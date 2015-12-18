@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 
 import java.text.SimpleDateFormat;
@@ -47,6 +48,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     private FloatingActionButton agency;
     private FloatingActionButton vehicle;
     private FloatingActionButton country;
+    private FloatingActionButton menu;
 
     public PreviousLaunchesFragment() {
         // Required empty public constructor
@@ -67,6 +69,9 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         final FloatingActionButton agency = (FloatingActionButton) view.findViewById(R.id.agency);
         final FloatingActionButton vehicle = (FloatingActionButton) view.findViewById(R.id.vehicle);
         final FloatingActionButton country = (FloatingActionButton) view.findViewById(R.id.country);
+        final FloatingActionMenu menu = (FloatingActionMenu) view.findViewById(R.id.menu);
+
+        menu.setClosedOnTouchOutside(true);
 
         agency.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,18 +115,18 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
                                         /* Download complete. Lets update UI */
                                         if (result != null) {
                                             List<Launch> thisList = result;
-                                            Log.d(LaunchApplication.TAG, "PreviousLaunchFragment" + result.get(0).getName() + " " + result.size());
-                                            adapter = new PreviousLaunchAdapter(getActivity(), getView().findViewById(R.id.fragment_feed_content));
+                                            Log.d(LaunchApplication.TAG, "PreviousLaunchFragment"
+                                                    + result.get(0).getName() + " "
+                                                    + result.size());
                                             adapter.addItems(thisList);
-                                            animatorAdapter = new SlideInBottomAnimationAdapter(adapter);
-                                            animatorAdapter.setDuration(350);
-                                            mRecyclerView.setAdapter(animatorAdapter);
+                                            animatorAdapter.notifyDataSetChanged();
+                                            mRecyclerView.smoothScrollToPosition(0);
                                         } else
                                             Log.e(LaunchApplication.TAG, "Failed to fetch data!");
                                     }
                                 };
                                 loader.execute(String.format(CurrentURL, String.valueOf(formattedDate)));
-
+                                menu.toggle(false);
                                 return true;
                             }
                         })
@@ -133,8 +138,74 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         vehicle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Vehicle", Toast.LENGTH_SHORT).show();
+                new MaterialDialog.Builder(getContext())
+                        .title("Select a Launch Vehicle")
+                        .items(R.array.vehicles)
+                        .positiveColorRes(R.color.colorAccentDark)
+                        .buttonRippleColorRes(R.color.colorAccentLight)
+                        .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                            @Override
+                            public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                /**
+                                 * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
+                                 * returning false here won't allow the newly selected radio button to actually be selected.
+                                 **/
+                                Calendar c = Calendar.getInstance();
 
+                                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                                String formattedDate = df.format(c.getTime());
+
+                                switch (which) {
+                                    case 0:
+                                        CurrentURL = "https://launchlibrary.net/1.1.1/launch/" +
+                                                "1990-01-01/%s/?sort=desc&limit=20" +
+                                                "&rocketid=1&rocketid=2";
+                                        break;
+                                    case 1:
+                                        CurrentURL = "https://launchlibrary.net/1.1.1/launch/" +
+                                                "1990-01-01/%s/?sort=desc&limit=20&rocketid=4";
+                                        break;
+                                    case 2:
+                                        CurrentURL = "https://launchlibrary.net/1.1.1/launch/" +
+                                                "1990-01-01/%s/?sort=desc&limit=20&rocketid=3" +
+                                                "&rocketid=6&rocketid=35&rocketid=87";
+                                        break;
+                                    case 3:
+                                        CurrentURL = "https://launchlibrary.net/1.1.1/launch/" +
+                                                "1990-01-01/%s/?sort=desc&limit=20&rocketid=2" +
+                                                "&rocketid=10&rocketid=26&rocketid=11&rocketid=37";
+                                        break;
+                                }
+                                PreviousLaunchLoader loader = new PreviousLaunchLoader() {
+                                    @Override
+                                    protected void onPreExecute() {
+                                        launchArrayList = new ArrayList<>();
+                                        if (adapter.getItemCount() != 0) {
+                                            adapter.removeAll();
+                                        }
+                                    }
+
+                                    @Override
+                                    protected void onPostExecute(List<Launch> result) {
+                                        /* Download complete. Lets update UI */
+                                        if (result != null) {
+                                            List<Launch> thisList = result;
+                                            Log.d(LaunchApplication.TAG, "PreviousLaunchFragment" + result.get(0).getName() + " " + result.size());
+                                            adapter.addItems(thisList);
+                                            animatorAdapter.notifyDataSetChanged();
+                                            mRecyclerView.smoothScrollToPosition(0);
+                                        } else
+                                            Log.e(LaunchApplication.TAG, "Failed to fetch data!");
+                                    }
+                                };
+                                loader.execute(String.format(CurrentURL, String.valueOf(formattedDate)));
+                                menu.toggle(false);
+                                return true;
+                            }
+                        })
+                        .positiveText("Filter")
+                        .icon(ContextCompat.getDrawable(getContext(), R.mipmap.ic_launcher))
+                        .show();
             }
         });
         country.setOnClickListener(new View.OnClickListener() {
@@ -206,6 +277,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     @Override
     public void onResume() {
         Calendar c = Calendar.getInstance();
+
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = df.format(c.getTime());
 

@@ -12,4 +12,10 @@
         <item>SpaceX</item>
         <item>ROSCOSMOS</item>
     </string-array>
+    <string-array name="vehicles">
+        <item>Falcon</item>
+        <item>Proton</item>
+        <item>Soyuz</item>
+        <item>Atlas</item>
+    </string-array>
 </resources>
