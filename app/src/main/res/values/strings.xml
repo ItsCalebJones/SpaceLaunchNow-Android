@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Space Launch Now</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="status_go">" GO"</string>
+    <string name="status_nogo">" NO GO"</string>
+    <string name="status_success">" Successful Launch"</string>
+    <string name="status_failure">" Launch Failure"</string>
+</resources>

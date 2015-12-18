@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tabs">
+        <item>Upcoming</item>
+        <item>Previous</item>
+        <!--<item>Favorites</item>-->
+        <!--<item>Missions</item>-->
+        <!--<item>Rockets</item>-->
+    </string-array>
+    <string-array name="agencies">
+        <item>NASA</item>
+        <item>SpaceX</item>
+        <item>ROSCOSMOS</item>
+    </string-array>
+</resources>
