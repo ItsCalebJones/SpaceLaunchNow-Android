@@ -6,3 +6,9 @@
 .DS_Store
 /build
 /captures
+
+.idea/dictionaries/cjones.xml
+
+.idea/inspectionProfiles/profiles_settings.xml
+
+.idea/inspectionProfiles/Project_Default.xml

@@ -1,4 +1,4 @@
-package calebjones.me.spacelaunchnow;
+package me.calebjones.spacelaunchnow;
 
 import org.junit.Test;
 
