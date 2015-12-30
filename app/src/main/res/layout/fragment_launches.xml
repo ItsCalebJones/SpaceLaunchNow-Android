@@ -27,7 +27,7 @@
                 android:layout_gravity="center_horizontal|center_vertical"
                 app:cpv_indeterminate="true"/>
 
-            <calebjones.me.spacelaunchnow.utils.AutofitRecyclerView
+            <me.calebjones.spacelaunchnow.utils.AutofitRecyclerView
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
