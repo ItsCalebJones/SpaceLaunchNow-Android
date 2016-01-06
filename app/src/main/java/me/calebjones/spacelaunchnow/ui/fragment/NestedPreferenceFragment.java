@@ -92,7 +92,6 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
 
     public void onResume() {
         super.onResume();
-        LaunchApplication.getInstance().trackScreenView("NestedPreference Fragment");
     }
 
     private void checkPreferenceResource() {

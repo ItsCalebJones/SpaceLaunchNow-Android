@@ -94,6 +94,7 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
 
         position = i;
 
+        //TODO These are slightly rounded when converting from double to long
         double dlat = launchItem.getLocation().getPads().get(0).getLatitude();
         double dlon = launchItem.getLocation().getPads().get(0).getLongitude();
 
