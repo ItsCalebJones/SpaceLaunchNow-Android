@@ -22,10 +22,8 @@ import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.LaunchVehicle;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetail;
 
-/**
- * Created by cjones on 12/24/15.
- */
-public class VehicleLoader extends AsyncTask<String, Void, String> {
+
+public class VehicleLoader extends AsyncTask<String, Void, Integer> {
     public static List<LaunchVehicle> vehicleList;
 
     private Context mContext;
@@ -38,7 +36,7 @@ public class VehicleLoader extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... params) {
+    protected Integer doInBackground(String... params) {
         InputStream inputStream = null;
         Integer result = 0;
         HttpURLConnection urlConnection = null;
@@ -66,26 +64,28 @@ public class VehicleLoader extends AsyncTask<String, Void, String> {
                     response.append(line);
                 }
 
-                return response.toString();
+                result = addToDB(response);
+
+                return result;
             } else {
-                return null;
+                return 0;
             }
 
         } catch (Exception e) {
             Log.d(LaunchApplication.TAG, e.getLocalizedMessage());
         }
-        return null; //"Failed to fetch data!";
+        return 0; //"Failed to fetch data!";
     }
 
-    @Override
-    protected void onPostExecute(String result) {
+    private Integer addToDB(StringBuilder response) {
         DatabaseManager databaseManager = new DatabaseManager(mContext);
+
         try {
-            JSONArray response = new JSONArray(result);
-            for (int i = 0; i < response.length(); i++) {
+            JSONArray responseArray = new JSONArray(response.toString());
+            for (int i = 0; i < responseArray.length(); i++) {
                 LaunchVehicle launchVehicle = new LaunchVehicle();
 
-                JSONObject vehicleObj = response.optJSONObject(i);
+                JSONObject vehicleObj = responseArray.optJSONObject(i);
                 launchVehicle.setLVName(vehicleObj.optString("LV_Name"));
                 launchVehicle.setLVFamily(vehicleObj.optString("LV_Family"));
                 launchVehicle.setLVSFamily(vehicleObj.optString("LV_SFamily"));
@@ -106,9 +106,17 @@ public class VehicleLoader extends AsyncTask<String, Void, String> {
 
                 databaseManager.addPost(launchVehicle);
             }
-
+            //Success
+            return 1;
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(LaunchApplication.TAG, e.getLocalizedMessage());
+            //Error
+            return 0;
         }
+    }
+
+    @Override
+    protected void onPostExecute(Integer result) {
+        Log.d(LaunchApplication.TAG, "Vehicle Loader: " + result);
     }
 }

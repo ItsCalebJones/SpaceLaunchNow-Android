@@ -2,8 +2,9 @@ package me.calebjones.spacelaunchnow.content.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,31 +26,35 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import me.calebjones.spacelaunchnow.LaunchApplication;
+import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetail;
 
 /**
- * Created by cjones on 12/16/15.
+ * Adapts UpcomingLaunch data to the LaunchFragment
  */
-public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder> {
+public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder> implements SectionIndexer {
     public int position;
-    public View mView;
     private List<Launch> launchList;
     private Context mContext;
     private Calendar rightNow;
+    private SharedPreferences sharedPref;
+    private static SharedPreference sharedPreference;
 
-    public LaunchAdapter(Context context, View view) {
+    public LaunchAdapter(Context context) {
         rightNow = Calendar.getInstance();
+        launchList = new ArrayList<>();
         this.mContext = context;
-        this.mView = view;
 
     }
 
@@ -60,14 +66,25 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
         }
     }
 
-    public void removeAll() {
-        this.launchList.clear();
+    public void clear() {
+        launchList.clear();
+        notifyDataSetChanged();
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup,
-                                         int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.content_list_item, viewGroup, false);
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+
+        int m_theme;
+
+        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+        sharedPreference = SharedPreference.getInstance(mContext);
+
+        if (sharedPreference.getNightMode()) {
+            m_theme = R.layout.dark_content_list_item;
+        } else {
+            m_theme = R.layout.light_content_list_item;
+        }
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(m_theme, viewGroup, false);
         return new ViewHolder(v);
     }
 
@@ -76,6 +93,7 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
         final Launch launchItem = launchList.get(i);
 
         position = i;
+
         double dlat = launchItem.getLocation().getPads().get(0).getLatitude();
         double dlon = launchItem.getLocation().getPads().get(0).getLongitude();
 
@@ -117,7 +135,7 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
             holder.content_TMinus_status.setText(" Unknown");
         }
 
-        if(launchItem.getVidURL().length() == 0){
+        if (launchItem.getVidURL().length() == 0) {
             holder.watchButton.setVisibility(View.GONE);
         }
 
@@ -151,17 +169,26 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
                     get(0).getDescription());
         }
 
+        //If location is available then see if pad and agency informaiton is avaialble.
         if (launchItem.getLocation().getName() != null) {
             if (launchItem.getLocation().getPads().size() > 0 && launchItem.getLocation().getPads().
                     get(0).getAgencies().size() > 0) {
-                String location = launchItem.getLocation().getName() +
-                        launchItem.getLocation().getPads().
+
+                //Get the first CountryCode
+                String country = launchItem.getLocation().getPads().
                         get(0).getAgencies().get(0).getCountryCode();
-                location = (location.substring(location.indexOf(", ")+2));
+                country = (country.substring(0, 2));
+
+                //Get the location remove the pad information
+                String location = launchItem.getLocation().getName() + " " + country;
+                        launchItem.getLocation().getPads().
+                                get(0).getAgencies().get(0).getCountryCode();
+                location = (location.substring(location.indexOf(", ") + 2));
+
                 holder.location.setText(location);
             } else {
                 holder.location.setText(launchItem.getLocation().getName()
-                        .substring(launchItem.getLocation().getName().indexOf(", ")+2));
+                        .substring(launchItem.getLocation().getName().indexOf(", ") + 2));
             }
         }
         holder.title.setText(launchItem.getRocket().getName());
@@ -169,11 +196,9 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
 
     //Recycling GoogleMap for list item
     @Override
-    public void onViewRecycled(ViewHolder holder)
-    {
+    public void onViewRecycled(ViewHolder holder) {
         // Cleanup MapView here?
-        if (holder.gMap != null)
-        {
+        if (holder.gMap != null) {
             holder.gMap.clear();
             holder.gMap.setMapType(GoogleMap.MAP_TYPE_NONE);
         }
@@ -182,6 +207,26 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
     @Override
     public int getItemCount() {
         return launchList.size();
+    }
+
+    @Override
+    public Object[] getSections() {
+        return new Object[0];
+    }
+
+    @Override
+    public int getPositionForSection(int sectionIndex) {
+        return 0;
+    }
+
+    @Override
+    public int getSectionForPosition(int position) {
+
+        if (position >= getItemCount()) {
+            position = getItemCount() - 1;
+        }
+
+        return 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, OnMapReadyCallback {
@@ -220,10 +265,9 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
             shareButton.setOnClickListener(this);
             exploreButton.setOnClickListener(this);
             watchButton.setOnClickListener(this);
-            map_view.setOnClickListener(this);
             exploreFab.setOnClickListener(this);
 
-            if (map_view != null){
+            if (map_view != null) {
                 map_view.onCreate(null);
                 map_view.onResume();
                 map_view.getMapAsync(this);
@@ -255,7 +299,7 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
                     break;
                 case R.id.fab:
                     String location = launchList.get(position).getLocation().getName();
-                    location = (location.substring(location.indexOf(",")+1));
+                    location = (location.substring(location.indexOf(",") + 1));
 
                     Log.d(LaunchApplication.TAG, "FAB: " + location);
 
@@ -285,11 +329,6 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
 
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            Log.d(LaunchApplication.TAG, "Map Ready!");
-            CircularProgressView progressView = (CircularProgressView)
-                    mView.findViewById(R.id.progress_View);
-            progressView.clearAnimation();
-            progressView.setVisibility(View.GONE);
             //TODO: Allow user to update this 1-normal 2-satellite 3-Terrain
             // https://goo.gl/OkexW7
             MapsInitializer.initialize(mContext);
@@ -297,7 +336,7 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
             gMap = googleMap;
             gMap.getUiSettings().setAllGesturesEnabled(false);
 
-            googleMap.setMapType(2);
+            googleMap.setMapType(1);
             googleMap.getUiSettings().setMapToolbarEnabled(false);
 
             // If we have map data, update the map content.
@@ -313,7 +352,7 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
             // Update the mapView feature data and camera position.
             gMap.addMarker(new MarkerOptions().position(mMapLocation));
 
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mMapLocation, 3f);
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mMapLocation, 3.2f);
             gMap.moveCamera(cameraUpdate);
         }
     }

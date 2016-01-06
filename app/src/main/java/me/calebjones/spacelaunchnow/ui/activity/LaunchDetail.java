@@ -112,7 +112,7 @@ public class LaunchDetail extends AppCompatActivity
                 locationCountryCode = launch.getLocation().getPads().
                         get(0).getAgencies().get(0).getCountryCode();
 
-                Log.d(LaunchApplication.TAG, "CountryCode length: " +
+                Log.v(LaunchApplication.TAG, "LaunchDetail - CountryCode length: " +
                         String.valueOf(locationCountryCode.length()));
 
                 //Go through various CountryCodes and assign flag.
@@ -160,15 +160,7 @@ public class LaunchDetail extends AppCompatActivity
     }
 
     private void applyProfileLogo(String url){
-        Log.d(LaunchApplication.TAG, "Loading Profile Image url: " + url);
-
-//        Glide.with(this)
-//                .load(url)
-//                .centerCrop()
-//                .dontAnimate()
-//                .placeholder(R.drawable.icon_international)
-//                .error(R.drawable.icon_international)
-//                .into(detail_profile_image);
+        Log.d(LaunchApplication.TAG, "LaunchDetail - Loading Profile Image url: " + url);
 
         Picasso.with(this)
                 .load(url)
@@ -194,19 +186,19 @@ public class LaunchDetail extends AppCompatActivity
                     .placeholder(R.drawable.placeholder)
                     .crossFade()
                     .into(detail_profile_backdrop);
-            Log.d(LaunchApplication.TAG, launchVehicle.getLVName() + " "
+            Log.d(LaunchApplication.TAG, "LaunchDetail - " + launchVehicle.getLVName() + " "
                     + launchVehicle.getImageURL());
         }
     }
 
     public void setData(String data){
         response = data;
-        Log.d(LaunchApplication.TAG, response);
+        Log.v(LaunchApplication.TAG, "LaunchDetail - " + response);
         Scanner scanner = new Scanner(response);
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             // process the line
-            Log.d(LaunchApplication.TAG, line);
+            Log.v(LaunchApplication.TAG, "LaunchDetail - " + line);
         }
         scanner.close();
     }

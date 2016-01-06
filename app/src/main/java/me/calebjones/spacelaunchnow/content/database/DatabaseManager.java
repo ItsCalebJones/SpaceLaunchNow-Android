@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.List;
 
 import me.calebjones.spacelaunchnow.content.models.LaunchVehicle;
-import me.calebjones.spacelaunchnow.utils.BlipUtils;
+import me.calebjones.spacelaunchnow.utils.Utils;
 
 public class DatabaseManager extends SQLiteOpenHelper {
 
@@ -137,9 +137,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 
     public LaunchVehicle getLaunchVehicle(String LaunchVehicleName) {
-        Log.d("The Jones Theory", "Checking for Vehicle: " + LaunchVehicleName);
+        Log.d("The Jones Theory", "DatabaseManager - Checking for Vehicle: " + LaunchVehicleName);
         Cursor cursor = getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_POST + " WHERE " + LVName + " LIKE '%" + LaunchVehicleName +"%'", null);
-        Log.d("The Jones Theory", "Cursor Size " + cursor.getCount() + ": " + DatabaseUtils.dumpCursorToString(cursor));
+        Log.d("The Jones Theory", "DatabaseManager - Cursor Size " + cursor.getCount() + ": " + DatabaseUtils.dumpCursorToString(cursor));
         if (cursor != null && cursor.getCount() != 0) {
             cursor.moveToFirst();
             LaunchVehicle item = new LaunchVehicle();
@@ -200,7 +200,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public List<LaunchVehicle> search(String keyWord) {
         List<LaunchVehicle> post = Collections.emptyList();
         int num = 0;
-        if (BlipUtils.isNumeric(keyWord)) {
+        if (Utils.isNumeric(keyWord)) {
             num = Integer.parseInt(keyWord);
         }
         Cursor cursor = getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_POST + " WHERE " + LVName +
@@ -251,7 +251,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         boolean exists = false;
         if (cursor != null && cursor.getCount() != 0) {
             exists = true;
-            Log.d("The Jones Theory", "Item " + item.getLVName() + " " + item.getLVVariant() + "Exists: " + exists);
+            Log.d("The Jones Theory", "DatabaseManager - Item " + item.getLVName() + " " + item.getLVVariant() + "Exists: " + exists);
         }
         cursor.close();
         return exists;

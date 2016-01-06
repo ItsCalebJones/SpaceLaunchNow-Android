@@ -18,4 +18,51 @@
         <item>Soyuz</item>
         <item>Atlas</item>
     </string-array>
+
+    <string-array name="upcoming_array">
+        <item>One</item>
+        <item>Two</item>
+        <item>Five</item>
+        <item>Ten</item>
+        <item>Twenty</item>
+        <item>Fifty</item>
+    </string-array>
+    <string-array name="upcoming_array_values">
+        <item>1</item>
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+        <item>50</item>
+    </string-array>
+    <string-array name="previous_array">
+        <item>Twenty</item>
+        <item>Fifty</item>
+        <item>One Hundred</item>
+        <item>Two Hundred</item>
+        <item>All</item>
+    </string-array>
+    <string-array name="previous_array_values">
+        <item>20</item>
+        <item>50</item>
+        <item>100</item>
+        <item>200</item>
+        <item>1000</item>
+    </string-array>
+    <string-array name="sync_timer">
+        <item>One Hour</item>
+        <item>Four Hours</item>
+        <item>Eight Hours</item>
+        <item>One Day</item>
+        <item>Three Days</item>
+        <item>One Week</item>
+    </string-array>
+    <string-array name="sync_timer_values">
+        <item>1</item>
+        <item>4</item>
+        <item>8</item>
+        <item>24</item>
+        <item>72</item>
+        <item>168</item>
+    </string-array>
 </resources>

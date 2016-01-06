@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen android:title="Notifications"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Launch Notifications">
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="notifications_new_message"
+        android:summaryOff="Allow Notifications for upcoming launches."
+        android:summaryOn="Notifications are on for upcoming launches."
+        android:title="Launch Notifications" />
+
+    <CheckBoxPreference
+        android:dependency="notifications_new_message"
+        android:key="notifications_new_message_vibrate"
+        android:title="Notification Priority"
+        android:summary="Allow high priority notifications."
+        android:defaultValue="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Saved Launches"
+        android:dependency="notifications_new_message">
+        <ListPreference
+            android:defaultValue="4"
+            android:entries="@array/sync_timer"
+            android:entryValues="@array/sync_timer_values"
+            android:key="saved_launch_timer"
+            android:summary="Select desired time for notification prior to launch."
+            android:title="Custom Notification Reminder" />
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="notifications_launch_day"
+            android:summaryOff="No notification for saved launches within 24 hours."
+            android:summaryOn="Receive notification when a saved launch is within 24 hours."
+            android:title="24 Hour Launch Notification" />
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="notifications_launch_imminent"
+            android:summaryOff="Do not notify when a saved launch is imminent."
+            android:summaryOn="Receive notification when a saved launch status is GO and T - five minutes."
+            android:title="Imminent Launch Notification" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Default Launches"
+        android:dependency="notifications_new_message">
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="notifications_launch_day"
+            android:summaryOff="No notification for launches within 24 hours."
+            android:summaryOn="Receive notification when a launch is within 24 hours."
+            android:title="24 Hour Launch Notification" />
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="notifications_launch_imminent"
+            android:summaryOff="Do not notify when a launch is imminent."
+            android:summaryOn="Receive notification when a launch status is GO and T - five minutes."
+            android:title="Imminent Launch Notification" />
+    </PreferenceCategory>
+</PreferenceScreen>

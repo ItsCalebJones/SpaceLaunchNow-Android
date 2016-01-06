@@ -1,19 +1,33 @@
 package me.calebjones.spacelaunchnow;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import me.calebjones.spacelaunchnow.content.database.DatabaseManager;
-import me.calebjones.spacelaunchnow.content.loader.VehicleLoader;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.content.services.RocketDataService;
+import me.calebjones.spacelaunchnow.ui.activity.SettingsActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.PreviousLaunchesFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.LaunchesFragment;
 
@@ -29,25 +43,74 @@ public class MainActivity extends AppCompatActivity
 
     private Toolbar toolbar;
     private DrawerLayout drawer;
+    private SharedPreferences sharedPref;
+    private static SharedPreference sharedPreference;
+    private Context context;
+    private BroadcastReceiver intentReceiver;
 
     private int mNavItemId;
+
+    class LaunchBroadcastReceiver extends BroadcastReceiver {
+        LaunchBroadcastReceiver() {
+        }
+
+        public void onReceive(Context context, Intent intent) {
+            Log.d(LaunchApplication.TAG, "LaunchBroadcastReceiver - Broadcast received!");
+            if (intent != null) {
+                String action = intent.getAction();
+                Fragment fragment;
+                if (Strings.ACTION_SUCCESS_UP_LAUNCHES.equals(action)) {
+                    fragment = null;
+                    try {
+                        fragment = (Fragment) LaunchesFragment.class.newInstance();
+                    } catch (Exception ignored) {
+                    }
+                    MainActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.flContent, fragment).commit();
+                } else if (Strings.ACTION_SUCCESS_PREV_LAUNCHES.equals(action)) {
+                    fragment = null;
+                    try {
+                        fragment = (Fragment) PreviousLaunchesFragment.class.newInstance();
+                    } catch (Exception ignored) {
+                    }
+                    MainActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.flContent, fragment).commit();
+                }
+            }
+        }
+    }
+
+
+    public MainActivity() {
+        this.intentReceiver = new LaunchBroadcastReceiver();
+    }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        int m_theme;
+        int m_layout;
+        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        this.context = getApplicationContext();
+
+        sharedPreference = SharedPreference.getInstance(this.context);
+
+        if (sharedPreference.getNightMode()) {
+            m_theme = R.style.DarkTheme_NoActionBar;
+            m_layout = R.layout.dark_activity_main;
+        } else {
+            m_theme = R.style.LightTheme_NoActionBar;
+            m_layout = R.layout.activity_main;
+        }
+
+        if (getSharedPreferences("theme_changed", 0).getBoolean("recreate", false)) {
+            SharedPreferences.Editor editor = getSharedPreferences("theme_changed", 0).edit();
+            editor.putBoolean("recreate", false);
+            editor.apply();
+            recreate();
+        }
+
+        setTheme(m_theme);
         super.onCreate(savedInstanceState);
-
-        new Thread(new Runnable() {
-            public void run() {
-                DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
-                databaseManager.rebuildDB(databaseManager.getWritableDatabase());
-
-                VehicleLoader vehicleLoader = new VehicleLoader(getApplicationContext());
-                vehicleLoader.execute("http://calebjones.me/app/launchvehicle.json");
-            }
-        }).start();
-
-        setContentView(R.layout.activity_main);
+        setContentView(m_layout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -72,6 +135,57 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         navigate(mNavItemId);
+        checkFirstBoot();
+    }
+
+    public void onStart() {
+        super.onStart();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
+        intentFilter.addAction(Strings.ACTION_FAILURE_UPC_LAUNCHES);
+        intentFilter.addAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
+        intentFilter.addAction(Strings.ACTION_FAILURE_PREV_LAUNCHES);
+        registerReceiver(this.intentReceiver, intentFilter);
+    }
+
+    public void onStop() {
+        super.onStop();
+        unregisterReceiver(this.intentReceiver);
+    }
+
+    public void checkFirstBoot() {
+        if (sharedPreference.getFirstBoot()) {
+            sharedPreference.setFirstBoot(false);
+            getFirstLaunches();
+        }
+    }
+
+    public void getFirstLaunches() {
+        Calendar c = Calendar.getInstance();
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = df.format(c.getTime());
+
+        String url = "https://launchlibrary.net/1.1/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=100";
+
+        Intent launchIntent = new Intent(this.context, LaunchDataService.class);
+        launchIntent.setAction(Strings.ACTION_GET_ALL);
+        launchIntent.putExtra("URL", url);
+        this.context.startService(launchIntent);
+
+        Intent rocketIntent = new Intent(this.context, RocketDataService.class);
+        rocketIntent.setAction(Strings.ACTION_GET_ROCKETS);
+        this.context.startService(rocketIntent);
+    }
+
+    public void onResume() {
+        super.onResume();
+        if (getSharedPreferences("theme_changed", 0).getBoolean("recreate", false)) {
+            SharedPreferences.Editor editor = getSharedPreferences("theme_changed", 0).edit();
+            editor.putBoolean("recreate", false);
+            editor.apply();
+            recreate();
+        }
     }
 
     public void setActionBarTitle(String title) {
@@ -91,7 +205,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
@@ -104,6 +218,9 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -129,7 +246,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void navigate(final int itemId) {
-        // perform the actual navigation logic, updating the main content fragment etc
+        // perform the actual navigation logic, updating the main_menu content fragment etc
         switch (itemId) {
             case R.id.menu_launches:
                 getSupportFragmentManager()
@@ -144,13 +261,13 @@ public class MainActivity extends AppCompatActivity
                         .commit();
                 break;
             case R.id.menu_missions:
-                Toast.makeText(getBaseContext(), "Work in progress! Thanks for your patience!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "Work in progress! Thanks for your patience!", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.menu_vehicle:
-                Toast.makeText(getBaseContext(), "Work in progress! Thanks for your patience!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "Work in progress! Thanks for your patience!", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.menu_favorites:
-                Toast.makeText(getBaseContext(), "Work in progress! Thanks for your patience!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "Work in progress! Thanks for your patience!", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 // ignore
