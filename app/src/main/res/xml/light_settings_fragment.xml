@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <Preference
+        android:persistent="false"
+        android:key="notifications"
+        android:layout="@layout/light_settings_notifications_layout"
+        android:title="Notifications" />
+    <Preference
+        android:persistent="false"
+        android:key="launch_tracking_options"
+        android:layout="@layout/light_settings_launch_options_layout"
+        android:title="Launch Tracking Options" />
+    <Preference
+        android:persistent="false"
+        android:key="appearance"
+        android:layout="@layout/light_settings_appearance_layout"
+        android:title="Appearance" />
+</PreferenceScreen>

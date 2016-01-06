@@ -2,6 +2,8 @@ package me.calebjones.spacelaunchnow.content.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,28 +11,35 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import me.calebjones.spacelaunchnow.LaunchApplication;
+import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetail;
 
 /**
- * Created by cjones on 12/16/15.
+ * This adapter takes data from SharedPreference/LoaderService and applies it to the LaunchesFragment
  */
 public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAdapter.ViewHolder>{
     public int position;
     private List<Launch> launchList;
     private Context mContext;
     private Calendar rightNow;
+    private SharedPreferences sharedPref;
+    private static SharedPreference sharedPreference;
 
-    public PreviousLaunchAdapter(Context context, List<Launch> models) {
+    public PreviousLaunchAdapter(Context context) {
         rightNow = Calendar.getInstance();
-        launchList = new ArrayList<>(models);
+        launchList = new ArrayList();
+        sharedPreference = SharedPreference.getInstance(context);
+        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         this.mContext = context;
     }
 
@@ -42,14 +51,25 @@ public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAd
         }
     }
 
-    public void removeAll() {
-        this.launchList.clear();
+    public void clear() {
+        launchList.clear();
+        notifyDataSetChanged();
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup,
-                                         int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.historical_list_item, viewGroup, false);
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+
+        int m_theme;
+
+        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+        sharedPreference = SharedPreference.getInstance(mContext);
+
+        if (sharedPreference.getNightMode()) {
+            m_theme = R.layout.dark_historical_list_item;
+        } else {
+            m_theme = R.layout.light_historical_list_item;
+        }
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(m_theme, viewGroup, false);
         return new ViewHolder(v);
     }
 
@@ -77,10 +97,6 @@ public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAd
             Date date = new Date(launchItem.getWindowstart());
             holder.launch_date.setText(df.format(date));
         }
-
-        Log.d("The Jones Theory", String.valueOf(launchItem.getLocation().getPads().size() > 0)
-                + String.valueOf(launchItem.getLocation().getPads().
-                get(0).getAgencies().size() > 0));
 
         //If pad and agency exist add it to location, otherwise get whats always available
         if (launchItem.getLocation().getPads().size() > 0 && launchItem.getLocation().getPads().
@@ -141,8 +157,7 @@ public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAd
 
     private void applyAndAnimateRemovals(List<Launch> newModels) {
         for (int i = launchList.size() - 1; i >= 0; i--) {
-            final Launch model = launchList.get(i);
-            if (!newModels.contains(model)) {
+            if (!newModels.contains(launchList.get(i))) {
                 removeItem(i);
             }
         }
@@ -168,7 +183,7 @@ public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAd
     }
 
     public Launch removeItem(int position) {
-        final Launch model = launchList.remove(position);
+        Launch model = launchList.remove(position);
         notifyItemRemoved(position);
         return model;
     }
@@ -179,8 +194,7 @@ public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAd
     }
 
     public void moveItem(int fromPosition, int toPosition) {
-        final Launch model = launchList.remove(fromPosition);
-        launchList.add(toPosition, model);
+        launchList.add(toPosition, launchList.remove(fromPosition));
         notifyItemMoved(fromPosition, toPosition);
     }
 }

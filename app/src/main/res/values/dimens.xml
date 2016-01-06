@@ -14,4 +14,5 @@
     <dimen name="column_width">200dp</dimen>
     <dimen name="column_width_fetch">320dp</dimen>
     <dimen name="item_margin_fetch">1dp</dimen>
+    <dimen name="list_item_height">72dp</dimen>
 </resources>

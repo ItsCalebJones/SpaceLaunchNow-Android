@@ -1,11 +1,20 @@
 package me.calebjones.spacelaunchnow.ui.fragment;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.preference.PreferenceManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -16,27 +25,33 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.borax12.materialdaterangepicker.date.DatePickerDialog;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
-import com.github.rahatarmanahmed.cpv.CircularProgressView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
+import jp.wasabeef.recyclerview.animators.adapters.SlideInBottomAnimationAdapter;
 import me.calebjones.spacelaunchnow.LaunchApplication;
 import me.calebjones.spacelaunchnow.content.adapter.PreviousLaunchAdapter;
+import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.loader.PreviousLaunchLoader;
-import me.calebjones.spacelaunchnow.utils.EndlessRecyclerOnScrollListener;
-import jp.wasabeef.recyclerview.animators.adapters.SlideInBottomAnimationAdapter;
+import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,21 +61,33 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     private View view;
     private RecyclerView mRecyclerView;
     private PreviousLaunchAdapter adapter;
-    private StaggeredGridLayoutManager layoutManager;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private SlideInBottomAnimationAdapter animatorAdapter;
-    private String CurrentURL;
-    private FloatingActionButton agency;
-    private FloatingActionButton vehicle;
-    private FloatingActionButton country;
-    private FloatingActionButton menu;
-    private List<Launch> mModels;
+    private String newURL;
+    private FloatingActionMenu menu;
+    private String start_date, end_date;
+    private List<Launch> rocketLaunches;
+    private SharedPreference sharedPreference;
+    private SharedPreferences sharedPrefs;
     private int mScrollPosition;
+    private FloatingActionButton agency, vehicle, country;
+    private int mScrollOffset = 4;
+
+
+    private StaggeredGridLayoutManager staggeredLayoutManager;
+    private LinearLayoutManager layoutManager;
+    private SlideInBottomAnimationAdapter animatorAdapter;
 
     public PreviousLaunchesFragment() {
         // Required empty public constructor
     }
 
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        this.sharedPreference = SharedPreference.getInstance(getContext());
+        this.sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        this.rocketLaunches = new ArrayList();
+        adapter = new PreviousLaunchAdapter(getActivity());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,80 +96,109 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
         setHasOptionsMenu(true);
 
-        // keep the fragment and all its data across screen rotation
-        setRetainInstance(true);
-
         LayoutInflater lf = getActivity().getLayoutInflater();
 
-        CurrentURL = "https://launchlibrary.net/1.1.1/launch/1990-01-01/%s?sort=desc&limit=20";
+        view = lf.inflate(R.layout.fragment_previous_launches, container, false);
 
-        view = lf.inflate(R.layout.fragment_launches, container, false);
+        agency = (FloatingActionButton) view.findViewById(R.id.agency);
+        vehicle = (FloatingActionButton) view.findViewById(R.id.vehicle);
+        country = (FloatingActionButton) view.findViewById(R.id.country);
+        menu = (FloatingActionMenu) view.findViewById(R.id.menu);
+        menu.setTranslationX(menu.getWidth() + 250);
 
-        final FloatingActionButton agency = (FloatingActionButton) view.findViewById(R.id.agency);
-        final FloatingActionButton vehicle = (FloatingActionButton) view.findViewById(R.id.vehicle);
-        final FloatingActionButton country = (FloatingActionButton) view.findViewById(R.id.country);
-        final FloatingActionMenu menu = (FloatingActionMenu) view.findViewById(R.id.menu);
+        if (getResources().getBoolean(R.bool.landscape)
+                && getResources().getBoolean(R.bool.isTablet)) {
+            mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_staggered);
+            RecyclerView hideView = (RecyclerView) view.findViewById(R.id.recycler_view);
+            if (mRecyclerView.getVisibility() != View.VISIBLE){
+                hideView.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.VISIBLE);
+            }
+            staggeredLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+            staggeredLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
+            mRecyclerView.setLayoutManager(staggeredLayoutManager);
+            mRecyclerView.setAdapter(adapter);
+        } else {
+            mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+            RecyclerView hideView = (RecyclerView) view.findViewById(R.id.recycler_view_staggered);
+            if (mRecyclerView.getVisibility() != View.VISIBLE){
+                hideView.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.VISIBLE);
+            }
+            layoutManager = new LinearLayoutManager(getContext());
+            mRecyclerView.setLayoutManager(layoutManager);
+            mRecyclerView.setAdapter(adapter);
+        }
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (Math.abs(dy) > mScrollOffset) {
+                    if (dy > 0) {
+                        menu.hideMenu(true);
+                    } else {
+                        menu.showMenu(true);
+                    }
+                }
+            }
+        });
 
+        if (this.sharedPreference.getPreviousFirstBoot()) {
+            this.sharedPreference.setPreviousFirstBoot(false);
+            Log.d("Space Launch Now", "Previous Launch Fragment: First Boot.");
+            getDefaultDateRange();
+            displayLaunches();
+        } else {
+            Log.d("Space Launch Now", "Previous Launch Fragment: Not First Boot.");
+            this.rocketLaunches.clear();
+            getDateRange();
+            displayLaunches();
+            setTitle();
+        }
+        setUpFab();
+        return view;
+    }
+
+    private void setUpFab() {
         menu.setClosedOnTouchOutside(true);
+
+        createCustomAnimation();
 
         agency.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new MaterialDialog.Builder(getContext())
                         .title("Select an Agency")
+                        .content("")
                         .items(R.array.agencies)
                         .positiveColorRes(R.color.colorAccentDark)
                         .buttonRippleColorRes(R.color.colorAccentLight)
                         .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                /**
-                                 * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
-                                 * returning false here won't allow the newly selected radio button to actually be selected.
-                                 **/
-                                Calendar c = Calendar.getInstance();
-
-                                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                                String formattedDate = df.format(c.getTime());
-
                                 switch (which) {
                                     case 0:
-                                        CurrentURL = "https://launchlibrary.net/1.1.1/launch/1990-01-01/%s/NASA?sort=desc&limit=20";
+                                        newURL = "https://launchlibrary.net/1.1.1/launch/" + start_date + "/" + end_date + "/NASA?sort=desc&limit=200";
+                                        adapter.clear();
+                                        fetchDataFiltered(newURL, "NASA | " + formatDatesForTitle(start_date) + " " + formatDatesForTitle(end_date));
                                         break;
                                     case 1:
-                                        CurrentURL = "https://launchlibrary.net/1.1.1/launch/1990-01-01/%s/SpaceX?sort=desc&limit=20";
+                                        newURL = "https://launchlibrary.net/1.1.1/launch/" + start_date + "/" + end_date + "/SpaceX?sort=desc&limit=200";
+                                        adapter.clear();
+                                        fetchDataFiltered(newURL, "SpaceX | " + formatDatesForTitle(start_date) + " " + formatDatesForTitle(end_date));
+                                        break;
+                                    case 2:
+                                        newURL = "https://launchlibrary.net/1.1.1/launch/" + start_date + "/" + end_date + "/ROSCOSMOS?sort=desc&limit=200";
+                                        adapter.clear();
+                                        fetchDataFiltered(newURL, "SpaceX | " + formatDatesForTitle(start_date) + " " + formatDatesForTitle(end_date));
                                         break;
                                 }
-                                PreviousLaunchLoader loader = new PreviousLaunchLoader() {
-                                    @Override
-                                    protected void onPreExecute() {
-                                        launchArrayList = new ArrayList<>();
-                                        if (adapter.getItemCount() != 0) {
-                                            adapter.removeAll();
-                                        }
-                                    }
-
-                                    @Override
-                                    protected void onPostExecute(List<Launch> result) {
-                                        /* Download complete. Lets update UI */
-                                        if (result != null) {
-                                            List<Launch> thisList = result;
-                                            Log.d(LaunchApplication.TAG, "PreviousLaunchFragment"
-                                                    + result.get(0).getName() + " "
-                                                    + result.size());
-                                            adapter.addItems(thisList);
-                                            adapter.notifyDataSetChanged();
-                                            mRecyclerView.smoothScrollToPosition(0);
-                                        } else
-                                            Log.e(LaunchApplication.TAG, "Failed to fetch data!");
-                                    }
-                                };
-                                loader.execute(String.format(CurrentURL, String.valueOf(formattedDate)));
                                 menu.toggle(false);
                                 return true;
                             }
                         })
                         .positiveText("Filter")
+                        .negativeText("Close")
                         .icon(ContextCompat.getDrawable(getContext(), R.mipmap.ic_launcher))
                         .show();
             }
@@ -154,68 +210,40 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
                         .title("Select a Launch Vehicle")
                         .items(R.array.vehicles)
                         .positiveColorRes(R.color.colorAccentDark)
+                        .negativeColorRes(R.color.colorPrimaryLight)
                         .buttonRippleColorRes(R.color.colorAccentLight)
                         .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                /**
-                                 * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
-                                 * returning false here won't allow the newly selected radio button to actually be selected.
-                                 **/
-                                Calendar c = Calendar.getInstance();
-
-                                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                                String formattedDate = df.format(c.getTime());
-
                                 switch (which) {
                                     case 0:
-                                        CurrentURL = "https://launchlibrary.net/1.1.1/launch/" +
-                                                "1990-01-01/%s/?sort=desc&limit=20" +
-                                                "&rocketid=1&rocketid=2";
+                                        newURL = "https://launchlibrary.net/1.1.1/launch/" + start_date + "/" + end_date + "/?sort=desc&limit=200&name=Falcon";
+                                        adapter.clear();
+                                        fetchDataFiltered(newURL, "Falcon | " + formatDatesForTitle(start_date) + " - " + formatDatesForTitle(end_date));
                                         break;
                                     case 1:
-                                        CurrentURL = "https://launchlibrary.net/1.1.1/launch/" +
-                                                "1990-01-01/%s/?sort=desc&limit=20&rocketid=4";
+                                        newURL = "https://launchlibrary.net/1.1.1/launch/" + start_date + "/" + end_date + "/?sort=desc&limit=200&name=Proton";
+                                        adapter.clear();
+                                        fetchDataFiltered(newURL, "Proton | " + formatDatesForTitle(start_date) + " - " + formatDatesForTitle(end_date));
                                         break;
                                     case 2:
-                                        CurrentURL = "https://launchlibrary.net/1.1.1/launch/" +
-                                                "1990-01-01/%s/?sort=desc&limit=20&rocketid=3" +
-                                                "&rocketid=6&rocketid=35&rocketid=87";
+                                        newURL = "https://launchlibrary.net/1.1.1/launch/" + start_date + "/" + end_date + "/?sort=desc&limit=200&name=Soyuz";
+                                        adapter.clear();
+                                        fetchDataFiltered(newURL, "Soyuz | " + formatDatesForTitle(start_date) + " - " + formatDatesForTitle(end_date));
                                         break;
                                     case 3:
-                                        CurrentURL = "https://launchlibrary.net/1.1.1/launch/" +
-                                                "1990-01-01/%s/?sort=desc&limit=20&rocketid=2" +
-                                                "&rocketid=10&rocketid=26&rocketid=11&rocketid=37";
+                                        newURL = "https://launchlibrary.net/1.1.1/launch/" + start_date + "/" + end_date + "/?sort=desc&limit=200&name=Atlas";
+                                        adapter.clear();
+                                        fetchDataFiltered(newURL, "Atlas | " + formatDatesForTitle(start_date) + " - " + formatDatesForTitle(end_date));
                                         break;
                                 }
-                                PreviousLaunchLoader loader = new PreviousLaunchLoader() {
-                                    @Override
-                                    protected void onPreExecute() {
-                                        launchArrayList = new ArrayList<>();
-                                        if (adapter.getItemCount() != 0) {
-                                            adapter.removeAll();
-                                        }
-                                    }
 
-                                    @Override
-                                    protected void onPostExecute(List<Launch> result) {
-                                        /* Download complete. Lets update UI */
-                                        if (result != null) {
-                                            List<Launch> thisList = result;
-                                            Log.d(LaunchApplication.TAG, "PreviousLaunchFragment" + result.get(0).getName() + " " + result.size());
-                                            adapter.addItems(thisList);
-                                            adapter.notifyDataSetChanged();
-                                            mRecyclerView.smoothScrollToPosition(0);
-                                        } else
-                                            Log.e(LaunchApplication.TAG, "Failed to fetch data!");
-                                    }
-                                };
-                                loader.execute(String.format(CurrentURL, String.valueOf(formattedDate)));
                                 menu.toggle(false);
                                 return true;
                             }
                         })
                         .positiveText("Filter")
+                        .negativeText("Close")
                         .icon(ContextCompat.getDrawable(getContext(), R.mipmap.ic_launcher))
                         .show();
             }
@@ -226,70 +254,105 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
                 Toast.makeText(getContext(), "Country", Toast.LENGTH_SHORT).show();
             }
         });
-
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-
-        layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                int topRowVerticalPostion = (mRecyclerView == null || mRecyclerView.getChildCount() == 0) ? 0 : mRecyclerView.getChildAt(0).getTop();
-                mSwipeRefreshLayout.setEnabled(dx == 0 && topRowVerticalPostion >= 0);
-            }
-        });
-        Calendar c = Calendar.getInstance();
-
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        String formattedDate = df.format(c.getTime());
-
-        CurrentURL = String.format("https://launchlibrary.net/1.1.1/launch/1990-01-01/%s?sort=desc&limit=20", String.valueOf(formattedDate));
-        mRecyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(layoutManager) {
-            @Override
-            public void onLoadMore(int current_page) {
-                PreviousLaunchLoader loader = new PreviousLaunchLoader() {
-                    @Override
-                    protected void onPreExecute() {
-                        launchArrayList = new ArrayList<>();
-                        Log.d(LaunchApplication.TAG, "List Size: " + String.valueOf(launchArrayList.size()) + " Adapter:" + adapter.getItemCount());
-                        if (adapter.getItemCount() != 0) {
-                            launchArrayList.clear();
-                        }
-                    }
-
-                    @Override
-                    protected void onPostExecute(List<Launch> result) {
-            /* Download complete. Lets update UI */
-                        if (result != null) {
-                            List<Launch> thisList = result;
-                            Log.d(LaunchApplication.TAG, "List Size: " + String.valueOf(thisList.size()) + " Adapter:" + adapter.getItemCount());
-                            adapter.addItems(thisList);
-                            mModels = thisList;
-                            adapter.notifyDataSetChanged();
-                        } else Log.e(LaunchApplication.TAG, "Failed to fetch data!");
-                    }
-                };
-                loader.execute(CurrentURL + "&offset=" + current_page);
-            }
-        });
-
-                /*Set up Pull to refresh*/
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.activity_main_swipe_refresh_layout);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-
-        ((MainActivity) getActivity()).setActionBarTitle("Previous Launches");
-
-        return view;
     }
 
+    private void setTitle() {
+        ((MainActivity) getActivity()).setActionBarTitle(this.sharedPreference.getPreviousTitle());
+    }
+
+    private String formatDatesForTitle(String start_date) {
+        SimpleDateFormat in = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat out = new SimpleDateFormat("LLL yyyy");
+
+        Date sDate;
+
+        try {
+            sDate = in.parse(start_date);
+            return out.format(sDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void displayLaunches() {
+        this.rocketLaunches = this.sharedPreference.getLaunchesPrevious();
+        filterData(this.rocketLaunches);
+        //Animate the FAB's loading
+        view.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                fabSlideIn();
+            }
+        }, 750);
+    }
+
+    public void filterData(List<Launch> rocketLaunchList) {
+        String text_to_filter = this.sharedPreference.getPreviousFilterText().toLowerCase();
+        List<Launch> filteredModelList = new ArrayList();
+        Iterator it = rocketLaunchList.iterator();
+        while (it.hasNext()) {
+            Launch rocketLaunch = (Launch) it.next();
+            String launch_name = rocketLaunch.getName().toLowerCase();
+            String location_name = rocketLaunch.getLocation().getName().toLowerCase();
+            if (launch_name.contains(text_to_filter) || location_name.contains(text_to_filter)) {
+                filteredModelList.add(rocketLaunch);
+            }
+        }
+        adapter.clear();
+        adapter.addItems(filteredModelList);
+    }
+
+    public void fetchData() {
+        String url = "https://launchlibrary.net/1.1/launch/" + this.start_date + "/" + this.end_date + "?sort=desc&limit=" + this.sharedPrefs.getString("previous_value", "100");
+        Log.d(LaunchApplication.TAG, "Sending Intent URL: " + url);
+        Intent intent = new Intent(getContext(), LaunchDataService.class);
+        intent.putExtra("URL", url);
+        intent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
+        getContext().startService(intent);
+    }
+
+    public void fetchDataFiltered(String url, String filterTitle) {
+        Log.d(LaunchApplication.TAG, "Sending Intent URL: " + url);
+        Intent intent = new Intent(getContext(), LaunchDataService.class);
+        intent.putExtra("URL", url);
+        intent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
+        getContext().startService(intent);
+        this.sharedPreference.setPreviousTitle(filterTitle);
+    }
+
+    private void createCustomAnimation() {
+
+        AnimatorSet set = new AnimatorSet();
+
+        ObjectAnimator scaleOutX = ObjectAnimator.ofFloat(menu.getMenuIconView(), "scaleX", 1.0f, 0.2f);
+        ObjectAnimator scaleOutY = ObjectAnimator.ofFloat(menu.getMenuIconView(), "scaleY", 1.0f, 0.2f);
+
+        ObjectAnimator scaleInX = ObjectAnimator.ofFloat(menu.getMenuIconView(), "scaleX", 0.2f, 1.0f);
+        ObjectAnimator scaleInY = ObjectAnimator.ofFloat(menu.getMenuIconView(), "scaleY", 0.2f, 1.0f);
+
+        scaleOutX.setDuration(50);
+        scaleOutY.setDuration(50);
+
+        scaleInX.setDuration(150);
+        scaleInY.setDuration(150);
+
+        scaleInX.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                menu.getMenuIconView().setImageResource(menu.isOpened()
+                        ? R.drawable.ic_sort : R.drawable.ic_close);
+            }
+        });
+
+        set.play(scaleOutX).with(scaleOutY);
+        set.play(scaleInX).with(scaleInY).after(scaleOutX);
+        set.setInterpolator(new OvershootInterpolator(2));
+
+        menu.setIconToggleAnimatorSet(set);
+    }
+
+    //Required for DateRange Dialogue that returns data from the dialogue.
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth,int yearEnd, int monthOfYearEnd, int dayOfMonthEnd) {
         String daydatestart = dayOfMonth < 10 ? "0"+dayOfMonth : ""+dayOfMonth;
@@ -297,39 +360,36 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         String daydateend = dayOfMonthEnd < 10 ? "0"+dayOfMonthEnd : ""+dayOfMonthEnd;
         String monthdayend = monthOfYearEnd < 10 ? "0"+monthOfYearEnd : ""+monthOfYearEnd;
 
-        String fromdate = year + "-" + monthdatestart + "-" + daydatestart;
-        String todate = yearEnd + "-" + monthdayend + "-" + daydateend;
-        CurrentURL = String.format("https://launchlibrary.net/1.1.1/launch/%s/%s?sort=desc&limit=20", fromdate, todate);
+        start_date = year + "-" + monthdatestart + "-" + daydatestart;
+        end_date = yearEnd + "-" + monthdayend + "-" + daydateend;
 
-        PreviousLaunchLoader loader = new PreviousLaunchLoader() {
-            @Override
-            protected void onPreExecute() {
-                launchArrayList = new ArrayList<>();
-                if (adapter.getItemCount() != 0) {
-                    adapter.removeAll();
-                }
-            }
+        this.sharedPreference.setPreviousTitle(formatDatesForTitle(start_date) + " - " +formatDatesForTitle(end_date));
 
-            @Override
-            protected void onPostExecute(List<Launch> result) {
-            /* Download complete. Lets update UI */
-                if (result != null) {
-                    List<Launch> thisList = result;
-                    adapter.removeAll();
-                    adapter.addItems(thisList);
-                    mModels = thisList;
-                    adapter.notifyDataSetChanged();
-                    mRecyclerView.smoothScrollToPosition(0);
-                } else Log.e(LaunchApplication.TAG, "Failed to fetch data!");
-            }
-        };
-        loader.execute(CurrentURL);
-        Log.d("The Jones Theory", CurrentURL);
+        setTitle();
+        adapter.clear();
+        fetchData();
+    }
+    public void getDateRange() {
+        start_date = this.sharedPreference.getStartDate();
+        end_date = this.sharedPreference.getEndDate();
+    }
+
+    public void getDefaultDateRange() {
+        Calendar c = Calendar.getInstance();
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = df.format(c.getTime());
+
+        this.start_date = this.sharedPreference.getStartDate();
+        this.end_date = String.valueOf(formattedDate);
+        this.sharedPreference.resetPreviousTitle();
+        setTitle();
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main_search, menu);
+        menu.clear();
+        inflater.inflate(R.menu.previous_menu, menu);
 
         final MenuItem item = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
@@ -355,14 +415,33 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
             dpd.show(getActivity().getFragmentManager(), "DatePicker");
             return true;
         }
+        if (id == R.id.action_refresh) {
+            adapter.clear();
+            getDefaultDateRange();
+            fetchData();
+            return true;
+        }
+
+        if (id == R.id.reset_filter){
+            adapter.clear();
+            getDefaultDateRange();
+            fetchData();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onQueryTextChange(String query) {
         // Here is where we are going to implement our filter logic
-        final List<Launch> filteredModelList = filter(mModels, query);
+        final List<Launch> filteredModelList = filter(rocketLaunches, query);
         adapter.animateTo(filteredModelList);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mRecyclerView.scrollToPosition(0);
+            }
+        }, 500);
 //        mRecyclerView.scrollToPosition(0);
         return false;
     }
@@ -379,7 +458,18 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         for (Launch model : models) {
             final String rocketName = model.getRocket().getName().toLowerCase();
             final String locationName = model.getLocation().getName().toLowerCase();
-            if (rocketName.contains(query) || locationName.contains(query)) {
+            String missionName;
+
+            //If pad and agency exist add it to location, otherwise get whats always available
+            if (model.getLocation().getPads().size() > 0 && model.getLocation().getPads().
+                    get(0).getAgencies().size() > 0){
+                missionName = model.getLocation().getPads().get(0).getAgencies().get(0).getName() + " " + (model.getRocket().getName());
+            } else {
+                missionName = model.getRocket().getName();
+            }
+            missionName = missionName.toLowerCase();
+
+            if (rocketName.contains(query) || locationName.contains(query) || missionName.contains(query)) {
                 filteredModelList.add(model);
             }
         }
@@ -388,78 +478,27 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
     @Override
     public void onResume() {
-        Calendar c = Calendar.getInstance();
-
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        String formattedDate = df.format(c.getTime());
-
+        setTitle();
         super.onResume();
-        if (mRecyclerView.getAdapter() == null) {
-            PreviousLaunchLoader loader = new PreviousLaunchLoader() {
-                @Override
-                protected void onPreExecute() {
-                    launchArrayList = new ArrayList<>();
-                    CircularProgressView progressView = (CircularProgressView) view.findViewById(R.id.progress_View);
-                    progressView.setVisibility(View.VISIBLE);
-                    progressView.startAnimation();
-                }
-
-                @Override
-                protected void onPostExecute(List<Launch> result) {
-            /* Download complete. Lets update UI */
-                    if (result != null) {
-                        List<Launch> thisList = result;
-                        Log.d(LaunchApplication.TAG, "PreviousLaunchFragment" + result.get(0).getName() + " " + result.size());
-                        CircularProgressView progressView = (CircularProgressView) view.findViewById(R.id.progress_View);
-                        progressView.setVisibility(View.GONE);
-                        adapter = new PreviousLaunchAdapter(getActivity(), thisList);
-                        adapter.addItems(thisList);
-                        mModels = thisList;
-                        mRecyclerView.setAdapter(adapter);
-                    } else Log.e(LaunchApplication.TAG, "Failed to fetch data!");
-                }
-            };
-            loader.execute(String.format("https://launchlibrary.net/1.1.1/launch/1990-01-01/%s?sort=desc&limit=20", String.valueOf(formattedDate)));
-        }
     }
 
     @Override
     public void onRefresh() {
-        Calendar c = Calendar.getInstance();
-
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        String formattedDate = df.format(c.getTime());
-        PreviousLaunchLoader loader = new PreviousLaunchLoader() {
-            @Override
-            protected void onPreExecute() {
-                launchArrayList = new ArrayList<>();
-                if (adapter.getItemCount() != 0) {
-                    adapter.removeAll();
-                }
-            }
-
-            @Override
-            protected void onPostExecute(List<Launch> result) {
-            /* Download complete. Lets update UI */
-                if (result != null) {
-                    List<Launch> thisList = result;
-                    mSwipeRefreshLayout.setRefreshing(false);
-                    CircularProgressView progressView = (CircularProgressView) view.findViewById(R.id.progress_View);
-                    progressView.setVisibility(View.GONE);
-                    adapter.removeAll();
-                    adapter.addItems(thisList);
-                    mModels = thisList;
-                    adapter.notifyDataSetChanged();
-                    mRecyclerView.smoothScrollToPosition(0);
-                } else Log.e(LaunchApplication.TAG, "Failed to fetch data!");
-            }
-        };
-        loader.execute(String.format("https://launchlibrary.net/1.1.1/launch/1990-01-01/%s?sort=desc&limit=20", String.valueOf(formattedDate)));
+        adapter.clear();
+        getDefaultDateRange();
+        fetchData();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable("curChoice", layoutManager.onSaveInstanceState());
+    }
+
+    private void fabSlideOut() {
+        menu.animate().translationX(menu.getWidth() + 250).setInterpolator(new AccelerateInterpolator(1)).start();
+    }
+
+    private void fabSlideIn() {
+        menu.animate().translationX(0).setInterpolator(new DecelerateInterpolator(4)).start();
     }
 }

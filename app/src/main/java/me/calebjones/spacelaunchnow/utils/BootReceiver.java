@@ -23,7 +23,7 @@ public class BootReceiver extends BroadcastReceiver{
                 .getBoolean("notifications_new_message", false);
         Log.d(LaunchApplication.TAG, "Notification: " + String.valueOf(notificationCheckBox));
         if (notificationCheckBox) {
-//            context.startService(new Intent(context, UpdateCheckService.class));
+//            context.startService(new Intent(context, LaunchDataService.class));
         }
     }
 }
