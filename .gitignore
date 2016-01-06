@@ -26,3 +26,5 @@
 .idea/gradle.xml
 
 gradle.properties
+
+app/src/main/res/values/api_keys.xml
