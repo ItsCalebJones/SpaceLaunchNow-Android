@@ -30,6 +30,7 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.content.models.LaunchVehicle;
 import me.calebjones.spacelaunchnow.utils.Utils;
+import timber.log.Timber;
 
 public class DatabaseManager extends SQLiteOpenHelper {
 
@@ -137,9 +138,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 
     public LaunchVehicle getLaunchVehicle(String LaunchVehicleName) {
-        Log.d("The Jones Theory", "DatabaseManager - Checking for Vehicle: " + LaunchVehicleName);
+        Timber.d("DatabaseManager - Checking for Vehicle: %s", LaunchVehicleName);
         Cursor cursor = getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_POST + " WHERE " + LVName + " LIKE '%" + LaunchVehicleName +"%'", null);
-        Log.d("The Jones Theory", "DatabaseManager - Cursor Size " + cursor.getCount() + ": " + DatabaseUtils.dumpCursorToString(cursor));
+        Timber.d("DatabaseManager - Cursor Size %s: %s", cursor.getCount(), DatabaseUtils.dumpCursorToString(cursor));
         if (cursor != null && cursor.getCount() != 0) {
             cursor.moveToFirst();
             LaunchVehicle item = new LaunchVehicle();
@@ -251,7 +252,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         boolean exists = false;
         if (cursor != null && cursor.getCount() != 0) {
             exists = true;
-            Log.d("The Jones Theory", "DatabaseManager - Item " + item.getLVName() + " " + item.getLVVariant() + "Exists: " + exists);
+            Timber.d("DatabaseManager - Item %s %s Exists: %s", item.getLVName(), item.getLVVariant(), true);
         }
         cursor.close();
         return exists;

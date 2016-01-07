@@ -31,6 +31,7 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.LaunchAdapter;
 import jp.wasabeef.recyclerview.animators.adapters.SlideInBottomAnimationAdapter;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import timber.log.Timber;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -109,10 +110,10 @@ public class LaunchesFragment extends Fragment implements SwipeRefreshLayout.OnR
 
         if (this.sharedPreference.getUpcomingFirstBoot()) {
             this.sharedPreference.setUpcomingFirstBoot(false);
-            Log.d("Space Launch Now", "Upcoming Launch Fragment: First Boot.");
+            Timber.d("Upcoming Launch Fragment: First Boot.");
             showLoading();
         } else  {
-            Log.d("Space Launch Now", "Upcoming Launch Fragment: Not First Boot.");
+            Timber.d("Upcoming Launch Fragment: Not First Boot.");
             this.rocketLaunches.clear();
             displayLaunches();
         }
@@ -146,7 +147,7 @@ public class LaunchesFragment extends Fragment implements SwipeRefreshLayout.OnR
         Intent intent = new Intent(getContext(), LaunchDataService.class);
         intent.putExtra("URL", url);
         intent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
-        Log.d("Space Launch Now", "Sending service intent!");
+        Timber.d("Sending service intent!");
         getContext().startService(intent);
     }
 
