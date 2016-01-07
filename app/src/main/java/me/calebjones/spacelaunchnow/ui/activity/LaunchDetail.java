@@ -50,6 +50,7 @@ public class LaunchDetail extends AppCompatActivity
     public String response;
     public Launch launch;
 
+    //TODO need to setTheme based on NightMode
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
