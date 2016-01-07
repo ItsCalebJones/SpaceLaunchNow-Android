@@ -8,7 +8,6 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +38,7 @@ import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetail;
+import timber.log.Timber;
 
 /**
  * Adapts UpcomingLaunch data to the LaunchFragment
@@ -279,30 +279,30 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
         @Override
         public void onClick(View v) {
             final int position = getAdapterPosition();
-            Log.d(LaunchApplication.TAG, "onClick at " + position);
+            Timber.d("onClick at %s", position);
 
             switch (v.getId()) {
                 case R.id.watchButton:
-                    Log.d(LaunchApplication.TAG, "Watch: " + launchList.get(position).getVidURL());
+                    Timber.d("Watch: %s", launchList.get(position).getVidURL());
                     Uri watchUri = Uri.parse(launchList.get(position).getVidURL());
                     Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
                     mContext.startActivity(i);
                     break;
                 case R.id.exploreButton:
-                    Log.d(LaunchApplication.TAG, "Explore: " + launchList.get(position).getId());
+                    Timber.d("Explore: %s", launchList.get(position).getId());
                     Launch launch = launchList.get(position);
                     Intent exploreIntent = new Intent(mContext, LaunchDetail.class);
                     exploreIntent.putExtra("launch", launch);
                     mContext.startActivity(exploreIntent);
                     break;
                 case R.id.shareButton:
-                    Log.d(LaunchApplication.TAG, "Share: " + launchList.get(position).getLocation().getName());
+                    Timber.d("Share: %s", launchList.get(position).getLocation().getName());
                     break;
                 case R.id.fab:
                     String location = launchList.get(position).getLocation().getName();
                     location = (location.substring(location.indexOf(",") + 1));
 
-                    Log.d(LaunchApplication.TAG, "FAB: " + location);
+                    Timber.d("FAB: %s ", location);
 
                     double dlat = launchList.get(position).getLocation().getPads().get(0).getLatitude();
                     double dlon = launchList.get(position).getLocation().getPads().get(0).getLongitude();

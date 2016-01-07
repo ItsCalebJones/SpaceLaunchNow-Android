@@ -21,6 +21,7 @@ import me.calebjones.spacelaunchnow.content.database.DatabaseManager;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.LaunchVehicle;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetail;
+import timber.log.Timber;
 
 
 public class VehicleLoader extends AsyncTask<String, Void, Integer> {
@@ -42,7 +43,7 @@ public class VehicleLoader extends AsyncTask<String, Void, Integer> {
         HttpURLConnection urlConnection = null;
 
         try {
-            Log.d(LaunchApplication.TAG, params[0]);
+            Timber.d(params[0]);
 
             /* forming th java.net.URL object */
             URL url = new URL(params[0]);
@@ -72,7 +73,7 @@ public class VehicleLoader extends AsyncTask<String, Void, Integer> {
             }
 
         } catch (Exception e) {
-            Log.d(LaunchApplication.TAG, e.getLocalizedMessage());
+            Timber.d(e.getLocalizedMessage());
         }
         return 0; //"Failed to fetch data!";
     }
@@ -109,7 +110,7 @@ public class VehicleLoader extends AsyncTask<String, Void, Integer> {
             //Success
             return 1;
         } catch (JSONException e) {
-            Log.e(LaunchApplication.TAG, e.getLocalizedMessage());
+            Timber.e(e.getLocalizedMessage());
             //Error
             return 0;
         }
@@ -117,6 +118,6 @@ public class VehicleLoader extends AsyncTask<String, Void, Integer> {
 
     @Override
     protected void onPostExecute(Integer result) {
-        Log.d(LaunchApplication.TAG, "Vehicle Loader: " + result);
+        Timber.d("Vehicle Loader: %s ", result);
     }
 }

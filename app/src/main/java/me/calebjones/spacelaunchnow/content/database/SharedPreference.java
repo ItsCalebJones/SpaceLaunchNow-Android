@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 import me.calebjones.spacelaunchnow.content.models.Launch;
+import timber.log.Timber;
 
 /**
  * Holder for future settings.
@@ -224,7 +225,7 @@ public class SharedPreference {
     }
 
     public void setPreviousLaunches(List<Launch> launches) {
-        Log.d("Space Launch Now", "SharedPreference - setPrevious list: " + launches.size());
+        Timber.d("SharedPreference - setPrevious list:  %s ", launches.size());
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         GsonBuilder gsonBuilder = new GsonBuilder();

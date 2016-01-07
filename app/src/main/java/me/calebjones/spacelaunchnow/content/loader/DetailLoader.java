@@ -23,6 +23,7 @@ import me.calebjones.spacelaunchnow.content.models.Mission;
 import me.calebjones.spacelaunchnow.content.models.Pad;
 import me.calebjones.spacelaunchnow.content.models.Rocket;
 import me.calebjones.spacelaunchnow.content.models.RocketAgency;
+import timber.log.Timber;
 
 /**
  * Class that parses the next 10 upcoming launches.
@@ -43,7 +44,7 @@ public class DetailLoader extends AsyncTask<String, Void, Launch> {
         HttpURLConnection urlConnection = null;
 
         try {
-            Log.d(LaunchApplication.TAG, params[0]);
+            Timber.d(params[0]);
 
             /* forming th java.net.URL object */
             URL url = new URL(params[0]);
@@ -71,7 +72,7 @@ public class DetailLoader extends AsyncTask<String, Void, Launch> {
             }
 
         } catch (Exception e) {
-            Log.d(LaunchApplication.TAG, e.getLocalizedMessage());
+            Timber.d(e.getLocalizedMessage());
         }
         return null; //"Failed to fetch data!";
     }
@@ -87,8 +88,8 @@ public class DetailLoader extends AsyncTask<String, Void, Launch> {
             /* Download complete. Lets update UI */
         if (result != null) {
 //                BlogFragment.setList(feedItemList);
-            Log.d(LaunchApplication.TAG, "Succeeded fetching data! - Launcher Loader");
-        } else Log.e(LaunchApplication.TAG, "Failed to fetch data!");
+            Timber.d("Succeeded fetching data! - Launcher Loader");
+        } else Timber.e("Failed to fetch data!");
     }
 
     public Launch parseResult(String result) throws JSONException {
@@ -114,7 +115,7 @@ public class DetailLoader extends AsyncTask<String, Void, Launch> {
             launch.setStatus(launchesObj.optInt("status"));
             launch.setVidURL(launchesObj.optString("vidURL"));
 
-            Log.d(LaunchApplication.TAG, "Launch " + 0 + ": " + launch.getName());
+            Timber.d("Launch %s : %s", 0 , launch.getName());
 
             //Start Parsing Rockets
             if (rocketObj != null) {
@@ -124,7 +125,7 @@ public class DetailLoader extends AsyncTask<String, Void, Launch> {
                 rocket.setName(rocketObj.optString("name"));
                 rocket.setFamilyname(rocketObj.optString("familyname"));
                 rocket.setConfiguration(rocketObj.optString("configuration"));
-                Log.d(LaunchApplication.TAG, "Launch " + 0 + ": Rocket  - " + rocket.getName());
+                Timber.d("Launch %s : Rocket - %s", 0 , rocket.getName());
 
                 JSONArray agencies = rocketObj.optJSONArray("agencies");
                 if (agencies != null) {
@@ -138,7 +139,7 @@ public class DetailLoader extends AsyncTask<String, Void, Launch> {
                         rocketAgency.setInfoURL(agencyObj.optString("infoURL"));
                         rocketAgency.setWikiURL(agencyObj.optString("wikiURL"));
 
-                        Log.d(LaunchApplication.TAG, "Launch " + 0 + ": Rocket Agency - " + rocketAgency.getName());
+                        Timber.d("Launch %s : Rocket Agency - %s", 0 , rocketAgency.getName());
                         rocketList.add(rocketAgency);
                     }
                     rocket.setAgencies(rocketList);
@@ -159,7 +160,7 @@ public class DetailLoader extends AsyncTask<String, Void, Launch> {
                         JSONObject padsObj = pads.optJSONObject(a);
                         location.setId(padsObj.optInt("id"));
                         location.setName(padsObj.optString("name"));
-                        Log.d(LaunchApplication.TAG, "Launch " + 0 + ": Location  - " + location.getName());
+                        Timber.d("Launch %s: Location  -  %s ",0, location.getName());
                         locationPads.setName(padsObj.optString("name"));
                         locationPads.setLatitude(padsObj.optDouble("latitude"));
                         locationPads.setLongitude(padsObj.optDouble("longitude"));
@@ -167,7 +168,7 @@ public class DetailLoader extends AsyncTask<String, Void, Launch> {
                         locationPads.setInfoURL(padsObj.optString("infoURL"));
                         locationPads.setWikiURL(padsObj.optString("wikiURL"));
 
-                        Log.d(LaunchApplication.TAG, "Launch " + 0 + ": Pad - " + locationPads.getName());
+                        Timber.d("Launch %s : Pad -  %s ",0, locationPads.getName());
                         JSONArray padAgencies = padsObj.optJSONArray("agencies");
                         if (padAgencies != null) {
                             List<LocationAgency> locationAgencies = new ArrayList<>();
@@ -180,7 +181,7 @@ public class DetailLoader extends AsyncTask<String, Void, Launch> {
                                 locationAgency.setInfoURL(padAgenciesObj.optString("infoURL"));
                                 locationAgency.setWikiURL(padAgenciesObj.optString("wikiURL"));
 
-                                Log.d(LaunchApplication.TAG, "Launch " + 0 + ": Pad Agency - " + locationPads.getName());
+                                Timber.d("Launch %s: Pad Agency - %s" , 0 , locationPads.getName());
                                 locationAgencies.add(locationAgency);
                             }
                         }
@@ -202,7 +203,7 @@ public class DetailLoader extends AsyncTask<String, Void, Launch> {
                     mission.setDescription(missionObj.optString("description"));
 
                     missionList.add(mission);
-                    Log.d(LaunchApplication.TAG, "Launch " + 0 + ": Mission  - " + missionList.get(c).getDescription());
+                    Timber.d("Launch %s: Mission  -  %s ", missionList.get(c).getDescription());
                 }
                 launch.setMissions(missionList);
             }

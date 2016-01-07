@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion '23.0.2'
 
     defaultConfig {
         applicationId "me.calebjones.spacelaunchnow"
@@ -23,9 +23,9 @@ android {
             proguardFile 'proguard-gson.pro'
             proguardFile 'proguard-project-app.pro'
             testProguardFile 'proguard-project-test.pro'
+            }
         }
     }
-}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -58,4 +58,5 @@ dependencies {
     compile 'com.borax12.materialdaterangepicker:library:1.2'
     compile 'hanks.xyz:smallbang-library:0.1.2'
     compile 'com.kobakei:ratethisapp:0.0.4'
+    compile 'com.jakewharton.timber:timber:4.1.0'
 }

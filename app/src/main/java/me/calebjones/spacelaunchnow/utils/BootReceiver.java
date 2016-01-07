@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import me.calebjones.spacelaunchnow.LaunchApplication;
+import timber.log.Timber;
 
 /**
  * Created by cjones on 11/10/15.
@@ -15,13 +16,13 @@ import me.calebjones.spacelaunchnow.LaunchApplication;
 public class BootReceiver extends BroadcastReceiver{
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(LaunchApplication.TAG, "Boot Received!");
+        Timber.d("Boot Received!");
 
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
         Boolean notificationCheckBox = sharedPreferences
                 .getBoolean("notifications_new_message", false);
-        Log.d(LaunchApplication.TAG, "Notification: " + String.valueOf(notificationCheckBox));
+        Timber.d("Notification: %s", String.valueOf(notificationCheckBox));
         if (notificationCheckBox) {
 //            context.startService(new Intent(context, LaunchDataService.class));
         }

@@ -29,6 +29,7 @@ import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.LaunchVehicle;
 import me.calebjones.spacelaunchnow.ui.fragment.PayloadDetail;
 import me.calebjones.spacelaunchnow.ui.fragment.SummaryDetail;
+import timber.log.Timber;
 
 
 public class LaunchDetail extends AppCompatActivity
@@ -50,6 +51,7 @@ public class LaunchDetail extends AppCompatActivity
     public String response;
     public Launch launch;
 
+    //TODO need to setTheme based on NightMode
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,7 +114,7 @@ public class LaunchDetail extends AppCompatActivity
                 locationCountryCode = launch.getLocation().getPads().
                         get(0).getAgencies().get(0).getCountryCode();
 
-                Log.v(LaunchApplication.TAG, "LaunchDetail - CountryCode length: " +
+                Timber.v("LaunchDetail - CountryCode length: %s",
                         String.valueOf(locationCountryCode.length()));
 
                 //Go through various CountryCodes and assign flag.
@@ -160,7 +162,7 @@ public class LaunchDetail extends AppCompatActivity
     }
 
     private void applyProfileLogo(String url){
-        Log.d(LaunchApplication.TAG, "LaunchDetail - Loading Profile Image url: " + url);
+        Timber.d("LaunchDetail - Loading Profile Image url: %s ", url);
 
         Picasso.with(this)
                 .load(url)
@@ -186,19 +188,18 @@ public class LaunchDetail extends AppCompatActivity
                     .placeholder(R.drawable.placeholder)
                     .crossFade()
                     .into(detail_profile_backdrop);
-            Log.d(LaunchApplication.TAG, "LaunchDetail - " + launchVehicle.getLVName() + " "
-                    + launchVehicle.getImageURL());
+            Timber.d("Glide Loading: %s %s", launchVehicle.getLVName(), launchVehicle.getImageURL());
         }
     }
 
     public void setData(String data){
         response = data;
-        Log.v(LaunchApplication.TAG, "LaunchDetail - " + response);
+        Timber.v("LaunchDetail - %s", response);
         Scanner scanner = new Scanner(response);
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             // process the line
-            Log.v(LaunchApplication.TAG, "LaunchDetail - " + line);
+            Timber.v("setData - %s ", line);
         }
         scanner.close();
     }

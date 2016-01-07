@@ -9,10 +9,11 @@ import me.calebjones.spacelaunchnow.LaunchApplication;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.RocketDataService;
+import timber.log.Timber;
 
 public class UpdateUpcomingLaunchesReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
-        Log.d(LaunchApplication.TAG, "UpdateUpcomingLaunchesReceiver - Broadcast received!");
+        Timber.d("UpdateUpcomingLaunchesReceiver - Broadcast received!");
 
         Intent update_upcoming_launches = new Intent(context, LaunchDataService.class);
         update_upcoming_launches.setAction(Strings.ACTION_GET_ALL);
