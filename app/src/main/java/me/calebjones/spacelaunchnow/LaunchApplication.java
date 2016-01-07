@@ -10,6 +10,7 @@ import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import timber.log.Timber;
 
 
 public class LaunchApplication extends Application {

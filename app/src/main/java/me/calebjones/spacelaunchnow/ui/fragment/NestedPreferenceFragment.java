@@ -14,6 +14,7 @@ import me.calebjones.spacelaunchnow.LaunchApplication;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.utils.TimeRangePickerDialogCustom;
+import timber.log.Timber;
 
 public class NestedPreferenceFragment extends PreferenceFragmentCompat implements TimeRangePickerDialogCustom.OnTimeRangeSelectedListener {
 
@@ -43,7 +44,7 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
         }
 
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            Log.d(LaunchApplication.TAG, "onSharedPreferenceChanged: " + key);
+            Timber.d("onSharedPreferenceChanged:  %s ", key);
             try {
                 if (key.equals("notifications")) {
                     if (this.valprefs.getBoolean(key, false)) {

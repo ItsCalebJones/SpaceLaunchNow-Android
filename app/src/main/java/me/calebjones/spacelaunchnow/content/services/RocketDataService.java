@@ -23,6 +23,7 @@ import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.LaunchVehicle;
+import timber.log.Timber;
 
 
 /**
@@ -40,7 +41,7 @@ public class RocketDataService extends IntentService {
     }
 
     public void onCreate() {
-        Log.d("Space Launch Now", "LaunchDataService - onCreate");
+        Timber.d("LaunchDataService - onCreate");
         super.onCreate();
     }
 
@@ -52,7 +53,7 @@ public class RocketDataService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.d("Space Launch Now", "RocketDataService - Intent received!");
+        Timber.d("RocketDataService - Intent received!");
         //TODO grab the latest Upcoming and Previous launches save to SharedPreferences.
         if (intent != null) {
             String action = intent.getAction();
@@ -107,7 +108,7 @@ public class RocketDataService extends IntentService {
 
 
         } catch (Exception e) {
-            Log.e(LaunchApplication.TAG, "RocketDataService - ERROR: " + e.getLocalizedMessage());
+            Timber.e("RocketDataService - ERROR: ", e.getLocalizedMessage());
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_FAILURE_ROCKETS);
             RocketDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
@@ -119,8 +120,8 @@ public class RocketDataService extends IntentService {
 
         try {
             JSONArray responseArray = new JSONArray(response.toString());
-            Log.d(LaunchApplication.TAG, "addToDB - Database Size: " + databaseManager.getCount() + " (Expect 0 here)");
-            Log.d(LaunchApplication.TAG, "addToDB - Adding: " + response.toString().substring(0,(response.toString().length() / 2)) + "...");
+            Timber.d("addToDB - Database Size: %s (Expect 0 here)", databaseManager.getCount());
+            Timber.d("addToDB - Adding: %s...", response.toString().substring(0,(response.toString().length() / 2)));
             for (int i = 0; i < responseArray.length(); i++) {
                 LaunchVehicle launchVehicle = new LaunchVehicle();
 
@@ -144,13 +145,13 @@ public class RocketDataService extends IntentService {
                 launchVehicle.setImageURL(vehicleObj.optString("ImageURL"));
 
                 databaseManager.addPost(launchVehicle);
-                Log.v(LaunchApplication.TAG, "addToDB - adding " + launchVehicle.getLVName() + "...");
+                Timber.v("addToDB - adding " + launchVehicle.getLVName() + "...");
             }
             //Success
-            Log.d(LaunchApplication.TAG, "addToDB - Success! Database Size: " + databaseManager.getCount());
+            Timber.d("addToDB - Success! Database Size:  %s ", databaseManager.getCount());
             return 1;
         } catch (JSONException e) {
-            Log.e(LaunchApplication.TAG, "RocketDataService - "+ e.getLocalizedMessage());
+            Timber.e("RocketDataService - "+ e.getLocalizedMessage());
             //Error
             return 0;
         }

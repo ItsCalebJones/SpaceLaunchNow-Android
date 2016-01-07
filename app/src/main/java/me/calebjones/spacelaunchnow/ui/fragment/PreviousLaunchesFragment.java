@@ -52,6 +52,7 @@ import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import timber.log.Timber;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -145,11 +146,11 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
         if (this.sharedPreference.getPreviousFirstBoot()) {
             this.sharedPreference.setPreviousFirstBoot(false);
-            Log.d("Space Launch Now", "Previous Launch Fragment: First Boot.");
+            Timber.d("Previous Launch Fragment: First Boot.");
             getDefaultDateRange();
             displayLaunches();
         } else {
-            Log.d("Space Launch Now", "Previous Launch Fragment: Not First Boot.");
+            Timber.d("Previous Launch Fragment: Not First Boot.");
             this.rocketLaunches.clear();
             getDateRange();
             displayLaunches();
@@ -305,7 +306,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
     public void fetchData() {
         String url = "https://launchlibrary.net/1.1/launch/" + this.start_date + "/" + this.end_date + "?sort=desc&limit=" + this.sharedPrefs.getString("previous_value", "100");
-        Log.d(LaunchApplication.TAG, "Sending Intent URL: " + url);
+        Timber.d("Sending Intent URL: %s");
         Intent intent = new Intent(getContext(), LaunchDataService.class);
         intent.putExtra("URL", url);
         intent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
@@ -313,7 +314,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     }
 
     public void fetchDataFiltered(String url, String filterTitle) {
-        Log.d(LaunchApplication.TAG, "Sending Intent URL: " + url);
+        Timber.d("Sending Intent URL: %s", url);
         Intent intent = new Intent(getContext(), LaunchDataService.class);
         intent.putExtra("URL", url);
         intent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
