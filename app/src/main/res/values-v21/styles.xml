@@ -33,6 +33,14 @@
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
     </style>
 
+    <style name="LightTheme.Transparent" parent="LightTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+    <style name="DarkTheme.Transparent" parent="DarkTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
     <style name="PreferenceTheme" parent="@style/PreferenceThemeOverlay">
         <item name="preferenceScreenStyle">@style/Preference.PreferenceScreen</item>
         <item name="preferenceFragmentStyle">@style/PreferenceFragment</item>

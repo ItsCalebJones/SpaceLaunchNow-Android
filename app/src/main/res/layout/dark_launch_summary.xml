@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:tag="launch_summary"
+    android:id="@+id/launch_summary"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:textAlignment="center"
+    android:transitionGroup="true"
+    tools:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/card_margin"
+            android:animateLayoutChanges="true"
+            card_view:cardBackgroundColor="@color/dark_theme_background"
+            card_view:cardCornerRadius="0dp"
+            card_view:cardElevation="4dp"
+            card_view:cardPreventCornerOverlap="true"
+            card_view:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="8dp">
+
+                <TextView
+                    android:id="@+id/launch_date_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="8dp"
+                    android:text="Launch Date"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="4dp"
+                    android:singleLine="false"
+                    android:text="Unknown Launch Date" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/View_Separator"
+                    android:padding="12dp" />
+
+                <TextView
+                    android:id="@+id/launch_window_start"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="4dp"
+                    android:singleLine="false"
+                    android:text="Launch Window Start: " />
+
+                <TextView
+                    android:id="@+id/launch_window_end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="4dp"
+                    android:singleLine="false"
+                    android:text="Launch Window End: " />
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/card_margin"
+            android:animateLayoutChanges="true"
+            card_view:cardBackgroundColor="@color/dark_theme_background"
+            card_view:cardCornerRadius="0dp"
+            card_view:cardElevation="4dp"
+            card_view:cardPreventCornerOverlap="true"
+            card_view:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="8dp">
+
+                <TextView
+                    android:id="@+id/launch_vehicle_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="8dp"
+                    android:text="Launch Vehicle Summary"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="4dp"
+                    android:singleLine="false"
+                    android:text="Unknown Launch Vehicle" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/View_Separator"
+                    android:padding="12dp" />
+
+                <TextView
+                    android:id="@+id/launch_configuration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="4dp"
+                    android:singleLine="false"
+                    android:text="Configuration: " />
+
+                <TextView
+                    android:id="@+id/launch_family"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:paddingBottom="16dp"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="4dp"
+                    android:singleLine="false"
+                    android:text="Family: " />
+
+                <TextView
+                    android:id="@+id/launch_vehicle_specs_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="4dp"
+                    android:singleLine="false"
+                    android:text="Vehicle Specifications"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@color/View_Separator"
+                    android:padding="12dp" />
+
+                <TextView
+                    android:id="@+id/launch_vehicle_specs_height"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="4dp"
+                    android:singleLine="false"
+                    android:text="Height: " />
+
+                <TextView
+                    android:id="@+id/launch_vehicle_specs_diameter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="4dp"
+                    android:singleLine="false"
+                    android:text="Diameter: " />
+
+                <TextView
+                    android:id="@+id/launch_vehicle_specs_stages"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="4dp"
+                    android:singleLine="false"
+                    android:text="Stages: " />
+
+                <TextView
+                    android:id="@+id/launch_vehicle_specs_leo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="4dp"
+                    android:singleLine="false"
+                    android:text="Payload to LEO: " />
+
+                <TextView
+                    android:id="@+id/launch_vehicle_specs_gto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:paddingBottom="16dp"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="4dp"
+                    android:singleLine="false"
+                    android:text="Payload to GTO: " />
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

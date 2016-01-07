@@ -2,7 +2,9 @@ package me.calebjones.spacelaunchnow.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -25,6 +27,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import me.calebjones.spacelaunchnow.LaunchApplication;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.DatabaseManager;
+import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.LaunchVehicle;
 import me.calebjones.spacelaunchnow.ui.fragment.PayloadDetail;
@@ -45,6 +48,9 @@ public class LaunchDetail extends AppCompatActivity
     private CircleImageView detail_profile_image;
     private TextView detail_rocket, detail_mission_location;
     private int mMaxScrollSize;
+    private SharedPreferences sharedPref;
+    private static SharedPreference sharedPreference;
+    private Context context;
 
     private String URL = "https://launchlibrary.net/1.1/launch/%s";
 
@@ -54,6 +60,26 @@ public class LaunchDetail extends AppCompatActivity
     //TODO need to setTheme based on NightMode
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        int m_theme;
+        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        this.context = getApplicationContext();
+
+        sharedPreference = SharedPreference.getInstance(this.context);
+
+        if (sharedPreference.getNightMode()) {
+            m_theme = R.style.DarkTheme_Transparent;
+        } else {
+            m_theme = R.style.LightTheme_Transparent;
+        }
+
+        if (getSharedPreferences("theme_changed", 0).getBoolean("recreate", false)) {
+            SharedPreferences.Editor editor = getSharedPreferences("theme_changed", 0).edit();
+            editor.putBoolean("recreate", false);
+            editor.apply();
+            recreate();
+        }
+
+        setTheme(m_theme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.launch_detail);
 
