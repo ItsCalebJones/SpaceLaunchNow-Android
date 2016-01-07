@@ -23,8 +23,7 @@ android {
             proguardFile 'proguard-gson.pro'
             proguardFile 'proguard-project-app.pro'
             testProguardFile 'proguard-project-test.pro'
-        }
-            debuggable true
+            }
         }
     }
 }
