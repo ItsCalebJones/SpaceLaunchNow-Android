@@ -37,6 +37,10 @@ public class LaunchApplication extends Application {
 
         sharedPreference = SharedPreference.getInstance(this);
         sharedPreference.setNightModeStatus(false);
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
     }
 
     @Override
