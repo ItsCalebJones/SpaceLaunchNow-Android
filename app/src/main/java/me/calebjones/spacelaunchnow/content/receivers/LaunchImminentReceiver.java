@@ -42,7 +42,7 @@ public class LaunchImminentReceiver extends BroadcastReceiver {
 //                priority = -1;
 //            }
 //
-//            Log.d("The Jones Theory", "NewPost - Hello World!");
+//            Timber.d("The Jones Theory", "NewPost - Hello World!");
 //            if (intent.getAction().equals(PostDownloader.NEW_POST) && notificationCheckBox){
 //
 //                //Init a DB connection
@@ -52,7 +52,7 @@ public class LaunchImminentReceiver extends BroadcastReceiver {
 //                int postID = intent.getExtras().getInt(LaunchDataService.EXTRA_NUM);
 //                byte[] bytes = intent.getByteArrayExtra("BitmapImage");
 //                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-//                Log.d("The Jones Theory-NPR", "Post - ID: " + postID );
+//                Timber.d("The Jones Theory-NPR", "Post - ID: " + postID );
 //
 //                post = databaseManager.getPostByID(postID);
 //
@@ -101,7 +101,7 @@ public class LaunchImminentReceiver extends BroadcastReceiver {
 //                NotificationManager mNotifyManager = (NotificationManager)
 //                        context.getSystemService(Context.NOTIFICATION_SERVICE);
 //                mNotifyManager.notify(NOTIF_ID, mBuilder.build());
-//                Log.d("The Jones Theory", "Notification issued for new post.");
+//                Timber.d("The Jones Theory", "Notification issued for new post.");
 //            }
         }
     }

@@ -30,6 +30,7 @@ import me.calebjones.spacelaunchnow.content.services.RocketDataService;
 import me.calebjones.spacelaunchnow.ui.activity.SettingsActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.PreviousLaunchesFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.LaunchesFragment;
+import timber.log.Timber;
 
 
 public class MainActivity extends AppCompatActivity
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         public void onReceive(Context context, Intent intent) {
-            Log.d(LaunchApplication.TAG, "LaunchBroadcastReceiver - Broadcast received!");
+            Timber.d("Broadcast received!");
             if (intent != null) {
                 String action = intent.getAction();
                 Fragment fragment;

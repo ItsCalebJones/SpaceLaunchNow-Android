@@ -10,6 +10,7 @@ import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import timber.log.Timber;
 
 
 public class LaunchApplication extends Application {
@@ -37,6 +38,10 @@ public class LaunchApplication extends Application {
 
         sharedPreference = SharedPreference.getInstance(this);
         sharedPreference.setNightModeStatus(false);
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
     }
 
     @Override
