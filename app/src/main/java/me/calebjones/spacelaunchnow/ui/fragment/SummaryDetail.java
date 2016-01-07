@@ -1,6 +1,9 @@
 package me.calebjones.spacelaunchnow.ui.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,25 +14,34 @@ import android.widget.TextView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.loader.DetailLoader;
+import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetail;
 
-/**
- * Created by cjones on 12/24/15.
- */
 public class SummaryDetail extends Fragment {
+
+    private SharedPreferences sharedPref;
+    private static SharedPreference sharedPreference;
+    private Context context;
 
     public static Launch detailLaunch;
     private TextView launch_date_title, date, launch_window_start, launch_window_end;
 
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.launch_summary,
-                container, false);
+        View view;
+        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        this.context = getContext();
+
+        sharedPreference = SharedPreference.getInstance(this.context);
+
+        if (sharedPreference.getNightMode()) {
+            view = inflater.inflate(R.layout.dark_launch_summary, container, false);
+        } else {
+            view = inflater.inflate(R.layout.light_launch_summary, container, false);
+        }
 
         launch_date_title = (TextView) view.findViewById(R.id.launch_date_title);
         date = (TextView) view.findViewById(R.id.date);
