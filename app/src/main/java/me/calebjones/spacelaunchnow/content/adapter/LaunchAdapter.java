@@ -98,16 +98,13 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
         double dlat = launchItem.getLocation().getPads().get(0).getLatitude();
         double dlon = launchItem.getLocation().getPads().get(0).getLongitude();
 
-        long lat = (long) dlat;
-        long lon = (long) dlon;
-
-        if (lat == 0 && lon == 0) {
+        if (dlat == 0 && dlon == 0) {
             if (holder.map_view != null) {
                 holder.map_view.setVisibility(View.GONE);
                 holder.exploreFab.setVisibility(View.GONE);
             }
         } else {
-            holder.setMapLocation(lat, lon);
+            holder.setMapLocation(dlat, dlon);
         }
 
         SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");

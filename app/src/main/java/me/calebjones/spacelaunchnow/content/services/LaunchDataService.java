@@ -2,10 +2,13 @@ package me.calebjones.spacelaunchnow.content.services;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.provider.SyncStateContract;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -70,20 +73,19 @@ public class LaunchDataService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Timber.d("LaunchDataService - Intent received:  %s ", intent.getAction());
-        //TODO grab the latest Upcoming and Previous launches save to SharedPreferences.
         String action = intent.getAction();
         if (Strings.ACTION_GET_ALL.equals(action)){
             if (this.sharedPref.getBoolean("background", true)) {
                 scheduleLaunchUpdates();
             }
-            Timber.d("LaunchDataService - onHandleIntent: %s | Background: ",action, this.sharedPref.getBoolean("background", true));
+            Timber.d("LaunchDataService - onHandleIntent: %s | Background: %s",action, this.sharedPref.getBoolean("background", true));
             getUpcomingLaunches();
             getPreviousLaunches(intent.getStringExtra("URL"));
         } else if (Strings.ACTION_GET_UP_LAUNCHES.equals(action)) {
             if (this.sharedPref.getBoolean("background", true)) {
                 scheduleLaunchUpdates();
             }
-            Timber.d("LaunchDataService - onHandleIntent: %s | Background: ",action, this.sharedPref.getBoolean("background", true));
+            Timber.d("LaunchDataService - onHandleIntent: %s | Background: %s",action, this.sharedPref.getBoolean("background", true));
             getUpcomingLaunches();
         } else if (Strings.ACTION_GET_PREV_LAUNCHES.equals(action)) {
             Timber.d("LaunchDataService - onHandleIntent:  %s ", action);
@@ -173,6 +175,10 @@ public class LaunchDataService extends IntentService {
                 mBuilder.setContentTitle("LaunchData Worked!")
                         .setSmallIcon(R.drawable.ic_notification)
                         .setAutoCancel(true);
+
+                NotificationManager mNotifyManager = (NotificationManager)
+                        getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
 
                 this.sharedPreference.setUpComingLaunches(upcomingLaunchList);
 
@@ -463,14 +469,14 @@ public class LaunchDataService extends IntentService {
         if (m.matches()) {
             int hrs = Integer.parseInt(m.group(1));
             interval = (long) hrs * 60 * 60 * 1000;
-            Timber.d("LaunchDataService - Notification Timer: %s to millisecond ",notificationTimer, interval);
+            Timber.d("LaunchDataService - Notification Timer: %s to millisecond %s",notificationTimer, interval);
 
             long nextUpdate = Calendar.getInstance().getTimeInMillis() + interval;
-            Timber.d("LaunchDataService - Scheduling Alarm at %s with interval of ",nextUpdate, interval);
+            Timber.d("LaunchDataService - Scheduling Alarm at %s with interval of %s",nextUpdate, interval);
             alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, nextUpdate, interval,
                     PendingIntent.getBroadcast(this, 165435, new Intent(Strings.ACTION_UPDATE_UP_LAUNCHES), PendingIntent.FLAG_UPDATE_CURRENT));
         } else {
-            Timber.e(LaunchApplication.TAG, "LaunchDataService - Error setting alarm, failed to change %s to milliseconds", notificationTimer);
+            Timber.e("LaunchDataService - Error setting alarm, failed to change %s to milliseconds", notificationTimer);
         }
     }
 }
