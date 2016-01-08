@@ -18,6 +18,7 @@ public final class Strings {
     public static final String ACTION_UPDATE_UP_LAUNCHES = "UPDATE_UP_LAUNCHES";
     public static final String ACTION_UPDATE_PREV_LAUNCHES = "UPDATE_PREV_LAUNCHES";
     public static final String ACTION_UPDATE_WEATHER_STATUS = "UPDATE_WEATHER_STATUS";
+    public static int NOTIF_ID = 568974;
 
     private Strings() {
     }

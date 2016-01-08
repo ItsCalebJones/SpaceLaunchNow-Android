@@ -74,8 +74,8 @@ public class SummaryDetail extends Fragment {
         date.setText(dateText);
 
         //TODO: Get launch window only if wstamp and westamp is available, hide otherwise.
-        launch_window_start.setText("Window Start: " + detailLaunch.getWindowstart());
-        launch_window_end.setText("Window End: " + detailLaunch.getWindowend());
+        launch_window_start.setText(String.format("Window Start: %s", detailLaunch.getWindowstart()));
+        launch_window_end.setText(String.format("Window End: %s", detailLaunch.getWindowend()));
     }
 
     @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {

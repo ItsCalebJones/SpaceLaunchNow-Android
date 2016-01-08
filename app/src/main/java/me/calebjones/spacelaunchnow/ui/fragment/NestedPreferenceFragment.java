@@ -33,7 +33,7 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
     private static final String TAG_KEY = "NESTED_KEY";
     public static final String TIMERANGEPICKER_TAG = "timerangepicker";
     private TextView toolbarTitle;
-    private static SharedPreference sharedPreference;
+    private static SharedPreference sharedPreferences;
     private Context context;
 
     class SharedPreferenceListener implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -92,6 +92,8 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
     }
 
     public void onResume() {
+        sharedPreferences = SharedPreference.getInstance(this.context);
+        sharedPreferences.getNightMode();
         super.onResume();
     }
 
@@ -132,9 +134,37 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
     @Override
     public void onTimeRangeSelected(int startHour, int startMin, int endHour, int endMin) {
         this.context = getContext();
-        sharedPreference = SharedPreference.getInstance(this.context);
-        sharedPreference.setNightModeStart(startHour + ":" + startMin);
-        sharedPreference.setNightModeEnd(endHour + ":" + endMin);
+        String startH, startM, endH, endM;
+
+        //Format Values to something more extensible.
+        if (startHour < 10){
+            startH = "0" + startHour;
+        } else {
+            startH = String.valueOf(startHour);
+        }
+
+        if (startMin < 10){
+            startM = "0" + startMin;
+        } else {
+            startM = String.valueOf(startMin);
+        }
+
+        if (endHour < 10){
+            endH = "0" + endHour;
+        } else {
+            endH = String.valueOf(endHour);
+        }
+
+        if (endMin < 10){
+            endM = "0" + endMin;
+        } else {
+            endM = String.valueOf(endMin);
+        }
+
+        sharedPreferences = SharedPreference.getInstance(this.context);
+        sharedPreferences.setNightModeStart(startH + ":" + startM);
+        sharedPreferences.setNightModeEnd(endH + ":" + endM);
+        sharedPreferences.getNightMode();
     }
 
 }

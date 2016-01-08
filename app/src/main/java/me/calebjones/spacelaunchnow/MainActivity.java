@@ -95,9 +95,11 @@ public class MainActivity extends AppCompatActivity
         sharedPreference = SharedPreference.getInstance(this.context);
 
         if (sharedPreference.getNightMode()) {
+            sharedPreference.setNightModeStatus(true);
             m_theme = R.style.DarkTheme_NoActionBar;
             m_layout = R.layout.dark_activity_main;
         } else {
+            sharedPreference.setNightModeStatus(false);
             m_theme = R.style.LightTheme_NoActionBar;
             m_layout = R.layout.activity_main;
         }

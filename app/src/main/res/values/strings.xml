@@ -1,19 +1,14 @@
 <resources>
     <string name="app_name">Space Launch Now</string>
     <string name="title_activity_main">MainActivity</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="action_settings">Settings</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="status_go">" GO"</string>
     <string name="status_nogo">" NO GO"</string>
     <string name="status_success">" Successful Launch"</string>
     <string name="status_failure">" Launch Failure"</string>
-    <string name="lorem_ipsum">           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ac malesuada dolor. Nulla velit augue, vulputate nec turpis id, malesuada commodo risus. Suspendisse ac posuere urna. Fusce eu cursus lacus. Aliquam dignissim sodales urna, id porttitor lectus rhoncus sit amet. Mauris semper neque libero, at ornare eros ullamcorper non. Integer condimentum a dolor in commodo. Sed nec nunc a metus ullamcorper dignissim a blandit eros. Nam a tortor nisi. Curabitur vehicula maximus metus vel imperdiet.\n\n
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ac malesuada dolor. Nulla velit augue, vulputate nec turpis id, malesuada commodo risus. Suspendisse ac posuere urna. Fusce eu cursus lacus. Aliquam dignissim sodales urna, id porttitor lectus rhoncus sit amet. Mauris semper neque libero, at ornare eros ullamcorper non. Integer condimentum a dolor in commodo. Sed nec nunc a metus ullamcorper dignissim a blandit eros. Nam a tortor nisi. Curabitur vehicula maximus metus vel imperdiet.\n\n
 
 Morbi vel lorem enim. Nullam eget metus lectus. Mauris a leo velit. Suspendisse iaculis venenatis lacinia. Donec accumsan at turpis vitae sodales. Proin auctor egestas nulla et lobortis. Nam tempus vehicula orci ac sollicitudin. Nam ut elit vitae turpis placerat egestas id et orci. \n\n
 
