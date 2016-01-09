@@ -15,7 +15,6 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,7 +24,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,11 +31,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import me.calebjones.spacelaunchnow.LaunchApplication;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.ui.activity.LaunchDetail;
+import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 import timber.log.Timber;
 
 /**
@@ -288,7 +285,7 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
                 case R.id.exploreButton:
                     Timber.d("Explore: %s", launchList.get(position).getId());
                     Launch launch = launchList.get(position);
-                    Intent exploreIntent = new Intent(mContext, LaunchDetail.class);
+                    Intent exploreIntent = new Intent(mContext, LaunchDetailActivity.class);
                     exploreIntent.putExtra("launch", launch);
                     mContext.startActivity(exploreIntent);
                     break;

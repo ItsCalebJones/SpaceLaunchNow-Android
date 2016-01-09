@@ -147,7 +147,7 @@ public class LaunchDataService extends IntentService {
         HttpURLConnection urlConnection = null;
         try {
             /* forming th java.net.URL object */
-            String value = this.sharedPref.getString("value", "5");
+            String value = this.sharedPref.getString("upcoming_value", "5");
             URL url = new URL("https://launchlibrary.net/1.1.1/launch/next/" + value);
 
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -190,6 +190,17 @@ public class LaunchDataService extends IntentService {
 
         } catch (Exception e) {
             Timber.e("LaunchDataService - getUpcomingLaunches ERROR: %s", e.getLocalizedMessage());
+
+            //TODO Remove this before release.
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
+            mBuilder.setContentTitle("LaunchData Failed!")
+                    .setSmallIcon(R.drawable.ic_notification)
+                    .setAutoCancel(true);
+
+            NotificationManager mNotifyManager = (NotificationManager)
+                    getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
+
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_FAILURE_UPC_LAUNCHES);
             LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
@@ -247,7 +258,7 @@ public class LaunchDataService extends IntentService {
                     if (agencies != null) {
                         List<RocketAgency> rocketList = new ArrayList<>();
                         for (int a = 0; a < agencies.length(); a++) {
-                            JSONObject agencyObj = launchesArray.optJSONObject(a);
+                            JSONObject agencyObj = agencies.optJSONObject(a);
                             rocketAgency.setName(agencyObj.optString("name"));
                             rocketAgency.setAbbrev(agencyObj.optString("abbrev"));
                             rocketAgency.setCountryCode(agencyObj.optString("countryCode"));
@@ -264,9 +275,6 @@ public class LaunchDataService extends IntentService {
 
                 //Start Parsing Locations
                 if (locationObj != null) {
-                    LocationAgency locationAgency = new LocationAgency();
-                    Pad locationPads = new Pad();
-
                     JSONArray pads = locationObj.optJSONArray("pads");
 
                     if (pads != null) {
@@ -275,6 +283,7 @@ public class LaunchDataService extends IntentService {
                             JSONObject padsObj = pads.optJSONObject(a);
                             location.setId(padsObj.optInt("id"));
                             location.setName(padsObj.optString("name"));
+                            Pad locationPads = new Pad();
                             locationPads.setName(padsObj.optString("name"));
                             locationPads.setLatitude(padsObj.optDouble("latitude"));
                             locationPads.setLongitude(padsObj.optDouble("longitude"));
@@ -287,6 +296,7 @@ public class LaunchDataService extends IntentService {
                                 List<LocationAgency> locationAgencies = new ArrayList<>();
                                 for (int b = 0; b < padAgencies.length(); b++) {
                                     JSONObject padAgenciesObj = padAgencies.optJSONObject(b);
+                                    LocationAgency locationAgency = new LocationAgency();
                                     locationAgency.setName(padAgenciesObj.optString("name"));
                                     locationAgency.setAbbrev(padAgenciesObj.optString("abbrev"));
                                     locationAgency.setCountryCode(padAgenciesObj
@@ -371,7 +381,7 @@ public class LaunchDataService extends IntentService {
                     if (agencies != null) {
                         List<RocketAgency> rocketList = new ArrayList<>();
                         for (int a = 0; a < agencies.length(); a++) {
-                            JSONObject agencyObj = launchesArray.optJSONObject(a);
+                            JSONObject agencyObj = agencies.optJSONObject(a);
                             rocketAgency.setName(agencyObj.optString("name"));
                             rocketAgency.setAbbrev(agencyObj.optString("abbrev"));
                             rocketAgency.setCountryCode(agencyObj.optString("countryCode"));
@@ -388,7 +398,7 @@ public class LaunchDataService extends IntentService {
 
                 //Start Parsing Locations
                 if (locationObj != null) {
-                    LocationAgency locationAgency = new LocationAgency();
+
                     Pad locationPads = new Pad();
 
                     JSONArray pads = locationObj.optJSONArray("pads");
@@ -412,6 +422,7 @@ public class LaunchDataService extends IntentService {
                                 List<LocationAgency> locationAgencies = new ArrayList<>();
                                 for (int b = 0; b < padAgencies.length(); b++) {
                                     JSONObject padAgenciesObj = padAgencies.optJSONObject(b);
+                                    LocationAgency locationAgency = new LocationAgency();
                                     locationAgency.setName(padAgenciesObj.optString("name"));
                                     locationAgency.setAbbrev(padAgenciesObj.optString("abbrev"));
                                     locationAgency.setCountryCode(padAgenciesObj
@@ -474,7 +485,7 @@ public class LaunchDataService extends IntentService {
             long nextUpdate = Calendar.getInstance().getTimeInMillis() + interval;
             Timber.d("LaunchDataService - Scheduling Alarm at %s with interval of %s",nextUpdate, interval);
             alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, nextUpdate, interval,
-                    PendingIntent.getBroadcast(this, 165435, new Intent(Strings.ACTION_UPDATE_UP_LAUNCHES), PendingIntent.FLAG_UPDATE_CURRENT));
+                    PendingIntent.getBroadcast(this, 165435, new Intent(Strings.ACTION_UPDATE_UP_LAUNCHES), 0));
         } else {
             Timber.e("LaunchDataService - Error setting alarm, failed to change %s to milliseconds", notificationTimer);
         }

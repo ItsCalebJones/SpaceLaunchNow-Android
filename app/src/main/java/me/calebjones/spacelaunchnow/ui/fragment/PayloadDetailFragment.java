@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 
-public class PayloadDetail extends Fragment {
+public class PayloadDetailFragment extends Fragment {
 
     private SharedPreferences sharedPref;
     private static SharedPreference sharedPreference;
@@ -40,7 +40,7 @@ public class PayloadDetail extends Fragment {
     }
 
     public static Fragment newInstance() {
-        return new PayloadDetail();
+        return new PayloadDetailFragment();
     }
 
 }

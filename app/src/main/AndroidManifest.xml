@@ -25,7 +25,7 @@
         </activity>
 
         <activity
-            android:name=".ui.activity.LaunchDetail"
+            android:name=".ui.activity.LaunchDetailActivity"
             android:theme="@style/AppTheme.ActionBar.Transparent"/>
 
         <meta-data
