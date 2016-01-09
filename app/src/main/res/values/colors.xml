@@ -6,6 +6,8 @@
     <color name="colorAccent">#448AFF</color>
     <color name="colorAccentDark">#1976D2</color>
     <color name="colorAccentLight">#03A9F4</color>
+    <color name="colorTextPrimary">#212121</color>
+    <color name="colorTextSecondary">#727272</color>
 
     <color name="colorGo">#4CAF50</color>
     <color name="View_Separator">#B6B6B6</color>

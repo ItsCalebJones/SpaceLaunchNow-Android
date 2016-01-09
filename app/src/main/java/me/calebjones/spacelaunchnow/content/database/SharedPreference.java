@@ -53,6 +53,7 @@ public class SharedPreference {
     public static String PREFS_PREVIOUS_TITLE;
     public static String PREFS_CURRENT_START_DATE;
     public static String PREFS_CURRENT_END_DATE;
+    public static String PREFS_LAUNCH_LIST_FAVS;
 
 
     static {
@@ -76,6 +77,7 @@ public class SharedPreference {
         PREFS_PREVIOUS_TITLE = "CURRENT_YEAR_RANGE";
         PREFS_CURRENT_START_DATE = "CURRENT_START_DATE";
         PREFS_CURRENT_END_DATE = "CURRENT_END_DATE";
+        PREFS_LAUNCH_LIST_FAVS = "LAUNCH_LIST_FAVS";
         INSTANCE = null;
     }
 
@@ -235,6 +237,48 @@ public class SharedPreference {
     public boolean getPreviousFirstBoot() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         return this.sharedPrefs.getBoolean(PREFS_PREVIOUS_FIRST_BOOT, true);
+    }
+
+
+    /* PREFS_LAUNCH_LIST_FAVS Methods
+     * The next four methods are for adding, setting, getting, and removing Favorite launches.
+     */
+    public void addFavLaunch(Launch launch) {
+        List<Launch> rocketLaunches = getFavoriteLaunches();
+        if (rocketLaunches == null) {
+            rocketLaunches = new ArrayList();
+        }
+        rocketLaunches.add(launch);
+        setFavLaunch(rocketLaunches);
+    }
+
+    public void setFavLaunch(List<Launch> launches) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.serializeSpecialFloatingPointValues();
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+        this.prefsEditor.putString(PREFS_LAUNCH_LIST_FAVS, gson.toJson(launches));
+        this.prefsEditor.apply();
+    }
+
+    public void removeFavLaunch() {
+        setUpComingLaunches(new ArrayList());
+    }
+
+    public List<Launch> getFavoriteLaunches() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        if (!this.sharedPrefs.contains(PREFS_LAUNCH_LIST_FAVS)) {
+            return null;
+        }
+        Gson gson = new Gson();
+        List<Launch> productFromShared;
+        SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        String jsonPreferences = sharedPref.getString(PREFS_LAUNCH_LIST_FAVS, null);
+        Type type = new TypeToken<List<Launch>>() {}.getType();
+        productFromShared = gson.fromJson(jsonPreferences, type);
+
+        return productFromShared;
     }
 
     public void setUpComingLaunches(List<Launch> launches) {

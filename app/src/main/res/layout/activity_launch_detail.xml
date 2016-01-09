@@ -18,7 +18,7 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/main.collapsing"
             android:layout_width="match_parent"
-            android:layout_height="256dp"
+            android:layout_height="224dp"
             android:fitsSystemWindows="true"
             app:expandedTitleMarginStart="48dp"
             app:contentScrim="?attr/colorPrimary"
@@ -119,9 +119,10 @@
     <android.support.design.widget.FloatingActionButton
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:id="@+id/fab_favorite"
         android:elevation="8dp"
         android:layout_gravity="bottom|right|end"
-        android:src="@drawable/ic_open_in_browser_white"
+        android:src="@drawable/ic_favorite_border"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:clickable="true"
         />

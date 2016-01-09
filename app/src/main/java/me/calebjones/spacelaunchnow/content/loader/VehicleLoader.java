@@ -2,7 +2,6 @@ package me.calebjones.spacelaunchnow.content.loader;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,14 +12,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
-import me.calebjones.spacelaunchnow.LaunchApplication;
 import me.calebjones.spacelaunchnow.content.database.DatabaseManager;
-import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.LaunchVehicle;
-import me.calebjones.spacelaunchnow.ui.activity.LaunchDetail;
 import timber.log.Timber;
 
 
