@@ -5,37 +5,41 @@
         <item
             android:id="@+id/menu_launches"
             android:checked="true"
-            android:icon="@drawable/ic_satellite"
+            android:icon="@drawable/ic_mission"
             android:title="Launches" />
         <item
-            android:id="@+id/menu_history"
-            android:icon="@drawable/ic_history"
-            android:title="Historical"/>
-        <item
             android:id="@+id/menu_missions"
-            android:icon="@drawable/ic_mission"
-            android:title="Missions"/>
+            android:icon="@drawable/ic_satellite"
+            android:title="Missions" />
         <item
             android:id="@+id/menu_vehicle"
             android:icon="@drawable/ic_rocket"
-            android:title="Vehicles"/>
+            android:title="Vehicles" />
         <item
             android:id="@+id/menu_favorites"
-            android:icon="@drawable/ic_bookmarked"
-            android:title="Favorites"/>
-
+            android:icon="@drawable/ic_favorite"
+            android:title="Favorites" />
+        <item
+            android:checkable="false"
+            android:id="@+id/menu_launch"
+            android:icon="@drawable/ic_open_in_browser"
+            android:title="Launch Library" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="Other">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:checkable="false"
+                android:id="@+id/Settings"
+                android:title="Settings" />
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:checkable="false"
+                android:id="@+id/Help"
+                android:title="Help" />
+            <item
+                android:checkable="false"
+                android:id="@+id/Send_feedback"
+                android:title="Send feedback" />
         </menu>
     </item>
 

@@ -53,7 +53,7 @@
                     android:layout_gravity="center|left"
                     android:layout_marginLeft="4dp"
                     android:padding="8dp"
-                    android:src="@drawable/ic_rocket" />
+                    android:src="@drawable/ic_mission" />
 
                 <TextView
                     android:id="@+id/launch_rocket"

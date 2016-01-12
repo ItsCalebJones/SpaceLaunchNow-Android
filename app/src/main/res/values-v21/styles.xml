@@ -4,6 +4,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@color/colorTextPrimary</item>
+        <item name="android:textColorSecondary">@color/colorTextSecondary</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
         <item name="android:windowActivityTransitions">true</item>
@@ -23,6 +25,7 @@
         <item name="colorPrimary">@color/darkPrimary</item>
         <item name="colorPrimaryDark">@color/darkPrimary_dark</item>
         <item name="colorAccent">@color/darkAccent</item>
+
         <item name="android:statusBarColor">@color/darkPrimary_dark</item>
         <item name="colorControlNormal">@color/darkIcons</item>
         <item name="android:windowActivityTransitions">true</item>
@@ -31,6 +34,14 @@
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
+    </style>
+
+    <style name="LightTheme.Transparent" parent="LightTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+    <style name="DarkTheme.Transparent" parent="DarkTheme">
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <style name="PreferenceTheme" parent="@style/PreferenceThemeOverlay">

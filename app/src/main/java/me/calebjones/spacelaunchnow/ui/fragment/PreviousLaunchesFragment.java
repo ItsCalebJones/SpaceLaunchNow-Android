@@ -34,7 +34,9 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.borax12.materialdaterangepicker.date.DatePickerDialog;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.github.rahatarmanahmed.cpv.CircularProgressView;
 
+import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -71,6 +73,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     private int mScrollPosition;
     private FloatingActionButton agency, vehicle, country;
     private int mScrollOffset = 4;
+    private static final Field sChildFragmentManagerField;
 
 
     private StaggeredGridLayoutManager staggeredLayoutManager;
@@ -83,7 +86,6 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         this.sharedPreference = SharedPreference.getInstance(getContext());
         this.sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         this.rocketLaunches = new ArrayList();
@@ -148,7 +150,6 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
             this.sharedPreference.setPreviousFirstBoot(false);
             Timber.d("Previous Launch Fragment: First Boot.");
             getDefaultDateRange();
-            displayLaunches();
         } else {
             Timber.d("Previous Launch Fragment: Not First Boot.");
             this.rocketLaunches.clear();
@@ -178,6 +179,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                                 switch (which) {
+                                    //TODO call a method to fetchData with current data.
                                     case 0:
                                         newURL = "https://launchlibrary.net/1.1.1/launch/" + start_date + "/" + end_date + "/NASA?sort=desc&limit=200";
                                         adapter.clear();
@@ -261,6 +263,10 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         ((MainActivity) getActivity()).setActionBarTitle(this.sharedPreference.getPreviousTitle());
     }
 
+    public void recreate(){
+        recreate();
+    }
+
     private String formatDatesForTitle(String start_date) {
         SimpleDateFormat in = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat out = new SimpleDateFormat("LLL yyyy");
@@ -305,12 +311,20 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     }
 
     public void fetchData() {
-        String url = "https://launchlibrary.net/1.1/launch/" + this.start_date + "/" + this.end_date + "?sort=desc&limit=" + this.sharedPrefs.getString("previous_value", "100");
+        showLoading();
+        String url = "https://launchlibrary.net/1.1/launch/" + this.start_date + "/" + this.end_date + "?sort=desc&limit=" + this.sharedPrefs.getString("previous_value", "1000");
         Timber.d("Sending Intent URL: %s");
         Intent intent = new Intent(getContext(), LaunchDataService.class);
         intent.putExtra("URL", url);
         intent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
         getContext().startService(intent);
+    }
+
+    private void showLoading() {
+        CircularProgressView progressView = (CircularProgressView)
+                view.findViewById(R.id.progress_View);
+        progressView.setVisibility(View.VISIBLE);
+        progressView.startAnimation();
     }
 
     public void fetchDataFiltered(String url, String filterTitle) {
@@ -479,6 +493,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
     @Override
     public void onResume() {
+        Timber.d("OnResume!");
         setTitle();
         super.onResume();
     }
@@ -490,16 +505,35 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         fetchData();
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
     private void fabSlideOut() {
         menu.animate().translationX(menu.getWidth() + 250).setInterpolator(new AccelerateInterpolator(1)).start();
     }
 
     private void fabSlideIn() {
         menu.animate().translationX(0).setInterpolator(new DecelerateInterpolator(4)).start();
+    }
+
+    static {
+        Field f = null;
+        try {
+            f = Fragment.class.getDeclaredField("mChildFragmentManager");
+            f.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            Timber.e("Error getting mChildFragmentManager field %s", e);
+        }
+        sChildFragmentManagerField = f;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        if (sChildFragmentManagerField != null) {
+            try {
+                sChildFragmentManagerField.set(this, null);
+            } catch (Exception e) {
+                Timber.e("Error setting mChildFragmentManager field %s", e);
+            }
+        }
     }
 }

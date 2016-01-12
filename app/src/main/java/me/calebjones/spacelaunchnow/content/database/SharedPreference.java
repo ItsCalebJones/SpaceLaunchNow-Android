@@ -1,22 +1,27 @@
 package me.calebjones.spacelaunchnow.content.database;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TooManyListenersException;
 
 import me.calebjones.spacelaunchnow.content.models.Launch;
+import me.calebjones.spacelaunchnow.content.models.Mission;
 import timber.log.Timber;
 
 /**
@@ -31,6 +36,7 @@ public class SharedPreference {
 
     public static String PREFS_LAUNCH_LIST_PREVIOUS;
     public static String PREFS_LAUNCH_LIST_UPCOMING;
+    public static String PREFS_MISSION_LIST_UPCOMING;
     public static String PREFS_NAME;
     public static String PREFS_FIRST_BOOT;
     public static String PREFS_POSITION;
@@ -49,6 +55,7 @@ public class SharedPreference {
     public static String PREFS_PREVIOUS_TITLE;
     public static String PREFS_CURRENT_START_DATE;
     public static String PREFS_CURRENT_END_DATE;
+    public static String PREFS_LAUNCH_LIST_FAVS;
 
 
     static {
@@ -59,6 +66,7 @@ public class SharedPreference {
         PREFS_POSITION = "POSITION_VALUE";
         PREFS_LAUNCH_LIST_UPCOMING = "LAUNCH_LIST_UPCOMING";
         PREFS_LAUNCH_LIST_PREVIOUS = "LAUNCH_LIST_PREVIOUS";
+        PREFS_MISSION_LIST_UPCOMING = "MISSION_LIST";
         PREFS_POSITION_LIST_UPCOMING = "POSITION_LIST_UPCOMING";
         PREFS_POSITION_LIST_PREVIOUS = "POSITION_LIST_PREVIOUS";
         PREFS_PREVIOUS_FILTER_TEXT = "PREVIOUS_FILTER_TEXT";
@@ -72,6 +80,7 @@ public class SharedPreference {
         PREFS_PREVIOUS_TITLE = "CURRENT_YEAR_RANGE";
         PREFS_CURRENT_START_DATE = "CURRENT_START_DATE";
         PREFS_CURRENT_END_DATE = "CURRENT_END_DATE";
+        PREFS_LAUNCH_LIST_FAVS = "LAUNCH_LIST_FAVS";
         INSTANCE = null;
     }
 
@@ -98,43 +107,66 @@ public class SharedPreference {
         boolean dark_theme = this.sharedPrefs.getBoolean("theme", false);
         boolean auto_theme = this.sharedPrefs.getBoolean("auto_theme", false);
 
-        Date date;
-        Date dateCompareOne;
-        Date dateCompareTwo;
+        Calendar now = Calendar.getInstance();
 
-        String startTime = INSTANCE.getNightModeStart();
-        String endTime = INSTANCE.getNightModeEnd();
+        String startTime = INSTANCE.getNightModeStart() + ":00";
+        String endTime = INSTANCE.getNightModeEnd() + ":00";
+        String currentH, currentM, currentS;
+
+        //Format Values to something more extensible.
+        if (now.get(Calendar.HOUR_OF_DAY) < 10){
+            currentH = "0" + now.get(Calendar.HOUR_OF_DAY);
+        } else {
+            currentH = String.valueOf(now.get(Calendar.HOUR_OF_DAY));
+        }
+
+        if (now.get(Calendar.MINUTE) < 10){
+            currentM = "0" + now.get(Calendar.MINUTE);
+        } else {
+            currentM = String.valueOf(now.get(Calendar.MINUTE));
+        }
+
+        if (now.get(Calendar.SECOND) < 10){
+            currentS = "0" + now.get(Calendar.SECOND);
+        } else {
+            currentS = String.valueOf(now.get(Calendar.SECOND));
+        }
+
+        String currentTime = currentH + ":" + currentM + ":" + currentS;
 
         if (dark_theme) {
             if (auto_theme) {
-                Calendar now = Calendar.getInstance();
-
-                int hour = now.get(Calendar.HOUR);
-                int minute = now.get(Calendar.MINUTE);
-
-                date = parseDate(hour + ":" + minute);
-                dateCompareOne = parseDate(startTime);
-                dateCompareTwo = parseDate(endTime);
-
-                if (dateCompareOne.before(date) && dateCompareTwo.after(date)) {
-                    return true;
+                try {
+                    if(isTimeBetweenTwoTime(startTime, endTime, currentTime)){
+                        if(!INSTANCE.getNightModeStatus()){
+                            INSTANCE.setNightModeStatus(true);
+                            Toast.makeText(appContext, "Auto-Theme switching to night mode!",Toast.LENGTH_LONG).show();
+                            Intent i = appContext.getPackageManager()
+                                    .getLaunchIntentForPackage( appContext.getPackageName() );
+                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            appContext.startActivity(i);
+                        }
+                        return true;
+                    } else {
+                        if(INSTANCE.getNightModeStatus()){
+                            INSTANCE.setNightModeStatus(false);
+                            Toast.makeText(appContext, "Auto-Theme switching to day mode!",Toast.LENGTH_LONG).show();
+                            Intent i = appContext.getPackageManager()
+                                    .getLaunchIntentForPackage( appContext.getPackageName() );
+                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            appContext.startActivity(i);
+                        }
+                        return false;
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    return false;
                 }
             } else {
                 return true;
             }
         } else {
             return false;
-        }
-        return false;
-    }
-
-    private Date parseDate(String date) {
-        SimpleDateFormat inputParser = new SimpleDateFormat("kk:mm");
-
-        try {
-            return inputParser.parse(date);
-        } catch (java.text.ParseException e) {
-            return new Date(0);
         }
     }
 
@@ -210,6 +242,48 @@ public class SharedPreference {
         return this.sharedPrefs.getBoolean(PREFS_PREVIOUS_FIRST_BOOT, true);
     }
 
+
+    /* PREFS_LAUNCH_LIST_FAVS Methods
+     * The next four methods are for adding, setting, getting, and removing Favorite launches.
+     */
+    public void addFavLaunch(Launch launch) {
+        List<Launch> rocketLaunches = getFavoriteLaunches();
+        if (rocketLaunches == null) {
+            rocketLaunches = new ArrayList();
+        }
+        rocketLaunches.add(launch);
+        setFavLaunch(rocketLaunches);
+    }
+
+    public void setFavLaunch(List<Launch> launches) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.serializeSpecialFloatingPointValues();
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+        this.prefsEditor.putString(PREFS_LAUNCH_LIST_FAVS, gson.toJson(launches));
+        this.prefsEditor.apply();
+    }
+
+    public void removeFavLaunch() {
+        setUpComingLaunches(new ArrayList());
+    }
+
+    public List<Launch> getFavoriteLaunches() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        if (!this.sharedPrefs.contains(PREFS_LAUNCH_LIST_FAVS)) {
+            return null;
+        }
+        Gson gson = new Gson();
+        List<Launch> productFromShared;
+        SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        String jsonPreferences = sharedPref.getString(PREFS_LAUNCH_LIST_FAVS, null);
+        Type type = new TypeToken<List<Launch>>() {}.getType();
+        productFromShared = gson.fromJson(jsonPreferences, type);
+
+        return productFromShared;
+    }
+
     public void setUpComingLaunches(List<Launch> launches) {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
@@ -222,6 +296,58 @@ public class SharedPreference {
 
     public void removeUpcomingLaunches() {
         setUpComingLaunches(new ArrayList());
+    }
+
+    public void setMissionList(List<Mission> missions) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.serializeSpecialFloatingPointValues();
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+        this.prefsEditor.putString(PREFS_MISSION_LIST_UPCOMING, gson.toJson(missions));
+        this.prefsEditor.apply();
+    }
+
+    public void removeMissionsList() {
+        setMissionList(new ArrayList());
+    }
+
+    public List<Mission> getMissionList() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        if (!this.sharedPrefs.contains(PREFS_LAUNCH_LIST_UPCOMING)) {
+            return null;
+        }
+        Gson gson = new Gson();
+        List<Mission> productFromShared;
+        SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        String jsonPreferences = sharedPref.getString(PREFS_MISSION_LIST_UPCOMING, null);
+
+        Type type = new TypeToken<List<Mission>>() {}.getType();
+        productFromShared = gson.fromJson(jsonPreferences, type);
+
+        return productFromShared;
+    }
+
+    public Mission getMissionByID(Integer id){
+        Mission mission = new Mission();
+
+        //Get Mission List
+        Gson gson = new Gson();
+        List<Mission> missionList;
+        SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        String jsonPreferences = sharedPref.getString(PREFS_MISSION_LIST_UPCOMING, null);
+
+        Type type = new TypeToken<List<Mission>>() {}.getType();
+        missionList = gson.fromJson(jsonPreferences, type);
+
+        int size = missionList.size();
+
+        for (int i = 0; i < size; i++) {
+            if (missionList.get(i).getId().equals(id)) {
+                mission = missionList.get(i);
+            }
+        }
+        return mission;
     }
 
     public void setPreviousLaunches(List<Launch> launches) {
@@ -283,6 +409,47 @@ public class SharedPreference {
         return productFromShared;
     }
 
+    public Launch getLaunchByID(Integer id){
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        if (!this.sharedPrefs.contains(PREFS_LAUNCH_LIST_PREVIOUS)) {
+            return null;
+        }
+        if (!this.sharedPrefs.contains(PREFS_LAUNCH_LIST_UPCOMING)) {
+            return null;
+        }
+        Launch launch = new Launch();
+
+        //Get Previous Launches List
+        Gson gson = new Gson();
+        List<Launch> launchList;
+        SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        String jsonPreferences = sharedPref.getString(PREFS_LAUNCH_LIST_PREVIOUS, null);
+
+        Type type = new TypeToken<List<Launch>>() {}.getType();
+        launchList = gson.fromJson(jsonPreferences, type);
+
+        //Get Upcoming Launches List List
+        Gson gsonUpcoming = new Gson();
+        List<Launch> launchListUpComing;
+        SharedPreferences sharedPrefUpcoming = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        String jsonPreferencesUpcoming = sharedPrefUpcoming.getString(PREFS_LAUNCH_LIST_UPCOMING, null);
+
+        Type typeUpcoming = new TypeToken<List<Launch>>() {}.getType();
+        launchListUpComing = gsonUpcoming.fromJson(jsonPreferencesUpcoming, type);
+
+        List<Launch> totalList = new ArrayList<>(launchList);
+        totalList.addAll(launchListUpComing);
+
+        int size = totalList.size();
+
+        for (int i = 0; i < size; i++) {
+            if (totalList.get(i).getId().equals(id)) {
+                launch = totalList.get(i);
+            }
+        }
+        return launch;
+    }
+
     public void setPreviousFilterText(String filterText) {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
@@ -340,13 +507,13 @@ public class SharedPreference {
 
     public String getPreviousTitle() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getString(PREFS_PREVIOUS_TITLE, "Previous Launches");
+        return this.sharedPrefs.getString(PREFS_PREVIOUS_TITLE, "Space Launch Now");
     }
 
     public void resetPreviousTitle() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putString(PREFS_PREVIOUS_TITLE, "Previous Launches");
+        this.prefsEditor.putString(PREFS_PREVIOUS_TITLE, "Space Launch Now");
         this.prefsEditor.apply();
     }
 
@@ -372,5 +539,42 @@ public class SharedPreference {
     public String getEndDate() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         return this.sharedPrefs.getString(PREFS_CURRENT_END_DATE, "2016-01-01");
+    }
+
+    public static boolean isTimeBetweenTwoTime(String initialTime, String finalTime, String currentTime) throws ParseException {
+        String reg = "^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$";
+        if (initialTime.matches(reg) && finalTime.matches(reg) && currentTime.matches(reg)) {
+            boolean valid = false;
+            //Start Time
+            java.util.Date inTime = new SimpleDateFormat("HH:mm:ss").parse(initialTime);
+            Calendar calendar1 = Calendar.getInstance();
+            calendar1.setTime(inTime);
+
+            //Current Time
+            java.util.Date checkTime = new SimpleDateFormat("HH:mm:ss").parse(currentTime);
+            Calendar calendar3 = Calendar.getInstance();
+            calendar3.setTime(checkTime);
+
+            //End Time
+            java.util.Date finTime = new SimpleDateFormat("HH:mm:ss").parse(finalTime);
+            Calendar calendar2 = Calendar.getInstance();
+            calendar2.setTime(finTime);
+
+            if (finalTime.compareTo(initialTime) < 0) {
+                calendar2.add(Calendar.DATE, 1);
+                calendar3.add(Calendar.DATE, 1);
+            }
+
+            java.util.Date actualTime = calendar3.getTime();
+            if ((actualTime.after(calendar1.getTime()) || actualTime.compareTo(calendar1.getTime()) == 0)
+                    && actualTime.before(calendar2.getTime())) {
+                valid = true;
+            }
+            Timber.d("Dark Theme - Within time: %s", valid);
+            return valid;
+        } else {
+            throw new IllegalArgumentException("Not a valid time, expecting HH:MM:SS format");
+        }
+
     }
 }

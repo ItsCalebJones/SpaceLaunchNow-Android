@@ -11,11 +11,11 @@
             android:summary="Specify how many upcoming launches to load. Default: Five"
             android:title="Upcoming Launches" />
         <ListPreference
-            android:defaultValue="100"
+            android:defaultValue="1000"
             android:key="previous_value"
             android:entries="@array/previous_array"
             android:entryValues="@array/previous_array_values"
-            android:summary="Specify how many previous launches to load. Default: 100"
+            android:summary="Specify how many previous launches to load. Default: All"
             android:title="Previous Launches" />
     </PreferenceCategory>
 

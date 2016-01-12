@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/card_margin"
+        android:layout_marginRight="@dimen/card_margin"
+        android:animateLayoutChanges="true"
+        card_view:cardBackgroundColor="@color/dark_card_background"
+        card_view:cardCornerRadius="0dp"
+        card_view:cardElevation="4dp"
+        card_view:cardPreventCornerOverlap="true"
+        card_view:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:id="@+id/lnrLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/TitleCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="4dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/categoryIcon"
+                    android:layout_width="64dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center|top"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_satellite_white"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/mission_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:lines="1"
+                        android:paddingTop="8dp"
+                        android:text="Unknown Launch Vehicle"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/mission_summary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="left"
+                        android:paddingBottom="2dp"
+                        android:paddingTop="4dp"
+                        android:singleLine="false"
+                        android:text="Unknown Mission" />
+
+                    <LinearLayout
+                        style="@style/DarkTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <android.support.v7.widget.AppCompatButton
+                            android:id="@+id/launchButton"
+                            style="@style/Base.Widget.AppCompat.Button.Colored"
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_marginBottom="12dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginRight="8dp"
+                            android:gravity="center"
+                            android:text="Launch"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+
+                        <android.support.v7.widget.AppCompatButton
+                            android:id="@+id/infoButton"
+                            style="@style/Base.Widget.AppCompat.Button.Colored"
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_marginBottom="12dp"
+                            android:layout_marginTop="2dp"
+                            android:gravity="center"
+                            android:text="INFO"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

@@ -5,24 +5,21 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import me.calebjones.spacelaunchnow.LaunchApplication;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.ui.activity.LaunchDetail;
+import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 
 /**
  * This adapter takes data from SharedPreference/LoaderService and applies it to the LaunchesFragment
@@ -103,10 +100,15 @@ public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAd
                 get(0).getAgencies().size() > 0){
             location = launchItem.getLocation().getName() + " " + launchItem.getLocation().getPads()
                     .get(0).getAgencies().get(0).getCountryCode();
-            title = launchItem.getLocation().getPads().get(0).getAgencies().get(0).getName() + " " + (launchItem.getRocket().getName());
+
+        } else {
+            location = launchItem.getLocation().getName();
+        }
+
+        if (launchItem.getRocket().getAgencies().size() > 0) {
+            title = launchItem.getRocket().getAgencies().get(0).getName() + " | " + (launchItem.getRocket().getName());
         } else {
             title = launchItem.getRocket().getName();
-            location = launchItem.getLocation().getName();
         }
 
         holder.mission.setText(launchItem.getName());
@@ -143,7 +145,7 @@ public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAd
         public void onClick(View v) {
             final int position = getAdapterPosition();
             Launch launch = launchList.get(position);
-            Intent intent = new Intent(mContext, LaunchDetail.class);
+            Intent intent = new Intent(mContext, LaunchDetailActivity.class);
             intent.putExtra("launch", launch);
             mContext.startActivity(intent);
         }

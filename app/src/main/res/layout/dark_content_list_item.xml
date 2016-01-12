@@ -54,7 +54,7 @@
                     android:layout_gravity="center|left"
                     android:layout_marginLeft="4dp"
                     android:padding="8dp"
-                    android:src="@drawable/ic_rocket_white" />
+                    android:src="@drawable/ic_assignment_white" />
 
                 <TextView
                     android:id="@+id/launch_rocket"
