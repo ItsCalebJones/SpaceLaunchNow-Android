@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.TooManyListenersException;
 
 import me.calebjones.spacelaunchnow.content.models.Launch;
+import me.calebjones.spacelaunchnow.content.models.Mission;
 import timber.log.Timber;
 
 /**
@@ -35,6 +36,7 @@ public class SharedPreference {
 
     public static String PREFS_LAUNCH_LIST_PREVIOUS;
     public static String PREFS_LAUNCH_LIST_UPCOMING;
+    public static String PREFS_MISSION_LIST_UPCOMING;
     public static String PREFS_NAME;
     public static String PREFS_FIRST_BOOT;
     public static String PREFS_POSITION;
@@ -64,6 +66,7 @@ public class SharedPreference {
         PREFS_POSITION = "POSITION_VALUE";
         PREFS_LAUNCH_LIST_UPCOMING = "LAUNCH_LIST_UPCOMING";
         PREFS_LAUNCH_LIST_PREVIOUS = "LAUNCH_LIST_PREVIOUS";
+        PREFS_MISSION_LIST_UPCOMING = "MISSION_LIST";
         PREFS_POSITION_LIST_UPCOMING = "POSITION_LIST_UPCOMING";
         PREFS_POSITION_LIST_PREVIOUS = "POSITION_LIST_PREVIOUS";
         PREFS_PREVIOUS_FILTER_TEXT = "PREVIOUS_FILTER_TEXT";
@@ -295,6 +298,58 @@ public class SharedPreference {
         setUpComingLaunches(new ArrayList());
     }
 
+    public void setMissionList(List<Mission> missions) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.serializeSpecialFloatingPointValues();
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+        this.prefsEditor.putString(PREFS_MISSION_LIST_UPCOMING, gson.toJson(missions));
+        this.prefsEditor.apply();
+    }
+
+    public void removeMissionsList() {
+        setMissionList(new ArrayList());
+    }
+
+    public List<Mission> getMissionList() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        if (!this.sharedPrefs.contains(PREFS_LAUNCH_LIST_UPCOMING)) {
+            return null;
+        }
+        Gson gson = new Gson();
+        List<Mission> productFromShared;
+        SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        String jsonPreferences = sharedPref.getString(PREFS_MISSION_LIST_UPCOMING, null);
+
+        Type type = new TypeToken<List<Mission>>() {}.getType();
+        productFromShared = gson.fromJson(jsonPreferences, type);
+
+        return productFromShared;
+    }
+
+    public Mission getMissionByID(Integer id){
+        Mission mission = new Mission();
+
+        //Get Mission List
+        Gson gson = new Gson();
+        List<Mission> missionList;
+        SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        String jsonPreferences = sharedPref.getString(PREFS_MISSION_LIST_UPCOMING, null);
+
+        Type type = new TypeToken<List<Mission>>() {}.getType();
+        missionList = gson.fromJson(jsonPreferences, type);
+
+        int size = missionList.size();
+
+        for (int i = 0; i < size; i++) {
+            if (missionList.get(i).getId().equals(id)) {
+                mission = missionList.get(i);
+            }
+        }
+        return mission;
+    }
+
     public void setPreviousLaunches(List<Launch> launches) {
         Timber.d("SharedPreference - setPrevious list:  %s ", launches.size());
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
@@ -354,6 +409,47 @@ public class SharedPreference {
         return productFromShared;
     }
 
+    public Launch getLaunchByID(Integer id){
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        if (!this.sharedPrefs.contains(PREFS_LAUNCH_LIST_PREVIOUS)) {
+            return null;
+        }
+        if (!this.sharedPrefs.contains(PREFS_LAUNCH_LIST_UPCOMING)) {
+            return null;
+        }
+        Launch launch = new Launch();
+
+        //Get Previous Launches List
+        Gson gson = new Gson();
+        List<Launch> launchList;
+        SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        String jsonPreferences = sharedPref.getString(PREFS_LAUNCH_LIST_PREVIOUS, null);
+
+        Type type = new TypeToken<List<Launch>>() {}.getType();
+        launchList = gson.fromJson(jsonPreferences, type);
+
+        //Get Upcoming Launches List List
+        Gson gsonUpcoming = new Gson();
+        List<Launch> launchListUpComing;
+        SharedPreferences sharedPrefUpcoming = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        String jsonPreferencesUpcoming = sharedPrefUpcoming.getString(PREFS_LAUNCH_LIST_UPCOMING, null);
+
+        Type typeUpcoming = new TypeToken<List<Launch>>() {}.getType();
+        launchListUpComing = gsonUpcoming.fromJson(jsonPreferencesUpcoming, type);
+
+        List<Launch> totalList = new ArrayList<>(launchList);
+        totalList.addAll(launchListUpComing);
+
+        int size = totalList.size();
+
+        for (int i = 0; i < size; i++) {
+            if (totalList.get(i).getId().equals(id)) {
+                launch = totalList.get(i);
+            }
+        }
+        return launch;
+    }
+
     public void setPreviousFilterText(String filterText) {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
@@ -411,13 +507,13 @@ public class SharedPreference {
 
     public String getPreviousTitle() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getString(PREFS_PREVIOUS_TITLE, "Previous Launches");
+        return this.sharedPrefs.getString(PREFS_PREVIOUS_TITLE, "Space Launch Now");
     }
 
     public void resetPreviousTitle() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putString(PREFS_PREVIOUS_TITLE, "Previous Launches");
+        this.prefsEditor.putString(PREFS_PREVIOUS_TITLE, "Space Launch Now");
         this.prefsEditor.apply();
     }
 

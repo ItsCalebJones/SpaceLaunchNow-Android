@@ -58,7 +58,7 @@
             android:minHeight="?attr/actionBarSize"
             android:layout_marginTop="-48dp"
             app:theme="@style/ThemeOverlay.AppCompat.Dark"
-            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:layout_scrollFlags="scroll|snap"
             style="@style/ToolBarWithNavigationBack"
             />
         ​
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:layout_scrollFlags="scroll|snap"
             >
             ​
             <TextView

@@ -100,10 +100,15 @@ public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAd
                 get(0).getAgencies().size() > 0){
             location = launchItem.getLocation().getName() + " " + launchItem.getLocation().getPads()
                     .get(0).getAgencies().get(0).getCountryCode();
-            title = launchItem.getLocation().getPads().get(0).getAgencies().get(0).getName() + " " + (launchItem.getRocket().getName());
+
+        } else {
+            location = launchItem.getLocation().getName();
+        }
+
+        if (launchItem.getRocket().getAgencies().size() > 0) {
+            title = launchItem.getRocket().getAgencies().get(0).getName() + " | " + (launchItem.getRocket().getName());
         } else {
             title = launchItem.getRocket().getName();
-            location = launchItem.getLocation().getName();
         }
 
         holder.mission.setText(launchItem.getName());

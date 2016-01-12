@@ -58,7 +58,7 @@
                     android:ellipsize="end"
                     android:gravity="left"
                     android:lines="1"
-                    android:paddingBottom="32dp"
+                    android:paddingBottom="16dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="8dp"
                     android:singleLine="false"
@@ -108,6 +108,21 @@
                         android:paddingTop="4dp"
                         android:singleLine="false"
                         android:text="Unknown Agency Type"
+                        android:textColor="?android:textColorSecondary" />
+
+                    <TextView
+                        android:id="@+id/mission_agency_summary_one"
+                        style="@style/LightTheme"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="left"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="4dp"
+                        android:singleLine="false"
+                        android:text=""
                         android:textColor="?android:textColorSecondary" />
 
                     <LinearLayout
@@ -192,6 +207,22 @@
                         android:paddingTop="4dp"
                         android:singleLine="false"
                         android:text="Unknown Agency Type"
+                        android:textColor="?android:textColorSecondary" />
+
+                    <TextView
+                        android:id="@+id/mission_agency_summary_two"
+                        style="@style/LightTheme"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="left"
+                        android:lines="1"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="4dp"
+                        android:singleLine="false"
+                        android:text=""
                         android:textColor="?android:textColorSecondary" />
 
                     <LinearLayout
@@ -307,7 +338,6 @@
                         android:ellipsize="end"
                         android:gravity="left"
                         android:lines="1"
-                        android:paddingBottom="8dp"
                         android:paddingLeft="16dp"
                         android:paddingTop="4dp"
                         android:singleLine="false"
@@ -327,6 +357,21 @@
                         android:paddingTop="4dp"
                         android:singleLine="false"
                         android:text="Unknown Agency Type"
+                        android:textColor="?android:textColorSecondary" />
+
+                    <TextView
+                        android:id="@+id/launch_agency_summary_one"
+                        style="@style/LightTheme"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="left"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="4dp"
+                        android:singleLine="false"
+                        android:text=""
                         android:textColor="?android:textColorSecondary" />
 
                     <LinearLayout
@@ -391,7 +436,6 @@
                         android:ellipsize="end"
                         android:gravity="left"
                         android:lines="1"
-                        android:paddingBottom="8dp"
                         android:paddingLeft="16dp"
                         android:paddingTop="4dp"
                         android:singleLine="false"
@@ -411,6 +455,21 @@
                         android:paddingTop="4dp"
                         android:singleLine="false"
                         android:text="Unknown Agency Type"
+                        android:textColor="?android:textColorSecondary" />
+
+                    <TextView
+                        android:id="@+id/launch_agency_summary_two"
+                        style="@style/LightTheme"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="left"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="4dp"
+                        android:singleLine="false"
+                        android:text=""
                         android:textColor="?android:textColorSecondary" />
 
                     <LinearLayout
