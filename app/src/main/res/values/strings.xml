@@ -1,19 +1,14 @@
 <resources>
     <string name="app_name">Space Launch Now</string>
     <string name="title_activity_main">MainActivity</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="action_settings">Settings</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="status_go">" GO"</string>
     <string name="status_nogo">" NO GO"</string>
     <string name="status_success">" Successful Launch"</string>
     <string name="status_failure">" Launch Failure"</string>
-    <string name="lorem_ipsum">           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ac malesuada dolor. Nulla velit augue, vulputate nec turpis id, malesuada commodo risus. Suspendisse ac posuere urna. Fusce eu cursus lacus. Aliquam dignissim sodales urna, id porttitor lectus rhoncus sit amet. Mauris semper neque libero, at ornare eros ullamcorper non. Integer condimentum a dolor in commodo. Sed nec nunc a metus ullamcorper dignissim a blandit eros. Nam a tortor nisi. Curabitur vehicula maximus metus vel imperdiet.\n\n
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ac malesuada dolor. Nulla velit augue, vulputate nec turpis id, malesuada commodo risus. Suspendisse ac posuere urna. Fusce eu cursus lacus. Aliquam dignissim sodales urna, id porttitor lectus rhoncus sit amet. Mauris semper neque libero, at ornare eros ullamcorper non. Integer condimentum a dolor in commodo. Sed nec nunc a metus ullamcorper dignissim a blandit eros. Nam a tortor nisi. Curabitur vehicula maximus metus vel imperdiet.\n\n
 
 Morbi vel lorem enim. Nullam eget metus lectus. Mauris a leo velit. Suspendisse iaculis venenatis lacinia. Donec accumsan at turpis vitae sodales. Proin auctor egestas nulla et lobortis. Nam tempus vehicula orci ac sollicitudin. Nam ut elit vitae turpis placerat egestas id et orci. \n\n
 
@@ -24,4 +19,21 @@ Nulla pretium vehicula lacus. Etiam facilisis tortor a urna rutrum, sit amet iac
 Quisque tincidunt magna quis viverra faucibus. Vivamus rhoncus elit vel mi tristique mattis. Curabitur dapibus consectetur tempus. Nulla scelerisque arcu gravida vulputate accumsan. Mauris metus odio, mollis ut tincidunt in, vestibulum quis augue. Donec pulvinar pharetra diam vel mattis. Aenean in erat aliquet, ornare dui vehicula, iaculis dui. Duis tempor dolor interdum nunc fermentum, sit amet aliquet tellus placerat. Nunc posuere tempor aliquam. Nam at tincidunt mi, vel congue diam. Aliquam ultricies pellentesque tortor venenatis faucibus. Maecenas sagittis lobortis lacus, vitae ornare sapien facilisis vel. Fusce eleifend mauris eu malesuada efficitur. Nulla congue orci in rutrum sodales. Cras et suscipit purus. Sed ultrices erat in libero lacinia, quis consequat sem rhoncus.</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="settings">Settings</string>
+    <string name="instant_window">An instantaneous window is often used when trying to reach time specific orbits such as when docking with the International Space Station.</string>
+    <string name="launch_explainer">In the context of spaceflight, a launch window is a time period during which a particular launch vehicle must be launched in order to reach its intended target. If the rocket is not launched within the \'window\', it has to wait for the next window. - Wikipedia</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="spacex_summary">SpaceX designs, manufactures and launches advanced rockets and spacecraft. The company was founded in 2002 to revolutionize space technology, with the ultimate goal of enabling people to live on other planets.</string>
+    <string name="usaf_summary">The United States Air Force is the aerial warfare service branch of the United States Armed Forces and one of the seven American uniformed services.</string>
+    <string name="casc_summary">The China Aerospace Science and Technology Corporation(CASC) is the main contractor for the Chinese space program. It is state-owned and has a number of subordinate entities which design, develop and manufacture a range of spacecraft, launch vehicles, strategic and tactical missile systems, and ground equipment.</string>
+    <string name="cnsa_summary">The China National Space Administration (CNSA) is the national space agency of the People\'s Republic of China. It is responsible for the national space program and for planning and development of space activities.</string>
+    <string name="isro_summary">The Indian Space Research Organisation (ISRO), is the space agency of the Indian government headquartered in the city of Bengaluru. Its vision is to \"harness space technology for national development, while pursuing space science research and planetary exploration\".</string>
+    <string name="vko_summary">"The Russian Aerospace Defence Forces (VKO) was the branch of the Armed Forces of the Russian Federation responsible for air and missile defence, and the operation of Russian military satellites and the Plesetsk Cosmodrome. "</string>
+    <string name="roscosmos_summary">The Roscosmos State Corporation for Space Activities, commonly known as Roscosmos, is the governmental body responsible for the Russian space science program and general aerospace research.</string>
+    <string name="ula_summary"><![CDATA[United Launch Alliance (ULA) is a joint venture of Lockheed Martin Space Systems and Boeing Defense, Space & Security. ULA was formed in December 2006 by combining the teams at these companies which provide spacecraft launch services to the government of the United States.]]></string>
+    <string name="gd_summary">General Dynamics Corporation is an American aerospace and defense company formed by mergers and divestitures. It is the world\'s fifth-largest defense contractor based on 2012 revenues.</string>
+    <string name="asa_summary">Arianespace SA is a French multinational company founded in 1980 as the world\'s first commercial launch service provider.</string>
+    <string name="TsSKB_summary">The Progress State Research and Production Space Centre, also known as TsSKB-Progress, is a Russian \"Federal State Unitary Enterprise\" under the jurisdiction of Roscosmos, the Russian Federal Space Agency responsible for space science and aerospace research. It is the developer of the famous Soyuz-FG rocket used for manned space flight, as well as Soyuz-U used for launching unmanned probes.</string>
+    <string name="nasa_summary">The National Aeronautics and Space Administration (NASA) is the United States government agency responsible for the civilian space program as well as aeronautics and aerospace research.</string>
 </resources>

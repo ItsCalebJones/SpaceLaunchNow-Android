@@ -71,7 +71,7 @@ public class TimeRangePickerDialogCustom extends DialogFragment implements View.
         tabs.addTab(tabpage1);
         tabs.addTab(tabpage2);
 
-
+        //TODO Pull in current start and end date.
         if (android.os.Build.VERSION.SDK_INT >= 23){
             SimpleDateFormat sdf = new SimpleDateFormat("hh:ss a");
             Date sdate = null;

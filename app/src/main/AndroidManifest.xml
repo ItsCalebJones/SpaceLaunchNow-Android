@@ -25,7 +25,7 @@
         </activity>
 
         <activity
-            android:name=".ui.activity.LaunchDetail"
+            android:name=".ui.activity.LaunchDetailActivity"
             android:theme="@style/AppTheme.ActionBar.Transparent"/>
 
         <meta-data
@@ -46,16 +46,18 @@
             android:exported="false" />
 
         <service
+            android:name=".content.services.MissionDataService"
+            android:exported="false" />
+
+        <service
             android:name=".content.services.RocketDataService"
             android:exported="false" />
 
         <receiver android:name=".content.receivers.UpdateUpcomingLaunchesReceiver">
             <intent-filter>
-                <action android:name="UPDATE_UPCOMING_LAUNCHES" />
+                <action android:name="UPDATE_UP_LAUNCHES" />
             </intent-filter>
         </receiver>
-
-
         <receiver android:name=".content.receivers.BootReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

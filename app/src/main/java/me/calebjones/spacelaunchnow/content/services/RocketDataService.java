@@ -54,7 +54,6 @@ public class RocketDataService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Timber.d("RocketDataService - Intent received!");
-        //TODO grab the latest Upcoming and Previous launches save to SharedPreferences.
         if (intent != null) {
             String action = intent.getAction();
             if (Strings.ACTION_GET_ROCKETS.equals(action)) {

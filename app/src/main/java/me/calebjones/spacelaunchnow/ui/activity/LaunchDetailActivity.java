@@ -2,17 +2,24 @@ package me.calebjones.spacelaunchnow.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,17 +29,20 @@ import com.squareup.picasso.Picasso;
 import java.util.Scanner;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import me.calebjones.spacelaunchnow.LaunchApplication;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.DatabaseManager;
+import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.LaunchVehicle;
-import me.calebjones.spacelaunchnow.ui.fragment.PayloadDetail;
-import me.calebjones.spacelaunchnow.ui.fragment.SummaryDetail;
+import me.calebjones.spacelaunchnow.ui.fragment.AgencyDetailFragment;
+import me.calebjones.spacelaunchnow.ui.fragment.PayloadDetailFragment;
+import me.calebjones.spacelaunchnow.ui.fragment.SummaryDetailFragment;
 import timber.log.Timber;
+import xyz.hanks.library.SmallBang;
+import xyz.hanks.library.SmallBangListener;
 
 
-public class LaunchDetail extends AppCompatActivity
+public class LaunchDetailActivity extends AppCompatActivity
         implements AppBarLayout.OnOffsetChangedListener {
 
     private static final int PERCENTAGE_TO_ANIMATE_AVATAR = 20;
@@ -44,39 +54,92 @@ public class LaunchDetail extends AppCompatActivity
     private ImageView detail_profile_backdrop;
     private CircleImageView detail_profile_image;
     private TextView detail_rocket, detail_mission_location;
+    private FloatingActionButton fab_favorite;
     private int mMaxScrollSize;
+    private SharedPreferences sharedPref;
+    private static SharedPreference sharedPreference;
+    private Context context;
+    private SmallBang mSmallBang;
 
     private String URL = "https://launchlibrary.net/1.1/launch/%s";
 
     public String response;
     public Launch launch;
 
-    //TODO need to setTheme based on NightMode
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        int m_theme;
+        final int statusColor;
+        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        this.context = getApplicationContext();
+
+        sharedPreference = SharedPreference.getInstance(this.context);
+
+        if (sharedPreference.getNightMode()) {
+            m_theme = R.style.DarkTheme_Transparent;
+            statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
+        } else {
+            m_theme = R.style.LightTheme_Transparent;
+            statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
+        }
+
+        if (getSharedPreferences("theme_changed", 0).getBoolean("recreate", false)) {
+            SharedPreferences.Editor editor = getSharedPreferences("theme_changed", 0).edit();
+            editor.putBoolean("recreate", false);
+            editor.apply();
+            recreate();
+        }
+
+        setTheme(m_theme);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.launch_detail);
+        setContentView(R.layout.activity_launch_detail);
 
         //Setup Views
         tabLayout = (TabLayout) findViewById(R.id.detail_tabs);
-        viewPager  = (ViewPager) findViewById(R.id.detail_viewpager);
+        viewPager = (ViewPager) findViewById(R.id.detail_viewpager);
         appBarLayout = (AppBarLayout) findViewById(R.id.detail_appbar);
         detail_profile_image = (CircleImageView) findViewById(R.id.detail_profile_image);
         detail_profile_backdrop = (ImageView) findViewById(R.id.detail_profile_backdrop);
         detail_rocket = (TextView) findViewById(R.id.detail_rocket);
         detail_mission_location = (TextView) findViewById(R.id.detail_mission_location);
+        fab_favorite = (FloatingActionButton) findViewById(R.id.fab_favorite);
+
+        mSmallBang = SmallBang.attach2Window(this);
 
         //Grab information from Intent
         Intent mIntent = getIntent();
-        launch = (Launch)mIntent.getSerializableExtra("launch");
+        launch = ((Launch) mIntent.getSerializableExtra("launch"));
+        if (mIntent.getIntExtra("launchID", 0) > 0){
+            launch = sharedPreference.getLaunchByID(mIntent.getIntExtra("launchID", 0));
+        }
         getLaunchVehicle(launch);
+
+        fab_favorite.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                mSmallBang.bang(fab_favorite,new SmallBangListener() {
+                    //TODO Check if favorite and animate to the new state.
+                    @Override
+                    public void onAnimationStart() {
+                        Timber.d("Animation start.");
+                        fab_favorite.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite_white));
+                    }
+
+                    @Override
+                    public void onAnimationEnd() {
+
+                    }
+                });
+                sharedPreference.addFavLaunch(launch);
+            }
+        });
 
         //Assign the title and mission locaiton data
         detail_rocket.setText(launch.getName());
 
         findProfileLogo();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,18 +152,56 @@ public class LaunchDetail extends AppCompatActivity
 
         viewPager.setAdapter(new TabsAdapter(getSupportFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
+
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                int totalScroll = appBarLayout.getTotalScrollRange();
+                int currentScroll = totalScroll + verticalOffset;
+
+                Timber.v("AppBar totalScroll: %s currentScroll: %s verticalOffset: %s",
+                        totalScroll, currentScroll, verticalOffset);
+                int color = statusColor;
+                int r = (color >> 16) & 0xFF;
+                int g = (color >> 8) & 0xFF;
+                int b = (color >> 0) & 0xFF;
+
+                if ((currentScroll) < 255){
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        Timber.v("ColorNew: %s ColorPrimary: %s R: %s G: %s B: %s",
+                                reverseNumber(currentScroll,0,255), R.color.colorPrimary,r,g,b);
+                        Window window = getWindow();
+                        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                        window.setStatusBarColor(Color.argb(reverseNumber(currentScroll,0,255),r,g,b));
+                    }
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        Window window = getWindow();
+                        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                    }
+                }
+            }
+        });
+    }
+
+    public int reverseNumber(int num, int min, int max) {
+        int number = (max + min) - num;
+        Timber.v("Number: %s",number);
+        return number;
     }
 
     private void findProfileLogo() {
 
+        //TODO stabilize this
         //Default location, mission is unknown.
         String location = "Unknown Location";
         String mission = "Unknown Mission";
         String locationCountryCode = null;
         String rocketAgency = "";
 
-        if (launch.getRocket().getAgencies().size() > 0){
-            for (int i = 0; i < launch.getRocket().getAgencies().size(); i++ ){
+        if (launch.getRocket().getAgencies().size() > 0) {
+            for (int i = 0; i < launch.getRocket().getAgencies().size(); i++) {
                 rocketAgency = rocketAgency + launch.getRocket().getAgencies().get(i).getAbbrev() + " ";
             }
         }
@@ -114,7 +215,7 @@ public class LaunchDetail extends AppCompatActivity
                 locationCountryCode = launch.getLocation().getPads().
                         get(0).getAgencies().get(0).getCountryCode();
 
-                Timber.v("LaunchDetail - CountryCode length: %s",
+                Timber.v("LaunchDetailActivity - CountryCode length: %s",
                         String.valueOf(locationCountryCode.length()));
 
                 //Go through various CountryCodes and assign flag.
@@ -122,15 +223,18 @@ public class LaunchDetail extends AppCompatActivity
 
                     if (locationCountryCode.contains("USA")) {
                         //Check for SpaceX/Boeing/ULA/NASA
+                        if (launch.getRocket().getAgencies().size() > 0){
+                            if (launch.getLocation().getPads().
+                                    get(0).getAgencies().get(0).getAbbrev().contains("SpX") && launch.getRocket().getAgencies().get(0).getAbbrev().contains("SpX")) {
+                                //Apply SpaceX Logo
+                                applyProfileLogo("http://i.imgur.com/3BqROn0.jpg");
+                            }
+                        }
                         if (launch.getLocation().getPads().
-                                get(0).getAgencies().get(0).getAbbrev().contains("SpX")){
-                            //Apply SpaceX Logo
-                            applyProfileLogo("http://i.imgur.com/3BqROn0.jpg");
-                        } else if (launch.getLocation().getPads().
-                                get(0).getAgencies().get(0).getAbbrev() == "BA" && launch.getRocket().getAgencies().get(0).getCountryCode() == "UKR"){
+                                get(0).getAgencies().get(0).getAbbrev() == "BA" && launch.getRocket().getAgencies().get(0).getCountryCode() == "UKR") {
                             //Apply Yuzhnoye Logo
                             applyProfileLogo("https://i.imgur.com/KnDMy7l.png");
-                        } else if (rocketAgency.contains("ULA")){
+                        } else if (rocketAgency.contains("ULA")) {
                             //Apply ULA Logo
                             applyProfileLogo("https://i.imgur.com/rh7JAa3.png");
                         } else {
@@ -144,12 +248,12 @@ public class LaunchDetail extends AppCompatActivity
                         applyProfileLogo("http://i.imgur.com/dIsaknI.png");
                     } else if (locationCountryCode.contains("IND")) {
                         applyProfileLogo("https://i.imgur.com/Caj9kpG.png");
-                    } else if (locationCountryCode.contains("JPN")){
+                    } else if (locationCountryCode.contains("JPN")) {
                         applyProfileLogo("https://i.imgur.com/QOdDYa5.png");
                     }
 
                 } else if (launch.getLocation().getPads().
-                        get(0).getAgencies().get(0).getAbbrev() == "ASA"){
+                        get(0).getAgencies().get(0).getAbbrev() == "ASA") {
                     //Apply Arianespace Logo
                     applyProfileLogo("https://i.imgur.com/yffq0aI.jpg");
                 }
@@ -161,8 +265,8 @@ public class LaunchDetail extends AppCompatActivity
         detail_mission_location.setText(location);
     }
 
-    private void applyProfileLogo(String url){
-        Timber.d("LaunchDetail - Loading Profile Image url: %s ", url);
+    private void applyProfileLogo(String url) {
+        Timber.d("LaunchDetailActivity - Loading Profile Image url: %s ", url);
 
         Picasso.with(this)
                 .load(url)
@@ -172,15 +276,20 @@ public class LaunchDetail extends AppCompatActivity
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
     }
 
     private void getLaunchVehicle(Launch result) {
+        String query;
+        if (result.getRocket().getName().contains("Space Shuttle")){
+            query = "Space Shuttle";
+        } else {
+            query = result.getRocket().getName();
+        }
         DatabaseManager databaseManager = new DatabaseManager(this);
-        LaunchVehicle launchVehicle = databaseManager.getLaunchVehicle(result.getRocket()
-                .getName());
-        if (launchVehicle != null && launchVehicle.getImageURL().length() > 0){
+        LaunchVehicle launchVehicle = databaseManager.getLaunchVehicle(query);
+        if (launchVehicle != null && launchVehicle.getImageURL().length() > 0) {
             Glide.with(this)
                     .load(launchVehicle
                             .getImageURL())
@@ -189,12 +298,14 @@ public class LaunchDetail extends AppCompatActivity
                     .crossFade()
                     .into(detail_profile_backdrop);
             Timber.d("Glide Loading: %s %s", launchVehicle.getLVName(), launchVehicle.getImageURL());
+        } else {
+
         }
     }
 
-    public void setData(String data){
+    public void setData(String data) {
         response = data;
-        Timber.v("LaunchDetail - %s", response);
+        Timber.v("LaunchDetailActivity - %s", response);
         Scanner scanner = new Scanner(response);
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
@@ -204,12 +315,12 @@ public class LaunchDetail extends AppCompatActivity
         scanner.close();
     }
 
-    public Launch getLaunch(){
+    public Launch getLaunch() {
         return launch;
     }
 
     public static void start(Context c) {
-        c.startActivity(new Intent(c, LaunchDetail.class));
+        c.startActivity(new Intent(c, LaunchDetailActivity.class));
     }
 
     @Override
@@ -240,23 +351,31 @@ public class LaunchDetail extends AppCompatActivity
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
 
         @Override
         public Fragment getItem(int i) {
-            switch(i) {
-                case 0: return SummaryDetail.newInstance();
-                case 1: return PayloadDetail.newInstance();
+            switch (i) {
+                case 0:
+                    return SummaryDetailFragment.newInstance();
+                case 1:
+                    return PayloadDetailFragment.newInstance();
+                case 2:
+                    return AgencyDetailFragment.newInstance();
             }
             return null;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch(position) {
-                case 0: return "Details";
-                case 1: return "Mission";
+            switch (position) {
+                case 0:
+                    return "Details";
+                case 1:
+                    return "Mission";
+                case 2:
+                    return "Agencies";
             }
             return "";
         }
