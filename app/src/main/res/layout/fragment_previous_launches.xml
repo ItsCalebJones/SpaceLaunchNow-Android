@@ -9,7 +9,7 @@
     android:paddingRight="2dp"
     tools:context="${relativePackage}.${activityClass}">
 
-        <RelativeLayout
+        <FrameLayout
             android:id="@+id/linear"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -41,7 +41,7 @@
                 android:visibility="gone"
                 />
 
-        </RelativeLayout>
+        </FrameLayout>
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/menu"

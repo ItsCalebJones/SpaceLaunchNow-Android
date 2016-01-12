@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.annotation.BoolRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -15,7 +16,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -24,12 +24,16 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.models.Mission;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.content.services.MissionDataService;
 import me.calebjones.spacelaunchnow.content.services.RocketDataService;
 import me.calebjones.spacelaunchnow.ui.activity.SettingsActivity;
+import me.calebjones.spacelaunchnow.ui.fragment.MissionFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.PreviousLaunchesFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.LaunchesFragment;
+import me.calebjones.spacelaunchnow.ui.fragment.LaunchesViewPager;
 import timber.log.Timber;
 
 
@@ -39,14 +43,16 @@ public class MainActivity extends AppCompatActivity
     private static final String NAV_ITEM_ID = "navItemId";
     private final Handler mDrawerActionHandler = new Handler();
 
-    private final LaunchesFragment mLaunchFragment = new LaunchesFragment();
-    private final PreviousLaunchesFragment mHistoryFragment = new PreviousLaunchesFragment();
+    private LaunchesViewPager mlaunchesViewPager;
+    private final MissionFragment mMissionFragment = new MissionFragment();
 
     private Toolbar toolbar;
     private DrawerLayout drawer;
     private SharedPreferences sharedPref;
     private static SharedPreference sharedPreference;
     private Context context;
+    private Boolean bool;
+
     private BroadcastReceiver intentReceiver;
 
     private int mNavItemId;
@@ -56,24 +62,18 @@ public class MainActivity extends AppCompatActivity
         }
 
         public void onReceive(Context context, Intent intent) {
-            Timber.d("Broadcast received!");
+            Timber.v("Broadcast received...");
             if (intent != null) {
                 String action = intent.getAction();
-                Fragment fragment;
+                Timber.d("Broadcast action : %s", action);
                 if (Strings.ACTION_SUCCESS_UP_LAUNCHES.equals(action)) {
-                    fragment = null;
-                    try {
-                        fragment = (Fragment) LaunchesFragment.class.newInstance();
-                    } catch (Exception ignored) {
-                    }
-                    MainActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.flContent, fragment).commit();
+                    mlaunchesViewPager.restartViews(Strings.ACTION_SUCCESS_UP_LAUNCHES);
                 } else if (Strings.ACTION_SUCCESS_PREV_LAUNCHES.equals(action)) {
-                    fragment = null;
-                    try {
-                        fragment = (Fragment) PreviousLaunchesFragment.class.newInstance();
-                    } catch (Exception ignored) {
+                    mlaunchesViewPager.restartViews(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
+                } else if (Strings.ACTION_SUCCESS_MISSIONS.equals(action)) {
+                    if (mMissionFragment.isVisible()){
+                        mMissionFragment.onFinishedRefreshing();
                     }
-                    MainActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.flContent, fragment).commit();
                 }
             }
         }
@@ -121,6 +121,8 @@ public class MainActivity extends AppCompatActivity
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
+        mlaunchesViewPager = new LaunchesViewPager();
+
         // load saved navigation state if present
         if (null == savedInstanceState) {
             mNavItemId = R.id.menu_launches;
@@ -148,6 +150,10 @@ public class MainActivity extends AppCompatActivity
         intentFilter.addAction(Strings.ACTION_FAILURE_UPC_LAUNCHES);
         intentFilter.addAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
         intentFilter.addAction(Strings.ACTION_FAILURE_PREV_LAUNCHES);
+        intentFilter.addAction(Strings.ACTION_SUCCESS_MISSIONS);
+        intentFilter.addAction(Strings.ACTION_FAILURE_MISSIONS);
+        intentFilter.addAction(Strings.ACTION_SUCCESS_ROCKETS);
+        intentFilter.addAction(Strings.ACTION_FAILURE_ROCKETS);
         registerReceiver(this.intentReceiver, intentFilter);
     }
 
@@ -169,7 +175,7 @@ public class MainActivity extends AppCompatActivity
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = df.format(c.getTime());
 
-        String url = "https://launchlibrary.net/1.1/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=100";
+        String url = "https://launchlibrary.net/1.1/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
 
         Intent launchIntent = new Intent(this.context, LaunchDataService.class);
         launchIntent.setAction(Strings.ACTION_GET_ALL);
@@ -179,6 +185,8 @@ public class MainActivity extends AppCompatActivity
         Intent rocketIntent = new Intent(this.context, RocketDataService.class);
         rocketIntent.setAction(Strings.ACTION_GET_ROCKETS);
         this.context.startService(rocketIntent);
+
+        this.context.startService(new Intent(this, MissionDataService.class));
     }
 
     public void onResume() {
@@ -188,6 +196,10 @@ public class MainActivity extends AppCompatActivity
             editor.putBoolean("recreate", false);
             editor.apply();
             recreate();
+        }
+
+        if (mlaunchesViewPager == null){
+            mlaunchesViewPager = new LaunchesViewPager();
         }
     }
 
@@ -232,7 +244,6 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(final MenuItem item) {
-        item.setChecked(true);
         mNavItemId = item.getItemId();
 
         // allow some time after closing the drawer before performing real navigation
@@ -254,17 +265,16 @@ public class MainActivity extends AppCompatActivity
             case R.id.menu_launches:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.flContent, mLaunchFragment)
-                        .commit();
-                break;
-            case R.id.menu_history:
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.flContent, mHistoryFragment)
+                        .replace(R.id.flContent, mlaunchesViewPager)
+                        .addToBackStack(null)
                         .commit();
                 break;
             case R.id.menu_missions:
-                Toast.makeText(getBaseContext(), "Work in progress! Thanks for your patience!", Toast.LENGTH_SHORT).show();
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.flContent, mMissionFragment)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             case R.id.menu_vehicle:
                 Toast.makeText(getBaseContext(), "Work in progress! Thanks for your patience!", Toast.LENGTH_SHORT).show();

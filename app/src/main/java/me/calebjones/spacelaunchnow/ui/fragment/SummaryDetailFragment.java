@@ -56,9 +56,7 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
     private TextView launch_date_title, date, launch_window_start, launch_window_end, launch_status
             , launch_vehicle, launch_configuration, launch_family, launch_vehicle_specs_height,
             launch_vehicle_specs_diameter,launch_vehicle_specs_stages,launch_vehicle_specs_leo,
-            launch_vehicle_specs_gto,launch_vehicle_specs_launch_mass, launch_vehicle_specs_thrust,
-            launch_agency_type, launch_vehicle_agency_one, launch_vehicle_agency_two, wikiButton_one
-            ,infoButton_one,infoButton_two,wikiButton_two,launch_agency_type_one,launch_agency_type_two;
+            launch_vehicle_specs_gto,launch_vehicle_specs_launch_mass, launch_vehicle_specs_thrust;
 
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -91,15 +89,6 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
         launch_vehicle_specs_gto = (TextView) view.findViewById(R.id.launch_vehicle_specs_gto);
         launch_vehicle_specs_launch_mass = (TextView) view.findViewById(R.id.launch_vehicle_specs_launch_mass);
         launch_vehicle_specs_thrust = (TextView) view.findViewById(R.id.launch_vehicle_specs_thrust);
-        launch_agency_type = (TextView) view.findViewById(R.id.launch_agency_type);
-        launch_vehicle_agency_one = (TextView) view.findViewById(R.id.launch_vehicle_agency_one);
-        launch_vehicle_agency_two = (TextView) view.findViewById(R.id.launch_vehicle_agency_two);
-        launch_agency_type_one = (TextView) view.findViewById(R.id.launch_agency_type_one);
-        launch_agency_type_two  = (TextView) view.findViewById(R.id.launch_agency_type_two);
-        wikiButton_one = (TextView) view.findViewById(R.id.wikiButton_one);
-        infoButton_one = (TextView) view.findViewById(R.id.infoButton_one);
-        infoButton_two = (TextView) view.findViewById(R.id.infoButton_two);
-        wikiButton_two = (TextView) view.findViewById(R.id.wikiButton_two);
         agency_one = (LinearLayout) view.findViewById(R.id.agency_one);
         agency_two = (LinearLayout) view.findViewById(R.id.agency_two);
         vehicle_spec_view = (LinearLayout) view.findViewById(R.id.vehicle_spec_view);
@@ -210,9 +199,14 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
     }
 
     private void getLaunchVehicle(Launch vehicle) {
+        String query;
+        if (vehicle.getRocket().getName().contains("Space Shuttle")){
+            query = "Space Shuttle";
+        } else {
+            query = vehicle.getRocket().getName();
+        }
         DatabaseManager databaseManager = new DatabaseManager(context);
-        launchVehicle = databaseManager.getLaunchVehicle(vehicle.getRocket()
-                .getName());
+        launchVehicle = databaseManager.getLaunchVehicle(query);
     }
 
 

@@ -14,14 +14,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
@@ -41,13 +36,14 @@ public class AgencyDetailFragment extends Fragment {
 
     public static Launch detailLaunch;
     private LaunchVehicle launchVehicle;
-    private LinearLayout mission_one, mission_two, agency_one, agency_two;
+    private LinearLayout mission_one, mission_two, launch_one, launch_two;
     private TextView mission_agency_type, mission_agency_one, mission_agency_type_one,
             mission_infoButton_one, mission_wikiButton_one, mission_agency_two,
             mission_agency_type_two, mission_infoButton_two, mission_wikiButton_two,
             launch_agency_type, launch_vehicle_agency_one, launch_agency_type_one, infoButton_one,
             wikiButton_one, launch_vehicle_agency_two, launch_agency_type_two, infoButton_two,
-            wikiButton_two;
+            wikiButton_two, launch_agency_summary_one,launch_agency_summary_two,
+            mission_agency_summary_one, mission_agency_summary_two;
 
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,26 +67,31 @@ public class AgencyDetailFragment extends Fragment {
 
         mission_agency_one = (TextView) view.findViewById(R.id.mission_vehicle_agency_one);
         mission_agency_type_one = (TextView) view.findViewById(R.id.mission_agency_type_one);
+        mission_agency_summary_one = (TextView) view.findViewById(R.id.mission_agency_summary_one);
         mission_infoButton_one = (TextView) view.findViewById(R.id.mission_infoButton_one);
         mission_wikiButton_one  = (TextView) view.findViewById(R.id.mission_wikiButton_one);
 
         mission_agency_two = (TextView) view.findViewById(R.id.mission_vehicle_agency_two);
         mission_agency_type_two = (TextView) view.findViewById(R.id.mission_agency_type_two);
+        mission_agency_summary_two = (TextView) view.findViewById(R.id.mission_agency_summary_two);
         mission_infoButton_two = (TextView) view.findViewById(R.id.mission_infoButton_two);
         mission_wikiButton_two  = (TextView) view.findViewById(R.id.mission_wikiButton_two);
 
-        agency_one = (LinearLayout) view.findViewById(R.id.agency_one);
-        agency_two = (LinearLayout) view.findViewById(R.id.agency_two);
+        launch_one = (LinearLayout) view.findViewById(R.id.agency_one);
+        launch_two = (LinearLayout) view.findViewById(R.id.agency_two);
 
         launch_agency_type = (TextView) view.findViewById(R.id.launch_agency_type);
 
         launch_vehicle_agency_one = (TextView) view.findViewById(R.id.launch_vehicle_agency_one);
+        launch_agency_type_one = (TextView) view.findViewById(R.id.launch_agency_type_one);
+        launch_agency_summary_one = (TextView) view.findViewById(R.id.launch_agency_summary_one);
         launch_agency_type_one = (TextView) view.findViewById(R.id.launch_agency_type_one);
         infoButton_one = (TextView) view.findViewById(R.id.infoButton_one);
         wikiButton_one  = (TextView) view.findViewById(R.id.wikiButton_one);
 
         launch_vehicle_agency_two = (TextView) view.findViewById(R.id.launch_vehicle_agency_two);
         launch_agency_type_two = (TextView) view.findViewById(R.id.launch_agency_type_two);
+        launch_agency_summary_two = (TextView) view.findViewById(R.id.launch_agency_summary_two);
         infoButton_two = (TextView) view.findViewById(R.id.infoButton_two);
         wikiButton_two  = (TextView) view.findViewById(R.id.wikiButton_two);
 
@@ -127,23 +128,29 @@ public class AgencyDetailFragment extends Fragment {
     }
 
     private void setNoMissionAgencies() {
-        launch_agency_type.setVisibility(View.VISIBLE);
-        agency_one.setVisibility(View.GONE);
-        agency_two.setVisibility(View.GONE);
+        mission_agency_type.setVisibility(View.VISIBLE);
+        mission_one.setVisibility(View.GONE);
+        mission_two.setVisibility(View.GONE);
 
     }
 
     private void setOneMissionAgencies() {
-        String agency = getAgencyType(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getType());
-        agency_one.setVisibility(View.VISIBLE);
-        agency_two.setVisibility(View.GONE);
-        launch_agency_type.setVisibility(View.GONE);
-        launch_vehicle_agency_one.setText(String.format("%s (%s)", detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getName(), detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getAbbrev()));
-        launch_agency_type_one.setText("Type: " + agency);
+        mission_agency_type.setVisibility(View.VISIBLE);
+        mission_agency_type.setText(detailLaunch.getLocation().getPads().get(0).getName());
+        String agencyTypeOne = getAgencyType(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getType());
+        String agencyNameOne = detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getName();
+        String agencyAbbrevOne = detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getAbbrev();
+
+        checkLaunchSummary(agencyAbbrevOne, mission_agency_summary_one);
+
+        mission_one.setVisibility(View.VISIBLE);
+        mission_two.setVisibility(View.GONE);
+        mission_agency_one.setText(String.format("%s (%s)", agencyNameOne, agencyAbbrevOne));
+        mission_agency_type_one.setText("Type: " + agencyTypeOne);
 
         if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL().length() > 0){
-            wikiButton_one.setVisibility(View.VISIBLE);
-            wikiButton_one.setOnClickListener(new View.OnClickListener() {
+            mission_wikiButton_one.setVisibility(View.VISIBLE);
+            mission_wikiButton_one.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(Intent.ACTION_VIEW);
@@ -153,13 +160,13 @@ public class AgencyDetailFragment extends Fragment {
                 }
             });
         } else {
-            wikiButton_one.setVisibility(View.GONE);
+            mission_wikiButton_one.setVisibility(View.GONE);
         }
 
 
         if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL().length() > 0){
-            infoButton_one.setVisibility(View.VISIBLE);
-            infoButton_one.setOnClickListener(new View.OnClickListener() {
+            mission_infoButton_one.setVisibility(View.VISIBLE);
+            mission_infoButton_one.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(Intent.ACTION_VIEW);
@@ -169,25 +176,34 @@ public class AgencyDetailFragment extends Fragment {
                 }
             });
         } else {
-            infoButton_one.setVisibility(View.GONE);
+            mission_infoButton_one.setVisibility(View.GONE);
         }
     }
 
     private void setTwoMissionAgencies() {
-        String agency = getAgencyType(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getType());
-        String agencyTwo = getAgencyType(detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getType());
+        mission_agency_type.setVisibility(View.VISIBLE);
+        mission_agency_type.setText(detailLaunch.getLocation().getPads().get(0).getName());
 
-        agency_one.setVisibility(View.VISIBLE);
-        agency_two.setVisibility(View.VISIBLE);
-        launch_agency_type.setVisibility(View.GONE);
-        launch_agency_type_one.setText(String.format("Type: %s", agency));
-        launch_agency_type_two.setText(String.format("Type: %s", agencyTwo));
-        launch_vehicle_agency_one.setText(String.format("%s (%s)", detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getName(), detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getAbbrev()));
-        launch_vehicle_agency_two.setText(String.format("%s (%s)", detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getName(), detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getAbbrev()));
+        String agencyTypeOne = getAgencyType(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getType());
+        String agencyNameOne = detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getName();
+        String agencyAbbrevOne = detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getAbbrev();
+        String agencyTypeTwo = getAgencyType(detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getType());
+        String agencyNameTwo = detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getName();
+        String agencyAbbrevTwo = detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getAbbrev();
+
+        checkLaunchSummary(agencyAbbrevOne, mission_agency_summary_one);
+        checkLaunchSummary(agencyAbbrevTwo, mission_agency_summary_two);
+
+        mission_one.setVisibility(View.VISIBLE);
+        mission_two.setVisibility(View.VISIBLE);
+        mission_agency_type_one.setText(String.format("Type: %s", agencyTypeOne));
+        mission_agency_type_two.setText(String.format("Type: %s", agencyTypeTwo));
+        mission_agency_one.setText(String.format("%s (%s)", agencyNameOne, agencyAbbrevOne));
+        mission_agency_two.setText(String.format("%s (%s)", agencyNameTwo, agencyAbbrevTwo));
 
         if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL().length() > 0){
-            wikiButton_one.setVisibility(View.VISIBLE);
-            wikiButton_one.setOnClickListener(new View.OnClickListener() {
+            mission_wikiButton_one.setVisibility(View.VISIBLE);
+            mission_wikiButton_one.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(Intent.ACTION_VIEW);
@@ -196,13 +212,13 @@ public class AgencyDetailFragment extends Fragment {
                 }
             });
         } else {
-            wikiButton_one.setVisibility(View.GONE);
+            mission_wikiButton_one.setVisibility(View.GONE);
         }
 
 
         if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL().length() > 0){
-            infoButton_one.setVisibility(View.VISIBLE);
-            infoButton_one.setOnClickListener(new View.OnClickListener() {
+            mission_infoButton_one.setVisibility(View.VISIBLE);
+            mission_infoButton_one.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(Intent.ACTION_VIEW);
@@ -211,12 +227,12 @@ public class AgencyDetailFragment extends Fragment {
                 }
             });
         } else {
-            infoButton_one.setVisibility(View.GONE);
+            mission_infoButton_one.setVisibility(View.GONE);
         }
 
         if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getWikiURL().length() > 0){
-            wikiButton_two.setVisibility(View.VISIBLE);
-            wikiButton_two.setOnClickListener(new View.OnClickListener() {
+            mission_wikiButton_two.setVisibility(View.VISIBLE);
+            mission_wikiButton_two.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(Intent.ACTION_VIEW);
@@ -225,13 +241,13 @@ public class AgencyDetailFragment extends Fragment {
                 }
             });
         } else {
-            wikiButton_two.setVisibility(View.GONE);
+            mission_wikiButton_two.setVisibility(View.GONE);
         }
 
 
         if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getInfoURL().length() > 0){
-            infoButton_two.setVisibility(View.VISIBLE);
-            infoButton_two.setOnClickListener(new View.OnClickListener() {
+            mission_infoButton_two.setVisibility(View.VISIBLE);
+            mission_infoButton_two.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(Intent.ACTION_VIEW);
@@ -240,35 +256,42 @@ public class AgencyDetailFragment extends Fragment {
                 }
             });
         } else {
-            infoButton_two.setVisibility(View.GONE);
+            mission_infoButton_two.setVisibility(View.GONE);
         }
     }
 
     private void setNoVehicleAgencies() {
-        mission_agency_type.setVisibility(View.VISIBLE);
-        mission_one.setVisibility(View.GONE);
-        mission_two.setVisibility(View.GONE);
+        launch_agency_type.setVisibility(View.VISIBLE);
+        launch_one.setVisibility(View.GONE);
+        launch_two.setVisibility(View.GONE);
 
     }
 
     private void setOneVehicleAgencies() {
+        launch_agency_type.setVisibility(View.VISIBLE);
+        launch_agency_type.setText(detailLaunch.getRocket().getName());
         String countryCode = detailLaunch.getRocket().getAgencies().get(0).getCountryCode();
-        String agency = getAgencyType(detailLaunch.getRocket().getAgencies().get(0).getType());
-        if (countryCode.length() > 9){
-            countryCode = countryCode.substring(0,2) + ", "+ countryCode.substring(4,6) + ", "+ countryCode.substring(7,9) + "...";
-            agency = agency + " | Multinational";
-        } else {
-            countryCode = countryCode.substring(0,2);
+        String agencyType = getAgencyType(detailLaunch.getRocket().getAgencies().get(0).getType());
+        String agencyName = detailLaunch.getRocket().getAgencies().get(0).getName();
+        String agencyAbbrev = detailLaunch.getRocket().getAgencies().get(0).getAbbrev();
+
+        checkLaunchSummary(agencyAbbrev, launch_agency_summary_one);
+
+        if (countryCode.length() > 10){
+            countryCode = countryCode.substring(0,3) + ", "+ countryCode.substring(4,7) + ", "+ countryCode.substring(7,10) + "...";
+            agencyType = agencyType + " | Multinational";
+        }  else if (countryCode.length() > 4 && countryCode.length() < 10){
+            countryCode = countryCode.substring(0,3);
         }
-        mission_one.setVisibility(View.VISIBLE);
-        mission_two.setVisibility(View.GONE);
-        mission_agency_type.setVisibility(View.GONE);
-        mission_agency_one.setText(String.format("%s (%s) %s", detailLaunch.getRocket().getAgencies().get(0).getName(), detailLaunch.getRocket().getAgencies().get(0).getAbbrev(), countryCode));
-        mission_agency_type_one.setText("Type: " + agency);
+
+        launch_one.setVisibility(View.VISIBLE);
+        launch_two.setVisibility(View.GONE);
+        launch_vehicle_agency_one.setText(String.format("%s (%s) %s",agencyName , agencyAbbrev, countryCode));
+        launch_agency_type_one.setText("Type: " + agencyType);
 
         if (detailLaunch.getRocket().getAgencies().get(0).getInfoURL().length() > 0){
-            mission_wikiButton_one.setVisibility(View.VISIBLE);
-            mission_wikiButton_one.setOnClickListener(new View.OnClickListener() {
+            wikiButton_one.setVisibility(View.VISIBLE);
+            wikiButton_one.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(Intent.ACTION_VIEW);
@@ -278,13 +301,13 @@ public class AgencyDetailFragment extends Fragment {
                 }
             });
         } else {
-            mission_wikiButton_one.setVisibility(View.GONE);
+            wikiButton_one.setVisibility(View.GONE);
         }
 
 
         if (detailLaunch.getRocket().getAgencies().get(0).getInfoURL().length() > 0){
-            mission_infoButton_one.setVisibility(View.VISIBLE);
-            mission_infoButton_one.setOnClickListener(new View.OnClickListener() {
+            infoButton_one.setVisibility(View.VISIBLE);
+            infoButton_one.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(Intent.ACTION_VIEW);
@@ -294,38 +317,49 @@ public class AgencyDetailFragment extends Fragment {
                 }
             });
         } else {
-            mission_infoButton_one.setVisibility(View.GONE);
+            infoButton_one.setVisibility(View.GONE);
         }
     }
 
     private void setTwoVehicleAgencies() {
         String countryCode = detailLaunch.getRocket().getAgencies().get(0).getCountryCode();
-        String agency = getAgencyType(detailLaunch.getRocket().getAgencies().get(0).getType());
-        if (countryCode.length() > 9){
-            countryCode = countryCode.substring(0,2) + ", "+ countryCode.substring(4,6) + ", "+ countryCode.substring(7,9) + "...";
-            agency = agency + " | Multinational";
-        } else {
-            countryCode = countryCode.substring(0,2);
+        String agencyOne = getAgencyType(detailLaunch.getRocket().getAgencies().get(0).getType());
+        String agencyNameOne = detailLaunch.getRocket().getAgencies().get(0).getName();
+        String agencyAbbrevOne = detailLaunch.getRocket().getAgencies().get(0).getAbbrev();
+
+        checkLaunchSummary(agencyAbbrevOne, launch_agency_summary_one);
+
+        if (countryCode.length() > 10){
+            countryCode = countryCode.substring(0,3) + ", "+ countryCode.substring(4,7) + ", "+ countryCode.substring(7,10) + "...";
+            agencyOne = agencyOne + " | Multinational";
+        }  else if (countryCode.length() > 4 && countryCode.length() < 10) {
+            countryCode = countryCode.substring(0, 3);
         }
+
         String countryCodeTwo = detailLaunch.getRocket().getAgencies().get(1).getCountryCode();
         String agencyTwo = getAgencyType(detailLaunch.getRocket().getAgencies().get(1).getType());
-        if (countryCodeTwo.length() > 9){
-            countryCodeTwo = countryCodeTwo.substring(0,2) + ", "+ countryCodeTwo.substring(4,6) + ", "+ countryCodeTwo.substring(7,9) + "...";
+        String agencyNameTwo = detailLaunch.getRocket().getAgencies().get(1).getName();
+        String agencyAbbrevTwo = detailLaunch.getRocket().getAgencies().get(1).getAbbrev();
+
+        checkLaunchSummary(agencyAbbrevTwo, launch_agency_summary_two);
+
+        if (countryCodeTwo.length() > 10){
+            countryCodeTwo = countryCodeTwo.substring(0,3) + ", "+ countryCodeTwo.substring(4,7) + ", "+ countryCodeTwo.substring(7,10) + "...";
             agencyTwo = agencyTwo + " | Multinational";
-        } else {
-            countryCodeTwo = countryCodeTwo.substring(0,2);
+        }  else if (countryCodeTwo.length() > 4 && countryCodeTwo.length() < 10) {
+            countryCodeTwo = countryCodeTwo.substring(0, 3);
         }
-        mission_one.setVisibility(View.VISIBLE);
-        mission_two.setVisibility(View.VISIBLE);
-        mission_agency_type.setVisibility(View.GONE);
-        mission_agency_type_one.setText(String.format("Type: %s", agency));
-        mission_agency_type_two.setText(String.format("Type: %s", agencyTwo));
-        mission_agency_one.setText(String.format("%s (%s) %s", detailLaunch.getRocket().getAgencies().get(0).getName(), detailLaunch.getRocket().getAgencies().get(0).getAbbrev(), countryCode));
-        mission_agency_two.setText(String.format("%s (%s) %s", detailLaunch.getRocket().getAgencies().get(1).getName(), detailLaunch.getRocket().getAgencies().get(1).getAbbrev(), countryCodeTwo));
+
+        launch_one.setVisibility(View.VISIBLE);
+        launch_two.setVisibility(View.VISIBLE);
+        launch_agency_type_one.setText(String.format("Type: %s", agencyOne));
+        launch_agency_type_two.setText(String.format("Type: %s", agencyTwo));
+        launch_vehicle_agency_one.setText(String.format("%s (%s) %s",agencyNameOne, agencyAbbrevOne , countryCode));
+        launch_vehicle_agency_two.setText(String.format("%s (%s) %s", agencyNameTwo,agencyAbbrevTwo, countryCodeTwo));
 
         if (detailLaunch.getRocket().getAgencies().get(0).getInfoURL().length() > 0){
-            mission_wikiButton_one.setVisibility(View.VISIBLE);
-            mission_wikiButton_one.setOnClickListener(new View.OnClickListener() {
+            wikiButton_one.setVisibility(View.VISIBLE);
+            wikiButton_one.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(Intent.ACTION_VIEW);
@@ -334,13 +368,13 @@ public class AgencyDetailFragment extends Fragment {
                 }
             });
         } else {
-            mission_wikiButton_one.setVisibility(View.GONE);
+            wikiButton_one.setVisibility(View.GONE);
         }
 
 
         if (detailLaunch.getRocket().getAgencies().get(0).getInfoURL().length() > 0){
-            mission_infoButton_one.setVisibility(View.VISIBLE);
-            mission_infoButton_one.setOnClickListener(new View.OnClickListener() {
+            infoButton_one.setVisibility(View.VISIBLE);
+            infoButton_one.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(Intent.ACTION_VIEW);
@@ -349,12 +383,12 @@ public class AgencyDetailFragment extends Fragment {
                 }
             });
         } else {
-            mission_infoButton_one.setVisibility(View.GONE);
+            infoButton_one.setVisibility(View.GONE);
         }
 
         if (detailLaunch.getRocket().getAgencies().get(1).getInfoURL().length() > 0){
-            mission_wikiButton_two.setVisibility(View.VISIBLE);
-            mission_wikiButton_two.setOnClickListener(new View.OnClickListener() {
+            wikiButton_two.setVisibility(View.VISIBLE);
+            wikiButton_two.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(Intent.ACTION_VIEW);
@@ -363,12 +397,12 @@ public class AgencyDetailFragment extends Fragment {
                 }
             });
         } else {
-            mission_wikiButton_two.setVisibility(View.GONE);
+            wikiButton_two.setVisibility(View.GONE);
         }
 
         if (detailLaunch.getRocket().getAgencies().get(1).getInfoURL().length() > 1){
-            mission_infoButton_two.setVisibility(View.VISIBLE);
-            mission_infoButton_two.setOnClickListener(new View.OnClickListener() {
+            infoButton_two.setVisibility(View.VISIBLE);
+            infoButton_two.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(Intent.ACTION_VIEW);
@@ -377,7 +411,47 @@ public class AgencyDetailFragment extends Fragment {
                 }
             });
         } else {
-            mission_infoButton_two.setVisibility(View.GONE);
+            infoButton_two.setVisibility(View.GONE);
+        }
+    }
+
+    private void checkLaunchSummary(String abbrev, TextView view) {
+        if (abbrev.equalsIgnoreCase("spx")){
+            view.setText(R.string.spacex_summary);
+            view.setVisibility(View.VISIBLE);
+        } else if (abbrev.equalsIgnoreCase("usaf")){
+            view.setText(R.string.usaf_summary);
+            view.setVisibility(View.VISIBLE);
+        } else if (abbrev.equalsIgnoreCase("cnsa")){
+            view.setText(R.string.cnsa_summary);
+            view.setVisibility(View.VISIBLE);
+        } else if (abbrev.equalsIgnoreCase("casc")){
+            view.setText(R.string.casc_summary);
+            view.setVisibility(View.VISIBLE);
+        } else if (abbrev.equalsIgnoreCase("isro")){
+            view.setText(R.string.isro_summary);
+            view.setVisibility(View.VISIBLE);
+        } else if (abbrev.equalsIgnoreCase("vko")){
+            view.setText(R.string.vko_summary);
+            view.setVisibility(View.VISIBLE);
+        } else if (abbrev.equalsIgnoreCase("fka")){
+            view.setText(R.string.roscosmos_summary);
+            view.setVisibility(View.VISIBLE);
+        } else if (abbrev.equalsIgnoreCase("ula")){
+            view.setText(R.string.ula_summary);
+            view.setVisibility(View.VISIBLE);
+        } else if (abbrev.equalsIgnoreCase("gd")){
+            view.setText(R.string.gd_summary);
+            view.setVisibility(View.VISIBLE);
+        } else if (abbrev.equalsIgnoreCase("asa")){
+            view.setText(R.string.asa_summary);
+            view.setVisibility(View.VISIBLE);
+        }  else if (abbrev.equalsIgnoreCase("TsSKB-Progress")){
+            view.setText(R.string.TsSKB_summary);
+            view.setVisibility(View.VISIBLE);
+        }  else if (abbrev.equalsIgnoreCase("nasa")){
+            view.setText(R.string.nasa_summary);
+            view.setVisibility(View.VISIBLE);
         }
     }
 

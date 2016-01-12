@@ -108,7 +108,10 @@ public class LaunchDetailActivity extends AppCompatActivity
 
         //Grab information from Intent
         Intent mIntent = getIntent();
-        launch = (Launch) mIntent.getSerializableExtra("launch");
+        launch = ((Launch) mIntent.getSerializableExtra("launch"));
+        if (mIntent.getIntExtra("launchID", 0) > 0){
+            launch = sharedPreference.getLaunchByID(mIntent.getIntExtra("launchID", 0));
+        }
         getLaunchVehicle(launch);
 
         fab_favorite.setOnClickListener(new View.OnClickListener(){
@@ -190,6 +193,7 @@ public class LaunchDetailActivity extends AppCompatActivity
 
     private void findProfileLogo() {
 
+        //TODO stabilize this
         //Default location, mission is unknown.
         String location = "Unknown Location";
         String mission = "Unknown Mission";
@@ -219,11 +223,14 @@ public class LaunchDetailActivity extends AppCompatActivity
 
                     if (locationCountryCode.contains("USA")) {
                         //Check for SpaceX/Boeing/ULA/NASA
+                        if (launch.getRocket().getAgencies().size() > 0){
+                            if (launch.getLocation().getPads().
+                                    get(0).getAgencies().get(0).getAbbrev().contains("SpX") && launch.getRocket().getAgencies().get(0).getAbbrev().contains("SpX")) {
+                                //Apply SpaceX Logo
+                                applyProfileLogo("http://i.imgur.com/3BqROn0.jpg");
+                            }
+                        }
                         if (launch.getLocation().getPads().
-                                get(0).getAgencies().get(0).getAbbrev().contains("SpX")) {
-                            //Apply SpaceX Logo
-                            applyProfileLogo("http://i.imgur.com/3BqROn0.jpg");
-                        } else if (launch.getLocation().getPads().
                                 get(0).getAgencies().get(0).getAbbrev() == "BA" && launch.getRocket().getAgencies().get(0).getCountryCode() == "UKR") {
                             //Apply Yuzhnoye Logo
                             applyProfileLogo("https://i.imgur.com/KnDMy7l.png");
@@ -274,9 +281,14 @@ public class LaunchDetailActivity extends AppCompatActivity
     }
 
     private void getLaunchVehicle(Launch result) {
+        String query;
+        if (result.getRocket().getName().contains("Space Shuttle")){
+            query = "Space Shuttle";
+        } else {
+            query = result.getRocket().getName();
+        }
         DatabaseManager databaseManager = new DatabaseManager(this);
-        LaunchVehicle launchVehicle = databaseManager.getLaunchVehicle(result.getRocket()
-                .getName());
+        LaunchVehicle launchVehicle = databaseManager.getLaunchVehicle(query);
         if (launchVehicle != null && launchVehicle.getImageURL().length() > 0) {
             Glide.with(this)
                     .load(launchVehicle
@@ -286,6 +298,8 @@ public class LaunchDetailActivity extends AppCompatActivity
                     .crossFade()
                     .into(detail_profile_backdrop);
             Timber.d("Glide Loading: %s %s", launchVehicle.getLVName(), launchVehicle.getImageURL());
+        } else {
+
         }
     }
 
