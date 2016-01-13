@@ -59,4 +59,5 @@ dependencies {
     compile 'hanks.xyz:smallbang-library:0.1.2'
     compile 'com.kobakei:ratethisapp:0.0.4'
     compile 'com.jakewharton.timber:timber:4.1.0'
+    compile 'za.co.riggaroo:materialhelptutorial:1.0.3'
 }

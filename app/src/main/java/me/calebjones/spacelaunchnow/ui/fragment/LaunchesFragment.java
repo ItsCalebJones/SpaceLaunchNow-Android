@@ -128,7 +128,13 @@ public class LaunchesFragment extends Fragment implements SwipeRefreshLayout.OnR
         if (this.sharedPreference.getUpcomingFirstBoot()) {
             this.sharedPreference.setUpcomingFirstBoot(false);
             Timber.d("Upcoming Launch Fragment: First Boot.");
-            showLoading();
+            if(this.sharedPreference.getLaunchesUpcoming().size() == 0){
+                showLoading();
+                fetchData();
+            } else {
+                this.rocketLaunches.clear();
+                displayLaunches();
+            }
         } else  {
             Timber.d("Upcoming Launch Fragment: Not First Boot.");
             this.rocketLaunches.clear();

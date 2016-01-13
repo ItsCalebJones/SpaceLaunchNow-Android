@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
@@ -35,6 +36,8 @@ import me.calebjones.spacelaunchnow.ui.fragment.PreviousLaunchesFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.LaunchesFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.LaunchesViewPager;
 import timber.log.Timber;
+import za.co.riggaroo.materialhelptutorial.TutorialItem;
+import za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity;
 
 
 public class MainActivity extends AppCompatActivity
@@ -52,8 +55,9 @@ public class MainActivity extends AppCompatActivity
     private static SharedPreference sharedPreference;
     private Context context;
     private Boolean bool;
-
     private BroadcastReceiver intentReceiver;
+
+    private static final int REQUEST_CODE = 5467;
 
     private int mNavItemId;
 
@@ -139,7 +143,6 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        navigate(mNavItemId);
         checkFirstBoot();
     }
 
@@ -166,6 +169,9 @@ public class MainActivity extends AppCompatActivity
         if (sharedPreference.getFirstBoot()) {
             sharedPreference.setFirstBoot(false);
             getFirstLaunches();
+            loadTutorial();
+        } else {
+            navigate(mNavItemId);
         }
     }
 
@@ -291,5 +297,42 @@ public class MainActivity extends AppCompatActivity
     protected void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(NAV_ITEM_ID, mNavItemId);
+    }
+
+    public void loadTutorial() {
+        Intent mainAct = new Intent(this, MaterialTutorialActivity.class);
+        mainAct.putParcelableArrayListExtra(MaterialTutorialActivity.MATERIAL_TUTORIAL_ARG_TUTORIAL_ITEMS, getTutorialItems(this));
+        startActivityForResult(mainAct, REQUEST_CODE);
+
+    }
+
+    private ArrayList<TutorialItem> getTutorialItems(Context context) {
+        TutorialItem tutorialItem1 = new TutorialItem("Test","Test",
+                R.color.colorPrimary, R.drawable.ic_mission);
+
+        TutorialItem tutorialItem2 = new TutorialItem("Test","Test",
+                R.color.colorAccent,  R.drawable.ic_satellite);
+
+        TutorialItem tutorialItem3 = new TutorialItem("Test","Test",
+                R.color.colorAccentLight, R.drawable.ic_rocket);
+
+        TutorialItem tutorialItem4 = new TutorialItem("Test","Test",
+                R.color.colorPrimaryLight,  R.drawable.ic_favorite);
+
+        ArrayList<TutorialItem> tutorialItems = new ArrayList<>();
+        tutorialItems.add(tutorialItem1);
+        tutorialItems.add(tutorialItem2);
+        tutorialItems.add(tutorialItem3);
+        tutorialItems.add(tutorialItem4);
+
+        return tutorialItems;
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //    super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            Toast.makeText(this, "Tutorial finished", Toast.LENGTH_LONG).show();
+            recreate();
+        }
     }
 }
