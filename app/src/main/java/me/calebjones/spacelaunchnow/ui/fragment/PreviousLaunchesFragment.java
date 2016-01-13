@@ -150,6 +150,13 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
             this.sharedPreference.setPreviousFirstBoot(false);
             Timber.d("Previous Launch Fragment: First Boot.");
             getDefaultDateRange();
+            if(this.sharedPreference.getLaunchesPrevious().size() == 0){
+                fetchData();
+            } else {
+                this.rocketLaunches.clear();
+                displayLaunches();
+                setTitle();
+            }
         } else {
             Timber.d("Previous Launch Fragment: Not First Boot.");
             this.rocketLaunches.clear();
