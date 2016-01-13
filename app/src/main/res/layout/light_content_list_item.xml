@@ -159,47 +159,61 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:paddingBottom="8dp"
                 android:paddingLeft="28dp"
                 android:paddingRight="28dp"
                 android:paddingTop="8dp">
-
-                <TextView
-                    android:id="@+id/content_status_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Status:"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/content_status"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:lines="1"
-                    android:text=" Unknown"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorGo"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/content_Tminus_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="4dp"
-                    android:text="T Minus:"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/content_TMinus_status"
+                <LinearLayout
+                    style="@style/LightTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:lines="1"
-                    android:text=" Unknown"
-                    android:textColor="@color/colorGo"
-                    android:textSize="16sp" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/content_status"
+                        style="@style/LightTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="left"
+                        android:paddingBottom="8dp"
+                        android:paddingTop="4dp"
+                        android:singleLine="false"
+                        android:text="Unknown Launch Status"
+                        android:textAlignment="center"
+                        android:textColor="?android:textColorSecondary"
+                        android:textSize="16sp"
+                        android:theme="@style/LightTheme" />
+                    </LinearLayout>
+                <LinearLayout
+                    style="@style/LightTheme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/content_TMinus_status"
+                        style="@style/LightTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="left"
+                        android:paddingBottom="16dp"
+                        android:singleLine="false"
+                        android:text="Unknown CountDown Status"
+                        android:textAlignment="center"
+                        android:textColor="?android:textColorSecondary"
+                        android:textSize="14sp"
+                        android:theme="@style/LightTheme" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@color/View_Separator"
+                        android:padding="12dp" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <TextView

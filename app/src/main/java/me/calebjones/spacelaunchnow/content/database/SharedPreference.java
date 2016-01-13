@@ -542,8 +542,6 @@ public class SharedPreference {
     }
 
     public static boolean isTimeBetweenTwoTime(String initialTime, String finalTime, String currentTime) throws ParseException {
-        String reg = "^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$";
-        if (initialTime.matches(reg) && finalTime.matches(reg) && currentTime.matches(reg)) {
             boolean valid = false;
             //Start Time
             java.util.Date inTime = new SimpleDateFormat("HH:mm:ss").parse(initialTime);
@@ -572,9 +570,5 @@ public class SharedPreference {
             }
             Timber.d("Dark Theme - Within time: %s", valid);
             return valid;
-        } else {
-            throw new IllegalArgumentException("Not a valid time, expecting HH:MM:SS format");
-        }
-
     }
 }
