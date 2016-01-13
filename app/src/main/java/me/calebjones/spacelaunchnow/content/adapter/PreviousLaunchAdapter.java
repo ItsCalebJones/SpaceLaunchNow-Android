@@ -146,6 +146,7 @@ public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAd
             final int position = getAdapterPosition();
             Launch launch = launchList.get(position);
             Intent intent = new Intent(mContext, LaunchDetailActivity.class);
+            intent.putExtra("TYPE", "Launch");
             intent.putExtra("launch", launch);
             mContext.startActivity(intent);
         }

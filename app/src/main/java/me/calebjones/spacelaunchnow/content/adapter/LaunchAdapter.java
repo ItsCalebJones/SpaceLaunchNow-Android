@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +25,14 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.StreetViewPanoramaCamera;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
@@ -89,6 +93,7 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
     public void onBindViewHolder(final ViewHolder holder, int i) {
         final Launch launchItem = launchList.get(i);
 
+
         position = i;
 
         //TODO These are slightly rounded when converting from double to long
@@ -106,33 +111,6 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
 
         SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
         df.toLocalizedPattern();
-
-        //If timestamp is available calculate TMinus and date.
-        if (launchItem.getWsstamp() > 0) {
-            long longdate = launchItem.getWsstamp();
-            longdate = longdate * 1000;
-            Date date = new Date(longdate);
-
-            long countdown = rightNow.getTimeInMillis();
-
-            Date date2 = new Date(countdown); // Insert value in date1 & date2 as your need
-
-            long dateDiff = date.getTime() - date2.getTime();
-            String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(dateDiff),
-                    TimeUnit.MILLISECONDS.toMinutes(dateDiff) % TimeUnit.HOURS.toMinutes(1),
-                    TimeUnit.MILLISECONDS.toSeconds(dateDiff) % TimeUnit.MINUTES.toSeconds(1));
-
-            holder.launch_date.setText(df.format(date));
-            holder.content_TMinus_status.setText(" " + hms);
-        } else {
-            Date date = new Date(launchItem.getWindowstart());
-            holder.launch_date.setText(df.format(date));
-            holder.content_TMinus_status.setText(" Unknown");
-        }
-
-        if (launchItem.getVidURL().length() == 0) {
-            holder.watchButton.setVisibility(View.GONE);
-        }
 
         switch (launchItem.getStatus()) {
             case 1:
@@ -155,6 +133,60 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
                 holder.content_status.setText(R.string.status_failure);
                 holder.content_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
                 break;
+        }
+
+        //If timestamp is available calculate TMinus and date.
+        if (launchItem.getWsstamp() > 0) {
+            long longdate = launchItem.getWsstamp();
+            longdate = longdate * 1000;
+            final Date date = new Date(longdate);
+
+            Calendar future = DateToCalendar(date);
+            Calendar now = rightNow;
+            CountDownTimer timer;
+
+            now.setTimeInMillis(System.currentTimeMillis());
+            long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
+            if (timeToFinish < 86400000) {
+                timer = new CountDownTimer(future.getTimeInMillis() - now.getTimeInMillis(), 1000) {
+                    StringBuilder time = new StringBuilder();
+
+                    @Override
+                    public void onFinish() {
+                        holder.content_TMinus_status.setText(DateUtils.formatElapsedTime(0));
+                        //mTextView.setText("Times Up!");
+                    }
+
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        time.setLength(0);
+                        // Use days if appropriate
+                        long hours = (millisUntilFinished / 3600000) % 24;
+                        long mins = (millisUntilFinished / 60000) % 60;
+                        long seconds = (millisUntilFinished / 1000) % 60;
+
+                        if (Long.valueOf(hours) > 1) {
+                            holder.content_TMinus_status.setText(String.format("%s Hours : %s Minutes : %s Seconds", Long.valueOf(hours), Long.valueOf(mins), Long.valueOf(seconds)));
+                        } else if (Long.valueOf(mins) > 1) {
+                            holder.content_TMinus_status.setText(String.format("%s Minutes : %s Seconds", Long.valueOf(hours), Long.valueOf(mins), Long.valueOf(seconds)));
+                        }
+                    }
+                }.start();
+            } else {
+                long days = timeToFinish / 86400000;
+                long hours = (timeToFinish / 3600000) % 24;
+                holder.content_TMinus_status.setText(String.format("%s Day(s) : %s Hour(s)", Long.valueOf(days), Long.valueOf(hours)));
+            }
+            holder.launch_date.setText(df.format(date));
+
+        } else {
+            Date date = new Date(launchItem.getWindowstart());
+            holder.launch_date.setText(df.format(date));
+            holder.content_TMinus_status.setText(" Unknown");
+        }
+
+        if (launchItem.getVidURL().length() == 0) {
+            holder.watchButton.setVisibility(View.GONE);
         }
 
 
@@ -224,10 +256,17 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
         return 0;
     }
 
+    public static Calendar DateToCalendar(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal;
+    }
+
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, OnMapReadyCallback {
         public TextView title, content, location, content_mission, content_mission_description,
-                launch_date, content_status_title, content_status, content_TMinus_status,
-                content_Tminus_title, watchButton, shareButton, exploreButton;
+                launch_date, content_status, content_TMinus_status,
+                watchButton, shareButton, exploreButton;
         public FloatingActionButton exploreFab;
 
         public MapView map_view;
@@ -248,12 +287,9 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
             content_mission_description = (TextView) view.findViewById(
                     R.id.content_mission_description);
             launch_date = (TextView) view.findViewById(R.id.launch_date);
-
-            content_status_title = (TextView) view.findViewById(R.id.content_status_title);
             content_status = (TextView) view.findViewById(R.id.content_status);
 
             content_TMinus_status = (TextView) view.findViewById(R.id.content_TMinus_status);
-            content_Tminus_title = (TextView) view.findViewById(R.id.content_Tminus_title);
 
             map_view = (MapView) view.findViewById(R.id.map_view);
 

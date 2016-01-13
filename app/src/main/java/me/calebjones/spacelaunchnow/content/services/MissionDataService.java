@@ -129,7 +129,7 @@ public class MissionDataService extends IntentService {
 
                 if (launchObj != null) {
                  Launch launch = new Launch();
-                    launch.setId(launchObj.optInt("id"));
+                    launch.setId(launchObj.optInt("id", 0));
                     launch.setName(launchObj.optString("name"));
                     mission.setLaunch(launch);
                 }

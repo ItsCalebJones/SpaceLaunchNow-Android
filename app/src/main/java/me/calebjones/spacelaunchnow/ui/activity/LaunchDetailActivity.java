@@ -108,11 +108,17 @@ public class LaunchDetailActivity extends AppCompatActivity
 
         //Grab information from Intent
         Intent mIntent = getIntent();
-        launch = ((Launch) mIntent.getSerializableExtra("launch"));
-        if (mIntent.getIntExtra("launchID", 0) > 0){
-            launch = sharedPreference.getLaunchByID(mIntent.getIntExtra("launchID", 0));
+        String type = mIntent.getStringExtra("TYPE");
+
+        if (type.equals("LaunchID")){
+            int id = mIntent.getIntExtra("id", 0);
+            launch = sharedPreference.getLaunchByID(id);
+        } else if (type.equals("Launch")){
+            launch = ((Launch) mIntent.getSerializableExtra("launch"));
         }
-        getLaunchVehicle(launch);
+        if (launch.getRocket().getName() != null){
+            getLaunchVehicle(launch);
+        }
 
         fab_favorite.setOnClickListener(new View.OnClickListener(){
             @Override
