@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:transitionGroup="true"
-    android:textAlignment="center">
+    android:textAlignment="center"
+    android:transitionGroup="true">
 
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
@@ -112,8 +111,7 @@
                     android:background="@color/View_Separator"
                     android:padding="32dp" />
 
-                <com.google.android.gms.maps.MapView
-                    xmlns:map="http://schemas.android.com/apk/res-auto"
+                <com.google.android.gms.maps.MapView xmlns:map="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/map_view"
                     android:layout_width="fill_parent"
                     android:layout_height="160dp"
@@ -132,27 +130,28 @@
                     android:clickable="true"
                     android:elevation="8dp"
                     android:src="@drawable/ic_explore" />
+
                 <TextView
                     android:id="@+id/content_mission"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/map_view"
+                    android:elevation="0dp"
                     android:paddingLeft="28dp"
                     android:paddingRight="28dp"
                     android:paddingTop="16dp"
                     android:text="Unknown Mission"
                     android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:elevation="0dp" />
+                    android:textStyle="bold" />
             </RelativeLayout>
 
             <View
                 android:id="@+id/separator_mission"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginLeft="24dp"
                 android:layout_marginRight="24dp"
+                android:layout_marginTop="8dp"
                 android:background="@color/View_Separator"
                 android:padding="12dp" />
 
@@ -164,6 +163,7 @@
                 android:paddingLeft="28dp"
                 android:paddingRight="28dp"
                 android:paddingTop="8dp">
+
                 <LinearLayout
                     style="@style/LightTheme"
                     android:layout_width="match_parent"
@@ -185,7 +185,8 @@
                         android:textColor="?android:textColorSecondary"
                         android:textSize="16sp"
                         android:theme="@style/LightTheme" />
-                    </LinearLayout>
+                </LinearLayout>
+
                 <LinearLayout
                     style="@style/LightTheme"
                     android:layout_width="match_parent"
@@ -199,39 +200,54 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:gravity="left"
-                        android:paddingBottom="16dp"
                         android:singleLine="false"
                         android:text="Unknown CountDown Status"
                         android:textAlignment="center"
                         android:textColor="?android:textColorSecondary"
                         android:textSize="14sp"
                         android:theme="@style/LightTheme" />
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@color/View_Separator"
-                        android:padding="12dp" />
+
                 </LinearLayout>
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/content_mission_description"
+            <LinearLayout
+                android:id="@+id/content_mission_description_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingBottom="16dp"
-                android:paddingLeft="28dp"
-                android:paddingRight="28dp"
-                android:textSize="14sp" />
+                android:orientation="vertical"
+                android:paddingBottom="8dp">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="24dp"
+                    android:paddingBottom="8dp"
+                    android:background="@color/View_Separator"
+                    android:padding="12dp" />
+
+
+                <TextView
+                    android:id="@+id/content_mission_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="28dp"
+                    android:paddingRight="28dp"
+                    android:textSize="14sp" />
+            </LinearLayout>
 
             <View
                 android:id="@+id/separator_buttons"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginLeft="24dp"
                 android:layout_marginRight="24dp"
+                android:layout_marginTop="8dp"
                 android:background="@color/View_Separator"
                 android:padding="12dp" />
 
@@ -248,12 +264,12 @@
                     android:layout_alignParentBottom="false"
                     android:layout_alignParentLeft="false"
                     android:layout_alignParentTop="false"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="2dp"
                     android:gravity="center"
                     android:text="Watch Live"
                     android:textColor="@color/white"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="2dp"
                     android:textSize="12sp" />
 
                 <android.support.v7.widget.AppCompatButton
