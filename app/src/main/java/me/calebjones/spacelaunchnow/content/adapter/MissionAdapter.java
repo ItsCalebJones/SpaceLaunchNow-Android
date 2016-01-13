@@ -82,8 +82,7 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
             if(mission.getLaunch().getId() == 0){
                 holder.launchButton.setVisibility(View.GONE);
             } else {
-                Launch launch = sharedPreference.getLaunchByID(mission.getLaunch().getId());
-                if (launch.getId() != null){
+                if (mission.getLaunch().getId() != null &&  mission.getLaunch().getId() != 0){
                     holder.launchButton.setVisibility(View.VISIBLE);
                 }
             }
@@ -127,9 +126,9 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
             switch (v.getId()) {
                 case R.id.launchButton:
                     Timber.v("Launch: %s", missionList.get(position).getLaunch());
-                    Launch launch = sharedPreference.getLaunchByID(missionList.get(position).getLaunch().getId());
                     Intent exploreIntent = new Intent(mContext, LaunchDetailActivity.class);
-                    exploreIntent.putExtra("launch", launch);
+                    exploreIntent.putExtra("TYPE", "LaunchID");
+                    exploreIntent.putExtra("id", (missionList.get(position).getLaunch().getId()));
                     mContext.startActivity(exploreIntent);
                     break;
                 case R.id.infoButton:
