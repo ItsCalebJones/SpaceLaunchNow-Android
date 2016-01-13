@@ -13,6 +13,7 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -192,8 +193,14 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
 
         if (launchItem.getMissions().size() > 0) {
             holder.content_mission.setText(launchItem.getMissions().get(0).getName());
-            holder.content_mission_description.setText(launchItem.getMissions().
-                    get(0).getDescription());
+            String description = launchItem.getMissions().
+                    get(0).getDescription();
+            if (description.length() > 0){
+                holder.content_mission_description_view.setVisibility(View.VISIBLE);
+                holder.content_mission_description.setText(description);
+            }
+        } else {
+            holder.content_mission_description_view.setVisibility(View.GONE);
         }
 
         //If location is available then see if pad and agency informaiton is avaialble.
@@ -267,6 +274,7 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
         public TextView title, content, location, content_mission, content_mission_description,
                 launch_date, content_status, content_TMinus_status,
                 watchButton, shareButton, exploreButton;
+        public LinearLayout content_mission_description_view;
         public FloatingActionButton exploreFab;
 
         public MapView map_view;
@@ -288,8 +296,8 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
                     R.id.content_mission_description);
             launch_date = (TextView) view.findViewById(R.id.launch_date);
             content_status = (TextView) view.findViewById(R.id.content_status);
-
             content_TMinus_status = (TextView) view.findViewById(R.id.content_TMinus_status);
+            content_mission_description_view = (LinearLayout) view.findViewById(R.id.content_mission_description_view);
 
             map_view = (MapView) view.findViewById(R.id.map_view);
 
