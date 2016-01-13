@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -80,7 +81,7 @@ public class LaunchDataService extends IntentService {
 
             startService(new Intent(this, MissionDataService.class));
             getUpcomingLaunches();
-            getPreviousLaunches(intent.getStringExtra("URL"));
+            getPreviousLaunches(getBaseURL());
         } else if (Strings.ACTION_GET_UP_LAUNCHES.equals(action)) {
             if (this.sharedPref.getBoolean("background", true)) {
                 scheduleLaunchUpdates();
@@ -247,9 +248,9 @@ public class LaunchDataService extends IntentService {
                     RocketAgency rocketAgency = new RocketAgency();
                     Rocket rocket = new Rocket();
                     rocket.setId(rocketObj.optInt("id"));
-                    rocket.setName(rocketObj.optString("name"));
-                    rocket.setFamilyname(rocketObj.optString("familyname"));
-                    rocket.setConfiguration(rocketObj.optString("configuration"));
+                    rocket.setName(rocketObj.optString("name", ""));
+                    rocket.setFamilyname(rocketObj.optString("familyname", ""));
+                    rocket.setConfiguration(rocketObj.optString("configuration", ""));
 
                     JSONArray agencies = rocketObj.optJSONArray("agencies");
                     if (agencies != null) {
@@ -488,5 +489,14 @@ public class LaunchDataService extends IntentService {
         } else {
             Timber.e("LaunchDataService - Error setting alarm, failed to change %s to milliseconds", notificationTimer);
         }
+    }
+
+    public String getBaseURL() {
+        Calendar c = Calendar.getInstance();
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = df.format(c.getTime());
+
+        return "https://launchlibrary.net/1.1/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
     }
 }
