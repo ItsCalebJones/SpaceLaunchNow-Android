@@ -8,9 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.annotation.BoolRes;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -25,15 +23,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
-import me.calebjones.spacelaunchnow.content.models.Mission;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.MissionDataService;
 import me.calebjones.spacelaunchnow.content.services.RocketDataService;
 import me.calebjones.spacelaunchnow.ui.activity.SettingsActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.MissionFragment;
-import me.calebjones.spacelaunchnow.ui.fragment.PreviousLaunchesFragment;
-import me.calebjones.spacelaunchnow.ui.fragment.LaunchesFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.LaunchesViewPager;
 import timber.log.Timber;
 import za.co.riggaroo.materialhelptutorial.TutorialItem;
@@ -307,17 +302,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     private ArrayList<TutorialItem> getTutorialItems(Context context) {
-        TutorialItem tutorialItem1 = new TutorialItem("Test","Test",
-                R.color.colorPrimary, R.drawable.ic_mission);
+        TutorialItem tutorialItem1 = new TutorialItem("Space Launch Now","Keep up to date on all your favorite  orbital launches, missions, and launch vehicles.",
+                R.color.slide_one, R.drawable.intro_slide_one_foreground, R.drawable.intro_slide_background);
 
-        TutorialItem tutorialItem2 = new TutorialItem("Test","Test",
-                R.color.colorAccent,  R.drawable.ic_satellite);
+        TutorialItem tutorialItem2 = new TutorialItem("Notification for Launches","Get notifications for upcoming launches and look into the history of spaceflight",
+                R.color.slide_two, R.drawable.intro_slide_two_foreground, R.drawable.intro_slide_background);
 
-        TutorialItem tutorialItem3 = new TutorialItem("Test","Test",
-                R.color.colorAccentLight, R.drawable.ic_rocket);
+        TutorialItem tutorialItem3 = new TutorialItem("Keep Track of Missions","Find out whats going in the world of spaceflight.",
+                R.color.slide_three,  R.drawable.intro_slide_three_foreground, R.drawable.intro_slide_background);
 
-        TutorialItem tutorialItem4 = new TutorialItem("Test","Test",
-                R.color.colorPrimaryLight,  R.drawable.ic_favorite);
+        TutorialItem tutorialItem4 = new TutorialItem("Find Launch Vehicles","Get to know the vehicles that have taken us to orbit.",
+                R.color.slide_four,  R.drawable.intro_slide_four_foreground, R.drawable.intro_slide_background);
 
         ArrayList<TutorialItem> tutorialItems = new ArrayList<>();
         tutorialItems.add(tutorialItem1);

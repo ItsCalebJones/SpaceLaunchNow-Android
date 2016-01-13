@@ -81,10 +81,12 @@ public class LaunchesViewPager extends Fragment {
 
     public void restartViews(String action) {
         Timber.d("Restarting view: %s", action);
-        if (Strings.ACTION_SUCCESS_UP_LAUNCHES.equals(action)) {
-            pagerAdapter.notifyDataSetChanged();
-        } else if (Strings.ACTION_SUCCESS_PREV_LAUNCHES.equals(action)) {
-            pagerAdapter.notifyDataSetChanged();
+        if (pagerAdapter != null){
+            if (Strings.ACTION_SUCCESS_UP_LAUNCHES.equals(action) ) {
+                pagerAdapter.notifyDataSetChanged();
+            } else if (Strings.ACTION_SUCCESS_PREV_LAUNCHES.equals(action)) {
+                pagerAdapter.notifyDataSetChanged();
+            }
         }
     }
 
