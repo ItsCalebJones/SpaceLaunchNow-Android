@@ -5,22 +5,34 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Random;
 
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Strings;
@@ -55,6 +67,8 @@ public class MainActivity extends AppCompatActivity
     private static final int REQUEST_CODE = 5467;
 
     private int mNavItemId;
+
+    public int statusColor;
 
     class LaunchBroadcastReceiver extends BroadcastReceiver {
         LaunchBroadcastReceiver() {
@@ -95,10 +109,12 @@ public class MainActivity extends AppCompatActivity
 
         if (sharedPreference.getNightMode()) {
             sharedPreference.setNightModeStatus(true);
+            statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
             m_theme = R.style.DarkTheme_NoActionBar;
             m_layout = R.layout.dark_activity_main;
         } else {
             sharedPreference.setNightModeStatus(false);
+            statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
             m_theme = R.style.LightTheme_NoActionBar;
             m_layout = R.layout.activity_main;
         }
@@ -118,7 +134,51 @@ public class MainActivity extends AppCompatActivity
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                Timber.v("onDrawerSlide -slideOffest: %s", slideOffset);
+                int color = statusColor;
+                int r = (color >> 16) & 0xFF;
+                int g = (color >> 8) & 0xFF;
+                int b = (color >> 0) & 0xFF;
+
+                float currentScroll = slideOffset * 255;
+                float totalScroll = 255;
+
+                int currentScrollInt = Math.round(currentScroll);
+
+
+                Timber.v("onDrawerSlide -currentScroll: %s totalScroll: %s", currentScroll, totalScroll);
+
+                if ((slideOffset) < 1 && (slideOffset) > 0){
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        Timber.v("onDrawerSlide - Open? currentScroll: %s", currentScroll);
+                        Window window = getWindow();
+                        window.setStatusBarColor(Color.argb(reverseNumber(currentScrollInt,0,255),r,g,b));
+                    }
+                }
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                Timber.v("onDrawerOpened - Open");
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                Timber.v("onDrawerClosed - Closed");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Window window = getWindow();
+                    window.setStatusBarColor(statusColor);
+                }
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        };
 
         mlaunchesViewPager = new LaunchesViewPager();
 
@@ -132,6 +192,19 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        View header = navigationView.getHeaderView(0);
+        ImageView imageView = (ImageView) header.findViewById(R.id.backgroundView);
+
+        //Figure this shit out
+        int[] images = {
+                R.drawable.nav_header,
+                R.drawable.navbar_one,
+                R.drawable.navbar_three,
+                R.drawable.navbar_four,
+        };
+        int idx = new Random().nextInt(images.length);
+        imageView.setImageDrawable(ContextCompat.getDrawable(context,images[idx]));
+
         // select the correct nav menu item
         navigationView.getMenu().findItem(mNavItemId).setChecked(true);
 
@@ -139,6 +212,12 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         checkFirstBoot();
+    }
+
+    public int reverseNumber(int num, int min, int max) {
+        int number = (max + min) - num;
+        Timber.v("Number: %s",number);
+        return number;
     }
 
     public void onStart() {
