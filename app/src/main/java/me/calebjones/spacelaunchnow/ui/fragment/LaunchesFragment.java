@@ -170,9 +170,7 @@ public class LaunchesFragment extends Fragment implements SwipeRefreshLayout.OnR
 
     public void fetchData() {
         this.sharedPreference.removeUpcomingLaunches();
-        String url = "https://launchlibrary.net/1.1/launch/" + this.SharedPreferences.getString("upcoming_value", "5");
         Intent intent = new Intent(getContext(), LaunchDataService.class);
-        intent.putExtra("URL", url);
         intent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
         Timber.d("Sending service intent!");
         getContext().startService(intent);
@@ -204,6 +202,10 @@ public class LaunchesFragment extends Fragment implements SwipeRefreshLayout.OnR
             showLoading();
             fetchData();
             return true;
+        }
+
+        if (id == R.id.return_home){
+            mRecyclerView.scrollToPosition(0);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -241,7 +243,8 @@ public class LaunchesFragment extends Fragment implements SwipeRefreshLayout.OnR
             try {
                 sChildFragmentManagerField.set(this, null);
             } catch (Exception e) {
-                Timber.e("Error setting mChildFragmentManager field %s", e);
+                e.getLocalizedMessage();
+                Timber.e("Error setting mChildFragmentManager field %s ", e);
             }
         }
     }

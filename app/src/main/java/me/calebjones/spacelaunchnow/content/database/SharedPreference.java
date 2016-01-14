@@ -30,6 +30,7 @@ import timber.log.Timber;
 public class SharedPreference {
 
     private static SharedPreference INSTANCE;
+    private static SharedPreferences SETTINGS;
     private SharedPreferences sharedPrefs;
     private Context appContext;
     SharedPreferences.Editor prefsEditor;

@@ -25,7 +25,7 @@
         <item>Five</item>
         <item>Ten</item>
         <item>Twenty</item>
-        <item>Fifty</item>
+        <item>All</item>
     </string-array>
     <string-array name="upcoming_array_values">
         <item>1</item>
@@ -33,7 +33,7 @@
         <item>5</item>
         <item>10</item>
         <item>20</item>
-        <item>50</item>
+        <item>1000</item>
     </string-array>
     <string-array name="previous_array">
         <item>Twenty</item>

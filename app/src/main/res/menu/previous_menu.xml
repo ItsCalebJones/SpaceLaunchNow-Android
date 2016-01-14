@@ -17,6 +17,12 @@
         app:showAsAction="never"
         android:title="Reset Filter" />
     <item
+        android:id="@+id/return_home"
+        android:orderInCategory="95"
+        android:icon="@drawable/ic_action_home"
+        android:title="Home"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"

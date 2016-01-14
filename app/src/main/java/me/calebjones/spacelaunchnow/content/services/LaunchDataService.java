@@ -148,8 +148,8 @@ public class LaunchDataService extends IntentService {
         HttpURLConnection urlConnection = null;
         try {
             /* forming th java.net.URL object */
-            String value = this.sharedPref.getString("upcoming_value", "5");
-            URL url = new URL("https://launchlibrary.net/1.1.1/launch/next/" + value);
+
+            URL url = new URL("https://launchlibrary.net/1.1.1/launch/next/1000");
 
             urlConnection = (HttpURLConnection) url.openConnection();
 

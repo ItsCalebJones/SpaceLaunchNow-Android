@@ -18,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.rahatarmanahmed.cpv.CircularProgressView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,6 +118,7 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onFinishedRefreshing() {
         this.missionList.clear();
         displayMissions();
+        hideLoading();
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
@@ -125,6 +128,19 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
         getContext().startService(new Intent(getContext(), MissionDataService.class));
     }
 
+    private void showLoading() {
+        CircularProgressView progressView = (CircularProgressView)
+                view.findViewById(R.id.progress_View);
+        progressView.setVisibility(View.VISIBLE);
+        progressView.startAnimation();
+    }
+
+    private void hideLoading() {
+        CircularProgressView progressView = (CircularProgressView)
+                view.findViewById(R.id.progress_View);
+        progressView.setVisibility(View.GONE);
+        progressView.resetAnimation();
+    }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
@@ -133,6 +149,26 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
         final MenuItem item = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.action_refresh) {
+            adapter.clear();
+            showLoading();
+            fetchData();
+            return true;
+        }
+
+        if (id == R.id.return_home){
+            mRecyclerView.scrollToPosition(0);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
