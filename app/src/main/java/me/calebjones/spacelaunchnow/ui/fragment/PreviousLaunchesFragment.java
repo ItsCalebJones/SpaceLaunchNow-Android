@@ -319,8 +319,8 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
     public void fetchData() {
         showLoading();
-        String url = "https://launchlibrary.net/1.1/launch/" + this.start_date + "/" + this.end_date + "?sort=desc&limit=" + this.sharedPrefs.getString("previous_value", "1000");
-        Timber.d("Sending Intent URL: %s");
+        String url = "https://launchlibrary.net/1.1/launch/" + this.start_date + "/" + this.end_date + "?sort=desc&limit=1000";
+        Timber.d("Sending Intent URL: %s", url);
         Intent intent = new Intent(getContext(), LaunchDataService.class);
         intent.putExtra("URL", url);
         intent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
@@ -450,6 +450,10 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
             fetchData();
             return true;
         }
+
+        if (id == R.id.return_home){
+            mRecyclerView.scrollToPosition(0);
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -526,7 +530,8 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
             f = Fragment.class.getDeclaredField("mChildFragmentManager");
             f.setAccessible(true);
         } catch (NoSuchFieldException e) {
-            Timber.e("Error getting mChildFragmentManager field %s", e);
+            e.getLocalizedMessage();
+            Timber.e("Error getting mChildFragmentManager field %s", e.getLocalizedMessage());
         }
         sChildFragmentManagerField = f;
     }
@@ -539,7 +544,8 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
             try {
                 sChildFragmentManagerField.set(this, null);
             } catch (Exception e) {
-                Timber.e("Error setting mChildFragmentManager field %s", e);
+                e.getLocalizedMessage();
+                Timber.e("Error setting mChildFragmentManager field %s", e.getLocalizedMessage());
             }
         }
     }

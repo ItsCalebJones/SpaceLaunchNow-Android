@@ -11,8 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
@@ -79,14 +82,51 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
         holder.mission_summary.setText(mission.getDescription());
 
         if (mission.getLaunch() != null && mission.getLaunch().getId() != null){
+
+            //If there's no info on the launch hide the button and no need to check for launch date.
             if(mission.getLaunch().getId() == 0){
                 holder.launchButton.setVisibility(View.GONE);
+                holder.mission_vehicle.setVisibility(View.GONE);
+                holder.mission_date.setVisibility(View.GONE);
             } else {
                 if (mission.getLaunch().getId() != null &&  mission.getLaunch().getId() != 0){
+
+                    //If we can find the name of the launch add it to the card.
+                    if (mission.getLaunch().getName() != null){
+                        holder.mission_vehicle.setText(mission.getLaunch().getName());
+                        holder.mission_vehicle.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.mission_vehicle.setVisibility(View.GONE);
+                    }
+
+                    //If we can find the date of the launch add it to the card.
+                    if (mission.getLaunch().getNet() != null){
+                        SimpleDateFormat informat = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss zzz");
+                        SimpleDateFormat outformat = new SimpleDateFormat("MMM dd, yyyy");
+                        outformat.toLocalizedPattern();
+
+                        Date date;
+                        String str = "";
+
+                        try {
+                            date = informat.parse(mission.getLaunch().getNet());
+                            str = outformat.format(date);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            holder.mission_date.setVisibility(View.GONE);
+                        }
+                        holder.mission_date.setText(str);
+                        holder.mission_date.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.mission_date.setVisibility(View.GONE);
+                    }
+
                     holder.launchButton.setVisibility(View.VISIBLE);
                 }
             }
         } else {
+            holder.mission_vehicle.setVisibility(View.GONE);
+            holder.mission_date.setVisibility(View.GONE);
             holder.launchButton.setVisibility(View.GONE);
         }
         if (mission.getInfoURL().length() == 0){
@@ -103,7 +143,8 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView mission_name, mission_summary, launchButton, infoButton;
+        public TextView mission_name, mission_summary, launchButton, infoButton, mission_vehicle,
+                mission_date;
 
         //Add content to the card
         public ViewHolder(View view) {
@@ -113,6 +154,8 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
             mission_summary = (TextView) view.findViewById(R.id.mission_summary);
             launchButton = (TextView) view.findViewById(R.id.launchButton);
             infoButton = (TextView) view.findViewById(R.id.infoButton);
+            mission_vehicle = (TextView) view.findViewById(R.id.mission_vehicle);
+            mission_date = (TextView) view.findViewById(R.id.mission_date);
 
             launchButton.setOnClickListener(this);
             infoButton.setOnClickListener(this);
@@ -128,7 +171,8 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
                     Timber.v("Launch: %s", missionList.get(position).getLaunch());
                     Intent exploreIntent = new Intent(mContext, LaunchDetailActivity.class);
                     exploreIntent.putExtra("TYPE", "LaunchID");
-                    exploreIntent.putExtra("id", (missionList.get(position).getLaunch().getId()));
+                    int id = missionList.get(position).getLaunch().getId();
+                    exploreIntent.putExtra("id", id);
                     mContext.startActivity(exploreIntent);
                     break;
                 case R.id.infoButton:

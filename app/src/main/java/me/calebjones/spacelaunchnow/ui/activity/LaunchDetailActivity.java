@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
@@ -29,6 +30,7 @@ import com.squareup.picasso.Picasso;
 import java.util.Scanner;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.DatabaseManager;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
@@ -116,8 +118,11 @@ public class LaunchDetailActivity extends AppCompatActivity
         } else if (type.equals("Launch")){
             launch = ((Launch) mIntent.getSerializableExtra("launch"));
         }
-        if (launch.getRocket().getName() != null){
+        if (launch.getRocket() != null || launch.getRocket().getName() != null){
             getLaunchVehicle(launch);
+        } else {
+            Intent homeIntent = new Intent(this, MainActivity.class);
+            startActivity(homeIntent);
         }
 
         fab_favorite.setOnClickListener(new View.OnClickListener(){

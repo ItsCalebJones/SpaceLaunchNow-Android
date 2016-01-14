@@ -162,7 +162,6 @@ public class MainActivity extends AppCompatActivity
 
     public void checkFirstBoot() {
         if (sharedPreference.getFirstBoot()) {
-            sharedPreference.setFirstBoot(false);
             getFirstLaunches();
             loadTutorial();
         } else {
@@ -326,7 +325,7 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //    super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            Toast.makeText(this, "Tutorial finished", Toast.LENGTH_LONG).show();
+            sharedPreference.setFirstBoot(false);
             recreate();
         }
     }

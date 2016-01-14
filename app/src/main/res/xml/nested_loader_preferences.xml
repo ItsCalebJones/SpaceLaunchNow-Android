@@ -8,14 +8,14 @@
             android:key="upcoming_value"
             android:entries="@array/upcoming_array"
             android:entryValues="@array/upcoming_array_values"
-            android:summary="Specify how many upcoming launches to load. Default: Five"
+            android:summary="Specify how many upcoming launches to load."
             android:title="Upcoming Launches" />
         <ListPreference
             android:defaultValue="1000"
             android:key="previous_value"
             android:entries="@array/previous_array"
             android:entryValues="@array/previous_array_values"
-            android:summary="Specify how many previous launches to load. Default: All"
+            android:summary="Specify how many previous launches to load."
             android:title="Previous Launches" />
     </PreferenceCategory>
 
