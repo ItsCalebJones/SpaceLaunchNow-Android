@@ -23,15 +23,43 @@ public class Launch implements Serializable {
     private Integer tbdtime;
     private Location location;
     private Rocket rocket;
+    private boolean isNotifiedDay = false;
+    private boolean isNotifiedHour = false;
+    private boolean isNotifiedCustom = false;
+    private boolean favorite = false;
     private List<Mission> missions = new ArrayList<Mission>();
     private String vidURL;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    /**
-     * 
-     * @return
-     *     The id
-     */
+    public boolean getIsNotifiedCustom() {
+        return isNotifiedCustom;
+    }
+
+
+    public void setIsNotifiedCustom(boolean isNotifiedCustom) {
+        this.isNotifiedCustom = isNotifiedCustom;
+    }
+
+    public boolean getIsNotifiedHour() {
+        return isNotifiedHour;
+    }
+
+
+    public void setIsNotifiedhour(boolean isNotifiedHour) {
+        this.isNotifiedHour = isNotifiedHour;
+    }
+
+
+    public boolean getIsNotifiedDay() {
+        return isNotifiedDay;
+    }
+
+
+    public void setIsNotifiedDay(boolean isNotifiedDay) {
+        this.isNotifiedDay = isNotifiedDay;
+    }
+
+
     public Integer getId() {
         return id;
     }
@@ -305,4 +333,11 @@ public class Launch implements Serializable {
         this.additionalProperties.put(name, value);
     }
 
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
 }

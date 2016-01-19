@@ -154,7 +154,7 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
 
                     @Override
                     public void onFinish() {
-                        holder.content_TMinus_status.setText(DateUtils.formatElapsedTime(0));
+                        holder.content_TMinus_status.setText("Check back later for launch status.");
                         //mTextView.setText("Times Up!");
                     }
 
@@ -330,6 +330,7 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
                     Timber.d("Explore: %s", launchList.get(position).getId());
                     Launch launch = launchList.get(position);
                     Intent exploreIntent = new Intent(mContext, LaunchDetailActivity.class);
+                    exploreIntent.putExtra("TYPE", "Launch");
                     exploreIntent.putExtra("launch", launch);
                     mContext.startActivity(exploreIntent);
                     break;

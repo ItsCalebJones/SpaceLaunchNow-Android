@@ -13,6 +13,10 @@ public class Rocket implements Serializable {
     private String name;
     private String configuration;
     private String familyname;
+    private String infoURL;
+    private String wikiURL;
+    private String imageURL;
+    private Family family;
     private List<RocketAgency> agencies = new ArrayList<RocketAgency>();
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -57,12 +61,48 @@ public class Rocket implements Serializable {
      * @return
      *     The configuration
      */
+    public String getInfoURL() {
+        return infoURL;
+    }
+
+    /**
+     * 
+     * @param configuration
+     *     The configuration
+     */
+    public void setInfoURL(String infoURL) {
+        this.infoURL = infoURL;
+    }
+
+    /**
+     *
+     * @return
+     *     The configuration
+     */
+    public String getWikiURL() {
+        return wikiURL;
+    }
+
+    /**
+     *
+     * @param configuration
+     *     The configuration
+     */
+    public void setWikiURL(String wikiURL) {
+        this.wikiURL = wikiURL;
+    }
+
+    /**
+     *
+     * @return
+     *     The configuration
+     */
     public String getConfiguration() {
         return configuration;
     }
 
     /**
-     * 
+     *
      * @param configuration
      *     The configuration
      */
@@ -75,8 +115,8 @@ public class Rocket implements Serializable {
      * @return
      *     The familyname
      */
-    public String getFamilyname() {
-        return familyname;
+    public Family getFamily() {
+        return family;
     }
 
     /**
@@ -84,8 +124,44 @@ public class Rocket implements Serializable {
      * @param familyname
      *     The familyname
      */
+    public void setFamily(Family family) {
+        this.family = family;
+    }
+
+    /**
+     *
+     * @return
+     *     The familyname
+     */
+    public String getFamilyname() {
+        return familyname;
+    }
+
+    /**
+     *
+     * @param familyname
+     *     The familyname
+     */
     public void setFamilyname(String familyname) {
         this.familyname = familyname;
+    }
+
+    /**
+     *
+     * @return
+     *     The familyname
+     */
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    /**
+     *
+     * @param familyname
+     *     The familyname
+     */
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 
     /**

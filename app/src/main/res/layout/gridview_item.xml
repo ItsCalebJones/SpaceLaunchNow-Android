@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/grid_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:foreground="?selectableItemBackground"
+    android:scaleX="0"
+    android:scaleY="0"
+    android:orientation="vertical"
+    android:background="@color/colorAccent">
+
+    <me.calebjones.spacelaunchnow.utils.SquareImageView
+        android:id="@+id/picture"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:transitionName="image"
+        android:scaleType="centerCrop"
+
+        />
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:padding="12dp"
+        android:textAlignment="center"
+        android:lines="1"
+        android:fontFamily="sans-serif-medium"
+        android:ellipsize="end"
+        android:textSize="16sp"/>
+</LinearLayout>

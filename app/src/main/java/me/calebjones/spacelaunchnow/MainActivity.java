@@ -6,26 +6,25 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.media.Image;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.provider.ContactsContract;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.transition.Slide;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -38,10 +37,11 @@ import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.MissionDataService;
-import me.calebjones.spacelaunchnow.content.services.RocketDataService;
+import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
 import me.calebjones.spacelaunchnow.ui.activity.SettingsActivity;
-import me.calebjones.spacelaunchnow.ui.fragment.MissionFragment;
-import me.calebjones.spacelaunchnow.ui.fragment.LaunchesViewPager;
+import me.calebjones.spacelaunchnow.ui.fragment.missions.MissionFragment;
+import me.calebjones.spacelaunchnow.ui.fragment.launches.LaunchesViewPager;
+import me.calebjones.spacelaunchnow.ui.fragment.vehicles.VehiclesViewPager;
 import timber.log.Timber;
 import za.co.riggaroo.materialhelptutorial.TutorialItem;
 import za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity;
@@ -52,13 +52,12 @@ public class MainActivity extends AppCompatActivity
 
     private static final String NAV_ITEM_ID = "navItemId";
     private final Handler mDrawerActionHandler = new Handler();
-
     private LaunchesViewPager mlaunchesViewPager;
     private final MissionFragment mMissionFragment = new MissionFragment();
-
     private Toolbar toolbar;
     private DrawerLayout drawer;
     private SharedPreferences sharedPref;
+    private NavigationView navigationView;
     private static SharedPreference sharedPreference;
     private Context context;
     private Boolean bool;
@@ -129,6 +128,10 @@ public class MainActivity extends AppCompatActivity
         setTheme(m_theme);
         super.onCreate(savedInstanceState);
         setContentView(m_layout);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setupWindowAnimations();
+        }
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -189,7 +192,7 @@ public class MainActivity extends AppCompatActivity
             mNavItemId = savedInstanceState.getInt(NAV_ITEM_ID);
         }
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         View header = navigationView.getHeaderView(0);
@@ -210,8 +213,16 @@ public class MainActivity extends AppCompatActivity
 
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
         checkFirstBoot();
+    }
+
+    private void setupWindowAnimations() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            Slide slide = new Slide();
+            slide.setDuration(1000);
+            getWindow().setEnterTransition(slide);
+            getWindow().setReturnTransition(slide);
+        }
     }
 
     public int reverseNumber(int num, int min, int max) {
@@ -224,13 +235,15 @@ public class MainActivity extends AppCompatActivity
         super.onStart();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
-        intentFilter.addAction(Strings.ACTION_FAILURE_UPC_LAUNCHES);
+        intentFilter.addAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
         intentFilter.addAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
         intentFilter.addAction(Strings.ACTION_FAILURE_PREV_LAUNCHES);
         intentFilter.addAction(Strings.ACTION_SUCCESS_MISSIONS);
         intentFilter.addAction(Strings.ACTION_FAILURE_MISSIONS);
-        intentFilter.addAction(Strings.ACTION_SUCCESS_ROCKETS);
-        intentFilter.addAction(Strings.ACTION_FAILURE_ROCKETS);
+        intentFilter.addAction(Strings.ACTION_SUCCESS_VEHICLE_DETAILS);
+        intentFilter.addAction(Strings.ACTION_FAILURE_VEHICLE_DETAILS);
+        intentFilter.addAction(Strings.ACTION_SUCCESS_VEHICLES);
+        intentFilter.addAction(Strings.ACTION_FAILURE_VEHICLES);
         registerReceiver(this.intentReceiver, intentFilter);
     }
 
@@ -244,8 +257,16 @@ public class MainActivity extends AppCompatActivity
             getFirstLaunches();
             loadTutorial();
         } else {
+            //TODO check last sync
+            refreshLaunches();
             navigate(mNavItemId);
         }
+    }
+
+    private void refreshLaunches() {
+        Intent update_upcoming_launches = new Intent(context, LaunchDataService.class);
+        update_upcoming_launches.setAction(Strings.ACTION_GET_UP_LAUNCHES);
+        context.startService(update_upcoming_launches);
     }
 
     public void getFirstLaunches() {
@@ -261,8 +282,8 @@ public class MainActivity extends AppCompatActivity
         launchIntent.putExtra("URL", url);
         this.context.startService(launchIntent);
 
-        Intent rocketIntent = new Intent(this.context, RocketDataService.class);
-        rocketIntent.setAction(Strings.ACTION_GET_ROCKETS);
+        Intent rocketIntent = new Intent(this.context, VehicleDataService.class);
+        rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
         this.context.startService(rocketIntent);
 
         this.context.startService(new Intent(this, MissionDataService.class));
@@ -292,6 +313,11 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            if (getFragmentManager().getBackStackEntryCount() == 0) {
+                this.finish();
+            } else {
+                getFragmentManager().popBackStack();
+            }
             super.onBackPressed();
         }
     }
@@ -345,7 +371,7 @@ public class MainActivity extends AppCompatActivity
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.flContent, mlaunchesViewPager)
-                        .addToBackStack(null)
+                        .addToBackStack("LaunchViewPager")
                         .commit();
                 break;
             case R.id.menu_missions:
@@ -356,9 +382,27 @@ public class MainActivity extends AppCompatActivity
                         .commit();
                 break;
             case R.id.menu_vehicle:
-                Toast.makeText(getBaseContext(), "Work in progress! Thanks for your patience!", Toast.LENGTH_SHORT).show();
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.flContent, new VehiclesViewPager())
+                        .commit();
                 break;
             case R.id.menu_favorites:
+                Toast.makeText(getBaseContext(), "Work in progress! Thanks for your patience!", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.menu_launch:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://launchlibrary.net/"));
+                startActivity(browserIntent);
+                break;
+            case R.id.menu_settings:
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                settingsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(settingsIntent);
+                break;
+            case R.id.menu_help:
+                loadTutorial();
+                break;
+            case R.id.menu_feedback:
                 Toast.makeText(getBaseContext(), "Work in progress! Thanks for your patience!", Toast.LENGTH_SHORT).show();
                 break;
             default:
@@ -404,8 +448,10 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //    super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            sharedPreference.setFirstBoot(false);
-            recreate();
+            if (sharedPreference.getFirstBoot()) {
+                sharedPreference.setFirstBoot(false);
+                recreate();
+            }
         }
     }
 }

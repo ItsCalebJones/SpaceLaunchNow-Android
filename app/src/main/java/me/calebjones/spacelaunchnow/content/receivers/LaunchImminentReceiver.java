@@ -16,11 +16,7 @@ import android.util.Log;
 
 import me.calebjones.spacelaunchnow.content.models.Launch;
 
-/**
- * Created by cjones on 11/10/15.
- * Need to implement a service and confirm downloaded before showing this notificaiton.
- * Then need to open directly into DetailView activity.
- */
+
 public class LaunchImminentReceiver extends BroadcastReceiver {
     private Launch launch;
 

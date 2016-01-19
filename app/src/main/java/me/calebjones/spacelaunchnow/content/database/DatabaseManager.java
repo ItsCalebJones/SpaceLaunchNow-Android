@@ -22,13 +22,12 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import me.calebjones.spacelaunchnow.content.models.LaunchVehicle;
+import me.calebjones.spacelaunchnow.content.models.RocketDetails;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
@@ -107,7 +106,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addPost(LaunchVehicle item) {
+    public void addPost(RocketDetails item) {
         if (feedExists(item)) {
             return;
         } else if (itemExists(item)){
@@ -137,13 +136,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
 
-    public LaunchVehicle getLaunchVehicle(String LaunchVehicleName) {
-        Timber.d("DatabaseManager - Checking for Vehicle: %s", LaunchVehicleName);
+    public RocketDetails getLaunchVehicle(String LaunchVehicleName) {
         Cursor cursor = getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_POST + " WHERE " + LVName + " LIKE '%" + LaunchVehicleName +"%'", null);
-        Timber.d("DatabaseManager - Cursor Size %s: %s", cursor.getCount(), DatabaseUtils.dumpCursorToString(cursor));
+        Timber.d("DatabaseManager - Checking for Vehicle: %s - Cursor Size %s:", LaunchVehicleName, cursor.getCount());
+        Timber.v("DatabaseManager - Cursor: %s", DatabaseUtils.dumpCursorToString(cursor));
         if (cursor != null && cursor.getCount() != 0) {
             cursor.moveToFirst();
-            LaunchVehicle item = new LaunchVehicle();
+            RocketDetails item = new RocketDetails();
             item.setLVName(cursor.getString(1));
             item.setLVFamily(cursor.getString(2));
             item.setLVSFamily(cursor.getString(3));
@@ -167,13 +166,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return null;
     }
 
-    public List<LaunchVehicle> getAllLaunchVehicle() {
-        List<LaunchVehicle> vehicles = Collections.emptyList();
+    public List<RocketDetails> getAllLaunchVehicle() {
+        List<RocketDetails> vehicles = Collections.emptyList();
         Cursor cursor = getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_POST, null);
         if (cursor != null && cursor.getCount() != 0 && cursor.moveToFirst()) {
             vehicles = new ArrayList<>();
             do {
-                LaunchVehicle item = new LaunchVehicle();
+                RocketDetails item = new RocketDetails();
                 item.setLVName(cursor.getString(1));
                 item.setLVFamily(cursor.getString(2));
                 item.setLVSFamily(cursor.getString(3));
@@ -198,8 +197,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return vehicles;
     }
 
-    public List<LaunchVehicle> search(String keyWord) {
-        List<LaunchVehicle> post = Collections.emptyList();
+    public List<RocketDetails> search(String keyWord) {
+        List<RocketDetails> post = Collections.emptyList();
         int num = 0;
         if (Utils.isNumeric(keyWord)) {
             num = Integer.parseInt(keyWord);
@@ -209,7 +208,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (cursor != null && cursor.getCount() != 0 && cursor.moveToFirst()) {
             post = new ArrayList<>();
             do {
-                LaunchVehicle item = new LaunchVehicle();
+                RocketDetails item = new RocketDetails();
                 item.setLVName(cursor.getString(1));
                 item.setLVFamily(cursor.getString(2));
                 item.setLVSFamily(cursor.getString(3));
@@ -245,7 +244,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
 
-    public boolean feedExists(LaunchVehicle item) {
+    public boolean feedExists(RocketDetails item) {
         Cursor cursor = getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_POST
                 + " WHERE " + LVName + " = ?", new String[]{String.valueOf(item.getLVName())});
 
@@ -258,7 +257,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return exists;
     }
 
-    public boolean itemExists(LaunchVehicle item) {
+    public boolean itemExists(RocketDetails item) {
         Cursor cursor = getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_POST
                 + " WHERE " + LVName + " = ?", new String[]{String.valueOf(item.getLVName())});
         boolean exists = false;

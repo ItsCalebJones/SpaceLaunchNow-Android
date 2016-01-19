@@ -8,9 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.provider.SyncStateContract;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,7 +26,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import me.calebjones.spacelaunchnow.LaunchApplication;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Strings;
@@ -50,6 +47,7 @@ public class LaunchDataService extends IntentService {
 
     public static List<Launch> upcomingLaunchList;
     public static List<Launch> previousLaunchList;
+    private int prevLaunchID;
     private AlarmManager alarmManager;
     private SharedPreferences sharedPref;
     private SharedPreference sharedPreference;
@@ -90,6 +88,7 @@ public class LaunchDataService extends IntentService {
             getUpcomingLaunches();
         } else if (Strings.ACTION_GET_PREV_LAUNCHES.equals(action)) {
             Timber.d("LaunchDataService - onHandleIntent:  %s ", action);
+            prevLaunchID = intent.getIntExtra("id", 0);
             getPreviousLaunches(intent.getStringExtra("URL"));
         } else {
             Timber.e("LaunchDataService - onHandleIntent: ERROR - Unknown Intent %s", action);
@@ -123,8 +122,18 @@ public class LaunchDataService extends IntentService {
                 }
 
                 parsePreviousResult(response.toString());
+
                 Timber.d("LaunchDataService - Previous Launches list:  %s ", previousLaunchList.size());
 
+                if (prevLaunchID != 0){
+                    int size = previousLaunchList.size();
+
+                    for (int i = 0; i < size; i++) {
+                        if (previousLaunchList.get(i).getId().equals(prevLaunchID)) {
+                            notifyStatusOfLaunch(previousLaunchList.get(i));
+                        }
+                    }
+                }
                 this.sharedPreference.setPreviousLaunches(previousLaunchList);
 
                 Intent broadcastIntent = new Intent();
@@ -138,6 +147,33 @@ public class LaunchDataService extends IntentService {
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_FAILURE_PREV_LAUNCHES);
             LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+        }
+    }
+
+    private void notifyStatusOfLaunch(Launch launch) {
+        String status = null;
+
+        switch (launch.getStatus()){
+            case 3:
+                status = "a success!";
+                break;
+            case 4:
+                status = "a failure.";
+                break;
+        }
+
+        if (status != null) {
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
+            mBuilder.setContentTitle(launch.getName())
+                    .setContentText("Launch was " + status)
+                    .setSmallIcon(R.drawable.ic_notification)
+                    .setAutoCancel(true);
+
+            NotificationManager mNotifyManager = (NotificationManager)
+                    getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
+        } else {
+            schedulePrevioushUpdates(launch.getId());
         }
     }
 
@@ -186,8 +222,9 @@ public class LaunchDataService extends IntentService {
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
                 LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
-            }
 
+                startService(new Intent(this, NextLaunchTracker.class));
+            }
 
         } catch (Exception e) {
             Timber.e("LaunchDataService - getUpcomingLaunches ERROR: %s", e.getLocalizedMessage());
@@ -203,7 +240,7 @@ public class LaunchDataService extends IntentService {
             mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
 
             Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Strings.ACTION_FAILURE_UPC_LAUNCHES);
+            broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
             LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
         }
     }
@@ -486,6 +523,36 @@ public class LaunchDataService extends IntentService {
             Timber.d("LaunchDataService - Scheduling Alarm at %s with interval of %s", nextUpdate, interval);
             alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, nextUpdate, interval,
                     PendingIntent.getBroadcast(this, 165435, new Intent(Strings.ACTION_UPDATE_UP_LAUNCHES), 0));
+        } else {
+            Timber.e("LaunchDataService - Error setting alarm, failed to change %s to milliseconds", notificationTimer);
+        }
+    }
+
+    public void schedulePrevioushUpdates(Integer id) {
+        Timber.d("LaunchDataService - scheduleLaunchUpdates");
+
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        //Get sync period.
+        String notificationTimer = "1";
+
+        long interval;
+
+        Pattern p = Pattern.compile("(\\d+)");
+        Matcher m = p.matcher(notificationTimer);
+
+        Intent intent = new Intent(Strings.ACTION_UPDATE_PREV_LAUNCHES);
+        intent.putExtra("id", id);
+
+        if (m.matches()) {
+            int hrs = Integer.parseInt(m.group(1));
+            interval = (long) hrs * 60 * 60 * 1000;
+            Timber.d("LaunchDataService - Notification Timer: %s to millisecond %s", notificationTimer, interval);
+
+            long nextUpdate = Calendar.getInstance().getTimeInMillis() + interval;
+            Timber.d("LaunchDataService - Scheduling Alarm at %s with interval of %s", nextUpdate, interval);
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, nextUpdate, interval,
+                    PendingIntent.getBroadcast(this, 165436, intent, 0));
         } else {
             Timber.e("LaunchDataService - Error setting alarm, failed to change %s to milliseconds", notificationTimer);
         }
