@@ -6,9 +6,11 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -28,9 +30,11 @@ import timber.log.Timber;
 /**
  * This adapter takes data from SharedPreference/LoaderService and applies it to the LaunchesFragment
  */
-public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHolder>{
+public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHolder> implements SectionIndexer {
     public int position;
     private List<Mission> missionList;
+    private List<Integer> mSectionPositions;
+    private List<String> mSections;
     private Context mContext;
     private Calendar rightNow;
     private SharedPreferences sharedPref;
@@ -39,6 +43,8 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
     public MissionAdapter(Context context) {
         rightNow = Calendar.getInstance();
         missionList = new ArrayList();
+        mSectionPositions = new ArrayList<>();
+        mSections = new ArrayList<>();
         sharedPreference = SharedPreference.getInstance(context);
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         this.mContext = context;
@@ -46,8 +52,23 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
 
     public void addItems(List<Mission> missionList) {
         if (this.missionList == null) {
+            Timber.d("Does this ever get called?");
             this.missionList = missionList;
         } else {
+            //Note: If you're populating with a large dataset, you might want to
+            //call the following code asychronously.
+            mSections.clear();
+            mSectionPositions.clear();
+
+            //data is your adapter's dataset
+            for (int i = 0, length = missionList.size(); i < length; i++) {
+                String section = missionList.get(i).getName().substring(0,1);
+                if (!TextUtils.isEmpty(section) && !mSections.contains(section)) {
+                    //This just adds a new section for each new letter
+                    mSections.add(section);
+                    mSectionPositions.add(i);
+                }
+            }
             this.missionList.addAll(missionList);
         }
     }
@@ -140,6 +161,30 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
     @Override
     public int getItemCount() {
         return missionList.size();
+    }
+
+    @Override
+    public Object[] getSections() {
+        return mSections.toArray();
+    }
+
+    @Override
+    public int getPositionForSection(int i) {
+        if (i >= 0 && i < mSectionPositions.size()) {
+            return mSectionPositions.get(i);
+        }
+        return 0;
+    }
+
+    @Override
+    public int getSectionForPosition(int i) {
+        for (int j = 0, length = mSectionPositions.size(); j < length; j++) {
+            int sectionPosition = mSectionPositions.get(j);
+            if (i <= sectionPosition) {
+                return j;
+            }
+        }
+        return 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

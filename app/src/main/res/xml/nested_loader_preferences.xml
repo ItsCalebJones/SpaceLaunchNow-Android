@@ -35,13 +35,4 @@
             android:summary="Select desired time between syncs."
             android:title="Background Sync Interval" />
     </PreferenceCategory>
-
-    <PreferenceCategory android:title="Other">
-    <SwitchPreferenceCompat
-        android:defaultValue="true"
-        android:key="localTime"
-        android:summaryOff="All dates and times are defaulted to UTC time."
-        android:summaryOn="All dates and times are translated to local timezone."
-        android:title="Local Time" />
-    </PreferenceCategory>
 </PreferenceScreen>
