@@ -1,38 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_feed_content"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:paddingLeft="2dp"
-    android:paddingRight="2dp"
     tools:context="${relativePackage}.${activityClass}">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.github.rahatarmanahmed.cpv.CircularProgressView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/progress_View"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:visibility="gone"
-            app:cpv_indeterminate="true" />
-
-        <com.simplecity.recyclerview_fastscroll.views.FastScrollRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        <com.malinskiy.superrecyclerview.SuperRecyclerView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:columnWidth="320dp" />
+            android:columnWidth="320dp"
+            app:layout_empty="@layout/emptyview"/>
 
-        <me.calebjones.spacelaunchnow.utils.AutofitRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/recycler_view_staggered"
+        <View
+            android:id="@+id/color_reveal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:visibility="gone" />
+            android:background="@color/colorPrimary"
+            android:visibility="invisible"
+            android:elevation="2dp"
+            />
 
     </FrameLayout>
 

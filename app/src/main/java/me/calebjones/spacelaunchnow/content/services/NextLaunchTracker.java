@@ -53,7 +53,13 @@ public class NextLaunchTracker extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        checkNextLaunch();
+        upcomingLaunchList = this.sharedPreference.getLaunchesUpcoming();
+        if (upcomingLaunchList.size() > 0){
+            checkNextLaunch();
+        } else {
+            interval = 3600000;
+            scheduleUpdate();
+        }
     }
 
     private void checkNextLaunch() {
@@ -66,13 +72,13 @@ public class NextLaunchTracker extends IntentService {
             //If they do not match this means nextLaunch has changed IE a launch executed.
             if (nextLaunch.getId().intValue() != storedLaunch.getId().intValue()){
                 this.sharedPreference.setNextLaunch(nextLaunch);
-                
+
                 Intent updatePreviousLaunches = new Intent(this, LaunchDataService.class);
                 updatePreviousLaunches.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
                 updatePreviousLaunches.putExtra("id", storedLaunch.getId());
                 updatePreviousLaunches.putExtra("URL", Utils.getBaseURL());
                 startService(updatePreviousLaunches);
-                
+
                 storedLaunch = nextLaunch;
                 checkStatus(storedLaunch);
             } else {
@@ -85,6 +91,7 @@ public class NextLaunchTracker extends IntentService {
         }
     }
 
+    //TODO THIS IS BUGGED
     private void checkStatus(Launch launch) {
         if (launch.getWsstamp() > 0) {
             long longdate = launch.getWsstamp();
@@ -117,11 +124,12 @@ public class NextLaunchTracker extends IntentService {
                         }
                     }
                 }
-                interval = timeToFinish / 3;
+                interval = 3600000;
                 scheduleUpdate();
 
             //Launch is in less then 24 hours
             } else if (timeToFinish < 86400000) {
+                Timber.v("Less than 24 hours.");
                 if (notify) {
                     //Check settings to see if user should be notified.
                     if (this.sharedPref.getBoolean("notifications_launch_day", false)) {
@@ -144,10 +152,13 @@ public class NextLaunchTracker extends IntentService {
                     interval = 3500000;
                 }
                 scheduleUpdate();
-            } else if (timeToFinish > 600000){
-                interval = timeToFinish / 2;
+            } else {
+                interval = (timeToFinish / 2) + 43200000;
                 scheduleUpdate();
             }
+        } else {
+            interval = (86400000);
+            scheduleUpdate();
         }
     }
 
@@ -181,13 +192,12 @@ public class NextLaunchTracker extends IntentService {
     }
 
     public void scheduleUpdate() {
-        Timber.d("NextLaunchTracker - scheduleUpdate - Interval: %s", interval);
-
+        Timber.d("scheduleUpdate - Interval: %s", interval);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         long nextUpdate = Calendar.getInstance().getTimeInMillis() + interval;
-        Timber.d("NextLaunchTracker - scheduleUpdated in %s milliseconds.", nextUpdate);
+        Timber.d("scheduleUpdated in %s milliseconds.", nextUpdate);
         alarmManager.set(AlarmManager.RTC_WAKEUP, nextUpdate,
-                PendingIntent.getBroadcast(this, 165436, new Intent(Strings.ACTION_CHECK_NEXT_LAUNCH_TIMER), 0));
+                PendingIntent.getBroadcast(this, 165432, new Intent(Strings.ACTION_CHECK_NEXT_LAUNCH_TIMER), 0));
 
     }
 

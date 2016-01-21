@@ -28,17 +28,21 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
 
+import io.fabric.sdk.android.Fabric;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.MissionDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
 import me.calebjones.spacelaunchnow.ui.activity.SettingsActivity;
+import me.calebjones.spacelaunchnow.ui.fragment.favorite.FavoriteFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.missions.MissionFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.fragment.vehicles.VehiclesViewPager;
@@ -99,6 +103,10 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if(!Fabric.isInitialized()){
+            Fabric.with(this, new Crashlytics());
+        }
+        Timber.d("onCreate");
         int m_theme;
         int m_layout;
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -258,7 +266,6 @@ public class MainActivity extends AppCompatActivity
             loadTutorial();
         } else {
             //TODO check last sync
-            refreshLaunches();
             navigate(mNavItemId);
         }
     }
@@ -388,7 +395,10 @@ public class MainActivity extends AppCompatActivity
                         .commit();
                 break;
             case R.id.menu_favorites:
-                Toast.makeText(getBaseContext(), "Work in progress! Thanks for your patience!", Toast.LENGTH_SHORT).show();
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.flContent, new FavoriteFragment())
+                        .commit();
                 break;
             case R.id.menu_launch:
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://launchlibrary.net/"));

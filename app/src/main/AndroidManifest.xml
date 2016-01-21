@@ -79,6 +79,9 @@
         <activity
             android:name="za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="dc9cc4c8ab9f9d19cc6ba7cf0cdef85dab29d1ec" />
     </application>
 
 </manifest>

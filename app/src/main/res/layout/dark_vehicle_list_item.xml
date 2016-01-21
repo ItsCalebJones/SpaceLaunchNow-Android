@@ -12,6 +12,7 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        card_view:cardBackgroundColor="@color/dark_card_background"
         card_view:cardCornerRadius="2dp"
         card_view:cardElevation="4dp"
         card_view:cardPreventCornerOverlap="true"
@@ -25,7 +26,8 @@
             <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/grid_root"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:elevation="2dp">
 
                 <ImageView
                     android:id="@+id/item_icon"
@@ -33,7 +35,8 @@
                     android:layout_height="175dp"
                     android:scaleType="centerCrop"
                     android:transitionName="imageCover"
-                    android:src="@drawable/placeholder" />
+                    android:src="@drawable/placeholder"
+                    android:elevation="2dp" />
 
             </FrameLayout>
 
@@ -42,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_gravity="bottom"
-                android:background="@color/colorAccent"
+                android:background="@color/darkPrimary_dark"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:text="Unknown Rocket Name"
@@ -50,7 +53,8 @@
                 android:textStyle="bold"
                 android:textAlignment="gravity"
                 android:gravity="center_vertical|center_horizontal"
-                android:textColor="#ffffff" />
+                android:textColor="#ffffff"
+                android:elevation="2dp" />
 
             <TextView
                 android:id="@+id/launch_vehicle_description"
@@ -64,7 +68,8 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:singleLine="false"
-                android:textColor="?android:textColorSecondary" />
+                android:textColor="?android:textColorSecondary"
+                android:visibility="gone" />
 
 
             <LinearLayout

@@ -31,6 +31,8 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.borax12.materialdaterangepicker.date.DatePickerDialog;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
@@ -95,6 +97,10 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         super.onCreateView(inflater, container, savedInstanceState);
 
         setHasOptionsMenu(true);
+
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentName("PreviousLaunchesFragment")
+                .putContentType("Fragment"));
 
         LayoutInflater lf = getActivity().getLayoutInflater();
 

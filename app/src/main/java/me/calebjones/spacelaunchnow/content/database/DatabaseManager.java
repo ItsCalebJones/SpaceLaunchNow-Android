@@ -239,6 +239,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (cursor != null && cursor.getCount() != 0) {
             count = cursor.getCount();
             cursor.close();
+        } else if (cursor != null){
+            cursor.close();
         }
         return count;
     }
@@ -253,7 +255,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
             exists = true;
             Timber.d("DatabaseManager - Item %s %s Exists: %s", item.getLVName(), item.getLVVariant(), true);
         }
-        cursor.close();
+        if (cursor != null) {
+            cursor.close();
+        }
         return exists;
     }
 
@@ -264,7 +268,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (cursor != null && cursor.getCount() != 0) {
             exists = true;
         }
-        cursor.close();
+        if (cursor != null) {
+            cursor.close();
+        }
         return exists;
     }
 }

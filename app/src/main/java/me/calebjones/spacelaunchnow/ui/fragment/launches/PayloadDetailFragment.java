@@ -52,7 +52,7 @@ public class PayloadDetailFragment extends Fragment {
             final Mission mission = sharedPreference.getMissionByID(detailLaunch.getMissions().get(0).getId());
             payload_status.setText(mission.getName());
             payload_description.setText(mission.getDescription());
-            if (mission.getInfoURL().length() > 0){
+            if (mission.getInfoURL() != null && mission.getInfoURL().length() > 0){
                 payload_infoButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -64,7 +64,7 @@ public class PayloadDetailFragment extends Fragment {
             } else {
                 payload_infoButton.setVisibility(View.GONE);
             }
-            if (mission.getWikiURL().length() > 0){
+            if (mission.getWikiURL() != null && mission.getWikiURL().length() > 0){
                 payload_wikiButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

@@ -56,6 +56,7 @@ public class OrbiterFragment extends MyFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         int m_theme;
+
         this.context = getContext();
 
         sharedPreference = SharedPreference.getInstance(this.context);

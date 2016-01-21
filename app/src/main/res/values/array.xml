@@ -11,6 +11,10 @@
         <item>NASA</item>
         <item>SpaceX</item>
         <item>ROSCOSMOS</item>
+        <item>ULA</item>
+        <item>Arianespace</item>
+        <item>CASC</item>
+        <item>ISRO</item>
     </string-array>
     <string-array name="vehicles">
         <item>Falcon</item>
