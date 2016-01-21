@@ -56,7 +56,8 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
     private TextView launch_date_title, date, launch_window_start, launch_window_end, launch_status
             , launch_vehicle, launch_configuration, launch_family, launch_vehicle_specs_height,
             launch_vehicle_specs_diameter,launch_vehicle_specs_stages,launch_vehicle_specs_leo,
-            launch_vehicle_specs_gto,launch_vehicle_specs_launch_mass, launch_vehicle_specs_thrust;
+            launch_vehicle_specs_gto,launch_vehicle_specs_launch_mass, launch_vehicle_specs_thrust,
+            watchButton;
 
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,6 +90,7 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
         launch_vehicle_specs_gto = (TextView) view.findViewById(R.id.launch_vehicle_specs_gto);
         launch_vehicle_specs_launch_mass = (TextView) view.findViewById(R.id.launch_vehicle_specs_launch_mass);
         launch_vehicle_specs_thrust = (TextView) view.findViewById(R.id.launch_vehicle_specs_thrust);
+        watchButton = (TextView) view.findViewById(R.id.watchButton);
         agency_one = (LinearLayout) view.findViewById(R.id.agency_one);
         agency_two = (LinearLayout) view.findViewById(R.id.agency_two);
         vehicle_spec_view = (LinearLayout) view.findViewById(R.id.vehicle_spec_view);
@@ -158,6 +160,20 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
             case 4:
                 launch_status.setText("Launch failure occurred.");
                 break;
+        }
+
+        if (detailLaunch.getVidURL() != null && detailLaunch.getVidURL().length() > 0){
+            watchButton.setVisibility(View.VISIBLE);
+            watchButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(detailLaunch.getVidURL()));
+                    startActivity(i);
+                }
+            });
+        } else {
+            watchButton.setVisibility(View.INVISIBLE);
         }
 
         launch_vehicle.setText(detailLaunch.getRocket().getName());
@@ -259,8 +275,7 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
         } else {
             launch_window_start.setText(String.format("Launch Time: %s",
                     detailLaunch.getWindowstart()));
-            launch_window_end.setVisibility(View.VISIBLE);
-            launch_window_end.setText(R.string.instant_window);
+            launch_window_end.setVisibility(View.INVISIBLE);
         }
     }
 

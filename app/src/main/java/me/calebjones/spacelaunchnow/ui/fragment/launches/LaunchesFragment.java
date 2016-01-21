@@ -19,6 +19,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 
 import java.lang.reflect.Field;
@@ -79,6 +81,11 @@ public class LaunchesFragment extends Fragment implements SwipeRefreshLayout.OnR
         } else {
             m_theme = R.style.LightTheme_NoActionBar;
         }
+
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentName("LaunchesFragment")
+                .putContentType("Fragment"));
+
         // create ContextThemeWrapper from the original Activity Context with the custom theme
         Context context = new ContextThemeWrapper(getActivity(), m_theme);
         // clone the inflater using the ContextThemeWrapper

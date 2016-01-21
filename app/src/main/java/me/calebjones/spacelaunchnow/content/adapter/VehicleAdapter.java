@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.graphics.Palette;
+import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseArray;
@@ -54,6 +55,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
     private int defaultBackgroundcolor;
     private static final int SCALE_DELAY = 30;
     private int lastPosition = -1;
+    private boolean night;
 
     public VehicleAdapter(Context context) {
         rightNow = Calendar.getInstance();
@@ -85,9 +87,11 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
         sharedPreference = SharedPreference.getInstance(mContext);
 
         if (sharedPreference.getNightMode()) {
+            night = true;
             m_theme = R.layout.gridview_item;
             defaultBackgroundcolor = ContextCompat.getColor(mContext, R.color.colorAccent);
         } else {
+            night = false;
             m_theme = R.layout.gridview_item;
             defaultBackgroundcolor = ContextCompat.getColor(mContext, R.color.darkAccent);
         }
@@ -112,6 +116,8 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
                         }
                     });
         } else {
+            holder.grid_root.setScaleY(1);
+            holder.grid_root.setScaleX(1);
             Glide.with(mContext)
                     .load(item.getDrawableId())
                     .into(holder.picture);
@@ -146,20 +152,24 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
                 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
                 @Override
                 public void onGenerated(Palette palette) {
+                    Palette.Swatch swatch;
+                    if (night){
+                        swatch = palette.getDarkMutedSwatch();
+                    } else {
+                        swatch = palette.getLightVibrantSwatch();
+                    }
 
-                    Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
+                    if (swatch != null) {
 
-                    if (vibrantSwatch != null) {
-
-                        viewHolder.name.setTextColor(vibrantSwatch.getTitleTextColor());
+                        viewHolder.name.setTextColor(swatch.getTitleTextColor());
                         viewHolder.picture.setTransitionName("cover" + position);
 
                         Utils.animateViewColor(viewHolder.grid_root, defaultBackgroundcolor,
-                                vibrantSwatch.getRgb());
+                                swatch.getRgb());
 
                     } else {
 
-                        Log.e("[ERROR]", "BookAdapter onGenerated - The VibrantSwatch were null at: " + position);
+                        Timber.e("[ERROR]", "BookAdapter onGenerated - The swatch was null at: %s", position);
                     }
                 }
             });

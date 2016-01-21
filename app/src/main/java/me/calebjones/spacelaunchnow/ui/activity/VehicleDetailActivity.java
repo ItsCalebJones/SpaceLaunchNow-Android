@@ -30,6 +30,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 
 import java.util.List;
 
@@ -79,6 +81,11 @@ public class VehicleDetailActivity extends AppCompatActivity implements AppBarLa
             m_theme = R.style.LightTheme_Transparent;
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
         }
+
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentName("VehicleDetailActivity")
+                .putContentType("Activity"));
+
         setTheme(m_theme);
 
         super.onCreate(savedInstanceState);
@@ -114,8 +121,11 @@ public class VehicleDetailActivity extends AppCompatActivity implements AppBarLa
             detail_profile_backdrop.setBackground(new BitmapDrawable(getResources(), bookCoverBitmap));
             detail_profile_backdrop.setTransitionName("cover" + position);
 
-            // Add a listener to get noticed when the transition ends to animate the fab button
-            getWindow().getSharedElementEnterTransition().addListener(sharedTransitionListener);
+            ViewPropertyAnimator showTitleAnimator = Utils.showViewByScale(detail_profile_image);
+            showTitleAnimator.setStartDelay(500);
+        } else {
+            detail_profile_image.setScaleX(1);
+            detail_profile_image.setScaleY(1);
         }
 
         appBarLayout.addOnOffsetChangedListener(this);
@@ -299,78 +309,5 @@ public class VehicleDetailActivity extends AppCompatActivity implements AppBarLa
                     .scaleY(1).scaleX(1)
                     .start();
         }
-    }
-
-    /**
-     * I use a listener to get notified when the enter transition ends, and with that notifications
-     * build my own coreography built with the elements of the UI
-     * <p/>
-     * Animations order:
-     * <p/>
-     * 1. The image is animated automatically by the SharedElementTransition
-     * 2. The layout that contains the titles
-     * 3. An alpha transition to show the text of the titles
-     * 3. A scale animation to show the book info
-     */
-    private CustomTransitionListener sharedTransitionListener = new CustomTransitionListener() {
-
-        @Override
-        public void onTransitionEnd(Transition transition) {
-
-            super.onTransitionEnd(transition);
-
-            ViewPropertyAnimator showTitleAnimator = Utils.showViewByScale(detail_profile_image);
-            showTitleAnimator.setListener(new CustomAnimatorListener() {
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-
-                    super.onAnimationEnd(animation);
-                    gridview.startAnimation(AnimationUtils.loadAnimation(VehicleDetailActivity.this, R.anim.alpha_on));
-                    gridview.setVisibility(View.VISIBLE);
-                }
-            });
-
-            showTitleAnimator.start();
-        }
-    };
-
-    @Override
-    public void onBackPressed() {
-
-        ViewPropertyAnimator hideTitleAnimator = Utils.hideViewByScaleXY(detail_profile_image);
-
-        hideTitleAnimator.setListener(new CustomAnimatorListener() {
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                gridview.startAnimation(AnimationUtils.loadAnimation(VehicleDetailActivity.this, R.anim.alpha_off));
-                gridview.setVisibility(View.INVISIBLE);
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Do something after 5s = 5000ms
-                        coolBack();
-                    }
-                }, 600);
-
-            }
-        });
-
-        hideTitleAnimator.start();
-    }
-
-    private void coolBack() {
-
-        try {
-            super.onBackPressed();
-
-        } catch (NullPointerException e) {
-
-            // TODO: workaround
-        }
-
     }
 }

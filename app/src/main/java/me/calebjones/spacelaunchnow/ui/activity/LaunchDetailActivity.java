@@ -26,6 +26,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
@@ -99,6 +101,10 @@ public class LaunchDetailActivity extends AppCompatActivity
             recreate();
         }
 
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentName("LaunchDetailActivity")
+                .putContentType("Activity"));
+
         setTheme(m_theme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch_detail);
@@ -158,6 +164,12 @@ public class LaunchDetailActivity extends AppCompatActivity
             fab_favorite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    Answers.getInstance().logContentView(new ContentViewEvent()
+                            .putContentName("LaunchDetailActivity - Favorite")
+                            .putContentType("Action")
+                            .putCustomAttribute("Favorite", launch.getName()));
+
                     final boolean fav = launch.isFavorite();
                     if (fav) {
                         launch.setFavorite(false);

@@ -3,7 +3,9 @@ package me.calebjones.spacelaunchnow.ui.fragment.missions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 
 import java.util.ArrayList;
@@ -37,11 +40,11 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private MissionAdapter adapter;
     private StaggeredGridLayoutManager staggeredLayoutManager;
     private LinearLayoutManager layoutManager;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     private SlideInBottomAnimationAdapter animatorAdapter;
     private List<Mission> missionList;
     private SharedPreference sharedPreference;
     private android.content.SharedPreferences SharedPreferences;
+    private FloatingActionButton menu;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,9 +64,8 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
         LayoutInflater lf = getActivity().getLayoutInflater();
 
         view = lf.inflate(R.layout.fragment_missions, container, false);
-        View menu = view.findViewById(R.id.menu);
+        menu = (FloatingActionButton) view.findViewById(R.id.menu);
         menu.setVisibility(View.GONE);
-
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         RecyclerView hideView = (RecyclerView) view.findViewById(R.id.recycler_view_staggered);
@@ -89,6 +91,30 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
         return view;
     }
 
+    private void showAlertDialog() {
+        new MaterialDialog.Builder(getContext())
+                .title("Select an Agency")
+                .content("Automatically marks upcoming launches as favorites.")
+                .items(R.array.agencies)
+                .positiveColorRes(R.color.colorAccentDark)
+                .buttonRippleColorRes(R.color.colorAccentLight)
+                .itemsCallbackMultiChoice(null, new MaterialDialog.ListCallbackMultiChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
+                        /**
+                         * If you use alwaysCallMultiChoiceCallback(), which is discussed below,
+                         * returning false here won't allow the newly selected check box to actually be selected.
+                         * See the limited multi choice dialog example in the sample project for details.
+                         **/
+                        return true;
+                    }
+                })
+                .positiveText("Filter")
+                .negativeText("Close")
+                .icon(ContextCompat.getDrawable(getContext(), R.mipmap.ic_launcher))
+                .show();
+    }
+
     private void displayMissions() {
         this.missionList = this.sharedPreference.getMissionList();
         adapter.clear();
@@ -104,7 +130,6 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
         this.missionList.clear();
         displayMissions();
         hideLoading();
-        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     public void fetchData() {

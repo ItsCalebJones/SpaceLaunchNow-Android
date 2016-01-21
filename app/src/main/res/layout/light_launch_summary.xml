@@ -179,18 +179,6 @@
                     android:text="Launch Window End: "
                     android:textColor="?android:textColorSecondary" />
 
-                <TextView
-                    style="@style/LightTheme"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:gravity="left"
-                    android:paddingBottom="8dp"
-                    android:paddingLeft="8dp"
-                    android:paddingTop="4dp"
-                    android:singleLine="false"
-                    android:text="@string/launch_explainer"
-                    android:textColor="?android:textColorSecondary" />
 
                 <View
                     style="@style/LightTheme"
@@ -223,7 +211,7 @@
                             android:layout_marginLeft="8dp"
                             android:layout_marginTop="2dp"
                             android:gravity="center"
-                            android:text="Watch Live"
+                            android:text="Watch Launch"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
 

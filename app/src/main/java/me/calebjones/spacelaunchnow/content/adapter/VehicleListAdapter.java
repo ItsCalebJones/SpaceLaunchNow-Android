@@ -2,12 +2,9 @@ package me.calebjones.spacelaunchnow.content.adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.ImageViewBitmapInfo;
-import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,7 +22,6 @@ import me.calebjones.spacelaunchnow.content.database.DatabaseManager;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.RocketDetails;
 import me.calebjones.spacelaunchnow.content.models.Rocket;
-import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.ViewHolder> {
@@ -77,10 +70,10 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
         databaseManager = new DatabaseManager(mContext);
 
         if (sharedPreference.getNightMode()) {
-            m_theme = R.layout.vehicle_list_item;
+            m_theme = R.layout.dark_vehicle_list_item;
             defaultBackgroundcolor = ContextCompat.getColor(mContext, R.color.colorAccent);
         } else {
-            m_theme = R.layout.vehicle_list_item;
+            m_theme = R.layout.light_vehicle_list_item;
             defaultBackgroundcolor = ContextCompat.getColor(mContext, R.color.darkAccent);
         }
 

@@ -166,10 +166,10 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
                         long mins = (millisUntilFinished / 60000) % 60;
                         long seconds = (millisUntilFinished / 1000) % 60;
 
-                        if (Long.valueOf(hours) > 1) {
-                            holder.content_TMinus_status.setText(String.format("%s Hours : %s Minutes : %s Seconds", Long.valueOf(hours), Long.valueOf(mins), Long.valueOf(seconds)));
+                        if (Long.valueOf(hours) >= 1) {
+                            holder.content_TMinus_status.setText(String.format("%s Hours : %s Minutes : %s Seconds", hours, mins, seconds));
                         } else if (Long.valueOf(mins) > 1) {
-                            holder.content_TMinus_status.setText(String.format("%s Minutes : %s Seconds", Long.valueOf(hours), Long.valueOf(mins), Long.valueOf(seconds)));
+                            holder.content_TMinus_status.setText(String.format("%s Minutes : %s Seconds", mins, seconds));
                         }
                     }
                 }.start();

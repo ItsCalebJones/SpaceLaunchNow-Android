@@ -49,6 +49,7 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
     private int defaultBackgroundcolor;
     private static final int SCALE_DELAY = 30;
     private int lastPosition = -1;
+    private boolean night;
 
     public OrbiterAdapter(Context context) {
         rightNow = Calendar.getInstance();
@@ -81,10 +82,12 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
         sharedPreference = SharedPreference.getInstance(mContext);
 
         if (sharedPreference.getNightMode()) {
+            night = true;
             m_theme = R.layout.gridview_item;
             defaultBackgroundcolor = ContextCompat.getColor(mContext, R.color.colorAccent);
 
         } else {
+            night = false;
             m_theme = R.layout.gridview_item;
             defaultBackgroundcolor = ContextCompat.getColor(mContext, R.color.darkAccent);
         }
@@ -109,6 +112,8 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
                         }
                     });
         } else {
+            holder.grid_root.setScaleY(1);
+            holder.grid_root.setScaleX(1);
             Glide.with(mContext)
                     .load(item.getDrawableId())
                     .into(holder.picture);
@@ -144,15 +149,20 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
                 @Override
                 public void onGenerated(Palette palette) {
 
-                    Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
+                    Palette.Swatch swatch;
+                    if (night){
+                        swatch = palette.getDarkMutedSwatch();
+                    } else {
+                        swatch = palette.getVibrantSwatch();
+                    }
 
-                    if (vibrantSwatch != null) {
+                    if (swatch != null) {
 
-                        viewHolder.name.setTextColor(vibrantSwatch.getTitleTextColor());
+                        viewHolder.name.setTextColor(swatch.getTitleTextColor());
                         viewHolder.picture.setTransitionName("cover" + position);
 
                         Utils.animateViewColor(viewHolder.grid_root, defaultBackgroundcolor,
-                                vibrantSwatch.getRgb());
+                                swatch.getRgb());
 
                     } else {
 
