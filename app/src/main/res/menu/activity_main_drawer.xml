@@ -30,15 +30,15 @@
         <menu>
             <item
                 android:checkable="false"
-                android:id="@+id/Settings"
+                android:id="@+id/menu_settings"
                 android:title="Settings" />
             <item
                 android:checkable="false"
-                android:id="@+id/Help"
+                android:id="@+id/menu_help"
                 android:title="Help" />
             <item
                 android:checkable="false"
-                android:id="@+id/Send_feedback"
+                android:id="@+id/menu_feedback"
                 android:title="Send feedback" />
         </menu>
     </item>

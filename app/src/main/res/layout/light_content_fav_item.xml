@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:textAlignment="center"
+    android:transitionGroup="true">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/card_margin"
+        android:layout_marginRight="@dimen/card_margin"
+        android:animateLayoutChanges="true"
+        card_view:cardCornerRadius="0dp"
+        card_view:cardElevation="4dp"
+        card_view:cardPreventCornerOverlap="true"
+        card_view:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:id="@+id/lnrLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/TitleCard"
+                android:layout_width="match_parent"
+                android:layout_height="88dp"
+                android:elevation="4dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imageIcon"
+                    android:layout_width="64dp"
+                    android:layout_height="fill_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="4dp"
+                    android:padding="8dp" />
+
+                <ImageView
+                    android:id="@+id/categoryIcon"
+                    android:layout_width="64dp"
+                    android:layout_height="fill_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_gravity="center|left"
+                    android:layout_marginLeft="4dp"
+                    android:src="@drawable/ic_favorite"
+                    android:layout_toLeftOf="@+id/launch_rocket"
+                    android:layout_toStartOf="@+id/launch_rocket"
+                    android:padding="6dp" />
+
+                <TextView
+                    android:id="@+id/launch_rocket"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/imageIcon"
+                    android:layout_toRightOf="@+id/imageIcon"
+                    android:fontFamily="sans-serif-condensed"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:paddingTop="8dp"
+                    android:text="Unknown Launch Vehicle"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp"
+                    android:textStyle="normal"
+                    android:paddingLeft="8dp" />
+
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/launch_rocket"
+                    android:layout_toEndOf="@+id/imageIcon"
+                    android:layout_toRightOf="@+id/imageIcon"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:paddingBottom="2dp"
+                    android:paddingTop="4dp"
+                    android:singleLine="false"
+                    android:text="Unknown Launch Location"
+                    android:paddingLeft="8dp" />
+
+                <TextView
+                    android:id="@+id/launch_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/location"
+                    android:layout_toEndOf="@+id/imageIcon"
+                    android:layout_toRightOf="@+id/imageIcon"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:paddingBottom="4dp"
+                    android:singleLine="false"
+                    android:text="Unknown Launch Date"
+                    android:paddingLeft="8dp" />
+
+            </RelativeLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</android.support.design.widget.CoordinatorLayout>

@@ -8,40 +8,31 @@
             android:key="upcoming_value"
             android:entries="@array/upcoming_array"
             android:entryValues="@array/upcoming_array_values"
-            android:summary="Specify how many upcoming launches to load. Default: Five"
+            android:summary="Specify how many upcoming launches to load."
             android:title="Upcoming Launches" />
         <ListPreference
             android:defaultValue="1000"
             android:key="previous_value"
             android:entries="@array/previous_array"
             android:entryValues="@array/previous_array_values"
-            android:summary="Specify how many previous launches to load. Default: All"
+            android:summary="Specify how many previous launches to load."
             android:title="Previous Launches" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Background Sync">
         <SwitchPreferenceCompat
             android:defaultValue="true"
-            android:key="background"
+            android:key="background_sync"
             android:summaryOff="Allow Launch Data to sync in the background."
             android:summaryOn="Launch Data will be synced in the background."
             android:title="Allow Background Syncs" />
         <ListPreference
-            android:dependency="background"
+            android:dependency="background_sync"
             android:defaultValue="4"
             android:entries="@array/sync_timer"
             android:entryValues="@array/sync_timer_values"
             android:key="notification_sync_time"
             android:summary="Select desired time between syncs."
             android:title="Background Sync Interval" />
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="Other">
-    <SwitchPreferenceCompat
-        android:defaultValue="true"
-        android:key="localTime"
-        android:summaryOff="All dates and times are defaulted to UTC time."
-        android:summaryOn="All dates and times are translated to local timezone."
-        android:title="Local Time" />
     </PreferenceCategory>
 </PreferenceScreen>

@@ -3,13 +3,17 @@ package me.calebjones.spacelaunchnow.content.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -24,9 +28,11 @@ import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 /**
  * This adapter takes data from SharedPreference/LoaderService and applies it to the LaunchesFragment
  */
-public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAdapter.ViewHolder>{
+public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAdapter.ViewHolder> implements SectionIndexer {
     public int position;
     private List<Launch> launchList;
+    private List<Integer> mSectionPositions;
+    private List<String> mSections;
     private Context mContext;
     private Calendar rightNow;
     private SharedPreferences sharedPref;
@@ -35,6 +41,8 @@ public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAd
     public PreviousLaunchAdapter(Context context) {
         rightNow = Calendar.getInstance();
         launchList = new ArrayList();
+        mSectionPositions = new ArrayList<>();
+        mSections = new ArrayList<>();
         sharedPreference = SharedPreference.getInstance(context);
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         this.mContext = context;
@@ -44,6 +52,32 @@ public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAd
         if (this.launchList == null) {
             this.launchList = launchList;
         } else {
+            final List<Launch> launches = launchList;
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    mSections.clear();
+                    mSectionPositions.clear();
+
+                    //Note: If you're populating with a large dataset, you might want to
+                    //call the following code asychronously.
+                    SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
+                    df.toLocalizedPattern();
+
+                    //data is your adapter's dataset
+                    for (int i = 0, length = launches.size(); i < length; i++) {
+                        long longdate = launches.get(i).getWsstamp();
+                        longdate = longdate * 1000;
+                        Date date = new Date(longdate);
+                        String section = parseDateToMMyyyy(df.format(date));
+                        if (!TextUtils.isEmpty(section) && !mSections.contains(section)) {
+                            //This just adds a new section for each new letter
+                            mSections.add(section);
+                            mSectionPositions.add(i);
+                        }
+                    }
+                }
+            });
             this.launchList.addAll(launchList);
         }
     }
@@ -83,7 +117,7 @@ public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAd
         df.toLocalizedPattern();
 
         //If timestamp is available calculate TMinus and date.
-        if(launchItem.getWsstamp() > 0){
+        if (launchItem.getWsstamp() > 0) {
             long longdate = launchItem.getWsstamp();
             longdate = longdate * 1000;
             Date date = new Date(longdate);
@@ -97,7 +131,7 @@ public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAd
 
         //If pad and agency exist add it to location, otherwise get whats always available
         if (launchItem.getLocation().getPads().size() > 0 && launchItem.getLocation().getPads().
-                get(0).getAgencies().size() > 0){
+                get(0).getAgencies().size() > 0) {
             location = launchItem.getLocation().getName() + " " + launchItem.getLocation().getPads()
                     .get(0).getAgencies().get(0).getCountryCode();
 
@@ -117,9 +151,51 @@ public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAd
 
     }
 
+    public String parseDateToMMyyyy(String time) {
+        String inputPattern = "EEEE, MMM dd yyyy hh:mm a zzz";
+        String outputPattern = "MMM yyyy";
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+
+        Date date = null;
+        String str = null;
+
+        try {
+            date = inputFormat.parse(time);
+            str = outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
+
     @Override
     public int getItemCount() {
         return launchList.size();
+    }
+
+    @Override
+    public Object[] getSections() {
+        return mSections.toArray();
+    }
+
+    @Override
+    public int getPositionForSection(int i) {
+        if (i >= 0 && i < mSectionPositions.size()) {
+            return mSectionPositions.get(i);
+        }
+        return 0;
+    }
+
+    @Override
+    public int getSectionForPosition(int i) {
+        for (int j = 0, length = mSectionPositions.size(); j < length; j++) {
+            int sectionPosition = mSectionPositions.get(j);
+            if (i <= sectionPosition) {
+                return j;
+            }
+        }
+        return 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

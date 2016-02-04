@@ -47,6 +47,7 @@ import timber.log.Timber;
  */
 public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder> implements SectionIndexer {
     public int position;
+    private String launchDate;
     private List<Launch> launchList;
     private Context mContext;
     private Calendar rightNow;
@@ -65,12 +66,24 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
             this.launchList = launchList;
         } else {
             this.launchList.addAll(launchList);
+            this.notifyDataSetChanged();
+        }
+    }
+
+    public void clearData() {
+        int size = this.launchList.size();
+        if (size > 0) {
+            for (int i = 0; i < size; i++) {
+                this.launchList.remove(0);
+            }
+
+            this.notifyItemRangeRemoved(0, size);
         }
     }
 
     public void clear() {
         launchList.clear();
-        notifyDataSetChanged();
+        this.notifyDataSetChanged();
     }
 
     @Override
@@ -113,6 +126,7 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
         SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
         df.toLocalizedPattern();
 
+
         switch (launchItem.getStatus()) {
             case 1:
                 //GO for launch
@@ -137,8 +151,8 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
         }
 
         //If timestamp is available calculate TMinus and date.
-        if (launchItem.getWsstamp() > 0) {
-            long longdate = launchItem.getWsstamp();
+        if (launchItem.getNetstamp() > 0) {
+            long longdate = launchItem.getNetstamp();
             longdate = longdate * 1000;
             final Date date = new Date(longdate);
 
@@ -154,7 +168,7 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
 
                     @Override
                     public void onFinish() {
-                        holder.content_TMinus_status.setText(DateUtils.formatElapsedTime(0));
+                        holder.content_TMinus_status.setText("Check back later for launch status.");
                         //mTextView.setText("Times Up!");
                     }
 
@@ -166,10 +180,10 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
                         long mins = (millisUntilFinished / 60000) % 60;
                         long seconds = (millisUntilFinished / 1000) % 60;
 
-                        if (Long.valueOf(hours) > 1) {
-                            holder.content_TMinus_status.setText(String.format("%s Hours : %s Minutes : %s Seconds", Long.valueOf(hours), Long.valueOf(mins), Long.valueOf(seconds)));
+                        if (Long.valueOf(hours) >= 1) {
+                            holder.content_TMinus_status.setText(String.format("%s Hours : %s Minutes : %s Seconds", hours, mins, seconds));
                         } else if (Long.valueOf(mins) > 1) {
-                            holder.content_TMinus_status.setText(String.format("%s Minutes : %s Seconds", Long.valueOf(hours), Long.valueOf(mins), Long.valueOf(seconds)));
+                            holder.content_TMinus_status.setText(String.format("%s Minutes : %s Seconds", mins, seconds));
                         }
                     }
                 }.start();
@@ -195,7 +209,7 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
             holder.content_mission.setText(launchItem.getMissions().get(0).getName());
             String description = launchItem.getMissions().
                     get(0).getDescription();
-            if (description.length() > 0){
+            if (description.length() > 0) {
                 holder.content_mission_description_view.setVisibility(View.VISIBLE);
                 holder.content_mission_description.setText(description);
             }
@@ -211,12 +225,12 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
                 //Get the first CountryCode
                 String country = launchItem.getLocation().getPads().
                         get(0).getAgencies().get(0).getCountryCode();
-                country = (country.substring(0, 2));
+                country = (country.substring(0, 3));
 
                 //Get the location remove the pad information
                 String location = launchItem.getLocation().getName() + " " + country;
-                        launchItem.getLocation().getPads().
-                                get(0).getAgencies().get(0).getCountryCode();
+                launchItem.getLocation().getPads().
+                        get(0).getAgencies().get(0).getCountryCode();
                 location = (location.substring(location.indexOf(", ") + 2));
 
                 holder.location.setText(location);
@@ -263,7 +277,7 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
         return 0;
     }
 
-    public static Calendar DateToCalendar(Date date){
+    public static Calendar DateToCalendar(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         return cal;
@@ -319,6 +333,16 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
             final int position = getAdapterPosition();
             Timber.d("onClick at %s", position);
 
+            Launch launch = new Launch();
+            launch = launchList.get(position);
+            Intent sendIntent = new Intent();
+
+            SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy hh:mm a zzz");
+            df.toLocalizedPattern();
+
+            Date date = new Date(launch.getWindowstart());
+            String launchDate = df.format(date);
+
             switch (v.getId()) {
                 case R.id.watchButton:
                     Timber.d("Watch: %s", launchList.get(position).getVidURL());
@@ -328,13 +352,55 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
                     break;
                 case R.id.exploreButton:
                     Timber.d("Explore: %s", launchList.get(position).getId());
-                    Launch launch = launchList.get(position);
                     Intent exploreIntent = new Intent(mContext, LaunchDetailActivity.class);
+                    exploreIntent.putExtra("TYPE", "Launch");
                     exploreIntent.putExtra("launch", launch);
                     mContext.startActivity(exploreIntent);
                     break;
                 case R.id.shareButton:
-                    Timber.d("Share: %s", launchList.get(position).getLocation().getName());
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_SUBJECT, launch.getName());
+                    if (launch.getVidURL() != null) {
+                        if (launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
+                                get(0).getAgencies().size() > 0) {
+                            //Get the first CountryCode
+                            String country = launch.getLocation().getPads().
+                                    get(0).getAgencies().get(0).getCountryCode();
+                            country = (country.substring(0, 3));
+
+                            sendIntent.putExtra(Intent.EXTRA_TEXT, launch.getName() + " launching from "
+                                    + launch.getLocation().getName() + " " + country + "\n \n"
+                                    + launchDate
+                                    + "\n\nWatch: " + launch.getVidURL() + "\n"
+                                    + " \n\nvia Space Launch Now and Launch Library");
+                        } else {
+                            sendIntent.putExtra(Intent.EXTRA_TEXT, launch.getName() + " launching from "
+                                    + launch.getLocation().getName() + "\n \n"
+                                    + launchDate
+                                    + "\n\nWatch: " + launch.getVidURL() + "\n"
+                                    + " \n\nvia Space Launch Now and Launch Library");
+                        }
+                    } else {
+                        if (launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
+                                get(0).getAgencies().size() > 0) {
+                            //Get the first CountryCode
+                            String country = launch.getLocation().getPads().
+                                    get(0).getAgencies().get(0).getCountryCode();
+                            country = (country.substring(0, 3));
+
+                            sendIntent.putExtra(Intent.EXTRA_TEXT, launch.getName() + " launching from "
+                                    + launch.getLocation().getName() + " " + country + "\n \n"
+                                    + launchDate
+                                    + " \n\nvia Space Launch Now and Launch Library");
+                        } else {
+                            sendIntent.putExtra(Intent.EXTRA_TEXT, launch.getName() + " launching from "
+                                    + launch.getLocation().getName() + "\n \n"
+                                    + launchDate
+                                    + " \n\nvia Space Launch Now and Launch Library");
+                        }
+                    }
+                    sendIntent.setType("text/plain");
+                    mContext.startActivity(sendIntent);
                     break;
                 case R.id.fab:
                     String location = launchList.get(position).getLocation().getName();

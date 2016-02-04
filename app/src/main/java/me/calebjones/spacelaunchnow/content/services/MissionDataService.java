@@ -131,6 +131,7 @@ public class MissionDataService extends IntentService {
                  Launch launch = new Launch();
                     launch.setId(launchObj.optInt("id", 0));
                     launch.setName(launchObj.optString("name"));
+                    launch.setNet(launchObj.optString("net"));
                     mission.setLaunch(launch);
                 }
                 missionList.add(mission);

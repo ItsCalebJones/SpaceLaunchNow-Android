@@ -5,36 +5,50 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.annotation.BoolRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.Slide;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import com.crashlytics.android.Crashlytics;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Random;
+
+import io.fabric.sdk.android.Fabric;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
-import me.calebjones.spacelaunchnow.content.models.Mission;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.MissionDataService;
-import me.calebjones.spacelaunchnow.content.services.RocketDataService;
+import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
 import me.calebjones.spacelaunchnow.ui.activity.SettingsActivity;
-import me.calebjones.spacelaunchnow.ui.fragment.MissionFragment;
-import me.calebjones.spacelaunchnow.ui.fragment.PreviousLaunchesFragment;
-import me.calebjones.spacelaunchnow.ui.fragment.LaunchesFragment;
-import me.calebjones.spacelaunchnow.ui.fragment.LaunchesViewPager;
+import me.calebjones.spacelaunchnow.ui.fragment.favorite.FavoriteFragment;
+import me.calebjones.spacelaunchnow.ui.fragment.missions.MissionFragment;
+import me.calebjones.spacelaunchnow.ui.fragment.launches.LaunchesViewPager;
+import me.calebjones.spacelaunchnow.ui.fragment.vehicles.VehiclesViewPager;
 import timber.log.Timber;
+import za.co.riggaroo.materialhelptutorial.TutorialItem;
+import za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity;
 
 
 public class MainActivity extends AppCompatActivity
@@ -42,20 +56,23 @@ public class MainActivity extends AppCompatActivity
 
     private static final String NAV_ITEM_ID = "navItemId";
     private final Handler mDrawerActionHandler = new Handler();
-
     private LaunchesViewPager mlaunchesViewPager;
+    private FavoriteFragment favoriteFragment;
     private final MissionFragment mMissionFragment = new MissionFragment();
-
     private Toolbar toolbar;
     private DrawerLayout drawer;
     private SharedPreferences sharedPref;
+    private NavigationView navigationView;
     private static SharedPreference sharedPreference;
     private Context context;
     private Boolean bool;
-
     private BroadcastReceiver intentReceiver;
 
+    private static final int REQUEST_CODE = 5467;
+
     private int mNavItemId;
+
+    public int statusColor;
 
     class LaunchBroadcastReceiver extends BroadcastReceiver {
         LaunchBroadcastReceiver() {
@@ -68,6 +85,9 @@ public class MainActivity extends AppCompatActivity
                 Timber.d("Broadcast action : %s", action);
                 if (Strings.ACTION_SUCCESS_UP_LAUNCHES.equals(action)) {
                     mlaunchesViewPager.restartViews(Strings.ACTION_SUCCESS_UP_LAUNCHES);
+                    if (mNavItemId == R.id.menu_favorites) {
+                        favoriteFragment.refreshViews();
+                    }
                 } else if (Strings.ACTION_SUCCESS_PREV_LAUNCHES.equals(action)) {
                     mlaunchesViewPager.restartViews(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
                 } else if (Strings.ACTION_SUCCESS_MISSIONS.equals(action)) {
@@ -87,6 +107,10 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if(!Fabric.isInitialized()){
+            Fabric.with(this, new Crashlytics());
+        }
+        Timber.d("onCreate");
         int m_theme;
         int m_layout;
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -96,10 +120,12 @@ public class MainActivity extends AppCompatActivity
 
         if (sharedPreference.getNightMode()) {
             sharedPreference.setNightModeStatus(true);
+            statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
             m_theme = R.style.DarkTheme_NoActionBar;
             m_layout = R.layout.dark_activity_main;
         } else {
             sharedPreference.setNightModeStatus(false);
+            statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
             m_theme = R.style.LightTheme_NoActionBar;
             m_layout = R.layout.activity_main;
         }
@@ -114,12 +140,54 @@ public class MainActivity extends AppCompatActivity
         setTheme(m_theme);
         super.onCreate(savedInstanceState);
         setContentView(m_layout);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setupWindowAnimations();
+        }
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                int color = statusColor;
+                int r = (color >> 16) & 0xFF;
+                int g = (color >> 8) & 0xFF;
+                int b = (color >> 0) & 0xFF;
+
+                float currentScroll = slideOffset * 255;
+
+                int currentScrollInt = Math.round(currentScroll);
+
+                if ((slideOffset) < 1 && (slideOffset) > 0){
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        Window window = getWindow();
+                        window.setStatusBarColor(Color.argb(reverseNumber(currentScrollInt,0,255),r,g,b));
+                    }
+                }
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                Timber.v("onDrawerOpened - Open");
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                Timber.v("onDrawerClosed - Closed");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Window window = getWindow();
+                    window.setStatusBarColor(statusColor);
+                }
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        };
 
         mlaunchesViewPager = new LaunchesViewPager();
 
@@ -130,30 +198,57 @@ public class MainActivity extends AppCompatActivity
             mNavItemId = savedInstanceState.getInt(NAV_ITEM_ID);
         }
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        View header = navigationView.getHeaderView(0);
+        ImageView imageView = (ImageView) header.findViewById(R.id.backgroundView);
+
+        //Figure this shit out
+        int[] images = {
+                R.drawable.nav_header,
+                R.drawable.navbar_one,
+                R.drawable.navbar_three,
+                R.drawable.navbar_four,
+        };
+        int idx = new Random().nextInt(images.length);
+        imageView.setImageDrawable(ContextCompat.getDrawable(context,images[idx]));
 
         // select the correct nav menu item
         navigationView.getMenu().findItem(mNavItemId).setChecked(true);
 
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
-        navigate(mNavItemId);
         checkFirstBoot();
+    }
+
+    private void setupWindowAnimations() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            Slide slide = new Slide();
+            slide.setDuration(1000);
+            getWindow().setEnterTransition(slide);
+            getWindow().setReturnTransition(slide);
+        }
+    }
+
+    public int reverseNumber(int num, int min, int max) {
+        int number = (max + min) - num;
+        return number;
     }
 
     public void onStart() {
         super.onStart();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
-        intentFilter.addAction(Strings.ACTION_FAILURE_UPC_LAUNCHES);
+        intentFilter.addAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
         intentFilter.addAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
         intentFilter.addAction(Strings.ACTION_FAILURE_PREV_LAUNCHES);
         intentFilter.addAction(Strings.ACTION_SUCCESS_MISSIONS);
         intentFilter.addAction(Strings.ACTION_FAILURE_MISSIONS);
-        intentFilter.addAction(Strings.ACTION_SUCCESS_ROCKETS);
-        intentFilter.addAction(Strings.ACTION_FAILURE_ROCKETS);
+        intentFilter.addAction(Strings.ACTION_SUCCESS_VEHICLE_DETAILS);
+        intentFilter.addAction(Strings.ACTION_FAILURE_VEHICLE_DETAILS);
+        intentFilter.addAction(Strings.ACTION_SUCCESS_VEHICLES);
+        intentFilter.addAction(Strings.ACTION_FAILURE_VEHICLES);
         registerReceiver(this.intentReceiver, intentFilter);
     }
 
@@ -164,9 +259,18 @@ public class MainActivity extends AppCompatActivity
 
     public void checkFirstBoot() {
         if (sharedPreference.getFirstBoot()) {
-            sharedPreference.setFirstBoot(false);
+            sharedPreference.setFiltered(false);
             getFirstLaunches();
+            loadTutorial();
+        } else {
+            navigate(mNavItemId);
         }
+    }
+
+    private void refreshLaunches() {
+        Intent update_upcoming_launches = new Intent(context, LaunchDataService.class);
+        update_upcoming_launches.setAction(Strings.ACTION_GET_UP_LAUNCHES);
+        context.startService(update_upcoming_launches);
     }
 
     public void getFirstLaunches() {
@@ -182,8 +286,8 @@ public class MainActivity extends AppCompatActivity
         launchIntent.putExtra("URL", url);
         this.context.startService(launchIntent);
 
-        Intent rocketIntent = new Intent(this.context, RocketDataService.class);
-        rocketIntent.setAction(Strings.ACTION_GET_ROCKETS);
+        Intent rocketIntent = new Intent(this.context, VehicleDataService.class);
+        rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
         this.context.startService(rocketIntent);
 
         this.context.startService(new Intent(this, MissionDataService.class));
@@ -201,6 +305,9 @@ public class MainActivity extends AppCompatActivity
         if (mlaunchesViewPager == null){
             mlaunchesViewPager = new LaunchesViewPager();
         }
+        if (favoriteFragment == null){
+            favoriteFragment = new FavoriteFragment();
+        }
     }
 
     public void setActionBarTitle(String title) {
@@ -213,6 +320,11 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            if (getFragmentManager().getBackStackEntryCount() == 0) {
+                this.finish();
+            } else {
+                getFragmentManager().popBackStack();
+            }
             super.onBackPressed();
         }
     }
@@ -220,7 +332,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+        if (BuildConfig.DEBUG) {
+            getMenuInflater().inflate(R.menu.main_menu, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.main_menu, menu);
+        }
         return true;
     }
 
@@ -263,6 +379,7 @@ public class MainActivity extends AppCompatActivity
         // perform the actual navigation logic, updating the main_menu content fragment etc
         switch (itemId) {
             case R.id.menu_launches:
+                mNavItemId = R.id.menu_launches;
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.flContent, mlaunchesViewPager)
@@ -270,17 +387,51 @@ public class MainActivity extends AppCompatActivity
                         .commit();
                 break;
             case R.id.menu_missions:
+                mNavItemId = R.id.menu_missions;
+                setActionBarTitle("Missions");
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.flContent, mMissionFragment)
-                        .addToBackStack(null)
+                        .addToBackStack("MissionFragment")
                         .commit();
                 break;
             case R.id.menu_vehicle:
-                Toast.makeText(getBaseContext(), "Work in progress! Thanks for your patience!", Toast.LENGTH_SHORT).show();
+                mNavItemId = R.id.menu_vehicle;
+                setActionBarTitle("Vehicles");
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.flContent, new VehiclesViewPager())
+                        .addToBackStack("VehicleViewPager")
+                        .commit();
                 break;
             case R.id.menu_favorites:
-                Toast.makeText(getBaseContext(), "Work in progress! Thanks for your patience!", Toast.LENGTH_SHORT).show();
+                mNavItemId = R.id.menu_favorites;
+                setActionBarTitle("Favorites");
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.flContent, favoriteFragment)
+                        .addToBackStack("FavoriteFragment")
+                        .commit();
+                break;
+            case R.id.menu_launch:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://launchlibrary.net/"));
+                startActivity(browserIntent);
+                break;
+            case R.id.menu_settings:
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                settingsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(settingsIntent);
+                break;
+            case R.id.menu_help:
+                loadTutorial();
+                break;
+            case R.id.menu_feedback:
+                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                emailIntent.setData(Uri.parse("mailto:"));
+                emailIntent.setType("message/rfc822");
+                emailIntent.putExtra(Intent.EXTRA_EMAIL  , new String[]{"cajones9119@gmail.com"});
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "SpaceLaunchNow - Feedback");
+                startActivity(Intent.createChooser(emailIntent, "Send Email"));
                 break;
             default:
                 // ignore
@@ -291,5 +442,44 @@ public class MainActivity extends AppCompatActivity
     protected void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(NAV_ITEM_ID, mNavItemId);
+    }
+
+    public void loadTutorial() {
+        Intent mainAct = new Intent(this, MaterialTutorialActivity.class);
+        mainAct.putParcelableArrayListExtra(MaterialTutorialActivity.MATERIAL_TUTORIAL_ARG_TUTORIAL_ITEMS, getTutorialItems(this));
+        startActivityForResult(mainAct, REQUEST_CODE);
+
+    }
+
+    private ArrayList<TutorialItem> getTutorialItems(Context context) {
+        TutorialItem tutorialItem1 = new TutorialItem("Space Launch Now","Keep up to date on all your favorite  orbital launches, missions, and launch vehicles.",
+                R.color.slide_one, R.drawable.intro_slide_one_foreground, R.drawable.intro_slide_background);
+
+        TutorialItem tutorialItem2 = new TutorialItem("Notification for Launches","Get notifications for upcoming launches and look into the history of spaceflight",
+                R.color.slide_two, R.drawable.intro_slide_two_foreground, R.drawable.intro_slide_background);
+
+        TutorialItem tutorialItem3 = new TutorialItem("Keep Track of Missions","Find out whats going in the world of spaceflight.",
+                R.color.slide_three,  R.drawable.intro_slide_three_foreground, R.drawable.intro_slide_background);
+
+        TutorialItem tutorialItem4 = new TutorialItem("Find Launch Vehicles","Get to know the vehicles that have taken us to orbit.",
+                R.color.slide_four,  R.drawable.intro_slide_four_foreground, R.drawable.intro_slide_background);
+
+        ArrayList<TutorialItem> tutorialItems = new ArrayList<>();
+        tutorialItems.add(tutorialItem1);
+        tutorialItems.add(tutorialItem2);
+        tutorialItems.add(tutorialItem3);
+        tutorialItems.add(tutorialItem4);
+
+        return tutorialItems;
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //    super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            if (sharedPreference.getFirstBoot()) {
+                sharedPreference.setFirstBoot(false);
+                recreate();
+            }
+        }
     }
 }
