@@ -18,7 +18,7 @@ public class BootReceiver extends BroadcastReceiver{
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         if (sharedPref.getBoolean("background_sync", true)) {
             Calendar c = Calendar.getInstance();
 

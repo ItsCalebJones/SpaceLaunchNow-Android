@@ -9,6 +9,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
+
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
+import com.crashlytics.android.answers.CustomEvent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,6 +32,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.fabric.sdk.android.Fabric;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
@@ -103,6 +110,7 @@ public class LaunchDataService extends IntentService {
             urlConnection = (HttpURLConnection) url.openConnection();
 
                 /* for Get request */
+            urlConnection.setConnectTimeout(5000);
             urlConnection.setRequestMethod("GET");
 
             int statusCode = urlConnection.getResponseCode();
@@ -153,11 +161,13 @@ public class LaunchDataService extends IntentService {
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
                 LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+
             }
 
 
         } catch (Exception e) {
             Timber.e("LaunchDataService - getPreviousLaunches ERROR: %s", e.getLocalizedMessage());
+            Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to retrieve previous launches: " + e.getLocalizedMessage());
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_FAILURE_PREV_LAUNCHES);
             LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
@@ -195,6 +205,7 @@ public class LaunchDataService extends IntentService {
             urlConnection = (HttpURLConnection) url.openConnection();
 
                 /* for Get request */
+            urlConnection.setConnectTimeout(5000);
             urlConnection.setRequestMethod("GET");
 
             int statusCode = urlConnection.getResponseCode();
@@ -233,16 +244,18 @@ public class LaunchDataService extends IntentService {
 
         } catch (Exception e) {
             Timber.e("LaunchDataService - getUpcomingLaunches ERROR: %s", e.getLocalizedMessage());
+            Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to retrieve upcoming launches: " + e.getLocalizedMessage());
 
-            //TODO Remove this before release.
-            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
-            mBuilder.setContentTitle("LaunchData Failed!")
-                    .setSmallIcon(R.drawable.ic_notification)
-                    .setAutoCancel(true);
+            if (BuildConfig.DEBUG) {
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
+                mBuilder.setContentTitle("LaunchData Failed!")
+                        .setSmallIcon(R.drawable.ic_notification)
+                        .setAutoCancel(true);
 
-            NotificationManager mNotifyManager = (NotificationManager)
-                    getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
+                NotificationManager mNotifyManager = (NotificationManager)
+                        getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
+            }
 
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
@@ -379,6 +392,7 @@ public class LaunchDataService extends IntentService {
                 upcomingLaunchList.add(launch);
             }
         } catch (JSONException e) {
+            Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to parse upcoming results: " + e.getLocalizedMessage());
             Timber.v("parseUpcomingResult - ERROR: %s", e.getLocalizedMessage());
             e.printStackTrace();
         }
@@ -508,6 +522,7 @@ public class LaunchDataService extends IntentService {
                 previousLaunchList.add(launch);
             }
         } catch (JSONException e) {
+            Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to parse previous results: " + e.getLocalizedMessage());
             e.printStackTrace();
         }
     }

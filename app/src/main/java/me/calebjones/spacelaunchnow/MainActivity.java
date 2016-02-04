@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -28,6 +29,8 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
 
 import java.text.SimpleDateFormat;
@@ -91,7 +94,7 @@ public class MainActivity extends AppCompatActivity
                 } else if (Strings.ACTION_SUCCESS_PREV_LAUNCHES.equals(action)) {
                     mlaunchesViewPager.restartViews(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
                 } else if (Strings.ACTION_SUCCESS_MISSIONS.equals(action)) {
-                    if (mMissionFragment.isVisible()){
+                    if (mMissionFragment.isVisible()) {
                         mMissionFragment.onFinishedRefreshing();
                     }
                 }
@@ -107,7 +110,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if(!Fabric.isInitialized()){
+        if (!Fabric.isInitialized()) {
             Fabric.with(this, new Crashlytics());
         }
         Timber.d("onCreate");
@@ -149,7 +152,7 @@ public class MainActivity extends AppCompatActivity
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 int color = statusColor;
@@ -161,10 +164,10 @@ public class MainActivity extends AppCompatActivity
 
                 int currentScrollInt = Math.round(currentScroll);
 
-                if ((slideOffset) < 1 && (slideOffset) > 0){
+                if ((slideOffset) < 1 && (slideOffset) > 0) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         Window window = getWindow();
-                        window.setStatusBarColor(Color.argb(reverseNumber(currentScrollInt,0,255),r,g,b));
+                        window.setStatusBarColor(Color.argb(reverseNumber(currentScrollInt, 0, 255), r, g, b));
                     }
                 }
             }
@@ -212,7 +215,7 @@ public class MainActivity extends AppCompatActivity
                 R.drawable.navbar_four,
         };
         int idx = new Random().nextInt(images.length);
-        imageView.setImageDrawable(ContextCompat.getDrawable(context,images[idx]));
+        imageView.setImageDrawable(ContextCompat.getDrawable(context, images[idx]));
 
         // select the correct nav menu item
         navigationView.getMenu().findItem(mNavItemId).setChecked(true);
@@ -302,10 +305,10 @@ public class MainActivity extends AppCompatActivity
             recreate();
         }
 
-        if (mlaunchesViewPager == null){
+        if (mlaunchesViewPager == null) {
             mlaunchesViewPager = new LaunchesViewPager();
         }
-        if (favoriteFragment == null){
+        if (favoriteFragment == null) {
             favoriteFragment = new FavoriteFragment();
         }
     }
@@ -320,12 +323,21 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            if (getFragmentManager().getBackStackEntryCount() == 0) {
-                this.finish();
-            } else {
+            if (getFragmentManager().getBackStackEntryCount() != 0) {
                 getFragmentManager().popBackStack();
+            } else {
+                new MaterialDialog.Builder(this)
+                        .title("Confirm Exit")
+                        .negativeText("Cancel")
+                        .positiveText("Exit")
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                finish();
+                            }
+                        })
+                        .show();
             }
-            super.onBackPressed();
         }
     }
 
@@ -383,7 +395,6 @@ public class MainActivity extends AppCompatActivity
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.flContent, mlaunchesViewPager)
-                        .addToBackStack(null)
                         .commit();
                 break;
             case R.id.menu_missions:
@@ -429,7 +440,7 @@ public class MainActivity extends AppCompatActivity
                 Intent emailIntent = new Intent(Intent.ACTION_SEND);
                 emailIntent.setData(Uri.parse("mailto:"));
                 emailIntent.setType("message/rfc822");
-                emailIntent.putExtra(Intent.EXTRA_EMAIL  , new String[]{"cajones9119@gmail.com"});
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"cajones9119@gmail.com"});
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "SpaceLaunchNow - Feedback");
                 startActivity(Intent.createChooser(emailIntent, "Send Email"));
                 break;
@@ -452,17 +463,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     private ArrayList<TutorialItem> getTutorialItems(Context context) {
-        TutorialItem tutorialItem1 = new TutorialItem("Space Launch Now","Keep up to date on all your favorite  orbital launches, missions, and launch vehicles.",
+        TutorialItem tutorialItem1 = new TutorialItem("Space Launch Now", "Keep up to date on all your favorite  orbital launches, missions, and launch vehicles.",
                 R.color.slide_one, R.drawable.intro_slide_one_foreground, R.drawable.intro_slide_background);
 
-        TutorialItem tutorialItem2 = new TutorialItem("Notification for Launches","Get notifications for upcoming launches and look into the history of spaceflight",
+        TutorialItem tutorialItem2 = new TutorialItem("Notification for Launches", "Get notifications for upcoming launches and look into the history of spaceflight",
                 R.color.slide_two, R.drawable.intro_slide_two_foreground, R.drawable.intro_slide_background);
 
-        TutorialItem tutorialItem3 = new TutorialItem("Keep Track of Missions","Find out whats going in the world of spaceflight.",
-                R.color.slide_three,  R.drawable.intro_slide_three_foreground, R.drawable.intro_slide_background);
+        TutorialItem tutorialItem3 = new TutorialItem("Keep Track of Missions", "Find out whats going in the world of spaceflight.",
+                R.color.slide_three, R.drawable.intro_slide_three_foreground, R.drawable.intro_slide_background);
 
-        TutorialItem tutorialItem4 = new TutorialItem("Find Launch Vehicles","Get to know the vehicles that have taken us to orbit.",
-                R.color.slide_four,  R.drawable.intro_slide_four_foreground, R.drawable.intro_slide_background);
+        TutorialItem tutorialItem4 = new TutorialItem("Find Launch Vehicles", "Get to know the vehicles that have taken us to orbit.",
+                R.color.slide_four, R.drawable.intro_slide_four_foreground, R.drawable.intro_slide_background);
 
         ArrayList<TutorialItem> tutorialItems = new ArrayList<>();
         tutorialItems.add(tutorialItem1);
@@ -472,6 +483,7 @@ public class MainActivity extends AppCompatActivity
 
         return tutorialItems;
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //    super.onActivityResult(requestCode, resultCode, data);

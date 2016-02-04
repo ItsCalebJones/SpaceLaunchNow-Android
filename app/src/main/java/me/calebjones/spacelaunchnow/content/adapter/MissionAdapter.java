@@ -5,13 +5,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SectionIndexer;
 import android.widget.TextView;
+
+import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,7 +24,6 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
-import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.Mission;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 import timber.log.Timber;
@@ -30,7 +31,7 @@ import timber.log.Timber;
 /**
  * This adapter takes data from SharedPreference/LoaderService and applies it to the LaunchesFragment
  */
-public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHolder> implements SectionIndexer {
+public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHolder> implements FastScrollRecyclerView.SectionedAdapter {
     public int position;
     private List<Mission> missionList;
     private List<Integer> mSectionPositions;
@@ -52,7 +53,6 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
 
     public void addItems(List<Mission> missionList) {
         if (this.missionList == null) {
-            Timber.d("Does this ever get called?");
             this.missionList = missionList;
         } else {
             //Note: If you're populating with a large dataset, you might want to
@@ -65,6 +65,7 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
                 String section = missionList.get(i).getName().substring(0,1);
                 if (!TextUtils.isEmpty(section) && !mSections.contains(section)) {
                     //This just adds a new section for each new letter
+                    Timber.v("Adding new section: %s", section);
                     mSections.add(section);
                     mSectionPositions.add(i);
                 }
@@ -163,20 +164,13 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
         return missionList.size();
     }
 
+    @NonNull
     @Override
-    public Object[] getSections() {
-        return mSections.toArray();
+    public String getSectionName(int position) {
+        int finalPosition = getSectionForPosition(position);
+        return mSections.get(finalPosition);
     }
 
-    @Override
-    public int getPositionForSection(int i) {
-        if (i >= 0 && i < mSectionPositions.size()) {
-            return mSectionPositions.get(i);
-        }
-        return 0;
-    }
-
-    @Override
     public int getSectionForPosition(int i) {
         for (int j = 0, length = mSectionPositions.size(); j < length; j++) {
             int sectionPosition = mSectionPositions.get(j);
