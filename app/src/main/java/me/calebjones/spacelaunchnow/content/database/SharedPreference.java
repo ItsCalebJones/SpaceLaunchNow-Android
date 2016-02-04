@@ -622,13 +622,18 @@ public class SharedPreference {
         }.getType();
         productFromShared = gson.fromJson(jsonPreferences, type);
 
-        Collections.sort(productFromShared, new Comparator<Mission>() {
-            public int compare(Mission emp1, Mission emp2) {
-                return emp1.getName().compareToIgnoreCase(emp2.getName());
-            }
-        });
+        if (productFromShared != null) {
+            Collections.sort(productFromShared, new Comparator<Mission>() {
+                public int compare(Mission emp1, Mission emp2) {
+                    return emp1.getName().compareToIgnoreCase(emp2.getName());
+                }
+            });
 
-        return productFromShared;
+            return productFromShared;
+        }
+        else {
+            return null;
+        }
     }
 
     //Get methods by ID
@@ -1054,8 +1059,6 @@ public class SharedPreference {
                     break;
                 }
             }
-        } else {
-            Timber.e("ERROR: favoriteList is null");
         }
         if (!exists) {
             if (getSwitchNasa()) {

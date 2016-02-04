@@ -5,13 +5,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SectionIndexer;
 import android.widget.TextView;
+
+import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,11 +26,12 @@ import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
+import timber.log.Timber;
 
 /**
  * This adapter takes data from SharedPreference/LoaderService and applies it to the LaunchesFragment
  */
-public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAdapter.ViewHolder> implements SectionIndexer {
+public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAdapter.ViewHolder> implements FastScrollRecyclerView.SectionedAdapter  {
     public int position;
     private List<Launch> launchList;
     private List<Integer> mSectionPositions;
@@ -71,6 +74,7 @@ public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAd
                         Date date = new Date(longdate);
                         String section = parseDateToMMyyyy(df.format(date));
                         if (!TextUtils.isEmpty(section) && !mSections.contains(section)) {
+                            Timber.v("Adding new section: %s", section);
                             //This just adds a new section for each new letter
                             mSections.add(section);
                             mSectionPositions.add(i);
@@ -174,20 +178,13 @@ public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAd
         return launchList.size();
     }
 
+    @NonNull
     @Override
-    public Object[] getSections() {
-        return mSections.toArray();
+    public String getSectionName(int position) {
+        int finalPosition = getSectionForPosition(position);
+        return mSections.get(finalPosition);
     }
 
-    @Override
-    public int getPositionForSection(int i) {
-        if (i >= 0 && i < mSectionPositions.size()) {
-            return mSectionPositions.get(i);
-        }
-        return 0;
-    }
-
-    @Override
     public int getSectionForPosition(int i) {
         for (int j = 0, length = mSectionPositions.size(); j < length; j++) {
             int sectionPosition = mSectionPositions.get(j);
