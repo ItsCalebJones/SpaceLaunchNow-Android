@@ -15,12 +15,12 @@ import java.net.URL;
 import java.util.List;
 
 import me.calebjones.spacelaunchnow.content.database.DatabaseManager;
-import me.calebjones.spacelaunchnow.content.models.LaunchVehicle;
+import me.calebjones.spacelaunchnow.content.models.RocketDetails;
 import timber.log.Timber;
 
 
 public class VehicleLoader extends AsyncTask<String, Void, Integer> {
-    public static List<LaunchVehicle> vehicleList;
+    public static List<RocketDetails> vehicleList;
 
     private Context mContext;
     public VehicleLoader (Context context){
@@ -79,7 +79,7 @@ public class VehicleLoader extends AsyncTask<String, Void, Integer> {
         try {
             JSONArray responseArray = new JSONArray(response.toString());
             for (int i = 0; i < responseArray.length(); i++) {
-                LaunchVehicle launchVehicle = new LaunchVehicle();
+                RocketDetails launchVehicle = new RocketDetails();
 
                 JSONObject vehicleObj = responseArray.optJSONObject(i);
                 launchVehicle.setLVName(vehicleObj.optString("LV_Name"));

@@ -1,6 +1,12 @@
 <resources>
 
-    <attr format="reference" name="cardStyle"/>
+    <attr name="cardStyle" format="reference" />
+
+    <style name="EditTextTheme">
+        <!-- Used for the bottom line when not selected / focused -->
+        <item name="colorControlNormal">#FFFF</item>
+        <!-- colorControlActivated & colorControlHighlight use the colorAccent color by default -->
+    </style>
 
     <!-- Base application theme. -->
     <style name="LightTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -34,7 +40,8 @@
         <item name="checkBoxPreferenceStyle">@style/Preference.CheckBoxPreference</item>
         <item name="switchPreferenceCompatStyle">@style/Preference.SwitchPreferenceCompat</item>
         <item name="dialogPreferenceStyle">@style/Preference.DialogPreference</item>
-        <item name="editTextPreferenceStyle">@style/Preference.DialogPreference.EditTextPreference</item>
+        <item name="editTextPreferenceStyle">@style/Preference.DialogPreference.EditTextPreference
+        </item>
         <item name="preferenceFragmentListStyle">@style/PreferenceFragmentList</item>
 
     </style>
@@ -69,18 +76,14 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="LightTheme.Transparent" parent="LightTheme">
-    </style>
+    <style name="LightTheme.Transparent" parent="LightTheme"></style>
 
-    <style name="DarkTheme.Transparent" parent="DarkTheme">
-    </style>
+    <style name="DarkTheme.Transparent" parent="DarkTheme"></style>
 
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-    </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"></style>
 
-    <style name="AppTheme.AppBarOverlay.Dark" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-    </style>
+    <style name="AppTheme.AppBarOverlay.Dark" parent="ThemeOverlay.AppCompat.Dark.ActionBar"></style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
@@ -91,5 +94,9 @@
     <style name="CardViewStyle.Dark" parent="CardView">
         <item name="cardBackgroundColor">@color/dark_card_background</item>
     </style>
+
+    <style name="LightTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="LightTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

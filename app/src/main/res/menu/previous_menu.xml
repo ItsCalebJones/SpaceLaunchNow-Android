@@ -5,17 +5,23 @@
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always"
         android:title="Search" />
+
     <item android:id="@+id/action_date"
         android:icon="@drawable/ic_event"
         app:showAsAction="always"
         android:title="Date" />
+
     <item android:id="@+id/action_refresh"
-        android:icon="@drawable/ic_refresh_white"
-        app:showAsAction="ifRoom"
-        android:title="Refresh" />
-    <item android:id="@+id/reset_filter"
         app:showAsAction="never"
-        android:title="Reset Filter" />
+        android:title="Refresh" />
+
+    <item
+        android:id="@+id/return_home"
+        android:orderInCategory="95"
+        android:icon="@drawable/ic_action_home"
+        android:title="Home"
+        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"

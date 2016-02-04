@@ -36,6 +36,15 @@
                 android:clipToPadding="false"
                 />
 
+            <me.calebjones.spacelaunchnow.utils.AutofitRecyclerView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/recycler_view_staggered"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:visibility="gone"
+                />
+
         </FrameLayout>
 
     </android.support.v4.widget.SwipeRefreshLayout>

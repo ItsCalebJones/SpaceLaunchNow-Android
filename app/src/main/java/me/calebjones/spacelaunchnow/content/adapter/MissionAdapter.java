@@ -6,13 +6,18 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
@@ -25,9 +30,11 @@ import timber.log.Timber;
 /**
  * This adapter takes data from SharedPreference/LoaderService and applies it to the LaunchesFragment
  */
-public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHolder>{
+public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHolder> implements SectionIndexer {
     public int position;
     private List<Mission> missionList;
+    private List<Integer> mSectionPositions;
+    private List<String> mSections;
     private Context mContext;
     private Calendar rightNow;
     private SharedPreferences sharedPref;
@@ -36,6 +43,8 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
     public MissionAdapter(Context context) {
         rightNow = Calendar.getInstance();
         missionList = new ArrayList();
+        mSectionPositions = new ArrayList<>();
+        mSections = new ArrayList<>();
         sharedPreference = SharedPreference.getInstance(context);
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         this.mContext = context;
@@ -43,8 +52,23 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
 
     public void addItems(List<Mission> missionList) {
         if (this.missionList == null) {
+            Timber.d("Does this ever get called?");
             this.missionList = missionList;
         } else {
+            //Note: If you're populating with a large dataset, you might want to
+            //call the following code asychronously.
+            mSections.clear();
+            mSectionPositions.clear();
+
+            //data is your adapter's dataset
+            for (int i = 0, length = missionList.size(); i < length; i++) {
+                String section = missionList.get(i).getName().substring(0,1);
+                if (!TextUtils.isEmpty(section) && !mSections.contains(section)) {
+                    //This just adds a new section for each new letter
+                    mSections.add(section);
+                    mSectionPositions.add(i);
+                }
+            }
             this.missionList.addAll(missionList);
         }
     }
@@ -79,14 +103,51 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
         holder.mission_summary.setText(mission.getDescription());
 
         if (mission.getLaunch() != null && mission.getLaunch().getId() != null){
+
+            //If there's no info on the launch hide the button and no need to check for launch date.
             if(mission.getLaunch().getId() == 0){
                 holder.launchButton.setVisibility(View.GONE);
+                holder.mission_vehicle.setVisibility(View.GONE);
+                holder.mission_date.setVisibility(View.GONE);
             } else {
                 if (mission.getLaunch().getId() != null &&  mission.getLaunch().getId() != 0){
+
+                    //If we can find the name of the launch add it to the card.
+                    if (mission.getLaunch().getName() != null){
+                        holder.mission_vehicle.setText(mission.getLaunch().getName());
+                        holder.mission_vehicle.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.mission_vehicle.setVisibility(View.GONE);
+                    }
+
+                    //If we can find the date of the launch add it to the card.
+                    if (mission.getLaunch().getNet() != null){
+                        SimpleDateFormat informat = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss zzz");
+                        SimpleDateFormat outformat = new SimpleDateFormat("MMM dd, yyyy");
+                        outformat.toLocalizedPattern();
+
+                        Date date;
+                        String str = "";
+
+                        try {
+                            date = informat.parse(mission.getLaunch().getNet());
+                            str = outformat.format(date);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            holder.mission_date.setVisibility(View.GONE);
+                        }
+                        holder.mission_date.setText(str);
+                        holder.mission_date.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.mission_date.setVisibility(View.GONE);
+                    }
+
                     holder.launchButton.setVisibility(View.VISIBLE);
                 }
             }
         } else {
+            holder.mission_vehicle.setVisibility(View.GONE);
+            holder.mission_date.setVisibility(View.GONE);
             holder.launchButton.setVisibility(View.GONE);
         }
         if (mission.getInfoURL().length() == 0){
@@ -102,8 +163,33 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
         return missionList.size();
     }
 
+    @Override
+    public Object[] getSections() {
+        return mSections.toArray();
+    }
+
+    @Override
+    public int getPositionForSection(int i) {
+        if (i >= 0 && i < mSectionPositions.size()) {
+            return mSectionPositions.get(i);
+        }
+        return 0;
+    }
+
+    @Override
+    public int getSectionForPosition(int i) {
+        for (int j = 0, length = mSectionPositions.size(); j < length; j++) {
+            int sectionPosition = mSectionPositions.get(j);
+            if (i <= sectionPosition) {
+                return j;
+            }
+        }
+        return 0;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView mission_name, mission_summary, launchButton, infoButton;
+        public TextView mission_name, mission_summary, launchButton, infoButton, mission_vehicle,
+                mission_date;
 
         //Add content to the card
         public ViewHolder(View view) {
@@ -113,6 +199,8 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
             mission_summary = (TextView) view.findViewById(R.id.mission_summary);
             launchButton = (TextView) view.findViewById(R.id.launchButton);
             infoButton = (TextView) view.findViewById(R.id.infoButton);
+            mission_vehicle = (TextView) view.findViewById(R.id.mission_vehicle);
+            mission_date = (TextView) view.findViewById(R.id.mission_date);
 
             launchButton.setOnClickListener(this);
             infoButton.setOnClickListener(this);
@@ -128,7 +216,8 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
                     Timber.v("Launch: %s", missionList.get(position).getLaunch());
                     Intent exploreIntent = new Intent(mContext, LaunchDetailActivity.class);
                     exploreIntent.putExtra("TYPE", "LaunchID");
-                    exploreIntent.putExtra("id", (missionList.get(position).getLaunch().getId()));
+                    int id = missionList.get(position).getLaunch().getId();
+                    exploreIntent.putExtra("id", id);
                     mContext.startActivity(exploreIntent);
                     break;
                 case R.id.infoButton:
