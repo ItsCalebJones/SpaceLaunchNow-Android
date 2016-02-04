@@ -384,22 +384,26 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
             rocketLaunches = sharedPreference.getLaunchesPreviousFiltered();
         }
 
-        Timber.v("DisplayLaunches - List size: %s", rocketLaunches.size());
+        if (rocketLaunches != null) {
+            Timber.v("DisplayLaunches - List size: %s", rocketLaunches.size());
 
-        adapter.clear();
-        if (rocketLaunches.size() > 0) {
-            empty.setVisibility(View.GONE);
-            adapter.addItems(rocketLaunches);
+            adapter.clear();
+            if (rocketLaunches.size() > 0) {
+                empty.setVisibility(View.GONE);
+                adapter.addItems(rocketLaunches);
+            } else {
+                empty.setVisibility(View.VISIBLE);
+            }
+            //Animate the FAB's loading
+            view.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    fabSlideIn();
+                }
+            }, 750);
         } else {
             empty.setVisibility(View.VISIBLE);
         }
-        //Animate the FAB's loading
-        view.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                fabSlideIn();
-            }
-        }, 750);
     }
 
     public void fetchData() {
