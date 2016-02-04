@@ -35,7 +35,7 @@ import timber.log.Timber;
 
 public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener {
 
-    private View view;
+    private View view, empty;
     private RecyclerView mRecyclerView;
     private MissionAdapter adapter;
     private StaggeredGridLayoutManager staggeredLayoutManager;
@@ -64,6 +64,7 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
         LayoutInflater lf = getActivity().getLayoutInflater();
 
         view = lf.inflate(R.layout.fragment_missions, container, false);
+        empty = view.findViewById(R.id.empty_launch_root);
         menu = (FloatingActionButton) view.findViewById(R.id.menu);
         menu.setVisibility(View.GONE);
 
@@ -93,11 +94,16 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void displayMissions() {
         this.missionList = this.sharedPreference.getMissionList();
-        if (missionList.size() == 0){
-            fetchData();
+        if (missionList != null) {
+            if (missionList.size() == 0) {
+                empty.setVisibility(View.VISIBLE);
+            } else {
+                empty.setVisibility(View.GONE);
+                adapter.clear();
+                adapter.addItems(missionList);
+            }
         } else {
-            adapter.clear();
-            adapter.addItems(missionList);
+            empty.setVisibility(View.VISIBLE);
         }
     }
 
