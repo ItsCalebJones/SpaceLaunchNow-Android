@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_feed_content"
     android:layout_width="fill_parent"
@@ -18,16 +18,138 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:columnWidth="320dp"
-            app:layout_empty="@layout/emptyview"/>
+            app:layout_empty="@layout/empty_favorite"/>
 
-        <View
+        <ScrollView
             android:id="@+id/color_reveal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:background="@color/colorPrimary"
             android:visibility="invisible"
             android:elevation="2dp"
-            />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="64dp"
+                android:layout_margin="32dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                    android:textColor="@color/white"
+                    android:text="Select Launches to Favorite"
+                    android:textSize="42dp"
+                    android:layout_margin="8dp"
+                    android:typeface="sans" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/white"
+                    android:padding="12dp" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent">
+
+                    <LinearLayout
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_width="fill_parent"
+                        android:layout_margin="12dp"
+                        android:orientation="vertical">
+
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/nasa_switch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="12dp"
+                            android:checked="false"
+                            android:textColor="@color/white"
+                            android:text="NASA"
+                            app:buttonTint="@color/white" />
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/spacex_switch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="12dp"
+                            android:checked="false"
+                            android:textColor="@color/white"
+                            app:buttonTint="@color/white"
+                            android:text="SpaceX"/>
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/roscosmos_switch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="12dp"
+                            android:checked="false"
+                            android:textColor="@color/white"
+                            app:buttonTint="@color/white"
+                            android:text="ROSCOSMOS"/>
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/ula_switch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="12dp"
+                            android:checked="false"
+                            android:textColor="@color/white"
+                            app:buttonTint="@color/white"
+                            android:text="ULA"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_width="fill_parent"
+                        android:layout_margin="12dp"
+                        android:orientation="vertical">
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/arianespace_switch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="12dp"
+                            android:checked="false"
+                            android:textColor="@color/white"
+                            app:buttonTint="@color/white"
+                            android:text="Arianespace"/>
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/casc_switch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="12dp"
+                            android:checked="false"
+                            android:textColor="@color/white"
+                            app:buttonTint="@color/white"
+                            android:text="CASC"/>
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/isro_switch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="12dp"
+                            android:checked="false"
+                            android:textColor="@color/white"
+                            app:buttonTint="@color/white"
+                            android:text="ISRO"/>
+                        <android.support.v7.widget.AppCompatCheckBox
+                            android:id="@+id/custom_switch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="12dp"
+                            android:checked="false"
+                            android:textColor="@color/white"
+                            app:buttonTint="@color/white"
+                            android:text="Custom"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+        </ScrollView>
 
     </FrameLayout>
 

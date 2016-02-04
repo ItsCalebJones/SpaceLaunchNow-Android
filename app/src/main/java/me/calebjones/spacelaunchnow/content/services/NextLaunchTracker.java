@@ -64,18 +64,21 @@ public class NextLaunchTracker extends IntentService {
 
     private void checkNextLaunch() {
         upcomingLaunchList = this.sharedPreference.getLaunchesUpcoming();
-        nextLaunch = upcomingLaunchList.get(0);
-        storedLaunch = this.sharedPreference.getNextLaunch();
+
+        if (upcomingLaunchList.size() > 0) {
+            nextLaunch = upcomingLaunchList.get(0);
+            storedLaunch = this.sharedPreference.getNextLaunch();
+        }
 
         //Check if the stored launch is still the next launch.
         if (storedLaunch != null) {
             //If they do not match this means nextLaunch has changed IE a launch executed.
             if (nextLaunch.getId().intValue() != storedLaunch.getId().intValue()){
                 this.sharedPreference.setNextLaunch(nextLaunch);
+                this.sharedPreference.setFiltered(false);
 
                 Intent updatePreviousLaunches = new Intent(this, LaunchDataService.class);
                 updatePreviousLaunches.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
-                updatePreviousLaunches.putExtra("id", storedLaunch.getId());
                 updatePreviousLaunches.putExtra("URL", Utils.getBaseURL());
                 startService(updatePreviousLaunches);
 
@@ -93,8 +96,8 @@ public class NextLaunchTracker extends IntentService {
 
     //TODO THIS IS BUGGED
     private void checkStatus(Launch launch) {
-        if (launch.getWsstamp() > 0) {
-            long longdate = launch.getWsstamp();
+        if (launch != null && launch.getNetstamp() > 0) {
+            long longdate = launch.getNetstamp();
             longdate = longdate * 1000;
             final Date date = new Date(longdate);
 
@@ -139,7 +142,7 @@ public class NextLaunchTracker extends IntentService {
                             this.sharedPreference.setNextLaunch(launch);
                         }
                         //If its a saved launch check notification
-                    } else if (launch.isFavorite() && this.sharedPref.getBoolean("notifications_launch_day_saved", false)) {
+                    } else if (launch.isFavorite() && this.sharedPref.getBoolean("notifications_launch_day_saved", true)) {
                         if (!launch.getIsNotifiedDay()) {
                             notifyUser();
                             launch.setIsNotifiedDay(true);

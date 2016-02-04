@@ -57,9 +57,6 @@ public class VehicleDataService extends IntentService {
             String action = intent.getAction();
             if (Strings.ACTION_GET_VEHICLES_DETAIL.equals(action)) {
 
-                DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
-                databaseManager.rebuildDB(databaseManager.getWritableDatabase());
-
                 getVehicleDetails();
                 getVehicles();
             }
@@ -110,7 +107,7 @@ public class VehicleDataService extends IntentService {
 
 
         } catch (Exception e) {
-            Timber.e("VehicleDataService - ERROR: ", e.getLocalizedMessage());
+            Timber.e("VehicleDataService - ERROR: %s", e.getLocalizedMessage());
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_FAILURE_VEHICLE_DETAILS);
             VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
@@ -145,7 +142,7 @@ public class VehicleDataService extends IntentService {
                 }
 
                 parseUpcomingResult(response.toString());
-                Timber.d("LaunchDataService - Upcoming Launches list:  %s ", vehicleList.size());
+                Timber.d("Vehicle list:  %s ", vehicleList.size());
                 this.sharedPreference.setVehiclesList(vehicleList);
 
                 Intent broadcastIntent = new Intent();
@@ -155,9 +152,9 @@ public class VehicleDataService extends IntentService {
 
 
         } catch (Exception e) {
-            Timber.e("VehicleDataService - ERROR: ", e.getLocalizedMessage());
+            Timber.e("VehicleDataService - ERROR: %s", e.getLocalizedMessage());
             Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Strings.ACTION_SUCCESS_VEHICLES);
+            broadcastIntent.setAction(Strings.ACTION_FAILURE_VEHICLES);
             VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
         }
     }
@@ -204,6 +201,9 @@ public class VehicleDataService extends IntentService {
         try {
             JSONArray responseArray = new JSONArray(response.toString());
             Timber.d("addToDB - Database Size: %s (Expect 0 here)", databaseManager.getCount());
+            if (databaseManager.getCount() > 0){
+                databaseManager.rebuildDB(databaseManager.getWritableDatabase());
+            }
             Timber.d("addToDB - Adding: %s...", response.toString().substring(0, (response.toString().length() / 2)));
             for (int i = 0; i < responseArray.length(); i++) {
                 RocketDetails launchVehicle = new RocketDetails();

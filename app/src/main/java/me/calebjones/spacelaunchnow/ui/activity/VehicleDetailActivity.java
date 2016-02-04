@@ -16,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
 import android.transition.Transition;
@@ -60,7 +61,7 @@ public class VehicleDetailActivity extends AppCompatActivity implements AppBarLa
     private TextView toolbarTitle, detail_rocket, detail_vehicle_agency;
     private ImageView detail_profile_backdrop;
     private CircleImageView detail_profile_image;
-    private LinearLayoutManager linearLayoutManager;
+    private StaggeredGridLayoutManager linearLayoutManager;
     private VehicleListAdapter adapter;
     private List<Rocket> rocketLaunches;
     private AppBarLayout appBarLayout;
@@ -171,7 +172,11 @@ public class VehicleDetailActivity extends AppCompatActivity implements AppBarLa
         }
         adapter = new VehicleListAdapter(context);
         mRecyclerView = (RecyclerView) findViewById(R.id.gridview);
-        linearLayoutManager = new LinearLayoutManager(context);
+        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
+            linearLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        } else {
+            linearLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+        }
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(adapter);
         displayRockets();

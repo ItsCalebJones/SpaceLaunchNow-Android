@@ -1,6 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragment_feed_content"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -20,12 +21,16 @@
             android:visibility="gone"
             app:cpv_indeterminate="true" />
 
-        <com.simplecity.recyclerview_fastscroll.views.FastScrollRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:columnWidth="320dp" />
+            android:columnWidth="320dp"
+            app:fastScrollPopupBgColor="@color/colorAccent"
+            app:fastScrollPopupTextColor="?android:attr/textColorPrimaryInverse"
+            app:fastScrollThumbColor="@color/colorAccent"
+            />
 
         <me.calebjones.spacelaunchnow.utils.AutofitRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/recycler_view_staggered"

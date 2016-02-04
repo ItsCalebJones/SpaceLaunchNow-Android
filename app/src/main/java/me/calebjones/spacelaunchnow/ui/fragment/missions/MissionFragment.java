@@ -91,34 +91,14 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
         return view;
     }
 
-    private void showAlertDialog() {
-        new MaterialDialog.Builder(getContext())
-                .title("Select an Agency")
-                .content("Automatically marks upcoming launches as favorites.")
-                .items(R.array.agencies)
-                .positiveColorRes(R.color.colorAccentDark)
-                .buttonRippleColorRes(R.color.colorAccentLight)
-                .itemsCallbackMultiChoice(null, new MaterialDialog.ListCallbackMultiChoice() {
-                    @Override
-                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
-                        /**
-                         * If you use alwaysCallMultiChoiceCallback(), which is discussed below,
-                         * returning false here won't allow the newly selected check box to actually be selected.
-                         * See the limited multi choice dialog example in the sample project for details.
-                         **/
-                        return true;
-                    }
-                })
-                .positiveText("Filter")
-                .negativeText("Close")
-                .icon(ContextCompat.getDrawable(getContext(), R.mipmap.ic_launcher))
-                .show();
-    }
-
     private void displayMissions() {
         this.missionList = this.sharedPreference.getMissionList();
-        adapter.clear();
-        adapter.addItems(missionList);
+        if (missionList.size() == 0){
+            fetchData();
+        } else {
+            adapter.clear();
+            adapter.addItems(missionList);
+        }
     }
 
     @Override

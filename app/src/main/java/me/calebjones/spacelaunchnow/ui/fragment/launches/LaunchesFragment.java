@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,17 +21,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.borax12.materialdaterangepicker.date.DatePickerDialog;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
+import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.models.Agency;
+import me.calebjones.spacelaunchnow.content.models.Location;
+import me.calebjones.spacelaunchnow.content.models.LocationAgency;
+import me.calebjones.spacelaunchnow.content.models.Mission;
+import me.calebjones.spacelaunchnow.content.models.Pad;
+import me.calebjones.spacelaunchnow.content.models.Rocket;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.R;
@@ -71,25 +82,13 @@ public class LaunchesFragment extends Fragment implements SwipeRefreshLayout.OnR
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        int m_theme;
         this.context = getContext();
 
         sharedPreference = SharedPreference.getInstance(this.context);
 
-        if (sharedPreference.getNightMode()) {
-            m_theme = R.style.DarkTheme_NoActionBar;
-        } else {
-            m_theme = R.style.LightTheme_NoActionBar;
-        }
-
         Answers.getInstance().logContentView(new ContentViewEvent()
                 .putContentName("LaunchesFragment")
                 .putContentType("Fragment"));
-
-        // create ContextThemeWrapper from the original Activity Context with the custom theme
-        Context context = new ContextThemeWrapper(getActivity(), m_theme);
-        // clone the inflater using the ContextThemeWrapper
-        LayoutInflater localInflater = inflater.cloneInContext(context);
 
         super.onCreateView(inflater, container, savedInstanceState);
 
@@ -128,7 +127,7 @@ public class LaunchesFragment extends Fragment implements SwipeRefreshLayout.OnR
         animatorAdapter.setDuration(350);
         mRecyclerView.setAdapter(animatorAdapter);
 
-                /*Set up Pull to refresh*/
+        /*Set up Pull to refresh*/
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.activity_main_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
@@ -152,16 +151,18 @@ public class LaunchesFragment extends Fragment implements SwipeRefreshLayout.OnR
 
     public void displayLaunches() {
         this.rocketLaunches = this.sharedPreference.getLaunchesUpcoming();
-        filterData(this.rocketLaunches);
+
+        if (rocketLaunches.size() == 0) {
+            Timber.v("Upcoming launches is empty...fetching.");
+            fetchData();
+        } else {
+            adapter.clear();
+            adapter.addItems(rocketLaunches);
+        }
     }
 
     public void recreate(){
         recreate();
-    }
-
-    public void filterData(List<Launch> rocketLaunchList) {
-        adapter.clear();
-        adapter.addItems(rocketLaunchList);
     }
 
     public void fetchData() {
@@ -183,7 +184,7 @@ public class LaunchesFragment extends Fragment implements SwipeRefreshLayout.OnR
 
     @Override
     public void onResume() {
-
+        setTitle();
         Timber.d("OnResume!");
         super.onResume();
     }
@@ -218,6 +219,39 @@ public class LaunchesFragment extends Fragment implements SwipeRefreshLayout.OnR
                 Timber.e("Error setting mChildFragmentManager field %s ", e);
             }
         }
+    }
+
+
+    //Currently only used to debug
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        //
+//        if (BuildConfig.DEBUG) {
+//            menu.clear();
+//            inflater.inflate(R.menu.debug_menu, menu);
+//        }
+    }
+
+    private void setTitle() {
+        ((MainActivity) getActivity()).setActionBarTitle("Space Launch Now");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.debug_add_launch){
+            if (sharedPreference.getDebugLaunch()){
+                sharedPreference.setDebugLaunch(false);
+            } else {
+                sharedPreference.setDebugLaunch(true);
+            }
+            onRefresh();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

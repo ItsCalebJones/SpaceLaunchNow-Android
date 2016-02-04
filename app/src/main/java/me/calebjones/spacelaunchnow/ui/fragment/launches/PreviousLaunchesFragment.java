@@ -33,6 +33,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.borax12.materialdaterangepicker.date.DatePickerDialog;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
+import com.crashlytics.android.answers.SearchEvent;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
@@ -45,6 +46,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import butterknife.ButterKnife;
 import jp.wasabeef.recyclerview.animators.adapters.SlideInBottomAnimationAdapter;
 import me.calebjones.spacelaunchnow.content.adapter.PreviousLaunchAdapter;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
@@ -55,12 +57,10 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import timber.log.Timber;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener, DatePickerDialog.OnDateSetListener {
 
-    private View view;
+    private View view, empty;
     private RecyclerView mRecyclerView;
     private PreviousLaunchAdapter adapter;
     private String newURL;
@@ -70,7 +70,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     private SharedPreference sharedPreference;
     private SharedPreferences sharedPrefs;
     private int mScrollPosition;
-    private FloatingActionButton agency, vehicle, country;
+    private FloatingActionButton agency, vehicle, country, reset;
     private int mScrollOffset = 4;
     private static final Field sChildFragmentManagerField;
 
@@ -105,11 +105,14 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         LayoutInflater lf = getActivity().getLayoutInflater();
 
         view = lf.inflate(R.layout.fragment_previous_launches, container, false);
+        ButterKnife.bind(getActivity());
 
         agency = (FloatingActionButton) view.findViewById(R.id.agency);
         vehicle = (FloatingActionButton) view.findViewById(R.id.vehicle);
         country = (FloatingActionButton) view.findViewById(R.id.country);
+        reset = (FloatingActionButton) view.findViewById(R.id.reset);
         menu = (FloatingActionMenu) view.findViewById(R.id.menu);
+        empty = view.findViewById(R.id.empty_launch_root);
         menu.setTranslationX(menu.getWidth() + 250);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
@@ -145,14 +148,12 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
             } else {
                 this.rocketLaunches.clear();
                 displayLaunches();
-                setTitle();
             }
         } else {
             Timber.d("Previous Launch Fragment: Not First Boot.");
             this.rocketLaunches.clear();
             getDateRange();
             displayLaunches();
-            setTitle();
         }
         setUpFab();
         return view;
@@ -163,97 +164,192 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
         createCustomAnimation();
 
+        reset.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                if (sharedPreference.getFiltered()){
+                    sharedPreference.setFiltered(false);
+                    sharedPreference.removeFilteredList();
+                    getDefaultDateRange();
+                    displayLaunches();
+                }
+                menu.hideMenu(true);
+            }
+        });
+
         agency.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new MaterialDialog.Builder(getContext())
-                        .title("Select an Agency")
-                        .content("")
-                        .items(R.array.agencies)
-                        .positiveColorRes(R.color.colorAccentDark)
-                        .buttonRippleColorRes(R.color.colorAccentLight)
-                        .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
-                            @Override
-                            public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                switch (which) {
-                                    //TODO call a method to fetchData with current data.
-                                    case 0:
-                                        newURL = "https://launchlibrary.net/1.1.1/launch/" + start_date + "/" + end_date + "/NASA?sort=desc&limit=200";
-                                        adapter.clear();
-                                        fetchDataFiltered(newURL, "NASA | " + formatDatesForTitle(start_date) + " " + formatDatesForTitle(end_date));
-                                        break;
-                                    case 1:
-                                        newURL = "https://launchlibrary.net/1.1.1/launch/" + start_date + "/" + end_date + "/SpaceX?sort=desc&limit=200";
-                                        adapter.clear();
-                                        fetchDataFiltered(newURL, "SpaceX | " + formatDatesForTitle(start_date) + " " + formatDatesForTitle(end_date));
-                                        break;
-                                    case 2:
-                                        newURL = "https://launchlibrary.net/1.1.1/launch/" + start_date + "/" + end_date + "/ROSCOSMOS?sort=desc&limit=200";
-                                        adapter.clear();
-                                        fetchDataFiltered(newURL, "SpaceX | " + formatDatesForTitle(start_date) + " " + formatDatesForTitle(end_date));
-                                        break;
-                                }
-                                menu.toggle(false);
-                                return true;
-                            }
-                        })
-                        .positiveText("Filter")
-                        .negativeText("Close")
-                        .icon(ContextCompat.getDrawable(getContext(), R.mipmap.ic_launcher))
-                        .show();
+                showAgencyDialog();
             }
         });
         vehicle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new MaterialDialog.Builder(getContext())
-                        .title("Select a Launch Vehicle")
-                        .items(R.array.vehicles)
-                        .positiveColorRes(R.color.colorAccentDark)
-                        .negativeColorRes(R.color.colorPrimaryLight)
-                        .buttonRippleColorRes(R.color.colorAccentLight)
-                        .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
-                            @Override
-                            public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                switch (which) {
-                                    case 0:
-                                        newURL = "https://launchlibrary.net/1.1.1/launch/" + start_date + "/" + end_date + "/?sort=desc&limit=200&name=Falcon";
-                                        adapter.clear();
-                                        fetchDataFiltered(newURL, "Falcon | " + formatDatesForTitle(start_date) + " - " + formatDatesForTitle(end_date));
-                                        break;
-                                    case 1:
-                                        newURL = "https://launchlibrary.net/1.1.1/launch/" + start_date + "/" + end_date + "/?sort=desc&limit=200&name=Proton";
-                                        adapter.clear();
-                                        fetchDataFiltered(newURL, "Proton | " + formatDatesForTitle(start_date) + " - " + formatDatesForTitle(end_date));
-                                        break;
-                                    case 2:
-                                        newURL = "https://launchlibrary.net/1.1.1/launch/" + start_date + "/" + end_date + "/?sort=desc&limit=200&name=Soyuz";
-                                        adapter.clear();
-                                        fetchDataFiltered(newURL, "Soyuz | " + formatDatesForTitle(start_date) + " - " + formatDatesForTitle(end_date));
-                                        break;
-                                    case 3:
-                                        newURL = "https://launchlibrary.net/1.1.1/launch/" + start_date + "/" + end_date + "/?sort=desc&limit=200&name=Atlas";
-                                        adapter.clear();
-                                        fetchDataFiltered(newURL, "Atlas | " + formatDatesForTitle(start_date) + " - " + formatDatesForTitle(end_date));
-                                        break;
-                                }
-
-                                menu.toggle(false);
-                                return true;
-                            }
-                        })
-                        .positiveText("Filter")
-                        .negativeText("Close")
-                        .icon(ContextCompat.getDrawable(getContext(), R.mipmap.ic_launcher))
-                        .show();
+                showVehicleDialog();
             }
         });
         country.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Country", Toast.LENGTH_SHORT).show();
+                showCountryDialog();
             }
         });
+    }
+
+    private void showCountryDialog() {
+        new MaterialDialog.Builder(getContext())
+                .title("Select a Country")
+                .content("Check an country below, to remove all filters use reset icon in the toolbar.")
+                .items(R.array.country)
+                .buttonRippleColorRes(R.color.colorAccentLight)
+                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        switch (which) {
+                            case 0:
+                                adapter.clear();
+                                fetchDataFiltered(2, "USA", "USA");
+                                break;
+                            case 1:
+                                adapter.clear();
+                                fetchDataFiltered(2, "China", "China");
+                                break;
+                            case 2:
+                                adapter.clear();
+                                fetchDataFiltered(2, "Russia", "Russia");
+                                break;
+                            case 3:
+                                adapter.clear();
+                                fetchDataFiltered(2, "India", "India");
+                                break;
+                            case 4:
+                                adapter.clear();
+                                fetchDataFiltered(2, "Multi", "Multi");
+                                break;
+
+                        }
+                        menu.toggle(false);
+                        return true;
+                    }
+                })
+                .positiveText("Filter")
+                .negativeText("Close")
+                .icon(ContextCompat.getDrawable(getContext(), R.mipmap.ic_launcher))
+                .show();
+    }
+
+    private void showAgencyDialog() {
+        new MaterialDialog.Builder(getContext())
+                .title("Select an Agency")
+                .content("Check an agency below, to remove all filters use reset icon in the toolbar.")
+                .items(R.array.agencies)
+                .buttonRippleColorRes(R.color.colorAccentLight)
+                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        String date = formatDatesForTitle(start_date) + " " + formatDatesForTitle(end_date);
+                        switch (which) {
+                            case 0:
+                                adapter.clear();
+                                fetchDataFiltered(0, "44", "NASA");
+                                break;
+                            case 1:
+                                adapter.clear();
+                                fetchDataFiltered(0, "121", "SpaceX");
+                                break;
+                            case 2:
+                                adapter.clear();
+                                fetchDataFiltered(0, "63", "ROSCOSMOS");
+                                break;
+                            case 3:
+                                adapter.clear();
+                                fetchDataFiltered(0, "124", "ULA");
+                                break;
+                            case 4:
+                                adapter.clear();
+                                fetchDataFiltered(0, "115", "Arianespace");
+                                break;
+                            case 5:
+                                adapter.clear();
+                                fetchDataFiltered(0, "88", "CASC");
+                                break;
+                            case 6:
+                                adapter.clear();
+                                fetchDataFiltered(0, "31", "ISRO");
+                                break;
+
+                        }
+                        menu.toggle(false);
+                        return true;
+                    }
+                })
+                .positiveText("Filter")
+                .negativeText("Close")
+                .icon(ContextCompat.getDrawable(getContext(), R.mipmap.ic_launcher))
+                .show();
+    }
+
+    private void showVehicleDialog() {
+        new MaterialDialog.Builder(getContext())
+                .title("Select a Launch Vehicle")
+                .content("Check a vehicle below, to remove all filters use reset icon in the toolbar.")
+                .items(R.array.vehicles)
+                .buttonRippleColorRes(R.color.colorAccentLight)
+                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        switch (which) {
+                            case 0:
+                                adapter.clear();
+                                fetchDataFiltered(1, "Falcon", "Falcon");
+                                break;
+                            case 1:
+                                adapter.clear();
+                                fetchDataFiltered(1, "Proton", "Proton");
+                                break;
+                            case 2:
+                                adapter.clear();
+                                fetchDataFiltered(1, "Soyuz", "Soyuz");
+                                break;
+                            case 3:
+                                adapter.clear();
+                                fetchDataFiltered(1 , "Atlas", "Atlas");
+                                break;
+                            case 4:
+                                adapter.clear();
+                                fetchDataFiltered(1 , "Delta", "Delta");
+                                break;
+                            case 5:
+                                adapter.clear();
+                                fetchDataFiltered(1 , "Long", "Long March");
+                                break;
+                            case 6:
+                                adapter.clear();
+                                fetchDataFiltered(1 , "SLV", "PSLV/GSLV");
+                                break;
+                            case 7:
+                                adapter.clear();
+                                fetchDataFiltered(1 , "Ariane", "Ariane");
+                                break;
+                            case 8:
+                                adapter.clear();
+                                fetchDataFiltered(1 , "Zenit", "Zenit");
+                                break;
+                            case 9:
+                                adapter.clear();
+                                fetchDataFiltered(1 , "Rokot", "Rokot");
+                                break;
+                        }
+
+                        menu.toggle(false);
+                        return true;
+                    }
+                })
+                .positiveText("Filter")
+                .negativeText("Close")
+                .icon(ContextCompat.getDrawable(getContext(), R.mipmap.ic_launcher))
+                .show();
     }
 
     private void setTitle() {
@@ -279,9 +375,24 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         return null;
     }
 
+    //TODO Test empty
     public void displayLaunches() {
-        this.rocketLaunches = this.sharedPreference.getLaunchesPrevious();
-        filterData(this.rocketLaunches);
+        Timber.v("DisplayLaunches - Filtered - %s", sharedPreference.getFiltered());
+        if (!sharedPreference.getFiltered()){
+            rocketLaunches = sharedPreference.getLaunchesPrevious();
+        } else {
+            rocketLaunches = sharedPreference.getLaunchesPreviousFiltered();
+        }
+
+        Timber.v("DisplayLaunches - List size: %s", rocketLaunches.size());
+
+        adapter.clear();
+        if (rocketLaunches.size() > 0) {
+            empty.setVisibility(View.GONE);
+            adapter.addItems(rocketLaunches);
+        } else {
+            empty.setVisibility(View.VISIBLE);
+        }
         //Animate the FAB's loading
         view.postDelayed(new Runnable() {
             @Override
@@ -289,11 +400,6 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
                 fabSlideIn();
             }
         }, 750);
-    }
-
-    public void filterData(List<Launch> rocketLaunchList) {
-        adapter.clear();
-        adapter.addItems(rocketLaunchList);
     }
 
     public void fetchData() {
@@ -313,13 +419,21 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         progressView.startAnimation();
     }
 
-    public void fetchDataFiltered(String url, String filterTitle) {
-        Timber.d("Sending Intent URL: %s", url);
-        Intent intent = new Intent(getContext(), LaunchDataService.class);
-        intent.putExtra("URL", url);
-        intent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
-        getContext().startService(intent);
-        this.sharedPreference.setPreviousTitle(filterTitle);
+    // Three types: 0 - Agency 1 - Vehicle 2 - Country
+    public void fetchDataFiltered(int type, String key, String title) {
+        Timber.d("Filtering by: %s", key);
+
+        Answers.getInstance().logSearch(new SearchEvent()
+                .putQuery(key));
+
+        if (sharedPreference.getFiltered()){
+            sharedPreference.setPreviousTitle(sharedPreference.getPreviousTitle() + " | " + title);
+        } else {
+            sharedPreference.setPreviousTitle(title);
+        }
+        sharedPreference.setPrevFilter(type, key);
+        displayLaunches();
+        setTitle();
     }
 
     private void createCustomAnimation() {
@@ -356,6 +470,15 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     //Required for DateRange Dialogue that returns data from the dialogue.
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth,int yearEnd, int monthOfYearEnd, int dayOfMonthEnd) {
+        monthOfYear = monthOfYear + 1;
+        monthOfYearEnd = monthOfYearEnd + 1;
+
+        if (monthOfYear == 0){
+            monthOfYear = 1;
+        }
+        if (monthOfYearEnd == 0){
+            monthOfYearEnd = 1;
+        }
         String daydatestart = dayOfMonth < 10 ? "0"+dayOfMonth : ""+dayOfMonth;
         String monthdatestart = monthOfYear < 10 ? "0"+monthOfYear : ""+monthOfYear;
         String daydateend = dayOfMonthEnd < 10 ? "0"+dayOfMonthEnd : ""+dayOfMonthEnd;
@@ -364,7 +487,12 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         start_date = year + "-" + monthdatestart + "-" + daydatestart;
         end_date = yearEnd + "-" + monthdayend + "-" + daydateend;
 
-        this.sharedPreference.setPreviousTitle(formatDatesForTitle(start_date) + " - " +formatDatesForTitle(end_date));
+        if (sharedPreference.getFiltered()){
+            this.sharedPreference.setPreviousTitle(sharedPreference.getPreviousTitle() + " | " + formatDatesForTitle(start_date) + " - " + formatDatesForTitle(end_date));
+        } else {
+            this.sharedPreference.setPreviousTitle(formatDatesForTitle(start_date) + " - " + formatDatesForTitle(end_date));
+            this.sharedPreference.setFiltered(true);
+        }
 
         setTitle();
         adapter.clear();
@@ -418,13 +546,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         }
         if (id == R.id.action_refresh) {
             adapter.clear();
-            getDefaultDateRange();
-            fetchData();
-            return true;
-        }
-
-        if (id == R.id.reset_filter){
-            adapter.clear();
+            this.sharedPreference.setFiltered(false);
             getDefaultDateRange();
             fetchData();
             return true;
@@ -440,6 +562,10 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     public boolean onQueryTextChange(String query) {
         // Here is where we are going to implement our filter logic
         final List<Launch> filteredModelList = filter(rocketLaunches, query);
+        if (query.length() > 3){
+            Answers.getInstance().logSearch(new SearchEvent()
+                    .putQuery(query));
+        }
         adapter.animateTo(filteredModelList);
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -484,13 +610,13 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     @Override
     public void onResume() {
         Timber.d("OnResume!");
-        setTitle();
         super.onResume();
     }
 
     @Override
     public void onRefresh() {
         adapter.clear();
+        this.sharedPreference.setFiltered(false);
         getDefaultDateRange();
         fetchData();
     }

@@ -67,7 +67,7 @@
                     android:lines="1"
                     android:paddingTop="8dp"
                     android:text="Unknown Launch Vehicle"
-                    android:textColor="@color/dark_theme_primary_text_color"
+                    android:textColor="?android:textColorPrimary"
                     android:textSize="18sp"
                     android:textStyle="normal" />
 
@@ -185,6 +185,7 @@
                         android:textAlignment="center"
                         android:textColor="?android:textColorSecondary"
                         android:textSize="16sp"
+                        android:textStyle="bold"
                         android:theme="@style/DarkTheme" />
                 </LinearLayout>
                 <LinearLayout

@@ -22,12 +22,12 @@
     <PreferenceCategory android:title="Background Sync">
         <SwitchPreferenceCompat
             android:defaultValue="true"
-            android:key="background"
+            android:key="background_sync"
             android:summaryOff="Allow Launch Data to sync in the background."
             android:summaryOn="Launch Data will be synced in the background."
             android:title="Allow Background Syncs" />
         <ListPreference
-            android:dependency="background"
+            android:dependency="background_sync"
             android:defaultValue="4"
             android:entries="@array/sync_timer"
             android:entryValues="@array/sync_timer_values"

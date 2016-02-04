@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -14,10 +15,11 @@ import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 
 public class BootReceiver extends BroadcastReceiver{
     private SharedPreferences sharedPref;
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        //TODO check if background updates is allowed, start services.
-        if (this.sharedPref.getBoolean("background", true)) {
+        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        if (sharedPref.getBoolean("background_sync", true)) {
             Calendar c = Calendar.getInstance();
 
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");

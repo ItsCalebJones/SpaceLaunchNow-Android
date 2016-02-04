@@ -58,6 +58,7 @@
             android:layout_marginTop="-48dp"
             android:minHeight="?attr/actionBarSize"
             app:layout_scrollFlags="scroll|snap"
+            android:fitsSystemWindows="true"
             app:theme="@style/ThemeOverlay.AppCompat.Dark" />
         ​
 
@@ -101,16 +102,16 @@
             android:layout_height="?attr/actionBarSize"
             app:tabIndicatorColor="@color/colorAccentLight"
             app:tabIndicatorHeight="4dp"
+            android:fitsSystemWindows="true"
             app:tabSelectedTextColor="@color/white"
             app:theme="@style/ThemeOverlay.AppCompat.Dark" />
     </android.support.design.widget.AppBarLayout>
-    ​
-    <!-- The top margin value equals half height of the blue box -->
 
     <android.support.v4.view.ViewPager
         android:id="@+id/detail_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     ​
 

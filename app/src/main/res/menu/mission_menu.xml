@@ -5,9 +5,9 @@
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always"
         android:title="Search" />
+
     <item android:id="@+id/action_refresh"
-        android:icon="@drawable/ic_refresh_white"
-        app:showAsAction="ifRoom"
+        app:showAsAction="never"
         android:title="Refresh" />
     <item
         android:id="@+id/return_home"

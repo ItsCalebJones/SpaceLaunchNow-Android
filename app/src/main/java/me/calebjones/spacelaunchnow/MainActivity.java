@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity
     private static final String NAV_ITEM_ID = "navItemId";
     private final Handler mDrawerActionHandler = new Handler();
     private LaunchesViewPager mlaunchesViewPager;
+    private FavoriteFragment favoriteFragment;
     private final MissionFragment mMissionFragment = new MissionFragment();
     private Toolbar toolbar;
     private DrawerLayout drawer;
@@ -84,6 +85,9 @@ public class MainActivity extends AppCompatActivity
                 Timber.d("Broadcast action : %s", action);
                 if (Strings.ACTION_SUCCESS_UP_LAUNCHES.equals(action)) {
                     mlaunchesViewPager.restartViews(Strings.ACTION_SUCCESS_UP_LAUNCHES);
+                    if (mNavItemId == R.id.menu_favorites) {
+                        favoriteFragment.refreshViews();
+                    }
                 } else if (Strings.ACTION_SUCCESS_PREV_LAUNCHES.equals(action)) {
                     mlaunchesViewPager.restartViews(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
                 } else if (Strings.ACTION_SUCCESS_MISSIONS.equals(action)) {
@@ -148,23 +152,17 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
-                Timber.v("onDrawerSlide -slideOffest: %s", slideOffset);
                 int color = statusColor;
                 int r = (color >> 16) & 0xFF;
                 int g = (color >> 8) & 0xFF;
                 int b = (color >> 0) & 0xFF;
 
                 float currentScroll = slideOffset * 255;
-                float totalScroll = 255;
 
                 int currentScrollInt = Math.round(currentScroll);
 
-
-                Timber.v("onDrawerSlide -currentScroll: %s totalScroll: %s", currentScroll, totalScroll);
-
                 if ((slideOffset) < 1 && (slideOffset) > 0){
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        Timber.v("onDrawerSlide - Open? currentScroll: %s", currentScroll);
                         Window window = getWindow();
                         window.setStatusBarColor(Color.argb(reverseNumber(currentScrollInt,0,255),r,g,b));
                     }
@@ -235,7 +233,6 @@ public class MainActivity extends AppCompatActivity
 
     public int reverseNumber(int num, int min, int max) {
         int number = (max + min) - num;
-        Timber.v("Number: %s",number);
         return number;
     }
 
@@ -262,10 +259,10 @@ public class MainActivity extends AppCompatActivity
 
     public void checkFirstBoot() {
         if (sharedPreference.getFirstBoot()) {
+            sharedPreference.setFiltered(false);
             getFirstLaunches();
             loadTutorial();
         } else {
-            //TODO check last sync
             navigate(mNavItemId);
         }
     }
@@ -308,6 +305,9 @@ public class MainActivity extends AppCompatActivity
         if (mlaunchesViewPager == null){
             mlaunchesViewPager = new LaunchesViewPager();
         }
+        if (favoriteFragment == null){
+            favoriteFragment = new FavoriteFragment();
+        }
     }
 
     public void setActionBarTitle(String title) {
@@ -332,7 +332,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+        if (BuildConfig.DEBUG) {
+            getMenuInflater().inflate(R.menu.main_menu, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.main_menu, menu);
+        }
         return true;
     }
 
@@ -375,29 +379,38 @@ public class MainActivity extends AppCompatActivity
         // perform the actual navigation logic, updating the main_menu content fragment etc
         switch (itemId) {
             case R.id.menu_launches:
+                mNavItemId = R.id.menu_launches;
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.flContent, mlaunchesViewPager)
-                        .addToBackStack("LaunchViewPager")
-                        .commit();
-                break;
-            case R.id.menu_missions:
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.flContent, mMissionFragment)
                         .addToBackStack(null)
                         .commit();
                 break;
+            case R.id.menu_missions:
+                mNavItemId = R.id.menu_missions;
+                setActionBarTitle("Missions");
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.flContent, mMissionFragment)
+                        .addToBackStack("MissionFragment")
+                        .commit();
+                break;
             case R.id.menu_vehicle:
+                mNavItemId = R.id.menu_vehicle;
+                setActionBarTitle("Vehicles");
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.flContent, new VehiclesViewPager())
+                        .addToBackStack("VehicleViewPager")
                         .commit();
                 break;
             case R.id.menu_favorites:
+                mNavItemId = R.id.menu_favorites;
+                setActionBarTitle("Favorites");
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.flContent, new FavoriteFragment())
+                        .replace(R.id.flContent, favoriteFragment)
+                        .addToBackStack("FavoriteFragment")
                         .commit();
                 break;
             case R.id.menu_launch:
@@ -413,7 +426,12 @@ public class MainActivity extends AppCompatActivity
                 loadTutorial();
                 break;
             case R.id.menu_feedback:
-                Toast.makeText(getBaseContext(), "Work in progress! Thanks for your patience!", Toast.LENGTH_SHORT).show();
+                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                emailIntent.setData(Uri.parse("mailto:"));
+                emailIntent.setType("message/rfc822");
+                emailIntent.putExtra(Intent.EXTRA_EMAIL  , new String[]{"cajones9119@gmail.com"});
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "SpaceLaunchNow - Feedback");
+                startActivity(Intent.createChooser(emailIntent, "Send Email"));
                 break;
             default:
                 // ignore

@@ -16,7 +16,6 @@
             android:icon="@drawable/ic_rocket"
             android:title="Vehicles" />
         <item
-            android:checkable="false"
             android:id="@+id/menu_favorites"
             android:icon="@drawable/ic_favorite"
             android:title="Favorites" />

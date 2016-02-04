@@ -110,7 +110,7 @@ public class OrbiterFragment extends MyFragment {
                 Timber.d("Starting Activity at %s", position);
 
                 Intent detailIntent = new Intent(getActivity(), OrbiterDetailActivity.class);
-                detailIntent.putExtra("position", position);
+                detailIntent.putExtra("position", position + 1);
                 detailIntent.putExtra("family", items.get(position).getName());
                 detailIntent.putExtra("agency", items.get(position).getAgency());
 
@@ -120,7 +120,7 @@ public class OrbiterFragment extends MyFragment {
 
                 // Setup the transition to the detail activity
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(),
-                        new Pair<View, String>(coverImage, "cover" + position));
+                        new Pair<View, String>(coverImage, "cover" + position + 1));
 
                 startActivity(detailIntent, options.toBundle());
             } else {
