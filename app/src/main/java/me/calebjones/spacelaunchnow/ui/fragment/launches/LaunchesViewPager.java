@@ -11,7 +11,9 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 
+import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Strings;
@@ -62,6 +64,11 @@ public class LaunchesViewPager extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
                 current_tab = tab.getPosition();
+                if (tab.getPosition() == 0){
+                    ((MainActivity) getActivity()).setActionBarTitle("Space Launch Now");
+                } else {
+                    ((MainActivity) getActivity()).setActionBarTitle(sharedPreference.getPreviousTitle());
+                }
             }
 
             @Override

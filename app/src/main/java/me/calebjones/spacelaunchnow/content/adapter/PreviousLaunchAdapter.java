@@ -58,6 +58,7 @@ public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAd
                 public void run() {
                     mSections.clear();
                     mSectionPositions.clear();
+
                     //Note: If you're populating with a large dataset, you might want to
                     //call the following code asychronously.
                     SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");

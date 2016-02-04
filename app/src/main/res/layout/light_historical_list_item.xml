@@ -49,7 +49,7 @@
                     android:paddingTop="8dp"
                     android:gravity="left"
                     android:text="Unknown Launch Vehicle"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="?android:textColorPrimary"
                     android:textSize="18sp"
                     android:textStyle="normal"
                     android:lines="1"

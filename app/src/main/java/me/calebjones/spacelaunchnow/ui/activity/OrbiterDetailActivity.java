@@ -117,18 +117,18 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
             final int position = getIntent().getIntExtra("position", 0);
             Timber.d("Position %s", position);
 
-            // Recover book cover from BooksFragment cache
-            Bitmap bookCoverBitmap = LaunchVehicleFragment.photoCache.get(position);
+            // Recover image cover from cache
+            Bitmap bookCoverBitmap = LaunchVehicleFragment.photoCache.get(position + 1);
             ImageView toolbarBookCover = (ImageView) findViewById(R.id.detail_profile_backdrop);
             toolbarBookCover.setImageBitmap(bookCoverBitmap);
 
             // Define toolbar as the shared element
             detail_profile_backdrop.setBackground(new BitmapDrawable(getResources(), bookCoverBitmap));
-            detail_profile_backdrop.setTransitionName("cover" + position);
+            detail_profile_backdrop.setTransitionName("cover" + position + 1);
 
-            // Add a listener to get noticed when the transition ends to animate the fab button
+            // Add a listener to get noticed when the transition ends to animate the view
             ViewPropertyAnimator showTitleAnimator = Utils.showViewByScale(detail_profile_image);
-            showTitleAnimator.setStartDelay(500);
+            showTitleAnimator.setStartDelay(750);
         } else {
             detail_profile_image.setScaleX(1);
             detail_profile_image.setScaleY(1);
@@ -198,7 +198,8 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
                     .into(detail_profile_backdrop);
 
             Glide.with(this)
-                    .load(R.string.rus_logo)
+                    .load(getString(R.string.rus_logo))
+                    .error(R.drawable.icon_international)
                     .into(detail_profile_image);
 
             orbiter_vehicle_card.setVisibility(View.VISIBLE);
@@ -224,8 +225,7 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
                     .into(detail_profile_backdrop);
 
             Glide.with(this)
-                    .load(R.string.chn_logo)
-                    .crossFade()
+                    .load(getString(R.string.chn_logo))
                     .error(R.drawable.icon_international)
                     .into(detail_profile_image);
 
@@ -252,7 +252,7 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
                     .into(detail_profile_backdrop);
 
             Glide.with(this)
-                    .load(R.string.spacex_logo)
+                    .load(getString(R.string.spacex_logo))
                     .error(R.drawable.icon_international)
                     .into(detail_profile_image);
 

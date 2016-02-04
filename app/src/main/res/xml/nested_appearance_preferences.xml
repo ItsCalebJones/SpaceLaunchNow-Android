@@ -7,16 +7,4 @@
         android:summaryOff="Night mode is disabled."
         android:summaryOn="Night Mode is enabled."
         android:title="Night mode" />
-    <SwitchPreferenceCompat
-        android:dependency="theme"
-        android:defaultValue="false"
-        android:key="auto_theme"
-        android:summaryOff="Automatic night mode is disabled."
-        android:summaryOn="Automatically use night mode within the configured set below."
-        android:title="Automatic Night Mode" />
-    <Preference
-        android:dependency="auto_theme"
-        android:key="auto_theme_window"
-        android:summary="Schedule automatic night mode."
-        android:title="Set Time Window" />
 </PreferenceScreen>

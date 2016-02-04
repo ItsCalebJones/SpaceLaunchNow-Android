@@ -1,6 +1,7 @@
 package me.calebjones.spacelaunchnow.content.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
@@ -20,6 +21,7 @@ import java.util.List;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Launch;
+import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
 import timber.log.Timber;
 
@@ -49,10 +51,24 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         }
     }
 
+    public void removeAll() {
+        items.clear();
+        notifyDataSetChanged();
+    }
+
     public void remove(int position) {
-        sharedPreference.removeFavLaunch(items.get(position));
-        items.remove(position);
-        notifyItemRemoved(position);
+        if (position < items.size()) {
+            Timber.v("Remove item: %s", items.get(position).getName());
+            sharedPreference.removeFavLaunch(items.get(position));
+            items.remove(position);
+            notifyItemRemoved(position);
+        } else {
+            Timber.e("ERROR: Tried to remove a item that was out of bounds.");
+        }
+    }
+
+    public Launch get(int position){
+        return items.get(position);
     }
 
 
@@ -122,6 +138,11 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    public void clear() {
+        items.clear();
+        this.notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

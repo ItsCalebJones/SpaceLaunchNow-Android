@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Strings;
@@ -36,18 +37,15 @@ import me.calebjones.spacelaunchnow.content.models.Mission;
 import me.calebjones.spacelaunchnow.content.models.Pad;
 import me.calebjones.spacelaunchnow.content.models.Rocket;
 import me.calebjones.spacelaunchnow.content.models.RocketAgency;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
-
-/**
- * Created by cjones on 11/10/15.
- * If it is a new post then notify the user and save to DB.
- */
 public class LaunchDataService extends IntentService {
 
     public static List<Launch> upcomingLaunchList;
     public static List<Launch> previousLaunchList;
-    private int prevLaunchID;
+    private Launch prevLaunch;
+    private Launch storedPrevLaunch;
     private AlarmManager alarmManager;
     private SharedPreferences sharedPref;
     private SharedPreference sharedPreference;
@@ -88,7 +86,6 @@ public class LaunchDataService extends IntentService {
             getUpcomingLaunches();
         } else if (Strings.ACTION_GET_PREV_LAUNCHES.equals(action)) {
             Timber.d("LaunchDataService - onHandleIntent:  %s ", action);
-            prevLaunchID = intent.getIntExtra("id", 0);
             getPreviousLaunches(intent.getStringExtra("URL"));
         } else {
             Timber.e("LaunchDataService - onHandleIntent: ERROR - Unknown Intent %s", action);
@@ -96,7 +93,6 @@ public class LaunchDataService extends IntentService {
     }
 
     private void getPreviousLaunches(String sUrl) {
-        LaunchDataService.this.cleanCachePrevious();
         InputStream inputStream = null;
         Integer result = 0;
         HttpURLConnection urlConnection = null;
@@ -125,17 +121,35 @@ public class LaunchDataService extends IntentService {
 
                 Timber.d("LaunchDataService - Previous Launches list:  %s ", previousLaunchList.size());
 
-                if (prevLaunchID != 0){
-                    int size = previousLaunchList.size();
+//                if (!this.sharedPreference.getFiltered()) {
+//                    prevLaunch = previousLaunchList.get(0);
+//                    storedPrevLaunch = this.sharedPreference.getPrevLaunch();
+//                    if (storedPrevLaunch != null) {
+//                        //If they do not match this means nextLaunch has changed IE a launch executed.
+//                        if (prevLaunch.getId().intValue() != storedPrevLaunch.getId().intValue()) {
+//                            this.sharedPreference.setNextLaunch(prevLaunch);
+//
+//                            Intent updatePreviousLaunches = new Intent(this, LaunchDataService.class);
+//                            updatePreviousLaunches.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
+//                            updatePreviousLaunches.putExtra("URL", Utils.getBaseURL());
+//                            startService(updatePreviousLaunches);
+//
+//                            storedPrevLaunch = prevLaunch;
+//                            checkStatus(storedPrevLaunch);
+//                        } else {
+//                            checkStatus(storedPrevLaunch);
+//                        }
+//                    } else {
+//                        this.sharedPreference.setPrevLaunch(prevLaunch);
+//                    }
+//                }
 
-                    for (int i = 0; i < size; i++) {
-                        if (previousLaunchList.get(i).getId().equals(prevLaunchID)) {
-                            notifyStatusOfLaunch(previousLaunchList.get(i));
-                        }
-                    }
+                if (this.sharedPreference.getFiltered()){
+                    this.sharedPreference.setPreviousLaunchesFiltered(previousLaunchList);
+                } else {
+                    LaunchDataService.this.cleanCachePrevious();
+                    this.sharedPreference.setPreviousLaunches(previousLaunchList);
                 }
-                this.sharedPreference.setPreviousLaunches(previousLaunchList);
-
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
                 LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
@@ -150,30 +164,17 @@ public class LaunchDataService extends IntentService {
         }
     }
 
-    private void notifyStatusOfLaunch(Launch launch) {
-        String status = null;
-
-        switch (launch.getStatus()){
+    private void checkStatus(Launch storedPrevLaunch) {
+        int status = storedPrevLaunch.getStatus();
+        switch (status){
+            case 1:
+                break;
+            case 2:
+                break;
             case 3:
-                status = "a success!";
                 break;
             case 4:
-                status = "a failure.";
                 break;
-        }
-
-        if (status != null) {
-            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
-            mBuilder.setContentTitle(launch.getName())
-                    .setContentText("Launch was " + status)
-                    .setSmallIcon(R.drawable.ic_notification)
-                    .setAutoCancel(true);
-
-            NotificationManager mNotifyManager = (NotificationManager)
-                    getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
-        } else {
-            schedulePrevioushUpdates(launch.getId());
         }
     }
 
@@ -184,8 +185,12 @@ public class LaunchDataService extends IntentService {
         HttpURLConnection urlConnection = null;
         try {
             /* forming th java.net.URL object */
-
-            URL url = new URL("https://launchlibrary.net/1.1.1/launch/next/1000");
+            URL url;
+            if(sharedPreference.getDebugLaunch()){
+                url = new URL("http://calebjones.me/app/debug_launch.json");
+            } else {
+                url = new URL("https://launchlibrary.net/1.1.1/launch/next/1000");
+            }
 
             urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -205,17 +210,17 @@ public class LaunchDataService extends IntentService {
                     response.append(line);
                 }
                 parseUpcomingResult(response.toString());
-                Timber.d("LaunchDataService - Upcoming Launches list:  %s ", upcomingLaunchList.size());
 
-                //TODO Remove this before release.
-                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
-                mBuilder.setContentTitle("LaunchData Worked!")
-                        .setSmallIcon(R.drawable.ic_notification)
-                        .setAutoCancel(true);
+                if (BuildConfig.DEBUG) {
+                    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
+                    mBuilder.setContentTitle("LaunchData Worked!")
+                            .setSmallIcon(R.drawable.ic_notification)
+                            .setAutoCancel(true);
 
-                NotificationManager mNotifyManager = (NotificationManager)
-                        getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-                mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
+                    NotificationManager mNotifyManager = (NotificationManager)
+                            getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                    mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
+                }
 
                 this.sharedPreference.setUpComingLaunches(upcomingLaunchList);
 
@@ -266,7 +271,6 @@ public class LaunchDataService extends IntentService {
                 JSONObject launchesObj = launchesArray.optJSONObject(i);
                 JSONObject rocketObj = launchesObj.optJSONObject("rocket");
                 JSONObject locationObj = launchesObj.optJSONObject("location");
-
                 Launch launch = new Launch();
 
                 launch.setName(launchesObj.optString("name"));
@@ -294,6 +298,7 @@ public class LaunchDataService extends IntentService {
                         List<RocketAgency> rocketList = new ArrayList<>();
                         for (int a = 0; a < agencies.length(); a++) {
                             JSONObject agencyObj = agencies.optJSONObject(a);
+                            rocketAgency.setId(agencyObj.optInt("id"));
                             rocketAgency.setName(agencyObj.optString("name"));
                             rocketAgency.setAbbrev(agencyObj.optString("abbrev"));
                             rocketAgency.setCountryCode(agencyObj.optString("countryCode"));
@@ -334,6 +339,7 @@ public class LaunchDataService extends IntentService {
                                     JSONObject padAgenciesObj = padAgencies.optJSONObject(b);
                                     LocationAgency locationAgency = new LocationAgency();
                                     locationAgency.setName(padAgenciesObj.optString("name"));
+                                    locationAgency.setId(padAgenciesObj.optInt("id"));
                                     locationAgency.setAbbrev(padAgenciesObj.optString("abbrev"));
                                     locationAgency.setCountryCode(padAgenciesObj
                                             .optString("countryCode"));
@@ -368,9 +374,12 @@ public class LaunchDataService extends IntentService {
                     launch.setMissions(missionList);
                 }
 
+                sharedPreference.checkFavorite(launch);
+                Timber.v("Adding launch %s", launch.getName());
                 upcomingLaunchList.add(launch);
             }
         } catch (JSONException e) {
+            Timber.v("parseUpcomingResult - ERROR: %s", e.getLocalizedMessage());
             e.printStackTrace();
         }
     }
@@ -416,6 +425,7 @@ public class LaunchDataService extends IntentService {
                         for (int a = 0; a < agencies.length(); a++) {
                             RocketAgency rocketAgency = new RocketAgency();
                             JSONObject agencyObj = agencies.optJSONObject(a);
+                            rocketAgency.setId(agencyObj.optInt("id"));
                             rocketAgency.setName(agencyObj.optString("name"));
                             rocketAgency.setAbbrev(agencyObj.optString("abbrev"));
                             rocketAgency.setCountryCode(agencyObj.optString("countryCode"));
@@ -460,6 +470,7 @@ public class LaunchDataService extends IntentService {
                                     JSONObject padAgenciesObj = padAgencies.optJSONObject(b);
                                     LocationAgency locationAgency = new LocationAgency();
                                     locationAgency.setName(padAgenciesObj.optString("name"));
+                                    locationAgency.setId(padAgenciesObj.optInt("id"));
                                     locationAgency.setAbbrev(padAgenciesObj.optString("abbrev"));
                                     locationAgency.setCountryCode(padAgenciesObj
                                             .optString("countryCode"));
@@ -523,36 +534,6 @@ public class LaunchDataService extends IntentService {
             Timber.d("LaunchDataService - Scheduling Alarm at %s with interval of %s", nextUpdate, interval);
             alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, nextUpdate, interval,
                     PendingIntent.getBroadcast(this, 165435, new Intent(Strings.ACTION_UPDATE_UP_LAUNCHES), 0));
-        } else {
-            Timber.e("LaunchDataService - Error setting alarm, failed to change %s to milliseconds", notificationTimer);
-        }
-    }
-
-    public void schedulePrevioushUpdates(Integer id) {
-        Timber.d("LaunchDataService - scheduleLaunchUpdates");
-
-        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-        //Get sync period.
-        String notificationTimer = "1";
-
-        long interval;
-
-        Pattern p = Pattern.compile("(\\d+)");
-        Matcher m = p.matcher(notificationTimer);
-
-        Intent intent = new Intent(Strings.ACTION_UPDATE_PREV_LAUNCHES);
-        intent.putExtra("id", id);
-
-        if (m.matches()) {
-            int hrs = Integer.parseInt(m.group(1));
-            interval = (long) hrs * 60 * 60 * 1000;
-            Timber.d("LaunchDataService - Notification Timer: %s to millisecond %s", notificationTimer, interval);
-
-            long nextUpdate = Calendar.getInstance().getTimeInMillis() + interval;
-            Timber.d("LaunchDataService - Scheduling Alarm at %s with interval of %s", nextUpdate, interval);
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, nextUpdate, interval,
-                    PendingIntent.getBroadcast(this, 165436, intent, 0));
         } else {
             Timber.e("LaunchDataService - Error setting alarm, failed to change %s to milliseconds", notificationTimer);
         }

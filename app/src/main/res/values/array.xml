@@ -4,9 +4,11 @@
         <item>Upcoming</item>
         <item>Previous</item>
     </string-array>
+
     <string-array name="vehicles_tabs">
         <item>Launch Vehicles</item>
     </string-array>
+
     <string-array name="agencies">
         <item>NASA</item>
         <item>SpaceX</item>
@@ -16,13 +18,27 @@
         <item>CASC</item>
         <item>ISRO</item>
     </string-array>
+
     <string-array name="vehicles">
         <item>Falcon</item>
         <item>Proton</item>
         <item>Soyuz</item>
         <item>Atlas</item>
+        <item>Delta</item>
+        <item>Long March</item>
+        <item>PSLV/GSLV</item>
+        <item>Ariane</item>
+        <item>Zenit</item>
+        <item>Rokot</item>
     </string-array>
 
+    <string-array name="country">
+        <item>USA</item>
+        <item>China</item>
+        <item>Russia</item>
+        <item>India</item>
+        <item>Multi</item>
+    </string-array>
     <string-array name="upcoming_array">
         <item>One</item>
         <item>Two</item>
@@ -31,6 +47,7 @@
         <item>Twenty</item>
         <item>All</item>
     </string-array>
+
     <string-array name="upcoming_array_values">
         <item>1</item>
         <item>2</item>

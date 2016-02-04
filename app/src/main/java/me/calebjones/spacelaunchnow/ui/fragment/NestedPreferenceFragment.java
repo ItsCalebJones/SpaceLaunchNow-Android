@@ -99,33 +99,23 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
 
     private void checkPreferenceResource() {
         switch (getArguments().getInt(TAG_KEY)) {
-            case NESTED_SCREEN_1_KEY /*1*/:
+            case NESTED_SCREEN_1_KEY:
                 addPreferencesFromResource(R.xml.nested_notification_preferences);
                 if (this.toolbarTitle != null) {
                     this.toolbarTitle.setText("Notification");
                 }
                 break;
-            case NESTED_SCREEN_2_KEY /*2*/:
+            case NESTED_SCREEN_2_KEY:
                 addPreferencesFromResource(R.xml.nested_loader_preferences);
                 if (this.toolbarTitle != null) {
                     this.toolbarTitle.setText("Launch Tracking Options");
                 }
                 break;
-            case NESTED_SCREEN_3_KEY /*2*/:
+            case NESTED_SCREEN_3_KEY:
                 addPreferencesFromResource(R.xml.nested_appearance_preferences);
                 if (this.toolbarTitle != null) {
                     this.toolbarTitle.setText("Appearance");
                 }
-                Preference myPref = findPreference("auto_theme_window");
-                myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    public boolean onPreferenceClick(Preference preference) {
-                        //open browser or intent here
-                        TimeRangePickerDialogCustom timePickerDialog = TimeRangePickerDialogCustom.newInstance(
-                                NestedPreferenceFragment.this, false);
-                        timePickerDialog.show(getActivity().getSupportFragmentManager(), "");
-                        return false;
-                    }
-                });
                 break;
             default:
         }

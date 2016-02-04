@@ -56,6 +56,8 @@ public class LaunchApplication extends Application {
         if (sharedPreference.getFirstBoot()) {
             //TODO check last sync
             refreshLaunches();
+        } else {
+            sharedPreference.syncFavorites();
         }
     }
 
