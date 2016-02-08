@@ -63,6 +63,10 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
             //data is your adapter's dataset
             for (int i = 0, length = missionList.size(); i < length; i++) {
                 String section = missionList.get(i).getName().substring(0,1);
+                if (section.matches("\\d+(?:\\.\\d+)?")){
+                    section = "#";
+                }
+                Timber.v("Adding section for %s as %s", missionList.get(i).getName(), section);
                 if (!TextUtils.isEmpty(section) && !mSections.contains(section)) {
                     //This just adds a new section for each new letter
                     mSections.add(section);
