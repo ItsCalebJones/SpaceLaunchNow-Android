@@ -105,8 +105,9 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             Glide.with(mContext)
-                    .load(item.getDrawableId())
+                    .load(item.getImageURL())
                     .asBitmap()
+                    .fitCenter()
                     .into(new BitmapImageViewTarget(holder.picture) {
                         @Override
                         public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
@@ -119,7 +120,8 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
             holder.grid_root.setScaleY(1);
             holder.grid_root.setScaleX(1);
             Glide.with(mContext)
-                    .load(item.getDrawableId())
+                    .load(item.getImageURL())
+                    .fitCenter()
                     .into(holder.picture);
         }
 
@@ -169,7 +171,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
 
                     } else {
 
-                        Timber.e("[ERROR]", "BookAdapter onGenerated - The swatch was null at: %s", position);
+                        Timber.e("BookAdapter onGenerated - The swatch was null at: %s", position);
                     }
                 }
             });

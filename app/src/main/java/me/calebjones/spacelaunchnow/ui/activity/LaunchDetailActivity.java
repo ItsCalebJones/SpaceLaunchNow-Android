@@ -273,7 +273,6 @@ public class LaunchDetailActivity extends AppCompatActivity
 
     private void findProfileLogo() {
 
-        //TODO stabilize this
         //Default location, mission is unknown.
         String location = "Unknown Location";
         String mission = "Unknown Mission";
@@ -319,7 +318,7 @@ public class LaunchDetailActivity extends AppCompatActivity
                             applyProfileLogo(getString(R.string.ula_logo));
                         } else {
                             //Else Apply USA flag
-                            detail_profile_image.setImageResource(R.drawable.usa_flag);
+                            applyProfileLogo(getString(R.string.usa_flag));
                         }
                     } else if (locationCountryCode.contains("RUS")) {
                         //Apply Russia Logo
@@ -350,6 +349,7 @@ public class LaunchDetailActivity extends AppCompatActivity
 
         Glide.with(this)
                 .load(url)
+                .centerCrop()
                 .placeholder(R.drawable.icon_international)
                 .error(R.drawable.icon_international)
                 .into(detail_profile_image);
