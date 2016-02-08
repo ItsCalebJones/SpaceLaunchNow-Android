@@ -13,7 +13,6 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.CustomEvent;
 
 import org.json.JSONArray;
@@ -110,6 +109,7 @@ public class LaunchDataService extends IntentService {
             urlConnection = (HttpURLConnection) url.openConnection();
 
                 /* for Get request */
+            urlConnection.setRequestProperty("Accept", "*/*");
             urlConnection.setConnectTimeout(5000);
             urlConnection.setRequestMethod("GET");
 
@@ -129,29 +129,6 @@ public class LaunchDataService extends IntentService {
 
                 Timber.d("LaunchDataService - Previous Launches list:  %s ", previousLaunchList.size());
 
-//                if (!this.sharedPreference.getFiltered()) {
-//                    prevLaunch = previousLaunchList.get(0);
-//                    storedPrevLaunch = this.sharedPreference.getPrevLaunch();
-//                    if (storedPrevLaunch != null) {
-//                        //If they do not match this means nextLaunch has changed IE a launch executed.
-//                        if (prevLaunch.getId().intValue() != storedPrevLaunch.getId().intValue()) {
-//                            this.sharedPreference.setNextLaunch(prevLaunch);
-//
-//                            Intent updatePreviousLaunches = new Intent(this, LaunchDataService.class);
-//                            updatePreviousLaunches.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
-//                            updatePreviousLaunches.putExtra("URL", Utils.getBaseURL());
-//                            startService(updatePreviousLaunches);
-//
-//                            storedPrevLaunch = prevLaunch;
-//                            checkStatus(storedPrevLaunch);
-//                        } else {
-//                            checkStatus(storedPrevLaunch);
-//                        }
-//                    } else {
-//                        this.sharedPreference.setPrevLaunch(prevLaunch);
-//                    }
-//                }
-
                 if (this.sharedPreference.getFiltered()){
                     this.sharedPreference.setPreviousLaunchesFiltered(previousLaunchList);
                 } else {
@@ -162,12 +139,22 @@ public class LaunchDataService extends IntentService {
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
                 LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
 
-            }
+            } else {
+                Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to retrieve upcoming launches: " + statusCode);
 
+                Answers.getInstance().logCustom(new CustomEvent("Failed Data Sync")
+                        .putCustomAttribute("Status", statusCode));
+
+                Intent broadcastIntent = new Intent();
+                broadcastIntent.setAction(Strings.ACTION_FAILURE_PREV_LAUNCHES);
+                LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+            }
 
         } catch (Exception e) {
             Timber.e("LaunchDataService - getPreviousLaunches ERROR: %s", e.getLocalizedMessage());
+
             Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to retrieve previous launches: " + e.getLocalizedMessage());
+
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_FAILURE_PREV_LAUNCHES);
             LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
@@ -205,6 +192,8 @@ public class LaunchDataService extends IntentService {
             urlConnection = (HttpURLConnection) url.openConnection();
 
                 /* for Get request */
+
+            urlConnection.setRequestProperty("Accept", "*/*");
             urlConnection.setConnectTimeout(5000);
             urlConnection.setRequestMethod("GET");
 
@@ -240,6 +229,15 @@ public class LaunchDataService extends IntentService {
                 LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
 
                 startService(new Intent(this, NextLaunchTracker.class));
+            } else {
+                Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to retrieve upcoming launches: " + statusCode);
+
+                Answers.getInstance().logCustom(new CustomEvent("Failed Data Sync")
+                        .putCustomAttribute("Status", statusCode));
+
+                Intent broadcastIntent = new Intent();
+                broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
+                LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
             }
 
         } catch (Exception e) {
