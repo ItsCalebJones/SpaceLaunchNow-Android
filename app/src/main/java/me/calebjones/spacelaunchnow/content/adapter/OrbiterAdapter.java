@@ -101,8 +101,9 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             Glide.with(mContext)
-                    .load(item.getDrawableId())
+                    .load(item.getImageURL())
                     .asBitmap()
+                    .fitCenter()
                     .into(new BitmapImageViewTarget(holder.picture) {
                         @Override
                         public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
@@ -115,7 +116,8 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
             holder.grid_root.setScaleY(1);
             holder.grid_root.setScaleX(1);
             Glide.with(mContext)
-                    .load(item.getDrawableId())
+                    .load(item.getImageURL())
+                    .fitCenter()
                     .into(holder.picture);
         }
 
@@ -166,7 +168,7 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
 
                     } else {
 
-                        Log.e("[ERROR]", "BookAdapter onGenerated - The VibrantSwatch were null at: " + position);
+                        Timber.e("Adapter onGenerated - The VibrantSwatch were null at: " + position);
                     }
                 }
             });
