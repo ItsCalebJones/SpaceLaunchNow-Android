@@ -137,8 +137,7 @@ public class VehicleDetailActivity extends AppCompatActivity implements AppBarLa
                 int totalScroll = appBarLayout.getTotalScrollRange();
                 int currentScroll = totalScroll + verticalOffset;
 
-                Timber.v("AppBar totalScroll: %s currentScroll: %s verticalOffset: %s",
-                        totalScroll, currentScroll, verticalOffset);
+
                 int color = statusColor;
                 int r = (color >> 16) & 0xFF;
                 int g = (color >> 8) & 0xFF;
@@ -146,8 +145,7 @@ public class VehicleDetailActivity extends AppCompatActivity implements AppBarLa
 
                 if ((currentScroll) < 255) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        Timber.v("ColorNew: %s ColorPrimary: %s R: %s G: %s B: %s",
-                                reverseNumber(currentScroll, 0, 255), R.color.colorPrimary, r, g, b);
+
                         Window window = getWindow();
                         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -183,9 +181,7 @@ public class VehicleDetailActivity extends AppCompatActivity implements AppBarLa
     }
 
     public int reverseNumber(int num, int min, int max) {
-        int number = (max + min) - num;
-        Timber.v("Number: %s", number);
-        return number;
+        return (max + min) - num;
     }
 
     public void displayRockets() {
@@ -197,44 +193,68 @@ public class VehicleDetailActivity extends AppCompatActivity implements AppBarLa
         adapter.clear();
         adapter.addItems(rocketLaunches);
         if (launcher.contains("Soyuz")) {
-            applyProfileBackdrop(R.drawable.soyuz);
+
+            applyProfileBackdrop(R.string.soyuz_image);
             applyProfileLogo(R.string.rus_logo);
+
         } else if (launcher.contains("Falcon")) {
-            applyProfileBackdrop(R.drawable.falcon);
+
+            applyProfileBackdrop(R.string.falcon_image);
             applyProfileLogo(R.string.spacex_logo);
+
         } else if (launcher.contains("Proton")) {
-            applyProfileBackdrop(R.drawable.proton);
+
+            applyProfileBackdrop(R.string.proton_image);
             applyProfileLogo(R.string.rus_logo);
+
         } else if (launcher.contains("Delta")) {
-            applyProfileBackdrop(R.drawable.delta);
+
+            applyProfileBackdrop(R.string.delta_image);
             applyProfileLogo(R.string.ula_logo);
+
         } else if (launcher.contains("Ariane")) {
-            applyProfileBackdrop(R.drawable.ariane);
+
+            applyProfileBackdrop(R.string.ariane_image);
             applyProfileLogo(R.string.ariane_logo);
+
         } else if (launcher.contains("Space")) {
-            applyProfileBackdrop(R.drawable.shuttle);
-            applyProfileLogo(R.drawable.usa_flag);
+
+            applyProfileBackdrop(R.string.shuttle_image);
+            applyProfileLogo(getString(R.string.usa_flag));
+
         } else if (launcher.contains("Long")) {
-            applyProfileBackdrop(R.drawable.long_march);
+
+            applyProfileBackdrop(R.string.long_image);
             applyProfileLogo(R.string.chn_logo);
+
         } else if (launcher.contains("Atlas")) {
-            applyProfileBackdrop(R.drawable.atlas);
-            applyProfileLogo(R.drawable.usa_flag);
+
+            applyProfileBackdrop(R.string.atlas_image);
+            applyProfileLogo(getString(R.string.usa_flag));
+
         } else if (launcher.contains("PSLV")) {
-            applyProfileBackdrop(R.drawable.pslv);
+
+            applyProfileBackdrop(R.string.pslv_image);
             applyProfileLogo(R.string.ind_logo);
+
         } else if (launcher.contains("Vega")) {
-            applyProfileBackdrop(R.drawable.vega);
+
+            applyProfileBackdrop(R.string.vega_image);
             applyProfileLogo(R.drawable.icon_international);
+
         } else if (launcher.contains("Zenit")) {
-            applyProfileBackdrop(R.drawable.zenit);
+
+            applyProfileBackdrop(R.string.zenit_image);
             applyProfileLogo(R.string.Yuzhnoye_logo);
         }
     }
 
-    private void applyProfileBackdrop(int drawable) {
+    private void applyProfileBackdrop(int drawableURL) {
+        Timber.d("VehicleDetailActivity - Loading Backdrop Image url: %s ", drawableURL);
         Glide.with(this)
-                .load(drawable)
+                .load(getString(drawableURL))
+                .centerCrop()
+                .crossFade()
                 .into(detail_profile_backdrop);
     }
 
@@ -243,15 +263,17 @@ public class VehicleDetailActivity extends AppCompatActivity implements AppBarLa
 
         Glide.with(this)
                 .load(url)
+                .centerCrop()
                 .error(R.drawable.icon_international)
                 .into(detail_profile_image);
     }
 
-    private void applyProfileLogo(int drawable) {
-        Timber.d("VehicleDetailActivity - Loading Profile Image url: %s ", drawable);
+    private void applyProfileLogo(int drawableURL) {
+        Timber.d("VehicleDetailActivity - Loading Profile Image url: %s ", drawableURL);
 
         Glide.with(this)
-                .load(drawable)
+                .load(getString(drawableURL))
+                .centerCrop()
                 .error(R.drawable.icon_international)
                 .into(detail_profile_image);
     }

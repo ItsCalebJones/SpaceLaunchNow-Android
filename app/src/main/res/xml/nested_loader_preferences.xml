@@ -23,7 +23,7 @@
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="background_sync"
-            android:summaryOff="Allow Launch Data to sync in the background."
+            android:summaryOff="Allow Launch Data to sync in the background, required for launch notifications."
             android:summaryOn="Launch Data will be synced in the background."
             android:title="Allow Background Syncs" />
         <ListPreference
