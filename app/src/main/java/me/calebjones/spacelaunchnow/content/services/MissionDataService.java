@@ -68,6 +68,8 @@ public class MissionDataService extends IntentService {
             urlConnection = (HttpURLConnection) url.openConnection();
 
                 /* for Get request */
+            urlConnection.setRequestProperty("Accept", "*/*");
+            urlConnection.setConnectTimeout(5000);
             urlConnection.setRequestMethod("GET");
 
             int statusCode = urlConnection.getResponseCode();

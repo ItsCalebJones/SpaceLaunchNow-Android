@@ -74,7 +74,6 @@ public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAd
                         Date date = new Date(longdate);
                         String section = parseDateToMMyyyy(df.format(date));
                         if (!TextUtils.isEmpty(section) && !mSections.contains(section)) {
-                            Timber.v("Adding new section: %s", section);
                             //This just adds a new section for each new letter
                             mSections.add(section);
                             mSectionPositions.add(i);

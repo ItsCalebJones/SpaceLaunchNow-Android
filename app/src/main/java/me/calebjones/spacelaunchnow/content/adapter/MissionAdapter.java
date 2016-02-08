@@ -65,7 +65,6 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
                 String section = missionList.get(i).getName().substring(0,1);
                 if (!TextUtils.isEmpty(section) && !mSections.contains(section)) {
                     //This just adds a new section for each new letter
-                    Timber.v("Adding new section: %s", section);
                     mSections.add(section);
                     mSectionPositions.add(i);
                 }
