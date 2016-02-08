@@ -23,12 +23,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
-import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,7 +44,6 @@ import me.calebjones.spacelaunchnow.content.models.RocketDetails;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.AgencyDetailFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.PayloadDetailFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.SummaryDetailFragment;
-import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 import xyz.hanks.library.SmallBang;
 import xyz.hanks.library.SmallBangListener;
