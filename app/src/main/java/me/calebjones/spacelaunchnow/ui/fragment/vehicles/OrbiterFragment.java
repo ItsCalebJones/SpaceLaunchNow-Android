@@ -92,10 +92,10 @@ public class OrbiterFragment extends MyFragment {
         });
         adapter.setOnItemClickListener(recyclerRowClickListener);
 
-        items.add(new GridItem("Soyuz", "Russian Federal Space Agency ",R.drawable.soyuz_spacecraft));
-        items.add(new GridItem("Shenzhou", "Chinese National Manned Space Program",R.drawable.shenzhou));
-        items.add(new GridItem("Dragon", "SpaceX",R.drawable.dragon));
-        items.add(new GridItem("Orion", "National Aeronautics and Space Administration (NASA)",R.drawable.orion));
+        items.add(new GridItem("Soyuz", "Russian Federal Space Agency ","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944174/soyuz_snfim6.jpg"));
+        items.add(new GridItem("Shenzhou", "Chinese National Manned Space Program","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944173/shenzhou_vzayjm.jpg"));
+        items.add(new GridItem("Dragon", "SpaceX","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944174/dragon_q9cxq9.jpg"));
+        items.add(new GridItem("Orion", "National Aeronautics and Space Administration (NASA)","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944173/orion_sgl9rs.jpg"));
 
         adapter.addItems(items);
         return view;

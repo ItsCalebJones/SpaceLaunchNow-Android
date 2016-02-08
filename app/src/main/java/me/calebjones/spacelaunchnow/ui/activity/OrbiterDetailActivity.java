@@ -143,8 +143,6 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
                 int totalScroll = appBarLayout.getTotalScrollRange();
                 int currentScroll = totalScroll + verticalOffset;
 
-                Timber.v("AppBar totalScroll: %s currentScroll: %s verticalOffset: %s",
-                        totalScroll, currentScroll, verticalOffset);
                 int color = statusColor;
                 int r = (color >> 16) & 0xFF;
                 int g = (color >> 8) & 0xFF;
@@ -152,8 +150,6 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
 
                 if ((currentScroll) < 255) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        Timber.v("ColorNew: %s ColorPrimary: %s R: %s G: %s B: %s",
-                                reverseNumber(currentScroll, 0, 255), R.color.colorPrimary, r, g, b);
                         Window window = getWindow();
                         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -180,9 +176,7 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
     }
 
     public int reverseNumber(int num, int min, int max) {
-        int number = (max + min) - num;
-        Timber.v("Number: %s", number);
-        return number;
+        return (max + min) - num;
     }
 
     public void displayOrbiterDetails() {
@@ -194,11 +188,14 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
 
         if (orbiter.equals("Soyuz")) {
             Glide.with(this)
-                    .load(R.drawable.soyuz_spacecraft)
+                    .load(getString(R.string.soyuz_orbiter_image))
+                    .centerCrop()
+                    .crossFade()
                     .into(detail_profile_backdrop);
 
             Glide.with(this)
                     .load(getString(R.string.rus_logo))
+                    .centerCrop()
                     .error(R.drawable.icon_international)
                     .into(detail_profile_image);
 
@@ -221,11 +218,13 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
 
         } else if (orbiter.equals("Shenzhou")) {
             Glide.with(this)
-                    .load(R.drawable.shenzhou)
+                    .load(getString(R.string.shenzhou_orbiter_image))
+                    .centerCrop()
                     .into(detail_profile_backdrop);
 
             Glide.with(this)
                     .load(getString(R.string.chn_logo))
+                    .centerCrop()
                     .error(R.drawable.icon_international)
                     .into(detail_profile_image);
 
@@ -248,11 +247,13 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
 
         } else if (orbiter.equals("Dragon")) {
             Glide.with(this)
-                    .load(R.drawable.dragon)
+                    .load(getString(R.string.dragon_orbiter_image))
+                    .centerCrop()
                     .into(detail_profile_backdrop);
 
             Glide.with(this)
                     .load(getString(R.string.spacex_logo))
+                    .centerCrop()
                     .error(R.drawable.icon_international)
                     .into(detail_profile_image);
 
@@ -275,11 +276,13 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
 
         } else if (orbiter.equals("Orion")) {
             Glide.with(this)
-                    .load(R.drawable.orion)
+                    .load(getString(R.string.orion_orbiter_image))
+                    .centerCrop()
                     .into(detail_profile_backdrop);
 
             Glide.with(this)
-                    .load(R.drawable.usa_flag)
+                    .load(getString(R.string.usa_flag))
+                    .centerCrop()
                     .error(R.drawable.icon_international)
                     .into(detail_profile_image);
 
@@ -361,6 +364,4 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
                     .start();
         }
     }
-
-
 }
