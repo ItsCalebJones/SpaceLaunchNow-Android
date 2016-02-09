@@ -2,6 +2,13 @@
 
     <attr name="cardStyle" format="reference" />
 
+    <style name="LightTheme.Launcher">
+        <item name="android:windowBackground">@drawable/launcher_drawable</item>
+    </style>
+    <style name="DarkTheme.Launcher">
+        <item name="android:windowBackground">@drawable/launcher_drawable</item>
+    </style>
+
     <style name="EditTextTheme">
         <!-- Used for the bottom line when not selected / focused -->
         <item name="colorControlNormal">#FFFF</item>

@@ -266,6 +266,44 @@ public class MainActivity extends AppCompatActivity
             getFirstLaunches();
             loadTutorial();
         } else {
+
+            //Spawn thread to check if data is in a bad state.
+            final Context context = this;
+            Thread t = new Thread(new Runnable() {
+                public void run() {
+                    if (sharedPreference.getVehicles() == null || sharedPreference.getVehicles().size() == 0){
+                        Intent rocketIntent = new Intent(context, VehicleDataService.class);
+                        rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
+                        context.startService(rocketIntent);
+
+                    }
+                    if (sharedPreference.getLaunchesUpcoming() == null || sharedPreference.getLaunchesUpcoming().size() == 0){
+                        Intent launchUpIntent = new Intent(context, LaunchDataService.class);
+                        launchUpIntent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
+                        context.startService(launchUpIntent);
+                    }
+                    if (sharedPreference.getLaunchesPrevious() == null || sharedPreference.getLaunchesPrevious().size() == 0){
+                        Calendar c = Calendar.getInstance();
+
+                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                        String formattedDate = df.format(c.getTime());
+
+                        String url = "https://launchlibrary.net/1.1/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
+
+                        Intent launchPrevIntent = new Intent(context, LaunchDataService.class);
+                        launchPrevIntent.putExtra("URL", url);
+                        launchPrevIntent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
+                        context.startService(launchPrevIntent);
+                    }
+                    if (sharedPreference.getMissionList() == null || sharedPreference.getMissionList().size() == 0){
+                        context.startService(new Intent(context, MissionDataService.class));
+                    }
+                    sharedPreference.syncFavorites();
+                }
+            });
+
+            t.start();
+            
             navigate(mNavItemId);
         }
     }
