@@ -148,34 +148,24 @@ public class MissionDataService extends IntentService {
         switch (type){
             case 1:
                 return "Earth Science";
-                break;
             case 2:
                 return "Planetary Science";
-                break;
             case 3:
                 return "Astrophysics";
-                break;
             case 4:
                 return "Heliophysics";
-                break;
             case 5:
                 return "Human Exploration";
-                break;
             case 6:
                 return "Robotic Exploration";
-                break;
             case 7:
                 return "Government/Top Secret";
-                break;
             case 8:
                 return "Tourism";
-                break;
             case 9:
                 return "Unknown";
-                break;
             case 10:
                 return "Communications";
-                break;
             default:
                 return "Unknown";
         }

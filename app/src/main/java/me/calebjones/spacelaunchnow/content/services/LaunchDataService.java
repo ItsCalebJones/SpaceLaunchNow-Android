@@ -509,6 +509,8 @@ public class LaunchDataService extends IntentService {
                         JSONObject missionObj = missions.optJSONObject(c);
                         Mission mission = new Mission();
                         mission.setId(missionObj.optInt("id"));
+                        mission.setType(missionObj.optInt("type"));
+                        mission.setTypeName(getTypeName(missionObj.optInt("type")));
                         mission.setName(missionObj.optString("name"));
                         mission.setDescription(missionObj.optString("description"));
 
@@ -559,5 +561,32 @@ public class LaunchDataService extends IntentService {
         String formattedDate = df.format(c.getTime());
 
         return "https://launchlibrary.net/1.1/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
+    }
+
+    private String getTypeName(int type) {
+        switch (type){
+            case 1:
+                return "Earth Science";
+            case 2:
+                return "Planetary Science";
+            case 3:
+                return "Astrophysics";
+            case 4:
+                return "Heliophysics";
+            case 5:
+                return "Human Exploration";
+            case 6:
+                return "Robotic Exploration";
+            case 7:
+                return "Government/Top Secret";
+            case 8:
+                return "Tourism";
+            case 9:
+                return "Unknown";
+            case 10:
+                return "Communications";
+            default:
+                return "Unknown";
+        }
     }
 }
