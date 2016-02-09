@@ -17,7 +17,8 @@
         android:theme="@style/LightTheme" >
         <activity
             android:name=".MainActivity"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/LightTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

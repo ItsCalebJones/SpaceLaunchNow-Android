@@ -55,7 +55,7 @@ public class LaunchApplication extends Application {
             Timber.plant(new Timber.DebugTree());
         }
 
-        checkFirstBoot();
+//        checkFirstBoot();
     }
 
     public void checkFirstBoot() {
