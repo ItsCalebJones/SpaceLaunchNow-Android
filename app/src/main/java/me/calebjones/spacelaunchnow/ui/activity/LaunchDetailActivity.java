@@ -19,8 +19,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -237,8 +239,6 @@ public class LaunchDetailActivity extends AppCompatActivity
         int totalScroll = appBarLayout.getTotalScrollRange();
         int currentScroll = totalScroll + verticalOffset;
 
-        Timber.v("AppBar totalScroll: %s currentScroll: %s verticalOffset: %s",
-                totalScroll, currentScroll, verticalOffset);
         int color = statusColor;
         int r = (color >> 16) & 0xFF;
         int g = (color >> 8) & 0xFF;
@@ -246,8 +246,7 @@ public class LaunchDetailActivity extends AppCompatActivity
 
         if ((currentScroll) < 255) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                Timber.v("ColorNew: %s ColorPrimary: %s R: %s G: %s B: %s",
-                        reverseNumber(currentScroll, 0, 255), R.color.colorPrimary, r, g, b);
+
                 Window window = getWindow();
                 window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -267,7 +266,6 @@ public class LaunchDetailActivity extends AppCompatActivity
 
     public int reverseNumber(int num, int min, int max) {
         int number = (max + min) - num;
-        Timber.v("Number: %s", number);
         return number;
     }
 
@@ -423,6 +421,42 @@ public class LaunchDetailActivity extends AppCompatActivity
                     .start();
         }
     }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        unbindDrawables(findViewById(R.id.rootview));
+        System.gc();
+    }
+
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        unbindDrawables(findViewById(R.id.rootview));
+        System.gc();
+    }
+
+    private void unbindDrawables(View view)
+    {
+        if (view.getBackground() != null)
+        {
+            view.getBackground().setCallback(null);
+        }
+        if (view instanceof ViewGroup && !(view instanceof AdapterView))
+        {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++)
+            {
+                unbindDrawables(((ViewGroup) view).getChildAt(i));
+            }
+            ((ViewGroup) view).removeAllViews();
+        }
+    }
+
 
 class TabsAdapter extends FragmentPagerAdapter {
     public TabsAdapter(FragmentManager fm) {
