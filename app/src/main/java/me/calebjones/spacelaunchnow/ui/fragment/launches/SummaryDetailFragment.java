@@ -29,6 +29,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.DatabaseManager;
@@ -173,7 +174,7 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
                 }
             });
         } else {
-            watchButton.setVisibility(View.INVISIBLE);
+            watchButton.setVisibility(View.GONE);
         }
 
         launch_vehicle.setText(detailLaunch.getRocket().getName());
@@ -231,19 +232,24 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
         SimpleDateFormat formatter = new SimpleDateFormat("hh:mm aaa zzz");
 
         // Create a calendar object that will convert the date and time value in milliseconds to date.
-        Calendar calendarStart = Calendar.getInstance();
-        calendarStart.setTimeInMillis(detailLaunch.getWsstamp());
+        Calendar calendarStart = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        long startDate = detailLaunch.getWsstamp();
+        startDate = startDate * 1000;
+        calendarStart.setTimeInMillis(startDate);
         String start = formatter.format(calendarStart.getTime());
 
         // Create a calendar object that will convert the date and time value in milliseconds to date.
-        Calendar calendarEnd = Calendar.getInstance();
-        calendarEnd.setTimeInMillis(detailLaunch.getWestamp());
-        String end = formatter.format(calendarStart.getTime());
+        Calendar calendarEnd = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        long endDate = detailLaunch.getWestamp();
+        endDate = endDate * 1000;
+        calendarEnd.setTimeInMillis(endDate);
+        String end = formatter.format(calendarEnd.getTime());
 
         if (!start.equals(end)){
-            if(start.length() > 0
-                    || end.length() > 0){
-                launch_window_start.setText("Launch Window unavailable.");
+            if(start.length() == 0
+                    || end.length() == 0){
+                launch_window_start.setText(String.format("Launch Time: %s",
+                        start));
                 launch_window_end.setVisibility(View.GONE);
             } else{
                 launch_window_start.setText(String.format("Window Start: %s",
