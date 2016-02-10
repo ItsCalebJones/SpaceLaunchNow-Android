@@ -80,10 +80,10 @@ public class LaunchDetailActivity extends AppCompatActivity
     public void onCreate(Bundle savedInstanceState) {
         int m_theme;
         final int statusColor;
-        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        this.context = getApplicationContext();
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        context = getApplicationContext();
 
-        sharedPreference = SharedPreference.getInstance(this.context);
+        sharedPreference = SharedPreference.getInstance(context);
 
         if (sharedPreference.getNightMode()) {
             m_theme = R.style.DarkTheme_Transparent;
