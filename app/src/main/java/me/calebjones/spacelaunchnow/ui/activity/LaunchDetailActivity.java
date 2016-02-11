@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -46,6 +47,7 @@ import me.calebjones.spacelaunchnow.content.models.RocketDetails;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.AgencyDetailFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.PayloadDetailFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.SummaryDetailFragment;
+import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;
 import xyz.hanks.library.SmallBang;
 import xyz.hanks.library.SmallBangListener;
@@ -67,6 +69,7 @@ public class LaunchDetailActivity extends AppCompatActivity
     private int mMaxScrollSize;
     private SharedPreferences sharedPref;
     private static SharedPreference sharedPreference;
+    private CustomTabActivityHelper customTabActivityHelper;
     private Context context;
     private SmallBang mSmallBang;
     private Calendar rightNow = Calendar.getInstance();
@@ -82,7 +85,7 @@ public class LaunchDetailActivity extends AppCompatActivity
         final int statusColor;
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         context = getApplicationContext();
-
+        customTabActivityHelper = new CustomTabActivityHelper();
         sharedPreference = SharedPreference.getInstance(context);
 
         if (sharedPreference.getNightMode()) {
@@ -422,38 +425,23 @@ public class LaunchDetailActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-
-        unbindDrawables(findViewById(R.id.rootview));
-        System.gc();
+    public void onStart() {
+        super.onStart();
+        Timber.v("LaunchDetailActivity onStart!");
+        customTabActivityHelper.bindCustomTabsService(this);
     }
 
-
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
-
-        unbindDrawables(findViewById(R.id.rootview));
-        System.gc();
+    public void onStop() {
+        super.onStop();
+        Timber.v("LaunchDetailActivity onStop!");
+        customTabActivityHelper.unbindCustomTabsService(this);
     }
 
-    private void unbindDrawables(View view)
-    {
-        if (view.getBackground() != null)
-        {
-            view.getBackground().setCallback(null);
-        }
-        if (view instanceof ViewGroup && !(view instanceof AdapterView))
-        {
-            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++)
-            {
-                unbindDrawables(((ViewGroup) view).getChildAt(i));
-            }
-            ((ViewGroup) view).removeAllViews();
+    public void mayLaunchUrl(Uri parse) {
+        if (customTabActivityHelper.mayLaunchUrl(parse,null,null)){
+            Timber.v("mayLaunchURL Accepted - %s", parse.toString());
+        } else  {
+            Timber.v("mayLaunchURL Denied - %s", parse.toString());
         }
     }
 

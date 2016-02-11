@@ -49,6 +49,8 @@ import me.calebjones.spacelaunchnow.ui.fragment.favorite.FavoriteFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.missions.MissionFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.fragment.vehicles.VehiclesViewPager;
+import me.calebjones.spacelaunchnow.utils.Utils;
+import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;
 import za.co.riggaroo.materialhelptutorial.TutorialItem;
 import za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity;
@@ -67,6 +69,7 @@ public class MainActivity extends AppCompatActivity
     private SharedPreferences sharedPref;
     private NavigationView navigationView;
     private static SharedPreference sharedPreference;
+    private CustomTabActivityHelper customTabActivityHelper;
     private Context context;
     private Boolean bool;
     private BroadcastReceiver intentReceiver;
@@ -76,6 +79,14 @@ public class MainActivity extends AppCompatActivity
     private int mNavItemId;
 
     public int statusColor;
+
+    public void mayLaunchUrl(Uri parse) {
+        if (customTabActivityHelper.mayLaunchUrl(parse,null,null)){
+            Timber.v("mayLaunchURL Accepted - %s", parse.toString());
+        } else  {
+            Timber.v("mayLaunchURL Denied - %s", parse.toString());
+        }
+    }
 
     class LaunchBroadcastReceiver extends BroadcastReceiver {
         LaunchBroadcastReceiver() {
@@ -118,6 +129,7 @@ public class MainActivity extends AppCompatActivity
         int m_layout;
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         this.context = getApplicationContext();
+        customTabActivityHelper = new CustomTabActivityHelper();
 
         sharedPreference = SharedPreference.getInstance(this.context);
 
@@ -241,6 +253,9 @@ public class MainActivity extends AppCompatActivity
 
     public void onStart() {
         super.onStart();
+        Timber.v("MainActivity onStart!");
+        customTabActivityHelper.bindCustomTabsService(this);
+
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
         intentFilter.addAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
@@ -253,11 +268,15 @@ public class MainActivity extends AppCompatActivity
         intentFilter.addAction(Strings.ACTION_SUCCESS_VEHICLES);
         intentFilter.addAction(Strings.ACTION_FAILURE_VEHICLES);
         registerReceiver(this.intentReceiver, intentFilter);
+
+        mayLaunchUrl(Uri.parse("https://launchlibrary.net/"));
     }
 
     public void onStop() {
         super.onStop();
+        Timber.v("MainActivity onStop!");
         unregisterReceiver(this.intentReceiver);
+        customTabActivityHelper.unbindCustomTabsService(this);
     }
 
     public void checkFirstBoot() {
@@ -463,8 +482,7 @@ public class MainActivity extends AppCompatActivity
                         .commit();
                 break;
             case R.id.menu_launch:
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://launchlibrary.net/"));
-                startActivity(browserIntent);
+                Utils.openCustomTab(this, getApplicationContext(), "https://launchlibrary.net/");
                 break;
             case R.id.menu_settings:
                 Intent settingsIntent = new Intent(this, SettingsActivity.class);
@@ -532,4 +550,6 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
+
+
 }

@@ -1,5 +1,6 @@
 package me.calebjones.spacelaunchnow.ui.fragment.launches;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,6 +24,7 @@ import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.RocketDetails;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 public class AgencyDetailFragment extends Fragment {
@@ -149,14 +151,14 @@ public class AgencyDetailFragment extends Fragment {
         mission_agency_type_one.setText("Type: " + agencyTypeOne);
 
         if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL().length() > 0){
+            ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL()));
+
             mission_wikiButton_one.setVisibility(View.VISIBLE);
             mission_wikiButton_one.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL()));
-                    startActivity(i);
-                    Timber.d("Wiki One!");
+                    Activity activity = (Activity)context;
+                    Utils.openCustomTab(activity, context, detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL());
                 }
             });
         } else {
@@ -165,14 +167,16 @@ public class AgencyDetailFragment extends Fragment {
 
 
         if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL().length() > 0){
+            ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getLocation()
+                    .getPads().get(0).getAgencies().get(0).getInfoURL()));
+
             mission_infoButton_one.setVisibility(View.VISIBLE);
             mission_infoButton_one.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL()));
-                    startActivity(i);
-                    Timber.d("Wiki One!");
+                    Activity activity = (Activity)context;
+                    Utils.openCustomTab(activity, context, detailLaunch.getLocation().getPads()
+                            .get(0).getAgencies().get(0).getInfoURL());
                 }
             });
         } else {
@@ -202,13 +206,15 @@ public class AgencyDetailFragment extends Fragment {
         mission_agency_two.setText(String.format("%s (%s)", agencyNameTwo, agencyAbbrevTwo));
 
         if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL().length() > 0){
+            ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL()));
+
             mission_wikiButton_one.setVisibility(View.VISIBLE);
             mission_wikiButton_one.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL()));
-                    startActivity(i);
+                    Activity activity = (Activity)context;
+                    Utils.openCustomTab(activity,context, detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL());
+
                 }
             });
         } else {
@@ -217,13 +223,15 @@ public class AgencyDetailFragment extends Fragment {
 
 
         if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL().length() > 0){
+            ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL()));
+
             mission_infoButton_one.setVisibility(View.VISIBLE);
             mission_infoButton_one.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL()));
-                    startActivity(i);
+                    Activity activity = (Activity)context;
+                    Utils.openCustomTab(activity, context, detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL());
+
                 }
             });
         } else {
@@ -231,13 +239,14 @@ public class AgencyDetailFragment extends Fragment {
         }
 
         if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getWikiURL().length() > 0){
+            ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getWikiURL()));
+
             mission_wikiButton_two.setVisibility(View.VISIBLE);
             mission_wikiButton_two.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getWikiURL()));
-                    startActivity(i);
+                    Activity activity = (Activity)context;
+                    Utils.openCustomTab(activity, context, detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getWikiURL());
                 }
             });
         } else {
@@ -246,13 +255,14 @@ public class AgencyDetailFragment extends Fragment {
 
 
         if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getInfoURL().length() > 0){
+            ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getInfoURL()));
+
             mission_infoButton_two.setVisibility(View.VISIBLE);
             mission_infoButton_two.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getInfoURL()));
-                    startActivity(i);
+                    Activity activity = (Activity)context;
+                    Utils.openCustomTab(activity, context, detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getInfoURL());
                 }
             });
         } else {
@@ -290,14 +300,14 @@ public class AgencyDetailFragment extends Fragment {
         launch_agency_type_one.setText("Type: " + agencyType);
 
         if (detailLaunch.getRocket().getAgencies().get(0).getInfoURL().length() > 0){
+            ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(0).getWikiURL()));
+
             wikiButton_one.setVisibility(View.VISIBLE);
             wikiButton_one.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(detailLaunch.getRocket().getAgencies().get(0).getWikiURL()));
-                    startActivity(i);
-                    Timber.d("Wiki One!");
+                    Activity activity = (Activity)context;
+                    Utils.openCustomTab(activity, context, detailLaunch.getRocket().getAgencies().get(0).getWikiURL());
                 }
             });
         } else {
@@ -306,14 +316,14 @@ public class AgencyDetailFragment extends Fragment {
 
 
         if (detailLaunch.getRocket().getAgencies().get(0).getInfoURL().length() > 0){
+            ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(0).getInfoURL()));
+
             infoButton_one.setVisibility(View.VISIBLE);
             infoButton_one.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(detailLaunch.getRocket().getAgencies().get(0).getInfoURL()));
-                    startActivity(i);
-                    Timber.d("Wiki One!");
+                    Activity activity = (Activity)context;
+                    Utils.openCustomTab(activity, context, detailLaunch.getRocket().getAgencies().get(0).getInfoURL());
                 }
             });
         } else {
@@ -358,13 +368,13 @@ public class AgencyDetailFragment extends Fragment {
         launch_vehicle_agency_two.setText(String.format("%s (%s) %s", agencyNameTwo,agencyAbbrevTwo, countryCodeTwo));
 
         if (detailLaunch.getRocket().getAgencies().get(0).getInfoURL().length() > 0){
+            ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(0).getWikiURL()));
             wikiButton_one.setVisibility(View.VISIBLE);
             wikiButton_one.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(detailLaunch.getRocket().getAgencies().get(0).getWikiURL()));
-                    startActivity(i);
+                    Activity activity = (Activity)context;
+                    Utils.openCustomTab(activity, context, detailLaunch.getRocket().getAgencies().get(0).getWikiURL());
                 }
             });
         } else {
@@ -373,27 +383,29 @@ public class AgencyDetailFragment extends Fragment {
 
 
         if (detailLaunch.getRocket().getAgencies().get(0).getInfoURL().length() > 0){
+            ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(0).getInfoURL()));
+
             infoButton_one.setVisibility(View.VISIBLE);
             infoButton_one.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(detailLaunch.getRocket().getAgencies().get(0).getInfoURL()));
-                    startActivity(i);
+                    Activity activity = (Activity)context;
+                    Utils.openCustomTab(activity, context, detailLaunch.getRocket().getAgencies().get(0).getInfoURL());
                 }
             });
         } else {
             infoButton_one.setVisibility(View.GONE);
         }
 
-        if (detailLaunch.getRocket().getAgencies().get(1).getInfoURL().length() > 0){
+        if (detailLaunch.getRocket().getAgencies().get(1).getWikiURL().length() > 0){
+            ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(1).getWikiURL()));
+
             wikiButton_two.setVisibility(View.VISIBLE);
             wikiButton_two.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(detailLaunch.getRocket().getAgencies().get(1).getWikiURL()));
-                    startActivity(i);
+                    Activity activity = (Activity)context;
+                    Utils.openCustomTab(activity, context, detailLaunch.getRocket().getAgencies().get(1).getWikiURL());
                 }
             });
         } else {
@@ -401,13 +413,14 @@ public class AgencyDetailFragment extends Fragment {
         }
 
         if (detailLaunch.getRocket().getAgencies().get(1).getInfoURL().length() > 1){
+            ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(1).getInfoURL()));
+
             infoButton_two.setVisibility(View.VISIBLE);
             infoButton_two.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(detailLaunch.getRocket().getAgencies().get(1).getInfoURL()));
-                    startActivity(i);
+                    Activity activity = (Activity)context;
+                    Utils.openCustomTab(activity, context, detailLaunch.getRocket().getAgencies().get(1).getInfoURL());
                 }
             });
         } else {
