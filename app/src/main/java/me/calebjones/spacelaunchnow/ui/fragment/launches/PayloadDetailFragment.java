@@ -1,5 +1,6 @@
 package me.calebjones.spacelaunchnow.ui.fragment.launches;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,6 +19,7 @@ import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.Mission;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.utils.Utils;
 
 public class PayloadDetailFragment extends Fragment {
 
@@ -28,7 +30,7 @@ public class PayloadDetailFragment extends Fragment {
     private TextView payload_description,payload_status,payload_infoButton,payload_wikiButton;
 
     @Nullable @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view;
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         this.context = getContext();
@@ -49,28 +51,35 @@ public class PayloadDetailFragment extends Fragment {
         payload_wikiButton = (TextView) view.findViewById(R.id.payload_wikiButton);
 
         if (detailLaunch.getMissions().size() > 0){
+
             final Mission mission = sharedPreference.getMissionByID(detailLaunch.getMissions().get(0).getId());
+
             payload_status.setText(mission.getName());
             payload_description.setText(mission.getDescription());
+
             if (mission.getInfoURL() != null && mission.getInfoURL().length() > 0){
+
+                ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(mission.getInfoURL()));
+
                 payload_infoButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent info = new Intent(Intent.ACTION_VIEW);
-                        info.setData(Uri.parse(mission.getInfoURL()));
-                        startActivity(info);
+                        Activity activity = (Activity)context;
+                        Utils.openCustomTab(activity, context, mission.getInfoURL());
                     }
                 });
             } else {
                 payload_infoButton.setVisibility(View.GONE);
             }
             if (mission.getWikiURL() != null && mission.getWikiURL().length() > 0){
+
+                ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(mission.getWikiURL()));
+
                 payload_wikiButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent wiki = new Intent(Intent.ACTION_VIEW);
-                        wiki.setData(Uri.parse(mission.getWikiURL()));
-                        startActivity(wiki);
+                        Activity activity = (Activity)context;
+                        Utils.openCustomTab(activity, context, mission.getWikiURL());
                     }
                 });
             } else {
@@ -78,6 +87,7 @@ public class PayloadDetailFragment extends Fragment {
             }
         } else {
             payload_status.setText("Unknown Mission and Payload");
+
             payload_infoButton.setVisibility(View.GONE);
             payload_wikiButton.setVisibility(View.GONE);
         }
