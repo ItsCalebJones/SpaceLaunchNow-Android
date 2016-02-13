@@ -116,21 +116,19 @@ public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAd
 
         position = i;
 
-        SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
-        df.toLocalizedPattern();
+        String launchDate;
 
-        //If timestamp is available calculate TMinus and date.
-        if (launchItem.getWsstamp() > 0) {
-            long longdate = launchItem.getWsstamp();
-            longdate = longdate * 1000;
-            Date date = new Date(longdate);
-
-            holder.launch_date.setText(df.format(date));
-
-        } else {
+        //Get launch date
+        if (sharedPref.getBoolean("local_time", true)) {
+            SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
+            df.toLocalizedPattern();
             Date date = new Date(launchItem.getWindowstart());
-            holder.launch_date.setText(df.format(date));
+            launchDate = df.format(date);
+        } else {
+            launchDate = launchItem.getWindowstart();
         }
+            holder.launch_date.setText(launchDate);
+
 
         //If pad and agency exist add it to location, otherwise get whats always available
         if (launchItem.getLocation().getPads().size() > 0 && launchItem.getLocation().getPads().

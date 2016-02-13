@@ -1,11 +1,16 @@
 package me.calebjones.spacelaunchnow.content.adapter;
 
+import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.customtabs.CustomTabsIntent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -22,10 +27,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Mission;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.utils.Utils;
+import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
+import me.calebjones.spacelaunchnow.utils.customtab.CustomTabHelper;
+import me.calebjones.spacelaunchnow.utils.customtab.WebViewFallback;
 import timber.log.Timber;
 
 /**
@@ -63,6 +73,10 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
             //data is your adapter's dataset
             for (int i = 0, length = missionList.size(); i < length; i++) {
                 String section = missionList.get(i).getName().substring(0,1);
+                if (section.matches("\\d+(?:\\.\\d+)?")){
+                    section = "#";
+                }
+                Timber.v("Adding section for %s as %s", missionList.get(i).getName(), section);
                 if (!TextUtils.isEmpty(section) && !mSections.contains(section)) {
                     //This just adds a new section for each new letter
                     mSections.add(section);
@@ -104,6 +118,9 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
 
         if (mission.getLaunch() != null && mission.getLaunch().getId() != null){
 
+            if (mission.getLaunch().getVidURL() != null){
+                ((MainActivity)mContext).mayLaunchUrl(Uri.parse(mission.getLaunch().getVidURL()));
+            }
             //If there's no info on the launch hide the button and no need to check for launch date.
             if(mission.getLaunch().getId() == 0){
                 holder.launchButton.setVisibility(View.GONE);
@@ -153,6 +170,7 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
         if (mission.getInfoURL().length() == 0){
             holder.infoButton.setVisibility(View.INVISIBLE);
         } else {
+            ((MainActivity)mContext).mayLaunchUrl(Uri.parse(mission.getInfoURL()));
             holder.infoButton.setVisibility(View.VISIBLE);
         }
 
@@ -215,9 +233,8 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
                     break;
                 case R.id.infoButton:
                     Timber.v("Info : %s", missionList.get(position).getInfoURL());
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(missionList.get(position).getInfoURL()));
-                    mContext.startActivity(i);
+                    Activity activity = (Activity)mContext;
+                    Utils.openCustomTab(activity, mContext, missionList.get(position).getInfoURL());
                     break;
             }
         }
