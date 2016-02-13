@@ -18,8 +18,6 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
-import com.squareup.haha.perflib.Main;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
