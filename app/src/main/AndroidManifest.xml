@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="me.calebjones.spacelaunchnow" >
+    package="me.calebjones.spacelaunchnow">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -14,10 +14,11 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/LightTheme" >
+        android:theme="@style/LightTheme">
         <activity
             android:name=".MainActivity"
-            android:windowSoftInputMode="adjustResize" >
+            android:theme="@style/LightTheme.Launcher"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -58,14 +59,14 @@
             android:name=".content.services.NextLaunchTracker"
             android:exported="false" />
 
-        <receiver android:name=".content.receivers.UpdateUpcomingLaunchesReceiver" >
+        <receiver android:name=".content.receivers.UpdateUpcomingLaunchesReceiver">
             <intent-filter>
                 <action android:name="UPDATE_UP_LAUNCHES" />
                 <action android:name="UPDATE_PREV_LAUNCHES" />
                 <action android:name="CHECK_NEXT_LAUNCH_TIMER" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".content.receivers.BootReceiver" >
+        <receiver android:name=".content.receivers.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -83,6 +84,7 @@
             android:name=".ui.activity.DebugActivity"
             android:label="@string/title_activity_debug"
             android:theme="@style/LightTheme" />
+        <activity android:name=".ui.activity.WebviewActivity"></activity>
     </application>
 
 </manifest>

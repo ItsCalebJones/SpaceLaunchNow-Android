@@ -15,6 +15,8 @@
     <dimen name="column_width_fetch">320dp</dimen>
     <dimen name="item_margin_fetch">1dp</dimen>
     <dimen name="list_item_height">72dp</dimen>
+    <dimen name="product_bottom">16dp</dimen>
+    <dimen name="product_bottom_text">48dp</dimen>
 
     <integer name="anim_duration_very_long">1500</integer>
     <integer name="anim_duration_long">500</integer>

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,11 +25,11 @@ import me.calebjones.spacelaunchnow.content.adapter.VehicleAdapter;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.GridItem;
 import me.calebjones.spacelaunchnow.ui.activity.VehicleDetailActivity;
-import me.calebjones.spacelaunchnow.utils.MyFragment;
+import me.calebjones.spacelaunchnow.utils.CustomFragment;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
 import timber.log.Timber;
 
-public class LaunchVehicleFragment extends MyFragment {
+public class LaunchVehicleFragment extends CustomFragment {
 
     private SharedPreference sharedPreference;
     private VehicleAdapter adapter;

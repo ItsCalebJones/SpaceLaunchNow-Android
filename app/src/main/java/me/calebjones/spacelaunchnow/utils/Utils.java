@@ -19,10 +19,16 @@ package me.calebjones.spacelaunchnow.utils;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
+import android.support.customtabs.CustomTabsIntent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -42,6 +48,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
+
+import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.models.Launch;
+import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
+import me.calebjones.spacelaunchnow.utils.customtab.WebViewFallback;
 
 public class Utils {
 
@@ -239,6 +251,108 @@ public class Utils {
         @Override
         public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
         }
+    }
+
+    public static void openCustomTab(Activity activity, Context context, String url) {
+        CustomTabsIntent.Builder intentBuilder = new CustomTabsIntent.Builder();
+
+        SharedPreference sharedPreference = SharedPreference.getInstance(context);
+
+        if (sharedPreference.getNightMode()) {
+            intentBuilder.setToolbarColor(ContextCompat.getColor(
+                    (context), R.color.darkPrimary));
+        } else {
+            intentBuilder.setToolbarColor(ContextCompat.getColor(
+                    (context), R.color.colorPrimary));
+        }
+
+        intentBuilder.setShowTitle(true);
+
+        PendingIntent actionPendingIntent = createPendingShareIntent(context, url);
+        intentBuilder.setActionButton(BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.ic_menu_share_white), "Share", actionPendingIntent);
+
+
+        intentBuilder.setStartAnimations(activity,
+                R.anim.slide_in_right, R.anim.slide_out_left);
+        intentBuilder.setExitAnimations(activity,
+                android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+
+        CustomTabActivityHelper.openCustomTab(
+                activity, intentBuilder.build(), Uri.parse(url), new WebViewFallback());
+    }
+
+    private static PendingIntent createPendingShareIntent(Context context, String url) {
+        Intent actionIntent = new Intent(Intent.ACTION_SEND);
+        actionIntent.setType("text/plain");
+        actionIntent.putExtra(Intent.EXTRA_TEXT, url);
+        return PendingIntent.getActivity(context, 0, actionIntent, 0);
+    }
+
+    public static Intent buildIntent(Launch launch){
+        SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy hh:mm a zzz");
+        df.toLocalizedPattern();
+
+        Date date = new Date(launch.getWindowstart());
+        String launchDate = df.format(date);
+        String mission;
+
+        Intent sendIntent = new Intent();
+
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_SUBJECT, launch.getName());
+
+        if (launch.getMissions().size() > 0){
+            mission = launch.getMissions().get(0).getDescription();
+        } else {
+            mission = "";
+        }
+
+        if (launch.getVidURL() != null) {
+            if (launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
+                    get(0).getAgencies().size() > 0) {
+                //Get the first CountryCode
+                String country = launch.getLocation().getPads().
+                        get(0).getAgencies().get(0).getCountryCode();
+                country = (country.substring(0, 3));
+
+                sendIntent.putExtra(Intent.EXTRA_TEXT, mission
+                        + launch.getRocket().getName() + " launching from "
+                        + launch.getLocation().getName() + " " + country + "\n \n"
+                        + launchDate
+                        + "\n\nWatch: " + launch.getVidURL() + "\n"
+                        + " \n\nvia Space Launch Now and Launch Library");
+            } else {
+                sendIntent.putExtra(Intent.EXTRA_TEXT, mission
+                        + launch.getName() + " launching from "
+                        + launch.getLocation().getName() + "\n \n"
+                        + launchDate
+                        + "\n\nWatch: " + launch.getVidURL() + "\n"
+                        + " \n\nvia Space Launch Now and Launch Library");
+            }
+        } else {
+            if (launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
+                    get(0).getAgencies().size() > 0) {
+                //Get the first CountryCode
+                String country = launch.getLocation().getPads().
+                        get(0).getAgencies().get(0).getCountryCode();
+                country = (country.substring(0, 3));
+
+                sendIntent.putExtra(Intent.EXTRA_TEXT, mission
+                        + launch.getName() + " launching from "
+                        + launch.getLocation().getName() + " " + country + "\n \n"
+                        + launchDate
+                        + " \n\nvia Space Launch Now and Launch Library");
+            } else {
+                sendIntent.putExtra(Intent.EXTRA_TEXT, mission
+                         + launch.getName() + " launching from "
+                        + launch.getLocation().getName() + "\n \n"
+                        + launchDate
+                        + " \n\nvia Space Launch Now and Launch Library");
+            }
+        }
+        sendIntent.setType("text/plain");
+        return sendIntent;
     }
 
 }
