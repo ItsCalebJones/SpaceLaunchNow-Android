@@ -93,15 +93,15 @@ public class NextLaunchTracker extends IntentService {
                 updatePreviousLaunches.putExtra("URL", Utils.getBaseURL());
                 startService(updatePreviousLaunches);
 
-                storedLaunch = nextLaunch;
-                checkStatus(storedLaunch);
+                checkStatus(nextLaunch);
             } else {
-                checkStatus(storedLaunch);
+                sharedPreference.setNextLaunch(nextLaunch);
+                checkStatus(nextLaunch);
             }
         } else {
             this.sharedPreference.setNextLaunch(nextLaunch);
-            storedLaunch = nextLaunch;
-            checkStatus(storedLaunch);
+
+            checkStatus(nextLaunch);
         }
     }
 
