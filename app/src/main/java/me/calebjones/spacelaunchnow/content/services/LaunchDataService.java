@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.fabric.sdk.android.Fabric;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
@@ -43,13 +42,13 @@ import me.calebjones.spacelaunchnow.content.models.Mission;
 import me.calebjones.spacelaunchnow.content.models.Pad;
 import me.calebjones.spacelaunchnow.content.models.Rocket;
 import me.calebjones.spacelaunchnow.content.models.RocketAgency;
-import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 public class LaunchDataService extends IntentService {
 
-    public static List<Launch> upcomingLaunchList;
-    public static List<Launch> previousLaunchList;
+
+    private static List<Launch> upcomingLaunchList;
+    private static List<Launch> previousLaunchList;
     private Launch prevLaunch;
     private Launch storedPrevLaunch;
     private AlarmManager alarmManager;
@@ -93,8 +92,77 @@ public class LaunchDataService extends IntentService {
         } else if (Strings.ACTION_GET_PREV_LAUNCHES.equals(action)) {
             Timber.d("LaunchDataService - onHandleIntent:  %s ", action);
             getPreviousLaunches(intent.getStringExtra("URL"));
+        } else if (Strings.ACTION_UPDATE_NEXT_LAUNCH.equals(action)){
+            Timber.d("LaunchDataService - onHandleIntent:  %s ", action);
+            updateNextLaunch();
         } else {
             Timber.e("LaunchDataService - onHandleIntent: ERROR - Unknown Intent %s", action);
+        }
+    }
+
+    private void updateNextLaunch(){
+        HttpURLConnection urlConnection;
+        try {
+            URL url = new URL(Strings.NEXT_URL);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestProperty("Accept", "*/*");
+            urlConnection.setConnectTimeout(5000);
+            urlConnection.setRequestMethod("GET");
+
+            int statusCode = urlConnection.getResponseCode();
+
+                /* 200 represents HTTP OK */
+            if (statusCode == 200) {
+
+                BufferedReader r = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+
+                while ((line = r.readLine()) != null) {
+                    response.append(line);
+                }
+                parseUpcomingResult(response.toString());
+
+                if (BuildConfig.DEBUG) {
+                    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
+                    mBuilder.setContentTitle("LaunchData Worked! - Next Launch")
+                            .setSmallIcon(R.drawable.ic_notification)
+                            .setAutoCancel(true);
+
+                    NotificationManager mNotifyManager = (NotificationManager)
+                            getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                    mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
+                }
+
+                //Replace
+                List<Launch> currentLaunchList = sharedPreference.getLaunchesUpcoming();
+
+                if (currentLaunchList.get(0).getId().equals(upcomingLaunchList.get(0).getId())) {
+                    currentLaunchList.set(0, upcomingLaunchList.get(0));
+                    sharedPreference.setUpComingLaunches(currentLaunchList);
+                }
+                startService(new Intent(this, NextLaunchTracker.class));
+            } else {
+                Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to retrieve next launch: " + statusCode);
+
+                Answers.getInstance().logCustom(new CustomEvent("Failed Data Sync")
+                        .putCustomAttribute("Status", statusCode));
+            }
+
+        } catch (Exception e) {
+            Timber.e("LaunchDataService - updateNextLaunch ERROR: %s", e.getLocalizedMessage());
+            Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to update next launch: " + e.getLocalizedMessage());
+
+            if (BuildConfig.DEBUG) {
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
+                mBuilder.setContentTitle("LaunchData Failed!")
+                        .setSmallIcon(R.drawable.ic_notification)
+                        .setAutoCancel(true);
+
+                NotificationManager mNotifyManager = (NotificationManager)
+                        getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
+            }
         }
     }
 
@@ -161,28 +229,14 @@ public class LaunchDataService extends IntentService {
         }
     }
 
-    private void checkStatus(Launch storedPrevLaunch) {
-        int status = storedPrevLaunch.getStatus();
-        switch (status){
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-        }
-    }
-
     private void getUpcomingLaunches() {
         LaunchDataService.this.cleanCacheUpcoming();
-        InputStream inputStream = null;
-        Integer result = 0;
-        HttpURLConnection urlConnection = null;
+        HttpURLConnection urlConnection;
         try {
             /* forming th java.net.URL object */
             URL url;
+
+            //Used for loading debug lauches/reproducing bugs
             if(sharedPreference.getDebugLaunch()){
                 url = new URL("http://calebjones.me/app/debug_launch.json");
             } else {
@@ -190,9 +244,6 @@ public class LaunchDataService extends IntentService {
             }
 
             urlConnection = (HttpURLConnection) url.openConnection();
-
-                /* for Get request */
-
             urlConnection.setRequestProperty("Accept", "*/*");
             urlConnection.setConnectTimeout(5000);
             urlConnection.setRequestMethod("GET");
