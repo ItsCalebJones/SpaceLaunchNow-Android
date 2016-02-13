@@ -267,6 +267,7 @@ public class SharedPreference {
         this.prefsEditor.apply();
     }
 
+    //This checks to make sure all favorited objects are set correctly in UpcomingLaunchList
     public void syncFavorites() {
         List<Launch> favoriteLaunches = getFavoriteLaunches();
         List<Launch> upcomingLaunches = getLaunchesUpcoming();
@@ -277,7 +278,6 @@ public class SharedPreference {
             for (int i = 0; i < favs; i++) {
                 for (int a = 0; a < size; a++) {
                     if (favoriteLaunches.get(i).getId().equals(upcomingLaunches.get(a).getId())) {
-                        Timber.v("Found Favorite %s adding to list.", favoriteLaunches.get(i).getName());
                         upcomingLaunches.set(a, favoriteLaunches.get(i));
                         break;
                     }
@@ -1049,11 +1049,10 @@ public class SharedPreference {
         boolean exists = false;
         if (favoriteList != null) {
             int favSize = favoriteList.size();
-
             for (int i = 0; i < favSize; i++) {
-                int launchID = launch.getId();
-                int favoriteID = favoriteList.get(i).getId();
-                if (launchID == favoriteID) {
+                Integer launchID = launch.getId();
+                Integer favoriteID = favoriteList.get(i).getId();
+                if (launchID.equals(favoriteID)) {
                     Timber.v("%s exists as favorite", launch.getName());
                     exists = true;
                     break;

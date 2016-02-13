@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -19,8 +20,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -44,6 +47,7 @@ import me.calebjones.spacelaunchnow.content.models.RocketDetails;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.AgencyDetailFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.PayloadDetailFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.SummaryDetailFragment;
+import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;
 import xyz.hanks.library.SmallBang;
 import xyz.hanks.library.SmallBangListener;
@@ -65,6 +69,7 @@ public class LaunchDetailActivity extends AppCompatActivity
     private int mMaxScrollSize;
     private SharedPreferences sharedPref;
     private static SharedPreference sharedPreference;
+    private CustomTabActivityHelper customTabActivityHelper;
     private Context context;
     private SmallBang mSmallBang;
     private Calendar rightNow = Calendar.getInstance();
@@ -78,10 +83,10 @@ public class LaunchDetailActivity extends AppCompatActivity
     public void onCreate(Bundle savedInstanceState) {
         int m_theme;
         final int statusColor;
-        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        this.context = getApplicationContext();
-
-        sharedPreference = SharedPreference.getInstance(this.context);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        context = getApplicationContext();
+        customTabActivityHelper = new CustomTabActivityHelper();
+        sharedPreference = SharedPreference.getInstance(context);
 
         if (sharedPreference.getNightMode()) {
             m_theme = R.style.DarkTheme_Transparent;
@@ -237,8 +242,6 @@ public class LaunchDetailActivity extends AppCompatActivity
         int totalScroll = appBarLayout.getTotalScrollRange();
         int currentScroll = totalScroll + verticalOffset;
 
-        Timber.v("AppBar totalScroll: %s currentScroll: %s verticalOffset: %s",
-                totalScroll, currentScroll, verticalOffset);
         int color = statusColor;
         int r = (color >> 16) & 0xFF;
         int g = (color >> 8) & 0xFF;
@@ -246,8 +249,7 @@ public class LaunchDetailActivity extends AppCompatActivity
 
         if ((currentScroll) < 255) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                Timber.v("ColorNew: %s ColorPrimary: %s R: %s G: %s B: %s",
-                        reverseNumber(currentScroll, 0, 255), R.color.colorPrimary, r, g, b);
+
                 Window window = getWindow();
                 window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -267,7 +269,6 @@ public class LaunchDetailActivity extends AppCompatActivity
 
     public int reverseNumber(int num, int min, int max) {
         int number = (max + min) - num;
-        Timber.v("Number: %s", number);
         return number;
     }
 
@@ -423,6 +424,27 @@ public class LaunchDetailActivity extends AppCompatActivity
                     .start();
         }
     }
+
+    public void onStart() {
+        super.onStart();
+        Timber.v("LaunchDetailActivity onStart!");
+        customTabActivityHelper.bindCustomTabsService(this);
+    }
+
+    public void onStop() {
+        super.onStop();
+        Timber.v("LaunchDetailActivity onStop!");
+        customTabActivityHelper.unbindCustomTabsService(this);
+    }
+
+    public void mayLaunchUrl(Uri parse) {
+        if (customTabActivityHelper.mayLaunchUrl(parse,null,null)){
+            Timber.v("mayLaunchURL Accepted - %s", parse.toString());
+        } else  {
+            Timber.v("mayLaunchURL Denied - %s", parse.toString());
+        }
+    }
+
 
 class TabsAdapter extends FragmentPagerAdapter {
     public TabsAdapter(FragmentManager fm) {

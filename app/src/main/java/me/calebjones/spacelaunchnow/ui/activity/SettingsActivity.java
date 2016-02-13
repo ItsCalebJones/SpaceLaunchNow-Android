@@ -52,7 +52,7 @@ public class SettingsActivity extends AppCompatActivity implements Callback {
             }
         }
 
-        toolbarTitle.setText(R.string.settings);
+        toolbarTitle.setText(R.string.action_settings);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().add(R.id.settings_content_frame, new SettingsFragment()).commit();
         }

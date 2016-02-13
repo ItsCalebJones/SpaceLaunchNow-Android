@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.crashlytics.android.Crashlytics;
 
+import com.squareup.leakcanary.LeakCanary;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -40,6 +41,7 @@ public class LaunchApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
+        LeakCanary.install(this);
         mInstance = this;
 
         int cacheSize = 10 * 1024 * 1024;
@@ -51,53 +53,13 @@ public class LaunchApplication extends Application {
         sharedPreference = SharedPreference.getInstance(this);
         sharedPreference.setNightModeStatus(false);
 
+        Intent nextIntent = new Intent(this, LaunchDataService.class);
+        nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
+        this.startService(nextIntent);
+
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
-
-        checkFirstBoot();
-    }
-
-    public void checkFirstBoot() {
-        if (sharedPreference.getFirstBoot()) {
-            //TODO check last sync
-            refreshLaunches();
-        } else {
-            if (sharedPreference.getVehicles() == null || sharedPreference.getVehicles().size() == 0){
-                Intent rocketIntent = new Intent(this, VehicleDataService.class);
-                rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
-                this.startService(rocketIntent);
-
-            }
-            if (sharedPreference.getLaunchesUpcoming() == null || sharedPreference.getLaunchesUpcoming().size() == 0){
-                Intent launchUpIntent = new Intent(this, LaunchDataService.class);
-                launchUpIntent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
-                this.startService(launchUpIntent);
-            }
-            if (sharedPreference.getLaunchesPrevious() == null || sharedPreference.getLaunchesPrevious().size() == 0){
-                Calendar c = Calendar.getInstance();
-
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                String formattedDate = df.format(c.getTime());
-
-                String url = "https://launchlibrary.net/1.1/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
-
-                Intent launchPrevIntent = new Intent(this, LaunchDataService.class);
-                launchPrevIntent.putExtra("URL", url);
-                launchPrevIntent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
-                this.startService(launchPrevIntent);
-            }
-            if (sharedPreference.getMissionList() == null || sharedPreference.getMissionList().size() == 0){
-                this.startService(new Intent(this, MissionDataService.class));
-            }
-            sharedPreference.syncFavorites();
-        }
-    }
-
-    private void refreshLaunches() {
-        Intent update_upcoming_launches = new Intent(this, LaunchDataService.class);
-        update_upcoming_launches.setAction(Strings.ACTION_GET_UP_LAUNCHES);
-        this.startService(update_upcoming_launches);
     }
 
     @Override
