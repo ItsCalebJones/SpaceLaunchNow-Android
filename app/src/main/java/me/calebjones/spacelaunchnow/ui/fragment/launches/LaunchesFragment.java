@@ -226,10 +226,10 @@ public class LaunchesFragment extends Fragment implements SwipeRefreshLayout.OnR
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         //
-//        if (BuildConfig.DEBUG) {
-//            menu.clear();
-//            inflater.inflate(R.menu.debug_menu, menu);
-//        }
+        if (BuildConfig.DEBUG) {
+            menu.clear();
+            inflater.inflate(R.menu.debug_menu, menu);
+        }
     }
 
     private void setTitle() {

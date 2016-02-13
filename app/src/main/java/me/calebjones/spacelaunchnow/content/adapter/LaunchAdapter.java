@@ -191,13 +191,19 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
                 long hours = (timeToFinish / 3600000) % 24;
                 holder.content_TMinus_status.setText(String.format("%s Day(s) : %s Hour(s)", Long.valueOf(days), Long.valueOf(hours)));
             }
-            holder.launch_date.setText(df.format(date));
 
         } else {
-            Date date = new Date(launchItem.getWindowstart());
-            holder.launch_date.setText(df.format(date));
             holder.content_TMinus_status.setText(" Unknown");
         }
+
+        //Get launch date
+        if (sharedPref.getBoolean("local_time", true)) {
+            Date date = new Date(launchItem.getWindowstart());
+            launchDate = df.format(date);
+        } else {
+            launchDate = launchItem.getWindowstart();
+        }
+        holder.launch_date.setText(launchDate);
 
         if (launchItem.getVidURL().length() == 0) {
             holder.watchButton.setVisibility(View.GONE);
