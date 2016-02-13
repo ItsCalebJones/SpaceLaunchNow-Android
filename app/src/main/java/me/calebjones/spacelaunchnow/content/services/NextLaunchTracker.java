@@ -9,13 +9,24 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
+import com.squareup.haha.perflib.Main;
+
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Launch;
@@ -54,7 +65,7 @@ public class NextLaunchTracker extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         upcomingLaunchList = this.sharedPreference.getLaunchesUpcoming();
-        if (upcomingLaunchList.size() > 0){
+        if (upcomingLaunchList.size() > 0) {
             checkNextLaunch();
         } else {
             interval = 3600000;
@@ -73,7 +84,7 @@ public class NextLaunchTracker extends IntentService {
         //Check if the stored launch is still the next launch.
         if (storedLaunch != null) {
             //If they do not match this means nextLaunch has changed IE a launch executed.
-            if (nextLaunch.getId().intValue() != storedLaunch.getId().intValue()){
+            if (nextLaunch.getId().intValue() != storedLaunch.getId().intValue()) {
                 this.sharedPreference.setNextLaunch(nextLaunch);
                 this.sharedPreference.setFiltered(false);
 
@@ -110,18 +121,19 @@ public class NextLaunchTracker extends IntentService {
 
             //Launch is in less then one hour
             if (timeToFinish < 3600000) {
-                if (notify){
+                if (notify) {
+                    int minutes = (int) ((timeToFinish / (1000 * 60)) % 60);
                     //Check settings to see if user should be notified.
-                    if (this.sharedPref.getBoolean("notifications_launch_imminent", true)){
+                    if (this.sharedPref.getBoolean("notifications_launch_imminent", true)) {
                         if (!launch.getIsNotifiedHour()) {
-                            notifyUserImmminent();
+                            notifyUserImminent(launch, minutes);
                             launch.setIsNotifiedhour(true);
                             this.sharedPreference.setNextLaunch(launch);
                         }
                         //If its a saved launch check notification
-                    } else if (launch.isFavorite() && this.sharedPref.getBoolean("notifications_launch_imminent_saved", true)){
+                    } else if (launch.isFavorite() && this.sharedPref.getBoolean("notifications_launch_imminent_saved", true)) {
                         if (!launch.getIsNotifiedHour()) {
-                            notifyUserImmminent();
+                            notifyUserImminent(launch, minutes);
                             launch.setIsNotifiedhour(true);
                             this.sharedPreference.setNextLaunch(launch);
                         }
@@ -130,28 +142,29 @@ public class NextLaunchTracker extends IntentService {
                 interval = 3600000;
                 scheduleUpdate();
 
-            //Launch is in less then 24 hours
+                //Launch is in less then 24 hours
             } else if (timeToFinish < 86400000) {
                 Timber.v("Less than 24 hours.");
                 if (notify) {
+                    int hours   = (int) ((timeToFinish / (1000*60*60)) % 24);
                     //Check settings to see if user should be notified.
                     if (this.sharedPref.getBoolean("notifications_launch_day", false)) {
                         if (!launch.getIsNotifiedDay()) {
-                            notifyUser();
+                            notifyUser(launch, hours);
                             launch.setIsNotifiedDay(true);
                             this.sharedPreference.setNextLaunch(launch);
                         }
                         //If its a saved launch check notification
                     } else if (launch.isFavorite() && this.sharedPref.getBoolean("notifications_launch_day_saved", true)) {
                         if (!launch.getIsNotifiedDay()) {
-                            notifyUser();
+                            notifyUser(launch, hours);
                             launch.setIsNotifiedDay(true);
                             this.sharedPreference.setNextLaunch(launch);
                         }
                     }
                 }
                 interval = timeToFinish / 2;
-                if (interval < 3600000){
+                if (interval < 3600000) {
                     interval = 3500000;
                 }
                 scheduleUpdate();
@@ -165,23 +178,137 @@ public class NextLaunchTracker extends IntentService {
         }
     }
 
-    private void notifyUserImmminent() {
+    private void notifyUserImminent(Launch launch, int minutes) {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
-        mBuilder.setContentTitle("Launch less then 1 hour!")
-                .setPriority(Notification.PRIORITY_MAX)
-                .setSmallIcon(R.drawable.ic_notification)
-                .setAutoCancel(true);
+
+        String launchDate;
+        String expandedText;
+        String launchName = launch.getName();
+        String launchURL = launch.getVidURL();
+        String launchPad = launch.getLocation().getName();
+
+        if (launch.getMissions().size() > 0) {
+            expandedText = "Launch attempt in " + minutes + " minutes from " + launchPad + ". \n\n" + launch.getMissions().get(0).getDescription();
+        } else {
+            expandedText = "Launch attempt in " + minutes + " minutes from " + launchPad;
+        }
+
+        //Get launch date
+        if (sharedPref.getBoolean("local_time", true)) {
+            SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
+            df.toLocalizedPattern();
+            Date date = new Date(launch.getWindowstart());
+            launchDate = df.format(date);
+        } else {
+            launchDate = launch.getWindowstart();
+        }
+
+        Intent mainActivityIntent = new Intent(this, MainActivity.class);
+        mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(mainActivityIntent);
+
+        PendingIntent appIntent = PendingIntent.getActivity(this,0,mainActivityIntent,0);
+
+        // Sets up the Open and Share action buttons that will appear in the
+        // big view of the notification.
+        Intent vidIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(launchURL));
+        PendingIntent vidPendingIntent = PendingIntent.getActivity(this, 0, vidIntent, 0);
+
+        Intent shareLaunch = Utils.buildIntent(launch);
+        PendingIntent sharePendingIntent = PendingIntent.getActivity(this, 0, shareLaunch, 0);
+
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        NotificationCompat.WearableExtender wearableExtender =
+                new NotificationCompat.WearableExtender()
+                        .setHintHideIcon(true)
+                        .setBackground(BitmapFactory.decodeResource(this.getResources(),
+                                R.drawable.nav_header));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
+            mBuilder.setContentTitle(launchName)
+                    .setContentText("Launch attempt in " + minutes + " minutes from " + launchPad)
+                    .setPriority(Notification.PRIORITY_HIGH)
+                    .setSmallIcon(R.drawable.ic_notification)
+                    .setAutoCancel(true)
+                    .setVibrate(new long[] { 1000, 1000 })
+                    .setLights(Color.RED, 3000, 3000)
+                    .setSound(alarmSound)
+                    .setContentIntent(appIntent)
+                    .setStyle(new NotificationCompat.BigTextStyle()
+                            .bigText(expandedText)
+                            .setSummaryText(launchDate))
+                    .extend(wearableExtender)
+                    .addAction(R.drawable.ic_open_in_browser, "Watch Live", vidPendingIntent)
+                    .addAction(R.drawable.ic_menu_share, "Share", sharePendingIntent);
+        } else {
+            mBuilder.setContentTitle(launchName)
+                    .setContentText("Launch attempt in " + minutes + " minutes from " + launchPad)
+                    .setSmallIcon(R.drawable.ic_notification)
+                    .setAutoCancel(true)
+                    .setStyle(new NotificationCompat.BigTextStyle()
+                            .bigText(expandedText)
+                            .setSummaryText(launchDate))
+                    .extend(wearableExtender)
+                    .addAction(R.drawable.ic_open_in_browser, "Watch Live", vidPendingIntent)
+                    .addAction(R.drawable.ic_menu_share, "Share", sharePendingIntent);
+        }
 
         NotificationManager mNotifyManager = (NotificationManager)
                 getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         mNotifyManager.notify(Strings.NOTIF_ID_HOUR, mBuilder.build());
     }
 
-    private void notifyUser() {
+    private void notifyUser(Launch launch, int hours) {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
-        mBuilder.setContentTitle("Launch less then 24 hours!")
+
+        String launchDate;
+        String expandedText;
+        String launchName = launch.getName();
+        String launchPad = launch.getLocation().getName();
+
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        Intent mainActivityIntent = new Intent(this, MainActivity.class);
+        mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(mainActivityIntent);
+
+        PendingIntent appIntent = PendingIntent.getActivity(this,0,mainActivityIntent,0);
+
+        if (launch.getMissions().size() > 0) {
+            expandedText = "Launch attempt in " + hours + " hours from " + launchPad + ". \n\n" + launch.getMissions().get(0).getDescription();
+        } else {
+            expandedText = "Launch attempt in " + hours + " hours from " + launchPad;
+        }
+
+        //Get launch date
+        if (sharedPref.getBoolean("local_time", true)) {
+            SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
+            df.toLocalizedPattern();
+            Date date = new Date(launch.getWindowstart());
+            launchDate = df.format(date);
+        } else {
+            launchDate = launch.getWindowstart();
+        }
+
+        NotificationCompat.WearableExtender wearableExtender =
+                new NotificationCompat.WearableExtender()
+                        .setHintHideIcon(true)
+                        .setBackground(BitmapFactory.decodeResource(this.getResources(),
+                                R.drawable.nav_header));
+
+        mBuilder.setContentTitle(launchName)
+                .setContentText("Launch attempt in " + hours + " hours from " + launchPad)
                 .setSmallIcon(R.drawable.ic_notification)
+                .setVibrate(new long[] { 300, 300, 300 })
+                .setSound(alarmSound)
+                .setContentIntent(appIntent)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(expandedText)
+                        .setSummaryText(launchDate))
+                .extend(wearableExtender)
                 .setAutoCancel(true);
+
 
         NotificationManager mNotifyManager = (NotificationManager)
                 getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
@@ -198,10 +325,8 @@ public class NextLaunchTracker extends IntentService {
         Timber.d("scheduleUpdate - Interval: %s", interval);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         long nextUpdate = Calendar.getInstance().getTimeInMillis() + interval;
-        Timber.d("scheduleUpdated in %s milliseconds.", nextUpdate);
+        Timber.d("scheduleUpdated at %s milli.", nextUpdate);
         alarmManager.set(AlarmManager.RTC_WAKEUP, nextUpdate,
                 PendingIntent.getBroadcast(this, 165432, new Intent(Strings.ACTION_CHECK_NEXT_LAUNCH_TIMER), 0));
-
     }
-
 }

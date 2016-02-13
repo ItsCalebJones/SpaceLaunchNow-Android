@@ -51,6 +51,7 @@ import java.util.Random;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.utils.customtab.WebViewFallback;
 
@@ -286,6 +287,72 @@ public class Utils {
         actionIntent.setType("text/plain");
         actionIntent.putExtra(Intent.EXTRA_TEXT, url);
         return PendingIntent.getActivity(context, 0, actionIntent, 0);
+    }
+
+    public static Intent buildIntent(Launch launch){
+        SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy hh:mm a zzz");
+        df.toLocalizedPattern();
+
+        Date date = new Date(launch.getWindowstart());
+        String launchDate = df.format(date);
+        String mission;
+
+        Intent sendIntent = new Intent();
+
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_SUBJECT, launch.getName());
+
+        if (launch.getMissions().size() > 0){
+            mission = launch.getMissions().get(0).getDescription();
+        } else {
+            mission = "";
+        }
+
+        if (launch.getVidURL() != null) {
+            if (launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
+                    get(0).getAgencies().size() > 0) {
+                //Get the first CountryCode
+                String country = launch.getLocation().getPads().
+                        get(0).getAgencies().get(0).getCountryCode();
+                country = (country.substring(0, 3));
+
+                sendIntent.putExtra(Intent.EXTRA_TEXT, mission
+                        + launch.getRocket().getName() + " launching from "
+                        + launch.getLocation().getName() + " " + country + "\n \n"
+                        + launchDate
+                        + "\n\nWatch: " + launch.getVidURL() + "\n"
+                        + " \n\nvia Space Launch Now and Launch Library");
+            } else {
+                sendIntent.putExtra(Intent.EXTRA_TEXT, mission
+                        + launch.getName() + " launching from "
+                        + launch.getLocation().getName() + "\n \n"
+                        + launchDate
+                        + "\n\nWatch: " + launch.getVidURL() + "\n"
+                        + " \n\nvia Space Launch Now and Launch Library");
+            }
+        } else {
+            if (launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
+                    get(0).getAgencies().size() > 0) {
+                //Get the first CountryCode
+                String country = launch.getLocation().getPads().
+                        get(0).getAgencies().get(0).getCountryCode();
+                country = (country.substring(0, 3));
+
+                sendIntent.putExtra(Intent.EXTRA_TEXT, mission
+                        + launch.getName() + " launching from "
+                        + launch.getLocation().getName() + " " + country + "\n \n"
+                        + launchDate
+                        + " \n\nvia Space Launch Now and Launch Library");
+            } else {
+                sendIntent.putExtra(Intent.EXTRA_TEXT, mission
+                         + launch.getName() + " launching from "
+                        + launch.getLocation().getName() + "\n \n"
+                        + launchDate
+                        + " \n\nvia Space Launch Now and Launch Library");
+            }
+        }
+        sendIntent.setType("text/plain");
+        return sendIntent;
     }
 
 }
