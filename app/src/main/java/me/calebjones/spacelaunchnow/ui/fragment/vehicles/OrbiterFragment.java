@@ -6,11 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Pair;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -24,16 +22,14 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.OrbiterAdapter;
-import me.calebjones.spacelaunchnow.content.adapter.VehicleAdapter;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.GridItem;
 import me.calebjones.spacelaunchnow.ui.activity.OrbiterDetailActivity;
-import me.calebjones.spacelaunchnow.ui.activity.VehicleDetailActivity;
-import me.calebjones.spacelaunchnow.utils.MyFragment;
+import me.calebjones.spacelaunchnow.utils.CustomFragment;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
 import timber.log.Timber;
 
-public class OrbiterFragment extends MyFragment {
+public class OrbiterFragment extends CustomFragment {
 
     private SharedPreference sharedPreference;
     private android.content.SharedPreferences SharedPreferences;

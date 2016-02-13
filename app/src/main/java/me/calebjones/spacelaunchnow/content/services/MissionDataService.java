@@ -124,6 +124,7 @@ public class MissionDataService extends IntentService {
                 Mission mission = new Mission();
                 mission.setId(missionObj.optInt("id"));
                 mission.setType(missionObj.optInt("type"));
+                mission.setTypeName(getTypeName(missionObj.optInt("type")));
                 mission.setName(missionObj.optString("name"));
                 mission.setDescription(missionObj.optString("description"));
                 mission.setInfoURL(missionObj.optString("infoURL"));
@@ -140,6 +141,33 @@ public class MissionDataService extends IntentService {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    private String getTypeName(int type) {
+        switch (type){
+            case 1:
+                return "Earth Science";
+            case 2:
+                return "Planetary Science";
+            case 3:
+                return "Astrophysics";
+            case 4:
+                return "Heliophysics";
+            case 5:
+                return "Human Exploration";
+            case 6:
+                return "Robotic Exploration";
+            case 7:
+                return "Government/Top Secret";
+            case 8:
+                return "Tourism";
+            case 9:
+                return "Unknown";
+            case 10:
+                return "Communications";
+            default:
+                return "Unknown";
         }
     }
 }

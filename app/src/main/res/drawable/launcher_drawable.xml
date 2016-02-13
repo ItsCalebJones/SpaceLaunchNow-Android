@@ -1,0 +1,13 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" android:opacity="opaque">
+    <!-- The background color, preferably the same as your normal theme -->
+    <item android:drawable="@color/slide_one"/>
+    <!-- Your product logo - 144dp color version of your app icon -->
+    <item android:bottom="@dimen/product_bottom" android:gravity="center">
+        <bitmap
+            android:src="@drawable/launcher"
+            android:gravity="center"/>
+    </item>
+    <item android:bottom="@dimen/product_bottom_text">
+        <bitmap android:gravity="bottom|center_horizontal" android:src="@drawable/logo" />
+    </item>
+</layer-list>
