@@ -94,6 +94,8 @@ public class NextLaunchTracker extends IntentService {
                 checkStatus(nextLaunch);
             } else {
                 sharedPreference.setNextLaunch(nextLaunch);
+                upcomingLaunchList.set(0,nextLaunch);
+                sharedPreference.setUpComingLaunches(upcomingLaunchList);
                 checkStatus(nextLaunch);
             }
         } else {
