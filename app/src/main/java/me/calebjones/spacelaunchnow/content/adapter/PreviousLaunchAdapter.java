@@ -69,14 +69,17 @@ public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAd
 
                     //data is your adapter's dataset
                     for (int i = 0, length = launches.size(); i < length; i++) {
-                        long longdate = launches.get(i).getWsstamp();
-                        longdate = longdate * 1000;
-                        Date date = new Date(longdate);
-                        String section = parseDateToMMyyyy(df.format(date));
-                        if (!TextUtils.isEmpty(section) && !mSections.contains(section)) {
-                            //This just adds a new section for each new letter
-                            mSections.add(section);
-                            mSectionPositions.add(i);
+                        //In case data is removed
+                        if (launches.size() >= i){
+                            long longdate = launches.get(i).getWsstamp();
+                            longdate = longdate * 1000;
+                            Date date = new Date(longdate);
+                            String section = parseDateToMMyyyy(df.format(date));
+                            if (!TextUtils.isEmpty(section) && !mSections.contains(section)) {
+                                //This just adds a new section for each new letter
+                                mSections.add(section);
+                                mSectionPositions.add(i);
+                            }
                         }
                     }
                 }

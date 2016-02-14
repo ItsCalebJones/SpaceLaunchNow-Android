@@ -157,7 +157,17 @@ public class LaunchesFragment extends Fragment implements SwipeRefreshLayout.OnR
             fetchData();
         } else {
             adapter.clear();
-            adapter.addItems(rocketLaunches);
+            List<Launch> goList = new ArrayList<>();
+            List<Launch> noList = new ArrayList<>();
+            for (int i = 0; i < rocketLaunches.size(); i++ ){
+                if (rocketLaunches.get(i).getStatus() == 1){
+                    goList.add(rocketLaunches.get(i));
+                } else {
+                    noList.add(rocketLaunches.get(i));
+                }
+            }
+            goList.addAll(noList);
+            adapter.addItems(goList);
         }
     }
 
@@ -191,7 +201,6 @@ public class LaunchesFragment extends Fragment implements SwipeRefreshLayout.OnR
 
     @Override
     public void onRefresh() {
-        adapter.clear();
         showLoading();
         fetchData();
     }
