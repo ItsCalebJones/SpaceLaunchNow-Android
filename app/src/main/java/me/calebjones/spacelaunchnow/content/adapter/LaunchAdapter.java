@@ -113,12 +113,14 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
         double dlat = launchItem.getLocation().getPads().get(0).getLatitude();
         double dlon = launchItem.getLocation().getPads().get(0).getLongitude();
 
-        if (dlat == 0 && dlon == 0) {
+        if (dlat == 0 && dlon == 0 || Double.isNaN(dlat) || Double.isNaN(dlon) || dlat == Double.NaN || dlon == Double.NaN) {
             if (holder.map_view != null) {
                 holder.map_view.setVisibility(View.GONE);
                 holder.exploreFab.setVisibility(View.GONE);
             }
         } else {
+            holder.map_view.setVisibility(View.VISIBLE);
+            holder.exploreFab.setVisibility(View.VISIBLE);
             holder.setMapLocation(dlat, dlon);
         }
 
@@ -219,6 +221,12 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
                 holder.content_mission_description.setText(description);
             }
         } else {
+            String[] separated = launchItem.getName().split(" \\| ");
+            if (separated[1].length() > 4) {
+                holder.content_mission.setText(separated[1].trim());
+            } else {
+                holder.content_mission.setText("Unknown Mission");
+            }
             holder.content_mission_description_view.setVisibility(View.GONE);
         }
 
@@ -253,7 +261,6 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
         // Cleanup MapView here?
         if (holder.gMap != null) {
             holder.gMap.clear();
-            holder.gMap.setMapType(GoogleMap.MAP_TYPE_NONE);
         }
     }
 
