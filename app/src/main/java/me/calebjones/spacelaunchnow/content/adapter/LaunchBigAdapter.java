@@ -9,7 +9,6 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,8 +32,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import java.util.concurrent.TimeUnit;
-
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.R;
@@ -44,7 +41,7 @@ import timber.log.Timber;
 /**
  * Adapts UpcomingLaunch data to the LaunchFragment
  */
-public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder> implements SectionIndexer {
+public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.ViewHolder> implements SectionIndexer {
     public int position;
     private String launchDate;
     private List<Launch> launchList;
@@ -53,7 +50,7 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder
     private SharedPreferences sharedPref;
     private static SharedPreference sharedPreference;
 
-    public LaunchAdapter(Context context) {
+    public LaunchBigAdapter(Context context) {
         rightNow = Calendar.getInstance();
         launchList = new ArrayList<>();
         this.mContext = context;

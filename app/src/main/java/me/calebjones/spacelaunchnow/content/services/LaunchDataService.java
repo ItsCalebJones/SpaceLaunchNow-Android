@@ -145,8 +145,10 @@ public class LaunchDataService extends IntentService {
             } else {
                 Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to retrieve next launch: " + statusCode);
 
-                Answers.getInstance().logCustom(new CustomEvent("Failed Data Sync")
-                        .putCustomAttribute("Status", statusCode));
+                if (!BuildConfig.DEBUG) {
+                    Answers.getInstance().logCustom(new CustomEvent("Failed Data Sync")
+                            .putCustomAttribute("Status", statusCode));
+                }
             }
 
         } catch (Exception e) {
@@ -283,8 +285,10 @@ public class LaunchDataService extends IntentService {
             } else {
                 Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to retrieve upcoming launches: " + statusCode);
 
-                Answers.getInstance().logCustom(new CustomEvent("Failed Data Sync")
-                        .putCustomAttribute("Status", statusCode));
+                if (!BuildConfig.DEBUG) {
+                    Answers.getInstance().logCustom(new CustomEvent("Failed Data Sync")
+                            .putCustomAttribute("Status", statusCode));
+                }
 
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);

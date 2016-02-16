@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -20,10 +19,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -38,15 +35,16 @@ import java.util.Date;
 import java.util.Scanner;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.DatabaseManager;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.RocketDetails;
-import me.calebjones.spacelaunchnow.ui.fragment.launches.AgencyDetailFragment;
-import me.calebjones.spacelaunchnow.ui.fragment.launches.PayloadDetailFragment;
-import me.calebjones.spacelaunchnow.ui.fragment.launches.SummaryDetailFragment;
+import me.calebjones.spacelaunchnow.ui.fragment.launches.details.AgencyDetailFragment;
+import me.calebjones.spacelaunchnow.ui.fragment.launches.details.PayloadDetailFragment;
+import me.calebjones.spacelaunchnow.ui.fragment.launches.details.SummaryDetailFragment;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;
 import xyz.hanks.library.SmallBang;
@@ -103,9 +101,11 @@ public class LaunchDetailActivity extends AppCompatActivity
             recreate();
         }
 
-        Answers.getInstance().logContentView(new ContentViewEvent()
-                .putContentName("LaunchDetailActivity")
-                .putContentType("Activity"));
+        if (!BuildConfig.DEBUG){
+            Answers.getInstance().logContentView(new ContentViewEvent()
+                    .putContentName("LaunchDetailActivity")
+                    .putContentType("Activity"));
+        }
 
         setTheme(m_theme);
         super.onCreate(savedInstanceState);
@@ -167,10 +167,12 @@ public class LaunchDetailActivity extends AppCompatActivity
                 @Override
                 public void onClick(View view) {
 
-                    Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName("LaunchDetailActivity - Favorite")
-                            .putContentType("Action")
-                            .putCustomAttribute("Favorite", launch.getName()));
+                    if (!BuildConfig.DEBUG) {
+                        Answers.getInstance().logContentView(new ContentViewEvent()
+                                .putContentName("LaunchDetailActivity - Favorite")
+                                .putContentType("Action")
+                                .putCustomAttribute("Favorite", launch.getName()));
+                    }
 
                     final boolean fav = launch.isFavorite();
                     if (fav) {

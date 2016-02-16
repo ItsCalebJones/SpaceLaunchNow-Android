@@ -26,12 +26,11 @@ import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
-import timber.log.Timber;
 
 /**
  * This adapter takes data from SharedPreference/LoaderService and applies it to the LaunchesFragment
  */
-public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAdapter.ViewHolder> implements FastScrollRecyclerView.SectionedAdapter  {
+public class LaunchCompactAdapter extends RecyclerView.Adapter<LaunchCompactAdapter.ViewHolder> implements FastScrollRecyclerView.SectionedAdapter  {
     public int position;
     private List<Launch> launchList;
     private List<Integer> mSectionPositions;
@@ -41,7 +40,7 @@ public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAd
     private SharedPreferences sharedPref;
     private static SharedPreference sharedPreference;
 
-    public PreviousLaunchAdapter(Context context) {
+    public LaunchCompactAdapter(Context context) {
         rightNow = Calendar.getInstance();
         launchList = new ArrayList();
         mSectionPositions = new ArrayList<>();
@@ -121,16 +120,30 @@ public class PreviousLaunchAdapter extends RecyclerView.Adapter<PreviousLaunchAd
 
         String launchDate;
 
-        //Get launch date
-        if (sharedPref.getBoolean("local_time", true)) {
-            SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
-            df.toLocalizedPattern();
-            Date date = new Date(launchItem.getWindowstart());
-            launchDate = df.format(date);
+        if (launchItem.getStatus() == 2) {
+            //Get launch date
+            if (sharedPref.getBoolean("local_time", true)) {
+                SimpleDateFormat df = new SimpleDateFormat("MMMM yyyy.");
+                df.toLocalizedPattern();
+                Date date = new Date(launchItem.getWindowstart());
+                launchDate = df.format(date);
+            } else {
+                launchDate = launchItem.getWindowstart();
+            }
+
+            holder.launch_date.setText("To be determined... " + launchDate);
         } else {
-            launchDate = launchItem.getWindowstart();
-        }
+            //Get launch date
+            if (sharedPref.getBoolean("local_time", true)) {
+                SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
+                df.toLocalizedPattern();
+                Date date = new Date(launchItem.getWindowstart());
+                launchDate = df.format(date);
+            } else {
+                launchDate = launchItem.getWindowstart();
+            }
             holder.launch_date.setText(launchDate);
+        }
 
 
         //If pad and agency exist add it to location, otherwise get whats always available
