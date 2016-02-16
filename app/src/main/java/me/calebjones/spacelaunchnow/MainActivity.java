@@ -13,8 +13,6 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -27,7 +25,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -46,6 +43,7 @@ import me.calebjones.spacelaunchnow.content.services.MissionDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
 import me.calebjones.spacelaunchnow.ui.activity.SettingsActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.favorite.FavoriteFragment;
+import me.calebjones.spacelaunchnow.ui.fragment.launches.NextLaunchFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.missions.MissionFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.fragment.vehicles.VehiclesViewPager;
@@ -63,7 +61,8 @@ public class MainActivity extends AppCompatActivity
     private final Handler mDrawerActionHandler = new Handler();
     private LaunchesViewPager mlaunchesViewPager;
     private FavoriteFragment favoriteFragment;
-    private final MissionFragment mMissionFragment = new MissionFragment();
+    private MissionFragment mMissionFragment = new MissionFragment();
+    private NextLaunchFragment mUpcomingFragment = new NextLaunchFragment();
     private Toolbar toolbar;
     private DrawerLayout drawer;
     private SharedPreferences sharedPref;
@@ -98,7 +97,12 @@ public class MainActivity extends AppCompatActivity
                 String action = intent.getAction();
                 Timber.d("Broadcast action : %s", action);
                 if (Strings.ACTION_SUCCESS_UP_LAUNCHES.equals(action)) {
-                    mlaunchesViewPager.restartViews(Strings.ACTION_SUCCESS_UP_LAUNCHES);
+                    if (mNavItemId == R.id.menu_next_launch) {
+                        mUpcomingFragment.onFinishedRefreshing();
+                    }
+                    if (mNavItemId == R.id.menu_launches) {
+                        mlaunchesViewPager.restartViews(Strings.ACTION_SUCCESS_UP_LAUNCHES);
+                    }
                     if (mNavItemId == R.id.menu_favorites) {
                         favoriteFragment.refreshViews();
                     }
@@ -208,7 +212,7 @@ public class MainActivity extends AppCompatActivity
 
         // load saved navigation state if present
         if (null == savedInstanceState) {
-            mNavItemId = R.id.menu_launches;
+            mNavItemId = R.id.menu_next_launch;
         } else {
             mNavItemId = savedInstanceState.getInt(NAV_ITEM_ID);
         }
@@ -447,6 +451,13 @@ public class MainActivity extends AppCompatActivity
     private void navigate(final int itemId) {
         // perform the actual navigation logic, updating the main_menu content fragment etc
         switch (itemId) {
+            case R.id.menu_next_launch:
+                mNavItemId = R.id.menu_next_launch;
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.flContent, mUpcomingFragment)
+                        .commit();
+                break;
             case R.id.menu_launches:
                 mNavItemId = R.id.menu_launches;
                 getSupportFragmentManager()

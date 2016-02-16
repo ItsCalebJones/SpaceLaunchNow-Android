@@ -115,9 +115,11 @@ public class FavoriteFragment extends Fragment {
             color = R.color.colorPrimary;
         }
 
-        Answers.getInstance().logContentView(new ContentViewEvent()
-                .putContentName("FavoriteFragment")
-                .putContentType("Fragment"));
+        if (!BuildConfig.DEBUG){
+            Answers.getInstance().logContentView(new ContentViewEvent()
+                    .putContentName("FavoriteFragment")
+                    .putContentType("Fragment"));
+        }
 
         // create ContextThemeWrapper from the original Activity Context with the custom theme
         final Context context = new ContextThemeWrapper(getActivity(), m_theme);

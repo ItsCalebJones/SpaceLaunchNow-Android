@@ -53,9 +53,12 @@ public class LaunchApplication extends Application {
         sharedPreference = SharedPreference.getInstance(this);
         sharedPreference.setNightModeStatus(false);
 
-        Intent nextIntent = new Intent(this, LaunchDataService.class);
-        nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
-        this.startService(nextIntent);
+        if (!sharedPreference.getFirstBoot()) {
+            Intent nextIntent = new Intent(this, LaunchDataService.class);
+            nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
+            this.startService(nextIntent);
+        }
+
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());

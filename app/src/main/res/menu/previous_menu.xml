@@ -11,16 +11,17 @@
         app:showAsAction="always"
         android:title="Date" />
 
-    <item android:id="@+id/action_refresh"
-        app:showAsAction="never"
-        android:title="Refresh" />
-
     <item
         android:id="@+id/return_home"
-        android:orderInCategory="95"
+        android:orderInCategory="1"
         android:icon="@drawable/ic_action_home"
         android:title="Home"
         app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/action_refresh"
+        android:orderInCategory="2"
+        app:showAsAction="never"
+        android:title="Refresh" />
 
     <item
         android:id="@+id/action_settings"

@@ -75,7 +75,12 @@ public class NextLaunchTracker extends IntentService {
         upcomingLaunchList = this.sharedPreference.getLaunchesUpcoming();
 
         if (upcomingLaunchList.size() > 0) {
-            nextLaunch = upcomingLaunchList.get(0);
+            for (int i = 0; i < upcomingLaunchList.size(); i++) {
+                if (upcomingLaunchList.get(i).getStatus() == 1) {
+                    nextLaunch = upcomingLaunchList.get(i);
+                    break;
+                }
+            }
             storedLaunch = this.sharedPreference.getNextLaunch();
         }
 
@@ -94,7 +99,7 @@ public class NextLaunchTracker extends IntentService {
                 checkStatus(nextLaunch);
             } else {
                 sharedPreference.setNextLaunch(nextLaunch);
-                upcomingLaunchList.set(0,nextLaunch);
+                upcomingLaunchList.set(0, nextLaunch);
                 sharedPreference.setUpComingLaunches(upcomingLaunchList);
                 checkStatus(nextLaunch);
             }
@@ -146,7 +151,7 @@ public class NextLaunchTracker extends IntentService {
             } else if (timeToFinish < 86400000) {
                 Timber.v("Less than 24 hours.");
                 if (notify) {
-                    int hours   = (int) ((timeToFinish / (1000*60*60)) % 24);
+                    int hours = (int) ((timeToFinish / (1000 * 60 * 60)) % 24);
                     //Check settings to see if user should be notified.
                     if (this.sharedPref.getBoolean("notifications_launch_day", false)) {
                         if (!launch.getIsNotifiedDay()) {
@@ -207,7 +212,7 @@ public class NextLaunchTracker extends IntentService {
         mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(mainActivityIntent);
 
-        PendingIntent appIntent = PendingIntent.getActivity(this,0,mainActivityIntent,0);
+        PendingIntent appIntent = PendingIntent.getActivity(this, 0, mainActivityIntent, 0);
 
         // Sets up the Open and Share action buttons that will appear in the
         // big view of the notification.
@@ -219,39 +224,33 @@ public class NextLaunchTracker extends IntentService {
 
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
+        //TODO add launch image when ready from LL
         NotificationCompat.WearableExtender wearableExtender =
                 new NotificationCompat.WearableExtender()
                         .setHintHideIcon(true)
                         .setBackground(BitmapFactory.decodeResource(this.getResources(),
                                 R.drawable.nav_header));
 
+        mBuilder.setContentTitle(launchName)
+                .setContentText("Launch attempt in " + minutes + " minutes from " + launchPad)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setAutoCancel(true)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(expandedText)
+                        .setSummaryText(launchDate))
+                .extend(wearableExtender)
+                .setSound(alarmSound)
+                .addAction(R.drawable.ic_open_in_browser_white, "Watch Live", vidPendingIntent)
+                .addAction(R.drawable.ic_menu_share_white, "Share", sharePendingIntent);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
-            mBuilder.setContentTitle(launchName)
-                    .setContentText("Launch attempt in " + minutes + " minutes from " + launchPad)
-                    .setPriority(Notification.PRIORITY_HIGH)
-                    .setSmallIcon(R.drawable.ic_notification)
-                    .setAutoCancel(true)
-                    .setVibrate(new long[] { 1000, 1000 })
-                    .setLights(Color.RED, 3000, 3000)
-                    .setSound(alarmSound)
-                    .setContentIntent(appIntent)
-                    .setStyle(new NotificationCompat.BigTextStyle()
-                            .bigText(expandedText)
-                            .setSummaryText(launchDate))
-                    .extend(wearableExtender)
-                    .addAction(R.drawable.ic_open_in_browser, "Watch Live", vidPendingIntent)
-                    .addAction(R.drawable.ic_menu_share, "Share", sharePendingIntent);
-        } else {
-            mBuilder.setContentTitle(launchName)
-                    .setContentText("Launch attempt in " + minutes + " minutes from " + launchPad)
-                    .setSmallIcon(R.drawable.ic_notification)
-                    .setAutoCancel(true)
-                    .setStyle(new NotificationCompat.BigTextStyle()
-                            .bigText(expandedText)
-                            .setSummaryText(launchDate))
-                    .extend(wearableExtender)
-                    .addAction(R.drawable.ic_open_in_browser, "Watch Live", vidPendingIntent)
-                    .addAction(R.drawable.ic_menu_share, "Share", sharePendingIntent);
+            mBuilder.setPriority(Notification.PRIORITY_HIGH)
+                    .setVibrate(new long[]{1000, 1000})
+                    .setLights(Color.RED, 3000, 3000);
+        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN && sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
+            mBuilder.setVibrate(new long[]{1000, 1000})
+                    .setLights(Color.RED, 3000, 3000);
         }
 
         NotificationManager mNotifyManager = (NotificationManager)
@@ -273,7 +272,7 @@ public class NextLaunchTracker extends IntentService {
         mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(mainActivityIntent);
 
-        PendingIntent appIntent = PendingIntent.getActivity(this,0,mainActivityIntent,0);
+        PendingIntent appIntent = PendingIntent.getActivity(this, 0, mainActivityIntent, 0);
 
         if (launch.getMissions().size() > 0) {
             expandedText = "Launch attempt in " + hours + " hours from " + launchPad + ". \n\n" + launch.getMissions().get(0).getDescription();
@@ -300,14 +299,23 @@ public class NextLaunchTracker extends IntentService {
         mBuilder.setContentTitle(launchName)
                 .setContentText("Launch attempt in " + hours + " hours from " + launchPad)
                 .setSmallIcon(R.drawable.ic_notification)
-                .setVibrate(new long[] { 300, 300, 300 })
-                .setSound(alarmSound)
                 .setContentIntent(appIntent)
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText(expandedText)
                         .setSummaryText(launchDate))
                 .extend(wearableExtender)
+                .setSound(alarmSound)
                 .setAutoCancel(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
+            mBuilder.setPriority(Notification.PRIORITY_HIGH)
+                    .setVibrate(new long[]{1000, 1000})
+                    .setLights(Color.RED, 3000, 3000);
+        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN && sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
+            mBuilder.setVibrate(new long[]{1000, 1000})
+                    .setLights(Color.RED, 3000, 3000);
+        }
 
 
         NotificationManager mNotifyManager = (NotificationManager)
