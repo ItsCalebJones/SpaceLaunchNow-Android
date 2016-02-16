@@ -27,7 +27,6 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.borax12.materialdaterangepicker.date.DatePickerDialog;
@@ -48,7 +47,8 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import jp.wasabeef.recyclerview.animators.adapters.SlideInBottomAnimationAdapter;
-import me.calebjones.spacelaunchnow.content.adapter.PreviousLaunchAdapter;
+import me.calebjones.spacelaunchnow.BuildConfig;
+import me.calebjones.spacelaunchnow.content.adapter.LaunchCompactAdapter;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.Launch;
@@ -62,7 +62,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
     private View view, empty;
     private RecyclerView mRecyclerView;
-    private PreviousLaunchAdapter adapter;
+    private LaunchCompactAdapter adapter;
     private String newURL;
     private FloatingActionMenu menu;
     private String start_date, end_date;
@@ -88,7 +88,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         this.sharedPreference = SharedPreference.getInstance(getContext());
         this.sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         this.rocketLaunches = new ArrayList();
-        adapter = new PreviousLaunchAdapter(getActivity());
+        adapter = new LaunchCompactAdapter(getActivity());
     }
 
     @Override
@@ -98,9 +98,11 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
         setHasOptionsMenu(true);
 
-        Answers.getInstance().logContentView(new ContentViewEvent()
-                .putContentName("PreviousLaunchesFragment")
-                .putContentType("Fragment"));
+        if (!BuildConfig.DEBUG){
+            Answers.getInstance().logContentView(new ContentViewEvent()
+                    .putContentName("PreviousLaunchesFragment")
+                    .putContentType("Fragment"));
+        }
 
         LayoutInflater lf = getActivity().getLayoutInflater();
 
@@ -427,8 +429,10 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     public void fetchDataFiltered(int type, String key, String title) {
         Timber.d("Filtering by: %s", key);
 
-        Answers.getInstance().logSearch(new SearchEvent()
-                .putQuery(key));
+        if (!BuildConfig.DEBUG){
+            Answers.getInstance().logSearch(new SearchEvent()
+                    .putQuery(key));
+        }
 
         if (sharedPreference.getFiltered()){
             sharedPreference.setPreviousTitle(sharedPreference.getPreviousTitle() + " | " + title);
@@ -567,8 +571,10 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         // Here is where we are going to implement our filter logic
         final List<Launch> filteredModelList = filter(rocketLaunches, query);
         if (query.length() > 3){
-            Answers.getInstance().logSearch(new SearchEvent()
-                    .putQuery(query));
+            if (!BuildConfig.DEBUG){
+                Answers.getInstance().logSearch(new SearchEvent()
+                        .putQuery(query));
+            }
         }
         adapter.animateTo(filteredModelList);
         new Handler().postDelayed(new Runnable() {
@@ -591,6 +597,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
         final List<Launch> filteredModelList = new ArrayList<>();
         for (Launch model : models) {
+            final String name = model.getName().toLowerCase();
             final String rocketName = model.getRocket().getName().toLowerCase();
             final String locationName = model.getLocation().getName().toLowerCase();
             String missionName;
@@ -604,7 +611,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
             }
             missionName = missionName.toLowerCase();
 
-            if (rocketName.contains(query) || locationName.contains(query) || missionName.contains(query)) {
+            if (rocketName.contains(query) || locationName.contains(query) || missionName.contains(query) || name.contains(query)) {
                 filteredModelList.add(model);
             }
         }

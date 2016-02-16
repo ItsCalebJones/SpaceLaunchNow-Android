@@ -37,6 +37,7 @@ import com.crashlytics.android.answers.ContentViewEvent;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.VehicleListAdapter;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
@@ -83,9 +84,11 @@ public class VehicleDetailActivity extends AppCompatActivity implements AppBarLa
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
         }
 
-        Answers.getInstance().logContentView(new ContentViewEvent()
-                .putContentName("VehicleDetailActivity")
-                .putContentType("Activity"));
+        if (!BuildConfig.DEBUG){
+            Answers.getInstance().logContentView(new ContentViewEvent()
+                    .putContentName("VehicleDetailActivity")
+                    .putContentType("Activity"));
+        }
 
         setTheme(m_theme);
 
