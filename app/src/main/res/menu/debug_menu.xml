@@ -10,6 +10,6 @@
     <item
         android:id="@+id/debug_add_launch"
         android:title="Add Launch"
-        app:showAsAction="ifRoom"
+        app:showAsAction="never"
         android:icon="@drawable/fab_add"/>
 </menu>

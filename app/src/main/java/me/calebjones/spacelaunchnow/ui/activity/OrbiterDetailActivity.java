@@ -35,6 +35,7 @@ import com.crashlytics.android.answers.ContentViewEvent;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.VehicleListAdapter;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
@@ -81,9 +82,11 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
             layout = R.layout.activity_orbiter_detail;
         }
 
-        Answers.getInstance().logContentView(new ContentViewEvent()
-                .putContentName("OrbiterDetailActivity")
-                .putContentType("Activity"));
+        if (!BuildConfig.DEBUG) {
+            Answers.getInstance().logContentView(new ContentViewEvent()
+                    .putContentName("OrbiterDetailActivity")
+                    .putContentType("Activity"));
+        }
 
         setTheme(m_theme);
 
