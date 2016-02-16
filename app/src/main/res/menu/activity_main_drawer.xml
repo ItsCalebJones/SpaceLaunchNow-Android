@@ -3,8 +3,12 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/menu_launches"
+            android:id="@+id/menu_next_launch"
             android:checked="true"
+            android:icon="@drawable/ic_bookmark"
+            android:title="Home" />
+        <item
+            android:id="@+id/menu_launches"
             android:icon="@drawable/ic_mission"
             android:title="Launches" />
         <item

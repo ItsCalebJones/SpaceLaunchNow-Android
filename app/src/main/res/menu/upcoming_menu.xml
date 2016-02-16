@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_search"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="always"
+        android:title="Search" />
+
     <item android:id="@+id/action_refresh"
-        android:icon="@drawable/ic_refresh_white"
-        app:showAsAction="ifRoom"
+        android:orderInCategory="2"
+        app:showAsAction="never"
         android:title="Refresh" />
-    <item
-        android:id="@+id/return_home"
-        android:orderInCategory="95"
-        android:icon="@drawable/ic_action_home"
-        android:title="Home"
-        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
