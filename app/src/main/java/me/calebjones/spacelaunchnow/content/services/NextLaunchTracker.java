@@ -9,7 +9,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.RingtoneManager;
@@ -24,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
@@ -62,8 +62,9 @@ public class NextLaunchTracker extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        upcomingLaunchList = this.sharedPreference.getLaunchesUpcoming();
-        if (upcomingLaunchList.size() > 0) {
+        upcomingLaunchList = this.sharedPreference.getNextLaunches();
+
+        if (upcomingLaunchList != null && upcomingLaunchList.size() > 0) {
             checkNextLaunch();
         } else {
             interval = 3600000;
@@ -72,23 +73,23 @@ public class NextLaunchTracker extends IntentService {
     }
 
     private void checkNextLaunch() {
-        upcomingLaunchList = this.sharedPreference.getLaunchesUpcoming();
+        upcomingLaunchList = this.sharedPreference.getNextLaunches();
 
-        if (upcomingLaunchList.size() > 0) {
+        if (upcomingLaunchList != null && upcomingLaunchList.size() > 0) {
             for (int i = 0; i < upcomingLaunchList.size(); i++) {
                 if (upcomingLaunchList.get(i).getStatus() == 1) {
                     nextLaunch = upcomingLaunchList.get(i);
                     break;
                 }
             }
-            storedLaunch = this.sharedPreference.getNextLaunch();
+            storedLaunch = sharedPreference.getNextLaunch();
         }
 
         //Check if the stored launch is still the next launch.
-        if (storedLaunch != null) {
+        if (storedLaunch != null && nextLaunch != null) {
             //If they do not match this means nextLaunch has changed IE a launch executed.
             if (nextLaunch.getId().intValue() != storedLaunch.getId().intValue()) {
-                this.sharedPreference.setNextLaunch(nextLaunch);
+                this.sharedPreference.setNextLaunches(nextLaunch);
                 this.sharedPreference.setFiltered(false);
 
                 Intent updatePreviousLaunches = new Intent(this, LaunchDataService.class);
@@ -98,14 +99,22 @@ public class NextLaunchTracker extends IntentService {
 
                 checkStatus(nextLaunch);
             } else {
-                sharedPreference.setNextLaunch(nextLaunch);
+                if (storedLaunch.getIsNotifiedDay()) {
+                    nextLaunch.setIsNotifiedDay(true);
+                }
+                if (storedLaunch.getIsNotifiedHour()) {
+                    nextLaunch.setIsNotifiedhour(true);
+                }
+                if (storedLaunch.isFavorite()) {
+                    nextLaunch.isFavorite();
+                }
+                sharedPreference.setNextLaunches(nextLaunch);
                 upcomingLaunchList.set(0, nextLaunch);
-                sharedPreference.setUpComingLaunches(upcomingLaunchList);
+                sharedPreference.setNextLaunches(upcomingLaunchList);
                 checkStatus(nextLaunch);
             }
-        } else {
-            this.sharedPreference.setNextLaunch(nextLaunch);
-
+        } else if (nextLaunch != null){
+            this.sharedPreference.setNextLaunches(nextLaunch);
             checkStatus(nextLaunch);
         }
     }
@@ -125,56 +134,61 @@ public class NextLaunchTracker extends IntentService {
             boolean notify = this.sharedPref.getBoolean("notifications_new_message", true);
 
             //Launch is in less then one hour
-            if (timeToFinish < 3600000) {
-                if (notify) {
-                    int minutes = (int) ((timeToFinish / (1000 * 60)) % 60);
-                    //Check settings to see if user should be notified.
-                    if (this.sharedPref.getBoolean("notifications_launch_imminent", true)) {
-                        if (!launch.getIsNotifiedHour()) {
-                            notifyUserImminent(launch, minutes);
-                            launch.setIsNotifiedhour(true);
-                            this.sharedPreference.setNextLaunch(launch);
-                        }
-                        //If its a saved launch check notification
-                    } else if (launch.isFavorite() && this.sharedPref.getBoolean("notifications_launch_imminent_saved", true)) {
-                        if (!launch.getIsNotifiedHour()) {
-                            notifyUserImminent(launch, minutes);
-                            launch.setIsNotifiedhour(true);
-                            this.sharedPreference.setNextLaunch(launch);
+            if (timeToFinish > 0) {
+                if (timeToFinish < 3600000) {
+                    if (notify) {
+                        int minutes = (int) ((timeToFinish / (1000 * 60)) % 60);
+                        //Check settings to see if user should be notified.
+                        if (this.sharedPref.getBoolean("notifications_launch_imminent", true)) {
+                            if (!launch.getIsNotifiedHour()) {
+                                notifyUserImminent(launch, minutes);
+                                launch.setIsNotifiedhour(true);
+                                this.sharedPreference.setNextLaunches(launch);
+                            }
+                            //If its a saved launch check notification
+                        } else if (launch.isFavorite() && this.sharedPref.getBoolean("notifications_launch_imminent_saved", true)) {
+                            if (!launch.getIsNotifiedHour()) {
+                                notifyUserImminent(launch, minutes);
+                                launch.setIsNotifiedhour(true);
+                                this.sharedPreference.setNextLaunches(launch);
+                            }
                         }
                     }
-                }
-                interval = 3600000;
-                scheduleUpdate();
+                    interval = 3600000;
+                    scheduleUpdate();
 
-                //Launch is in less then 24 hours
-            } else if (timeToFinish < 86400000) {
-                Timber.v("Less than 24 hours.");
-                if (notify) {
-                    int hours = (int) ((timeToFinish / (1000 * 60 * 60)) % 24);
-                    //Check settings to see if user should be notified.
-                    if (this.sharedPref.getBoolean("notifications_launch_day", false)) {
-                        if (!launch.getIsNotifiedDay()) {
-                            notifyUser(launch, hours);
-                            launch.setIsNotifiedDay(true);
-                            this.sharedPreference.setNextLaunch(launch);
-                        }
-                        //If its a saved launch check notification
-                    } else if (launch.isFavorite() && this.sharedPref.getBoolean("notifications_launch_day_saved", true)) {
-                        if (!launch.getIsNotifiedDay()) {
-                            notifyUser(launch, hours);
-                            launch.setIsNotifiedDay(true);
-                            this.sharedPreference.setNextLaunch(launch);
+                    //Launch is in less then 24 hours
+                } else if (timeToFinish < 86400000) {
+                    Timber.v("Less than 24 hours.");
+                    if (notify) {
+                        int hours = (int) ((timeToFinish / (1000 * 60 * 60)) % 24);
+                        //Check settings to see if user should be notified.
+                        if (this.sharedPref.getBoolean("notifications_launch_day", false)) {
+                            if (!launch.getIsNotifiedDay()) {
+                                notifyUser(launch, hours);
+                                launch.setIsNotifiedDay(true);
+                                this.sharedPreference.setNextLaunches(launch);
+                            }
+                            //If its a saved launch check notification
+                        } else if (launch.isFavorite() && this.sharedPref.getBoolean("notifications_launch_day_saved", true)) {
+                            if (!launch.getIsNotifiedDay()) {
+                                notifyUser(launch, hours);
+                                launch.setIsNotifiedDay(true);
+                                this.sharedPreference.setNextLaunches(launch);
+                            }
                         }
                     }
+                    interval = timeToFinish / 2;
+                    if (interval < 3600000) {
+                        interval = 3500000;
+                    }
+                    scheduleUpdate();
+                } else {
+                    interval = (timeToFinish / 2) + 43200000;
+                    scheduleUpdate();
                 }
-                interval = timeToFinish / 2;
-                if (interval < 3600000) {
-                    interval = 3500000;
-                }
-                scheduleUpdate();
             } else {
-                interval = (timeToFinish / 2) + 43200000;
+                interval = 3600000;
                 scheduleUpdate();
             }
         } else {
@@ -334,6 +348,48 @@ public class NextLaunchTracker extends IntentService {
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         long nextUpdate = Calendar.getInstance().getTimeInMillis() + interval;
         Timber.d("scheduleUpdated at %s milli.", nextUpdate);
+
+        if (BuildConfig.DEBUG) {
+            storedLaunch = sharedPreference.getNextLaunch();
+            upcomingLaunchList = sharedPreference.getNextLaunches();
+
+            if (upcomingLaunchList != null && upcomingLaunchList.size() > 0) {
+                for (int i = 0; i < upcomingLaunchList.size(); i++) {
+                    if (upcomingLaunchList.get(i).getStatus() == 1) {
+                        nextLaunch = upcomingLaunchList.get(i);
+                        break;
+                    }
+                }
+            }
+
+            if(nextLaunch != null && storedLaunch != null) {
+                // Create a DateFormatter object for displaying date in specified format.
+                SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss zz");
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(nextUpdate);
+
+                String intevalString = String.format("%02d:%02d:%02d",
+                        TimeUnit.MILLISECONDS.toHours(interval),
+                        TimeUnit.MILLISECONDS.toMinutes(interval) -
+                                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(interval)), // The change is in this line
+                        TimeUnit.MILLISECONDS.toSeconds(interval) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(interval)));
+
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
+                mBuilder.setContentTitle("LaunchData Worked! - Next Launch")
+                        .setStyle(new NotificationCompat.BigTextStyle()
+                                .bigText("Next Launch = " + nextLaunch.getName() + "\n\nStored Launch = " + storedLaunch.getName())
+                                .setSummaryText(String.format("Interval: %s | ", intevalString) + formatter.format(calendar.getTime())))
+                        .setSmallIcon(R.drawable.ic_notification)
+                        .setAutoCancel(true);
+
+                NotificationManager mNotifyManager = (NotificationManager)
+                        getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                mNotifyManager.notify(Strings.NOTIF_ID + 1, mBuilder.build());
+            }
+        }
+
+
         alarmManager.set(AlarmManager.RTC_WAKEUP, nextUpdate,
                 PendingIntent.getBroadcast(this, 165432, new Intent(Strings.ACTION_CHECK_NEXT_LAUNCH_TIMER), 0));
     }

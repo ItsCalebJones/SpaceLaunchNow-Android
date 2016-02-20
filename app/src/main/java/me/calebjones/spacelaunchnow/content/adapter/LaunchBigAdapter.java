@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.CountDownTimer;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
@@ -257,6 +258,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
     public void onViewRecycled(ViewHolder holder) {
         // Cleanup MapView here?
         if (holder.gMap != null) {
+            System.gc();
             holder.gMap.clear();
         }
     }

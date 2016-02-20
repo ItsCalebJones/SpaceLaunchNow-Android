@@ -1,11 +1,13 @@
 package me.calebjones.spacelaunchnow.ui.fragment.vehicles;
 
 
+import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,14 +41,14 @@ public class LaunchVehicleFragment extends CustomFragment {
     private Context context;
     private View view;
     private RecyclerView mRecyclerView;
-    public static SparseArray<Bitmap> photoCache = new SparseArray<Bitmap>(1);
+    public SparseArray<Bitmap> photoCache = new SparseArray<Bitmap>(1);
     private int defaultBackgroundcolor;
     private static final int SCALE_DELAY = 30;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getActivity());
-        this.sharedPreference = SharedPreference.getInstance(getContext());
+        this.sharedPreference = SharedPreference.getInstance(getActivity().getApplication());
         adapter = new VehicleAdapter(getActivity());
     }
 
@@ -54,7 +56,7 @@ public class LaunchVehicleFragment extends CustomFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         int m_theme;
-        this.context = getContext();
+        context = getActivity().getApplication();
 
         sharedPreference = SharedPreference.getInstance(this.context);
 
@@ -75,9 +77,9 @@ public class LaunchVehicleFragment extends CustomFragment {
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.gridview);
         if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
-            layoutManager = new GridLayoutManager(getActivity(), 3);
+            layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 3);
         } else {
-            layoutManager = new GridLayoutManager(getActivity(), 2);
+            layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 2);
         }
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(adapter);

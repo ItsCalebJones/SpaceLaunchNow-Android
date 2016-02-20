@@ -39,7 +39,7 @@ import me.calebjones.spacelaunchnow.utils.customtab.WebViewFallback;
 import timber.log.Timber;
 
 /**
- * This adapter takes data from SharedPreference/LoaderService and applies it to the LaunchesFragment
+ * This adapter takes data from SharedPreference/LoaderService and applies it to the UpcomingLaunchesFragment
  */
 public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHolder> implements FastScrollRecyclerView.SectionedAdapter {
     public int position;
