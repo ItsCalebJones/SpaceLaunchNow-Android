@@ -53,7 +53,7 @@ public class OrbiterFragment extends CustomFragment {
                              Bundle savedInstanceState) {
         int m_theme;
 
-        this.context = getContext();
+        this.context = getActivity().getApplicationContext();
 
         sharedPreference = SharedPreference.getInstance(this.context);
 
@@ -74,9 +74,9 @@ public class OrbiterFragment extends CustomFragment {
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.gridview);
         if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
-            layoutManager = new GridLayoutManager(getActivity(), 3);
+            layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 3);
         } else {
-            layoutManager = new GridLayoutManager(getActivity(), 2);
+            layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 2);
         }
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(adapter);

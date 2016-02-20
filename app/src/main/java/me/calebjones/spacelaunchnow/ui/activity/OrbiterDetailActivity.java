@@ -120,15 +120,6 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
             final int position = getIntent().getIntExtra("position", 0);
             Timber.d("Position %s", position);
 
-            // Recover image cover from cache
-            Bitmap bookCoverBitmap = LaunchVehicleFragment.photoCache.get(position + 1);
-            ImageView toolbarBookCover = (ImageView) findViewById(R.id.detail_profile_backdrop);
-            toolbarBookCover.setImageBitmap(bookCoverBitmap);
-
-            // Define toolbar as the shared element
-            detail_profile_backdrop.setBackground(new BitmapDrawable(getResources(), bookCoverBitmap));
-            detail_profile_backdrop.setTransitionName("cover" + position + 1);
-
             // Add a listener to get noticed when the transition ends to animate the view
             ViewPropertyAnimator showTitleAnimator = Utils.showViewByScale(detail_profile_image);
             showTitleAnimator.setStartDelay(750);

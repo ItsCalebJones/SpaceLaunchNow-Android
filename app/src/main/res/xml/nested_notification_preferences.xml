@@ -18,28 +18,12 @@
         android:defaultValue="true" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Saved Launches"
-        android:dependency="notifications_new_message">
-        <SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="notifications_launch_day_saved"
-            android:summaryOff="No notification for saved launches within 24 hours."
-            android:summaryOn="Receive notification when a saved launch is within 24 hours."
-            android:title="24 Hour Launch Notification" />
-        <SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="notifications_launch_imminent_saved"
-            android:summaryOff="Do not notify when a saved launch is imminent."
-            android:summaryOn="Receive notification when a saved launch is within one hour."
-            android:title="Imminent Launch Notification" />
-    </PreferenceCategory>
-
     <PreferenceCategory android:title="Default Launches"
         android:dependency="notifications_new_message">
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="notifications_launch_day"
-            android:summaryOff="No notification for launches within 24 hours."
+            android:summaryOff="Do not notify for launches within 24 hours."
             android:summaryOn="Receive notification when a launch is within 24 hours."
             android:title="24 Hour Launch Notification" />
         <SwitchPreferenceCompat

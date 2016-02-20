@@ -1,20 +1,15 @@
 package me.calebjones.spacelaunchnow.content.database;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -58,7 +53,7 @@ public class SharedPreference {
     public static String PREFS_PREVIOUS_TITLE;
     public static String PREFS_CURRENT_START_DATE;
     public static String PREFS_CURRENT_END_DATE;
-    public static String PREFS_LAUNCH_LIST_FAVS;
+    public static String PREFS_LAUNCH_LIST_NEXT;
     public static String PREFS_NEXT_LAUNCH;
     public static String PREFS_PREV_LAUNCH;
     public static String PREFS_PREV_FILTERED;
@@ -74,6 +69,10 @@ public class SharedPreference {
     public static String PREFS_SWITCH_CASC;
     public static String PREFS_SWITCH_ISRO;
     public static String PREFS_SWITCH_CUSTOM;
+    public static String PREFS_SWITCH_PLES;
+    public static String PREFS_SWITCH_VAN;
+    public static String PREFS_SWITCH_CAPE;
+    public static String PREFS_SWITCH_KSC;
     public static String PREFS_CUSTOM_STRING;
 
 
@@ -99,7 +98,7 @@ public class SharedPreference {
         PREFS_PREVIOUS_TITLE = "CURRENT_YEAR_RANGE";
         PREFS_CURRENT_START_DATE = "CURRENT_START_DATE";
         PREFS_CURRENT_END_DATE = "CURRENT_END_DATE";
-        PREFS_LAUNCH_LIST_FAVS = "LAUNCH_LIST_FAVS";
+        PREFS_LAUNCH_LIST_NEXT = "LAUNCH_LIST_FAVS";
         PREFS_LIST_AGENCY = "LIST_AGENCY";
         PREFS_LIST_VEHICLES = "LIST_VEHICLES";
         PREFS_NEXT_LAUNCH = "NEXT_LAUNCH";
@@ -118,6 +117,10 @@ public class SharedPreference {
         PREFS_SWITCH_ISRO = "SWITCH_ISRO";
         PREFS_SWITCH_CUSTOM = "SWITCH_CUSTOM";
         PREFS_CUSTOM_STRING = "CUSTOM_STRING";
+        PREFS_SWITCH_CAPE = "SWITCH_CAPE";
+        PREFS_SWITCH_VAN = "SWITCH_VAN";
+        PREFS_SWITCH_KSC = "SWITCH_KSC";
+        PREFS_SWITCH_PLES = "SWITCH_PLES";
         PREFS_DEBUG = "DEBUG";
         INSTANCE = null;
     }
@@ -233,29 +236,8 @@ public class SharedPreference {
     }
 
 
-    public void addFavLaunch(Launch launch) {
-        List<Launch> rocketLaunches = getFavoriteLaunches();
-        List<Launch> upcomingLaunches = getLaunchesUpcoming();
-        Timber.d("Adding Favorite: %s", launch.getName());
-        if (rocketLaunches == null) {
-            rocketLaunches = new ArrayList();
-        }
-        launch.setFavorite(true);
-        rocketLaunches.add(launch);
-
-        int size = upcomingLaunches.size();
-
-        for (int i = 0; i < size; i++) {
-            if (upcomingLaunches.get(i).getId().equals(launch.getId())) {
-                upcomingLaunches.set(i, launch);
-                setUpComingLaunches(upcomingLaunches);
-            }
-        }
-        setFavLaunch(rocketLaunches);
-    }
-
     //Set methods for storing data.
-    public void setFavLaunch(List<Launch> launches) {
+    public void setNextLaunches(List<Launch> launches) {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
 
@@ -263,30 +245,11 @@ public class SharedPreference {
         gsonBuilder.serializeSpecialFloatingPointValues();
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
-        this.prefsEditor.putString(PREFS_LAUNCH_LIST_FAVS, gson.toJson(launches));
+        this.prefsEditor.putString(PREFS_LAUNCH_LIST_NEXT, gson.toJson(launches));
         this.prefsEditor.apply();
     }
 
-    //This checks to make sure all favorited objects are set correctly in UpcomingLaunchList
-    public void syncFavorites() {
-        List<Launch> favoriteLaunches = getFavoriteLaunches();
-        List<Launch> upcomingLaunches = getLaunchesUpcoming();
-
-        if (favoriteLaunches != null && favoriteLaunches.size() > 0) {
-            int size = upcomingLaunches.size();
-            int favs = favoriteLaunches.size();
-            for (int i = 0; i < favs; i++) {
-                for (int a = 0; a < size; a++) {
-                    if (favoriteLaunches.get(i).getId().equals(upcomingLaunches.get(a).getId())) {
-                        upcomingLaunches.set(a, favoriteLaunches.get(i));
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    public void setNextLaunch(Launch launch) {
+    public void setNextLaunches(Launch launch) {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -294,6 +257,11 @@ public class SharedPreference {
         Gson gson = gsonBuilder.setPrettyPrinting().create();
         this.prefsEditor.putString(PREFS_NEXT_LAUNCH, gson.toJson(launch));
         this.prefsEditor.apply();
+        List<Launch> list = getLaunchesUpcoming();
+        if (list.size() > 0) {
+            list.set(0, launch);
+            setUpComingLaunches(list);
+        }
     }
 
     public void setPrevLaunch(Launch launch) {
@@ -314,7 +282,13 @@ public class SharedPreference {
         Gson gson = gsonBuilder.setPrettyPrinting().create();
         this.prefsEditor.putString(PREFS_LIST_UPCOMING, gson.toJson(launches));
         this.prefsEditor.apply();
-        syncFavorites();
+        List<Launch> goList = new ArrayList<>();
+        for (int i = 0; i < launches.size(); i++) {
+            if (launches.get(i).getStatus() == 1) {
+                goList.add(launches.get(i));
+            }
+        }
+        setNextLaunches(filterLaunches(goList));
     }
 
     public void setMissionList(List<Mission> missions) {
@@ -392,27 +366,6 @@ public class SharedPreference {
         setPreviousLaunchesFiltered(new ArrayList());
     }
 
-    public void removeFavLaunchAll() {
-        setFavLaunch(new ArrayList());
-    }
-
-    public void removeFavLaunch(Launch launch) {
-        List<Launch> launchList = getFavoriteLaunches();
-        List<Launch> newList = new ArrayList<>();
-
-        Timber.v("Removing Launch - %s - Before: old - %s new - %s", launch.getName().substring(0, 5), launchList.size(), newList.size());
-
-        int size = launchList.size();
-
-        for (int i = 0; i < size; i++) {
-            if (launchList.get(i).getId() != launch.getId()) {
-                newList.add(launchList.get(i));
-            }
-        }
-
-        Timber.v("After: old - %s new - %s", launchList.size(), newList.size());
-        setFavLaunch(newList);
-    }
 
     public void removePreviousLaunches() {
         setPreviousLaunches(new ArrayList());
@@ -429,7 +382,7 @@ public class SharedPreference {
     //Get Methods for various lists of data.
     public Launch getNextLaunch() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        if (!this.sharedPrefs.contains(PREFS_LIST_UPCOMING)) {
+        if (!this.sharedPrefs.contains(PREFS_NEXT_LAUNCH)) {
             return null;
         }
         Gson gson = new Gson();
@@ -441,19 +394,6 @@ public class SharedPreference {
         return launch;
     }
 
-    public Launch getPrevLaunch() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        if (!this.sharedPrefs.contains(PREFS_LIST_PREVIOUS)) {
-            return null;
-        }
-        Gson gson = new Gson();
-        SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        String jsonPreferences = sharedPref.getString(PREFS_PREV_LAUNCH, null);
-
-        Launch launch = gson.fromJson(jsonPreferences, Launch.class);
-
-        return launch;
-    }
 
     public List<Launch> getLaunchesUpcoming() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
@@ -592,20 +532,20 @@ public class SharedPreference {
         return productFromShared;
     }
 
-    public List<Launch> getFavoriteLaunches() {
+    public List<Launch> getNextLaunches() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        if (!this.sharedPrefs.contains(PREFS_LAUNCH_LIST_FAVS)) {
+        if (!this.sharedPrefs.contains(PREFS_LAUNCH_LIST_NEXT)) {
             return null;
         }
         Gson gson = new Gson();
-        List<Launch> favrorites;
+        List<Launch> favorites;
         SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        String jsonPreferences = sharedPref.getString(PREFS_LAUNCH_LIST_FAVS, null);
+        String jsonPreferences = sharedPref.getString(PREFS_LAUNCH_LIST_NEXT, null);
         Type type = new TypeToken<List<Launch>>() {
         }.getType();
-        favrorites = gson.fromJson(jsonPreferences, type);
+        favorites = gson.fromJson(jsonPreferences, type);
 
-        return favrorites;
+        return favorites;
     }
 
     public List<Mission> getMissionList() {
@@ -630,8 +570,7 @@ public class SharedPreference {
             });
 
             return productFromShared;
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -926,11 +865,59 @@ public class SharedPreference {
         this.prefsEditor.putString(PREFS_FILTER_COUNTRY, key);
         this.prefsEditor.apply();
     }
+    //Nasa Switch
+    public boolean getSwitchVan() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_VAN, true);
+    }
+
+    public void setSwitchVan(boolean key) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean(PREFS_SWITCH_VAN, key);
+        this.prefsEditor.apply();
+    }
+    //Nasa Switch
+    public boolean getSwitchKSC() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_KSC, true);
+    }
+
+    public void setSwitchKSC(boolean key) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean(PREFS_SWITCH_KSC, key);
+        this.prefsEditor.apply();
+    }
+    //Nasa Switch
+    public boolean getSwitchPles() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_PLES, true);
+    }
+
+    public void setSwitchPles(boolean key) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean(PREFS_SWITCH_PLES, key);
+        this.prefsEditor.apply();
+    }
+    //Nasa Switch
+    public boolean getSwitchCape() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_CAPE, true);
+    }
+
+    public void setSwitchCape(boolean key) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean(PREFS_SWITCH_CAPE, key);
+        this.prefsEditor.apply();
+    }
 
     //Nasa Switch
     public boolean getSwitchNasa() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_SWITCH_NASA, false);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_NASA, true);
     }
 
     public void setSwitchNasa(boolean key) {
@@ -943,7 +930,7 @@ public class SharedPreference {
     //SpaceX Switch
     public boolean getSwitchSpaceX() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_SWITCH_SPACEX, false);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_SPACEX, true);
     }
 
     public void setSwitchSpaceX(boolean key) {
@@ -956,7 +943,7 @@ public class SharedPreference {
     //Roscosmos Switch
     public boolean getSwitchRoscosmos() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_SWITCH_ROSCOSMOS, false);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_ROSCOSMOS, true);
     }
 
     public void setSwitchRoscosmos(boolean key) {
@@ -969,7 +956,7 @@ public class SharedPreference {
     //ULA Switch
     public boolean getSwitchULA() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_SWITCH_ULA, false);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_ULA, true);
     }
 
     public void setSwitchULA(boolean key) {
@@ -982,7 +969,7 @@ public class SharedPreference {
     //Arianespace Switch
     public boolean getSwitchArianespace() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_SWITCH_ARIANE, false);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_ARIANE, true);
     }
 
     public void setSwitchArianespace(boolean key) {
@@ -995,7 +982,7 @@ public class SharedPreference {
     //CASC Switch
     public boolean getSwitchCASC() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_SWITCH_CASC, false);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_CASC, true);
     }
 
     public void setSwitchCASC(boolean key) {
@@ -1008,7 +995,7 @@ public class SharedPreference {
     //ISRO Switch
     public boolean getSwitchISRO() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_SWITCH_ISRO, false);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_ISRO, true);
     }
 
     public void setSwitchISRO(boolean key) {
@@ -1019,16 +1006,19 @@ public class SharedPreference {
     }
 
     //ISRO Switch
-    public boolean getSwitchCustom() {
+    public boolean getAllSwitch() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_SWITCH_CUSTOM, false);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_CUSTOM, true);
     }
 
-    public void setSwitchCustom(boolean key) {
+    public void setAllSwitch(boolean key) {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_CUSTOM, key);
         this.prefsEditor.apply();
+        if (key) {
+            resetSwitches();
+        }
     }
 
     //Custom Switch
@@ -1044,123 +1034,101 @@ public class SharedPreference {
         this.prefsEditor.apply();
     }
 
-    public void checkFavorite(Launch launch) {
-        List<Launch> favoriteList = getFavoriteLaunches();
-        boolean exists = false;
-        if (favoriteList != null) {
-            int favSize = favoriteList.size();
-            for (int i = 0; i < favSize; i++) {
-                Integer launchID = launch.getId();
-                Integer favoriteID = favoriteList.get(i).getId();
-                if (launchID.equals(favoriteID)) {
-                    Timber.v("%s exists as favorite", launch.getName());
-                    exists = true;
-                    break;
-                }
-            }
-        }
-        if (!exists) {
-            if (getSwitchNasa()) {
-                searchForMatches(launch, 44);
-            }
-            if (getSwitchSpaceX()) {
-                searchForMatches(launch, 121);
-            }
-            if (getSwitchRoscosmos()) {
-                searchForMatches(launch, 63);
-            }
-            if (getSwitchArianespace()) {
-                searchForMatches(launch, 115);
-            }
-            if (getSwitchCASC()) {
-                searchForMatches(launch, 88);
-            }
-            if (getSwitchULA()) {
-                searchForMatches(launch, 124);
-            }
-            if (getSwitchISRO()) {
-                searchForMatches(launch, 31);
-            }
-            if (getSwitchCustom()) {
-                searchForCustom(launch);
-            }
-        }
+    public void resetSwitches() {
+        setSwitchNasa(true);
+        setSwitchISRO(true);
+        setSwitchRoscosmos(true);
+        setSwitchSpaceX(true);
+        setSwitchULA(true);
+        setSwitchArianespace(true);
+        setSwitchCASC(true);
+        setSwitchCape(true);
+        setSwitchKSC(true);
+        setSwitchPles(true);
+        setSwitchVan(true);
     }
 
-    private void searchForCustom(Launch launch) {
-        String search = getCustomSearch().toLowerCase();
+    public List<Launch> filterLaunches(List<Launch> launchesUpcoming) {
+        List<Integer> agency = new ArrayList<>();
+        List<String> location = new ArrayList<>();
+        if (getAllSwitch()) {
+            return launchesUpcoming;
+        }
+        List<Launch> list = new ArrayList<>();
+        if (getSwitchNasa()) {
+            agency.add(43);
+        }
+        if (getSwitchSpaceX()) {
+            agency.add(121);
+        }
+        if (getSwitchRoscosmos()) {
+            agency.add(63);
+        }
+        if (getSwitchArianespace()) {
+            agency.add(115);
+        }
+        if (getSwitchCASC()) {
+            agency.add(88);
+        }
+        if (getSwitchULA()) {
+            agency.add(124);
+        }
+        if (getSwitchISRO()) {
+            agency.add(31);
+        }
+        if (getSwitchVan()){
+            location.add("Vandenberg");
+        }
+        if (getSwitchCape()){
+            location.add("Cape");
+        }
+        if (getSwitchKSC()){
+            location.add("Kennedy");
+        }
+        if (getSwitchPles()){
+            location.add("Plesetek");
+            location.add("Baikonur");
+        }
+        return searchForMatches(launchesUpcoming, list, agency, location);
+    }
 
-        // If string found in name of launch, rocket, or location add it.
-        if (launch.getName().toLowerCase().contains(search) || launch.getRocket().getName().toLowerCase().contains(search)
-                || launch.getLocation().getName().toLowerCase().toLowerCase().contains(search)) {
-            addFavLaunch(launch);
-
-            //If missions not null see if name or agency match
-        } else if (launch.getMissions() != null && launch.getMissions().size() > 0) {
-            int missionSize = launch.getMissions().size();
-            for (int i = 0; i < missionSize; i++) {
-                //DO SEARCHING
-                if (launch.getMissions().get(i).getName().toLowerCase().contains(search)) {
-                    addFavLaunch(launch);
-                } else if (launch.getMissions().get(i).getDescription().toLowerCase().contains(search)) {
-                    addFavLaunch(launch);
+    private List<Launch> searchForMatches(List<Launch> launchesUpcoming, List<Launch> list, List<Integer> num, List<String> location) {
+        int size = launchesUpcoming.size();
+        for (int i = 0; i < size; i++) {
+            Launch launch = launchesUpcoming.get(i);
+            boolean found = false;
+            if (launch.getRocket().getAgencies() != null) {
+                int agencySize = launch.getRocket().getAgencies().size();
+                for (int a = 0; a < agencySize; a++) {
+                    if (num.contains(launch.getRocket().getAgencies().get(a).getId())) {
+                        list.add(launch);
+                        found = true;
+                        break;
+                    }
                 }
             }
-
-            //If location is not null see if name or agency match
-        } else if (launch.getLocation().getPads() != null && launch.getLocation().getPads().size() > 0) {
-            int padSize = launch.getLocation().getPads().size();
-            for (int i = 0; i < padSize; i++) {
-                //DO SEARCH
-                if (launch.getLocation().getPads().get(i).getName().toLowerCase().contains(search)) {
-                    addFavLaunch(launch);
-                } else if (launch.getLocation().getPads().get(i).getAgencies() != null &&
-                        launch.getLocation().getPads().get(i).getAgencies().size() > 0) {
-                    int agencySize = launch.getLocation().getPads().get(i).getAgencies().size();
-                    for (int a = 0; a < agencySize; a++) {
-                        if (launch.getLocation().getPads().get(i).getAgencies().get(a).getName().toLowerCase().contains(search)
-                                || launch.getLocation().getPads().get(i).getAgencies().get(a).getCountryCode().toLowerCase().contains(search)
-                                || launch.getLocation().getPads().get(i).getAgencies().get(a).getAbbrev().toLowerCase().contains(search)) {
-                            addFavLaunch(launch);
+            if (!found && launch.getLocation().getPads().size() > 0) {
+                int locationSize = launch.getLocation().getPads().size();
+                for (int b = 0; b < locationSize; b++) {
+                    int locationAgencySize = launch.getLocation().getPads().get(b).getAgencies().size();
+                    for (int c = 0; c < locationAgencySize; c++) {
+                        if (num.contains(launch.getLocation().getPads().get(b).getAgencies().get(c).getId())) {
+                            list.add(launch);
+                            found = true;
+                            break;
                         }
                     }
                 }
             }
-            //If launch rocket is not null see if agency matches
-        } else if (launch.getRocket().getAgencies() != null && launch.getRocket().getAgencies().size() > 0) {
-            int rocketSize = launch.getRocket().getAgencies().size();
-            for (int i = 0; i < rocketSize; i++) {
-                //DO SEARCH
-                if (launch.getRocket().getAgencies().get(i).getName().toLowerCase().contains(search)
-                        || launch.getRocket().getAgencies().get(i).getCountryCode().toLowerCase().contains(search)
-                        || launch.getRocket().getAgencies().get(i).getAbbrev().toLowerCase().contains(search)) {
-                    addFavLaunch(launch);
+            if (!found && launch.getLocation() != null) {
+                for (int d = 0; d < location.size(); d++){
+                    if(launch.getLocation().getName().toLowerCase().contains(location.get(d).toLowerCase())){
+                        list.add(launch);
+                        break;
+                    }
                 }
             }
         }
-    }
-
-    private void searchForMatches(Launch launch, int id) {
-        if (launch.getRocket().getAgencies() != null) {
-            int agencySize = launch.getRocket().getAgencies().size();
-            for (int a = 0; a < agencySize; a++) {
-                if (launch.getRocket().getAgencies().get(a).getId() == id) {
-                    addFavLaunch(launch);
-                    Timber.v("Adding favorited item %s", launch.getRocket().getAgencies().get(a).getName());
-                    break;
-                }
-            }
-        }
-    }
-
-    public void resetSwitches() {
-        setSwitchCustom(false);
-        setSwitchNasa(false);
-        setSwitchISRO(false);
-        setSwitchRoscosmos(false);
-        setSwitchSpaceX(false);
-        setSwitchULA(false);
-        setSwitchArianespace(false);
-        setSwitchCASC(false);
+        return list;
     }
 }
