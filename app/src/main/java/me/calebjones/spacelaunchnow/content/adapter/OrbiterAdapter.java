@@ -35,7 +35,7 @@ import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 /**
- * This adapter takes data from SharedPreference/LoaderService and applies it to the LaunchesFragment
+ * This adapter takes data from SharedPreference/LoaderService and applies it to the UpcomingLaunchesFragment
  */
 public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHolder>{
 

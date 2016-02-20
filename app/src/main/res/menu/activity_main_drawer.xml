@@ -20,10 +20,6 @@
             android:icon="@drawable/ic_rocket"
             android:title="Vehicles" />
         <item
-            android:id="@+id/menu_favorites"
-            android:icon="@drawable/ic_favorite"
-            android:title="Favorites" />
-        <item
             android:checkable="false"
             android:id="@+id/menu_launch"
             android:icon="@drawable/ic_open_in_browser"
