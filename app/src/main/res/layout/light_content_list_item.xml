@@ -121,6 +121,7 @@
                     tools:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
                 <android.support.design.widget.FloatingActionButton
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/fab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -130,7 +131,8 @@
                     android:layout_marginRight="20dp"
                     android:clickable="true"
                     android:elevation="8dp"
-                    android:src="@drawable/ic_explore" />
+                    android:src="@drawable/ic_explore"
+                    app:backgroundTint="@color/colorAccentLight" />
 
                 <TextView
                     android:id="@+id/content_mission"

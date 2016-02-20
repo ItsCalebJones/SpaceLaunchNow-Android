@@ -28,7 +28,7 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 
 /**
- * This adapter takes data from SharedPreference/LoaderService and applies it to the LaunchesFragment
+ * This adapter takes data from SharedPreference/LoaderService and applies it to the UpcomingLaunchesFragment
  */
 public class LaunchCompactAdapter extends RecyclerView.Adapter<LaunchCompactAdapter.ViewHolder> implements FastScrollRecyclerView.SectionedAdapter  {
     public int position;

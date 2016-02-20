@@ -131,13 +131,22 @@ public class LaunchDataService extends IntentService {
 
                     NotificationManager mNotifyManager = (NotificationManager)
                             getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-                    mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
+                    mNotifyManager.notify(Strings.NOTIF_ID+1, mBuilder.build());
                 }
 
                 //Replace
                 List<Launch> currentLaunchList = sharedPreference.getLaunchesUpcoming();
 
                 if (currentLaunchList.get(0).getId().equals(upcomingLaunchList.get(0).getId())) {
+                    if (currentLaunchList.get(0).getIsNotifiedDay()) {
+                        upcomingLaunchList.get(0).setIsNotifiedDay(true);
+                    }
+                    if (currentLaunchList.get(0).getIsNotifiedHour()) {
+                        upcomingLaunchList.get(0).setIsNotifiedhour(true);
+                    }
+                    if (currentLaunchList.get(0).isFavorite()) {
+                        upcomingLaunchList.get(0).isFavorite();
+                    }
                     currentLaunchList.set(0, upcomingLaunchList.get(0));
                     sharedPreference.setUpComingLaunches(currentLaunchList);
                 }
@@ -157,7 +166,7 @@ public class LaunchDataService extends IntentService {
 
             if (BuildConfig.DEBUG) {
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
-                mBuilder.setContentTitle("LaunchData Failed!")
+                mBuilder.setContentTitle("LaunchData Failed! - Next Launch")
                         .setSmallIcon(R.drawable.ic_notification)
                         .setAutoCancel(true);
 
@@ -242,7 +251,7 @@ public class LaunchDataService extends IntentService {
             if(sharedPreference.getDebugLaunch()){
                 url = new URL("http://calebjones.me/app/debug_launch.json");
             } else {
-                url = new URL("https://launchlibrary.net/1.1.1/launch/next/1000");
+                url = new URL(Strings.LAUNCH_URL);
             }
 
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -440,7 +449,6 @@ public class LaunchDataService extends IntentService {
                     launch.setMissions(missionList);
                 }
 
-                sharedPreference.checkFavorite(launch);
                 Timber.v("Adding launch %s", launch.getName());
                 upcomingLaunchList.add(launch);
             }
