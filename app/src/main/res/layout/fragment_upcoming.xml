@@ -1,11 +1,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragment_feed_content"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:paddingLeft="2dp"
-    android:paddingRight="2dp"
     tools:context="${relativePackage}.${activityClass}">
 
 
@@ -27,61 +26,196 @@
                 android:layout_gravity="center_horizontal|center_vertical"
                 app:cpv_indeterminate="true"/>
 
-            <me.calebjones.spacelaunchnow.utils.AutofitRecyclerView
-                xmlns:android="http://schemas.android.com/apk/res/android"
+            <com.malinskiy.superrecyclerview.SuperRecyclerView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:columnWidth="320dp"
                 android:clipToPadding="false"
-                />
+                android:columnWidth="320dp"
+                app:layout_empty="@layout/empty_next_launch"/>
+
+            <ScrollView
+                android:id="@+id/color_reveal"
+                android:background="@color/colorPrimary"
+                android:visibility="invisible"
+                android:elevation="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="28dp"
+                    android:layout_marginRight="28dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:textColor="@color/white"
+                        android:text="Select Launches to Follow"
+                        android:textSize="36dp"
+                        android:layout_margin="8dp"
+                        android:typeface="sans" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_margin="8dp"
+                        android:background="@color/white"
+                        android:padding="12dp" />
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_height="fill_parent"
+                        android:layout_width="fill_parent">
+
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:layout_width="fill_parent"
+                            android:layout_margin="12dp"
+                            android:orientation="vertical">
+
+                            <android.support.v7.widget.AppCompatCheckBox
+                                android:id="@+id/nasa_switch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="12dp"
+                                android:checked="false"
+                                android:textColor="@color/white"
+                                android:text="NASA"
+                                app:buttonTint="@color/white" />
+                            <android.support.v7.widget.AppCompatCheckBox
+                                android:id="@+id/spacex_switch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="12dp"
+                                android:checked="false"
+                                android:textColor="@color/white"
+                                app:buttonTint="@color/white"
+                                android:text="SpaceX"/>
+                            <android.support.v7.widget.AppCompatCheckBox
+                                android:id="@+id/roscosmos_switch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="12dp"
+                                android:checked="false"
+                                android:textColor="@color/white"
+                                app:buttonTint="@color/white"
+                                android:text="ROSCOSMOS"/>
+                            <android.support.v7.widget.AppCompatCheckBox
+                                android:id="@+id/ula_switch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="12dp"
+                                android:checked="false"
+                                android:textColor="@color/white"
+                                app:buttonTint="@color/white"
+                                android:text="ULA"/>
+                            <android.support.v7.widget.AppCompatCheckBox
+                                android:id="@+id/KSC_switch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="12dp"
+                                android:checked="false"
+                                android:textColor="@color/white"
+                                app:buttonTint="@color/white"
+                                android:text="Kennedy Space Center"/>
+                            <android.support.v7.widget.AppCompatCheckBox
+                                android:id="@+id/van_switch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="12dp"
+                                android:checked="false"
+                                android:textColor="@color/white"
+                                app:buttonTint="@color/white"
+                                android:text="Vandenberg AFB"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:layout_width="fill_parent"
+                            android:layout_margin="12dp"
+                            android:orientation="vertical">
+                            <android.support.v7.widget.AppCompatCheckBox
+                                android:id="@+id/arianespace_switch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="12dp"
+                                android:checked="false"
+                                android:textColor="@color/white"
+                                app:buttonTint="@color/white"
+                                android:text="Arianespace"/>
+                            <android.support.v7.widget.AppCompatCheckBox
+                                android:id="@+id/casc_switch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="12dp"
+                                android:checked="false"
+                                android:textColor="@color/white"
+                                app:buttonTint="@color/white"
+                                android:text="CASC"/>
+                            <android.support.v7.widget.AppCompatCheckBox
+                                android:id="@+id/isro_switch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="12dp"
+                                android:checked="false"
+                                android:textColor="@color/white"
+                                app:buttonTint="@color/white"
+                                android:text="ISRO"/>
+                            <android.support.v7.widget.AppCompatCheckBox
+                                android:id="@+id/cape_switch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="12dp"
+                                android:checked="false"
+                                android:textColor="@color/white"
+                                app:buttonTint="@color/white"
+                                android:text="Cape Canaveral"/>
+                            <android.support.v7.widget.AppCompatCheckBox
+                                android:id="@+id/ples_switch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="12dp"
+                                android:checked="false"
+                                android:textColor="@color/white"
+                                app:buttonTint="@color/white"
+                                android:text="Plesetsk Cosmodrome"/>
+                            <android.support.v7.widget.AppCompatCheckBox
+                                android:id="@+id/all_switch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="12dp"
+                                android:checked="false"
+                                android:textColor="@color/white"
+                                app:buttonTint="@color/white"
+                                android:text="All"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </ScrollView>
 
         </FrameLayout>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <com.github.clans.fab.FloatingActionMenu
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
-        fab:menu_colorNormal="@color/colorAccent"
-        fab:menu_colorPressed="@color/colorAccentLight"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/ic_add_alert"
         >
 
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/agency"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_sort"
-            fab:fab_size="mini"
-            fab:fab_label="Agency"
-            fab:fab_colorNormal="@color/colorAccent"
-            fab:fab_colorPressed="@color/colorAccentLight"/>
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/country"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_sort"
-            fab:fab_size="mini"
-            fab:fab_label="Country"
-            fab:fab_colorNormal="@color/colorAccent"
-            fab:fab_colorPressed="@color/colorAccentLight"/>
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/vehicle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_sort"
-            fab:fab_size="mini"
-            fab:fab_label="Launch Vehicle"
-            fab:fab_colorNormal="@color/colorAccent"
-            fab:fab_colorPressed="@color/colorAccentLight"/>
-
-
-    </com.github.clans.fab.FloatingActionMenu>
+    </android.support.design.widget.FloatingActionButton>
 
 </FrameLayout>

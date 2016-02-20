@@ -45,7 +45,7 @@ import timber.log.Timber;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LaunchesFragment extends Fragment implements SearchView.OnQueryTextListener {
+public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQueryTextListener {
 
     private View view;
     private RecyclerView mRecyclerView;
@@ -60,7 +60,7 @@ public class LaunchesFragment extends Fragment implements SearchView.OnQueryText
 
     private static final Field sChildFragmentManagerField;
 
-    public LaunchesFragment() {
+    public UpcomingLaunchesFragment() {
         // Required empty public constructor
     }
 
@@ -82,7 +82,7 @@ public class LaunchesFragment extends Fragment implements SearchView.OnQueryText
 
         if (!BuildConfig.DEBUG){
             Answers.getInstance().logContentView(new ContentViewEvent()
-                    .putContentName("LaunchesFragment")
+                    .putContentName("UpcomingLaunchesFragment")
                     .putContentType("Fragment"));
         }
 

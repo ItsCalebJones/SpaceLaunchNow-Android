@@ -26,7 +26,6 @@ public class WebviewActivity extends AppCompatActivity {
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         setTitle(url);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         webView.loadUrl(url);
     }
 

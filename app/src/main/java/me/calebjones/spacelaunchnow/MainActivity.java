@@ -13,6 +13,8 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -42,7 +44,6 @@ import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.MissionDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
 import me.calebjones.spacelaunchnow.ui.activity.SettingsActivity;
-import me.calebjones.spacelaunchnow.ui.fragment.favorite.FavoriteFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.NextLaunchFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.missions.MissionFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.LaunchesViewPager;
@@ -60,9 +61,9 @@ public class MainActivity extends AppCompatActivity
     private static final String NAV_ITEM_ID = "navItemId";
     private final Handler mDrawerActionHandler = new Handler();
     private LaunchesViewPager mlaunchesViewPager;
-    private FavoriteFragment favoriteFragment;
-    private MissionFragment mMissionFragment = new MissionFragment();
-    private NextLaunchFragment mUpcomingFragment = new NextLaunchFragment();
+    private MissionFragment mMissionFragment;
+    private NextLaunchFragment mUpcomingFragment;
+    private VehiclesViewPager mVehicleViewPager;
     private Toolbar toolbar;
     private DrawerLayout drawer;
     private SharedPreferences sharedPref;
@@ -80,9 +81,9 @@ public class MainActivity extends AppCompatActivity
     public int statusColor;
 
     public void mayLaunchUrl(Uri parse) {
-        if (customTabActivityHelper.mayLaunchUrl(parse,null,null)){
+        if (customTabActivityHelper.mayLaunchUrl(parse, null, null)) {
             Timber.v("mayLaunchURL Accepted - %s", parse.toString());
-        } else  {
+        } else {
             Timber.v("mayLaunchURL Denied - %s", parse.toString());
         }
     }
@@ -97,20 +98,25 @@ public class MainActivity extends AppCompatActivity
                 String action = intent.getAction();
                 Timber.d("Broadcast action : %s", action);
                 if (Strings.ACTION_SUCCESS_UP_LAUNCHES.equals(action)) {
-                    if (mNavItemId == R.id.menu_next_launch) {
-                        mUpcomingFragment.onFinishedRefreshing();
+                    if (mNavItemId == R.id.menu_next_launch && !sharedPreference.getFirstBoot()) {
+                        if (mUpcomingFragment != null) {
+                            mUpcomingFragment.onFinishedRefreshing();
+                        }
                     }
                     if (mNavItemId == R.id.menu_launches) {
-                        mlaunchesViewPager.restartViews(Strings.ACTION_SUCCESS_UP_LAUNCHES);
-                    }
-                    if (mNavItemId == R.id.menu_favorites) {
-                        favoriteFragment.refreshViews();
+                    if (mlaunchesViewPager != null) {
+                            mlaunchesViewPager.restartViews(Strings.ACTION_SUCCESS_UP_LAUNCHES);
+                        }
                     }
                 } else if (Strings.ACTION_SUCCESS_PREV_LAUNCHES.equals(action)) {
-                    mlaunchesViewPager.restartViews(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
+                    if (mlaunchesViewPager != null) {
+                        mlaunchesViewPager.restartViews(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
+                    }
                 } else if (Strings.ACTION_SUCCESS_MISSIONS.equals(action)) {
-                    if (mMissionFragment.isVisible()) {
-                        mMissionFragment.onFinishedRefreshing();
+                    if (mMissionFragment != null) {
+                        if (mMissionFragment.isVisible()) {
+                            mMissionFragment.onFinishedRefreshing();
+                        }
                     }
                 }
             }
@@ -208,8 +214,6 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-        mlaunchesViewPager = new LaunchesViewPager();
-
         // load saved navigation state if present
         if (null == savedInstanceState) {
             mNavItemId = R.id.menu_next_launch;
@@ -294,18 +298,18 @@ public class MainActivity extends AppCompatActivity
             final Context context = this;
             Thread t = new Thread(new Runnable() {
                 public void run() {
-                    if (sharedPreference.getVehicles() == null || sharedPreference.getVehicles().size() == 0){
+                    if (sharedPreference.getVehicles() == null || sharedPreference.getVehicles().size() == 0) {
                         Intent rocketIntent = new Intent(context, VehicleDataService.class);
                         rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
                         context.startService(rocketIntent);
 
                     }
-                    if (sharedPreference.getLaunchesUpcoming() == null || sharedPreference.getLaunchesUpcoming().size() == 0){
+                    if (sharedPreference.getLaunchesUpcoming() == null || sharedPreference.getLaunchesUpcoming().size() == 0) {
                         Intent launchUpIntent = new Intent(context, LaunchDataService.class);
                         launchUpIntent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
                         context.startService(launchUpIntent);
                     }
-                    if (sharedPreference.getLaunchesPrevious() == null || sharedPreference.getLaunchesPrevious().size() == 0){
+                    if (sharedPreference.getLaunchesPrevious() == null || sharedPreference.getLaunchesPrevious().size() == 0) {
                         Calendar c = Calendar.getInstance();
 
                         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -318,15 +322,14 @@ public class MainActivity extends AppCompatActivity
                         launchPrevIntent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
                         context.startService(launchPrevIntent);
                     }
-                    if (sharedPreference.getMissionList() == null || sharedPreference.getMissionList().size() == 0){
+                    if (sharedPreference.getMissionList() == null || sharedPreference.getMissionList().size() == 0) {
                         context.startService(new Intent(context, MissionDataService.class));
                     }
-                    sharedPreference.syncFavorites();
                 }
             });
 
             t.start();
-            
+
             navigate(mNavItemId);
         }
     }
@@ -364,13 +367,6 @@ public class MainActivity extends AppCompatActivity
             editor.putBoolean("recreate", false);
             editor.apply();
             recreate();
-        }
-
-        if (mlaunchesViewPager == null) {
-            mlaunchesViewPager = new LaunchesViewPager();
-        }
-        if (favoriteFragment == null) {
-            favoriteFragment = new FavoriteFragment();
         }
     }
 
@@ -450,47 +446,57 @@ public class MainActivity extends AppCompatActivity
 
     private void navigate(final int itemId) {
         // perform the actual navigation logic, updating the main_menu content fragment etc
+        FragmentManager fm = getSupportFragmentManager();
         switch (itemId) {
             case R.id.menu_next_launch:
                 mNavItemId = R.id.menu_next_launch;
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.flContent, mUpcomingFragment)
-                        .commit();
+                // Check to see if we have retained the worker fragment.
+                mUpcomingFragment = (NextLaunchFragment) fm.findFragmentByTag("NEXT_LAUNCH");
+
+                // If not retained (or first time running), we need to create it.
+                if (mUpcomingFragment == null) {
+                    mUpcomingFragment = new NextLaunchFragment();
+                    // Tell it who it is working with.
+                    fm.beginTransaction().replace(R.id.flContent,mUpcomingFragment, "NEXT_LAUNCH").commit();
+                }
                 break;
             case R.id.menu_launches:
                 mNavItemId = R.id.menu_launches;
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.flContent, mlaunchesViewPager)
-                        .commit();
+                // Check to see if we have retained the worker fragment.
+                mlaunchesViewPager = (LaunchesViewPager) fm.findFragmentByTag("LAUNCH_VIEWPAGER");
+
+                // If not retained (or first time running), we need to create it.
+                if (mlaunchesViewPager == null) {
+                    mlaunchesViewPager = new LaunchesViewPager();
+                    // Tell it who it is working with.
+                    fm.beginTransaction().replace(R.id.flContent,mlaunchesViewPager, "LAUNCH_VIEWPAGER").commit();
+                }
                 break;
             case R.id.menu_missions:
                 mNavItemId = R.id.menu_missions;
                 setActionBarTitle("Missions");
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.flContent, mMissionFragment)
-                        .addToBackStack("MissionFragment")
-                        .commit();
+                // Check to see if we have retained the worker fragment.
+                mMissionFragment = (MissionFragment) fm.findFragmentByTag("MISSION_FRAGMENT");
+
+                // If not retained (or first time running), we need to create it.
+                if (mMissionFragment == null) {
+                    mMissionFragment = new MissionFragment();
+                    // Tell it who it is working with.
+                    fm.beginTransaction().replace(R.id.flContent, mMissionFragment, "MISSION_FRAGMENT").commit();
+                }
                 break;
             case R.id.menu_vehicle:
                 mNavItemId = R.id.menu_vehicle;
                 setActionBarTitle("Vehicles");
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.flContent, new VehiclesViewPager())
-                        .addToBackStack("VehicleViewPager")
-                        .commit();
-                break;
-            case R.id.menu_favorites:
-                mNavItemId = R.id.menu_favorites;
-                setActionBarTitle("Favorites");
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.flContent, favoriteFragment)
-                        .addToBackStack("FavoriteFragment")
-                        .commit();
+                // Check to see if we have retained the worker fragment.
+                mVehicleViewPager = (VehiclesViewPager) fm.findFragmentByTag("VEHICLE_VIEWPAGER");
+
+                // If not retained (or first time running), we need to create it.
+                if (mVehicleViewPager == null) {
+                    mVehicleViewPager = new VehiclesViewPager();
+                    // Tell it who it is working with.
+                    fm.beginTransaction().replace(R.id.flContent, mVehicleViewPager, "VEHICLE_VIEWPAGER").commit();
+                }
                 break;
             case R.id.menu_launch:
                 Utils.openCustomTab(this, getApplicationContext(), "https://launchlibrary.net/");

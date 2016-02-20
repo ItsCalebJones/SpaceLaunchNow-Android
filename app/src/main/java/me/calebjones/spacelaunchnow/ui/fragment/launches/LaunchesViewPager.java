@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
@@ -25,7 +24,7 @@ public class LaunchesViewPager extends Fragment {
     private PagerAdapter pagerAdapter;
     private int current_tab;
     private TabLayout tabLayout;
-    private LaunchesFragment launchesFragment;
+    private UpcomingLaunchesFragment launchesFragment;
     private PreviousLaunchesFragment previousLaunchesFragment;
     private static SharedPreference sharedPreference;
     private Context context;
@@ -134,7 +133,7 @@ public class LaunchesViewPager extends Fragment {
 
             switch (position) {
                 case 0:
-                    launchesFragment = new LaunchesFragment();
+                    launchesFragment = new UpcomingLaunchesFragment();
                     return launchesFragment;
                 case 1:
                     previousLaunchesFragment = new PreviousLaunchesFragment();

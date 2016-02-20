@@ -119,7 +119,6 @@ public class LaunchDetailActivity extends AppCompatActivity
         detail_profile_backdrop = (ImageView) findViewById(R.id.detail_profile_backdrop);
         detail_rocket = (TextView) findViewById(R.id.detail_rocket);
         detail_mission_location = (TextView) findViewById(R.id.detail_mission_location);
-        fab_favorite = (FloatingActionButton) findViewById(R.id.fab_favorite);
 
         mSmallBang = SmallBang.attach2Window(this);
 
@@ -154,60 +153,6 @@ public class LaunchDetailActivity extends AppCompatActivity
         Calendar now = rightNow;
         now.setTimeInMillis(System.currentTimeMillis());
         long timeToFinish = future - now.getTimeInMillis();
-
-        if (timeToFinish > 0) {
-            fab_favorite.setVisibility(View.VISIBLE);
-            boolean fav = launch.isFavorite();
-            if (fav) {
-                fab_favorite.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite_white));
-            } else {
-                fab_favorite.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite_border));
-            }
-            fab_favorite.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    if (!BuildConfig.DEBUG) {
-                        Answers.getInstance().logContentView(new ContentViewEvent()
-                                .putContentName("LaunchDetailActivity - Favorite")
-                                .putContentType("Action")
-                                .putCustomAttribute("Favorite", launch.getName()));
-                    }
-
-                    final boolean fav = launch.isFavorite();
-                    if (fav) {
-                        launch.setFavorite(false);
-                        sharedPreference.removeFavLaunch(launch);
-                        Timber.v("List size: %s", sharedPreference.getFavoriteLaunches().size());
-                    } else {
-                        //make fav
-                        launch.setFavorite(true);
-                        sharedPreference.addFavLaunch(launch);
-                        Timber.v("List size: %s", sharedPreference.getFavoriteLaunches().size());
-                    }
-                    mSmallBang.bang(fab_favorite, new SmallBangListener() {
-
-                        //TODO Check if favorite and animate to the new state.
-                        @Override
-                        public void onAnimationStart() {
-                            Timber.d("Animation start.");
-                            if (fav) {
-                                fab_favorite.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite_border));
-                            } else {
-                                fab_favorite.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite_white));
-                            }
-                        }
-
-                        @Override
-                        public void onAnimationEnd() {
-
-                        }
-                    });
-                }
-            });
-        } else {
-            fab_favorite.setVisibility(View.GONE);
-        }
 
     //Assign the title and mission locaiton data
     detail_rocket.setText(launch.getName());

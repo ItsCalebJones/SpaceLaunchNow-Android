@@ -116,15 +116,6 @@ public class VehicleDetailActivity extends AppCompatActivity implements AppBarLa
             final int position = getIntent().getIntExtra("position", 0);
             Timber.d("Position %s", position);
 
-            // Recover book cover from BooksFragment cache
-            Bitmap bookCoverBitmap = LaunchVehicleFragment.photoCache.get(position);
-            ImageView toolbarBookCover = (ImageView) findViewById(R.id.detail_profile_backdrop);
-            toolbarBookCover.setImageBitmap(bookCoverBitmap);
-
-            // Define toolbar as the shared element
-            detail_profile_backdrop.setBackground(new BitmapDrawable(getResources(), bookCoverBitmap));
-            detail_profile_backdrop.setTransitionName("cover" + position);
-
             ViewPropertyAnimator showTitleAnimator = Utils.showViewByScale(detail_profile_image);
             showTitleAnimator.setStartDelay(500);
         } else {
