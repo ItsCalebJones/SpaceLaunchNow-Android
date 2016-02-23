@@ -1,7 +1,9 @@
 package me.calebjones.spacelaunchnow;
 
 import android.app.Application;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.provider.Settings;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -42,6 +44,9 @@ public class LaunchApplication extends Application {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
         LeakCanary.install(this);
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
         mInstance = this;
 
         int cacheSize = 10 * 1024 * 1024;
@@ -57,11 +62,20 @@ public class LaunchApplication extends Application {
             Intent nextIntent = new Intent(this, LaunchDataService.class);
             nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
             this.startService(nextIntent);
-        }
 
-
-        if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
+            if (sharedPreference.getLastVehicleUpdate() > 0) {
+                Timber.d("Time since last VehicleUpdate: %s", (System.currentTimeMillis() - sharedPreference.getLastVehicleUpdate()));
+                if ((System.currentTimeMillis() - sharedPreference.getLastVehicleUpdate()) > 604800000) {
+                    Intent rocketIntent = new Intent(this, VehicleDataService.class);
+                    rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
+                    this.startService(rocketIntent);
+                }
+                //Needed for users that will be upgrading
+            } else {
+                Intent rocketIntent = new Intent(this, VehicleDataService.class);
+                rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
+                this.startService(rocketIntent);
+            }
         }
     }
 
