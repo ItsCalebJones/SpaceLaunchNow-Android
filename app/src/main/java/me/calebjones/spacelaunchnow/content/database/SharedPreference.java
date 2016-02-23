@@ -74,6 +74,7 @@ public class SharedPreference {
     public static String PREFS_SWITCH_CAPE;
     public static String PREFS_SWITCH_KSC;
     public static String PREFS_CUSTOM_STRING;
+    public static String PREFS_LAST_VEHICLE_UPDATE;
 
 
     static {
@@ -121,6 +122,7 @@ public class SharedPreference {
         PREFS_SWITCH_VAN = "SWITCH_VAN";
         PREFS_SWITCH_KSC = "SWITCH_KSC";
         PREFS_SWITCH_PLES = "SWITCH_PLES";
+        PREFS_LAST_VEHICLE_UPDATE = "LAST_VEHICLE_UPDATE";
         PREFS_DEBUG = "DEBUG";
         INSTANCE = null;
     }
@@ -140,6 +142,18 @@ public class SharedPreference {
 
     public static void create(Context context) {
         INSTANCE = new SharedPreference(context);
+    }
+
+    public long getLastVehicleUpdate(){
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getLong(PREFS_LAST_VEHICLE_UPDATE, 0);
+    }
+
+    public void setLastVehicleUpdate(long value){
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putLong(PREFS_LAST_VEHICLE_UPDATE, value);
+        this.prefsEditor.apply();
     }
 
     public boolean getNightMode() {
