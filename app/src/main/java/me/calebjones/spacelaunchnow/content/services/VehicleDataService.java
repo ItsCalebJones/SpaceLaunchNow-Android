@@ -56,7 +56,7 @@ public class VehicleDataService extends IntentService {
         if (intent != null) {
             String action = intent.getAction();
             if (Strings.ACTION_GET_VEHICLES_DETAIL.equals(action)) {
-
+                sharedPreference.setLastVehicleUpdate(System.currentTimeMillis());
                 getVehicleDetails();
                 getVehicles();
             }
