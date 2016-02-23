@@ -46,7 +46,6 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import jp.wasabeef.recyclerview.animators.adapters.SlideInBottomAnimationAdapter;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.content.adapter.LaunchCompactAdapter;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
@@ -77,7 +76,6 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
     private StaggeredGridLayoutManager staggeredLayoutManager;
     private LinearLayoutManager layoutManager;
-    private SlideInBottomAnimationAdapter animatorAdapter;
 
     public PreviousLaunchesFragment() {
         // Required empty public constructor

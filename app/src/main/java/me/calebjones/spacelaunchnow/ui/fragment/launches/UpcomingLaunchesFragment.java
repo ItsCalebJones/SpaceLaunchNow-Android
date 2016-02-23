@@ -38,7 +38,6 @@ import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.LaunchBigAdapter;
-import jp.wasabeef.recyclerview.animators.adapters.SlideInBottomAnimationAdapter;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import timber.log.Timber;
 
@@ -52,7 +51,6 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
     private LaunchCompactAdapter adapter;
     private LinearLayoutManager layoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private SlideInBottomAnimationAdapter animatorAdapter;
     private List<Launch> rocketLaunches;
     private SharedPreference sharedPreference;
     private SharedPreferences SharedPreferences;
