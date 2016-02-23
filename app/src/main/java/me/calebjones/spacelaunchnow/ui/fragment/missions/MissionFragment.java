@@ -25,7 +25,6 @@ import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.wasabeef.recyclerview.animators.adapters.SlideInBottomAnimationAdapter;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.MissionAdapter;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
@@ -40,7 +39,6 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private MissionAdapter adapter;
     private StaggeredGridLayoutManager staggeredLayoutManager;
     private LinearLayoutManager layoutManager;
-    private SlideInBottomAnimationAdapter animatorAdapter;
     private List<Mission> missionList;
     private SharedPreference sharedPreference;
     private android.content.SharedPreferences SharedPreferences;

@@ -25,7 +25,7 @@ android {
         applicationId "me.calebjones.spacelaunchnow"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 6
+        versionCode 7
         versionName "1.0"
     }
     buildTypes {
@@ -58,10 +58,8 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:8.4.0'
     compile 'com.google.code.gson:gson:2.5'
     compile 'com.squareup.okhttp:okhttp:2.5.0'
-    compile 'jp.wasabeef:recyclerview-animators:1.2.1'
     compile 'com.github.bumptech.glide:glide:3.6.1'
     compile 'com.github.rahatarmanahmed:circularprogressview:2.4.0'
-    compile 'com.koushikdutta.ion:ion:2.1.6'
     compile 'com.github.clans:fab:1.6.2'
     compile 'de.hdodenhof:circleimageview:1.3.0'
     compile 'com.borax12.materialdaterangepicker:library:1.2'
