@@ -103,7 +103,16 @@ public class LaunchDataService extends IntentService {
     private void updateNextLaunch(){
         HttpURLConnection urlConnection;
         try {
-            URL url = new URL(Strings.NEXT_URL);
+
+            URL url;
+
+            //Used for loading debug lauches/reproducing bugs
+            if(sharedPreference.getDebugLaunch()){
+                url = new URL("http://calebjones.me/app/debug_launch.json");
+            } else {
+                url = new URL(Strings.NEXT_URL);
+            }
+
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestProperty("Accept", "*/*");
             urlConnection.setConnectTimeout(5000);
@@ -137,19 +146,9 @@ public class LaunchDataService extends IntentService {
                 //Replace
                 List<Launch> currentLaunchList = sharedPreference.getLaunchesUpcoming();
 
-                if (currentLaunchList.get(0).getId().equals(upcomingLaunchList.get(0).getId())) {
-                    if (currentLaunchList.get(0).getIsNotifiedDay()) {
-                        upcomingLaunchList.get(0).setIsNotifiedDay(true);
-                    }
-                    if (currentLaunchList.get(0).getIsNotifiedHour()) {
-                        upcomingLaunchList.get(0).setIsNotifiedhour(true);
-                    }
-                    if (currentLaunchList.get(0).isFavorite()) {
-                        upcomingLaunchList.get(0).isFavorite();
-                    }
-                    currentLaunchList.set(0, upcomingLaunchList.get(0));
-                    sharedPreference.setUpComingLaunches(currentLaunchList);
-                }
+                currentLaunchList.set(0, upcomingLaunchList.get(0));
+                sharedPreference.setUpComingLaunches(currentLaunchList);
+
                 startService(new Intent(this, NextLaunchTracker.class));
             } else {
                 Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to retrieve next launch: " + statusCode);
