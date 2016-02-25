@@ -12,7 +12,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -22,7 +21,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
@@ -236,6 +234,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                 }
                 adapter.clear();
                 adapter.addItems(rocketLaunches);
+                adapter.notifyDataSetChanged();
             }
         }
     }
@@ -380,6 +379,10 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                 sharedPreference.setDebugLaunch(true);
             }
             onRefresh();
+        } else if (id == R.id.debug_next_launch){
+            Intent nextIntent = new Intent(getActivity(), LaunchDataService.class);
+            nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
+            getActivity().startService(nextIntent);
         }
         return super.onOptionsItemSelected(item);
     }
