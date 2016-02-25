@@ -87,9 +87,10 @@ public class NextLaunchTracker extends IntentService {
 
         //Check if the stored launch is still the next launch.
         if (storedLaunch != null && nextLaunch != null) {
+
             //If they do not match this means nextLaunch has changed IE a launch executed.
             if (nextLaunch.getId().intValue() != storedLaunch.getId().intValue()) {
-                this.sharedPreference.setNextLaunches(nextLaunch);
+                this.sharedPreference.setNextLaunch(nextLaunch);
                 this.sharedPreference.setFiltered(false);
 
                 Intent updatePreviousLaunches = new Intent(this, LaunchDataService.class);
@@ -98,23 +99,40 @@ public class NextLaunchTracker extends IntentService {
                 startService(updatePreviousLaunches);
 
                 checkStatus(nextLaunch);
+
+                //They do match, check if the launch time has moved.
             } else {
-                if (storedLaunch.getIsNotifiedDay()) {
-                    nextLaunch.setIsNotifiedDay(true);
+
+                if (nextLaunch.getNetstamp().intValue() != storedLaunch.getNetstamp().intValue()){
+
+                    sharedPreference.setNextLaunch(nextLaunch);
+                    upcomingLaunchList.set(0, nextLaunch);
+                    sharedPreference.setNextLaunches(upcomingLaunchList);
+                    checkStatus(nextLaunch);
+
+                    Intent broadcastIntent = new Intent();
+                    broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
+                    this.getApplicationContext().sendBroadcast(broadcastIntent);
+
+                } else {
+                    if (storedLaunch.getIsNotifiedDay()) {
+                        nextLaunch.setIsNotifiedDay(true);
+                    }
+                    if (storedLaunch.getIsNotifiedHour()) {
+                        nextLaunch.setIsNotifiedhour(true);
+                    }
+                    if (storedLaunch.isFavorite()) {
+                        nextLaunch.isFavorite();
+                    }
+
+                    sharedPreference.setNextLaunch(nextLaunch);
+                    upcomingLaunchList.set(0, nextLaunch);
+                    sharedPreference.setNextLaunches(upcomingLaunchList);
+                    checkStatus(nextLaunch);
                 }
-                if (storedLaunch.getIsNotifiedHour()) {
-                    nextLaunch.setIsNotifiedhour(true);
-                }
-                if (storedLaunch.isFavorite()) {
-                    nextLaunch.isFavorite();
-                }
-                sharedPreference.setNextLaunches(nextLaunch);
-                upcomingLaunchList.set(0, nextLaunch);
-                sharedPreference.setNextLaunches(upcomingLaunchList);
-                checkStatus(nextLaunch);
             }
         } else if (nextLaunch != null){
-            this.sharedPreference.setNextLaunches(nextLaunch);
+            this.sharedPreference.setNextLaunch(nextLaunch);
             checkStatus(nextLaunch);
         }
     }
@@ -122,6 +140,7 @@ public class NextLaunchTracker extends IntentService {
     //TODO THIS IS BUGGED
     private void checkStatus(Launch launch) {
         if (launch != null && launch.getNetstamp() > 0) {
+
             long longdate = launch.getNetstamp();
             longdate = longdate * 1000;
             final Date date = new Date(longdate);
@@ -143,14 +162,14 @@ public class NextLaunchTracker extends IntentService {
                             if (!launch.getIsNotifiedHour()) {
                                 notifyUserImminent(launch, minutes);
                                 launch.setIsNotifiedhour(true);
-                                this.sharedPreference.setNextLaunches(launch);
+                                this.sharedPreference.setNextLaunch(launch);
                             }
                             //If its a saved launch check notification
                         } else if (launch.isFavorite() && this.sharedPref.getBoolean("notifications_launch_imminent_saved", true)) {
                             if (!launch.getIsNotifiedHour()) {
                                 notifyUserImminent(launch, minutes);
                                 launch.setIsNotifiedhour(true);
-                                this.sharedPreference.setNextLaunches(launch);
+                                this.sharedPreference.setNextLaunch(launch);
                             }
                         }
                     }
@@ -167,14 +186,14 @@ public class NextLaunchTracker extends IntentService {
                             if (!launch.getIsNotifiedDay()) {
                                 notifyUser(launch, hours);
                                 launch.setIsNotifiedDay(true);
-                                this.sharedPreference.setNextLaunches(launch);
+                                this.sharedPreference.setNextLaunch(launch);
                             }
                             //If its a saved launch check notification
                         } else if (launch.isFavorite() && this.sharedPref.getBoolean("notifications_launch_day_saved", true)) {
                             if (!launch.getIsNotifiedDay()) {
                                 notifyUser(launch, hours);
                                 launch.setIsNotifiedDay(true);
-                                this.sharedPreference.setNextLaunches(launch);
+                                this.sharedPreference.setNextLaunch(launch);
                             }
                         }
                     }

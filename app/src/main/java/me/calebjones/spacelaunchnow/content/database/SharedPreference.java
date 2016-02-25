@@ -263,7 +263,7 @@ public class SharedPreference {
         this.prefsEditor.apply();
     }
 
-    public void setNextLaunches(Launch launch) {
+    public void setNextLaunch(Launch launch) {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         GsonBuilder gsonBuilder = new GsonBuilder();

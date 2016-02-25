@@ -8,6 +8,11 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/debug_next_launch"
+        android:title="Next Launch"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/debug_add_launch"
         android:title="Add Launch"
         app:showAsAction="never"
