@@ -11,7 +11,6 @@
         android:id="@+id/backgroundView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:src="@drawable/nav_header"
         android:scaleType="centerCrop"
         android:layout_alignParentTop="true"

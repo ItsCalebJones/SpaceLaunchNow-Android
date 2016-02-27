@@ -146,10 +146,14 @@ public class LaunchDataService extends IntentService {
                 //Replace
                 List<Launch> currentLaunchList = sharedPreference.getLaunchesUpcoming();
 
-                currentLaunchList.set(0, upcomingLaunchList.get(0));
-                sharedPreference.setUpComingLaunches(currentLaunchList);
+                if (currentLaunchList != null && currentLaunchList.size() > 0) {
+                    if (currentLaunchList.get(0).getId().equals(upcomingLaunchList.get(0).getId())) {
+                        currentLaunchList.set(0, upcomingLaunchList.get(0));
+                        sharedPreference.setUpComingLaunches(currentLaunchList);
+                        startService(new Intent(this, NextLaunchTracker.class));
+                    }
+                }
 
-                startService(new Intent(this, NextLaunchTracker.class));
             } else {
                 Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to retrieve next launch: " + statusCode);
 
@@ -213,6 +217,7 @@ public class LaunchDataService extends IntentService {
                     LaunchDataService.this.cleanCachePrevious();
                     this.sharedPreference.setPreviousLaunches(previousLaunchList);
                 }
+
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
                 LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
@@ -581,7 +586,9 @@ public class LaunchDataService extends IntentService {
                     launch.setMissions(missionList);
                 }
 
-                previousLaunchList.add(launch);
+                if (launch.getStatus() != 1-2){
+                    previousLaunchList.add(launch);
+                }
             }
         } catch (JSONException e) {
             Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to parse previous results: " + e.getLocalizedMessage());

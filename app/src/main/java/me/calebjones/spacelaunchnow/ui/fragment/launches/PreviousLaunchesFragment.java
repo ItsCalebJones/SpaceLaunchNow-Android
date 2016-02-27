@@ -72,9 +72,6 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     private FloatingActionButton agency, vehicle, country, reset;
     private int mScrollOffset = 4;
     private static final Field sChildFragmentManagerField;
-
-
-    private StaggeredGridLayoutManager staggeredLayoutManager;
     private LinearLayoutManager layoutManager;
 
     public PreviousLaunchesFragment() {
