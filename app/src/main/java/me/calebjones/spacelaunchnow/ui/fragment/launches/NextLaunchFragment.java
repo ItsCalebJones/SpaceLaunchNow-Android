@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -166,6 +167,21 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         } else {
             layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         }
+        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                int topRowVerticalPosition =
+                        (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
+                mSwipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
+
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(adapter);
 
@@ -176,7 +192,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         if (this.sharedPreference.getUpcomingFirstBoot()) {
             this.sharedPreference.setUpcomingFirstBoot(false);
             Timber.d("Upcoming Launch Fragment: First Boot.");
-            if (this.sharedPreference.getLaunchesUpcoming().size() == 0) {
+            if (this.sharedPreference.getLaunchesUpcoming() == null || this.sharedPreference.getLaunchesUpcoming().size() == 0) {
                 showLoading();
                 fetchData();
             } else {
@@ -211,6 +227,21 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
             mRecyclerView.setLayoutManager(layoutManager);
             mRecyclerView.setAdapter(adapter);
         }
+        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                int topRowVerticalPosition =
+                        (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
+                mSwipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
+
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
         adapter.addItems(goList);
         adapter.notifyDataSetChanged();
     }
@@ -393,75 +424,83 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         ButterKnife.unbind(this);
     }
 
+    private void confirm() {
+        if (!switchChanged) {
+            menu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_check));
+        }
+        switchChanged = true;
+    }
+
     @OnClick(R.id.nasa_switch)
     public void nasa_switch() {
-        switchChanged = true;
+        confirm();
         sharedPreference.setSwitchNasa(!sharedPreference.getSwitchNasa());
     }
 
+
     @OnClick(R.id.spacex_switch)
     public void spacex_switch() {
-        switchChanged = true;
+        confirm();
         sharedPreference.setSwitchSpaceX(!sharedPreference.getSwitchSpaceX());
     }
 
     @OnClick(R.id.roscosmos_switch)
     public void roscosmos_switch() {
-        switchChanged = true;
+        confirm();
         sharedPreference.setSwitchRoscosmos(!sharedPreference.getSwitchRoscosmos());
     }
 
     @OnClick(R.id.ula_switch)
     public void ula_switch() {
-        switchChanged = true;
+        confirm();
         sharedPreference.setSwitchULA(!sharedPreference.getSwitchULA());
     }
 
     @OnClick(R.id.arianespace_switch)
     public void arianespace_switch() {
-        switchChanged = true;
+        confirm();
         sharedPreference.setSwitchArianespace(!sharedPreference.getSwitchArianespace());
     }
 
     @OnClick(R.id.casc_switch)
     public void casc_switch() {
-        switchChanged = true;
+        confirm();
         sharedPreference.setSwitchCASC(!sharedPreference.getSwitchCASC());
     }
 
     @OnClick(R.id.isro_switch)
     public void isro_switch() {
-        switchChanged = true;
+        confirm();
         sharedPreference.setSwitchISRO(!sharedPreference.getSwitchISRO());
     }
 
     @OnClick(R.id.KSC_switch)
     public void KSC_switch() {
-        switchChanged = true;
+        confirm();
         sharedPreference.setSwitchKSC(!sharedPreference.getSwitchKSC());
     }
 
     @OnClick(R.id.ples_switch)
     public void ples_switch() {
-        switchChanged = true;
+        confirm();
         sharedPreference.setSwitchPles(!sharedPreference.getSwitchPles());
     }
 
     @OnClick(R.id.van_switch)
     public void van_switch() {
-        switchChanged = true;
+        confirm();
         sharedPreference.setSwitchVan(!sharedPreference.getSwitchVan());
     }
 
     @OnClick(R.id.cape_switch)
     public void cape_switch() {
-        switchChanged = true;
+        confirm();
         sharedPreference.setSwitchCape(!sharedPreference.getSwitchCape());
     }
 
     @OnClick(R.id.all_switch)
     public void all_switch() {
-        switchChanged = true;
+        confirm();
         sharedPreference.setAllSwitch(!sharedPreference.getAllSwitch());
             setUpSwitches();
     }
