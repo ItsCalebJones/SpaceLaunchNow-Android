@@ -3,17 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/grid_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:clickable="true"
     android:foreground="?selectableItemBackground"
     android:scaleX="0"
     android:scaleY="0"
     android:layout_margin="2dp"
     app:cardCornerRadius="4dp"
-app:cardBackgroundColor="@color/colorAccent">
+    app:cardBackgroundColor="@color/colorAccent">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
     <me.calebjones.spacelaunchnow.utils.SquareImageView

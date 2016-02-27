@@ -140,7 +140,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
             holder.grid_root.animate()
                     .scaleY(1).scaleX(1)
                     .setDuration(300)
-                    .setStartDelay(SCALE_DELAY * cellPosition)
+                    .setStartDelay(SCALE_DELAY * Math.abs(cellPosition))
                     .start();
         }
 

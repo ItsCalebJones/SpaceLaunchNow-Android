@@ -92,7 +92,7 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
 
         view = lf.inflate(R.layout.fragment_launches, container, false);
         View menu = view.findViewById(R.id.menu);
-        menu.setVisibility(View.GONE);
+        menu.setVisibility(View.INVISIBLE);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(getContext());

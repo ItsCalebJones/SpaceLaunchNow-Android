@@ -272,9 +272,11 @@ public class SharedPreference {
         this.prefsEditor.putString(PREFS_NEXT_LAUNCH, gson.toJson(launch));
         this.prefsEditor.apply();
         List<Launch> list = getLaunchesUpcoming();
-        if (list.size() > 0) {
-            list.set(0, launch);
-            setUpComingLaunches(list);
+        for (int i = 0; i < list.size(); i++){
+            if (launch.getId().equals(list.get(i).getId())){
+                list.set(i, launch);
+                setUpComingLaunches(list);
+            }
         }
     }
 
