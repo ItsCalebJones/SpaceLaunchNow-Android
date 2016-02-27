@@ -44,6 +44,7 @@ import me.calebjones.spacelaunchnow.ui.fragment.vehicles.LaunchVehicleFragment;
 import me.calebjones.spacelaunchnow.utils.CustomAnimatorListener;
 import me.calebjones.spacelaunchnow.utils.CustomTransitionListener;
 import me.calebjones.spacelaunchnow.utils.Utils;
+import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;
 
 public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
@@ -53,6 +54,7 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
 
     private SharedPreference sharedPreference;
     private android.content.SharedPreferences SharedPreferences;
+    private CustomTabActivityHelper customTabActivityHelper;
     private View view, title_container, gridview;
     private Context context;
     private TextView toolbarTitle, detail_rocket, detail_vehicle_agency,
@@ -71,6 +73,7 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
         this.context = getApplicationContext();
 
         sharedPreference = SharedPreference.getInstance(this.context);
+        customTabActivityHelper = new CustomTabActivityHelper();
 
         if (sharedPreference.getNightMode()) {
             m_theme = R.style.DarkTheme_Transparent;
@@ -198,11 +201,11 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
             //Set up history information
             orbiter_history.setText("Soyuz Spacecraft History");
             orbiter_history_description.setText(R.string.soyuz_history_description);
-            wikiButton.setVisibility(View.VISIBLE);
+            wikiButton.setVisibility(View.INVISIBLE);
             wikiButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+//                    Utils.openCustomTab();
                 }
             });
 
@@ -227,11 +230,11 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
             //Set up history information
             orbiter_history.setText("Shenzhou Spacecraft History");
             orbiter_history_description.setText(R.string.shenzhou_history);
-            wikiButton.setVisibility(View.VISIBLE);
+            wikiButton.setVisibility(View.INVISIBLE);
             wikiButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+//                    Utils.openCustomTab();
                 }
             });
 
@@ -256,11 +259,11 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
             //Set up history information
             orbiter_history.setText("Dragon Spacecraft History");
             orbiter_history_description.setText(R.string.dragon_history);
-            wikiButton.setVisibility(View.VISIBLE);
+            wikiButton.setVisibility(View.INVISIBLE);
             wikiButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+//                    Utils.openCustomTab();
                 }
             });
 
@@ -285,11 +288,11 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
             //Set up history information
             orbiter_history.setText("Orion Spacecraft History");
             orbiter_history_description.setText(R.string.orion_history);
-            wikiButton.setVisibility(View.VISIBLE);
+            wikiButton.setVisibility(View.INVISIBLE);
             wikiButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+//                    Utils.openCustomTab();
                 }
             });
 
@@ -297,6 +300,18 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
             orbiter_title.setText("Orion Details");
             orbiter_description.setText(R.string.orion_description);
         }
+    }
+
+    public void onStart() {
+        super.onStart();
+        Timber.v("LaunchDetailActivity onStart!");
+        customTabActivityHelper.bindCustomTabsService(this);
+    }
+
+    public void onStop() {
+        super.onStop();
+        Timber.v("LaunchDetailActivity onStop!");
+        customTabActivityHelper.unbindCustomTabsService(this);
     }
 
 

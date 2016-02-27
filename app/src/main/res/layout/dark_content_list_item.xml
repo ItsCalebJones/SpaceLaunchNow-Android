@@ -133,6 +133,7 @@
                     android:clickable="true"
                     android:elevation="8dp"
                     android:src="@drawable/ic_explore" />
+
                 <TextView
                     android:id="@+id/content_mission"
                     android:layout_width="match_parent"
