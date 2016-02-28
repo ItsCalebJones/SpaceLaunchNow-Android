@@ -202,6 +202,10 @@ public class NextLaunchTracker extends IntentService {
                         interval = 3500000;
                     }
                     scheduleUpdate();
+                    //Launch is within 48 hours
+                } else if (timeToFinish < 172800000){
+                    interval = ((future.getTimeInMillis() - 82800000) - now.getTimeInMillis());
+                    scheduleUpdate();
                 } else {
                     interval = (timeToFinish / 2) + 43200000;
                     scheduleUpdate();
@@ -243,7 +247,6 @@ public class NextLaunchTracker extends IntentService {
 
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
         mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(mainActivityIntent);
 
         PendingIntent appIntent = PendingIntent.getActivity(this, 0, mainActivityIntent, 0);
 
@@ -303,7 +306,6 @@ public class NextLaunchTracker extends IntentService {
 
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
         mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(mainActivityIntent);
 
         PendingIntent appIntent = PendingIntent.getActivity(this, 0, mainActivityIntent, 0);
 
