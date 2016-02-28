@@ -247,7 +247,6 @@ public class NextLaunchTracker extends IntentService {
 
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
         mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(mainActivityIntent);
 
         PendingIntent appIntent = PendingIntent.getActivity(this, 0, mainActivityIntent, 0);
 
@@ -307,7 +306,6 @@ public class NextLaunchTracker extends IntentService {
 
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
         mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(mainActivityIntent);
 
         PendingIntent appIntent = PendingIntent.getActivity(this, 0, mainActivityIntent, 0);
 
