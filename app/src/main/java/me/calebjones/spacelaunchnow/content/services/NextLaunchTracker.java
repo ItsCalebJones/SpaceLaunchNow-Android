@@ -202,6 +202,10 @@ public class NextLaunchTracker extends IntentService {
                         interval = 3500000;
                     }
                     scheduleUpdate();
+                    //Launch is within 48 hours
+                } else if (timeToFinish < 172800000){
+                    interval = ((future.getTimeInMillis() - 82800000) - now.getTimeInMillis());
+                    scheduleUpdate();
                 } else {
                     interval = (timeToFinish / 2) + 43200000;
                     scheduleUpdate();
