@@ -373,7 +373,9 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     }
 
     public void onFinishedRefreshing() {
-        rocketLaunches.clear();
+        if (rocketLaunches != null) {
+            rocketLaunches.clear();
+        }
         displayLaunches();
         mSwipeRefreshLayout.setRefreshing(false);
         hideLoading();
