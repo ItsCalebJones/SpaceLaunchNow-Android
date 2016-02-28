@@ -107,7 +107,7 @@
 
                         <android.support.v7.widget.AppCompatButton
                             android:id="@+id/launchButton"
-                            style="@style/Base.Widget.AppCompat.Button.Colored"
+                            style="@style/Base.Widget.AppCompat.Button"
                             android:layout_width="wrap_content"
                             android:layout_height="50dp"
                             android:layout_marginBottom="12dp"
@@ -120,7 +120,7 @@
 
                         <android.support.v7.widget.AppCompatButton
                             android:id="@+id/infoButton"
-                            style="@style/Base.Widget.AppCompat.Button.Colored"
+                            style="@style/Base.Widget.AppCompat.Button"
                             android:layout_width="wrap_content"
                             android:layout_height="50dp"
                             android:layout_marginBottom="12dp"
