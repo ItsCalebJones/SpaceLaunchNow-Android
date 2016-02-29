@@ -372,7 +372,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             watchButton.setOnClickListener(this);
             exploreFab.setOnClickListener(this);
 
-            if (!Utils.checkPlayServices(mContext) && map_view != null) {
+            if (Utils.checkPlayServices(mContext) && map_view != null) {
                 map_view.onCreate(null);
                 map_view.onResume();
                 map_view.getMapAsync(this);
