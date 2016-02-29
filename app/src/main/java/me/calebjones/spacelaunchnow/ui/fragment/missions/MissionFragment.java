@@ -47,9 +47,9 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getActivity());
-        this.sharedPreference = SharedPreference.getInstance(getContext());
+        this.sharedPreference = SharedPreference.getInstance(getActivity().getApplicationContext());
         this.missionList = new ArrayList();
-        adapter = new MissionAdapter(getActivity());
+        adapter = new MissionAdapter(getActivity().getApplicationContext(), getActivity());
     }
 
     @Override

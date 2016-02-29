@@ -1,5 +1,6 @@
 package me.calebjones.spacelaunchnow.content.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +10,7 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,9 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,6 +42,7 @@ import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 /**
@@ -47,14 +53,16 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
     private String launchDate;
     private List<Launch> launchList;
     private Context mContext;
+    private Context aContext;
     private Calendar rightNow;
     private SharedPreferences sharedPref;
     private static SharedPreference sharedPreference;
 
-    public LaunchBigAdapter(Context context) {
+    public LaunchBigAdapter(Context context, Context aContext) {
         rightNow = Calendar.getInstance();
         launchList = new ArrayList<>();
         this.mContext = context;
+        this.aContext = aContext;
 
     }
 
@@ -111,15 +119,21 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         double dlat = launchItem.getLocation().getPads().get(0).getLatitude();
         double dlon = launchItem.getLocation().getPads().get(0).getLongitude();
 
-        if (dlat == 0 && dlon == 0 || Double.isNaN(dlat) || Double.isNaN(dlon) || dlat == Double.NaN || dlon == Double.NaN) {
-            if (holder.map_view != null) {
-                holder.map_view.setVisibility(View.GONE);
-                holder.exploreFab.setVisibility(View.GONE);
+        // Getting status
+        if (Utils.checkPlayServices(mContext)) {
+            if (dlat == 0 && dlon == 0 || Double.isNaN(dlat) || Double.isNaN(dlon) || dlat == Double.NaN || dlon == Double.NaN) {
+                if (holder.map_view != null) {
+                    holder.map_view.setVisibility(View.GONE);
+                    holder.exploreFab.setVisibility(View.GONE);
+                }
+            } else {
+                holder.map_view.setVisibility(View.VISIBLE);
+                holder.exploreFab.setVisibility(View.VISIBLE);
+                holder.setMapLocation(dlat, dlon);
             }
         } else {
-            holder.map_view.setVisibility(View.VISIBLE);
-            holder.exploreFab.setVisibility(View.VISIBLE);
-            holder.setMapLocation(dlat, dlon);
+            holder.map_view.setVisibility(View.GONE);
+            holder.exploreFab.setVisibility(View.GONE);
         }
 
         SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
@@ -167,8 +181,11 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
 
                     @Override
                     public void onFinish() {
-                        holder.content_TMinus_status.setText("Check back later for launch status.");
-                        //mTextView.setText("Times Up!");
+                        if (launchItem.getStatus() == 1) {
+                            holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
+                        } else {
+                            holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
+                        }
                     }
 
                     @Override
@@ -181,8 +198,10 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
 
                         if (Long.valueOf(hours) >= 1) {
                             holder.content_TMinus_status.setText(String.format("%s Hours : %s Minutes : %s Seconds", hours, mins, seconds));
-                        } else if (Long.valueOf(mins) > 1) {
+                        } else if (Long.valueOf(mins) > 0) {
                             holder.content_TMinus_status.setText(String.format("%s Minutes : %s Seconds", mins, seconds));
+                        } else if (Long.valueOf(seconds) > 0) {
+                            holder.content_TMinus_status.setText(String.format("%s Seconds", seconds));
                         }
                     }
                 }.start();
@@ -193,17 +212,39 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             }
 
         } else {
-            holder.content_TMinus_status.setText(" Unknown");
+            if (launchItem.getStatus() != 1) {
+                if (launchItem.getRocket().getAgencies().size() > 0) {
+                    holder.content_TMinus_status.setText(String.format("Pending confirmed GO from %s", launchItem.getRocket().getAgencies().get(0).getName()));
+                } else {
+                    holder.content_TMinus_status.setText("Pending confirmed GO from launch agency");
+                }
+            } else {
+                holder.content_TMinus_status.setText("Unknown");
+            }
         }
 
         //Get launch date
-        if (sharedPref.getBoolean("local_time", true)) {
-            Date date = new Date(launchItem.getWindowstart());
-            launchDate = df.format(date);
+        if (launchItem.getStatus() == 2) {
+            //Get launch date
+            if (sharedPref.getBoolean("local_time", true)) {
+                SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy.");
+                sdf.toLocalizedPattern();
+                Date date = new Date(launchItem.getWindowstart());
+                launchDate = sdf.format(date);
+            } else {
+                launchDate = launchItem.getWindowstart();
+            }
+
+            holder.launch_date.setText("To be determined... " + launchDate);
         } else {
-            launchDate = launchItem.getWindowstart();
+            if (sharedPref.getBoolean("local_time", true)) {
+                Date date = new Date(launchItem.getWindowstart());
+                launchDate = df.format(date);
+            } else {
+                launchDate = launchItem.getWindowstart();
+            }
+            holder.launch_date.setText(launchDate);
         }
-        holder.launch_date.setText(launchDate);
 
         if (launchItem.getVidURL().length() == 0) {
             holder.watchButton.setVisibility(View.GONE);
@@ -331,7 +372,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             watchButton.setOnClickListener(this);
             exploreFab.setOnClickListener(this);
 
-            if (map_view != null) {
+            if (!Utils.checkPlayServices(mContext) && map_view != null) {
                 map_view.onCreate(null);
                 map_view.onResume();
                 map_view.getMapAsync(this);
@@ -359,14 +400,14 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
                     Timber.d("Watch: %s", launchList.get(position).getVidURL());
                     Uri watchUri = Uri.parse(launchList.get(position).getVidURL());
                     Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
-                    mContext.startActivity(i);
+                    aContext.startActivity(i);
                     break;
                 case R.id.exploreButton:
                     Timber.d("Explore: %s", launchList.get(position).getId());
                     Intent exploreIntent = new Intent(mContext, LaunchDetailActivity.class);
                     exploreIntent.putExtra("TYPE", "Launch");
                     exploreIntent.putExtra("launch", launch);
-                    mContext.startActivity(exploreIntent);
+                    aContext.startActivity(exploreIntent);
                     break;
                 case R.id.shareButton:
                     sendIntent.setAction(Intent.ACTION_SEND);
@@ -411,7 +452,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
                         }
                     }
                     sendIntent.setType("text/plain");
-                    mContext.startActivity(sendIntent);
+                    aContext.startActivity(sendIntent);
                     break;
                 case R.id.fab:
                     String location = launchList.get(position).getLocation().getName();
@@ -428,7 +469,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
 
                     if (mapIntent.resolveActivity(mContext.getPackageManager()) != null) {
                         Toast.makeText(mContext, "Loading " + launchList.get(position).getLocation().getPads().get(0).getName(), Toast.LENGTH_LONG).show();
-                        mContext.startActivity(mapIntent);
+                        aContext.startActivity(mapIntent);
                     }
                     break;
             }

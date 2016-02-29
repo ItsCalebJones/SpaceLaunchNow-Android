@@ -31,7 +31,7 @@ public class PayloadDetailFragment extends Fragment {
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view;
-        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         this.context = getContext();
 
         sharedPreference = SharedPreference.getInstance(this.context);

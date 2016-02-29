@@ -37,6 +37,7 @@ import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.RocketDetails;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 import xyz.hanks.library.SmallBang;
 
@@ -116,29 +117,34 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
         detailLaunch = ((LaunchDetailActivity)getActivity()).getLaunch();
         getLaunchVehicle(detailLaunch);
 
-        setUpMap();
+        if (Utils.checkPlayServices(context)) {
+            setUpMap();
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String location = detailLaunch.getLocation().getName();
-                location = (location.substring(location.indexOf(",") + 1));
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String location = detailLaunch.getLocation().getName();
+                    location = (location.substring(location.indexOf(",") + 1));
 
-                Timber.d("FAB: %s ", location);
+                    Timber.d("FAB: %s ", location);
 
-                double dlat = detailLaunch.getLocation().getPads().get(0).getLatitude();
-                double dlon = detailLaunch.getLocation().getPads().get(0).getLongitude();
+                    double dlat = detailLaunch.getLocation().getPads().get(0).getLatitude();
+                    double dlon = detailLaunch.getLocation().getPads().get(0).getLongitude();
 
-                Uri gmmIntentUri = Uri.parse("geo:" + dlat + ", " + dlon + "?z=12&q=" + dlat + ", " + dlon);
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                mapIntent.setPackage("com.google.android.apps.maps");
+                    Uri gmmIntentUri = Uri.parse("geo:" + dlat + ", " + dlon + "?z=12&q=" + dlat + ", " + dlon);
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                    mapIntent.setPackage("com.google.android.apps.maps");
 
-                if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
-                    Toast.makeText(context, "Loading " + detailLaunch.getLocation().getPads().get(0).getName(), Toast.LENGTH_LONG).show();
-                    context.startActivity(mapIntent);
+                    if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
+                        Toast.makeText(context, "Loading " + detailLaunch.getLocation().getPads().get(0).getName(), Toast.LENGTH_LONG).show();
+                        context.startActivity(mapIntent);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            map_view.setVisibility(View.GONE);
+            fab.setVisibility(View.GONE);
+        }
 
         //Setup SimpleDateFormat to parse out getNet date.
         SimpleDateFormat input = new SimpleDateFormat("MMMM dd, yyyy hh:mm:ss zzz");
@@ -306,7 +312,7 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         //TODO: Allow user to update this 1-normal 2-satellite 3-Terrain
         // https://goo.gl/OkexW7
-        MapsInitializer.initialize(context);
+        MapsInitializer.initialize(getActivity().getApplicationContext());
 
         gMap = googleMap;
         gMap.getUiSettings().setAllGesturesEnabled(false);
@@ -330,4 +336,26 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mMapLocation, 8f);
         gMap.moveCamera(cameraUpdate);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        map_view.onDestroy();
+        if (gMap != null) {
+            gMap.clear();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        map_view.onPause();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        map_view.onLowMemory();
+    }
+
 }
