@@ -95,7 +95,7 @@ public class VehicleDetailActivity extends AppCompatActivity implements AppBarLa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vehicle_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         toolbarTitle = (TextView) findViewById(R.id.title_text);
         detail_rocket = (TextView) findViewById(R.id.detail_rocket);
         detail_vehicle_agency = (TextView) findViewById(R.id.detail_vehicle_agency);
