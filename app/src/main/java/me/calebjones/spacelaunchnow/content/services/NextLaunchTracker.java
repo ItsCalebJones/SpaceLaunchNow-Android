@@ -76,12 +76,13 @@ public class NextLaunchTracker extends IntentService {
         upcomingLaunchList = this.sharedPreference.getNextLaunches();
 
         if (upcomingLaunchList != null && upcomingLaunchList.size() > 0) {
-            for (int i = 0; i < upcomingLaunchList.size(); i++) {
-                if (upcomingLaunchList.get(i).getStatus() == 1) {
-                    nextLaunch = upcomingLaunchList.get(i);
-                    break;
-                }
-            }
+//            for (int i = 0; i < upcomingLaunchList.size(); i++) {
+//                if (upcomingLaunchList.get(i).getStatus() == 1) {
+//                    nextLaunch = upcomingLaunchList.get(i);
+//                    break;
+//                }
+//            }
+            nextLaunch = upcomingLaunchList.get(0);
             storedLaunch = sharedPreference.getNextLaunch();
         }
 
@@ -103,7 +104,7 @@ public class NextLaunchTracker extends IntentService {
                 //They do match, check if the launch time has moved.
             } else {
 
-                if (nextLaunch.getNetstamp().intValue() != storedLaunch.getNetstamp().intValue()){
+                if (Math.abs(nextLaunch.getNetstamp() - storedLaunch.getNetstamp())  > 60){
 
                     sharedPreference.setNextLaunch(nextLaunch);
                     upcomingLaunchList.set(0, nextLaunch);
@@ -373,15 +374,7 @@ public class NextLaunchTracker extends IntentService {
         if (BuildConfig.DEBUG) {
             storedLaunch = sharedPreference.getNextLaunch();
             upcomingLaunchList = sharedPreference.getNextLaunches();
-
-            if (upcomingLaunchList != null && upcomingLaunchList.size() > 0) {
-                for (int i = 0; i < upcomingLaunchList.size(); i++) {
-                    if (upcomingLaunchList.get(i).getStatus() == 1) {
-                        nextLaunch = upcomingLaunchList.get(i);
-                        break;
-                    }
-                }
-            }
+            nextLaunch = upcomingLaunchList.get(0);
 
             if(nextLaunch != null && storedLaunch != null) {
                 // Create a DateFormatter object for displaying date in specified format.

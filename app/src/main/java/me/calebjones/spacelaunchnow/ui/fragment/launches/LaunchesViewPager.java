@@ -35,7 +35,7 @@ public class LaunchesViewPager extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         int mlayout;
-        this.context = getActivity();
+        this.context = getActivity().getApplicationContext();
 
 
         sharedPreference = SharedPreference.getInstance(this.context);
