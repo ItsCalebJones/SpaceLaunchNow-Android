@@ -14,8 +14,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
 
 import me.calebjones.spacelaunchnow.R;
@@ -30,9 +28,6 @@ public class AgencyDetailFragment extends Fragment {
     private SharedPreferences sharedPref;
     private static SharedPreference sharedPreference;
     private Context context;
-    public MapView map_view;
-    public GoogleMap gMap;
-    protected LatLng mMapLocation;
 
     public static Launch detailLaunch;
     private RocketDetails launchVehicle;

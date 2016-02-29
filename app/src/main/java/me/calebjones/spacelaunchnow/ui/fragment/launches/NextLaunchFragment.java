@@ -91,7 +91,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         super.onCreate(savedInstanceState);
         sharedPreference = SharedPreference.getInstance(getActivity().getApplication());
         rocketLaunches = new ArrayList();
-        adapter = new LaunchBigAdapter(getActivity());
+        adapter = new LaunchBigAdapter(getActivity().getApplicationContext(), getActivity());
     }
 
 
@@ -208,17 +208,14 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     }
 
     private void refreshView() {
-        rocketLaunches = sharedPreference.getLaunchesUpcoming();
-        List<Launch> goList = new ArrayList<>();
-        for (int i = 0; i < rocketLaunches.size(); i++) {
-            if (rocketLaunches.get(i).getStatus() == 1) {
-                goList.add(rocketLaunches.get(i));
-            }
+        rocketLaunches = sharedPreference.filterLaunches(sharedPreference.getLaunchesUpcoming());
+        if (rocketLaunches.size() > 10){
+            rocketLaunches = rocketLaunches.subList(0,10);
         }
-        goList = sharedPreference.filterLaunches(goList);
-        sharedPreference.setNextLaunches(goList);
+        sharedPreference.setNextLaunches(rocketLaunches);
         adapter.clear();
-        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && goList.size() == 1){
+
+        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && rocketLaunches.size() == 1){
             layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
             mRecyclerView.setLayoutManager(layoutManager);
             mRecyclerView.setAdapter(adapter);
@@ -242,7 +239,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                 super.onScrollStateChanged(recyclerView, newState);
             }
         });
-        adapter.addItems(goList);
+        adapter.addItems(rocketLaunches);
         adapter.notifyDataSetChanged();
     }
 
