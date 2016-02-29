@@ -36,7 +36,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.PathInterpolator;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.Response;
 
@@ -97,12 +100,12 @@ public class Utils {
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public static void animateViewColor (View v, int startColor, int endColor) {
+    public static void animateViewColor(View v, int startColor, int endColor) {
 
         ObjectAnimator animator = ObjectAnimator.ofObject(v, "backgroundColor",
                 new ArgbEvaluator(), startColor, endColor);
 
-        animator.setInterpolator(new PathInterpolator(0.4f,0f,1f,1f));
+        animator.setInterpolator(new PathInterpolator(0.4f, 0f, 1f, 1f));
         animator.setDuration(COLOR_ANIMATION_DURATION);
         animator.start();
     }
@@ -136,7 +139,6 @@ public class Utils {
      * Reduces the X & Y from a view
      *
      * @param v the view to be scaled
-     *
      * @return the ViewPropertyAnimation to manage the animation
      */
     public static ViewPropertyAnimator hideViewByScaleXY(View v) {
@@ -148,7 +150,6 @@ public class Utils {
      * Reduces the Y from a view
      *
      * @param v the view to be scaled
-     *
      * @return the ViewPropertyAnimation to manage the animation
      */
     public static ViewPropertyAnimator hideViewByScaleY(View v) {
@@ -160,7 +161,6 @@ public class Utils {
      * Reduces the X from a view
      *
      * @param v the view to be scaled
-     *
      * @return the ViewPropertyAnimation to manage the animation
      */
     public static ViewPropertyAnimator hideViewByScalyInX(View v) {
@@ -171,14 +171,13 @@ public class Utils {
     /**
      * Reduces the X & Y
      *
-     * @param v the view to be scaled
+     * @param v     the view to be scaled
      * @param delay to start the animation
-     * @param x integer to scale
-     * @param y integer to scale
-     *
+     * @param x     integer to scale
+     * @param y     integer to scale
      * @return the ViewPropertyAnimation to manage the animation
      */
-    private static ViewPropertyAnimator hideViewByScale (View v, int delay, int x, int y) {
+    private static ViewPropertyAnimator hideViewByScale(View v, int delay, int x, int y) {
 
         ViewPropertyAnimator propertyAnimator = v.animate().setStartDelay(delay)
                 .scaleX(x).scaleY(y);
@@ -190,10 +189,9 @@ public class Utils {
      * Shows a view by scaling
      *
      * @param v the view to be scaled
-     *
      * @return the ViewPropertyAnimation to manage the animation
      */
-    public static ViewPropertyAnimator showViewByScale (View v) {
+    public static ViewPropertyAnimator showViewByScale(View v) {
 
         ViewPropertyAnimator propertyAnimator = v.animate().setStartDelay(DEFAULT_DELAY)
                 .scaleX(1).scaleY(1);
@@ -210,7 +208,7 @@ public class Utils {
         return "https://launchlibrary.net/1.1/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
     }
 
-    public static Calendar DateToCalendar(Date date){
+    public static Calendar DateToCalendar(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         return cal;
@@ -289,7 +287,7 @@ public class Utils {
         return PendingIntent.getActivity(context, 0, actionIntent, 0);
     }
 
-    public static Intent buildIntent(Launch launch){
+    public static Intent buildIntent(Launch launch) {
         SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy hh:mm a zzz");
         df.toLocalizedPattern();
 
@@ -302,7 +300,7 @@ public class Utils {
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_SUBJECT, launch.getName());
 
-        if (launch.getMissions().size() > 0){
+        if (launch.getMissions().size() > 0) {
             mission = launch.getMissions().get(0).getDescription();
         } else {
             mission = "";
@@ -345,7 +343,7 @@ public class Utils {
                         + " \n\nvia Space Launch Now and Launch Library");
             } else {
                 sendIntent.putExtra(Intent.EXTRA_TEXT, mission
-                         + launch.getName() + " launching from "
+                        + launch.getName() + " launching from "
                         + launch.getLocation().getName() + "\n \n"
                         + launchDate
                         + " \n\nvia Space Launch Now and Launch Library");
@@ -355,4 +353,12 @@ public class Utils {
         return sendIntent;
     }
 
+    public static boolean checkPlayServices(Context context) {
+        GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
+        int result = googleAPI.isGooglePlayServicesAvailable(context);
+        if(result != ConnectionResult.SUCCESS) {
+            return false;
+        }
+        return true;
+    }
 }
