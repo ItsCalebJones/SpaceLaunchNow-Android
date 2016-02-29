@@ -1,5 +1,6 @@
 package me.calebjones.spacelaunchnow.content.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +20,9 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -38,6 +42,7 @@ import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 /**
@@ -114,15 +119,21 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         double dlat = launchItem.getLocation().getPads().get(0).getLatitude();
         double dlon = launchItem.getLocation().getPads().get(0).getLongitude();
 
-        if (dlat == 0 && dlon == 0 || Double.isNaN(dlat) || Double.isNaN(dlon) || dlat == Double.NaN || dlon == Double.NaN) {
-            if (holder.map_view != null) {
-                holder.map_view.setVisibility(View.GONE);
-                holder.exploreFab.setVisibility(View.GONE);
+        // Getting status
+        if (Utils.checkPlayServices(mContext)) {
+            if (dlat == 0 && dlon == 0 || Double.isNaN(dlat) || Double.isNaN(dlon) || dlat == Double.NaN || dlon == Double.NaN) {
+                if (holder.map_view != null) {
+                    holder.map_view.setVisibility(View.GONE);
+                    holder.exploreFab.setVisibility(View.GONE);
+                }
+            } else {
+                holder.map_view.setVisibility(View.VISIBLE);
+                holder.exploreFab.setVisibility(View.VISIBLE);
+                holder.setMapLocation(dlat, dlon);
             }
         } else {
-            holder.map_view.setVisibility(View.VISIBLE);
-            holder.exploreFab.setVisibility(View.VISIBLE);
-            holder.setMapLocation(dlat, dlon);
+            holder.map_view.setVisibility(View.GONE);
+            holder.exploreFab.setVisibility(View.GONE);
         }
 
         SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
@@ -170,7 +181,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
 
                     @Override
                     public void onFinish() {
-                        if (launchItem.getStatus() == 1){
+                        if (launchItem.getStatus() == 1) {
                             holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
                         } else {
                             holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
@@ -189,7 +200,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
                             holder.content_TMinus_status.setText(String.format("%s Hours : %s Minutes : %s Seconds", hours, mins, seconds));
                         } else if (Long.valueOf(mins) > 0) {
                             holder.content_TMinus_status.setText(String.format("%s Minutes : %s Seconds", mins, seconds));
-                        } else if (Long.valueOf(seconds) > 0){
+                        } else if (Long.valueOf(seconds) > 0) {
                             holder.content_TMinus_status.setText(String.format("%s Seconds", seconds));
                         }
                     }
@@ -201,8 +212,8 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             }
 
         } else {
-            if (launchItem.getStatus() != 1){
-                if (launchItem.getRocket().getAgencies().size() > 0){
+            if (launchItem.getStatus() != 1) {
+                if (launchItem.getRocket().getAgencies().size() > 0) {
                     holder.content_TMinus_status.setText(String.format("Pending confirmed GO from %s", launchItem.getRocket().getAgencies().get(0).getName()));
                 } else {
                     holder.content_TMinus_status.setText("Pending confirmed GO from launch agency");
@@ -361,7 +372,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             watchButton.setOnClickListener(this);
             exploreFab.setOnClickListener(this);
 
-            if (map_view != null) {
+            if (!Utils.checkPlayServices(mContext) && map_view != null) {
                 map_view.onCreate(null);
                 map_view.onResume();
                 map_view.getMapAsync(this);
