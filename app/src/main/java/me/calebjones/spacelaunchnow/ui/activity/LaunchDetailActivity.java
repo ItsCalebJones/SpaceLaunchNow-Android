@@ -101,7 +101,7 @@ public class LaunchDetailActivity extends AppCompatActivity
             recreate();
         }
 
-        if (!BuildConfig.DEBUG){
+        if (!BuildConfig.DEBUG) {
             Answers.getInstance().logContentView(new ContentViewEvent()
                     .putContentName("LaunchDetailActivity")
                     .putContentType("Activity"));
@@ -154,65 +154,64 @@ public class LaunchDetailActivity extends AppCompatActivity
         now.setTimeInMillis(System.currentTimeMillis());
         long timeToFinish = future - now.getTimeInMillis();
 
-    //Assign the title and mission locaiton data
-    detail_rocket.setText(launch.getName());
+        //Assign the title and mission locaiton data
+        detail_rocket.setText(launch.getName());
 
-    findProfileLogo();
+        findProfileLogo();
 
-    final Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
-    toolbar.setNavigationOnClickListener(new View.OnClickListener()
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+        toolbar.setNavigationOnClickListener(
+                new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v) {
+                        onBackPressed();
+                    }
+                }
 
-    {
-        @Override
-        public void onClick (View v){
-        onBackPressed();
+        );
+
+        appBarLayout.addOnOffsetChangedListener(this);
+        mMaxScrollSize = appBarLayout.getTotalScrollRange();
+
+        viewPager.setAdapter(new
+
+                TabsAdapter(getSupportFragmentManager()
+
+        ));
+        tabLayout.setupWithViewPager(viewPager);
+
+        appBarLayout.addOnOffsetChangedListener(
+                new AppBarLayout.OnOffsetChangedListener() {
+                    @Override
+                    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                        int totalScroll = appBarLayout.getTotalScrollRange();
+                        int currentScroll = totalScroll + verticalOffset;
+
+                        int color = statusColor;
+                        int r = (color >> 16) & 0xFF;
+                        int g = (color >> 8) & 0xFF;
+                        int b = (color >> 0) & 0xFF;
+
+                        if ((currentScroll) < 255) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+                                Window window = getWindow();
+                                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                                window.setStatusBarColor(Color.argb(reverseNumber(currentScroll, 0, 255), r, g, b));
+                            }
+                        } else {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                Window window = getWindow();
+                                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                            }
+                        }
+                    }
+                }
+
+        );
     }
-    }
-
-    );
-
-    appBarLayout.addOnOffsetChangedListener(this);
-    mMaxScrollSize=appBarLayout.getTotalScrollRange();
-
-    viewPager.setAdapter(new
-
-    TabsAdapter(getSupportFragmentManager()
-
-    ));
-    tabLayout.setupWithViewPager(viewPager);
-
-    appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener()
-
-    {
-        @Override
-        public void onOffsetChanged (AppBarLayout appBarLayout,int verticalOffset){
-        int totalScroll = appBarLayout.getTotalScrollRange();
-        int currentScroll = totalScroll + verticalOffset;
-
-        int color = statusColor;
-        int r = (color >> 16) & 0xFF;
-        int g = (color >> 8) & 0xFF;
-        int b = (color >> 0) & 0xFF;
-
-        if ((currentScroll) < 255) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-                Window window = getWindow();
-                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(Color.argb(reverseNumber(currentScroll, 0, 255), r, g, b));
-            }
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                Window window = getWindow();
-                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            }
-        }
-    }
-    }
-
-    );
-}
 
     public int reverseNumber(int num, int min, int max) {
         int number = (max + min) - num;
@@ -385,49 +384,49 @@ public class LaunchDetailActivity extends AppCompatActivity
     }
 
     public void mayLaunchUrl(Uri parse) {
-        if (customTabActivityHelper.mayLaunchUrl(parse,null,null)){
+        if (customTabActivityHelper.mayLaunchUrl(parse, null, null)) {
             Timber.v("mayLaunchURL Accepted - %s", parse.toString());
-        } else  {
+        } else {
             Timber.v("mayLaunchURL Denied - %s", parse.toString());
         }
     }
 
 
-class TabsAdapter extends FragmentPagerAdapter {
-    public TabsAdapter(FragmentManager fm) {
-        super(fm);
-    }
-
-    @Override
-    public int getCount() {
-        return 3;
-    }
-
-    @Override
-    public Fragment getItem(int i) {
-        switch (i) {
-            case 0:
-                return SummaryDetailFragment.newInstance();
-            case 1:
-                return PayloadDetailFragment.newInstance();
-            case 2:
-                return AgencyDetailFragment.newInstance();
+    class TabsAdapter extends FragmentPagerAdapter {
+        public TabsAdapter(FragmentManager fm) {
+            super(fm);
         }
-        return null;
-    }
 
-    @Override
-    public CharSequence getPageTitle(int position) {
-        switch (position) {
-            case 0:
-                return "Details";
-            case 1:
-                return "Mission";
-            case 2:
-                return "Agencies";
+        @Override
+        public int getCount() {
+            return 3;
         }
-        return "";
+
+        @Override
+        public Fragment getItem(int i) {
+            switch (i) {
+                case 0:
+                    return SummaryDetailFragment.newInstance();
+                case 1:
+                    return PayloadDetailFragment.newInstance();
+                case 2:
+                    return AgencyDetailFragment.newInstance();
+            }
+            return null;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return "Details";
+                case 1:
+                    return "Mission";
+                case 2:
+                    return "Agencies";
+            }
+            return "";
+        }
     }
-}
 
 }
