@@ -47,11 +47,12 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
     private List<Integer> mSectionPositions;
     private List<String> mSections;
     private Context mContext;
+    private Context aContext;
     private Calendar rightNow;
     private SharedPreferences sharedPref;
     private static SharedPreference sharedPreference;
 
-    public MissionAdapter(Context context) {
+    public MissionAdapter(Context context, Context aContext) {
         rightNow = Calendar.getInstance();
         missionList = new ArrayList();
         mSectionPositions = new ArrayList<>();
@@ -59,6 +60,7 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
         sharedPreference = SharedPreference.getInstance(context);
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         this.mContext = context;
+        this.aContext = aContext;
     }
 
     public void addItems(List<Mission> missionList) {
@@ -119,7 +121,7 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
         if (mission.getLaunch() != null && mission.getLaunch().getId() != null){
 
             if (mission.getLaunch().getVidURL() != null){
-                ((MainActivity)mContext).mayLaunchUrl(Uri.parse(mission.getLaunch().getVidURL()));
+                ((MainActivity)aContext).mayLaunchUrl(Uri.parse(mission.getLaunch().getVidURL()));
             }
             //If there's no info on the launch hide the button and no need to check for launch date.
             if(mission.getLaunch().getId() == 0){
@@ -170,7 +172,7 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
         if (mission.getInfoURL().length() == 0){
             holder.infoButton.setVisibility(View.INVISIBLE);
         } else {
-            ((MainActivity)mContext).mayLaunchUrl(Uri.parse(mission.getInfoURL()));
+            ((MainActivity)aContext).mayLaunchUrl(Uri.parse(mission.getInfoURL()));
             holder.infoButton.setVisibility(View.VISIBLE);
         }
 

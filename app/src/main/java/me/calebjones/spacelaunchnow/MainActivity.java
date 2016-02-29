@@ -104,13 +104,15 @@ public class MainActivity extends AppCompatActivity
                         }
                     }
                     if (mNavItemId == R.id.menu_launches) {
-                    if (mlaunchesViewPager != null) {
+                        if (mlaunchesViewPager != null) {
                             mlaunchesViewPager.restartViews(Strings.ACTION_SUCCESS_UP_LAUNCHES);
                         }
                     }
                 } else if (Strings.ACTION_SUCCESS_PREV_LAUNCHES.equals(action)) {
-                    if (mlaunchesViewPager != null) {
-                        mlaunchesViewPager.restartViews(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
+                    if (mNavItemId == R.id.menu_launches) {
+                        if (mlaunchesViewPager != null) {
+                            mlaunchesViewPager.restartViews(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
+                        }
                     }
                 } else if (Strings.ACTION_SUCCESS_MISSIONS.equals(action)) {
                     if (mMissionFragment != null) {
@@ -457,7 +459,7 @@ public class MainActivity extends AppCompatActivity
                 if (mUpcomingFragment == null) {
                     mUpcomingFragment = new NextLaunchFragment();
                     // Tell it who it is working with.
-                    fm.beginTransaction().replace(R.id.flContent,mUpcomingFragment, "NEXT_LAUNCH").commit();
+                    fm.beginTransaction().replace(R.id.flContent, mUpcomingFragment, "NEXT_LAUNCH").commit();
                 }
                 break;
             case R.id.menu_launches:
@@ -469,7 +471,7 @@ public class MainActivity extends AppCompatActivity
                 if (mlaunchesViewPager == null) {
                     mlaunchesViewPager = new LaunchesViewPager();
                     // Tell it who it is working with.
-                    fm.beginTransaction().replace(R.id.flContent,mlaunchesViewPager, "LAUNCH_VIEWPAGER").commit();
+                    fm.beginTransaction().replace(R.id.flContent, mlaunchesViewPager, "LAUNCH_VIEWPAGER").commit();
                 }
                 break;
             case R.id.menu_missions:

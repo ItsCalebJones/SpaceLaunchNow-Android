@@ -306,7 +306,7 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         //TODO: Allow user to update this 1-normal 2-satellite 3-Terrain
         // https://goo.gl/OkexW7
-        MapsInitializer.initialize(context);
+        MapsInitializer.initialize(getActivity().getApplicationContext());
 
         gMap = googleMap;
         gMap.getUiSettings().setAllGesturesEnabled(false);
@@ -330,4 +330,26 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mMapLocation, 8f);
         gMap.moveCamera(cameraUpdate);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        map_view.onDestroy();
+        if (gMap != null) {
+            gMap.clear();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        map_view.onPause();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        map_view.onLowMemory();
+    }
+
 }

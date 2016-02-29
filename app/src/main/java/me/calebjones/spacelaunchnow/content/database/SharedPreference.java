@@ -271,6 +271,7 @@ public class SharedPreference {
         Gson gson = gsonBuilder.setPrettyPrinting().create();
         this.prefsEditor.putString(PREFS_NEXT_LAUNCH, gson.toJson(launch));
         this.prefsEditor.apply();
+
         List<Launch> list = getLaunchesUpcoming();
         for (int i = 0; i < list.size(); i++){
             if (launch.getId().equals(list.get(i).getId())){
@@ -298,13 +299,18 @@ public class SharedPreference {
         Gson gson = gsonBuilder.setPrettyPrinting().create();
         this.prefsEditor.putString(PREFS_LIST_UPCOMING, gson.toJson(launches));
         this.prefsEditor.apply();
-        List<Launch> goList = new ArrayList<>();
-        for (int i = 0; i < launches.size(); i++) {
-            if (launches.get(i).getStatus() == 1) {
-                goList.add(launches.get(i));
-            }
+
+//        List<Launch> goList = new ArrayList<>();
+//        for (int i = 0; i < launches.size(); i++) {
+//            if (launches.get(i).getStatus() == 1) {
+//                goList.add(launches.get(i));
+//            }
+//        }
+        launches = filterLaunches(launches);
+        if (launches.size() > 10){
+            launches = launches.subList(0,10);
         }
-        setNextLaunches(filterLaunches(goList));
+        setNextLaunches(launches);
     }
 
     public void setMissionList(List<Mission> missions) {

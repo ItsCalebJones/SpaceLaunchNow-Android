@@ -49,14 +49,14 @@ public class LaunchVehicleFragment extends CustomFragment {
         super.onCreate(savedInstanceState);
         SharedPreferences = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getActivity());
         this.sharedPreference = SharedPreference.getInstance(getActivity().getApplication());
-        adapter = new VehicleAdapter(getActivity());
+        adapter = new VehicleAdapter(getActivity().getApplicationContext());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         int m_theme;
-        context = getActivity().getApplication();
+        context = getActivity().getApplicationContext();
 
         sharedPreference = SharedPreference.getInstance(this.context);
 
@@ -66,7 +66,7 @@ public class LaunchVehicleFragment extends CustomFragment {
             m_theme = R.style.LightTheme_NoActionBar;
         }
         // create ContextThemeWrapper from the original Activity Context with the custom theme
-        Context context = new ContextThemeWrapper(getActivity(), m_theme);
+        Context context = new ContextThemeWrapper(getActivity().getApplicationContext(), m_theme);
         // clone the inflater using the ContextThemeWrapper
         LayoutInflater localInflater = inflater.cloneInContext(context);
 
