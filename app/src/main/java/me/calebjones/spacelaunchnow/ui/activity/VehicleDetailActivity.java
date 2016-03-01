@@ -162,7 +162,7 @@ public class VehicleDetailActivity extends AppCompatActivity implements AppBarLa
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
             }
         }
-        adapter = new VehicleListAdapter(context);
+        adapter = new VehicleListAdapter(context, this);
         mRecyclerView = (RecyclerView) findViewById(R.id.gridview);
         if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
             linearLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
