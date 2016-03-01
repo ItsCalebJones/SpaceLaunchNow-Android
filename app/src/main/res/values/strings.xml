@@ -67,4 +67,5 @@ Quisque tincidunt magna quis viverra faucibus. Vivamus rhoncus elit vel mi trist
     <string name="dragon_orbiter_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944174/dragon_q9cxq9.jpg</string>
     <string name="orion_orbiter_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944173/orion_sgl9rs.jpg</string>
     <string name="title_activity_debug">DebugActivity</string>
+    <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
 </resources>

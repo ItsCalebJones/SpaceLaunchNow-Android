@@ -22,6 +22,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.EventLogTags;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,6 +62,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String Class = "Class";
     private static final String Apogee = "Apogee";
     private static final String ImageURL = "ImageURL";
+    private static final String InfoURL = "InfoURL";
+    private static final String WikiURL = "WikiURL";
+    private static final String Description = "Description";
 
     private static final String CREATE_TABLE =
             "CREATE TABLE " + TABLE_POST + "(" +
@@ -81,7 +85,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     TOThrust + TYPE_TEXT + COMMA_SEP +
                     Class + TYPE_TEXT + COMMA_SEP +
                     Apogee + TYPE_TEXT + COMMA_SEP +
-                    ImageURL + TYPE_TEXT + ")";
+                    Description + TYPE_TEXT + COMMA_SEP +
+                    ImageURL + TYPE_TEXT + COMMA_SEP +
+                    InfoURL + TYPE_TEXT + COMMA_SEP +
+                    WikiURL + TYPE_TEXT + ")";
 
     private static final String DELETE_TABLE =
             "DROP TABLE IF EXISTS " + TABLE_POST;
@@ -131,6 +138,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
         values.put(Class, item.getClass_());
         values.put(Apogee, item.getApogee());
         values.put(ImageURL, item.getImageURL());
+        values.put(Description, item.getDescription());
+        values.put(InfoURL, item.getInfoURL());
+        values.put(WikiURL, item.getWikiURL());
 
         getWritableDatabase().insert(TABLE_POST, null, values);
     }
@@ -159,7 +169,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
             item.setTOThrust(cursor.getString(14));
             item.setClass_(cursor.getString(15));
             item.setApogee(cursor.getString(16));
-            item.setImageURL(cursor.getString(17));
+            item.setDescription(cursor.getString(17));
+            item.setImageURL(cursor.getString(18));
+            item.setInfoURL(cursor.getString(19));
+            item.setWikiURL(cursor.getString(20));
             cursor.close();
             return item;
         }
@@ -189,7 +202,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 item.setTOThrust(cursor.getString(14));
                 item.setClass_(cursor.getString(15));
                 item.setApogee(cursor.getString(16));
-                item.setImageURL(cursor.getString(17));
+                item.setDescription(cursor.getString(17));
+                item.setImageURL(cursor.getString(18));
+                item.setInfoURL(cursor.getString(19));
+                item.setWikiURL(cursor.getString(20));
                 vehicles.add(item);
             } while (cursor.moveToNext());
             cursor.close();
@@ -225,7 +241,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 item.setTOThrust(cursor.getString(14));
                 item.setClass_(cursor.getString(15));
                 item.setApogee(cursor.getString(16));
-                item.setImageURL(cursor.getString(17));
+                item.setDescription(cursor.getString(17));
+                item.setImageURL(cursor.getString(18));
+                item.setInfoURL(cursor.getString(19));
+                item.setWikiURL(cursor.getString(20));
                 post.add(item);
             } while (cursor.moveToNext());
             cursor.close();

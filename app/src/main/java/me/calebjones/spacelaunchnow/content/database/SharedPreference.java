@@ -308,9 +308,11 @@ public class SharedPreference {
 //                goList.add(launches.get(i));
 //            }
 //        }
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(appContext);
+        int size = Integer.parseInt(sharedPref.getString("upcoming_value", "10"));
         launches = filterLaunches(launches);
-        if (launches.size() > 10){
-            launches = launches.subList(0,10);
+        if (launches.size() > size){
+            launches = launches.subList(0,size);
         }
         setNextLaunches(launches);
     }

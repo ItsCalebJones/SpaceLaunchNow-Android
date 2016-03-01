@@ -18,7 +18,7 @@
         android:layout_marginLeft="32dp"
         android:layout_toRightOf="@id/ivIcon"
         android:layout_width="match_parent"
-        android:text="Launch Tracking Options"
+        android:text="General"
         android:textSize="16sp" />
     <TextView
         android:layout_below="@+id/tvTitle"
@@ -26,6 +26,6 @@
         android:layout_marginLeft="32dp"
         android:layout_toRightOf="@id/ivIcon"
         android:layout_width="match_parent"
-        android:text="Advanced settings for Upcoming and Previous launch lists."
+        android:text="@string/general_settings_for_launch_tracking_and_application_behavior"
         android:textSize="14sp" />
 </RelativeLayout>

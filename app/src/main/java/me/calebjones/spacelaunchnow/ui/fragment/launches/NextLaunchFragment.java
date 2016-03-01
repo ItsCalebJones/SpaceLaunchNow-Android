@@ -6,8 +6,10 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -42,6 +44,7 @@ import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
 import timber.log.Timber;
 
 public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -79,6 +82,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     private FloatingActionButton menu;
     private List<Launch> rocketLaunches;
     private SharedPreference sharedPreference;
+    private SharedPreferences sharedPref;
     private Context context;
     private boolean active;
     private boolean switchChanged;
@@ -209,8 +213,10 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
 
     private void refreshView() {
         rocketLaunches = sharedPreference.filterLaunches(sharedPreference.getLaunchesUpcoming());
-        if (rocketLaunches.size() > 10){
-            rocketLaunches = rocketLaunches.subList(0,10);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        int size = Integer.parseInt(sharedPref.getString("upcoming_value", "10"));
+        if (rocketLaunches.size() > size){
+            rocketLaunches = rocketLaunches.subList(0,size);
         }
         sharedPreference.setNextLaunches(rocketLaunches);
         adapter.clear();
@@ -440,6 +446,10 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                     refreshView();
                 }
             }
+        } else if (id == R.id.debug_vehicle){
+            Intent rocketIntent = new Intent(context, VehicleDataService.class);
+            rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
+            context.startService(rocketIntent);
         }
         return super.onOptionsItemSelected(item);
     }

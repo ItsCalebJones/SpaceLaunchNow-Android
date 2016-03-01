@@ -20,6 +20,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
 import android.view.Menu;
@@ -385,17 +386,21 @@ public class MainActivity extends AppCompatActivity
             if (getFragmentManager().getBackStackEntryCount() != 0) {
                 getFragmentManager().popBackStack();
             } else {
-                new MaterialDialog.Builder(this)
-                        .title("Confirm Exit")
-                        .negativeText("Cancel")
-                        .positiveText("Exit")
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                finish();
-                            }
-                        })
-                        .show();
+                if (sharedPref.getBoolean("confirm_exit", false)) {
+                    new MaterialDialog.Builder(this)
+                            .title("Confirm Exit")
+                            .negativeText("Cancel")
+                            .positiveText("Exit")
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    finish();
+                                }
+                            })
+                            .show();
+                } else {
+                    super.onBackPressed();
+                }
             }
         }
     }

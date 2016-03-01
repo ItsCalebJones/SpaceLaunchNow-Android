@@ -212,6 +212,8 @@ public class VehicleDataService extends IntentService {
 
                 JSONObject vehicleObj = responseArray.optJSONObject(i);
                 launchVehicle.setDescription(vehicleObj.optString("Description"));
+                launchVehicle.setWikiURL(vehicleObj.optString("WikiURL"));
+                launchVehicle.setInfoURL(vehicleObj.optString("InfoURL"));
                 launchVehicle.setLVName(vehicleObj.optString("LV_Name"));
                 launchVehicle.setLVFamily(vehicleObj.optString("LV_Family"));
                 launchVehicle.setLVSFamily(vehicleObj.optString("LV_SFamily"));
