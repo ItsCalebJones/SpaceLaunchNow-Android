@@ -146,7 +146,7 @@
                     <android.support.v7.widget.AppCompatButton
                         android:id="@+id/wikiButton"
                         android:visibility="invisible"
-                        style="@style/Base.Widget.AppCompat.Button"
+                        style="@style/Base.Widget.AppCompat.Button.Colored"
                         android:layout_width="wrap_content"
                         android:layout_height="50dp"
                         android:layout_margin="8dp"
