@@ -392,6 +392,9 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         if (BuildConfig.DEBUG) {
             menu.clear();
             inflater.inflate(R.menu.debug_menu, menu);
+        } else {
+            menu.clear();
+            inflater.inflate(R.menu.next_menu, menu);
         }
     }
 
@@ -413,6 +416,30 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
             Intent nextIntent = new Intent(getActivity(), LaunchDataService.class);
             nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
             getActivity().startService(nextIntent);
+        } else if (id == R.id.action_alert) {
+            if (!active) {
+                switchChanged = false;
+                active = true;
+                mSwipeRefreshLayout.setEnabled(false);
+                menu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_close));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    showView();
+                } else {
+                    color_reveal.setVisibility(View.VISIBLE);
+                }
+            } else {
+                active = false;
+                menu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_add_alert));
+                mSwipeRefreshLayout.setEnabled(true);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    hideView();
+                } else {
+                    color_reveal.setVisibility(View.INVISIBLE);
+                }
+                if (switchChanged) {
+                    refreshView();
+                }
+            }
         }
         return super.onOptionsItemSelected(item);
     }
