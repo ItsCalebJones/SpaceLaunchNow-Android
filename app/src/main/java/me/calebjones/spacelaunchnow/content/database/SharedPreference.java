@@ -273,10 +273,12 @@ public class SharedPreference {
         this.prefsEditor.apply();
 
         List<Launch> list = getLaunchesUpcoming();
-        for (int i = 0; i < list.size(); i++){
-            if (launch.getId().equals(list.get(i).getId())){
-                list.set(i, launch);
-                setUpComingLaunches(list);
+        if (list != null) {
+            for (int i = 0; i < list.size(); i++) {
+                if (launch.getId().equals(list.get(i).getId())) {
+                    list.set(i, launch);
+                    setUpComingLaunches(list);
+                }
             }
         }
     }
