@@ -35,7 +35,7 @@ public final class Strings {
     public static int NOTIF_ID_DAY = 568985;
     public static int NOTIF_ID_HOUR = 568995;
 
-    public static String LAUNCH_URL = "https://launchlibrary.net/1.1.1/launch/next/1000";
+    public static String LAUNCH_URL = "https://launchlibrary.net/1.1.1/launch/next/1000&mode=verbose";
     public static String MISSION_URL = "https://launchlibrary.net/1.1.1/mission?limit=1000&mode=verbose";
     public static String AGENCY_URL = "https://launchlibrary.net/1.1.1/agency?mode=verbose&limit=1000";
     public static String VEHICLE_URL = "https://launchlibrary.net/1.1.1/rocket?mode=verbose&limit=1000";
