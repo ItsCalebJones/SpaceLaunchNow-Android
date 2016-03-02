@@ -56,6 +56,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
     private Context aContext;
     private Calendar rightNow;
     private SharedPreferences sharedPref;
+    private CountDownTimer timer;
     private static SharedPreference sharedPreference;
 
     public LaunchBigAdapter(Context context, Context aContext) {
@@ -89,6 +90,9 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
     public void clear() {
         launchList.clear();
         this.notifyDataSetChanged();
+        if (timer != null){
+            timer.cancel();
+        }
     }
 
     @Override
@@ -111,7 +115,6 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
         final Launch launchItem = launchList.get(i);
-
 
         position = i;
 
@@ -139,7 +142,6 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
         df.toLocalizedPattern();
 
-
         switch (launchItem.getStatus()) {
             case 1:
                 //GO for launch
@@ -149,7 +151,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             case 2:
                 //NO GO for launch
                 holder.content_status.setText(R.string.status_nogo);
-                holder.content_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+                holder.content_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorAccent));
                 break;
             case 3:
                 //Success for launch
@@ -159,7 +161,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             case 4:
                 //Failure to launch
                 holder.content_status.setText(R.string.status_failure);
-                holder.content_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+                holder.content_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorAccent));
                 break;
         }
 
@@ -171,10 +173,10 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
 
             Calendar future = DateToCalendar(date);
             Calendar now = rightNow;
-            CountDownTimer timer;
 
             now.setTimeInMillis(System.currentTimeMillis());
             long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
+
             if (timeToFinish < 86400000) {
                 timer = new CountDownTimer(future.getTimeInMillis() - now.getTimeInMillis(), 1000) {
                     StringBuilder time = new StringBuilder();
@@ -183,6 +185,8 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
                     public void onFinish() {
                         if (launchItem.getStatus() == 1) {
                             holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
+
+                            //TODO - Get hold reason and show it
                         } else {
                             holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
                         }
@@ -196,22 +200,28 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
                         long mins = (millisUntilFinished / 60000) % 60;
                         long seconds = (millisUntilFinished / 1000) % 60;
 
-                        if (Long.valueOf(hours) >= 1) {
+                        if (hours >= 1) {
                             holder.content_TMinus_status.setText(String.format("%s Hours : %s Minutes : %s Seconds", hours, mins, seconds));
-                        } else if (Long.valueOf(mins) > 0) {
+                        } else if (mins > 0) {
                             holder.content_TMinus_status.setText(String.format("%s Minutes : %s Seconds", mins, seconds));
-                        } else if (Long.valueOf(seconds) > 0) {
+                        } else if (seconds > 0) {
                             holder.content_TMinus_status.setText(String.format("%s Seconds", seconds));
                         }
                     }
                 }.start();
             } else {
+                if (timer != null){
+                    timer.cancel();
+                }
                 long days = timeToFinish / 86400000;
                 long hours = (timeToFinish / 3600000) % 24;
                 holder.content_TMinus_status.setText(String.format("%s Day(s) : %s Hour(s)", Long.valueOf(days), Long.valueOf(hours)));
             }
 
         } else {
+            if (timer != null){
+                timer.cancel();
+            }
             if (launchItem.getStatus() != 1) {
                 if (launchItem.getRocket().getAgencies().size() > 0) {
                     holder.content_TMinus_status.setText(String.format("Pending confirmed GO from %s", launchItem.getRocket().getAgencies().get(0).getName()));
