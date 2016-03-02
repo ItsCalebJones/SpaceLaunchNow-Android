@@ -374,7 +374,10 @@ public class NextLaunchTracker extends IntentService {
         if (BuildConfig.DEBUG) {
             storedLaunch = sharedPreference.getNextLaunch();
             upcomingLaunchList = sharedPreference.getNextLaunches();
-            nextLaunch = upcomingLaunchList.get(0);
+
+            if (upcomingLaunchList != null && upcomingLaunchList.size() > 0) {
+                nextLaunch = upcomingLaunchList.get(0);
+            }
 
             if(nextLaunch != null && storedLaunch != null) {
                 // Create a DateFormatter object for displaying date in specified format.

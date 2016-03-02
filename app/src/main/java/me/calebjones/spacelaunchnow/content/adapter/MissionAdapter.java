@@ -227,16 +227,16 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
             switch (v.getId()) {
                 case R.id.launchButton:
                     Timber.v("Launch: %s", missionList.get(position).getLaunch());
-                    Intent exploreIntent = new Intent(mContext, LaunchDetailActivity.class);
+                    Intent exploreIntent = new Intent(aContext, LaunchDetailActivity.class);
                     exploreIntent.putExtra("TYPE", "LaunchID");
                     int id = missionList.get(position).getLaunch().getId();
                     exploreIntent.putExtra("id", id);
-                    mContext.startActivity(exploreIntent);
+                    aContext.startActivity(exploreIntent);
                     break;
                 case R.id.infoButton:
                     Timber.v("Info : %s", missionList.get(position).getInfoURL());
-                    Activity activity = (Activity)mContext;
-                    Utils.openCustomTab(activity, mContext, missionList.get(position).getInfoURL());
+                    Activity activity = (Activity)aContext;
+                    Utils.openCustomTab(activity, aContext, missionList.get(position).getInfoURL());
                     break;
             }
         }
