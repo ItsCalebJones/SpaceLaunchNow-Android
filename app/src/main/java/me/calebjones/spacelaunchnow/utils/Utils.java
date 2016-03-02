@@ -361,4 +361,33 @@ public class Utils {
         }
         return true;
     }
+
+    public static String getTypeName(int type) {
+        switch (type){
+            case 1:
+                return "Earth Science";
+            case 2:
+                return "Planetary Science";
+            case 3:
+                return "Astrophysics";
+            case 4:
+                return "Heliophysics";
+            case 5:
+                return "Human Exploration";
+            case 6:
+                return "Robotic Exploration";
+            case 7:
+                return "Government/Top Secret";
+            case 8:
+                return "Tourism";
+            case 9:
+                return "Unknown";
+            case 10:
+                return "Communications";
+            case 11:
+                return "Resupply";
+            default:
+                return "Unknown";
+        }
+    }
 }

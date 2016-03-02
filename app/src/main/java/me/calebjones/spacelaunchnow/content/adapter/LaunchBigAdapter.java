@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
@@ -57,6 +58,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
     private Calendar rightNow;
     private SharedPreferences sharedPref;
     private CountDownTimer timer;
+    private Boolean night;
     private static SharedPreference sharedPreference;
 
     public LaunchBigAdapter(Context context, Context aContext) {
@@ -104,8 +106,10 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         sharedPreference = SharedPreference.getInstance(mContext);
 
         if (sharedPreference.getNightMode()) {
+            night = true;
             m_theme = R.layout.dark_content_list_item;
         } else {
+            night = false;
             m_theme = R.layout.light_content_list_item;
         }
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(m_theme, viewGroup, false);
@@ -117,6 +121,11 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         final Launch launchItem = launchList.get(i);
 
         position = i;
+
+        //Retrieve missionType
+        if (launchItem.getMissions().size() != 0) {
+            setCategoryIcon(holder, sharedPreference.getMissionTypeByID(launchItem.getMissions().get(0).getId()));
+        }
 
         //TODO These are slightly rounded when converting from double to long
         double dlat = launchItem.getLocation().getPads().get(0).getLatitude();
@@ -351,6 +360,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
                 launch_date, content_status, content_TMinus_status,
                 watchButton, shareButton, exploreButton;
         public LinearLayout content_mission_description_view;
+        public ImageView categoryIcon;
         public FloatingActionButton exploreFab;
 
         public MapView map_view;
@@ -361,6 +371,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         public ViewHolder(View view) {
             super(view);
 
+            categoryIcon = (ImageView) view.findViewById(R.id.categoryIcon);
             exploreFab = (FloatingActionButton) view.findViewById(R.id.fab);
             exploreButton = (TextView) view.findViewById(R.id.exploreButton);
             shareButton = (TextView) view.findViewById(R.id.shareButton);
@@ -521,6 +532,119 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
 
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mMapLocation, 3.2f);
             gMap.moveCamera(cameraUpdate);
+        }
+    }
+
+    private void setCategoryIcon(ViewHolder holder, String type) {
+        switch (type){
+            case "Earth Science":
+                if(night){
+                    holder.categoryIcon.setImageDrawable(
+                            ContextCompat.getDrawable(mContext, R.drawable.ic_earth_white));
+                } else {
+                    holder.categoryIcon.setImageDrawable(
+                            ContextCompat.getDrawable(mContext, R.drawable.ic_earth));
+                }
+                break;
+            case "Planetary Science":
+                if(night){
+                    holder.categoryIcon.setImageDrawable(
+                            ContextCompat.getDrawable(mContext, R.drawable.ic_planetary_white));
+                } else {
+                    holder.categoryIcon.setImageDrawable(
+                            ContextCompat.getDrawable(mContext, R.drawable.ic_planetary));
+                }
+                break;
+            case "Astrophysics":
+                if(night){
+                    holder.categoryIcon.setImageDrawable(
+                            ContextCompat.getDrawable(mContext, R.drawable.ic_astrophysics_white));
+                } else {
+                    holder.categoryIcon.setImageDrawable(
+                            ContextCompat.getDrawable(mContext, R.drawable.ic_astrophysics));
+                }
+                break;
+            case "Heliophysics":
+                if(night){
+                    holder.categoryIcon.setImageDrawable(
+                            ContextCompat.getDrawable(mContext, R.drawable.ic_heliophysics_alt_white));
+                } else {
+                    holder.categoryIcon.setImageDrawable(
+                            ContextCompat.getDrawable(mContext, R.drawable.ic_heliophysics_alt));
+                }
+                break;
+            case "Human Exploration":
+                if(night){
+                    holder.categoryIcon.setImageDrawable(
+                            ContextCompat.getDrawable(mContext, R.drawable.ic_human_explore_white));
+                } else {
+                    holder.categoryIcon.setImageDrawable(
+                            ContextCompat.getDrawable(mContext, R.drawable.ic_human_explore));
+                }
+                break;
+            case "Robotic Exploration":
+                if(night){
+                    holder.categoryIcon.setImageDrawable(
+                            ContextCompat.getDrawable(mContext, R.drawable.ic_robotic_explore_white));
+                } else {
+                    holder.categoryIcon.setImageDrawable(
+                            ContextCompat.getDrawable(mContext, R.drawable.ic_robotic_explore));
+                }
+                break;
+            case "Government/Top Secret":
+                if(night){
+                    holder.categoryIcon.setImageDrawable(
+                            ContextCompat.getDrawable(mContext, R.drawable.ic_top_secret_white));
+                } else {
+                    holder.categoryIcon.setImageDrawable(
+                            ContextCompat.getDrawable(mContext, R.drawable.ic_top_secret));
+                }
+                break;
+            case "Tourism":
+                if(night){
+                    holder.categoryIcon.setImageDrawable(
+                            ContextCompat.getDrawable(mContext, R.drawable.ic_tourism_white));
+                } else {
+                    holder.categoryIcon.setImageDrawable(
+                            ContextCompat.getDrawable(mContext, R.drawable.ic_tourism));
+                }
+                break;
+            case "Unknown":
+                if(night){
+                    holder.categoryIcon.setImageDrawable(
+                            ContextCompat.getDrawable(mContext, R.drawable.ic_unknown_white));
+                } else {
+                    holder.categoryIcon.setImageDrawable(
+                            ContextCompat.getDrawable(mContext, R.drawable.ic_unknown));
+                }
+                break;
+            case "Communications":
+                if(night){
+                    holder.categoryIcon.setImageDrawable(
+                            ContextCompat.getDrawable(mContext, R.drawable.ic_satellite_white));
+                } else {
+                    holder.categoryIcon.setImageDrawable(
+                            ContextCompat.getDrawable(mContext, R.drawable.ic_satellite));
+                }
+                break;
+            case "Resupply":
+                if(night){
+                    holder.categoryIcon.setImageDrawable(
+                            ContextCompat.getDrawable(mContext, R.drawable.ic_resupply_white));
+                } else {
+                    holder.categoryIcon.setImageDrawable(
+                            ContextCompat.getDrawable(mContext, R.drawable.ic_resupply));
+                }
+                break;
+            default:
+                if(night){
+                    holder.categoryIcon.setImageDrawable(
+                            ContextCompat.getDrawable(mContext, R.drawable.ic_unknown_white));
+                } else {
+                    holder.categoryIcon.setImageDrawable(
+                            ContextCompat.getDrawable(mContext, R.drawable.ic_unknown));
+                }
+                break;
         }
     }
 }

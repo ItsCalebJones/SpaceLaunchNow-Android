@@ -20,22 +20,11 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/imageIcon"
-                    android:layout_width="64dp"
-                    android:layout_height="fill_parent"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:padding="8dp"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="8dp"/>
-
-                <ImageView
                     android:id="@+id/categoryIcon"
                     android:layout_width="64dp"
                     android:layout_height="fill_parent"
                     android:layout_gravity="center|left"
-                    android:src="@drawable/ic_mission"
+                    android:src="@drawable/ic_unknown"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
@@ -54,8 +43,8 @@
                     android:textStyle="normal"
                     android:lines="1"
                     android:fontFamily="sans-serif-condensed"
-                    android:layout_toRightOf="@+id/imageIcon"
-                    android:layout_toEndOf="@+id/imageIcon"
+                    android:layout_toRightOf="@+id/categoryIcon"
+                    android:layout_toEndOf="@+id/categoryIcon"
                     android:layout_marginRight="16dp"
                     />
                 <TextView
@@ -68,8 +57,8 @@
                     android:lines="1"
                     android:text="Unknown Mission"
                     android:layout_below="@+id/launch_rocket"
-                    android:layout_toRightOf="@+id/imageIcon"
-                    android:layout_toEndOf="@+id/imageIcon"
+                    android:layout_toRightOf="@+id/categoryIcon"
+                    android:layout_toEndOf="@+id/categoryIcon"
                     android:paddingTop="4dp"
                     android:paddingBottom="2dp"/>
 
@@ -83,8 +72,8 @@
                     android:lines="1"
                     android:text="Unknown Launch Location"
                     android:layout_below="@+id/mission"
-                    android:layout_toRightOf="@+id/imageIcon"
-                    android:layout_toEndOf="@+id/imageIcon"
+                    android:layout_toRightOf="@+id/categoryIcon"
+                    android:layout_toEndOf="@+id/categoryIcon"
                     android:paddingBottom="2dp"/>
                 <TextView
                     android:id="@+id/launch_date"
@@ -96,8 +85,8 @@
                     android:lines="1"
                     android:text="Unknown Launch Date"
                     android:layout_below="@+id/location"
-                    android:layout_toRightOf="@+id/imageIcon"
-                    android:layout_toEndOf="@+id/imageIcon"
+                    android:layout_toRightOf="@+id/categoryIcon"
+                    android:layout_toEndOf="@+id/categoryIcon"
                     android:paddingBottom="4dp"/>
                 <View
                     android:id="@+id/separator"

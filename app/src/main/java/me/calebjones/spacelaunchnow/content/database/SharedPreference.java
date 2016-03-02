@@ -392,7 +392,6 @@ public class SharedPreference {
         setPreviousLaunchesFiltered(new ArrayList());
     }
 
-
     public void removePreviousLaunches() {
         setPreviousLaunches(new ArrayList());
     }
@@ -599,6 +598,25 @@ public class SharedPreference {
         } else {
             return null;
         }
+    }
+
+    public String getMissionTypeByID(int id){
+        List<Mission> missionList = getMissionList();
+
+        int start = 0;
+        int end = missionList.size() - 1;
+
+        while (start <= end){
+            if (id == missionList.get(start).getId()){
+                return missionList.get(start).getTypeName();
+            } else if (id == missionList.get(end).getId()) {
+                return missionList.get(end).getTypeName();
+            } else {
+                start ++;
+                end --;
+            }
+        }
+        return null;
     }
 
     //Get methods by ID
