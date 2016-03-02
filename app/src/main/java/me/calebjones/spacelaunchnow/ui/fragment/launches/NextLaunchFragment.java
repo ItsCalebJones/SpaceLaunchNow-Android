@@ -15,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -77,6 +78,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     private SuperRecyclerView mRecyclerView;
     private LaunchBigAdapter adapter;
     private StaggeredGridLayoutManager layoutManager;
+    private LinearLayoutManager linearLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private View color_reveal;
     private FloatingActionButton menu;
@@ -166,11 +168,6 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         });
 
         mRecyclerView = (SuperRecyclerView) view.findViewById(R.id.recycler_view);
-        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
-            layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        } else {
-            layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-        }
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
         {
             @Override
@@ -186,7 +183,13 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                 super.onScrollStateChanged(recyclerView, newState);
             }
         });
-        mRecyclerView.setLayoutManager(layoutManager);
+        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
+            layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+            mRecyclerView.setLayoutManager(layoutManager);
+        } else {
+            linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+            mRecyclerView.setLayoutManager(linearLayoutManager);
+        }
         mRecyclerView.setAdapter(adapter);
 
         /*Set up Pull to refresh*/
@@ -214,6 +217,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     private void refreshView() {
         rocketLaunches = sharedPreference.filterLaunches(sharedPreference.getLaunchesUpcoming());
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+
         int size = Integer.parseInt(sharedPref.getString("upcoming_value", "10"));
         if (rocketLaunches.size() > size){
             rocketLaunches = rocketLaunches.subList(0,size);
@@ -222,8 +226,8 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         adapter.clear();
 
         if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && rocketLaunches.size() == 1){
-            layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-            mRecyclerView.setLayoutManager(layoutManager);
+            linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+            mRecyclerView.setLayoutManager(linearLayoutManager);
             mRecyclerView.setAdapter(adapter);
         } else if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
             layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
@@ -258,8 +262,8 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                 Timber.v("Next launches is empty...");
             } else {
                 if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && rocketLaunches.size() == 1){
-                    layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-                    mRecyclerView.setLayoutManager(layoutManager);
+                    linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+                    mRecyclerView.setLayoutManager(linearLayoutManager);
                     mRecyclerView.setAdapter(adapter);
                 } else if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
                     layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
