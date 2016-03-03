@@ -536,115 +536,117 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
     }
 
     private void setCategoryIcon(ViewHolder holder, String type) {
-        switch (type){
-            case "Earth Science":
-                if(night){
-                    holder.categoryIcon.setImageDrawable(
-                            ContextCompat.getDrawable(mContext, R.drawable.ic_earth_white));
-                } else {
-                    holder.categoryIcon.setImageDrawable(
-                            ContextCompat.getDrawable(mContext, R.drawable.ic_earth));
-                }
-                break;
-            case "Planetary Science":
-                if(night){
-                    holder.categoryIcon.setImageDrawable(
-                            ContextCompat.getDrawable(mContext, R.drawable.ic_planetary_white));
-                } else {
-                    holder.categoryIcon.setImageDrawable(
-                            ContextCompat.getDrawable(mContext, R.drawable.ic_planetary));
-                }
-                break;
-            case "Astrophysics":
-                if(night){
-                    holder.categoryIcon.setImageDrawable(
-                            ContextCompat.getDrawable(mContext, R.drawable.ic_astrophysics_white));
-                } else {
-                    holder.categoryIcon.setImageDrawable(
-                            ContextCompat.getDrawable(mContext, R.drawable.ic_astrophysics));
-                }
-                break;
-            case "Heliophysics":
-                if(night){
-                    holder.categoryIcon.setImageDrawable(
-                            ContextCompat.getDrawable(mContext, R.drawable.ic_heliophysics_alt_white));
-                } else {
-                    holder.categoryIcon.setImageDrawable(
-                            ContextCompat.getDrawable(mContext, R.drawable.ic_heliophysics_alt));
-                }
-                break;
-            case "Human Exploration":
-                if(night){
-                    holder.categoryIcon.setImageDrawable(
-                            ContextCompat.getDrawable(mContext, R.drawable.ic_human_explore_white));
-                } else {
-                    holder.categoryIcon.setImageDrawable(
-                            ContextCompat.getDrawable(mContext, R.drawable.ic_human_explore));
-                }
-                break;
-            case "Robotic Exploration":
-                if(night){
-                    holder.categoryIcon.setImageDrawable(
-                            ContextCompat.getDrawable(mContext, R.drawable.ic_robotic_explore_white));
-                } else {
-                    holder.categoryIcon.setImageDrawable(
-                            ContextCompat.getDrawable(mContext, R.drawable.ic_robotic_explore));
-                }
-                break;
-            case "Government/Top Secret":
-                if(night){
-                    holder.categoryIcon.setImageDrawable(
-                            ContextCompat.getDrawable(mContext, R.drawable.ic_top_secret_white));
-                } else {
-                    holder.categoryIcon.setImageDrawable(
-                            ContextCompat.getDrawable(mContext, R.drawable.ic_top_secret));
-                }
-                break;
-            case "Tourism":
-                if(night){
-                    holder.categoryIcon.setImageDrawable(
-                            ContextCompat.getDrawable(mContext, R.drawable.ic_tourism_white));
-                } else {
-                    holder.categoryIcon.setImageDrawable(
-                            ContextCompat.getDrawable(mContext, R.drawable.ic_tourism));
-                }
-                break;
-            case "Unknown":
-                if(night){
-                    holder.categoryIcon.setImageDrawable(
-                            ContextCompat.getDrawable(mContext, R.drawable.ic_unknown_white));
-                } else {
-                    holder.categoryIcon.setImageDrawable(
-                            ContextCompat.getDrawable(mContext, R.drawable.ic_unknown));
-                }
-                break;
-            case "Communications":
-                if(night){
-                    holder.categoryIcon.setImageDrawable(
-                            ContextCompat.getDrawable(mContext, R.drawable.ic_satellite_white));
-                } else {
-                    holder.categoryIcon.setImageDrawable(
-                            ContextCompat.getDrawable(mContext, R.drawable.ic_satellite));
-                }
-                break;
-            case "Resupply":
-                if(night){
-                    holder.categoryIcon.setImageDrawable(
-                            ContextCompat.getDrawable(mContext, R.drawable.ic_resupply_white));
-                } else {
-                    holder.categoryIcon.setImageDrawable(
-                            ContextCompat.getDrawable(mContext, R.drawable.ic_resupply));
-                }
-                break;
-            default:
-                if(night){
-                    holder.categoryIcon.setImageDrawable(
-                            ContextCompat.getDrawable(mContext, R.drawable.ic_unknown_white));
-                } else {
-                    holder.categoryIcon.setImageDrawable(
-                            ContextCompat.getDrawable(mContext, R.drawable.ic_unknown));
-                }
-                break;
+        if (type != null) {
+            switch (type) {
+                case "Earth Science":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_earth_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_earth));
+                    }
+                    break;
+                case "Planetary Science":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_planetary_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_planetary));
+                    }
+                    break;
+                case "Astrophysics":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_astrophysics_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_astrophysics));
+                    }
+                    break;
+                case "Heliophysics":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_heliophysics_alt_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_heliophysics_alt));
+                    }
+                    break;
+                case "Human Exploration":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_human_explore_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_human_explore));
+                    }
+                    break;
+                case "Robotic Exploration":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_robotic_explore_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_robotic_explore));
+                    }
+                    break;
+                case "Government/Top Secret":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_top_secret_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_top_secret));
+                    }
+                    break;
+                case "Tourism":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_tourism_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_tourism));
+                    }
+                    break;
+                case "Unknown":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_unknown_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_unknown));
+                    }
+                    break;
+                case "Communications":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_satellite_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_satellite));
+                    }
+                    break;
+                case "Resupply":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_resupply_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_resupply));
+                    }
+                    break;
+                default:
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_unknown_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_unknown));
+                    }
+                    break;
+            }
         }
     }
 }

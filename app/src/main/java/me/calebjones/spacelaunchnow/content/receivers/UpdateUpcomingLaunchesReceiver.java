@@ -23,7 +23,7 @@ public class UpdateUpcomingLaunchesReceiver extends BroadcastReceiver {
         String action = intent.getAction();
         if (sharedPref.getBoolean("background_sync", true)) {
             if (Strings.ACTION_UPDATE_UP_LAUNCHES.equals(action)) {
-                sharedPreference.setFiltered(false);
+                sharedPreference.setPrevFiltered(false);
 
                 Intent update_upcoming_launches = new Intent(context, LaunchDataService.class);
                 update_upcoming_launches.setAction(Strings.ACTION_GET_ALL);
@@ -39,7 +39,7 @@ public class UpdateUpcomingLaunchesReceiver extends BroadcastReceiver {
 
             } else if (Strings.ACTION_UPDATE_PREV_LAUNCHES.equals(action)) {
 
-                sharedPreference.setFiltered(false);
+                sharedPreference.setPrevFiltered(false);
                 Intent update_prev_launches = new Intent(context, LaunchDataService.class);
 
                 int id = intent.getIntExtra("id", 0);

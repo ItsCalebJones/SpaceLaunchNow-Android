@@ -90,7 +90,6 @@ public class MissionDataService extends IntentService {
 
                 Collections.reverse(missionList);
                 this.sharedPreference.setMissionList(missionList);
-                this.sharedPreference.syncMissions();
 
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_MISSIONS);

@@ -1,29 +1,36 @@
 package me.calebjones.spacelaunchnow.ui.fragment.launches;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.SearchEvent;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 
 import java.lang.reflect.Field;
@@ -37,14 +44,13 @@ import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.adapter.LaunchBigAdapter;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import timber.log.Timber;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQueryTextListener {
+public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
 
     private View view;
     private RecyclerView mRecyclerView;
@@ -54,6 +60,9 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
     private List<Launch> rocketLaunches;
     private SharedPreference sharedPreference;
     private SharedPreferences SharedPreferences;
+    private FloatingActionMenu menu;
+    private FloatingActionButton agency, vehicle, location, reset;
+    private int mScrollOffset = 4;
     private Context context;
 
     private static final Field sChildFragmentManagerField;
@@ -78,7 +87,7 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
 
         sharedPreference = SharedPreference.getInstance(this.context);
 
-        if (!BuildConfig.DEBUG){
+        if (!BuildConfig.DEBUG) {
             Answers.getInstance().logContentView(new ContentViewEvent()
                     .putContentName("UpcomingLaunchesFragment")
                     .putContentType("Fragment"));
@@ -91,44 +100,313 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
         LayoutInflater lf = getActivity().getLayoutInflater();
 
         view = lf.inflate(R.layout.fragment_launches, container, false);
-        View menu = view.findViewById(R.id.menu);
-        menu.setVisibility(View.INVISIBLE);
+
+        agency = (FloatingActionButton) view.findViewById(R.id.agency);
+        vehicle = (FloatingActionButton) view.findViewById(R.id.vehicle);
+        location = (FloatingActionButton) view.findViewById(R.id.location);
+        reset = (FloatingActionButton) view.findViewById(R.id.reset);
+        menu = (FloatingActionMenu) view.findViewById(R.id.menu);
+                /*Set up Pull to refresh*/
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.launches_swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(adapter);
 
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                int topRowVerticalPosition =
+                        (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
+                mSwipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
+                if (Math.abs(dy) > mScrollOffset) {
+                    if (dy > 0) {
+                        menu.hideMenu(true);
+                    } else {
+                        menu.showMenu(true);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
+
         if (this.sharedPreference.getUpcomingFirstBoot()) {
             this.sharedPreference.setUpcomingFirstBoot(false);
             Timber.d("Upcoming Launch Fragment: First Boot.");
-            if(this.sharedPreference.getLaunchesUpcoming().size() == 0){
+            if (this.sharedPreference.getLaunchesUpcoming().size() == 0) {
                 showLoading();
                 fetchData();
             } else {
                 this.rocketLaunches.clear();
                 displayLaunches();
             }
-        } else  {
+        } else {
             Timber.d("Upcoming Launch Fragment: Not First Boot.");
             this.rocketLaunches.clear();
             displayLaunches();
         }
+        setUpFab();
         return view;
     }
 
+    private void setUpFab() {
+        menu.setClosedOnTouchOutside(true);
+
+        createCustomAnimation();
+
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (sharedPreference.getUpFiltered()) {
+                    sharedPreference.setUpFiltered(false);
+                    sharedPreference.removeFilteredList();
+                    displayLaunches();
+                }
+                menu.hideMenu(true);
+            }
+        });
+
+        agency.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAgencyDialog();
+            }
+        });
+        vehicle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showVehicleDialog();
+            }
+        });
+        location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLocationDialog();
+            }
+        });
+    }
+
+    private void showLocationDialog() {
+        new MaterialDialog.Builder(getContext())
+                .title("Select a Country")
+                .content("Check an location below, to remove all filters use reset icon in the toolbar.")
+                .items(R.array.country)
+                .buttonRippleColorRes(R.color.colorAccentLight)
+                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        switch (which) {
+                            case 0:
+                                adapter.clear();
+                                fetchDataFiltered(2, "USA", "USA");
+                                break;
+                            case 1:
+                                adapter.clear();
+                                fetchDataFiltered(2, "China", "China");
+                                break;
+                            case 2:
+                                adapter.clear();
+                                fetchDataFiltered(2, "Russia", "Russia");
+                                break;
+                            case 3:
+                                adapter.clear();
+                                fetchDataFiltered(2, "India", "India");
+                                break;
+                            case 4:
+                                adapter.clear();
+                                fetchDataFiltered(2, "Multi", "Multi");
+                                break;
+
+                        }
+                        menu.toggle(false);
+                        return true;
+                    }
+                })
+                .positiveText("Filter")
+                .negativeText("Close")
+                .icon(ContextCompat.getDrawable(getContext(), R.mipmap.ic_launcher))
+                .show();
+    }
+
+    private void showAgencyDialog() {
+        new MaterialDialog.Builder(getContext())
+                .title("Select an Agency")
+                .content("Check an agency below, to remove all filters use reset icon in the toolbar.")
+                .items(R.array.agencies)
+                .buttonRippleColorRes(R.color.colorAccentLight)
+                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        switch (which) {
+                            case 0:
+                                adapter.clear();
+                                fetchDataFiltered(0, "44", "NASA");
+                                break;
+                            case 1:
+                                adapter.clear();
+                                fetchDataFiltered(0, "121", "SpaceX");
+                                break;
+                            case 2:
+                                adapter.clear();
+                                fetchDataFiltered(0, "63", "ROSCOSMOS");
+                                break;
+                            case 3:
+                                adapter.clear();
+                                fetchDataFiltered(0, "124", "ULA");
+                                break;
+                            case 4:
+                                adapter.clear();
+                                fetchDataFiltered(0, "115", "Arianespace");
+                                break;
+                            case 5:
+                                adapter.clear();
+                                fetchDataFiltered(0, "88", "CASC");
+                                break;
+                            case 6:
+                                adapter.clear();
+                                fetchDataFiltered(0, "31", "ISRO");
+                                break;
+
+                        }
+                        menu.toggle(false);
+                        return true;
+                    }
+                })
+                .positiveText("Filter")
+                .negativeText("Close")
+                .icon(ContextCompat.getDrawable(getContext(), R.mipmap.ic_launcher))
+                .show();
+    }
+
+    private void showVehicleDialog() {
+        new MaterialDialog.Builder(getContext())
+                .title("Select a Launch Vehicle")
+                .content("Check a vehicle below, to remove all filters use reset icon in the toolbar.")
+                .items(R.array.vehicles)
+                .buttonRippleColorRes(R.color.colorAccentLight)
+                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        switch (which) {
+                            case 0:
+                                adapter.clear();
+                                fetchDataFiltered(1, "Falcon", "Falcon");
+                                break;
+                            case 1:
+                                adapter.clear();
+                                fetchDataFiltered(1, "Proton", "Proton");
+                                break;
+                            case 2:
+                                adapter.clear();
+                                fetchDataFiltered(1, "Soyuz", "Soyuz");
+                                break;
+                            case 3:
+                                adapter.clear();
+                                fetchDataFiltered(1, "Atlas", "Atlas");
+                                break;
+                            case 4:
+                                adapter.clear();
+                                fetchDataFiltered(1, "Delta", "Delta");
+                                break;
+                            case 5:
+                                adapter.clear();
+                                fetchDataFiltered(1, "Long", "Long March");
+                                break;
+                            case 6:
+                                adapter.clear();
+                                fetchDataFiltered(1, "SLV", "PSLV/GSLV");
+                                break;
+                            case 7:
+                                adapter.clear();
+                                fetchDataFiltered(1, "Ariane", "Ariane");
+                                break;
+                            case 8:
+                                adapter.clear();
+                                fetchDataFiltered(1, "Zenit", "Zenit");
+                                break;
+                            case 9:
+                                adapter.clear();
+                                fetchDataFiltered(1, "Rokot", "Rokot");
+                                break;
+                        }
+
+                        menu.toggle(false);
+                        return true;
+                    }
+                })
+                .positiveText("Filter")
+                .negativeText("Close")
+                .icon(ContextCompat.getDrawable(getContext(), R.mipmap.ic_launcher))
+                .show();
+    }
+
+    private void createCustomAnimation() {
+
+        AnimatorSet set = new AnimatorSet();
+
+        ObjectAnimator scaleOutX = ObjectAnimator.ofFloat(menu.getMenuIconView(), "scaleX", 1.0f, 0.2f);
+        ObjectAnimator scaleOutY = ObjectAnimator.ofFloat(menu.getMenuIconView(), "scaleY", 1.0f, 0.2f);
+
+        ObjectAnimator scaleInX = ObjectAnimator.ofFloat(menu.getMenuIconView(), "scaleX", 0.2f, 1.0f);
+        ObjectAnimator scaleInY = ObjectAnimator.ofFloat(menu.getMenuIconView(), "scaleY", 0.2f, 1.0f);
+
+        scaleOutX.setDuration(50);
+        scaleOutY.setDuration(50);
+
+        scaleInX.setDuration(150);
+        scaleInY.setDuration(150);
+
+        scaleInX.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                menu.getMenuIconView().setImageResource(menu.isOpened()
+                        ? R.drawable.ic_sort : R.drawable.ic_close);
+            }
+        });
+
+        set.play(scaleOutX).with(scaleOutY);
+        set.play(scaleInX).with(scaleInY).after(scaleOutX);
+        set.setInterpolator(new OvershootInterpolator(2));
+
+        menu.setIconToggleAnimatorSet(set);
+    }
+
+    public void fetchDataFiltered(int type, String key, String title) {
+        Timber.d("Filtering by: %s", key);
+
+        if (!BuildConfig.DEBUG) {
+            Answers.getInstance().logSearch(new SearchEvent()
+                    .putQuery(key));
+        }
+
+        sharedPreference.setUpFilter(type, key);
+        displayLaunches();
+        setTitle();
+    }
+
     public void displayLaunches() {
-        this.rocketLaunches = this.sharedPreference.getLaunchesUpcoming();
+        if (!sharedPreference.getUpFiltered()) {
+            rocketLaunches = sharedPreference.getLaunchesUpcoming();
+        } else {
+            rocketLaunches = sharedPreference.getLaunchesUpcomingFiltered();
+        }
 
         if (rocketLaunches.size() == 0) {
-            Timber.v("Upcoming launches is empty...fetching.");
-            fetchData();
+            Timber.v("Upcoming launches is empty...");
         } else {
             adapter.clear();
             List<Launch> goList = new ArrayList<>();
             List<Launch> noList = new ArrayList<>();
-            for (int i = 0; i < rocketLaunches.size(); i++ ){
-                if (rocketLaunches.get(i).getStatus() == 1){
+            for (int i = 0; i < rocketLaunches.size(); i++) {
+                if (rocketLaunches.get(i).getStatus() == 1) {
                     goList.add(rocketLaunches.get(i));
                 } else {
                     noList.add(rocketLaunches.get(i));
@@ -164,6 +442,8 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
     }
 
     public void onRefresh() {
+        adapter.clear();
+        sharedPreference.setUpFiltered(false);
         fetchData();
     }
 
@@ -215,7 +495,7 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.action_refresh){
+        if (id == R.id.action_refresh) {
             onRefresh();
         }
         return super.onOptionsItemSelected(item);
@@ -225,8 +505,8 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
     public boolean onQueryTextChange(String query) {
         // Here is where we are going to implement our filter logic
         final List<Launch> filteredModelList = filter(rocketLaunches, query);
-        if (query.length() > 3){
-            if (!BuildConfig.DEBUG){
+        if (query.length() > 3) {
+            if (!BuildConfig.DEBUG) {
                 Answers.getInstance().logSearch(new SearchEvent()
                         .putQuery(query));
             }
@@ -258,7 +538,7 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
 
             //If pad and agency exist add it to location, otherwise get whats always available
             if (model.getLocation().getPads().size() > 0 && model.getLocation().getPads().
-                    get(0).getAgencies().size() > 0){
+                    get(0).getAgencies().size() > 0) {
                 missionName = model.getLocation().getPads().get(0).getAgencies().get(0).getName() + " " + (model.getRocket().getName());
             } else {
                 missionName = model.getRocket().getName();
