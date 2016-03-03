@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
@@ -113,7 +114,8 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
                                 holder.mission_vehicle.setVisibility(View.VISIBLE);
                             }
                         } else {
-                            holder.mission_vehicle.setText(mission.getLaunch().getName());
+                            String[] launch = mission.getLaunch().getName().split(Pattern.quote(" |"));
+                            holder.mission_vehicle.setText(launch[0]);
                             holder.mission_vehicle.setVisibility(View.VISIBLE);
                         }
                     } else {
