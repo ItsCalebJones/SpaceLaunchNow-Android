@@ -47,8 +47,6 @@ import me.calebjones.spacelaunchnow.ui.fragment.launches.details.PayloadDetailFr
 import me.calebjones.spacelaunchnow.ui.fragment.launches.details.SummaryDetailFragment;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;
-import xyz.hanks.library.SmallBang;
-import xyz.hanks.library.SmallBangListener;
 
 
 public class LaunchDetailActivity extends AppCompatActivity
@@ -69,7 +67,6 @@ public class LaunchDetailActivity extends AppCompatActivity
     private static SharedPreference sharedPreference;
     private CustomTabActivityHelper customTabActivityHelper;
     private Context context;
-    private SmallBang mSmallBang;
     private Calendar rightNow = Calendar.getInstance();
 
     private String URL = "https://launchlibrary.net/1.1/launch/%s";
@@ -120,7 +117,6 @@ public class LaunchDetailActivity extends AppCompatActivity
         detail_rocket = (TextView) findViewById(R.id.detail_rocket);
         detail_mission_location = (TextView) findViewById(R.id.detail_mission_location);
 
-        mSmallBang = SmallBang.attach2Window(this);
 
         //Grab information from Intent
         Intent mIntent = getIntent();

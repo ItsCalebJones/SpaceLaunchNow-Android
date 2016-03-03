@@ -40,8 +40,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.Response;
+import okhttp3.Interceptor;
+import okhttp3.Response;
 
 import java.io.IOException;
 import java.io.InputStream;

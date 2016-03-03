@@ -290,6 +290,7 @@ public class LaunchDataService extends IntentService {
                 }
 
                 this.sharedPreference.setUpComingLaunches(upcomingLaunchList);
+                this.sharedPreference.syncMissions();
 
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);

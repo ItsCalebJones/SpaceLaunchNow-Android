@@ -264,6 +264,9 @@ public class SharedPreference {
     }
 
     public void setNextLaunch(Launch launch) {
+        if (launch.getMissions() != null & launch.getMissions().size() >0){
+            launch.getMissions().get(0).setTypeName(getMissionTypeByID(launch.getMissions().get(0).getId()));
+        }
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -1174,5 +1177,42 @@ public class SharedPreference {
             }
         }
         return list;
+    }
+
+    public void syncMissions(){
+        List<Mission> missionList = getMissionList();
+        List<Launch> upcomingList = getLaunchesUpcoming();
+        List<Launch> previousList = getLaunchesPrevious();
+
+        if(missionList != null && missionList.size() > 0
+                & upcomingList != null && upcomingList.size() > 0
+                & previousList != null && previousList.size() > 0) {
+
+            int upList = upcomingList.size();
+            int prevList = previousList.size();
+            int missList = missionList.size();
+
+            for (int i = 0; i < missList; i++) {
+                for (int a = 0; a < upList; a++) {
+                    if (upcomingList.get(a).getMissions() != null && upcomingList.get(a).getMissions().size() > 0) {
+                        if (upcomingList.get(a).getMissions().get(0).getId().intValue() == missionList.get(i).getId().intValue()) {
+                            upcomingList.get(a).getMissions().get(0).setType(missionList.get(i).getType());
+                            upcomingList.get(a).getMissions().get(0).setTypeName(missionList.get(i).getTypeName());
+                        }
+                    }
+                }
+                for (int b = 0; b < prevList; b++) {
+                    if (previousList.get(b).getMissions() != null && previousList.get(b).getMissions().size() > 0) {
+                        if (previousList.get(b).getMissions().get(0).getId().intValue() == missionList.get(i).getId().intValue()) {
+                            previousList.get(b).getMissions().get(0).setType(missionList.get(i).getType());
+                            previousList.get(b).getMissions().get(0).setTypeName(missionList.get(i).getTypeName());
+                        }
+                    }
+                }
+            }
+
+            setUpComingLaunches(upcomingList);
+            setPreviousLaunches(previousList);
+        }
     }
 }

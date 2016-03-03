@@ -124,7 +124,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
 
         //Retrieve missionType
         if (launchItem.getMissions().size() != 0) {
-            setCategoryIcon(holder, sharedPreference.getMissionTypeByID(launchItem.getMissions().get(0).getId()));
+            setCategoryIcon(holder, launchItem.getMissions().get(0).getTypeName());
         }
 
         //TODO These are slightly rounded when converting from double to long

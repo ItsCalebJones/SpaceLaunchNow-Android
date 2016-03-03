@@ -57,35 +57,6 @@ public class LaunchCompactAdapter extends RecyclerView.Adapter<LaunchCompactAdap
         if (this.launchList == null) {
             this.launchList = launchList;
         } else {
-            final List<Launch> launches = launchList;
-            AsyncTask.execute(new Runnable() {
-                @Override
-                public void run() {
-                    mSections.clear();
-                    mSectionPositions.clear();
-
-                    //Note: If you're populating with a large dataset, you might want to
-                    //call the following code asychronously.
-                    SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
-                    df.toLocalizedPattern();
-
-                    //data is your adapter's dataset
-                    for (int i = 0, length = launches.size(); i < length; i++) {
-                        //In case data is removed
-                        if (launches.size() >= i){
-                            long longdate = launches.get(i).getWsstamp();
-                            longdate = longdate * 1000;
-                            Date date = new Date(longdate);
-                            String section = parseDateToMMyyyy(df.format(date));
-                            if (!TextUtils.isEmpty(section) && !mSections.contains(section)) {
-                                //This just adds a new section for each new letter
-                                mSections.add(section);
-                                mSectionPositions.add(i);
-                            }
-                        }
-                    }
-                }
-            });
             this.launchList.addAll(launchList);
         }
     }
@@ -128,7 +99,7 @@ public class LaunchCompactAdapter extends RecyclerView.Adapter<LaunchCompactAdap
 
         //Retrieve missionType
         if (launchItem.getMissions().size() != 0) {
-            setCategoryIcon(holder, sharedPreference.getMissionTypeByID(launchItem.getMissions().get(0).getId()));
+            setCategoryIcon(holder, launchItem.getMissions().get(0).getTypeName());
         }
 
         if (launchItem.getStatus() == 2) {
@@ -142,7 +113,7 @@ public class LaunchCompactAdapter extends RecyclerView.Adapter<LaunchCompactAdap
                 launchDate = launchItem.getWindowstart();
             }
 
-            holder.launch_date.setText("To be determined... " + launchDate);
+            holder.launch_date.setText(String.format("To be determined... %s", launchDate));
         } else {
             //Get launch date
             if (sharedPref.getBoolean("local_time", true)) {
@@ -205,18 +176,12 @@ public class LaunchCompactAdapter extends RecyclerView.Adapter<LaunchCompactAdap
     @NonNull
     @Override
     public String getSectionName(int position) {
-        int finalPosition = getSectionForPosition(position);
-        return mSections.get(finalPosition);
-    }
+        SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
+        df.toLocalizedPattern();
 
-    public int getSectionForPosition(int i) {
-        for (int j = 0, length = mSectionPositions.size(); j < length; j++) {
-            int sectionPosition = mSectionPositions.get(j);
-            if (i <= sectionPosition) {
-                return j;
-            }
-        }
-        return 0;
+        Date date = new Date(launchList.get(position).getWindowstart());
+
+        return parseDateToMMyyyy(df.format(date));
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
