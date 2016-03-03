@@ -29,6 +29,7 @@ import android.widget.ImageView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.crashlytics.android.Crashlytics;
 
 import java.text.SimpleDateFormat;
@@ -330,9 +331,49 @@ public class MainActivity extends AppCompatActivity
             });
 
             t.start();
-
+            if (Utils.getVersionName(context) != sharedPreference.getVersionCode()){
+                sharedPreference.setVersionCode(Utils.getVersionName(context));
+                showWhatsNew();
+            }
             navigate(mNavItemId);
         }
+    }
+
+    private void showWhatsNew() {
+        Theme theme;
+        if(sharedPreference.getNightMode()){
+            theme = Theme.DARK;
+        } else {
+            theme = Theme.LIGHT;
+        }
+
+        //TODO Update Every Release
+        new MaterialDialog.Builder(this)
+                .title(R.string.whats_new_title)
+                .content(R.string.whats_new_content)
+                .positiveText("Dismiss")
+                .negativeText("Feedback")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog,
+                                        @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog,
+                                        @NonNull DialogAction which) {
+                        String url = "https://www.reddit.com/r/spacelaunchnow";
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                    }
+                })
+                .theme(theme)
+                .autoDismiss(false)
+                .icon(ContextCompat.getDrawable(context, R.mipmap.ic_launcher))
+                .show();
     }
 
     private void refreshLaunches() {
@@ -511,16 +552,14 @@ public class MainActivity extends AppCompatActivity
                 settingsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(settingsIntent);
                 break;
-            case R.id.menu_help:
-                loadTutorial();
+            case R.id.menu_new:
+                showWhatsNew();
                 break;
             case R.id.menu_feedback:
-                Intent emailIntent = new Intent(Intent.ACTION_SEND);
-                emailIntent.setData(Uri.parse("mailto:"));
-                emailIntent.setType("message/rfc822");
-                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"cajones9119@gmail.com"});
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "SpaceLaunchNow - Feedback");
-                startActivity(Intent.createChooser(emailIntent, "Send Email"));
+                String url = "https://www.reddit.com/r/spacelaunchnow";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
                 break;
             default:
                 // ignore

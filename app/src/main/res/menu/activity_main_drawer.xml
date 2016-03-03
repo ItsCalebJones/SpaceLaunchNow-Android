@@ -25,7 +25,6 @@
             android:icon="@drawable/ic_open_in_browser"
             android:title="Launch Library" />
     </group>
-
     <item android:title="Other">
         <menu>
             <item
@@ -34,13 +33,12 @@
                 android:title="Settings" />
             <item
                 android:checkable="false"
-                android:id="@+id/menu_help"
-                android:title="Help" />
+                android:id="@+id/menu_new"
+                android:title="Whats New" />
             <item
                 android:checkable="false"
                 android:id="@+id/menu_feedback"
                 android:title="Send feedback" />
         </menu>
     </item>
-
 </menu>

@@ -21,8 +21,10 @@ import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -388,6 +390,17 @@ public class Utils {
                 return "Resupply";
             default:
                 return "Unknown";
+        }
+    }
+
+    public static int getVersionName(Context context)
+    {
+        try {
+            ComponentName comp = new ComponentName(context, context.getClass());
+            PackageInfo pinfo = context.getPackageManager().getPackageInfo(comp.getPackageName(), 0);
+            return pinfo.versionCode;
+        } catch (android.content.pm.PackageManager.NameNotFoundException e) {
+            return 0;
         }
     }
 }
