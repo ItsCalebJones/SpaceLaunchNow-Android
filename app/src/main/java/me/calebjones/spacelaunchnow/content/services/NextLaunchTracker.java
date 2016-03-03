@@ -92,7 +92,7 @@ public class NextLaunchTracker extends IntentService {
             //If they do not match this means nextLaunch has changed IE a launch executed.
             if (nextLaunch.getId().intValue() != storedLaunch.getId().intValue()) {
                 this.sharedPreference.setNextLaunch(nextLaunch);
-                this.sharedPreference.setFiltered(false);
+                this.sharedPreference.setPrevFiltered(false);
 
                 Intent updatePreviousLaunches = new Intent(this, LaunchDataService.class);
                 updatePreviousLaunches.setAction(Strings.ACTION_GET_PREV_LAUNCHES);

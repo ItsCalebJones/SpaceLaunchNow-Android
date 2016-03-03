@@ -31,6 +31,7 @@ public class SharedPreference {
 
     public static String PREFS_LIST_PREVIOUS;
     public static String PREFS_LIST_PREVIOUS_FILTERED;
+    public static String PREFS_LIST_UPCOMING_FILTERED;
     public static String PREFS_LIST_UPCOMING;
     public static String PREFS_LIST_AGENCY;
     public static String PREFS_LIST_VEHICLES;
@@ -57,6 +58,7 @@ public class SharedPreference {
     public static String PREFS_NEXT_LAUNCH;
     public static String PREFS_PREV_LAUNCH;
     public static String PREFS_PREV_FILTERED;
+    public static String PREFS_UP_FILTERED;
     public static String PREFS_DEBUG;
     public static String PREFS_FILTER_VEHICLE;
     public static String PREFS_FILTER_AGENCY;
@@ -105,10 +107,12 @@ public class SharedPreference {
         PREFS_NEXT_LAUNCH = "NEXT_LAUNCH";
         PREFS_PREV_LAUNCH = "PREV_LAUNCH";
         PREFS_PREV_FILTERED = "PREV_FILTERED";
+        PREFS_UP_FILTERED = "UP_FILTERED";
         PREFS_FILTER_VEHICLE = "FILTER_VEHICLE";
         PREFS_FILTER_AGENCY = "FILTER_AGENCY";
         PREFS_FILTER_COUNTRY = "FILTER_COUNTRY";
         PREFS_LIST_PREVIOUS_FILTERED = "LIST_PREVIOUS_FILTERED";
+        PREFS_LIST_UPCOMING_FILTERED = "LIST_UPCOMING_FILTERED";
         PREFS_SWITCH_NASA = "SWITCH_NASA";
         PREFS_SWITCH_SPACEX = "SWITCH_SPACEX";
         PREFS_SWITCH_ROSCOSMOS = "SWITCH_ROSCOSMOS";
@@ -213,16 +217,28 @@ public class SharedPreference {
         return this.sharedPrefs.getBoolean(PREFS_FIRST_BOOT, true);
     }
 
-    public void setFiltered(boolean value) {
+    public void setPrevFiltered(boolean value) {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_PREV_FILTERED, value);
         this.prefsEditor.apply();
     }
 
-    public boolean getFiltered() {
+    public boolean getPrevFiltered() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         return this.sharedPrefs.getBoolean(PREFS_PREV_FILTERED, false);
+    }
+
+    public void setUpFiltered(boolean value) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean(PREFS_UP_FILTERED, value);
+        this.prefsEditor.apply();
+    }
+
+    public boolean getUpFiltered() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getBoolean(PREFS_UP_FILTERED, false);
     }
 
     public void setUpcomingFirstBoot(boolean value) {
@@ -352,6 +368,17 @@ public class SharedPreference {
         this.prefsEditor.apply();
     }
 
+    public void setUpcomingLaunchesFiltered(List<Launch> launches) {
+        Timber.d("SharedPreference - setUpcomingFiltered list:  %s ", launches.size());
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.serializeSpecialFloatingPointValues();
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+        this.prefsEditor.putString(PREFS_LIST_UPCOMING_FILTERED, gson.toJson(launches));
+        this.prefsEditor.apply();
+    }
+
 
     public void setAgenciesList(List<Agency> agencies) {
         Timber.d("SharedPreference - setAgenciesList list:  %s ", agencies.size());
@@ -393,6 +420,10 @@ public class SharedPreference {
 
     public void removeFilteredList() {
         setPreviousLaunchesFiltered(new ArrayList());
+    }
+
+    public void removeUpFilteredList() {
+        setUpcomingLaunchesFiltered(new ArrayList());
     }
 
     public void removePreviousLaunches() {
@@ -473,10 +504,22 @@ public class SharedPreference {
         Type type = new TypeToken<List<Launch>>() {
         }.getType();
         productFromShared = gson.fromJson(jsonPreferences, type);
+        return productFromShared;
+    }
 
-        if (productFromShared != null) {
-            Timber.v("getLaunchesPreviousFiltered - Size: %s", productFromShared.size());
+    public List<Launch> getLaunchesUpcomingFiltered() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        if (!this.sharedPrefs.contains(PREFS_LIST_UPCOMING)) {
+            return null;
         }
+        Gson gson = new Gson();
+        List<Launch> productFromShared;
+        SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        String jsonPreferences = sharedPref.getString(PREFS_LIST_UPCOMING_FILTERED, null);
+
+        Type type = new TypeToken<List<Launch>>() {
+        }.getType();
+        productFromShared = gson.fromJson(jsonPreferences, type);
         return productFromShared;
     }
 
@@ -749,10 +792,10 @@ public class SharedPreference {
 
         List<Launch> newList = new ArrayList<>();
 
-        if (!getFiltered()) {
+        if (!getPrevFiltered()) {
             Timber.v("Not filtered, setting filtered to true and retrieving full list");
             removeFilteredList();
-            setFiltered(true);
+            setPrevFiltered(true);
             launchList = gson.fromJson(previous, mType);
         } else {
             Timber.v("Filtered, retrieving filtered list.");
@@ -868,6 +911,145 @@ public class SharedPreference {
                     }
                 }
                 this.setPreviousLaunchesFiltered(newList);
+                break;
+        }
+    }
+
+    public void setUpFilter(int type, String key) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+
+        //Get Previous Launches List
+        Gson gson = new Gson();
+        List<Launch> launchList;
+        SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        String upcoming = sharedPref.getString(PREFS_LIST_UPCOMING, null);
+        String upcomingFiltered = sharedPref.getString(PREFS_LIST_UPCOMING_FILTERED, null);
+
+        Type mType;
+        mType = new TypeToken<List<Launch>>() {
+        }.getType();
+
+        List<Launch> newList = new ArrayList<>();
+
+        if (!getPrevFiltered()) {
+            Timber.v("Not filtered, setting filtered to true and retrieving full list");
+            removeUpFilteredList();
+            setUpFiltered(true);
+            launchList = gson.fromJson(upcoming, mType);
+        } else {
+            Timber.v("Filtered, retrieving filtered list.");
+            launchList = gson.fromJson(upcomingFiltered, mType);
+        }
+
+        int size = launchList.size();
+        Timber.v("setUpFilter - List size is %s", size);
+
+
+        switch (type) {
+            //Agency
+            case 0:
+                this.prefsEditor.putString(PREFS_FILTER_AGENCY, key);
+                for (int i = 0; i < size; i++) {
+                    Launch launch = null;
+                    int id = Integer.parseInt(key);
+                    if (launchList.get(i).getRocket().getAgencies() != null) {
+                        int agencySize = launchList.get(i).getRocket().getAgencies().size();
+                        for (int a = 0; a < agencySize; a++) {
+                            if (launchList.get(i).getRocket().getAgencies().get(a).getId() == id) {
+                                launch = launchList.get(i);
+                                Timber.v("Adding filtered item %s", launch.getRocket().getAgencies().get(a).getName());
+                            }
+                        }
+                        if (launchList.get(i).getLocation().getPads() != null) {
+                            int padSize = launchList.get(i).getLocation().getPads().size();
+                            for (int a = 0; a < padSize; a++) {
+                                if (launchList.get(i).getLocation().getPads().get(a).getAgencies() != null) {
+                                    int agencySizeLocation = launchList.get(i).getLocation().getPads().get(a).getAgencies().size();
+                                    for (int b = 0; b < agencySizeLocation; b++) {
+                                        if (launchList.get(i).getLocation().getPads().get(a).getAgencies().get(b).getId() == id) {
+                                            launch = launchList.get(i);
+                                            Timber.v("Adding filtered item %s", launch.getLocation().getPads().get(a).getAgencies().get(b).getName());
+                                            b = agencySizeLocation;
+                                            a = padSize;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (launch != null) {
+                        newList.add(launch);
+                    }
+                }
+                if (newList.size() != 0) {
+                    Timber.v("Saving list - size is %s", newList.size());
+                    this.setUpcomingLaunchesFiltered(newList);
+                }
+                break;
+            //Vehicle
+            case 1:
+                this.prefsEditor.putString(PREFS_FILTER_VEHICLE, key);
+                for (int i = 0; i < size; i++) {
+                    if (launchList.get(i).getRocket() != null) {
+                        if (launchList.get(i).getRocket().getName().contains(key)) {
+                            newList.add(launchList.get(i));
+                        }
+                    }
+                }
+                this.setUpcomingLaunchesFiltered(newList);
+                break;
+            //Country
+            case 2:
+                this.prefsEditor.putString(PREFS_FILTER_COUNTRY, key);
+
+                //If its not 'Multi' then search by the Key
+                if (!key.contains("Multi")) {
+                    for (int i = 0; i < size; i++) {
+                        if (launchList.get(i).getLocation().getPads() != null) {
+                            int padSize = launchList.get(i).getLocation().getPads().size();
+                            for (int a = 0; a < padSize; a++) {
+                                if (launchList.get(i).getLocation().getPads().get(a)
+                                        .getAgencies() != null) {
+                                    int agencySize = launchList.get(i).getLocation()
+                                            .getPads().get(a).getAgencies().size();
+                                    for (int b = 0; b < agencySize; b++) {
+                                        if (launchList.get(i).getLocation().getPads()
+                                                .get(a).getAgencies().get(b).getCountryCode()
+                                                .contains(key)) {
+                                            newList.add(launchList.get(i));
+                                            b = agencySize;
+                                            a = padSize;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    //Otherwise find launches where countrycode length is longer then six.
+                } else {
+                    for (int i = 0; i < size; i++) {
+                        if (launchList.get(i).getLocation().getPads() != null) {
+                            int padSize = launchList.get(i).getLocation().getPads().size();
+                            for (int a = 0; a < padSize; a++) {
+                                if (launchList.get(i).getLocation().getPads().get(a)
+                                        .getAgencies() != null) {
+                                    int agencySize = launchList.get(i).getLocation()
+                                            .getPads().get(a).getAgencies().size();
+                                    for (int b = 0; b < agencySize; b++) {
+                                        if (launchList.get(i).getLocation().getPads()
+                                                .get(a).getAgencies().get(b).getCountryCode()
+                                                .length() > 6) {
+                                            newList.add(launchList.get(i));
+                                            b = agencySize;
+                                            a = padSize;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                this.setUpcomingLaunchesFiltered(newList);
                 break;
         }
     }
@@ -1179,17 +1361,14 @@ public class SharedPreference {
         return list;
     }
 
-    public void syncMissions(){
+    public void syncUpcomingMissions(){
         List<Mission> missionList = getMissionList();
         List<Launch> upcomingList = getLaunchesUpcoming();
-        List<Launch> previousList = getLaunchesPrevious();
 
         if(missionList != null && missionList.size() > 0
-                & upcomingList != null && upcomingList.size() > 0
-                & previousList != null && previousList.size() > 0) {
+                & upcomingList != null && upcomingList.size() > 0) {
 
             int upList = upcomingList.size();
-            int prevList = previousList.size();
             int missList = missionList.size();
 
             for (int i = 0; i < missList; i++) {
@@ -1201,6 +1380,22 @@ public class SharedPreference {
                         }
                     }
                 }
+            }
+            setUpComingLaunches(upcomingList);
+        }
+    }
+
+    public void syncPreviousMissions(){
+        List<Mission> missionList = getMissionList();
+        List<Launch> previousList = getLaunchesPrevious();
+
+        if(missionList != null && missionList.size() > 0
+                & previousList != null && previousList.size() > 0) {
+
+            int prevList = previousList.size();
+            int missList = missionList.size();
+
+            for (int i = 0; i < missList; i++) {
                 for (int b = 0; b < prevList; b++) {
                     if (previousList.get(b).getMissions() != null && previousList.get(b).getMissions().size() > 0) {
                         if (previousList.get(b).getMissions().get(0).getId().intValue() == missionList.get(i).getId().intValue()) {
@@ -1210,8 +1405,6 @@ public class SharedPreference {
                     }
                 }
             }
-
-            setUpComingLaunches(upcomingList);
             setPreviousLaunches(previousList);
         }
     }

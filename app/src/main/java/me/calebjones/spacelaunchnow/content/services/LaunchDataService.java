@@ -212,12 +212,13 @@ public class LaunchDataService extends IntentService {
 
                 Timber.d("LaunchDataService - Previous Launches list:  %s ", previousLaunchList.size());
 
-                if (this.sharedPreference.getFiltered()){
+                if (this.sharedPreference.getPrevFiltered()){
                     this.sharedPreference.setPreviousLaunchesFiltered(previousLaunchList);
                 } else {
                     LaunchDataService.this.cleanCachePrevious();
                     this.sharedPreference.setPreviousLaunches(previousLaunchList);
                 }
+                this.sharedPreference.syncPreviousMissions();
 
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
@@ -290,7 +291,7 @@ public class LaunchDataService extends IntentService {
                 }
 
                 this.sharedPreference.setUpComingLaunches(upcomingLaunchList);
-                this.sharedPreference.syncMissions();
+                this.sharedPreference.syncUpcomingMissions();
 
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
