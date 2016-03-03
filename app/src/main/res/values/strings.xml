@@ -68,4 +68,7 @@ Quisque tincidunt magna quis viverra faucibus. Vivamus rhoncus elit vel mi trist
     <string name="orion_orbiter_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944173/orion_sgl9rs.jpg</string>
     <string name="title_activity_debug">DebugActivity</string>
     <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
+
+    <string name="whats_new_title">Whats New! v1.0-beta.X</string>
+    <string name="whats_new_content">**Title**\n\n \u2022 **TEXT**\n</string>
 </resources>

@@ -29,6 +29,7 @@ public class SharedPreference {
     private Context appContext;
     SharedPreferences.Editor prefsEditor;
 
+    public static String PREFS_VERSION_CODE;
     public static String PREFS_LIST_PREVIOUS;
     public static String PREFS_LIST_PREVIOUS_FILTERED;
     public static String PREFS_LIST_UPCOMING_FILTERED;
@@ -80,6 +81,7 @@ public class SharedPreference {
 
 
     static {
+        PREFS_VERSION_CODE = "VERSION_CODE";
         PREFS_NAME = "SPACE_LAUNCH_NOW_PREFS";
         PREFS_FIRST_BOOT = "IS_FIRST_BOOT";
         PREFS_PREVIOUS_FIRST_BOOT = "IS_PREVIOUS_FIRST_BOOT";
@@ -148,6 +150,18 @@ public class SharedPreference {
         INSTANCE = new SharedPreference(context);
     }
 
+    public void setVersionCode(int value){
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putInt(PREFS_VERSION_CODE, value);
+        this.prefsEditor.apply();
+    }
+
+    public int getVersionCode() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getInt(PREFS_VERSION_CODE, 0);
+    }
+
     public long getLastVehicleUpdate(){
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         return this.sharedPrefs.getLong(PREFS_LAST_VEHICLE_UPDATE, 0);
@@ -162,14 +176,7 @@ public class SharedPreference {
 
     public boolean getNightMode() {
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this.appContext);
-
-        boolean dark_theme = this.sharedPrefs.getBoolean("theme", false);
-
-        if (dark_theme) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.sharedPrefs.getBoolean("theme", false);
     }
 
     public void setDebugLaunch(boolean value) {
