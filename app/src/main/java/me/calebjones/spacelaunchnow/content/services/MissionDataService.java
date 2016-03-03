@@ -85,11 +85,12 @@ public class MissionDataService extends IntentService {
                     response.append(line);
                 }
 
-                parsePreviousResult(response.toString());
+                parseMissionsResult(response.toString());
                 Timber.d("getMissionLaunches - Mission list:  %s ", missionList.size());
 
                 Collections.reverse(missionList);
                 this.sharedPreference.setMissionList(missionList);
+                this.sharedPreference.syncMissions();
 
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_MISSIONS);
@@ -109,7 +110,7 @@ public class MissionDataService extends IntentService {
         this.sharedPreference.removeMissionsList();
     }
 
-    public void parsePreviousResult(String result) throws JSONException {
+    public void parseMissionsResult(String result) throws JSONException {
         try {
 
             /*Initialize array if null*/

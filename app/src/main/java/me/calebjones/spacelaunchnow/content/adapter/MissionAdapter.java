@@ -71,24 +71,6 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
         if (this.missionList == null) {
             this.missionList = missionList;
         } else {
-            //Note: If you're populating with a large dataset, you might want to
-            //call the following code asychronously.
-            mSections.clear();
-            mSectionPositions.clear();
-
-            //data is your adapter's dataset
-            for (int i = 0, length = missionList.size(); i < length; i++) {
-                String section = missionList.get(i).getName().substring(0, 1);
-                if (section.matches("\\d+(?:\\.\\d+)?")) {
-                    section = "#";
-                }
-                Timber.v("Adding section for %s as %s", missionList.get(i).getName(), section);
-                if (!TextUtils.isEmpty(section) && !mSections.contains(section)) {
-                    //This just adds a new section for each new letter
-                    mSections.add(section);
-                    mSectionPositions.add(i);
-                }
-            }
             this.missionList.addAll(missionList);
         }
     }
@@ -123,7 +105,7 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
 
         //Retrieve missionType
 
-        setCategoryIcon(holder, sharedPreference.getMissionTypeByID(mission.getId()));
+        setCategoryIcon(holder, mission.getTypeName());
 
         holder.mission_name.setText(mission.getName());
         holder.mission_summary.setText(mission.getDescription());
@@ -206,19 +188,13 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
     @NonNull
     @Override
     public String getSectionName(int position) {
-        int finalPosition = getSectionForPosition(position);
-        return mSections.get(finalPosition);
+            String section = missionList.get(position).getName().substring(0, 1);
+            if (section.matches("\\d+(?:\\.\\d+)?")) {
+                section = "#";
+            }
+        return section;
     }
 
-    public int getSectionForPosition(int i) {
-        for (int j = 0, length = mSectionPositions.size(); j < length; j++) {
-            int sectionPosition = mSectionPositions.get(j);
-            if (i <= sectionPosition) {
-                return j;
-            }
-        }
-        return 0;
-    }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView mission_name, mission_summary, launchButton, infoButton, mission_vehicle,

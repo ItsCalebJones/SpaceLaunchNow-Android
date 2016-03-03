@@ -44,8 +44,8 @@
             android:layout_marginTop="-48dp"
             android:elevation="8dp"
             android:src="@drawable/icon_international"
-            app:border_color="#FFF"
-            app:border_width="4dp"
+            app:civ_border_color="#FFF"
+            app:civ_border_width="4dp"
             app:layout_scrollFlags="scroll" />
         ​
 
