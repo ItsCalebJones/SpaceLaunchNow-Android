@@ -207,7 +207,7 @@ public class Utils {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = df.format(c.getTime());
 
-        return "https://launchlibrary.net/1.1/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
+        return "https://launchlibrary.net/1.2/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
     }
 
     public static Calendar DateToCalendar(Date date) {
