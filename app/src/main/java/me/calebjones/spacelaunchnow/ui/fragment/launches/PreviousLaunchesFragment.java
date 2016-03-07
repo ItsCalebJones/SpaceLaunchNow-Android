@@ -411,7 +411,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
     public void fetchData() {
         showLoading();
-        String url = "https://launchlibrary.net/1.1/launch/" + this.start_date + "/" + this.end_date + "?sort=desc&limit=1000";
+        String url = "https://launchlibrary.net/1.2/launch/" + this.start_date + "/" + this.end_date + "?sort=desc&limit=1000";
         Timber.d("Sending Intent URL: %s", url);
         Intent intent = new Intent(getContext(), LaunchDataService.class);
         intent.putExtra("URL", url);
