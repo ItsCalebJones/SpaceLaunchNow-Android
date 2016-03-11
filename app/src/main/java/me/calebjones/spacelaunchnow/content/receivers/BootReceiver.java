@@ -11,6 +11,7 @@ import java.util.Calendar;
 
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.utils.Utils;
 
 
 public class BootReceiver extends BroadcastReceiver{
@@ -20,16 +21,9 @@ public class BootReceiver extends BroadcastReceiver{
     public void onReceive(Context context, Intent intent) {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         if (sharedPref.getBoolean("background_sync", true)) {
-            Calendar c = Calendar.getInstance();
-
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            String formattedDate = df.format(c.getTime());
-
-            String url = "https://launchlibrary.net/1.1/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
-
             Intent launchIntent = new Intent(context, LaunchDataService.class);
             launchIntent.setAction(Strings.ACTION_GET_ALL);
-            launchIntent.putExtra("URL", url);
+            launchIntent.putExtra("URL", Utils.getBaseURL());
             context.startService(launchIntent);
         }
     }

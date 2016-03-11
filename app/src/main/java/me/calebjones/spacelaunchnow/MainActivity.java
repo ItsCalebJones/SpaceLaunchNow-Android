@@ -312,15 +312,8 @@ public class MainActivity extends AppCompatActivity
                         context.startService(launchUpIntent);
                     }
                     if (sharedPreference.getLaunchesPrevious() == null || sharedPreference.getLaunchesPrevious().size() == 0) {
-                        Calendar c = Calendar.getInstance();
-
-                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                        String formattedDate = df.format(c.getTime());
-
-                        String url = "https://launchlibrary.net/1.1/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
-
                         Intent launchPrevIntent = new Intent(context, LaunchDataService.class);
-                        launchPrevIntent.putExtra("URL", url);
+                        launchPrevIntent.putExtra("URL", Utils.getBaseURL());
                         launchPrevIntent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
                         context.startService(launchPrevIntent);
                     }
@@ -383,16 +376,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void getFirstLaunches() {
-        Calendar c = Calendar.getInstance();
-
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        String formattedDate = df.format(c.getTime());
-
-        String url = "https://launchlibrary.net/1.1/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
-
         Intent launchIntent = new Intent(this.context, LaunchDataService.class);
         launchIntent.setAction(Strings.ACTION_GET_ALL);
-        launchIntent.putExtra("URL", url);
+        launchIntent.putExtra("URL", Utils.getBaseURL());
         this.context.startService(launchIntent);
 
         Intent rocketIntent = new Intent(this.context, VehicleDataService.class);
