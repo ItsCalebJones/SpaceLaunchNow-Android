@@ -464,8 +464,6 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     public void onDestroyView() {
         super.onDestroyView();
         Timber.v("onDestroyView");
-        mRecyclerView.removeAllViews();
-        mRecyclerView.setAdapter(null);
         ButterKnife.unbind(this);
     }
 
