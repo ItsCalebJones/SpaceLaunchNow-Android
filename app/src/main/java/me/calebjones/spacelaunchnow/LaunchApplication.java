@@ -12,6 +12,7 @@ import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.MissionDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import timber.log.Timber;
@@ -51,6 +52,8 @@ public class LaunchApplication extends Application {
         sharedPreference = SharedPreference.getInstance(this);
         sharedPreference.setNightModeStatus(false);
 
+
+
         if (!sharedPreference.getFirstBoot()) {
             Intent nextIntent = new Intent(this, LaunchDataService.class);
             nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
@@ -64,6 +67,14 @@ public class LaunchApplication extends Application {
                     this.startService(rocketIntent);
 
                     this.startService(new Intent(this, MissionDataService.class));
+                } else if (Utils.getVersionName(this) != sharedPreference.getVersionCode()){
+                        sharedPreference.setVersionCode(Utils.getVersionName(this));
+                        Intent rocketIntent = new Intent(this, VehicleDataService.class);
+                        rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
+                        this.startService(rocketIntent);
+
+                        this.startService(new Intent(this, MissionDataService.class));
+                    }
                 }
                 //Needed for users that will be upgrading
             } else {
@@ -72,7 +83,6 @@ public class LaunchApplication extends Application {
                 this.startService(rocketIntent);
             }
         }
-    }
 
     @Override
     public void onLowMemory() {
