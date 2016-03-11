@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -30,6 +29,7 @@ import android.widget.ImageView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.crashlytics.android.Crashlytics;
 
 import java.text.SimpleDateFormat;
@@ -291,7 +291,7 @@ public class MainActivity extends AppCompatActivity
 
     public void checkFirstBoot() {
         if (sharedPreference.getFirstBoot()) {
-            sharedPreference.setFiltered(false);
+            sharedPreference.setPrevFiltered(false);
             getFirstLaunches();
             loadTutorial();
         } else {
@@ -312,15 +312,8 @@ public class MainActivity extends AppCompatActivity
                         context.startService(launchUpIntent);
                     }
                     if (sharedPreference.getLaunchesPrevious() == null || sharedPreference.getLaunchesPrevious().size() == 0) {
-                        Calendar c = Calendar.getInstance();
-
-                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                        String formattedDate = df.format(c.getTime());
-
-                        String url = "https://launchlibrary.net/1.1/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
-
                         Intent launchPrevIntent = new Intent(context, LaunchDataService.class);
-                        launchPrevIntent.putExtra("URL", url);
+                        launchPrevIntent.putExtra("URL", Utils.getBaseURL());
                         launchPrevIntent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
                         context.startService(launchPrevIntent);
                     }
@@ -331,9 +324,49 @@ public class MainActivity extends AppCompatActivity
             });
 
             t.start();
-
+            if (Utils.getVersionName(context) != sharedPreference.getVersionCode()){
+                sharedPreference.setVersionCode(Utils.getVersionName(context));
+                showWhatsNew();
+            }
             navigate(mNavItemId);
         }
+    }
+
+    private void showWhatsNew() {
+        Theme theme;
+        if(sharedPreference.getNightMode()){
+            theme = Theme.DARK;
+        } else {
+            theme = Theme.LIGHT;
+        }
+
+        //TODO Update Every Release
+        new MaterialDialog.Builder(this)
+                .title(R.string.whats_new_title)
+                .content(R.string.whats_new_content)
+                .positiveText("Dismiss")
+                .negativeText("Feedback")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog,
+                                        @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog,
+                                        @NonNull DialogAction which) {
+                        String url = "https://www.reddit.com/r/spacelaunchnow";
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                    }
+                })
+                .theme(theme)
+                .autoDismiss(false)
+                .icon(ContextCompat.getDrawable(context, R.mipmap.ic_launcher))
+                .show();
     }
 
     private void refreshLaunches() {
@@ -343,16 +376,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void getFirstLaunches() {
-        Calendar c = Calendar.getInstance();
-
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        String formattedDate = df.format(c.getTime());
-
-        String url = "https://launchlibrary.net/1.1/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
-
         Intent launchIntent = new Intent(this.context, LaunchDataService.class);
         launchIntent.setAction(Strings.ACTION_GET_ALL);
-        launchIntent.putExtra("URL", url);
+        launchIntent.putExtra("URL", Utils.getBaseURL());
         this.context.startService(launchIntent);
 
         Intent rocketIntent = new Intent(this.context, VehicleDataService.class);
@@ -385,17 +411,21 @@ public class MainActivity extends AppCompatActivity
             if (getFragmentManager().getBackStackEntryCount() != 0) {
                 getFragmentManager().popBackStack();
             } else {
-                new MaterialDialog.Builder(this)
-                        .title("Confirm Exit")
-                        .negativeText("Cancel")
-                        .positiveText("Exit")
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                finish();
-                            }
-                        })
-                        .show();
+                if (sharedPref.getBoolean("confirm_exit", false)) {
+                    new MaterialDialog.Builder(this)
+                            .title("Confirm Exit")
+                            .negativeText("Cancel")
+                            .positiveText("Exit")
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    finish();
+                                }
+                            })
+                            .show();
+                } else {
+                    super.onBackPressed();
+                }
             }
         }
     }
@@ -508,16 +538,14 @@ public class MainActivity extends AppCompatActivity
                 settingsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(settingsIntent);
                 break;
-            case R.id.menu_help:
-                loadTutorial();
+            case R.id.menu_new:
+                showWhatsNew();
                 break;
             case R.id.menu_feedback:
-                Intent emailIntent = new Intent(Intent.ACTION_SEND);
-                emailIntent.setData(Uri.parse("mailto:"));
-                emailIntent.setType("message/rfc822");
-                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"cajones9119@gmail.com"});
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "SpaceLaunchNow - Feedback");
-                startActivity(Intent.createChooser(emailIntent, "Send Email"));
+                String url = "https://www.reddit.com/r/spacelaunchnow";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
                 break;
             default:
                 // ignore

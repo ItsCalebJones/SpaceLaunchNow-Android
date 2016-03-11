@@ -1,21 +1,16 @@
 package me.calebjones.spacelaunchnow.content.adapter;
 
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
@@ -23,9 +18,9 @@ import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
@@ -33,9 +28,6 @@ import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Mission;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
-import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
-import me.calebjones.spacelaunchnow.utils.customtab.CustomTabHelper;
-import me.calebjones.spacelaunchnow.utils.customtab.WebViewFallback;
 import timber.log.Timber;
 
 /**
@@ -44,21 +36,15 @@ import timber.log.Timber;
 public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHolder> implements FastScrollRecyclerView.SectionedAdapter {
     public int position;
     private List<Mission> missionList;
-    private List<Integer> mSectionPositions;
-    private List<String> mSections;
+
     private Context mContext;
     private Context aContext;
-    private Calendar rightNow;
-    private SharedPreferences sharedPref;
+    private Boolean night;
     private static SharedPreference sharedPreference;
 
     public MissionAdapter(Context context, Context aContext) {
-        rightNow = Calendar.getInstance();
         missionList = new ArrayList();
-        mSectionPositions = new ArrayList<>();
-        mSections = new ArrayList<>();
         sharedPreference = SharedPreference.getInstance(context);
-        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         this.mContext = context;
         this.aContext = aContext;
     }
@@ -67,24 +53,6 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
         if (this.missionList == null) {
             this.missionList = missionList;
         } else {
-            //Note: If you're populating with a large dataset, you might want to
-            //call the following code asychronously.
-            mSections.clear();
-            mSectionPositions.clear();
-
-            //data is your adapter's dataset
-            for (int i = 0, length = missionList.size(); i < length; i++) {
-                String section = missionList.get(i).getName().substring(0,1);
-                if (section.matches("\\d+(?:\\.\\d+)?")){
-                    section = "#";
-                }
-                Timber.v("Adding section for %s as %s", missionList.get(i).getName(), section);
-                if (!TextUtils.isEmpty(section) && !mSections.contains(section)) {
-                    //This just adds a new section for each new letter
-                    mSections.add(section);
-                    mSectionPositions.add(i);
-                }
-            }
             this.missionList.addAll(missionList);
         }
     }
@@ -98,13 +66,13 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 
         int m_theme;
-
-        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
         sharedPreference = SharedPreference.getInstance(mContext);
 
         if (sharedPreference.getNightMode()) {
+            night = true;
             m_theme = R.layout.dark_mission_list_item;
         } else {
+            night = false;
             m_theme = R.layout.light_mission_list_item;
         }
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(m_theme, viewGroup, false);
@@ -115,32 +83,47 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
     public void onBindViewHolder(final ViewHolder holder, int i) {
         final Mission mission = missionList.get(i);
 
+        //Retrieve missionType
+
+        setCategoryIcon(holder, mission.getTypeName());
+
         holder.mission_name.setText(mission.getName());
         holder.mission_summary.setText(mission.getDescription());
 
-        if (mission.getLaunch() != null && mission.getLaunch().getId() != null){
+        if (mission.getLaunch() != null && mission.getLaunch().getId() != null) {
 
-            if (mission.getLaunch().getVidURL() != null){
-                ((MainActivity)aContext).mayLaunchUrl(Uri.parse(mission.getLaunch().getVidURL()));
+            if (mission.getLaunch().getVidURL() != null) {
+                ((MainActivity) aContext).mayLaunchUrl(Uri.parse(mission.getLaunch().getVidURL()));
             }
             //If there's no info on the launch hide the button and no need to check for launch date.
-            if(mission.getLaunch().getId() == 0){
+            if (mission.getLaunch().getId() == 0) {
                 holder.launchButton.setVisibility(View.GONE);
                 holder.mission_vehicle.setVisibility(View.GONE);
                 holder.mission_date.setVisibility(View.GONE);
             } else {
-                if (mission.getLaunch().getId() != null &&  mission.getLaunch().getId() != 0){
+                if (mission.getLaunch().getId() != null && mission.getLaunch().getId() != 0) {
 
                     //If we can find the name of the launch add it to the card.
-                    if (mission.getLaunch().getName() != null){
-                        holder.mission_vehicle.setText(mission.getLaunch().getName());
-                        holder.mission_vehicle.setVisibility(View.VISIBLE);
+                    if (mission.getLaunch() != null) {
+                        if (mission.getLaunch().getRocket() != null) {
+                            if (mission.getLaunch().getRocket().getName() != null) {
+                                holder.mission_vehicle.setText(mission.getLaunch().getRocket().getName());
+                                holder.mission_vehicle.setVisibility(View.VISIBLE);
+                            } else {
+                                holder.mission_vehicle.setText(mission.getLaunch().getName());
+                                holder.mission_vehicle.setVisibility(View.VISIBLE);
+                            }
+                        } else {
+                            String[] launch = mission.getLaunch().getName().split(Pattern.quote(" |"));
+                            holder.mission_vehicle.setText(launch[0]);
+                            holder.mission_vehicle.setVisibility(View.VISIBLE);
+                        }
                     } else {
                         holder.mission_vehicle.setVisibility(View.GONE);
                     }
 
                     //If we can find the date of the launch add it to the card.
-                    if (mission.getLaunch().getNet() != null){
+                    if (mission.getLaunch().getNet() != null) {
                         SimpleDateFormat informat = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss zzz");
                         SimpleDateFormat outformat = new SimpleDateFormat("MMM dd, yyyy");
                         outformat.toLocalizedPattern();
@@ -169,10 +152,10 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
             holder.mission_date.setVisibility(View.GONE);
             holder.launchButton.setVisibility(View.GONE);
         }
-        if (mission.getInfoURL().length() == 0){
+        if (mission.getInfoURL().length() == 0) {
             holder.infoButton.setVisibility(View.INVISIBLE);
         } else {
-            ((MainActivity)aContext).mayLaunchUrl(Uri.parse(mission.getInfoURL()));
+            ((MainActivity) aContext).mayLaunchUrl(Uri.parse(mission.getInfoURL()));
             holder.infoButton.setVisibility(View.VISIBLE);
         }
 
@@ -186,28 +169,24 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
     @NonNull
     @Override
     public String getSectionName(int position) {
-        int finalPosition = getSectionForPosition(position);
-        return mSections.get(finalPosition);
+        String section = missionList.get(position).getName().substring(0, 1);
+        if (section.matches("\\d+(?:\\.\\d+)?")) {
+            section = "#";
+        }
+        return section;
     }
 
-    public int getSectionForPosition(int i) {
-        for (int j = 0, length = mSectionPositions.size(); j < length; j++) {
-            int sectionPosition = mSectionPositions.get(j);
-            if (i <= sectionPosition) {
-                return j;
-            }
-        }
-        return 0;
-    }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView mission_name, mission_summary, launchButton, infoButton, mission_vehicle,
                 mission_date;
+        public ImageView categoryIcon;
 
         //Add content to the card
         public ViewHolder(View view) {
             super(view);
 
+            categoryIcon = (ImageView) view.findViewById(R.id.categoryIcon);
             mission_name = (TextView) view.findViewById(R.id.mission_name);
             mission_summary = (TextView) view.findViewById(R.id.mission_summary);
             launchButton = (TextView) view.findViewById(R.id.launchButton);
@@ -227,16 +206,16 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
             switch (v.getId()) {
                 case R.id.launchButton:
                     Timber.v("Launch: %s", missionList.get(position).getLaunch());
-                    Intent exploreIntent = new Intent(mContext, LaunchDetailActivity.class);
+                    Intent exploreIntent = new Intent(aContext, LaunchDetailActivity.class);
                     exploreIntent.putExtra("TYPE", "LaunchID");
                     int id = missionList.get(position).getLaunch().getId();
                     exploreIntent.putExtra("id", id);
-                    mContext.startActivity(exploreIntent);
+                    aContext.startActivity(exploreIntent);
                     break;
                 case R.id.infoButton:
                     Timber.v("Info : %s", missionList.get(position).getInfoURL());
-                    Activity activity = (Activity)mContext;
-                    Utils.openCustomTab(activity, mContext, missionList.get(position).getInfoURL());
+                    Activity activity = (Activity) aContext;
+                    Utils.openCustomTab(activity, aContext, missionList.get(position).getInfoURL());
                     break;
             }
         }
@@ -289,5 +268,120 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
     public void moveItem(int fromPosition, int toPosition) {
         missionList.add(toPosition, missionList.remove(fromPosition));
         notifyItemMoved(fromPosition, toPosition);
+    }
+
+    private void setCategoryIcon(ViewHolder holder, String type) {
+        if (type != null) {
+            switch (type) {
+                case "Earth Science":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_earth_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_earth));
+                    }
+                    break;
+                case "Planetary Science":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_planetary_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_planetary));
+                    }
+                    break;
+                case "Astrophysics":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_astrophysics_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_astrophysics));
+                    }
+                    break;
+                case "Heliophysics":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_heliophysics_alt_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_heliophysics_alt));
+                    }
+                    break;
+                case "Human Exploration":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_human_explore_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_human_explore));
+                    }
+                    break;
+                case "Robotic Exploration":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_robotic_explore_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_robotic_explore));
+                    }
+                    break;
+                case "Government/Top Secret":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_top_secret_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_top_secret));
+                    }
+                    break;
+                case "Tourism":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_tourism_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_tourism));
+                    }
+                    break;
+                case "Unknown":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_unknown_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_unknown));
+                    }
+                    break;
+                case "Communications":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_satellite_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_satellite));
+                    }
+                    break;
+                case "Resupply":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_resupply_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_resupply));
+                    }
+                    break;
+                default:
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_unknown_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_unknown));
+                    }
+                    break;
+            }
+        }
     }
 }

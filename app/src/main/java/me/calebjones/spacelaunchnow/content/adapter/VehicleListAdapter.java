@@ -1,8 +1,10 @@
 package me.calebjones.spacelaunchnow.content.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,8 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.util.Util;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,12 +26,14 @@ import me.calebjones.spacelaunchnow.content.database.DatabaseManager;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.RocketDetails;
 import me.calebjones.spacelaunchnow.content.models.Rocket;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.ViewHolder> {
 
     public int position;
     private Context mContext;
+    private Activity activity;
     private Calendar rightNow;
     private SharedPreferences sharedPref;
     private DatabaseManager databaseManager;
@@ -38,12 +44,13 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
     private static final int SCALE_DELAY = 30;
     private int lastPosition = -1;
 
-    public VehicleListAdapter(Context context) {
+    public VehicleListAdapter(Context context, Activity activity) {
         rightNow = Calendar.getInstance();
         items = new ArrayList();
         sharedPreference = SharedPreference.getInstance(context);
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         this.mContext = context;
+        this.activity = activity;
     }
 
     public void addItems(List<Rocket> items) {
@@ -99,6 +106,11 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
         if (launchVehicle != null){
             holder.vehicle_spec_view.setVisibility(View.VISIBLE);
             holder.launch_vehicle_description.setVisibility(View.VISIBLE);
+            if (launchVehicle.getDescription() != null) {
+                holder.launch_vehicle_description.setText(launchVehicle.getDescription());
+            } else {
+                holder.launch_vehicle_description.setVisibility(View.GONE);
+            }
             holder.launch_vehicle_specs_height.setText(String.format("Height: %s Meters", launchVehicle.getLength()));
             holder.launch_vehicle_specs_diameter.setText(String.format("Diameter: %s Meters", launchVehicle.getDiameter()));
             holder.launch_vehicle_specs_stages.setText(String.format("Stages: %d", launchVehicle.getMaxStage()));
@@ -118,15 +130,38 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
 
         holder.item_title.setText(item.getName());
 
-        if (item.getInfoURL() != null){
+        if (launchVehicle != null){
+            if(launchVehicle.getInfoURL().length() > 0) {
+                items.get(i).setInfoURL(launchVehicle.getInfoURL());
+                holder.infoButton.setVisibility(View.VISIBLE);
+            } else {
+                holder.infoButton.setVisibility(View.GONE);
+            }
+        }  else if (item.getInfoURL() != null){
+            if(item.getInfoURL().length() > 0){
+                holder.infoButton.setVisibility(View.VISIBLE);
+            }  else {
+                holder.infoButton.setVisibility(View.GONE);
+            }
+        } else {
             holder.infoButton.setVisibility(View.GONE);
-        } else {
-            holder.infoButton.setVisibility(View.VISIBLE);
         }
-        if (item.getWikiURL() != null){
-            holder.wikiButton.setVisibility(View.GONE);
+
+        if (launchVehicle != null){
+            if(launchVehicle.getWikiURL().length() > 0) {
+                items.get(i).setWikiURL(launchVehicle.getWikiURL());
+                holder.wikiButton.setVisibility(View.VISIBLE);
+            } else {
+                holder.wikiButton.setVisibility(View.GONE);
+            }
+        }  else if (item.getWikiURL() != null){
+            if(item.getWikiURL().length() > 0){
+                holder.wikiButton.setVisibility(View.VISIBLE);
+            }  else {
+                holder.wikiButton.setVisibility(View.GONE);
+            }
         } else {
-            holder.wikiButton.setVisibility(View.VISIBLE);
+            holder.infoButton.setVisibility(View.GONE);
         }
     }
 
@@ -139,6 +174,7 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ImageView item_icon;
         public View vehicle_spec_view, vehicle_container;
+        public FloatingActionButton fab;
         public TextView item_title,launch_vehicle_specs_height,
                 launch_vehicle_specs_diameter,launch_vehicle_specs_stages,launch_vehicle_specs_leo,
                 launch_vehicle_specs_gto,launch_vehicle_specs_launch_mass, launch_vehicle_specs_thrust
@@ -149,6 +185,7 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
             super(view);
 
             view.setOnClickListener(this);
+            fab = (FloatingActionButton) view.findViewById(R.id.vehicle_fab);
             vehicle_container = view.findViewById(R.id.vehicle_container);
             vehicle_spec_view = view.findViewById(R.id.vehicle_spec_view);
             item_icon = (ImageView) view.findViewById(R.id.item_icon);
@@ -166,12 +203,24 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
 
             infoButton.setOnClickListener(this);
             wikiButton.setOnClickListener(this);
+            fab.setOnClickListener(this);
         }
 
         //React to click events.
         @Override
         public void onClick(View v) {
-            Timber.d("%s clicked.", getPosition());
+            final int position = getAdapterPosition();
+            switch (v.getId()) {
+                case R.id.infoButton:
+                    Utils.openCustomTab(activity, mContext, items.get(position).getInfoURL());
+                    break;
+                case R.id.wikiButton:
+                    Utils.openCustomTab(activity, mContext, items.get(position).getWikiURL());
+                    break;
+                case R.id.vehicle_fab:
+                    Toast.makeText(mContext, items.get(position).getName() + " | Work in progress!", Toast.LENGTH_SHORT);
+                    break;
+            }
         }
     }
 }

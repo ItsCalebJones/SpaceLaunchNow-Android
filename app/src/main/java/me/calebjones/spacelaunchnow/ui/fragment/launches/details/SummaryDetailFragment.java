@@ -39,14 +39,13 @@ import me.calebjones.spacelaunchnow.content.models.RocketDetails;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
-import xyz.hanks.library.SmallBang;
+
 
 public class SummaryDetailFragment extends Fragment implements OnMapReadyCallback {
 
     private SharedPreferences sharedPref;
     private static SharedPreference sharedPreference;
     private Context context;
-    private SmallBang mSmallBang;
     public MapView map_view;
     public GoogleMap gMap;
     protected LatLng mMapLocation;
@@ -340,22 +339,33 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
     @Override
     public void onDestroy() {
         super.onDestroy();
-        map_view.onDestroy();
-        if (gMap != null) {
-            gMap.clear();
+        if (Utils.checkPlayServices(context)) {
+            if (map_view != null) {
+                map_view.onDestroy();
+            }
+            if (gMap != null) {
+                gMap.clear();
+            }
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        map_view.onPause();
+        if (Utils.checkPlayServices(context)) {
+            if (map_view != null) {
+                map_view.onDestroy();
+            }
+        }
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        map_view.onLowMemory();
+        if (Utils.checkPlayServices(context)) {
+            if (map_view != null) {
+                map_view.onDestroy();
+            }
+        }
     }
-
 }

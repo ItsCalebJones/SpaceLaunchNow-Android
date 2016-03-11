@@ -2,16 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_sort"
-        android:icon="@drawable/ic_sort"
-        android:title="Sort"
-        app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/action_clear"
-        android:orderInCategory="95"
-        android:icon="@drawable/ic_clear_all"
-        android:title="Clear All"
-        app:showAsAction="never" />
+        android:id="@+id/action_alert"
+        android:icon="@drawable/ic_add_alert"
+        app:showAsAction="always"
+        android:title="Alert" />
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"

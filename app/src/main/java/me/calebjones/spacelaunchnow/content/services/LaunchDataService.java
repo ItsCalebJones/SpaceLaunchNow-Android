@@ -42,6 +42,7 @@ import me.calebjones.spacelaunchnow.content.models.Mission;
 import me.calebjones.spacelaunchnow.content.models.Pad;
 import me.calebjones.spacelaunchnow.content.models.Rocket;
 import me.calebjones.spacelaunchnow.content.models.RocketAgency;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 public class LaunchDataService extends IntentService {
@@ -211,12 +212,13 @@ public class LaunchDataService extends IntentService {
 
                 Timber.d("LaunchDataService - Previous Launches list:  %s ", previousLaunchList.size());
 
-                if (this.sharedPreference.getFiltered()){
+                if (this.sharedPreference.getPrevFiltered()){
                     this.sharedPreference.setPreviousLaunchesFiltered(previousLaunchList);
                 } else {
                     LaunchDataService.this.cleanCachePrevious();
                     this.sharedPreference.setPreviousLaunches(previousLaunchList);
                 }
+//                this.sharedPreference.syncPreviousMissions();
 
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
@@ -289,6 +291,7 @@ public class LaunchDataService extends IntentService {
                 }
 
                 this.sharedPreference.setUpComingLaunches(upcomingLaunchList);
+//                this.sharedPreference.syncUpcomingMissions();
 
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
@@ -445,6 +448,8 @@ public class LaunchDataService extends IntentService {
                         JSONObject missionObj = missions.optJSONObject(c);
                         Mission mission = new Mission();
                         mission.setId(missionObj.optInt("id"));
+                        mission.setType(missionObj.optInt("type"));
+                        mission.setTypeName(Utils.getTypeName(missionObj.optInt("type")));
                         mission.setName(missionObj.optString("name"));
                         mission.setDescription(missionObj.optString("description"));
 
@@ -577,7 +582,7 @@ public class LaunchDataService extends IntentService {
                         Mission mission = new Mission();
                         mission.setId(missionObj.optInt("id"));
                         mission.setType(missionObj.optInt("type"));
-                        mission.setTypeName(getTypeName(missionObj.optInt("type")));
+                        mission.setTypeName(Utils.getTypeName(missionObj.optInt("type")));
                         mission.setName(missionObj.optString("name"));
                         mission.setDescription(missionObj.optString("description"));
 
@@ -629,33 +634,6 @@ public class LaunchDataService extends IntentService {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = df.format(c.getTime());
 
-        return "https://launchlibrary.net/1.1/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
-    }
-
-    private String getTypeName(int type) {
-        switch (type){
-            case 1:
-                return "Earth Science";
-            case 2:
-                return "Planetary Science";
-            case 3:
-                return "Astrophysics";
-            case 4:
-                return "Heliophysics";
-            case 5:
-                return "Human Exploration";
-            case 6:
-                return "Robotic Exploration";
-            case 7:
-                return "Government/Top Secret";
-            case 8:
-                return "Tourism";
-            case 9:
-                return "Unknown";
-            case 10:
-                return "Communications";
-            default:
-                return "Unknown";
-        }
+        return "https://launchlibrary.net/1.2/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
     }
 }

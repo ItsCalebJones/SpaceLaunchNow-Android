@@ -92,7 +92,7 @@ public class NextLaunchTracker extends IntentService {
             //If they do not match this means nextLaunch has changed IE a launch executed.
             if (nextLaunch.getId().intValue() != storedLaunch.getId().intValue()) {
                 this.sharedPreference.setNextLaunch(nextLaunch);
-                this.sharedPreference.setFiltered(false);
+                this.sharedPreference.setPrevFiltered(false);
 
                 Intent updatePreviousLaunches = new Intent(this, LaunchDataService.class);
                 updatePreviousLaunches.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
@@ -374,7 +374,10 @@ public class NextLaunchTracker extends IntentService {
         if (BuildConfig.DEBUG) {
             storedLaunch = sharedPreference.getNextLaunch();
             upcomingLaunchList = sharedPreference.getNextLaunches();
-            nextLaunch = upcomingLaunchList.get(0);
+
+            if (upcomingLaunchList != null && upcomingLaunchList.size() > 0) {
+                nextLaunch = upcomingLaunchList.get(0);
+            }
 
             if(nextLaunch != null && storedLaunch != null) {
                 // Create a DateFormatter object for displaying date in specified format.

@@ -1,29 +1,19 @@
 package me.calebjones.spacelaunchnow;
 
 import android.app.Application;
-import android.app.PendingIntent;
 import android.content.Intent;
-import android.provider.Settings;
 
 import com.crashlytics.android.Crashlytics;
-
 import com.squareup.leakcanary.LeakCanary;
-import com.squareup.okhttp.Cache;
-import com.squareup.okhttp.OkHttpClient;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 import me.calebjones.spacelaunchnow.content.database.SharedPreference;
-import me.calebjones.spacelaunchnow.content.models.Launch;
-import me.calebjones.spacelaunchnow.content.models.Mission;
-import me.calebjones.spacelaunchnow.content.models.Rocket;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.MissionDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
 import timber.log.Timber;
 
 
@@ -32,7 +22,7 @@ public class LaunchApplication extends Application {
     private static LaunchApplication mInstance;
     public static final String TAG = "Space Launch Now";
 
-    public OkHttpClient client = new OkHttpClient();
+    public OkHttpClient client;
     private static SharedPreference sharedPreference;
 
     public static synchronized LaunchApplication getInstance() {
@@ -51,7 +41,10 @@ public class LaunchApplication extends Application {
 
         int cacheSize = 10 * 1024 * 1024;
         Cache cache = new Cache(getCacheDir(), cacheSize);
-        client.setCache(cache);
+
+        client = new OkHttpClient.Builder()
+                .cache(cache)
+                .build();
 
         SharedPreference.create(this);
 
@@ -69,6 +62,8 @@ public class LaunchApplication extends Application {
                     Intent rocketIntent = new Intent(this, VehicleDataService.class);
                     rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
                     this.startService(rocketIntent);
+
+                    this.startService(new Intent(this, MissionDataService.class));
                 }
                 //Needed for users that will be upgrading
             } else {

@@ -25,3 +25,6 @@
 #    public static *** d(...);
 #    public static *** v(...);
 #}
+-keepclassmembers class * implements android.os.Parcelable {
+    static ** CREATOR;
+}
