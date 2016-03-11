@@ -69,7 +69,7 @@ Quisque tincidunt magna quis viverra faucibus. Vivamus rhoncus elit vel mi trist
     <string name="title_activity_debug">DebugActivity</string>
     <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
 
-    <string name="whats_new_title">Whats New! v1.0-beta.9</string>
+    <string name="whats_new_title">Whats New! v1.0-beta.10</string>
     <string name="whats_new_content">Thanks for everyone\'s patience, this release was delayed due to a bug introduced by Google that caused crashes for anyone using Android 4.0.4-4.1.X. Also doing a lot of leg work for new data coming through launch library. I\'ve got a decent backlog of things to finish up. The next release should be sometime early next week.\n\nNew Features:\n
     \u2022 Add Confirm Exit as an optional settings now.\n
     \u2022 Added new information to Vehicle cards.\n
@@ -82,5 +82,5 @@ Quisque tincidunt magna quis viverra faucibus. Vivamus rhoncus elit vel mi trist
     \u2022 Back button working now in Vehicle/Orbiter Details.\n
     \u2022 Fixed an issue with countdown timer moving to different cards.\n
     \u2022 Fixed crashes in several places.\n
-    \u2022 Fixed Mission nad Launch cards in night mode.</string>
+    \u2022 Fixed Mission and Launch cards in night mode.</string>
 </resources>
