@@ -335,37 +335,4 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mMapLocation, 8f);
         gMap.moveCamera(cameraUpdate);
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (Utils.checkPlayServices(context)) {
-            if (map_view != null) {
-                map_view.onDestroy();
-            }
-            if (gMap != null) {
-                gMap.clear();
-            }
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (Utils.checkPlayServices(context)) {
-            if (map_view != null) {
-                map_view.onDestroy();
-            }
-        }
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        if (Utils.checkPlayServices(context)) {
-            if (map_view != null) {
-                map_view.onDestroy();
-            }
-        }
-    }
 }
