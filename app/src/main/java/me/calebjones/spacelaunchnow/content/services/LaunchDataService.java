@@ -218,7 +218,7 @@ public class LaunchDataService extends IntentService {
                     LaunchDataService.this.cleanCachePrevious();
                     this.sharedPreference.setPreviousLaunches(previousLaunchList);
                 }
-                this.sharedPreference.syncPreviousMissions();
+//                this.sharedPreference.syncPreviousMissions();
 
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
@@ -291,7 +291,7 @@ public class LaunchDataService extends IntentService {
                 }
 
                 this.sharedPreference.setUpComingLaunches(upcomingLaunchList);
-                this.sharedPreference.syncUpcomingMissions();
+//                this.sharedPreference.syncUpcomingMissions();
 
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);

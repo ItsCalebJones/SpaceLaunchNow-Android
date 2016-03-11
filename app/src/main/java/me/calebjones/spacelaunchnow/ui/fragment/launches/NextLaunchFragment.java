@@ -97,7 +97,9 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         super.onCreate(savedInstanceState);
         sharedPreference = SharedPreference.getInstance(getActivity().getApplication());
         rocketLaunches = new ArrayList();
-        adapter = new LaunchBigAdapter(getActivity().getApplicationContext(), getActivity());
+        if (adapter == null) {
+            adapter = new LaunchBigAdapter(getActivity().getApplicationContext(), getActivity());
+        }
     }
 
 
@@ -105,7 +107,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        context = getActivity().getApplication();
+        context = getActivity().getApplicationContext();
         final int color;
         active = false;
 
@@ -461,6 +463,9 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        Timber.v("onDestroyView");
+        mRecyclerView.removeAllViews();
+        mRecyclerView.setAdapter(null);
         ButterKnife.unbind(this);
     }
 

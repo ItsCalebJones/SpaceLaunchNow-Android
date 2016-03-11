@@ -1,14 +1,17 @@
 package me.calebjones.spacelaunchnow.content.adapter;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.widget.RecyclerView;
@@ -92,7 +95,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
     public void clear() {
         launchList.clear();
         this.notifyDataSetChanged();
-        if (timer != null){
+        if (timer != null) {
             timer.cancel();
         }
     }
@@ -219,7 +222,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
                     }
                 }.start();
             } else {
-                if (timer != null){
+                if (timer != null) {
                     timer.cancel();
                 }
                 long days = timeToFinish / 86400000;
@@ -228,7 +231,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             }
 
         } else {
-            if (timer != null){
+            if (timer != null) {
                 timer.cancel();
             }
             if (launchItem.getStatus() != 1) {
@@ -316,7 +319,9 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
     //Recycling GoogleMap for list item
     @Override
     public void onViewRecycled(ViewHolder holder) {
+        Timber.v("onViewRecyled!");
         // Cleanup MapView here?
+        holder.map_view.onDestroy();
         if (holder.gMap != null) {
             System.gc();
             holder.gMap.clear();
@@ -509,7 +514,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         public void onMapReady(GoogleMap googleMap) {
             //TODO: Allow user to update this 1-normal 2-satellite 3-Terrain
             // https://goo.gl/OkexW7
-            MapsInitializer.initialize(mContext);
+            MapsInitializer.initialize(mContext.getApplicationContext());
 
             gMap = googleMap;
             gMap.getUiSettings().setAllGesturesEnabled(false);
