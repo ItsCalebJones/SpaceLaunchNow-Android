@@ -321,7 +321,9 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
     public void onViewRecycled(ViewHolder holder) {
         Timber.v("onViewRecyled!");
         // Cleanup MapView here?
-        holder.map_view.onDestroy();
+        if (holder.map_view !=null) {
+            holder.map_view.onDestroy();
+        }
         if (holder.gMap != null) {
             System.gc();
             holder.gMap.clear();
