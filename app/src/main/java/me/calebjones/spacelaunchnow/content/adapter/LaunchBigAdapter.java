@@ -1,20 +1,24 @@
 package me.calebjones.spacelaunchnow.content.adapter;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
@@ -56,6 +60,8 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
     private Context aContext;
     private Calendar rightNow;
     private SharedPreferences sharedPref;
+    private CountDownTimer timer;
+    private Boolean night;
     private static SharedPreference sharedPreference;
 
     public LaunchBigAdapter(Context context, Context aContext) {
@@ -89,6 +95,9 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
     public void clear() {
         launchList.clear();
         this.notifyDataSetChanged();
+        if (timer != null) {
+            timer.cancel();
+        }
     }
 
     @Override
@@ -100,8 +109,10 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         sharedPreference = SharedPreference.getInstance(mContext);
 
         if (sharedPreference.getNightMode()) {
+            night = true;
             m_theme = R.layout.dark_content_list_item;
         } else {
+            night = false;
             m_theme = R.layout.light_content_list_item;
         }
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(m_theme, viewGroup, false);
@@ -112,8 +123,12 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
     public void onBindViewHolder(final ViewHolder holder, int i) {
         final Launch launchItem = launchList.get(i);
 
-
         position = i;
+
+        //Retrieve missionType
+        if (launchItem.getMissions().size() != 0) {
+            setCategoryIcon(holder, launchItem.getMissions().get(0).getTypeName());
+        }
 
         //TODO These are slightly rounded when converting from double to long
         double dlat = launchItem.getLocation().getPads().get(0).getLatitude();
@@ -139,7 +154,6 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
         df.toLocalizedPattern();
 
-
         switch (launchItem.getStatus()) {
             case 1:
                 //GO for launch
@@ -149,7 +163,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             case 2:
                 //NO GO for launch
                 holder.content_status.setText(R.string.status_nogo);
-                holder.content_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+                holder.content_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorAccent));
                 break;
             case 3:
                 //Success for launch
@@ -159,7 +173,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             case 4:
                 //Failure to launch
                 holder.content_status.setText(R.string.status_failure);
-                holder.content_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+                holder.content_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorAccent));
                 break;
         }
 
@@ -171,10 +185,10 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
 
             Calendar future = DateToCalendar(date);
             Calendar now = rightNow;
-            CountDownTimer timer;
 
             now.setTimeInMillis(System.currentTimeMillis());
             long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
+
             if (timeToFinish < 86400000) {
                 timer = new CountDownTimer(future.getTimeInMillis() - now.getTimeInMillis(), 1000) {
                     StringBuilder time = new StringBuilder();
@@ -183,6 +197,8 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
                     public void onFinish() {
                         if (launchItem.getStatus() == 1) {
                             holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
+
+                            //TODO - Get hold reason and show it
                         } else {
                             holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
                         }
@@ -196,22 +212,28 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
                         long mins = (millisUntilFinished / 60000) % 60;
                         long seconds = (millisUntilFinished / 1000) % 60;
 
-                        if (Long.valueOf(hours) >= 1) {
+                        if (hours >= 1) {
                             holder.content_TMinus_status.setText(String.format("%s Hours : %s Minutes : %s Seconds", hours, mins, seconds));
-                        } else if (Long.valueOf(mins) > 0) {
+                        } else if (mins > 0) {
                             holder.content_TMinus_status.setText(String.format("%s Minutes : %s Seconds", mins, seconds));
-                        } else if (Long.valueOf(seconds) > 0) {
+                        } else if (seconds > 0) {
                             holder.content_TMinus_status.setText(String.format("%s Seconds", seconds));
                         }
                     }
                 }.start();
             } else {
+                if (timer != null) {
+                    timer.cancel();
+                }
                 long days = timeToFinish / 86400000;
                 long hours = (timeToFinish / 3600000) % 24;
                 holder.content_TMinus_status.setText(String.format("%s Day(s) : %s Hour(s)", Long.valueOf(days), Long.valueOf(hours)));
             }
 
         } else {
+            if (timer != null) {
+                timer.cancel();
+            }
             if (launchItem.getStatus() != 1) {
                 if (launchItem.getRocket().getAgencies().size() > 0) {
                     holder.content_TMinus_status.setText(String.format("Pending confirmed GO from %s", launchItem.getRocket().getAgencies().get(0).getName()));
@@ -297,10 +319,16 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
     //Recycling GoogleMap for list item
     @Override
     public void onViewRecycled(ViewHolder holder) {
+        Timber.v("onViewRecyled!");
         // Cleanup MapView here?
-        if (holder.gMap != null) {
-            System.gc();
-            holder.gMap.clear();
+        if (Utils.checkPlayServices(mContext)) {
+            if (holder.map_view != null) {
+                holder.map_view.onDestroy();
+            }
+            if (holder.gMap != null) {
+                System.gc();
+                holder.gMap.clear();
+            }
         }
     }
 
@@ -341,6 +369,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
                 launch_date, content_status, content_TMinus_status,
                 watchButton, shareButton, exploreButton;
         public LinearLayout content_mission_description_view;
+        public ImageView categoryIcon;
         public FloatingActionButton exploreFab;
 
         public MapView map_view;
@@ -351,6 +380,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         public ViewHolder(View view) {
             super(view);
 
+            categoryIcon = (ImageView) view.findViewById(R.id.categoryIcon);
             exploreFab = (FloatingActionButton) view.findViewById(R.id.fab);
             exploreButton = (TextView) view.findViewById(R.id.exploreButton);
             shareButton = (TextView) view.findViewById(R.id.shareButton);
@@ -372,7 +402,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             watchButton.setOnClickListener(this);
             exploreFab.setOnClickListener(this);
 
-            if (!Utils.checkPlayServices(mContext) && map_view != null) {
+            if (Utils.checkPlayServices(mContext) && map_view != null) {
                 map_view.onCreate(null);
                 map_view.onResume();
                 map_view.getMapAsync(this);
@@ -488,7 +518,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         public void onMapReady(GoogleMap googleMap) {
             //TODO: Allow user to update this 1-normal 2-satellite 3-Terrain
             // https://goo.gl/OkexW7
-            MapsInitializer.initialize(mContext);
+            MapsInitializer.initialize(mContext.getApplicationContext());
 
             gMap = googleMap;
             gMap.getUiSettings().setAllGesturesEnabled(false);
@@ -511,6 +541,121 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
 
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mMapLocation, 3.2f);
             gMap.moveCamera(cameraUpdate);
+        }
+    }
+
+    private void setCategoryIcon(ViewHolder holder, String type) {
+        if (type != null) {
+            switch (type) {
+                case "Earth Science":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_earth_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_earth));
+                    }
+                    break;
+                case "Planetary Science":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_planetary_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_planetary));
+                    }
+                    break;
+                case "Astrophysics":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_astrophysics_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_astrophysics));
+                    }
+                    break;
+                case "Heliophysics":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_heliophysics_alt_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_heliophysics_alt));
+                    }
+                    break;
+                case "Human Exploration":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_human_explore_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_human_explore));
+                    }
+                    break;
+                case "Robotic Exploration":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_robotic_explore_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_robotic_explore));
+                    }
+                    break;
+                case "Government/Top Secret":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_top_secret_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_top_secret));
+                    }
+                    break;
+                case "Tourism":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_tourism_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_tourism));
+                    }
+                    break;
+                case "Unknown":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_unknown_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_unknown));
+                    }
+                    break;
+                case "Communications":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_satellite_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_satellite));
+                    }
+                    break;
+                case "Resupply":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_resupply_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_resupply));
+                    }
+                    break;
+                default:
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_unknown_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_unknown));
+                    }
+                    break;
+            }
         }
     }
 }

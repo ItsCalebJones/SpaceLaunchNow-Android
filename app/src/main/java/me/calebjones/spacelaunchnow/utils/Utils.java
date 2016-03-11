@@ -21,8 +21,10 @@ import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -40,8 +42,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.Response;
+import okhttp3.Interceptor;
+import okhttp3.Response;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -201,11 +203,12 @@ public class Utils {
 
     public static String getBaseURL() {
         Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, 1);
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = df.format(c.getTime());
 
-        return "https://launchlibrary.net/1.1/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
+        return "https://launchlibrary.net/1.2/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
     }
 
     public static Calendar DateToCalendar(Date date) {
@@ -360,5 +363,45 @@ public class Utils {
             return false;
         }
         return true;
+    }
+
+    public static String getTypeName(int type) {
+        switch (type){
+            case 1:
+                return "Earth Science";
+            case 2:
+                return "Planetary Science";
+            case 3:
+                return "Astrophysics";
+            case 4:
+                return "Heliophysics";
+            case 5:
+                return "Human Exploration";
+            case 6:
+                return "Robotic Exploration";
+            case 7:
+                return "Government/Top Secret";
+            case 8:
+                return "Tourism";
+            case 9:
+                return "Unknown";
+            case 10:
+                return "Communications";
+            case 11:
+                return "Resupply";
+            default:
+                return "Unknown";
+        }
+    }
+
+    public static int getVersionName(Context context)
+    {
+        try {
+            ComponentName comp = new ComponentName(context, context.getClass());
+            PackageInfo pinfo = context.getPackageManager().getPackageInfo(comp.getPackageName(), 0);
+            return pinfo.versionCode;
+        } catch (android.content.pm.PackageManager.NameNotFoundException e) {
+            return 0;
+        }
     }
 }

@@ -4,7 +4,7 @@
     android:title="Launch Tracking">
     <PreferenceCategory android:title="Default Launch Count">
         <ListPreference
-            android:defaultValue="1000"
+            android:defaultValue="10"
             android:key="upcoming_value"
             android:entries="@array/upcoming_array"
             android:entryValues="@array/upcoming_array_values"
@@ -42,5 +42,10 @@
             android:summaryOff="Allow times to be represented in UTC."
             android:summaryOn="Allow locally translated times to fit your current timezone."
             android:title="Timezone Settings" />
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="confirm_exit"
+            android:summary="Show confirm dialog before exit."
+            android:title="Confirm Exit" />
     </PreferenceCategory>
 </PreferenceScreen>

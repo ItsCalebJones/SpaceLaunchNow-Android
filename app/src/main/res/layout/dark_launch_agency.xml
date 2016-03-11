@@ -133,7 +133,7 @@
 
                         <android.support.v7.widget.AppCompatButton
                             android:id="@+id/mission_infoButton_one"
-                            style="@style/Base.Widget.AppCompat.Button"
+                            style="@style/Base.Widget.AppCompat.Button.Colored"
                             android:layout_width="wrap_content"
                             android:layout_height="50dp"
                             android:layout_alignParentBottom="false"
@@ -149,7 +149,7 @@
 
                         <android.support.v7.widget.AppCompatButton
                             android:id="@+id/mission_wikiButton_one"
-                            style="@style/Base.Widget.AppCompat.Button"
+                            style="@style/Base.Widget.AppCompat.Button.Colored"
                             android:layout_width="wrap_content"
                             android:layout_height="50dp"
                             android:layout_alignParentBottom="false"
@@ -233,7 +233,7 @@
 
                         <android.support.v7.widget.AppCompatButton
                             android:id="@+id/mission_infoButton_two"
-                            style="@style/Base.Widget.AppCompat.Button"
+                            style="@style/Base.Widget.AppCompat.Button.Colored"
                             android:layout_width="wrap_content"
                             android:layout_height="50dp"
                             android:layout_alignParentBottom="false"
@@ -249,7 +249,7 @@
 
                         <android.support.v7.widget.AppCompatButton
                             android:id="@+id/mission_wikiButton_two"
-                            style="@style/Base.Widget.AppCompat.Button"
+                            style="@style/Base.Widget.AppCompat.Button.Colored"
                             android:layout_width="wrap_content"
                             android:layout_height="50dp"
                             android:layout_alignParentBottom="false"
@@ -382,7 +382,7 @@
 
                         <android.support.v7.widget.AppCompatButton
                             android:id="@+id/infoButton_one"
-                            style="@style/Base.Widget.AppCompat.Button"
+                            style="@style/Base.Widget.AppCompat.Button.Colored"
                             android:layout_width="wrap_content"
                             android:layout_height="50dp"
                             android:layout_alignParentBottom="false"
@@ -398,7 +398,7 @@
 
                         <android.support.v7.widget.AppCompatButton
                             android:id="@+id/wikiButton_one"
-                            style="@style/Base.Widget.AppCompat.Button"
+                            style="@style/Base.Widget.AppCompat.Button.Colored"
                             android:layout_width="wrap_content"
                             android:layout_height="50dp"
                             android:layout_alignParentBottom="false"
@@ -480,7 +480,7 @@
 
                         <android.support.v7.widget.AppCompatButton
                             android:id="@+id/infoButton_two"
-                            style="@style/Base.Widget.AppCompat.Button"
+                            style="@style/Base.Widget.AppCompat.Button.Colored"
                             android:layout_width="wrap_content"
                             android:layout_height="50dp"
                             android:layout_alignParentBottom="false"
@@ -496,7 +496,7 @@
 
                         <android.support.v7.widget.AppCompatButton
                             android:id="@+id/wikiButton_two"
-                            style="@style/Base.Widget.AppCompat.Button"
+                            style="@style/Base.Widget.AppCompat.Button.Colored"
                             android:layout_width="wrap_content"
                             android:layout_height="50dp"
                             android:layout_alignParentBottom="false"

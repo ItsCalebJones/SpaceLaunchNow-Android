@@ -25,7 +25,25 @@ public class RocketDetails implements Serializable {
     private String Apogee;
     private String ImageURL;
     private String Range;
+    private String InfoURL;
+    private String WikiURL;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
+    public String getInfoURL() {
+        return InfoURL;
+    }
+
+    public void setInfoURL(String InfoURL) {
+        this.InfoURL = InfoURL;
+    }
+
+    public String getWikiURL() {
+        return WikiURL;
+    }
+
+    public void setWikiURL(String WikiURL) {
+        this.WikiURL = WikiURL;
+    }
 
     /**
      *
@@ -306,11 +324,7 @@ public class RocketDetails implements Serializable {
         return Apogee;
     }
 
-    /**
-     *
-     * @param Apogee
-     * The Apogee
-     */
+
     public void setDescription(String Description) {
         this.Description = Description;
     }

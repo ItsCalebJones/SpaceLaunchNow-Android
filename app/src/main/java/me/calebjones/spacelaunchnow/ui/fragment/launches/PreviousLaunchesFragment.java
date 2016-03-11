@@ -17,7 +17,6 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -54,6 +53,7 @@ import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 
@@ -66,6 +66,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     private FloatingActionMenu menu;
     private String start_date, end_date;
     private List<Launch> rocketLaunches;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private SharedPreference sharedPreference;
     private SharedPreferences sharedPrefs;
     private int mScrollPosition;
@@ -111,6 +112,9 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         menu = (FloatingActionMenu) view.findViewById(R.id.menu);
         empty = view.findViewById(R.id.empty_launch_root);
         menu.setTranslationX(menu.getWidth() + 250);
+                        /*Set up Pull to refresh*/
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.previous_swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         RecyclerView hideView = (RecyclerView) view.findViewById(R.id.recycler_view_staggered);
@@ -121,8 +125,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(adapter);
-
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -133,6 +136,10 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
                         menu.showMenu(true);
                     }
                 }
+                int topRowVerticalPosition =
+                        (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
+                mSwipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
+
             }
         });
 
@@ -164,8 +171,8 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         reset.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                if (sharedPreference.getFiltered()){
-                    sharedPreference.setFiltered(false);
+                if (sharedPreference.getPrevFiltered()){
+                    sharedPreference.setPrevFiltered(false);
                     sharedPreference.removeFilteredList();
                     getDefaultDateRange();
                     displayLaunches();
@@ -374,8 +381,8 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
     //TODO Test empty
     public void displayLaunches() {
-        Timber.v("DisplayLaunches - Filtered - %s", sharedPreference.getFiltered());
-        if (!sharedPreference.getFiltered()){
+        Timber.v("DisplayLaunches - Filtered - %s", sharedPreference.getPrevFiltered());
+        if (!sharedPreference.getPrevFiltered()){
             rocketLaunches = sharedPreference.getLaunchesPrevious();
         } else {
             rocketLaunches = sharedPreference.getLaunchesPreviousFiltered();
@@ -386,8 +393,26 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
             adapter.clear();
             if (rocketLaunches.size() > 0) {
-                empty.setVisibility(View.GONE);
-                adapter.addItems(rocketLaunches);
+                List<Launch> launches = new ArrayList<>();
+                Calendar rightNow = Calendar.getInstance();
+                for (int i = 0; i < rocketLaunches.size(); i++){
+                    if (rocketLaunches.get(i) != null && rocketLaunches.get(i).getNetstamp() > 0) {
+                        final Date date = new Date((rocketLaunches.get(i).getNetstamp()) * 1000);
+
+                        Calendar future = Utils.DateToCalendar(date);
+                        rightNow.setTimeInMillis(System.currentTimeMillis());
+                        long timeToFinish = future.getTimeInMillis() - rightNow.getTimeInMillis();
+                        if (timeToFinish < 0) {
+                            launches.add(rocketLaunches.get(i));
+                        }
+                    }
+                }
+                if (launches.size() > 0) {
+                    empty.setVisibility(View.GONE);
+                    adapter.addItems(launches);
+                } else {
+                    empty.setVisibility(View.VISIBLE);
+                }
             } else {
                 empty.setVisibility(View.VISIBLE);
             }
@@ -405,7 +430,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
     public void fetchData() {
         showLoading();
-        String url = "https://launchlibrary.net/1.1/launch/" + this.start_date + "/" + this.end_date + "?sort=desc&limit=1000";
+        String url = "https://launchlibrary.net/1.2/launch/" + this.start_date + "/" + this.end_date + "?sort=desc&limit=1000";
         Timber.d("Sending Intent URL: %s", url);
         Intent intent = new Intent(getContext(), LaunchDataService.class);
         intent.putExtra("URL", url);
@@ -429,7 +454,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
                     .putQuery(key));
         }
 
-        if (sharedPreference.getFiltered()){
+        if (sharedPreference.getPrevFiltered()){
             sharedPreference.setPreviousTitle(sharedPreference.getPreviousTitle() + " | " + title);
         } else {
             sharedPreference.setPreviousTitle(title);
@@ -490,11 +515,11 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         start_date = year + "-" + monthdatestart + "-" + daydatestart;
         end_date = yearEnd + "-" + monthdayend + "-" + daydateend;
 
-        if (sharedPreference.getFiltered()){
+        if (sharedPreference.getPrevFiltered()){
             this.sharedPreference.setPreviousTitle(sharedPreference.getPreviousTitle() + " | " + formatDatesForTitle(start_date) + " - " + formatDatesForTitle(end_date));
         } else {
             this.sharedPreference.setPreviousTitle(formatDatesForTitle(start_date) + " - " + formatDatesForTitle(end_date));
-            this.sharedPreference.setFiltered(true);
+            this.sharedPreference.setPrevFiltered(true);
         }
 
         setTitle();
@@ -508,6 +533,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
     public void getDefaultDateRange() {
         Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, 1);
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = df.format(c.getTime());
@@ -549,7 +575,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         }
         if (id == R.id.action_refresh) {
             adapter.clear();
-            this.sharedPreference.setFiltered(false);
+            this.sharedPreference.setPrevFiltered(false);
             getDefaultDateRange();
             fetchData();
             return true;
@@ -622,7 +648,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     @Override
     public void onRefresh() {
         adapter.clear();
-        this.sharedPreference.setFiltered(false);
+        this.sharedPreference.setPrevFiltered(false);
         getDefaultDateRange();
         fetchData();
     }

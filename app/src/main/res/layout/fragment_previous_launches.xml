@@ -8,34 +8,39 @@
     android:paddingRight="2dp"
     tools:context="${relativePackage}.${activityClass}">
 
-    <FrameLayout
-        android:id="@+id/linear"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/previous_swipe_refresh_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-        <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/recycler_view"
+        <FrameLayout
+            android:id="@+id/linear"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            app:fastScrollPopupBgColor="@color/colorAccent"
-            app:fastScrollPopupTextColor="@android:color/primary_text_dark"
-            app:fastScrollThumbColor="@color/colorAccent" />
+            android:layout_height="match_parent">
 
-        <include layout="@layout/empty_launch"/>
+            <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                app:fastScrollPopupBgColor="@color/colorAccent"
+                app:fastScrollPopupTextColor="@android:color/primary_text_dark"
+                app:fastScrollThumbColor="@color/colorAccent" />
 
-        <com.github.rahatarmanahmed.cpv.CircularProgressView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/progress_View"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:visibility="gone"
-            app:cpv_indeterminate="true"
-            />
+            <include layout="@layout/empty_launch" />
 
-    </FrameLayout>
+            <com.github.rahatarmanahmed.cpv.CircularProgressView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/progress_View"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:visibility="gone"
+                app:cpv_indeterminate="true" />
 
+        </FrameLayout>
+
+
+    </android.support.v4.widget.SwipeRefreshLayout>
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/menu"
         android:layout_width="wrap_content"

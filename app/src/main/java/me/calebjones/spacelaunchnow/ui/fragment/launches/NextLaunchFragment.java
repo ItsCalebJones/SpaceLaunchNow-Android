@@ -6,13 +6,16 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -42,6 +45,7 @@ import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
 import timber.log.Timber;
 
 public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -74,11 +78,13 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     private SuperRecyclerView mRecyclerView;
     private LaunchBigAdapter adapter;
     private StaggeredGridLayoutManager layoutManager;
+    private LinearLayoutManager linearLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private View color_reveal;
     private FloatingActionButton menu;
     private List<Launch> rocketLaunches;
     private SharedPreference sharedPreference;
+    private SharedPreferences sharedPref;
     private Context context;
     private boolean active;
     private boolean switchChanged;
@@ -91,7 +97,9 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         super.onCreate(savedInstanceState);
         sharedPreference = SharedPreference.getInstance(getActivity().getApplication());
         rocketLaunches = new ArrayList();
-        adapter = new LaunchBigAdapter(getActivity().getApplicationContext(), getActivity());
+        if (adapter == null) {
+            adapter = new LaunchBigAdapter(getActivity().getApplicationContext(), getActivity());
+        }
     }
 
 
@@ -99,7 +107,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        context = getActivity().getApplication();
+        context = getActivity().getApplicationContext();
         final int color;
         active = false;
 
@@ -162,11 +170,6 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         });
 
         mRecyclerView = (SuperRecyclerView) view.findViewById(R.id.recycler_view);
-        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
-            layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        } else {
-            layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-        }
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
         {
             @Override
@@ -182,7 +185,13 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                 super.onScrollStateChanged(recyclerView, newState);
             }
         });
-        mRecyclerView.setLayoutManager(layoutManager);
+        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
+            layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+            mRecyclerView.setLayoutManager(layoutManager);
+        } else {
+            linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+            mRecyclerView.setLayoutManager(linearLayoutManager);
+        }
         mRecyclerView.setAdapter(adapter);
 
         /*Set up Pull to refresh*/
@@ -209,15 +218,18 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
 
     private void refreshView() {
         rocketLaunches = sharedPreference.filterLaunches(sharedPreference.getLaunchesUpcoming());
-        if (rocketLaunches.size() > 10){
-            rocketLaunches = rocketLaunches.subList(0,10);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+
+        int size = Integer.parseInt(sharedPref.getString("upcoming_value", "10"));
+        if (rocketLaunches.size() > size){
+            rocketLaunches = rocketLaunches.subList(0,size);
         }
         sharedPreference.setNextLaunches(rocketLaunches);
         adapter.clear();
 
         if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && rocketLaunches.size() == 1){
-            layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-            mRecyclerView.setLayoutManager(layoutManager);
+            linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+            mRecyclerView.setLayoutManager(linearLayoutManager);
             mRecyclerView.setAdapter(adapter);
         } else if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
             layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
@@ -252,8 +264,8 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                 Timber.v("Next launches is empty...");
             } else {
                 if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && rocketLaunches.size() == 1){
-                    layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-                    mRecyclerView.setLayoutManager(layoutManager);
+                    linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+                    mRecyclerView.setLayoutManager(linearLayoutManager);
                     mRecyclerView.setAdapter(adapter);
                 } else if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
                     layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
@@ -392,6 +404,9 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         if (BuildConfig.DEBUG) {
             menu.clear();
             inflater.inflate(R.menu.debug_menu, menu);
+        } else {
+            menu.clear();
+            inflater.inflate(R.menu.next_menu, menu);
         }
     }
 
@@ -413,6 +428,34 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
             Intent nextIntent = new Intent(getActivity(), LaunchDataService.class);
             nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
             getActivity().startService(nextIntent);
+        } else if (id == R.id.action_alert) {
+            if (!active) {
+                switchChanged = false;
+                active = true;
+                mSwipeRefreshLayout.setEnabled(false);
+                menu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_close));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    showView();
+                } else {
+                    color_reveal.setVisibility(View.VISIBLE);
+                }
+            } else {
+                active = false;
+                menu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_add_alert));
+                mSwipeRefreshLayout.setEnabled(true);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    hideView();
+                } else {
+                    color_reveal.setVisibility(View.INVISIBLE);
+                }
+                if (switchChanged) {
+                    refreshView();
+                }
+            }
+        } else if (id == R.id.debug_vehicle){
+            Intent rocketIntent = new Intent(context, VehicleDataService.class);
+            rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
+            context.startService(rocketIntent);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -420,6 +463,9 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        Timber.v("onDestroyView");
+        mRecyclerView.removeAllViews();
+        mRecyclerView.setAdapter(null);
         ButterKnife.unbind(this);
     }
 

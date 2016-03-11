@@ -95,7 +95,7 @@ public class VehicleDetailActivity extends AppCompatActivity implements AppBarLa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vehicle_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         toolbarTitle = (TextView) findViewById(R.id.title_text);
         detail_rocket = (TextView) findViewById(R.id.detail_rocket);
         detail_vehicle_agency = (TextView) findViewById(R.id.detail_vehicle_agency);
@@ -162,7 +162,7 @@ public class VehicleDetailActivity extends AppCompatActivity implements AppBarLa
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
             }
         }
-        adapter = new VehicleListAdapter(context);
+        adapter = new VehicleListAdapter(context, this);
         mRecyclerView = (RecyclerView) findViewById(R.id.gridview);
         if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
             linearLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);

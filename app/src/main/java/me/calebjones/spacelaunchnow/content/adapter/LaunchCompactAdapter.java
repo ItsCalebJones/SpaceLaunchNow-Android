@@ -6,11 +6,13 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
@@ -30,7 +32,7 @@ import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 /**
  * This adapter takes data from SharedPreference/LoaderService and applies it to the UpcomingLaunchesFragment
  */
-public class LaunchCompactAdapter extends RecyclerView.Adapter<LaunchCompactAdapter.ViewHolder> implements FastScrollRecyclerView.SectionedAdapter  {
+public class LaunchCompactAdapter extends RecyclerView.Adapter<LaunchCompactAdapter.ViewHolder> implements FastScrollRecyclerView.SectionedAdapter {
     public int position;
     private List<Launch> launchList;
     private List<Integer> mSectionPositions;
@@ -38,6 +40,7 @@ public class LaunchCompactAdapter extends RecyclerView.Adapter<LaunchCompactAdap
     private Context mContext;
     private Calendar rightNow;
     private SharedPreferences sharedPref;
+    private Boolean night;
     private static SharedPreference sharedPreference;
 
     public LaunchCompactAdapter(Context context) {
@@ -54,35 +57,6 @@ public class LaunchCompactAdapter extends RecyclerView.Adapter<LaunchCompactAdap
         if (this.launchList == null) {
             this.launchList = launchList;
         } else {
-            final List<Launch> launches = launchList;
-            AsyncTask.execute(new Runnable() {
-                @Override
-                public void run() {
-                    mSections.clear();
-                    mSectionPositions.clear();
-
-                    //Note: If you're populating with a large dataset, you might want to
-                    //call the following code asychronously.
-                    SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
-                    df.toLocalizedPattern();
-
-                    //data is your adapter's dataset
-                    for (int i = 0, length = launches.size(); i < length; i++) {
-                        //In case data is removed
-                        if (launches.size() >= i){
-                            long longdate = launches.get(i).getWsstamp();
-                            longdate = longdate * 1000;
-                            Date date = new Date(longdate);
-                            String section = parseDateToMMyyyy(df.format(date));
-                            if (!TextUtils.isEmpty(section) && !mSections.contains(section)) {
-                                //This just adds a new section for each new letter
-                                mSections.add(section);
-                                mSectionPositions.add(i);
-                            }
-                        }
-                    }
-                }
-            });
             this.launchList.addAll(launchList);
         }
     }
@@ -101,8 +75,10 @@ public class LaunchCompactAdapter extends RecyclerView.Adapter<LaunchCompactAdap
         sharedPreference = SharedPreference.getInstance(mContext);
 
         if (sharedPreference.getNightMode()) {
+            night = true;
             m_theme = R.layout.dark_historical_list_item;
         } else {
+            night = false;
             m_theme = R.layout.light_historical_list_item;
         }
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(m_theme, viewGroup, false);
@@ -113,12 +89,18 @@ public class LaunchCompactAdapter extends RecyclerView.Adapter<LaunchCompactAdap
     public void onBindViewHolder(final ViewHolder holder, int i) {
         final Launch launchItem = launchList.get(i);
 
+
+        String missionType;
         String title;
         String location;
+        String launchDate;
 
         position = i;
 
-        String launchDate;
+        //Retrieve missionType
+        if (launchItem.getMissions().size() != 0) {
+            setCategoryIcon(holder, launchItem.getMissions().get(0).getTypeName());
+        }
 
         if (launchItem.getStatus() == 2) {
             //Get launch date
@@ -131,7 +113,7 @@ public class LaunchCompactAdapter extends RecyclerView.Adapter<LaunchCompactAdap
                 launchDate = launchItem.getWindowstart();
             }
 
-            holder.launch_date.setText("To be determined... " + launchDate);
+            holder.launch_date.setText(String.format("To be determined... %s", launchDate));
         } else {
             //Get launch date
             if (sharedPref.getBoolean("local_time", true)) {
@@ -194,27 +176,23 @@ public class LaunchCompactAdapter extends RecyclerView.Adapter<LaunchCompactAdap
     @NonNull
     @Override
     public String getSectionName(int position) {
-        int finalPosition = getSectionForPosition(position);
-        return mSections.get(finalPosition);
-    }
+        SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
+        df.toLocalizedPattern();
 
-    public int getSectionForPosition(int i) {
-        for (int j = 0, length = mSectionPositions.size(); j < length; j++) {
-            int sectionPosition = mSectionPositions.get(j);
-            if (i <= sectionPosition) {
-                return j;
-            }
-        }
-        return 0;
+        Date date = new Date(launchList.get(position).getWindowstart());
+
+        return parseDateToMMyyyy(df.format(date));
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView title, content, location, launch_date, mission;
+        public ImageView categoryIcon;
 
         //Add content to the card
         public ViewHolder(View view) {
             super(view);
 
+            categoryIcon = (ImageView) view.findViewById(R.id.categoryIcon);
             title = (TextView) view.findViewById(R.id.launch_rocket);
             location = (TextView) view.findViewById(R.id.location);
             launch_date = (TextView) view.findViewById(R.id.launch_date);
@@ -285,5 +263,120 @@ public class LaunchCompactAdapter extends RecyclerView.Adapter<LaunchCompactAdap
     public void moveItem(int fromPosition, int toPosition) {
         launchList.add(toPosition, launchList.remove(fromPosition));
         notifyItemMoved(fromPosition, toPosition);
+    }
+
+    private void setCategoryIcon(ViewHolder holder, String type) {
+        if (type != null) {
+            switch (type) {
+                case "Earth Science":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_earth_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_earth));
+                    }
+                    break;
+                case "Planetary Science":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_planetary_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_planetary));
+                    }
+                    break;
+                case "Astrophysics":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_astrophysics_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_astrophysics));
+                    }
+                    break;
+                case "Heliophysics":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_heliophysics_alt_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_heliophysics_alt));
+                    }
+                    break;
+                case "Human Exploration":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_human_explore_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_human_explore));
+                    }
+                    break;
+                case "Robotic Exploration":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_robotic_explore_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_robotic_explore));
+                    }
+                    break;
+                case "Government/Top Secret":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_top_secret_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_top_secret));
+                    }
+                    break;
+                case "Tourism":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_tourism_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_tourism));
+                    }
+                    break;
+                case "Unknown":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_unknown_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_unknown));
+                    }
+                    break;
+                case "Communications":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_satellite_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_satellite));
+                    }
+                    break;
+                case "Resupply":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_resupply_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_resupply));
+                    }
+                    break;
+                default:
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_unknown_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_unknown));
+                    }
+                    break;
+            }
+        }
     }
 }
