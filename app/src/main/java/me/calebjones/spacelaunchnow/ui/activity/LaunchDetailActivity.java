@@ -69,8 +69,6 @@ public class LaunchDetailActivity extends AppCompatActivity
     private Context context;
     private Calendar rightNow = Calendar.getInstance();
 
-    private String URL = "https://launchlibrary.net/1.1/launch/%s";
-
     public String response;
     public Launch launch;
 
