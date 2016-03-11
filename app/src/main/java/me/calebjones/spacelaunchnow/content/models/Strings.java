@@ -23,7 +23,7 @@ public final class Strings {
     public static final String ACTION_SUCCESS_AGENCY = "SUCCESS_GET_AGENCY";
     public static final String ACTION_SUCCESS_VEHICLES = "SUCCESS_GET_VEHICLES";
 
-    public static final String ACTION_UPDATE_NEXT_LAUNCH = "UPDATE_NEXT_LAUNCHES";
+    public static final String ACTION_UPDATE_NEXT_LAUNCH = "UPDATE_NEXT_LAUNCH";
     public static final String ACTION_UPDATE_UP_LAUNCHES = "UPDATE_UP_LAUNCHES";
     public static final String ACTION_UPDATE_PREV_LAUNCHES = "UPDATE_PREV_LAUNCHES";
     public static final String ACTION_UPDATE_AGENCY = "UPDATE_GET_AGENCY";

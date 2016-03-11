@@ -53,6 +53,7 @@ import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 
@@ -392,8 +393,26 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
             adapter.clear();
             if (rocketLaunches.size() > 0) {
-                empty.setVisibility(View.GONE);
-                adapter.addItems(rocketLaunches);
+                List<Launch> launches = new ArrayList<>();
+                Calendar rightNow = Calendar.getInstance();
+                for (int i = 0; i < rocketLaunches.size(); i++){
+                    if (rocketLaunches.get(i) != null && rocketLaunches.get(i).getNetstamp() > 0) {
+                        final Date date = new Date((rocketLaunches.get(i).getNetstamp()) * 1000);
+
+                        Calendar future = Utils.DateToCalendar(date);
+                        rightNow.setTimeInMillis(System.currentTimeMillis());
+                        long timeToFinish = future.getTimeInMillis() - rightNow.getTimeInMillis();
+                        if (timeToFinish < 0) {
+                            launches.add(rocketLaunches.get(i));
+                        }
+                    }
+                }
+                if (launches.size() > 0) {
+                    empty.setVisibility(View.GONE);
+                    adapter.addItems(launches);
+                } else {
+                    empty.setVisibility(View.VISIBLE);
+                }
             } else {
                 empty.setVisibility(View.VISIBLE);
             }
@@ -514,6 +533,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
     public void getDefaultDateRange() {
         Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, 1);
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = df.format(c.getTime());

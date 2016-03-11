@@ -203,6 +203,7 @@ public class Utils {
 
     public static String getBaseURL() {
         Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, 1);
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = df.format(c.getTime());
