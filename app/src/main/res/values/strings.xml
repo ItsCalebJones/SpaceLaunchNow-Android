@@ -70,7 +70,7 @@ Quisque tincidunt magna quis viverra faucibus. Vivamus rhoncus elit vel mi trist
     <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
 
     <string name="whats_new_title">Whats New! v1.0-beta.10</string>
-    <string name="whats_new_content">HotFix! - Fixed two new crashes.\n\nThanks for everyone\'s patience, this release was delayed due to a bug introduced by Google that caused crashes for anyone using Android 4.0.4-4.1.X. Also doing a lot of leg work for new data coming through launch library. I\'ve got a decent backlog of things to finish up. The next release should be sometime early next week.\n\n
+    <string name="whats_new_content">HotFix! - Fixed a few crashes and Watch Live button.\n\nThanks for everyone\'s patience, this release was delayed due to a bug introduced by Google that caused crashes for anyone using Android 4.0.4-4.1.X. Also doing a lot of leg work for new data coming through launch library. I\'ve got a decent backlog of things to finish up. The next release should be sometime early next week.\n\n
 
     New Features:\n
     \u2022 Add Confirm Exit as an optional settings now.\n
