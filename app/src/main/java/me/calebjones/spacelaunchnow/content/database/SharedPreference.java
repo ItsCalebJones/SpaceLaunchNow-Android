@@ -656,20 +656,24 @@ public class SharedPreference {
     public String getMissionTypeByID(int id){
         List<Mission> missionList = getMissionList();
 
-        int start = 0;
-        int end = missionList.size() - 1;
+        if (missionList != null && missionList.size() > 0) {
+            int start = 0;
+            int end = missionList.size() - 1;
 
-        while (start <= end){
-            if (id == missionList.get(start).getId()){
-                return missionList.get(start).getTypeName();
-            } else if (id == missionList.get(end).getId()) {
-                return missionList.get(end).getTypeName();
-            } else {
-                start ++;
-                end --;
+            while (start <= end) {
+                if (id == missionList.get(start).getId()) {
+                    return missionList.get(start).getTypeName();
+                } else if (id == missionList.get(end).getId()) {
+                    return missionList.get(end).getTypeName();
+                } else {
+                    start++;
+                    end--;
+                }
             }
+            return null;
+        } else {
+            return null;
         }
-        return null;
     }
 
     //Get methods by ID

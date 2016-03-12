@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.BooleanResult;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -62,6 +63,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
     private SharedPreferences sharedPref;
     private CountDownTimer timer;
     private Boolean night;
+    private Boolean play = false;
     private static SharedPreference sharedPreference;
 
     public LaunchBigAdapter(Context context, Context aContext) {
@@ -69,7 +71,9 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         launchList = new ArrayList<>();
         this.mContext = context;
         this.aContext = aContext;
-
+        if(Utils.checkPlayServices(mContext)){
+            play = true;
+        }
     }
 
     public void addItems(List<Launch> launchList) {
@@ -135,7 +139,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         double dlon = launchItem.getLocation().getPads().get(0).getLongitude();
 
         // Getting status
-        if (Utils.checkPlayServices(mContext)) {
+        if (play) {
             if (dlat == 0 && dlon == 0 || Double.isNaN(dlat) || Double.isNaN(dlon) || dlat == Double.NaN || dlon == Double.NaN) {
                 if (holder.map_view != null) {
                     holder.map_view.setVisibility(View.GONE);
@@ -268,7 +272,8 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             holder.launch_date.setText(launchDate);
         }
 
-        if (launchItem.getVidURL().length() == 0) {
+
+        if (launchItem.getVidURL().length() == 0 || launchItem.getVidURL().contains("null")) {
             holder.watchButton.setVisibility(View.GONE);
         }
 
@@ -321,10 +326,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
     public void onViewRecycled(ViewHolder holder) {
         Timber.v("onViewRecyled!");
         // Cleanup MapView here?
-        if (Utils.checkPlayServices(mContext)) {
-            if (holder.map_view != null) {
-                holder.map_view.onDestroy();
-            }
+        if (play) {
             if (holder.gMap != null) {
                 System.gc();
                 holder.gMap.clear();
@@ -402,7 +404,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             watchButton.setOnClickListener(this);
             exploreFab.setOnClickListener(this);
 
-            if (Utils.checkPlayServices(mContext) && map_view != null) {
+            if (play && map_view != null) {
                 map_view.onCreate(null);
                 map_view.onResume();
                 map_view.getMapAsync(this);

@@ -364,7 +364,19 @@ public class LaunchDataService extends IntentService {
                 launch.setWsstamp(launchesObj.optInt("wsstamp"));
                 launch.setWestamp(launchesObj.optInt("westamp"));
                 launch.setStatus(launchesObj.optInt("status"));
-                launch.setVidURL(launchesObj.optString("vidURL"));
+                //TODO remove later once 1.2 is stable
+//                launch.setVidURL(launchesObj.optString("vidURL"));
+                JSONArray vidURLs = launchesObj.getJSONArray("vidURLs");
+                if (vidURLs.length() > 0){
+                    launch.setVidURL(vidURLs.get(0).toString());
+                    ArrayList<String> listData = new ArrayList<String>();
+                    if (vidURLs != null) {
+                        for (int o=0;o<vidURLs.length();o++){
+                            listData.add(vidURLs.get(o).toString());
+                        }
+                        launch.setVidURLs(listData);
+                    }
+                }
 
                 //Start Parsing Rockets
                 if (rocketObj != null) {
@@ -493,7 +505,18 @@ public class LaunchDataService extends IntentService {
                 launch.setWsstamp(launchesObj.optInt("wsstamp"));
                 launch.setWestamp(launchesObj.optInt("westamp"));
                 launch.setStatus(launchesObj.optInt("status"));
-                launch.setVidURL(launchesObj.optString("vidURL"));
+//                launch.setVidURL(launchesObj.optString("vidURL"));
+                JSONArray vidURLs = launchesObj.getJSONArray("vidURLs");
+                if (vidURLs.length() > 0){
+                    launch.setVidURL(vidURLs.get(0).toString());
+                    ArrayList<String> listdata = new ArrayList<String>();
+                    if (vidURLs != null) {
+                        for (int o=0;o<vidURLs.length();o++){
+                            listdata.add(vidURLs.get(o).toString());
+                        }
+                        launch.setVidURLs(listdata);
+                    }
+                }
 
                 //Start Parsing Rockets
                 if (rocketObj != null) {

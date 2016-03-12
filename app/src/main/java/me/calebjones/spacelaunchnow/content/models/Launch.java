@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import timber.log.Timber;
+
 public class Launch implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -29,6 +31,7 @@ public class Launch implements Serializable {
     private boolean favorite = false;
     private List<Mission> missions = new ArrayList<Mission>();
     private String vidURL;
+    private ArrayList<String> vidURLs;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public boolean getIsNotifiedCustom() {
@@ -323,6 +326,15 @@ public class Launch implements Serializable {
      */
     public void setVidURL(String vidURL) {
         this.vidURL = vidURL;
+    }
+
+    public ArrayList<String> getVidURLs() {
+        return vidURLs;
+    }
+
+    public void setVidURLs(ArrayList<String> mVidURls) {
+        this.vidURLs = mVidURls;
+        Timber.v("Test");
     }
 
     public Map<String, Object> getAdditionalProperties() {
