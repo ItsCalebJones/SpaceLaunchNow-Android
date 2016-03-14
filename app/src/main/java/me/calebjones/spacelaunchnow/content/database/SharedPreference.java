@@ -577,10 +577,12 @@ public class SharedPreference {
                 RocketDetails launchVehicle = databaseManager.getLaunchVehicle(query);
                 Rocket rocket = new Rocket();
                 rocket = fullVehicleList.get(i);
-                if (launchVehicle != null) {
-                    rocket.setImageURL(launchVehicle.getImageURL());
-                } else {
-                    rocket.setImageURL("");
+                if (rocket.getImageURL().contains("placeholder")){
+                    if (launchVehicle != null) {
+                        rocket.setImageURL(launchVehicle.getImageURL());
+                    } else {
+                        rocket.setImageURL("");
+                    }
                 }
                 sortedVehicleList.add(rocket);
             }

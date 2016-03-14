@@ -139,13 +139,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/map_view"
+                    android:elevation="0dp"
                     android:paddingLeft="28dp"
                     android:paddingRight="28dp"
                     android:paddingTop="16dp"
                     android:text="Unknown Mission"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:elevation="0dp" />
+                    android:layout_marginRight="52dp"/>
             </RelativeLayout>
 
             <View

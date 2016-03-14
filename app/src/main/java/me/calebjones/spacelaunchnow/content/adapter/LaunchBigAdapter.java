@@ -272,8 +272,11 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             holder.launch_date.setText(launchDate);
         }
 
-
-        if (launchItem.getVidURL().length() == 0 || launchItem.getVidURL().contains("null")) {
+        if (launchItem.getVidURL() != null) {
+            if (launchItem.getVidURL().length() == 0 || launchItem.getVidURL().contains("null")) {
+                holder.watchButton.setVisibility(View.GONE);
+            }
+        } else {
             holder.watchButton.setVisibility(View.GONE);
         }
 

@@ -386,6 +386,7 @@ public class LaunchDataService extends IntentService {
                     rocket.setName(rocketObj.optString("name", ""));
                     rocket.setFamilyname(rocketObj.optString("familyname", ""));
                     rocket.setConfiguration(rocketObj.optString("configuration", ""));
+                    rocket.setImageURL(rocketObj.optString("imageURL"));
 
                     JSONArray agencies = rocketObj.optJSONArray("agencies");
                     if (agencies != null) {
@@ -525,6 +526,7 @@ public class LaunchDataService extends IntentService {
                     rocket.setName(rocketObj.optString("name"));
                     rocket.setFamilyname(rocketObj.optString("familyname"));
                     rocket.setConfiguration(rocketObj.optString("configuration"));
+                    rocket.setImageURL(rocketObj.optString("imageURL"));
 
                     JSONArray agencies = rocketObj.optJSONArray("agencies");
                     if (agencies != null) {
