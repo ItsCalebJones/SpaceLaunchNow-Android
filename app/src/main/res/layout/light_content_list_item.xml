@@ -146,7 +146,8 @@
                     android:paddingTop="16dp"
                     android:text="Unknown Mission"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:layout_marginRight="52dp" />
             </RelativeLayout>
 
             <View
