@@ -168,7 +168,7 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
                 break;
         }
 
-        if (detailLaunch.getVidURL() != null && detailLaunch.getVidURL().length() > 0){
+        if (detailLaunch.getVidURL() != null && detailLaunch.getVidURL().length() > 0 && !detailLaunch.getVidURL().contains("null")){
             watchButton.setVisibility(View.VISIBLE);
             watchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
