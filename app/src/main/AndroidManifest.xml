@@ -7,6 +7,13 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-feature android:name="android.hardware.type.watch" />
+
+    <!-- Required to act as a custom watch face. -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- Required to act as a custom watch face. -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".LaunchApplication"
@@ -84,7 +91,7 @@
             android:name=".ui.activity.DebugActivity"
             android:label="@string/title_activity_debug"
             android:theme="@style/LightTheme" />
-        <activity android:name=".ui.activity.WebviewActivity"></activity>
+        <activity android:name=".ui.activity.WebviewActivity" />
     </application>
 
 </manifest>

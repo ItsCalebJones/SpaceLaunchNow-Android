@@ -14,8 +14,19 @@ import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
+import com.google.android.gms.wearable.Wearable;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -33,7 +44,9 @@ import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 
-public class NextLaunchTracker extends IntentService {
+public class NextLaunchTracker extends IntentService implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private Launch nextLaunch;
     private Launch storedLaunch;
@@ -43,6 +56,10 @@ public class NextLaunchTracker extends IntentService {
     private Calendar rightNow;
     private AlarmManager alarmManager;
     private long interval;
+    private static final String NAME_KEY = "me.calebjones.spacelaunchnow.wear.nextname";
+    private static final String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
+
+    private GoogleApiClient mGoogleApiClient;
 
     public NextLaunchTracker() {
         super("NextLaunchTracker");
@@ -406,8 +423,34 @@ public class NextLaunchTracker extends IntentService {
             }
         }
 
-
+        sendToWear(sharedPreference.getNextLaunch());
         alarmManager.set(AlarmManager.RTC_WAKEUP, nextUpdate,
                 PendingIntent.getBroadcast(this, 165432, new Intent(Strings.ACTION_CHECK_NEXT_LAUNCH_TIMER), 0));
+    }
+
+    // Create a data map and put data in it
+    private void sendToWear(Launch launch) {
+        PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/nextLaunch");
+
+        putDataMapReq.getDataMap().putString(NAME_KEY, launch.getName());
+        putDataMapReq.getDataMap().putInt(NAME_KEY, launch.getNetstamp());
+
+        PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
+        Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }

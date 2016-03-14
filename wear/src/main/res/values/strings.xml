@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">wear</string>
+    <string name="my_digital_name">My Digital</string>
+
+    <string name="hello">Hello World!</string>
+    <string name="title">Hello Notification!</string>
+    <string name="notification_posted">Notification posted</string>
+</resources>
