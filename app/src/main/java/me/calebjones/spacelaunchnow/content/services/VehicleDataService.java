@@ -177,6 +177,7 @@ public class VehicleDataService extends IntentService {
                 rocket.setConfiguration(rocketObj.optString("configuration"));
                 rocket.setInfoURL(rocketObj.optString("infoURL"));
                 rocket.setWikiURL(rocketObj.optString("wikiURL"));
+                rocket.setImageURL(rocketObj.optString("imageURL"));
 
                 if (familyObj != null) {
                     Family family = new Family();
