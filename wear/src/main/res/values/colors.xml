@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="background">#000000</color>
+    <color name="background">#448AFF</color>
     <color name="digital_text">#ffffff</color>
+    <color name="countdown_text">#FF303A</color>
+    <color name="secondary_text">#7e7e7e</color>
 </resources>

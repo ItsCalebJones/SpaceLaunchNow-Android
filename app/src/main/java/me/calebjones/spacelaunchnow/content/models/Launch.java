@@ -334,7 +334,6 @@ public class Launch implements Serializable {
 
     public void setVidURLs(ArrayList<String> mVidURls) {
         this.vidURLs = mVidURls;
-        Timber.v("Test");
     }
 
     public Map<String, Object> getAdditionalProperties() {
