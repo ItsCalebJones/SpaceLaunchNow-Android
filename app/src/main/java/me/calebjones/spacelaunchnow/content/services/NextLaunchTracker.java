@@ -14,8 +14,19 @@ import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
+import com.google.android.gms.wearable.Wearable;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -33,7 +44,9 @@ import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 
-public class NextLaunchTracker extends IntentService {
+public class NextLaunchTracker extends IntentService implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private Launch nextLaunch;
     private Launch storedLaunch;
@@ -43,6 +56,10 @@ public class NextLaunchTracker extends IntentService {
     private Calendar rightNow;
     private AlarmManager alarmManager;
     private long interval;
+    private static final String NAME_KEY = "me.calebjones.spacelaunchnow.wear.nextname";
+    private static final String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
+
+    private GoogleApiClient mGoogleApiClient;
 
     public NextLaunchTracker() {
         super("NextLaunchTracker");
@@ -52,17 +69,29 @@ public class NextLaunchTracker extends IntentService {
         Timber.d("NextLaunchTracker - onCreate");
         rightNow = Calendar.getInstance();
         super.onCreate();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Wearable.API)
+                .build();
     }
 
+
     public int onStartCommand(Intent intent, int flags, int startId) {
+
         this.sharedPreference = SharedPreference.getInstance(getApplicationContext());
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
         upcomingLaunchList = this.sharedPreference.getNextLaunches();
+
+        mGoogleApiClient.connect();
+        Timber.d("mGoogleApiClient - connect");
 
         if (upcomingLaunchList != null && upcomingLaunchList.size() > 0) {
             checkNextLaunch();
@@ -406,8 +435,48 @@ public class NextLaunchTracker extends IntentService {
             }
         }
 
-
+        sendToWear(sharedPreference.getNextLaunch());
         alarmManager.set(AlarmManager.RTC_WAKEUP, nextUpdate,
                 PendingIntent.getBroadcast(this, 165432, new Intent(Strings.ACTION_CHECK_NEXT_LAUNCH_TIMER), 0));
+    }
+
+    // Create a data map and put data in it
+    private void sendToWear(Launch launch) {
+        Timber.v("Sending data...");
+        PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/nextLaunch");
+
+        putDataMapReq.getDataMap().putString(NAME_KEY, launch.getName());
+        putDataMapReq.getDataMap().putInt(TIME_KEY, launch.getNetstamp());
+        putDataMapReq.getDataMap().putLong("time", new Date().getTime());
+
+        PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
+        Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
+        DataApi.DataItemResult dataItemResult = Wearable.DataApi
+                .putDataItem(mGoogleApiClient, putDataReq).await();
+        Timber.v("Sent");
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Timber.d("onConnected");
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Timber.e("onConnectionSuspended");
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Timber.e("onConnectionFailed %s",connectionResult.getErrorMessage());
+    }
+
+    @Override
+    public void onDestroy(){
+        Timber.d("onDestroy");
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            Timber.d("Google Client Disconnect");
+            mGoogleApiClient.disconnect();
+        }
     }
 }

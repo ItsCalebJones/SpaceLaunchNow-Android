@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -14,6 +15,11 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
+import com.google.android.gms.wearable.Wearable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,7 +51,9 @@ import me.calebjones.spacelaunchnow.content.models.RocketAgency;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
-public class LaunchDataService extends IntentService {
+public class LaunchDataService extends IntentService implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
 
     private static List<Launch> upcomingLaunchList;
@@ -56,12 +64,23 @@ public class LaunchDataService extends IntentService {
     private SharedPreferences sharedPref;
     private SharedPreference sharedPreference;
 
+    private static final String NAME_KEY = "me.calebjones.spacelaunchnow.wear.nextname";
+    private static final String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
+
+    private GoogleApiClient mGoogleApiClient;
+
     public LaunchDataService() {
         super("LaunchDataService");
     }
 
     public void onCreate() {
         Timber.d("LaunchDataService - UpComingLaunchService onCreate");
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Wearable.API)
+                .build();
+
         super.onCreate();
     }
 
@@ -75,11 +94,16 @@ public class LaunchDataService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Timber.d("LaunchDataService - Intent received:  %s ", intent.getAction());
         String action = intent.getAction();
+
+        mGoogleApiClient.connect();
+        Timber.d("mGoogleApiClient - connect");
+
         if (Strings.ACTION_GET_ALL.equals(action)) {
             if (this.sharedPref.getBoolean("background", true)) {
                 scheduleLaunchUpdates();
             }
-            Timber.d("LaunchDataService - onHandleIntent: %s | Background: %s", action, this.sharedPref.getBoolean("background", true));
+            Timber.d("LaunchDataService - onHandleIntent: %s | Background: %s", action,
+                    this.sharedPref.getBoolean("background", true));
 
             startService(new Intent(this, MissionDataService.class));
             getUpcomingLaunches();
@@ -88,7 +112,8 @@ public class LaunchDataService extends IntentService {
             if (this.sharedPref.getBoolean("background", true)) {
                 scheduleLaunchUpdates();
             }
-            Timber.d("LaunchDataService - onHandleIntent: %s | Background: %s", action, this.sharedPref.getBoolean("background", true));
+            Timber.d("LaunchDataService - onHandleIntent: %s | Background: %s", action,
+                    this.sharedPref.getBoolean("background", true));
             getUpcomingLaunches();
         } else if (Strings.ACTION_GET_PREV_LAUNCHES.equals(action)) {
             Timber.d("LaunchDataService - onHandleIntent:  %s ", action);
@@ -151,8 +176,10 @@ public class LaunchDataService extends IntentService {
                     if (currentLaunchList.get(0).getId().equals(upcomingLaunchList.get(0).getId())) {
                         currentLaunchList.set(0, upcomingLaunchList.get(0));
                         sharedPreference.setUpComingLaunches(currentLaunchList);
-                        startService(new Intent(this, NextLaunchTracker.class));
+                    } else {
+                        getUpcomingLaunches();
                     }
+                    startService(new Intent(this, NextLaunchTracker.class));
                 }
 
             } else {
@@ -660,5 +687,40 @@ public class LaunchDataService extends IntentService {
         String formattedDate = df.format(c.getTime());
 
         return "https://launchlibrary.net/1.2/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
+    }
+
+    // Create a data map and put data in it
+    private void sendToWear(Launch launch) {
+        PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/nextLaunch");
+
+        putDataMapReq.getDataMap().putString(NAME_KEY, launch.getName());
+        putDataMapReq.getDataMap().putInt(NAME_KEY, launch.getNetstamp());
+
+        PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
+        Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Timber.d("onConnected");
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Timber.e("onConnectionSuspended");
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Timber.e("onConnectionFailed %s",connectionResult.getErrorMessage());
+    }
+
+    @Override
+    public void onDestroy(){
+        Timber.d("onDestroy");
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            Timber.d("Google Client Disconnect");
+            mGoogleApiClient.disconnect();
+        }
     }
 }
