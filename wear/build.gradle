@@ -6,11 +6,11 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "me.calebjones.spacelaunchnow.wear"
+        applicationId "me.calebjones.spacelaunchnow"
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
     }
     buildTypes {
         release {
@@ -24,4 +24,5 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.android.support:wearable:1.3.0'
     compile 'com.google.android.gms:play-services-wearable:8.4.0'
+    compile 'com.jakewharton.timber:timber:4.1.0'
 }
