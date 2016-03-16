@@ -70,7 +70,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     private SharedPreference sharedPreference;
     private SharedPreferences sharedPrefs;
     private int mScrollPosition;
-    private FloatingActionButton agency, vehicle, country, reset;
+    private FloatingActionButton agency, vehicle, country, location, reset;
     private int mScrollOffset = 4;
     private static final Field sChildFragmentManagerField;
     private LinearLayoutManager layoutManager;
@@ -108,11 +108,12 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         agency = (FloatingActionButton) view.findViewById(R.id.agency);
         vehicle = (FloatingActionButton) view.findViewById(R.id.vehicle);
         country = (FloatingActionButton) view.findViewById(R.id.country);
+        location = (FloatingActionButton) view.findViewById(R.id.launch_location);
         reset = (FloatingActionButton) view.findViewById(R.id.reset);
         menu = (FloatingActionMenu) view.findViewById(R.id.menu);
         empty = view.findViewById(R.id.empty_launch_root);
-        menu.setTranslationX(menu.getWidth() + 250);
-                        /*Set up Pull to refresh*/
+
+        /*Set up Pull to refresh*/
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.previous_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
@@ -171,13 +172,14 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         reset.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                sharedPreference.resetAllPrevFilters();
                 if (sharedPreference.getPrevFiltered()){
                     sharedPreference.setPrevFiltered(false);
                     sharedPreference.removeFilteredList();
                     getDefaultDateRange();
                     displayLaunches();
                 }
-                menu.hideMenu(true);
+                menu.close(true);
             }
         });
 
@@ -199,6 +201,13 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
                 showCountryDialog();
             }
         });
+        location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLocationDialog();
+            }
+        });
+
     }
 
     private void showCountryDialog() {
@@ -207,31 +216,45 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
                 .content("Check an country below, to remove all filters use reset icon in the toolbar.")
                 .items(R.array.country)
                 .buttonRippleColorRes(R.color.colorAccentLight)
-                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                .itemsCallbackMultiChoice(sharedPreference.getPrevCountryFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
                     @Override
-                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        switch (which) {
-                            case 0:
-                                adapter.clear();
-                                fetchDataFiltered(2, "USA", "USA");
-                                break;
-                            case 1:
-                                adapter.clear();
-                                fetchDataFiltered(2, "China", "China");
-                                break;
-                            case 2:
-                                adapter.clear();
-                                fetchDataFiltered(2, "Russia", "Russia");
-                                break;
-                            case 3:
-                                adapter.clear();
-                                fetchDataFiltered(2, "India", "India");
-                                break;
-                            case 4:
-                                adapter.clear();
-                                fetchDataFiltered(2, "Multi", "Multi");
-                                break;
+                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
+                        sharedPreference.setPrevCountryFiltered(which);
+                        ArrayList<String> keyArray = new ArrayList<>();
+                        for (int i = 0; i < which.length;i ++){
+                            keyArray.add(text[i].toString());
+                        }
+                        if (keyArray.size() > 0) {
+                            adapter.clear();
+                            fetchDataFiltered(2, keyArray);
+                        }
+                        menu.toggle(false);
+                        return true;
+                    }
+                })
+                .positiveText("Filter")
+                .negativeText("Close")
+                .icon(ContextCompat.getDrawable(getContext(), R.mipmap.ic_launcher))
+                .show();
+    }
 
+    private void showLocationDialog() {
+        new MaterialDialog.Builder(getContext())
+                .title("Select a Location")
+                .content("Check an location below, to remove all filters use reset icon in the toolbar.")
+                .items(R.array.location)
+                .buttonRippleColorRes(R.color.colorAccentLight)
+                .itemsCallbackMultiChoice(sharedPreference.getPrevLocationFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
+                        sharedPreference.setPrevLocationFiltered(which);
+                        ArrayList<String> keyArray = new ArrayList<>();
+                        for (int i = 0; i < which.length;i ++){
+                            keyArray.add(text[i].toString());
+                        }
+                        if (keyArray.size() > 0) {
+                            adapter.clear();
+                            fetchDataFiltered(3, keyArray);
                         }
                         menu.toggle(false);
                         return true;
@@ -249,40 +272,17 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
                 .content("Check an agency below, to remove all filters use reset icon in the toolbar.")
                 .items(R.array.agencies)
                 .buttonRippleColorRes(R.color.colorAccentLight)
-                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                .itemsCallbackMultiChoice(sharedPreference.getPrevAgencyFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
                     @Override
-                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        String date = formatDatesForTitle(start_date) + " " + formatDatesForTitle(end_date);
-                        switch (which) {
-                            case 0:
-                                adapter.clear();
-                                fetchDataFiltered(0, "44", "NASA");
-                                break;
-                            case 1:
-                                adapter.clear();
-                                fetchDataFiltered(0, "121", "SpaceX");
-                                break;
-                            case 2:
-                                adapter.clear();
-                                fetchDataFiltered(0, "63", "ROSCOSMOS");
-                                break;
-                            case 3:
-                                adapter.clear();
-                                fetchDataFiltered(0, "124", "ULA");
-                                break;
-                            case 4:
-                                adapter.clear();
-                                fetchDataFiltered(0, "115", "Arianespace");
-                                break;
-                            case 5:
-                                adapter.clear();
-                                fetchDataFiltered(0, "88", "CASC");
-                                break;
-                            case 6:
-                                adapter.clear();
-                                fetchDataFiltered(0, "31", "ISRO");
-                                break;
-
+                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
+                        sharedPreference.setPrevAgencyFiltered(which);
+                        ArrayList<String> keyArray = new ArrayList<>();
+                        for (int i = 0; i < which.length;i ++){
+                            keyArray.add(text[i].toString());
+                        }
+                        if (keyArray.size() > 0) {
+                            adapter.clear();
+                            fetchDataFiltered(0, keyArray);
                         }
                         menu.toggle(false);
                         return true;
@@ -300,52 +300,18 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
                 .content("Check a vehicle below, to remove all filters use reset icon in the toolbar.")
                 .items(R.array.vehicles)
                 .buttonRippleColorRes(R.color.colorAccentLight)
-                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                .itemsCallbackMultiChoice(sharedPreference.getPrevVehicleFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
                     @Override
-                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        switch (which) {
-                            case 0:
-                                adapter.clear();
-                                fetchDataFiltered(1, "Falcon", "Falcon");
-                                break;
-                            case 1:
-                                adapter.clear();
-                                fetchDataFiltered(1, "Proton", "Proton");
-                                break;
-                            case 2:
-                                adapter.clear();
-                                fetchDataFiltered(1, "Soyuz", "Soyuz");
-                                break;
-                            case 3:
-                                adapter.clear();
-                                fetchDataFiltered(1 , "Atlas", "Atlas");
-                                break;
-                            case 4:
-                                adapter.clear();
-                                fetchDataFiltered(1 , "Delta", "Delta");
-                                break;
-                            case 5:
-                                adapter.clear();
-                                fetchDataFiltered(1 , "Long", "Long March");
-                                break;
-                            case 6:
-                                adapter.clear();
-                                fetchDataFiltered(1 , "SLV", "PSLV/GSLV");
-                                break;
-                            case 7:
-                                adapter.clear();
-                                fetchDataFiltered(1 , "Ariane", "Ariane");
-                                break;
-                            case 8:
-                                adapter.clear();
-                                fetchDataFiltered(1 , "Zenit", "Zenit");
-                                break;
-                            case 9:
-                                adapter.clear();
-                                fetchDataFiltered(1 , "Rokot", "Rokot");
-                                break;
+                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
+                        sharedPreference.setPrevVehicleFiltered(which);
+                        ArrayList<String> keyArray = new ArrayList<>();
+                        for (int i = 0; i < which.length;i ++){
+                            keyArray.add(text[i].toString());
                         }
-
+                        if (keyArray.size() > 0) {
+                            adapter.clear();
+                            fetchDataFiltered(1, keyArray);
+                        }
                         menu.toggle(false);
                         return true;
                     }
@@ -446,14 +412,14 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     }
 
     // Three types: 0 - Agency 1 - Vehicle 2 - Country
-    public void fetchDataFiltered(int type, String key, String title) {
-        Timber.d("Filtering by: %s", key);
+    public void fetchDataFiltered(int type, ArrayList<String> key) {
+        Timber.d("Filtering by: %s", key.toString());
 
-        if (!BuildConfig.DEBUG){
-            Answers.getInstance().logSearch(new SearchEvent()
-                    .putQuery(key));
-        }
+        Answers.getInstance().logSearch(new SearchEvent()
+                    .putQuery(key.toString()));
 
+
+        String title = key.toString().replaceAll("\\[", "").replaceAll("\\]","");
         if (sharedPreference.getPrevFiltered()){
             sharedPreference.setPreviousTitle(sharedPreference.getPreviousTitle() + " | " + title);
         } else {
@@ -507,18 +473,21 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         if (monthOfYearEnd == 0){
             monthOfYearEnd = 1;
         }
-        String daydatestart = dayOfMonth < 10 ? "0"+dayOfMonth : ""+dayOfMonth;
-        String monthdatestart = monthOfYear < 10 ? "0"+monthOfYear : ""+monthOfYear;
-        String daydateend = dayOfMonthEnd < 10 ? "0"+dayOfMonthEnd : ""+dayOfMonthEnd;
-        String monthdayend = monthOfYearEnd < 10 ? "0"+monthOfYearEnd : ""+monthOfYearEnd;
+        String dayDateStart = dayOfMonth < 10 ? "0" + dayOfMonth : "" + dayOfMonth;
+        String monthDateStart = monthOfYear < 10 ? "0" + monthOfYear : "" + monthOfYear;
+        String dayDateEnd = dayOfMonthEnd < 10 ? "0" + dayOfMonthEnd : "" + dayOfMonthEnd;
+        String monthDayEnd = monthOfYearEnd < 10 ? "0" + monthOfYearEnd : "" + monthOfYearEnd;
 
-        start_date = year + "-" + monthdatestart + "-" + daydatestart;
-        end_date = yearEnd + "-" + monthdayend + "-" + daydateend;
+        start_date = year + "-" + monthDateStart + "-" + dayDateStart;
+        end_date = yearEnd + "-" + monthDayEnd + "-" + dayDateEnd;
 
         if (sharedPreference.getPrevFiltered()){
-            this.sharedPreference.setPreviousTitle(sharedPreference.getPreviousTitle() + " | " + formatDatesForTitle(start_date) + " - " + formatDatesForTitle(end_date));
+            this.sharedPreference.setPreviousTitle(sharedPreference.getPreviousTitle()
+                    + " | " + formatDatesForTitle(start_date)
+                    + " - " + formatDatesForTitle(end_date));
         } else {
-            this.sharedPreference.setPreviousTitle(formatDatesForTitle(start_date) + " - " + formatDatesForTitle(end_date));
+            this.sharedPreference.setPreviousTitle(formatDatesForTitle(start_date)
+                    + " - " + formatDatesForTitle(end_date));
             this.sharedPreference.setPrevFiltered(true);
         }
 
@@ -649,6 +618,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     public void onRefresh() {
         adapter.clear();
         this.sharedPreference.setPrevFiltered(false);
+        this.sharedPreference.resetAllPrevFilters();
         getDefaultDateRange();
         fetchData();
     }

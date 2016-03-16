@@ -129,13 +129,8 @@ public class LaunchCompactAdapter extends RecyclerView.Adapter<LaunchCompactAdap
 
 
         //If pad and agency exist add it to location, otherwise get whats always available
-        if (launchItem.getLocation().getPads().size() > 0 && launchItem.getLocation().getPads().
-                get(0).getAgencies().size() > 0) {
-            location = launchItem.getLocation().getName() + " " + launchItem.getLocation().getPads()
-                    .get(0).getAgencies().get(0).getCountryCode();
-
-        } else {
-            location = launchItem.getLocation().getName();
+        if (launchItem.getLocation() != null){
+            holder.location.setText(launchItem.getLocation().getName());
         }
 
         if (launchItem.getRocket().getAgencies().size() > 0) {
@@ -146,8 +141,6 @@ public class LaunchCompactAdapter extends RecyclerView.Adapter<LaunchCompactAdap
 
         holder.mission.setText(launchItem.getName());
         holder.title.setText(title);
-        holder.location.setText(location);
-
     }
 
     public String parseDateToMMyyyy(String time) {
