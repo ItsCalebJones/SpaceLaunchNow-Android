@@ -61,7 +61,7 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
     private SharedPreference sharedPreference;
     private SharedPreferences SharedPreferences;
     private FloatingActionMenu menu;
-    private FloatingActionButton agency, vehicle, location, reset;
+    private FloatingActionButton agency, vehicle, country, location, reset;
     private int mScrollOffset = 4;
     private Context context;
 
@@ -103,7 +103,9 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
 
         agency = (FloatingActionButton) view.findViewById(R.id.agency);
         vehicle = (FloatingActionButton) view.findViewById(R.id.vehicle);
-        location = (FloatingActionButton) view.findViewById(R.id.location);
+        country = (FloatingActionButton) view.findViewById(R.id.location);
+        location = (FloatingActionButton) view.findViewById(R.id.launch_location);
+
         reset = (FloatingActionButton) view.findViewById(R.id.reset);
         menu = (FloatingActionMenu) view.findViewById(R.id.menu);
                 /*Set up Pull to refresh*/
@@ -165,12 +167,13 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sharedPreference.resetAllUpFilters();
                 if (sharedPreference.getUpFiltered()) {
                     sharedPreference.setUpFiltered(false);
                     sharedPreference.removeFilteredList();
                     displayLaunches();
                 }
-                menu.hideMenu(true);
+                menu.close(true);
             }
         });
 
@@ -186,6 +189,12 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
                 showVehicleDialog();
             }
         });
+        country.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCountryDialog();
+            }
+        });
         location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -194,37 +203,51 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
         });
     }
 
-    private void showLocationDialog() {
+    private void showCountryDialog() {
         new MaterialDialog.Builder(getContext())
                 .title("Select a Country")
-                .content("Check an location below, to remove all filters use reset icon in the toolbar.")
+                .content("Check an country below, to remove all filters use reset icon in the toolbar.")
                 .items(R.array.country)
                 .buttonRippleColorRes(R.color.colorAccentLight)
-                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                .itemsCallbackMultiChoice(sharedPreference.getUpCountryFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
                     @Override
-                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        switch (which) {
-                            case 0:
-                                adapter.clear();
-                                fetchDataFiltered(2, "USA", "USA");
-                                break;
-                            case 1:
-                                adapter.clear();
-                                fetchDataFiltered(2, "China", "China");
-                                break;
-                            case 2:
-                                adapter.clear();
-                                fetchDataFiltered(2, "Russia", "Russia");
-                                break;
-                            case 3:
-                                adapter.clear();
-                                fetchDataFiltered(2, "India", "India");
-                                break;
-                            case 4:
-                                adapter.clear();
-                                fetchDataFiltered(2, "Multi", "Multi");
-                                break;
+                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
+                        sharedPreference.setUpCountryFiltered(which);
+                        ArrayList<String> keyArray = new ArrayList<>();
+                        for (int i = 0; i < which.length;i ++){
+                            keyArray.add(text[i].toString());
+                        }
+                        if (keyArray.size() > 0) {
+                            adapter.clear();
+                            fetchDataFiltered(2, keyArray);
+                        }
+                        menu.toggle(false);
+                        return true;
+                    }
+                })
+                .positiveText("Filter")
+                .negativeText("Close")
+                .icon(ContextCompat.getDrawable(getContext(), R.mipmap.ic_launcher))
+                .show();
+    }
 
+    private void showLocationDialog() {
+        new MaterialDialog.Builder(getContext())
+                .title("Select a Location")
+                .content("Check an location below, to remove all filters use reset icon in the toolbar.")
+                .items(R.array.location)
+                .buttonRippleColorRes(R.color.colorAccentLight)
+                .itemsCallbackMultiChoice(sharedPreference.getUpLocationFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
+                        sharedPreference.setUpLocationFiltered(which);
+                        ArrayList<String> keyArray = new ArrayList<>();
+                        for (int i = 0; i < which.length;i ++){
+                            keyArray.add(text[i].toString());
+                        }
+                        if (keyArray.size() > 0) {
+                            adapter.clear();
+                            fetchDataFiltered(3, keyArray);
                         }
                         menu.toggle(false);
                         return true;
@@ -242,39 +265,17 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
                 .content("Check an agency below, to remove all filters use reset icon in the toolbar.")
                 .items(R.array.agencies)
                 .buttonRippleColorRes(R.color.colorAccentLight)
-                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                .itemsCallbackMultiChoice(sharedPreference.getUpAgencyFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
                     @Override
-                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        switch (which) {
-                            case 0:
-                                adapter.clear();
-                                fetchDataFiltered(0, "44", "NASA");
-                                break;
-                            case 1:
-                                adapter.clear();
-                                fetchDataFiltered(0, "121", "SpaceX");
-                                break;
-                            case 2:
-                                adapter.clear();
-                                fetchDataFiltered(0, "63", "ROSCOSMOS");
-                                break;
-                            case 3:
-                                adapter.clear();
-                                fetchDataFiltered(0, "124", "ULA");
-                                break;
-                            case 4:
-                                adapter.clear();
-                                fetchDataFiltered(0, "115", "Arianespace");
-                                break;
-                            case 5:
-                                adapter.clear();
-                                fetchDataFiltered(0, "88", "CASC");
-                                break;
-                            case 6:
-                                adapter.clear();
-                                fetchDataFiltered(0, "31", "ISRO");
-                                break;
-
+                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
+                        sharedPreference.setUpAgencyFiltered(which);
+                        ArrayList<String> keyArray = new ArrayList<>();
+                        for (int i = 0; i < which.length;i ++){
+                            keyArray.add(text[i].toString());
+                        }
+                        if (keyArray.size() > 0) {
+                            adapter.clear();
+                            fetchDataFiltered(0, keyArray);
                         }
                         menu.toggle(false);
                         return true;
@@ -292,52 +293,18 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
                 .content("Check a vehicle below, to remove all filters use reset icon in the toolbar.")
                 .items(R.array.vehicles)
                 .buttonRippleColorRes(R.color.colorAccentLight)
-                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                .itemsCallbackMultiChoice(sharedPreference.getUpVehicleFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
                     @Override
-                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        switch (which) {
-                            case 0:
-                                adapter.clear();
-                                fetchDataFiltered(1, "Falcon", "Falcon");
-                                break;
-                            case 1:
-                                adapter.clear();
-                                fetchDataFiltered(1, "Proton", "Proton");
-                                break;
-                            case 2:
-                                adapter.clear();
-                                fetchDataFiltered(1, "Soyuz", "Soyuz");
-                                break;
-                            case 3:
-                                adapter.clear();
-                                fetchDataFiltered(1, "Atlas", "Atlas");
-                                break;
-                            case 4:
-                                adapter.clear();
-                                fetchDataFiltered(1, "Delta", "Delta");
-                                break;
-                            case 5:
-                                adapter.clear();
-                                fetchDataFiltered(1, "Long", "Long March");
-                                break;
-                            case 6:
-                                adapter.clear();
-                                fetchDataFiltered(1, "SLV", "PSLV/GSLV");
-                                break;
-                            case 7:
-                                adapter.clear();
-                                fetchDataFiltered(1, "Ariane", "Ariane");
-                                break;
-                            case 8:
-                                adapter.clear();
-                                fetchDataFiltered(1, "Zenit", "Zenit");
-                                break;
-                            case 9:
-                                adapter.clear();
-                                fetchDataFiltered(1, "Rokot", "Rokot");
-                                break;
+                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
+                        sharedPreference.setUpVehicleFiltered(which);
+                        ArrayList<String> keyArray = new ArrayList<>();
+                        for (int i = 0; i < which.length;i ++){
+                            keyArray.add(text[i].toString());
                         }
-
+                        if (keyArray.size() > 0) {
+                            adapter.clear();
+                            fetchDataFiltered(1, keyArray);
+                        }
                         menu.toggle(false);
                         return true;
                     }
@@ -379,17 +346,10 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
         menu.setIconToggleAnimatorSet(set);
     }
 
-    public void fetchDataFiltered(int type, String key, String title) {
+    public void fetchDataFiltered(int type, ArrayList<String> key) {
         Timber.d("Filtering by: %s", key);
-
-        if (!BuildConfig.DEBUG) {
-            Answers.getInstance().logSearch(new SearchEvent()
-                    .putQuery(key));
-        }
-
         sharedPreference.setUpFilter(type, key);
         displayLaunches();
-        setTitle();
     }
 
     public void displayLaunches() {
@@ -444,6 +404,7 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
     public void onRefresh() {
         adapter.clear();
         sharedPreference.setUpFiltered(false);
+        sharedPreference.resetAllUpFilters();
         fetchData();
     }
 
@@ -536,7 +497,7 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
             final String locationName = model.getLocation().getName().toLowerCase();
             String missionName;
 
-            //If pad and agency exist add it to location, otherwise get whats always available
+            //If pad and agency exist add it to country, otherwise get whats always available
             if (model.getLocation().getPads().size() > 0 && model.getLocation().getPads().
                     get(0).getAgencies().size() > 0) {
                 missionName = model.getLocation().getPads().get(0).getAgencies().get(0).getName() + " " + (model.getRocket().getName());

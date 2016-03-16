@@ -299,27 +299,9 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             holder.content_mission_description_view.setVisibility(View.GONE);
         }
 
-        //If location is available then see if pad and agency informaiton is avaialble.
-        if (launchItem.getLocation().getName() != null) {
-            if (launchItem.getLocation().getPads().size() > 0 && launchItem.getLocation().getPads().
-                    get(0).getAgencies().size() > 0) {
-
-                //Get the first CountryCode
-                String country = launchItem.getLocation().getPads().
-                        get(0).getAgencies().get(0).getCountryCode();
-                country = (country.substring(0, 3));
-
-                //Get the location remove the pad information
-                String location = launchItem.getLocation().getName() + " " + country;
-                launchItem.getLocation().getPads().
-                        get(0).getAgencies().get(0).getCountryCode();
-                location = (location.substring(location.indexOf(", ") + 2));
-
-                holder.location.setText(location);
-            } else {
-                holder.location.setText(launchItem.getLocation().getName()
-                        .substring(launchItem.getLocation().getName().indexOf(", ") + 2));
-            }
+        //If pad and agency exist add it to location, otherwise get whats always available
+        if (launchItem.getLocation() != null){
+            holder.location.setText(launchItem.getLocation().getName());
         }
         holder.title.setText(launchItem.getRocket().getName());
     }

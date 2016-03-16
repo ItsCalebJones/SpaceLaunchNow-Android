@@ -73,7 +73,7 @@
             android:id="@+id/agency"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_sort"
+            android:src="@drawable/ic_government_white"
             app:fab_colorNormal="@color/colorAccent"
             app:fab_colorPressed="@color/colorAccentLight"
             app:fab_label="Agency"
@@ -83,20 +83,30 @@
             android:id="@+id/country"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_sort"
+            android:src="@drawable/ic_flag"
             app:fab_colorNormal="@color/colorAccent"
             app:fab_colorPressed="@color/colorAccentLight"
             app:fab_label="Country"
             app:fab_size="mini" />
 
         <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/launch_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_earth_white"
+            app:fab_colorNormal="@color/colorAccent"
+            app:fab_colorPressed="@color/colorAccentLight"
+            app:fab_label="Location"
+            app:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
             android:id="@+id/vehicle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_sort"
+            android:src="@drawable/ic_rocket_white"
             app:fab_colorNormal="@color/colorAccent"
             app:fab_colorPressed="@color/colorAccentLight"
-            app:fab_label="Launch Vehicle"
+            app:fab_label="Vehicle"
             app:fab_size="mini" />
 
 

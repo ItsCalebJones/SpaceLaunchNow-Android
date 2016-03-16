@@ -3,6 +3,7 @@ package me.calebjones.spacelaunchnow.content.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ public class Launch implements Serializable {
     private Integer tbdtime;
     private Location location;
     private Rocket rocket;
+    private Date date;
     private boolean isNotifiedDay = false;
     private boolean isNotifiedHour = false;
     private boolean isNotifiedCustom = false;
@@ -350,5 +352,13 @@ public class Launch implements Serializable {
 
     public void setFavorite(boolean favorite) {
         this.favorite = favorite;
+    }
+
+    public Date getLaunchDate() {
+        return date;
+    }
+
+    public void setLaunchDate(Date date) {
+        this.date = date;
     }
 }

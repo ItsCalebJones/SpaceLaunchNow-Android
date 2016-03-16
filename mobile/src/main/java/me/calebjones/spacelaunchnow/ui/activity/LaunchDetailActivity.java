@@ -277,8 +277,7 @@ public class LaunchDetailActivity extends AppCompatActivity
                     //Apply Arianespace Logo
                     applyProfileLogo(getString(R.string.ariane_logo));
                 }
-                location = (launch.getLocation().getName().substring(launch
-                        .getLocation().getName().indexOf(", ") + 2));
+                location = (launch.getLocation().getPads().get(0).getName());
             }
         }
         //Assigns the result of the two above checks.

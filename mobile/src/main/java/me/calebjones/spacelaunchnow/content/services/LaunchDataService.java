@@ -30,9 +30,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -372,6 +374,8 @@ public class LaunchDataService extends IntentService implements
 
             /*Initialize array if null*/
             upcomingLaunchList = new ArrayList<>();
+            SimpleDateFormat df = new SimpleDateFormat("MMMM dd, yyyy kk:mm:ss zzz");
+            df.toLocalizedPattern();
 
             JSONObject response = new JSONObject(result);
             JSONArray launchesArray = response.optJSONArray("launches");
@@ -385,6 +389,11 @@ public class LaunchDataService extends IntentService implements
                 launch.setName(launchesObj.optString("name"));
                 launch.setId(launchesObj.optInt("id"));
                 launch.setNet(launchesObj.optString("net"));
+                try {
+                    launch.setLaunchDate(df.parse(launchesObj.optString("net")));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 launch.setWindowstart(launchesObj.optString("windowstart"));
                 launch.setWindowend(launchesObj.optString("windowend"));
                 launch.setNetstamp(launchesObj.optInt("netstamp"));
@@ -444,10 +453,11 @@ public class LaunchDataService extends IntentService implements
                         List<Pad> locationPadsList = new ArrayList<>();
                         for (int a = 0; a < pads.length(); a++) {
                             JSONObject padsObj = pads.optJSONObject(a);
-                            location.setId(padsObj.optInt("id"));
-                            location.setName(padsObj.optString("name"));
+                            location.setId(locationObj.optInt("id"));
+                            location.setName(locationObj.optString("name"));
                             Pad locationPads = new Pad();
                             locationPads.setName(padsObj.optString("name"));
+                            locationPads.setId(padsObj.optInt("id"));
                             locationPads.setLatitude(padsObj.optDouble("latitude"));
                             locationPads.setLongitude(padsObj.optDouble("longitude"));
                             locationPads.setMapURL(padsObj.optString("mapURL"));
@@ -513,6 +523,8 @@ public class LaunchDataService extends IntentService implements
 
             /*Initialize array if null*/
             previousLaunchList = new ArrayList<>();
+            SimpleDateFormat df = new SimpleDateFormat("MMMM dd, yyyy kk:mm:ss zzz");
+            df.toLocalizedPattern();
 
             JSONObject response = new JSONObject(result);
             JSONArray launchesArray = response.optJSONArray("launches");
@@ -527,6 +539,11 @@ public class LaunchDataService extends IntentService implements
                 launch.setName(launchesObj.optString("name"));
                 launch.setId(launchesObj.optInt("id"));
                 launch.setNet(launchesObj.optString("net"));
+                try {
+                    launch.setLaunchDate(df.parse(launchesObj.optString("net")));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 launch.setWindowstart(launchesObj.optString("windowstart"));
                 launch.setWindowend(launchesObj.optString("windowend"));
                 launch.setNetstamp(launchesObj.optInt("netstamp"));
@@ -589,10 +606,11 @@ public class LaunchDataService extends IntentService implements
                         for (int a = 0; a < pads.length(); a++) {
                             JSONObject padsObj = pads.optJSONObject(a);
 
-                            location.setId(padsObj.optInt("id"));
-                            location.setName(padsObj.optString("name"));
+                            location.setId(locationObj.optInt("id"));
+                            location.setName(locationObj.optString("name"));
 
                             locationPads.setName(padsObj.optString("name"));
+                            locationPads.setId(padsObj.optInt("id"));
                             locationPads.setLatitude(padsObj.optDouble("latitude"));
                             locationPads.setLongitude(padsObj.optDouble("longitude"));
                             locationPads.setMapURL(padsObj.optString("mapURL"));
