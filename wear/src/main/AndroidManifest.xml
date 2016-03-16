@@ -49,20 +49,6 @@
             <!--</intent-filter>-->
         <!--</activity>-->
 
-        <activity
-            android:name=".LaunchActivity"
-            android:allowEmbedded="true"
-            android:exported="true"
-            android:taskAffinity=""
-            android:theme="@android:style/Theme.DeviceDefault.Light"/>
-
-        <receiver
-            android:name=".LaunchNotificationReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="me.calebjones.spacelaunchnow.wear.SHOW_NOTIFICATION" />
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>
