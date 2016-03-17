@@ -1,13 +1,11 @@
 package me.calebjones.spacelaunchnow.ui.fragment.vehicles;
 
 
-import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,7 +22,7 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.VehicleAdapter;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.GridItem;
 import me.calebjones.spacelaunchnow.ui.activity.VehicleDetailActivity;
 import me.calebjones.spacelaunchnow.utils.CustomFragment;
@@ -33,7 +31,7 @@ import timber.log.Timber;
 
 public class LaunchVehicleFragment extends CustomFragment {
 
-    private SharedPreference sharedPreference;
+    private ListPreferences sharedPreference;
     private VehicleAdapter adapter;
     private android.content.SharedPreferences SharedPreferences;
     private GridLayoutManager layoutManager;
@@ -48,7 +46,7 @@ public class LaunchVehicleFragment extends CustomFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getActivity());
-        this.sharedPreference = SharedPreference.getInstance(getActivity().getApplication());
+        this.sharedPreference = ListPreferences.getInstance(getActivity().getApplication());
         adapter = new VehicleAdapter(getActivity().getApplicationContext());
     }
 
@@ -58,7 +56,7 @@ public class LaunchVehicleFragment extends CustomFragment {
         int m_theme;
         context = getActivity().getApplicationContext();
 
-        sharedPreference = SharedPreference.getInstance(this.context);
+        sharedPreference = ListPreferences.getInstance(this.context);
 
         if (sharedPreference.getNightMode()) {
             m_theme = R.style.DarkTheme_NoActionBar;

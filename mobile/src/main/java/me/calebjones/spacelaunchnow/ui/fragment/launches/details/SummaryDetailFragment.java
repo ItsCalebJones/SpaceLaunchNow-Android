@@ -33,7 +33,7 @@ import java.util.TimeZone;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.DatabaseManager;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.RocketDetails;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
@@ -44,7 +44,7 @@ import timber.log.Timber;
 public class SummaryDetailFragment extends Fragment implements OnMapReadyCallback {
 
     private SharedPreferences sharedPref;
-    private static SharedPreference sharedPreference;
+    private static ListPreferences sharedPreference;
     private Context context;
     public MapView map_view;
     public GoogleMap gMap;
@@ -66,7 +66,7 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         this.context = getContext();
 
-        sharedPreference = SharedPreference.getInstance(this.context);
+        sharedPreference = ListPreferences.getInstance(this.context);
 
 
         if (sharedPreference.getNightMode()) {

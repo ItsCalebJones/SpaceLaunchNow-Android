@@ -39,7 +39,7 @@ import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.DatabaseManager;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.RocketDetails;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.details.AgencyDetailFragment;
@@ -64,7 +64,7 @@ public class LaunchDetailActivity extends AppCompatActivity
     private FloatingActionButton fab_favorite;
     private int mMaxScrollSize;
     private SharedPreferences sharedPref;
-    private static SharedPreference sharedPreference;
+    private static ListPreferences sharedPreference;
     private CustomTabActivityHelper customTabActivityHelper;
     private Context context;
     private Calendar rightNow = Calendar.getInstance();
@@ -79,7 +79,7 @@ public class LaunchDetailActivity extends AppCompatActivity
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         context = getApplicationContext();
         customTabActivityHelper = new CustomTabActivityHelper();
-        sharedPreference = SharedPreference.getInstance(context);
+        sharedPreference = ListPreferences.getInstance(context);
 
         if (sharedPreference.getNightMode()) {
             m_theme = R.style.DarkTheme_Transparent;

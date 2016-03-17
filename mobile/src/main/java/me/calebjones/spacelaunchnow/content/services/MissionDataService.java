@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.Mission;
 import me.calebjones.spacelaunchnow.content.models.Strings;
@@ -34,7 +34,7 @@ public class MissionDataService extends IntentService {
 
     public static List<Mission> missionList;
     private SharedPreferences sharedPref;
-    private SharedPreference sharedPreference;
+    private ListPreferences sharedPreference;
 
     public MissionDataService() {
         super("MissionDataService");
@@ -46,7 +46,7 @@ public class MissionDataService extends IntentService {
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-        this.sharedPreference = SharedPreference.getInstance(getApplicationContext());
+        this.sharedPreference = ListPreferences.getInstance(getApplicationContext());
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         return super.onStartCommand(intent, flags, startId);
     }

@@ -1,16 +1,14 @@
 package me.calebjones.spacelaunchnow.ui.activity;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.ui.fragment.NestedPreferenceFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.SettingsFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.SettingsFragment.Callback;
@@ -18,7 +16,7 @@ import me.calebjones.spacelaunchnow.ui.fragment.SettingsFragment.Callback;
 public class SettingsActivity extends AppCompatActivity implements Callback {
     private static final String NESTED = "NESTED";
     private TextView toolbarTitle;
-    private static SharedPreference sharedPreference;
+    private static ListPreferences sharedPreference;
     private Context context;
 
 
@@ -27,7 +25,7 @@ public class SettingsActivity extends AppCompatActivity implements Callback {
         int m_theme;
         this.context = getApplicationContext();
 
-        sharedPreference = SharedPreference.getInstance(this.context);
+        sharedPreference = ListPreferences.getInstance(this.context);
 
         if (sharedPreference.getNightMode()) {
             m_theme = R.style.DarkTheme_NoActionBar;

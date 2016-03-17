@@ -34,14 +34,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.Location;
@@ -64,7 +64,8 @@ public class LaunchDataService extends IntentService implements
     private Launch storedPrevLaunch;
     private AlarmManager alarmManager;
     private SharedPreferences sharedPref;
-    private SharedPreference sharedPreference;
+    private ListPreferences listPreference;
+    private SwitchPreferences switchPreferences;
 
     private static final String NAME_KEY = "me.calebjones.spacelaunchnow.wear.nextname";
     private static final String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
@@ -87,7 +88,8 @@ public class LaunchDataService extends IntentService implements
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-        this.sharedPreference = SharedPreference.getInstance(getApplicationContext());
+        this.listPreference = ListPreferences.getInstance(getApplicationContext());
+        this.switchPreferences = SwitchPreferences.getInstance(getApplicationContext());
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         return super.onStartCommand(intent, flags, startId);
     }
@@ -135,7 +137,7 @@ public class LaunchDataService extends IntentService implements
             URL url;
 
             //Used for loading debug lauches/reproducing bugs
-            if(sharedPreference.getDebugLaunch()){
+            if(listPreference.getDebugLaunch()){
                 url = new URL("http://calebjones.me/app/debug_launch.json");
             } else {
                 url = new URL(Strings.NEXT_URL);
@@ -172,12 +174,12 @@ public class LaunchDataService extends IntentService implements
                 }
 
                 //Replace
-                List<Launch> currentLaunchList = sharedPreference.getLaunchesUpcoming();
+                List<Launch> currentLaunchList = listPreference.getLaunchesUpcoming();
 
                 if (currentLaunchList != null && currentLaunchList.size() > 0) {
                     if (currentLaunchList.get(0).getId().equals(upcomingLaunchList.get(0).getId())) {
                         currentLaunchList.set(0, upcomingLaunchList.get(0));
-                        sharedPreference.setUpComingLaunches(currentLaunchList);
+                        listPreference.setUpComingLaunches(currentLaunchList);
                     } else {
                         getUpcomingLaunches();
                     }
@@ -241,13 +243,13 @@ public class LaunchDataService extends IntentService implements
 
                 Timber.d("LaunchDataService - Previous Launches list:  %s ", previousLaunchList.size());
 
-                if (this.sharedPreference.getPrevFiltered()){
-                    this.sharedPreference.setPreviousLaunchesFiltered(previousLaunchList);
+                if (this.switchPreferences.getPrevFiltered()){
+                    this.listPreference.setPreviousLaunchesFiltered(previousLaunchList);
                 } else {
                     LaunchDataService.this.cleanCachePrevious();
-                    this.sharedPreference.setPreviousLaunches(previousLaunchList);
+                    this.listPreference.setPreviousLaunches(previousLaunchList);
                 }
-//                this.sharedPreference.syncPreviousMissions();
+//                this.listPreference.syncPreviousMissions();
 
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
@@ -283,7 +285,7 @@ public class LaunchDataService extends IntentService implements
             URL url;
 
             //Used for loading debug lauches/reproducing bugs
-            if(sharedPreference.getDebugLaunch()){
+            if(listPreference.getDebugLaunch()){
                 url = new URL("http://calebjones.me/app/debug_launch.json");
             } else {
                 url = new URL(Strings.LAUNCH_URL);
@@ -319,8 +321,8 @@ public class LaunchDataService extends IntentService implements
                     mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
                 }
 
-                this.sharedPreference.setUpComingLaunches(upcomingLaunchList);
-//                this.sharedPreference.syncUpcomingMissions();
+                this.listPreference.setUpComingLaunches(upcomingLaunchList);
+//                this.listPreference.syncUpcomingMissions();
 
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
@@ -362,11 +364,11 @@ public class LaunchDataService extends IntentService implements
     }
 
     private void cleanCacheUpcoming() {
-        this.sharedPreference.removeUpcomingLaunches();
+        this.listPreference.removeUpcomingLaunches();
     }
 
     private void cleanCachePrevious() {
-        this.sharedPreference.removePreviousLaunches();
+        this.listPreference.removePreviousLaunches();
     }
 
     public void parseUpcomingResult(String result) throws JSONException {

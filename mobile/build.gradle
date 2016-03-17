@@ -22,6 +22,7 @@ android {
     compileSdkVersion 23
     buildToolsVersion '23.0.2'
     defaultConfig {
+        manifestPlaceholders = [ appNameLabel:"@string/application_name"]
         applicationId "me.calebjones.spacelaunchnow"
         minSdkVersion 15
         targetSdkVersion 23
@@ -29,6 +30,11 @@ android {
         versionName "1.0.0"
     }
     buildTypes {
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-DEBUG'
+            manifestPlaceholders = [ appNameLabel:"Space Launch Now - Debug"]
+        }
     }
     productFlavors {
     }
@@ -37,6 +43,8 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
+
+    wearApp project(':wear')
 
     compile('com.github.afollestad.material-dialogs:core:0.8.5.5@aar') {
         transitive = true
@@ -67,9 +75,9 @@ dependencies {
     compile 'com.github.clans:fab:1.6.2'
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'com.borax12.materialdaterangepicker:library:1.2'
-    compile 'com.kobakei:ratethisapp:0.0.4'
+    compile 'net.mediavrog:integrated-rating-request:1.1.1'
     compile 'com.jakewharton.timber:timber:4.1.0'
-    compile 'za.co.riggaroo:materialhelptutorial:1.0.3'
+    compile 'za.co.riggaroo:materialhelptutorial:1.1.0'
     compile 'com.malinskiy:superrecyclerview:1.1.1'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.simplecityapps:recyclerview-fastscroll:1.0.6'

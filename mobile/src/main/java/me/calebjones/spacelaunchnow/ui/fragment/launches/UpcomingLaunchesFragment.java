@@ -40,7 +40,8 @@ import java.util.List;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.content.adapter.LaunchCompactAdapter;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.R;
@@ -58,7 +59,8 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
     private LinearLayoutManager layoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<Launch> rocketLaunches;
-    private SharedPreference sharedPreference;
+    private SwitchPreferences switchPreferences;
+    private ListPreferences listPreference;
     private SharedPreferences SharedPreferences;
     private FloatingActionMenu menu;
     private FloatingActionButton agency, vehicle, country, location, reset;
@@ -74,7 +76,8 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getActivity());
-        this.sharedPreference = SharedPreference.getInstance(getContext());
+        this.listPreference = ListPreferences.getInstance(getContext());
+        this.switchPreferences = SwitchPreferences.getInstance(getContext());
         this.rocketLaunches = new ArrayList();
         adapter = new LaunchCompactAdapter(getContext());
     }
@@ -85,7 +88,7 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
                              Bundle savedInstanceState) {
         this.context = getContext();
 
-        sharedPreference = SharedPreference.getInstance(this.context);
+        listPreference = ListPreferences.getInstance(this.context);
 
         if (!BuildConfig.DEBUG) {
             Answers.getInstance().logContentView(new ContentViewEvent()
@@ -140,10 +143,10 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
             }
         });
 
-        if (this.sharedPreference.getUpcomingFirstBoot()) {
-            this.sharedPreference.setUpcomingFirstBoot(false);
+        if (this.listPreference.getUpcomingFirstBoot()) {
+            this.listPreference.setUpcomingFirstBoot(false);
             Timber.d("Upcoming Launch Fragment: First Boot.");
-            if (this.sharedPreference.getLaunchesUpcoming().size() == 0) {
+            if (this.listPreference.getLaunchesUpcoming().size() == 0) {
                 showLoading();
                 fetchData();
             } else {
@@ -167,10 +170,10 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sharedPreference.resetAllUpFilters();
-                if (sharedPreference.getUpFiltered()) {
-                    sharedPreference.setUpFiltered(false);
-                    sharedPreference.removeFilteredList();
+                switchPreferences.resetAllUpFilters();
+                if (switchPreferences.getUpFiltered()) {
+                    switchPreferences.setUpFiltered(false);
+                    listPreference.removeFilteredList();
                     displayLaunches();
                 }
                 menu.close(true);
@@ -209,10 +212,10 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
                 .content("Check an country below, to remove all filters use reset icon in the toolbar.")
                 .items(R.array.country)
                 .buttonRippleColorRes(R.color.colorAccentLight)
-                .itemsCallbackMultiChoice(sharedPreference.getUpCountryFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
+                .itemsCallbackMultiChoice(switchPreferences.getUpCountryFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
-                        sharedPreference.setUpCountryFiltered(which);
+                        switchPreferences.setUpCountryFiltered(which);
                         ArrayList<String> keyArray = new ArrayList<>();
                         for (int i = 0; i < which.length;i ++){
                             keyArray.add(text[i].toString());
@@ -237,10 +240,10 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
                 .content("Check an location below, to remove all filters use reset icon in the toolbar.")
                 .items(R.array.location)
                 .buttonRippleColorRes(R.color.colorAccentLight)
-                .itemsCallbackMultiChoice(sharedPreference.getUpLocationFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
+                .itemsCallbackMultiChoice(switchPreferences.getUpLocationFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
-                        sharedPreference.setUpLocationFiltered(which);
+                        switchPreferences.setUpLocationFiltered(which);
                         ArrayList<String> keyArray = new ArrayList<>();
                         for (int i = 0; i < which.length;i ++){
                             keyArray.add(text[i].toString());
@@ -265,10 +268,10 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
                 .content("Check an agency below, to remove all filters use reset icon in the toolbar.")
                 .items(R.array.agencies)
                 .buttonRippleColorRes(R.color.colorAccentLight)
-                .itemsCallbackMultiChoice(sharedPreference.getUpAgencyFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
+                .itemsCallbackMultiChoice(switchPreferences.getUpAgencyFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
-                        sharedPreference.setUpAgencyFiltered(which);
+                        switchPreferences.setUpAgencyFiltered(which);
                         ArrayList<String> keyArray = new ArrayList<>();
                         for (int i = 0; i < which.length;i ++){
                             keyArray.add(text[i].toString());
@@ -293,10 +296,10 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
                 .content("Check a vehicle below, to remove all filters use reset icon in the toolbar.")
                 .items(R.array.vehicles)
                 .buttonRippleColorRes(R.color.colorAccentLight)
-                .itemsCallbackMultiChoice(sharedPreference.getUpVehicleFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
+                .itemsCallbackMultiChoice(switchPreferences.getUpVehicleFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
-                        sharedPreference.setUpVehicleFiltered(which);
+                        switchPreferences.setUpVehicleFiltered(which);
                         ArrayList<String> keyArray = new ArrayList<>();
                         for (int i = 0; i < which.length;i ++){
                             keyArray.add(text[i].toString());
@@ -348,15 +351,15 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
 
     public void fetchDataFiltered(int type, ArrayList<String> key) {
         Timber.d("Filtering by: %s", key);
-        sharedPreference.setUpFilter(type, key);
+        listPreference.setUpFilter(type, key);
         displayLaunches();
     }
 
     public void displayLaunches() {
-        if (!sharedPreference.getUpFiltered()) {
-            rocketLaunches = sharedPreference.getLaunchesUpcoming();
+        if (!switchPreferences.getUpFiltered()) {
+            rocketLaunches = listPreference.getLaunchesUpcoming();
         } else {
-            rocketLaunches = sharedPreference.getLaunchesUpcomingFiltered();
+            rocketLaunches = listPreference.getLaunchesUpcomingFiltered();
         }
 
         if (rocketLaunches.size() == 0) {
@@ -378,7 +381,7 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
     }
 
     public void fetchData() {
-        this.sharedPreference.removeUpcomingLaunches();
+        this.listPreference.removeUpcomingLaunches();
         Intent intent = new Intent(getContext(), LaunchDataService.class);
         intent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
         Timber.d("Sending service intent!");
@@ -403,8 +406,8 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
 
     public void onRefresh() {
         adapter.clear();
-        sharedPreference.setUpFiltered(false);
-        sharedPreference.resetAllUpFilters();
+        switchPreferences.setUpFiltered(false);
+        switchPreferences.resetAllUpFilters();
         fetchData();
     }
 

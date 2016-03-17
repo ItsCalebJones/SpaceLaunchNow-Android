@@ -22,7 +22,7 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.OrbiterAdapter;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.GridItem;
 import me.calebjones.spacelaunchnow.ui.activity.OrbiterDetailActivity;
 import me.calebjones.spacelaunchnow.utils.CustomFragment;
@@ -31,7 +31,7 @@ import timber.log.Timber;
 
 public class OrbiterFragment extends CustomFragment {
 
-    private SharedPreference sharedPreference;
+    private ListPreferences sharedPreference;
     private android.content.SharedPreferences SharedPreferences;
     private Context context;
     private View view;
@@ -44,7 +44,7 @@ public class OrbiterFragment extends CustomFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getActivity());
-        this.sharedPreference = SharedPreference.getInstance(getContext());
+        this.sharedPreference = ListPreferences.getInstance(getContext());
         adapter = new OrbiterAdapter(getActivity().getApplicationContext());
     }
 
@@ -55,7 +55,7 @@ public class OrbiterFragment extends CustomFragment {
 
         this.context = getActivity().getApplicationContext();
 
-        sharedPreference = SharedPreference.getInstance(this.context);
+        sharedPreference = ListPreferences.getInstance(this.context);
 
         if (sharedPreference.getNightMode()) {
             m_theme = R.style.DarkTheme_NoActionBar;
