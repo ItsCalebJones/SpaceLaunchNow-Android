@@ -38,10 +38,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.PathInterpolator;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import okhttp3.Interceptor;
 import okhttp3.Response;
 
@@ -55,7 +56,6 @@ import java.util.Date;
 import java.util.Random;
 
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.utils.customtab.WebViewFallback;
@@ -257,7 +257,7 @@ public class Utils {
     public static void openCustomTab(Activity activity, Context context, String url) {
         CustomTabsIntent.Builder intentBuilder = new CustomTabsIntent.Builder();
 
-        SharedPreference sharedPreference = SharedPreference.getInstance(context);
+        ListPreferences sharedPreference = ListPreferences.getInstance(context);
 
         if (sharedPreference.getNightMode()) {
             intentBuilder.setToolbarColor(ContextCompat.getColor(

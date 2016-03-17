@@ -6,24 +6,27 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.MissionDataService;
 import timber.log.Timber;
 
 public class UpdateUpcomingLaunchesReceiver extends BroadcastReceiver {
-    private static SharedPreference sharedPreference;
+    private static ListPreferences listPreference;
+    private static SwitchPreferences switchPreferences;
     private SharedPreferences sharedPref;
 
     public void onReceive(Context context, Intent intent) {
         Timber.d("UpdateUpcomingLaunchesReceiver - Broadcast %s received!", intent.getAction());
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        sharedPreference = SharedPreference.getInstance(context);
+        listPreference = ListPreferences.getInstance(context);
+        switchPreferences = SwitchPreferences.getInstance(context);
         String action = intent.getAction();
         if (sharedPref.getBoolean("background_sync", true)) {
             if (Strings.ACTION_UPDATE_UP_LAUNCHES.equals(action)) {
-                sharedPreference.setPrevFiltered(false);
+                switchPreferences.setPrevFiltered(false);
 
                 Intent update_upcoming_launches = new Intent(context, LaunchDataService.class);
                 update_upcoming_launches.setAction(Strings.ACTION_GET_ALL);
@@ -39,7 +42,7 @@ public class UpdateUpcomingLaunchesReceiver extends BroadcastReceiver {
 
             } else if (Strings.ACTION_UPDATE_PREV_LAUNCHES.equals(action)) {
 
-                sharedPreference.setPrevFiltered(false);
+                switchPreferences.setPrevFiltered(false);
                 Intent update_prev_launches = new Intent(context, LaunchDataService.class);
 
                 int id = intent.getIntExtra("id", 0);

@@ -14,10 +14,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.RocketDetails;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
@@ -26,7 +24,7 @@ import me.calebjones.spacelaunchnow.utils.Utils;
 public class AgencyDetailFragment extends Fragment {
 
     private SharedPreferences sharedPref;
-    private static SharedPreference sharedPreference;
+    private static ListPreferences sharedPreference;
     private Context context;
 
     public static Launch detailLaunch;
@@ -46,7 +44,7 @@ public class AgencyDetailFragment extends Fragment {
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         this.context = getContext();
 
-        sharedPreference = SharedPreference.getInstance(this.context);
+        sharedPreference = ListPreferences.getInstance(this.context);
 
 
         if (sharedPreference.getNightMode()) {

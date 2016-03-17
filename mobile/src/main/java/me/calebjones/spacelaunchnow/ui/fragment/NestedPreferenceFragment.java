@@ -5,14 +5,12 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
-import android.util.Log;
 import android.widget.TextView;
 
-import me.calebjones.spacelaunchnow.LaunchApplication;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.utils.TimeRangePickerDialogCustom;
 import timber.log.Timber;
 
@@ -33,7 +31,8 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
     private static final String TAG_KEY = "NESTED_KEY";
     public static final String TIMERANGEPICKER_TAG = "timerangepicker";
     private TextView toolbarTitle;
-    private static SharedPreference sharedPreferences;
+    private static ListPreferences listPreferences;
+    private SwitchPreferences switchPreferences;
     private Context context;
 
     class SharedPreferenceListener implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -92,8 +91,9 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
     }
 
     public void onResume() {
-        sharedPreferences = SharedPreference.getInstance(this.context);
-        sharedPreferences.getNightMode();
+        listPreferences = ListPreferences.getInstance(this.context);
+        switchPreferences = SwitchPreferences.getInstance(this.context);
+        listPreferences.getNightMode();
         super.onResume();
     }
 
@@ -151,10 +151,10 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
             endM = String.valueOf(endMin);
         }
 
-        sharedPreferences = SharedPreference.getInstance(this.context);
-        sharedPreferences.setNightModeStart(startH + ":" + startM);
-        sharedPreferences.setNightModeEnd(endH + ":" + endM);
-        sharedPreferences.getNightMode();
+        listPreferences = ListPreferences.getInstance(this.context);
+        switchPreferences.setNightModeStart(startH + ":" + startM);
+        switchPreferences.setNightModeEnd(endH + ":" + endM);
+        listPreferences.getNightMode();
     }
 
 }

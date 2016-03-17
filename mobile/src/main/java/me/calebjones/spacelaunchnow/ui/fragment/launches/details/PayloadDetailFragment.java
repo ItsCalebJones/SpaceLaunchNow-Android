@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.Mission;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
@@ -23,7 +23,7 @@ import me.calebjones.spacelaunchnow.utils.Utils;
 public class PayloadDetailFragment extends Fragment {
 
     private SharedPreferences sharedPref;
-    private static SharedPreference sharedPreference;
+    private static ListPreferences sharedPreference;
     private Context context;
     public static Launch detailLaunch;
     private TextView payload_description,payload_status,payload_infoButton,payload_wikiButton;
@@ -34,7 +34,7 @@ public class PayloadDetailFragment extends Fragment {
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         this.context = getContext();
 
-        sharedPreference = SharedPreference.getInstance(this.context);
+        sharedPreference = ListPreferences.getInstance(this.context);
 
         if (sharedPreference.getNightMode()) {
             view = inflater.inflate(R.layout.dark_launch_payload, container, false);

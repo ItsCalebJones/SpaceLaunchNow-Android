@@ -1,20 +1,14 @@
 package me.calebjones.spacelaunchnow.content.adapter;
 
 import android.annotation.TargetApi;
-import android.app.ActivityOptions;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.Pair;
 import android.support.v7.graphics.Palette;
-import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,26 +16,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.bumptech.glide.request.target.ViewTarget;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.GridItem;
-import me.calebjones.spacelaunchnow.ui.activity.VehicleDetailActivity;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 /**
- * This adapter takes data from SharedPreference/LoaderService and applies it to the UpcomingLaunchesFragment
+ * This adapter takes data from ListPreferences/LoaderService and applies it to the UpcomingLaunchesFragment
  */
 public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHolder> {
 
@@ -50,7 +40,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
     private Calendar rightNow;
     private SharedPreferences sharedPref;
     private List<GridItem> items = new ArrayList<GridItem>();
-    private static SharedPreference sharedPreference;
+    private static ListPreferences sharedPreference;
     private OnItemClickListener onItemClickListener;
     private int defaultBackgroundcolor;
     private static final int SCALE_DELAY = 30;
@@ -60,7 +50,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
     public VehicleAdapter(Context context) {
         rightNow = Calendar.getInstance();
         items = new ArrayList();
-        sharedPreference = SharedPreference.getInstance(context);
+        sharedPreference = ListPreferences.getInstance(context);
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         this.mContext = context;
     }
@@ -84,7 +74,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
         int m_theme;
 
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        sharedPreference = SharedPreference.getInstance(mContext);
+        sharedPreference = ListPreferences.getInstance(mContext);
 
         if (sharedPreference.getNightMode()) {
             night = true;
