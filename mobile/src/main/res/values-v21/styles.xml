@@ -111,4 +111,37 @@
     <style name="CollapsingTextAppearance.Inverse">
         <item name="android:textSize">30sp</item>
     </style>
+
+    <style name="SPL">
+    </style>
+
+    <style name="SPL.SnackBar">
+        <item name="android:elevation">6dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="SPL.SnackBar.Layout">
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <style name="SPL.SnackBar.Text">
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">left</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="SPL.SnackBar.Button">
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SPL.SnackBar.Button.Decline">
+        <item name="android:background">@null</item>
+        <item name="android:layout_width">40dp</item>
+    </style>
 </resources>

@@ -6,6 +6,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
+        manifestPlaceholders = [ applicationLabel:"@string/app_name"]
         applicationId "me.calebjones.spacelaunchnow"
         minSdkVersion 21
         targetSdkVersion 23
@@ -16,6 +17,11 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-DEBUG'
+            manifestPlaceholders = [ applicationNameLabel:"Launch Tracker - Debug"]
         }
     }
 }

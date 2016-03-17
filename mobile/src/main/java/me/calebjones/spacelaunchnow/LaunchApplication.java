@@ -6,8 +6,11 @@ import android.content.Intent;
 import com.crashlytics.android.Crashlytics;
 import com.squareup.leakcanary.LeakCanary;
 
+import net.mediavrog.irr.DefaultRuleEngine;
+
 import io.fabric.sdk.android.Fabric;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.MissionDataService;
@@ -24,7 +27,8 @@ public class LaunchApplication extends Application {
     public static final String TAG = "Space Launch Now";
 
     public OkHttpClient client;
-    private static SharedPreference sharedPreference;
+    private static ListPreferences sharedPreference;
+    private SwitchPreferences switchPreferences;
 
     public static synchronized LaunchApplication getInstance() {
         return mInstance;
@@ -47,12 +51,13 @@ public class LaunchApplication extends Application {
                 .cache(cache)
                 .build();
 
-        SharedPreference.create(this);
+        ListPreferences.create(this);
 
-        sharedPreference = SharedPreference.getInstance(this);
-        sharedPreference.setNightModeStatus(false);
-
-
+        sharedPreference = ListPreferences.getInstance(this);
+        switchPreferences = SwitchPreferences.getInstance(this);
+        
+        //TODO Ready reivews before release.
+//        DefaultRuleEngine.trackAppStart(this);
 
         if (!sharedPreference.getFirstBoot()) {
             Intent nextIntent = new Intent(this, LaunchDataService.class);
@@ -72,8 +77,8 @@ public class LaunchApplication extends Application {
                     this.startService(launchIntent);
 
                     this.startService(new Intent(this, MissionDataService.class));
-                } else if (Utils.getVersionName(this) != sharedPreference.getVersionCode()){
-                        sharedPreference.setVersionCode(Utils.getVersionName(this));
+                } else if (Utils.getVersionName(this) != switchPreferences.getVersionCode()){
+                    switchPreferences.setVersionCode(Utils.getVersionName(this));
 
                         Intent launchIntent = new Intent(this, LaunchDataService.class);
                         launchIntent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);

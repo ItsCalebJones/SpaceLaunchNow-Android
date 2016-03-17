@@ -41,7 +41,8 @@ import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.LaunchBigAdapter;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
@@ -83,7 +84,8 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     private View color_reveal;
     private FloatingActionButton menu;
     private List<Launch> rocketLaunches;
-    private SharedPreference sharedPreference;
+    private ListPreferences sharedPreference;
+    private SwitchPreferences switchPreferences;
     private SharedPreferences sharedPref;
     private Context context;
     private boolean active;
@@ -95,7 +97,8 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreference = SharedPreference.getInstance(getActivity().getApplication());
+        sharedPreference = ListPreferences.getInstance(getActivity().getApplication());
+        switchPreferences = SwitchPreferences.getInstance(getActivity().getApplication());
         rocketLaunches = new ArrayList();
         if (adapter == null) {
             adapter = new LaunchBigAdapter(getActivity().getApplicationContext(), getActivity());
@@ -117,7 +120,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
             color = R.color.colorPrimary;
         }
 
-        sharedPreference = SharedPreference.getInstance(context);
+        sharedPreference = ListPreferences.getInstance(context);
 
         if (!BuildConfig.DEBUG) {
             if (!BuildConfig.DEBUG) {
@@ -280,18 +283,18 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     }
 
     private void setUpSwitches() {
-        customSwitch.setChecked(sharedPreference.getAllSwitch());
-        nasaSwitch.setChecked(sharedPreference.getSwitchNasa());
-        spacexSwitch.setChecked(sharedPreference.getSwitchSpaceX());
-        roscosmosSwitch.setChecked(sharedPreference.getSwitchRoscosmos());
-        ulaSwitch.setChecked(sharedPreference.getSwitchULA());
-        arianespaceSwitch.setChecked(sharedPreference.getSwitchArianespace());
-        cascSwitch.setChecked(sharedPreference.getSwitchCASC());
-        isroSwitch.setChecked(sharedPreference.getSwitchISRO());
-        plesSwitch.setChecked(sharedPreference.getSwitchPles());
-        capeSwitch.setChecked(sharedPreference.getSwitchCape());
-        vanSwitch.setChecked(sharedPreference.getSwitchVan());
-        kscSwitch.setChecked(sharedPreference.getSwitchKSC());
+        customSwitch.setChecked(switchPreferences.getAllSwitch());
+        nasaSwitch.setChecked(switchPreferences.getSwitchNasa());
+        spacexSwitch.setChecked(switchPreferences.getSwitchSpaceX());
+        roscosmosSwitch.setChecked(switchPreferences.getSwitchRoscosmos());
+        ulaSwitch.setChecked(switchPreferences.getSwitchULA());
+        arianespaceSwitch.setChecked(switchPreferences.getSwitchArianespace());
+        cascSwitch.setChecked(switchPreferences.getSwitchCASC());
+        isroSwitch.setChecked(switchPreferences.getSwitchISRO());
+        plesSwitch.setChecked(switchPreferences.getSwitchPles());
+        capeSwitch.setChecked(switchPreferences.getSwitchCape());
+        vanSwitch.setChecked(switchPreferences.getSwitchVan());
+        kscSwitch.setChecked(switchPreferences.getSwitchKSC());
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -477,74 +480,74 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     @OnClick(R.id.nasa_switch)
     public void nasa_switch() {
         confirm();
-        sharedPreference.setSwitchNasa(!sharedPreference.getSwitchNasa());
+        switchPreferences.setSwitchNasa(!switchPreferences.getSwitchNasa());
     }
 
 
     @OnClick(R.id.spacex_switch)
     public void spacex_switch() {
         confirm();
-        sharedPreference.setSwitchSpaceX(!sharedPreference.getSwitchSpaceX());
+        switchPreferences.setSwitchSpaceX(!switchPreferences.getSwitchSpaceX());
     }
 
     @OnClick(R.id.roscosmos_switch)
     public void roscosmos_switch() {
         confirm();
-        sharedPreference.setSwitchRoscosmos(!sharedPreference.getSwitchRoscosmos());
+        switchPreferences.setSwitchRoscosmos(!switchPreferences.getSwitchRoscosmos());
     }
 
     @OnClick(R.id.ula_switch)
     public void ula_switch() {
         confirm();
-        sharedPreference.setSwitchULA(!sharedPreference.getSwitchULA());
+        switchPreferences.setSwitchULA(!switchPreferences.getSwitchULA());
     }
 
     @OnClick(R.id.arianespace_switch)
     public void arianespace_switch() {
         confirm();
-        sharedPreference.setSwitchArianespace(!sharedPreference.getSwitchArianespace());
+        switchPreferences.setSwitchArianespace(!switchPreferences.getSwitchArianespace());
     }
 
     @OnClick(R.id.casc_switch)
     public void casc_switch() {
         confirm();
-        sharedPreference.setSwitchCASC(!sharedPreference.getSwitchCASC());
+        switchPreferences.setSwitchCASC(!switchPreferences.getSwitchCASC());
     }
 
     @OnClick(R.id.isro_switch)
     public void isro_switch() {
         confirm();
-        sharedPreference.setSwitchISRO(!sharedPreference.getSwitchISRO());
+        switchPreferences.setSwitchISRO(!switchPreferences.getSwitchISRO());
     }
 
     @OnClick(R.id.KSC_switch)
     public void KSC_switch() {
         confirm();
-        sharedPreference.setSwitchKSC(!sharedPreference.getSwitchKSC());
+        switchPreferences.setSwitchKSC(!switchPreferences.getSwitchKSC());
     }
 
     @OnClick(R.id.ples_switch)
     public void ples_switch() {
         confirm();
-        sharedPreference.setSwitchPles(!sharedPreference.getSwitchPles());
+        switchPreferences.setSwitchPles(!switchPreferences.getSwitchPles());
     }
 
     @OnClick(R.id.van_switch)
     public void van_switch() {
         confirm();
-        sharedPreference.setSwitchVan(!sharedPreference.getSwitchVan());
+        switchPreferences.setSwitchVan(!switchPreferences.getSwitchVan());
     }
 
     @OnClick(R.id.cape_switch)
     public void cape_switch() {
         confirm();
-        sharedPreference.setSwitchCape(!sharedPreference.getSwitchCape());
+        switchPreferences.setSwitchCape(!switchPreferences.getSwitchCape());
     }
 
     @OnClick(R.id.all_switch)
     public void all_switch() {
         confirm();
-        sharedPreference.setAllSwitch(!sharedPreference.getAllSwitch());
+        switchPreferences.setAllSwitch(!switchPreferences.getAllSwitch());
             setUpSwitches();
     }
 }

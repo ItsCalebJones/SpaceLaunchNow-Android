@@ -1,19 +1,13 @@
 package me.calebjones.spacelaunchnow.content.adapter;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.CountDownTimer;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,10 +18,6 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.BooleanResult;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -43,7 +33,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
@@ -64,7 +54,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
     private CountDownTimer timer;
     private Boolean night;
     private Boolean play = false;
-    private static SharedPreference sharedPreference;
+    private static ListPreferences sharedPreference;
 
     public LaunchBigAdapter(Context context, Context aContext) {
         rightNow = Calendar.getInstance();
@@ -110,7 +100,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         int m_theme;
 
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        sharedPreference = SharedPreference.getInstance(mContext);
+        sharedPreference = ListPreferences.getInstance(mContext);
 
         if (sharedPreference.getNightMode()) {
             night = true;

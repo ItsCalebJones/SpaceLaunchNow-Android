@@ -47,7 +47,8 @@ import java.util.List;
 import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.content.adapter.LaunchCompactAdapter;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.MainActivity;
@@ -67,7 +68,8 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     private String start_date, end_date;
     private List<Launch> rocketLaunches;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private SharedPreference sharedPreference;
+    private ListPreferences listPreferences;
+    private SwitchPreferences switchPreferences;
     private SharedPreferences sharedPrefs;
     private int mScrollPosition;
     private FloatingActionButton agency, vehicle, country, location, reset;
@@ -81,7 +83,8 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.sharedPreference = SharedPreference.getInstance(getContext());
+        this.listPreferences = ListPreferences.getInstance(getContext());
+        this.switchPreferences = SwitchPreferences.getInstance(getContext());
         this.sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         this.rocketLaunches = new ArrayList();
         adapter = new LaunchCompactAdapter(getActivity());
@@ -144,11 +147,11 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
             }
         });
 
-        if (this.sharedPreference.getPreviousFirstBoot()) {
-            this.sharedPreference.setPreviousFirstBoot(false);
+        if (this.listPreferences.getPreviousFirstBoot()) {
+            this.listPreferences.setPreviousFirstBoot(false);
             Timber.d("Previous Launch Fragment: First Boot.");
             getDefaultDateRange();
-            if(this.sharedPreference.getLaunchesPrevious() == null || this.sharedPreference.getLaunchesPrevious().size() == 0){
+            if(this.listPreferences.getLaunchesPrevious() == null || this.listPreferences.getLaunchesPrevious().size() == 0){
                 fetchData();
             } else {
                 this.rocketLaunches.clear();
@@ -172,10 +175,10 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         reset.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                sharedPreference.resetAllPrevFilters();
-                if (sharedPreference.getPrevFiltered()){
-                    sharedPreference.setPrevFiltered(false);
-                    sharedPreference.removeFilteredList();
+                switchPreferences.resetAllPrevFilters();
+                if (switchPreferences.getPrevFiltered()){
+                    switchPreferences.setPrevFiltered(false);
+                    listPreferences.removeFilteredList();
                     getDefaultDateRange();
                     displayLaunches();
                 }
@@ -216,10 +219,10 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
                 .content("Check an country below, to remove all filters use reset icon in the toolbar.")
                 .items(R.array.country)
                 .buttonRippleColorRes(R.color.colorAccentLight)
-                .itemsCallbackMultiChoice(sharedPreference.getPrevCountryFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
+                .itemsCallbackMultiChoice(switchPreferences.getPrevCountryFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
-                        sharedPreference.setPrevCountryFiltered(which);
+                        switchPreferences.setPrevCountryFiltered(which);
                         ArrayList<String> keyArray = new ArrayList<>();
                         for (int i = 0; i < which.length;i ++){
                             keyArray.add(text[i].toString());
@@ -244,10 +247,10 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
                 .content("Check an location below, to remove all filters use reset icon in the toolbar.")
                 .items(R.array.location)
                 .buttonRippleColorRes(R.color.colorAccentLight)
-                .itemsCallbackMultiChoice(sharedPreference.getPrevLocationFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
+                .itemsCallbackMultiChoice(switchPreferences.getPrevLocationFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
-                        sharedPreference.setPrevLocationFiltered(which);
+                        switchPreferences.setPrevLocationFiltered(which);
                         ArrayList<String> keyArray = new ArrayList<>();
                         for (int i = 0; i < which.length;i ++){
                             keyArray.add(text[i].toString());
@@ -272,10 +275,10 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
                 .content("Check an agency below, to remove all filters use reset icon in the toolbar.")
                 .items(R.array.agencies)
                 .buttonRippleColorRes(R.color.colorAccentLight)
-                .itemsCallbackMultiChoice(sharedPreference.getPrevAgencyFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
+                .itemsCallbackMultiChoice(switchPreferences.getPrevAgencyFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
-                        sharedPreference.setPrevAgencyFiltered(which);
+                        switchPreferences.setPrevAgencyFiltered(which);
                         ArrayList<String> keyArray = new ArrayList<>();
                         for (int i = 0; i < which.length;i ++){
                             keyArray.add(text[i].toString());
@@ -300,10 +303,10 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
                 .content("Check a vehicle below, to remove all filters use reset icon in the toolbar.")
                 .items(R.array.vehicles)
                 .buttonRippleColorRes(R.color.colorAccentLight)
-                .itemsCallbackMultiChoice(sharedPreference.getPrevVehicleFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
+                .itemsCallbackMultiChoice(switchPreferences.getPrevVehicleFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
-                        sharedPreference.setPrevVehicleFiltered(which);
+                        switchPreferences.setPrevVehicleFiltered(which);
                         ArrayList<String> keyArray = new ArrayList<>();
                         for (int i = 0; i < which.length;i ++){
                             keyArray.add(text[i].toString());
@@ -323,7 +326,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     }
 
     private void setTitle() {
-        ((MainActivity) getActivity()).setActionBarTitle(this.sharedPreference.getPreviousTitle());
+        ((MainActivity) getActivity()).setActionBarTitle(this.listPreferences.getPreviousTitle());
     }
 
     public void recreate(){
@@ -347,11 +350,11 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
     //TODO Test empty
     public void displayLaunches() {
-        Timber.v("DisplayLaunches - Filtered - %s", sharedPreference.getPrevFiltered());
-        if (!sharedPreference.getPrevFiltered()){
-            rocketLaunches = sharedPreference.getLaunchesPrevious();
+        Timber.v("DisplayLaunches - Filtered - %s", switchPreferences.getPrevFiltered());
+        if (!switchPreferences.getPrevFiltered()){
+            rocketLaunches = listPreferences.getLaunchesPrevious();
         } else {
-            rocketLaunches = sharedPreference.getLaunchesPreviousFiltered();
+            rocketLaunches = listPreferences.getLaunchesPreviousFiltered();
         }
 
         if (rocketLaunches != null) {
@@ -420,12 +423,12 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
 
         String title = key.toString().replaceAll("\\[", "").replaceAll("\\]","");
-        if (sharedPreference.getPrevFiltered()){
-            sharedPreference.setPreviousTitle(sharedPreference.getPreviousTitle() + " | " + title);
+        if (switchPreferences.getPrevFiltered()){
+            listPreferences.setPreviousTitle(listPreferences.getPreviousTitle() + " | " + title);
         } else {
-            sharedPreference.setPreviousTitle(title);
+            listPreferences.setPreviousTitle(title);
         }
-        sharedPreference.setPrevFilter(type, key);
+        listPreferences.setPrevFilter(type, key);
         displayLaunches();
         setTitle();
     }
@@ -481,14 +484,14 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         start_date = year + "-" + monthDateStart + "-" + dayDateStart;
         end_date = yearEnd + "-" + monthDayEnd + "-" + dayDateEnd;
 
-        if (sharedPreference.getPrevFiltered()){
-            this.sharedPreference.setPreviousTitle(sharedPreference.getPreviousTitle()
+        if (switchPreferences.getPrevFiltered()){
+            this.listPreferences.setPreviousTitle(listPreferences.getPreviousTitle()
                     + " | " + formatDatesForTitle(start_date)
                     + " - " + formatDatesForTitle(end_date));
         } else {
-            this.sharedPreference.setPreviousTitle(formatDatesForTitle(start_date)
+            this.listPreferences.setPreviousTitle(formatDatesForTitle(start_date)
                     + " - " + formatDatesForTitle(end_date));
-            this.sharedPreference.setPrevFiltered(true);
+            this.switchPreferences.setPrevFiltered(true);
         }
 
         setTitle();
@@ -496,8 +499,8 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         fetchData();
     }
     public void getDateRange() {
-        start_date = this.sharedPreference.getStartDate();
-        end_date = this.sharedPreference.getEndDate();
+        start_date = this.listPreferences.getStartDate();
+        end_date = this.listPreferences.getEndDate();
     }
 
     public void getDefaultDateRange() {
@@ -507,9 +510,9 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = df.format(c.getTime());
 
-        this.start_date = this.sharedPreference.getStartDate();
+        this.start_date = this.listPreferences.getStartDate();
         this.end_date = String.valueOf(formattedDate);
-        this.sharedPreference.resetPreviousTitle();
+        this.listPreferences.resetPreviousTitle();
         setTitle();
     }
 
@@ -544,7 +547,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         }
         if (id == R.id.action_refresh) {
             adapter.clear();
-            this.sharedPreference.setPrevFiltered(false);
+            this.switchPreferences.setPrevFiltered(false);
             getDefaultDateRange();
             fetchData();
             return true;
@@ -617,8 +620,8 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     @Override
     public void onRefresh() {
         adapter.clear();
-        this.sharedPreference.setPrevFiltered(false);
-        this.sharedPreference.resetAllPrevFilters();
+        this.switchPreferences.setPrevFiltered(false);
+        this.switchPreferences.resetAllPrevFilters();
         getDefaultDateRange();
         fetchData();
     }

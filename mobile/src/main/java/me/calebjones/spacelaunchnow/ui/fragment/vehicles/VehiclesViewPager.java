@@ -16,7 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import timber.log.Timber;
 
 public class VehiclesViewPager extends Fragment {
@@ -27,7 +27,7 @@ public class VehiclesViewPager extends Fragment {
     private TabLayout tabLayout;
     private LaunchVehicleFragment launchVehicleFragment;
     private OrbiterFragment orbiterFragment;
-    private static SharedPreference sharedPreference;
+    private static ListPreferences sharedPreference;
     private Context context;
 
 
@@ -38,7 +38,7 @@ public class VehiclesViewPager extends Fragment {
         int mlayout;
         this.context = getActivity().getApplicationContext();
 
-        sharedPreference = SharedPreference.getInstance(this.context);
+        sharedPreference = ListPreferences.getInstance(this.context);
 
         if (sharedPreference.getNightMode()) {
             mlayout = R.layout.dark_fragment_launches_view_pager;

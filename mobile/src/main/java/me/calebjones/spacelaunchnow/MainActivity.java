@@ -32,13 +32,12 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.crashlytics.android.Crashlytics;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Random;
 
 import io.fabric.sdk.android.Fabric;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.MissionDataService;
@@ -68,7 +67,8 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawer;
     private SharedPreferences sharedPref;
     private NavigationView navigationView;
-    private static SharedPreference sharedPreference;
+    private static ListPreferences listPreferences;
+    private SwitchPreferences switchPreferences;
     private CustomTabActivityHelper customTabActivityHelper;
     private Context context;
     private Boolean bool;
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity
                 String action = intent.getAction();
                 Timber.d("Broadcast action : %s", action);
                 if (Strings.ACTION_SUCCESS_UP_LAUNCHES.equals(action)) {
-                    if (mNavItemId == R.id.menu_next_launch && !sharedPreference.getFirstBoot()) {
+                    if (mNavItemId == R.id.menu_next_launch && !listPreferences.getFirstBoot()) {
                         if (mUpcomingFragment != null) {
                             mUpcomingFragment.onFinishedRefreshing();
                         }
@@ -143,15 +143,16 @@ public class MainActivity extends AppCompatActivity
         this.context = getApplicationContext();
         customTabActivityHelper = new CustomTabActivityHelper();
 
-        sharedPreference = SharedPreference.getInstance(this.context);
+        listPreferences = ListPreferences.getInstance(this.context);
+        switchPreferences = SwitchPreferences.getInstance(this.context);
 
-        if (sharedPreference.getNightMode()) {
-            sharedPreference.setNightModeStatus(true);
+        if (listPreferences.getNightMode()) {
+            switchPreferences.setNightModeStatus(true);
             statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
             m_theme = R.style.DarkTheme_NoActionBar;
             m_layout = R.layout.dark_activity_main;
         } else {
-            sharedPreference.setNightModeStatus(false);
+            switchPreferences.setNightModeStatus(false);
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
             m_theme = R.style.LightTheme_NoActionBar;
             m_layout = R.layout.activity_main;
@@ -290,8 +291,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void checkFirstBoot() {
-        if (sharedPreference.getFirstBoot()) {
-            sharedPreference.setPrevFiltered(false);
+        if (listPreferences.getFirstBoot()) {
+            switchPreferences.setPrevFiltered(false);
             getFirstLaunches();
             loadTutorial();
         } else {
@@ -300,32 +301,32 @@ public class MainActivity extends AppCompatActivity
             final Context context = this;
             Thread t = new Thread(new Runnable() {
                 public void run() {
-                    if (sharedPreference.getVehicles() == null || sharedPreference.getVehicles().size() == 0) {
+                    if (listPreferences.getVehicles() == null || listPreferences.getVehicles().size() == 0) {
                         Intent rocketIntent = new Intent(context, VehicleDataService.class);
                         rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
                         context.startService(rocketIntent);
 
                     }
-                    if (sharedPreference.getLaunchesUpcoming() == null || sharedPreference.getLaunchesUpcoming().size() == 0) {
+                    if (listPreferences.getLaunchesUpcoming() == null || listPreferences.getLaunchesUpcoming().size() == 0) {
                         Intent launchUpIntent = new Intent(context, LaunchDataService.class);
                         launchUpIntent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
                         context.startService(launchUpIntent);
                     }
-                    if (sharedPreference.getLaunchesPrevious() == null || sharedPreference.getLaunchesPrevious().size() == 0) {
+                    if (listPreferences.getLaunchesPrevious() == null || listPreferences.getLaunchesPrevious().size() == 0) {
                         Intent launchPrevIntent = new Intent(context, LaunchDataService.class);
                         launchPrevIntent.putExtra("URL", Utils.getBaseURL());
                         launchPrevIntent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
                         context.startService(launchPrevIntent);
                     }
-                    if (sharedPreference.getMissionList() == null || sharedPreference.getMissionList().size() == 0) {
+                    if (listPreferences.getMissionList() == null || listPreferences.getMissionList().size() == 0) {
                         context.startService(new Intent(context, MissionDataService.class));
                     }
                 }
             });
 
             t.start();
-            if (Utils.getVersionName(context) != sharedPreference.getVersionCode()){
-                sharedPreference.setVersionCode(Utils.getVersionName(context));
+            if (Utils.getVersionName(context) != switchPreferences.getVersionCode()){
+                switchPreferences.setVersionCode(Utils.getVersionName(context));
                 showWhatsNew();
             }
             navigate(mNavItemId);
@@ -334,7 +335,7 @@ public class MainActivity extends AppCompatActivity
 
     private void showWhatsNew() {
         Theme theme;
-        if(sharedPreference.getNightMode()){
+        if(listPreferences.getNightMode()){
             theme = Theme.DARK;
         } else {
             theme = Theme.LIGHT;
@@ -591,8 +592,8 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //    super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            if (sharedPreference.getFirstBoot()) {
-                sharedPreference.setFirstBoot(false);
+            if (listPreferences.getFirstBoot()) {
+                listPreferences.setFirstBoot(false);
                 recreate();
             }
         }

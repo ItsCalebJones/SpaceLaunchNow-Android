@@ -2,7 +2,6 @@ package me.calebjones.spacelaunchnow.content.database;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Paint;
 import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
@@ -11,11 +10,9 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import me.calebjones.spacelaunchnow.content.models.Agency;
 import me.calebjones.spacelaunchnow.content.models.Launch;
@@ -24,15 +21,15 @@ import me.calebjones.spacelaunchnow.content.models.Mission;
 import me.calebjones.spacelaunchnow.content.models.Rocket;
 import timber.log.Timber;
 
-public class SharedPreference {
+public class ListPreferences {
 
-    private static SharedPreference INSTANCE;
+    private static ListPreferences INSTANCE;
     private static SharedPreferences SETTINGS;
     private SharedPreferences sharedPrefs;
+    private SwitchPreferences switchPreferences;
     private Context appContext;
     SharedPreferences.Editor prefsEditor;
 
-    public static String PREFS_VERSION_CODE;
     public static String PREFS_LIST_PREVIOUS;
     public static String PREFS_LIST_UPCOMING;
     public static String PREFS_LIST_PREVIOUS_FILTERED;
@@ -50,9 +47,6 @@ public class SharedPreference {
     public static String PREFS_UPCOMING_FIRST_BOOT;
     public static String PREFS_UPCOMING_COUNT;
     public static String PREFS_UPCOMING_FILTER_TEXT;
-    public static String PREFS_NIGHT_MODE_STATUS;
-    public static String PREFS_NIGHT_MODE_START;
-    public static String PREFS_NIGHT_MODE_END;
     public static String PREFS_LAST_UPCOMING_LAUNCH_UPDATE;
     public static String PREFS_LAST_PREVIOUS_LAUNCH_UPDATE;
     public static String PREFS_PREVIOUS_TITLE;
@@ -61,38 +55,12 @@ public class SharedPreference {
     public static String PREFS_LAUNCH_LIST_NEXT;
     public static String PREFS_NEXT_LAUNCH;
     public static String PREFS_PREV_LAUNCH;
-    public static String PREFS_PREV_FILTERED;
-    public static String PREFS_UP_FILTERED;
-    public static String PREFS_PREV_VEHICLE_FILTERED_WHICH;
-    public static String PREFS_UP_VEHICLE_FILTERED_WHICH;
-    public static String PREFS_UP_AGENCY_FILTERED_WHICH;
-    public static String PREFS_PREV_AGENCY_FILTERED_WHICH;
-    public static String PREFS_UP_LOCATION_FILTERED_WHICH;
-    public static String PREFS_PREV_LOCATION_FILTERED_WHICH;
-    public static String PREFS_UP_COUNTRY_FILTERED_WHICH;
-    public static String PREFS_PREV_COUNTRY_FILTERED_WHICH;
     public static String PREFS_DEBUG;
-    public static String PREFS_FILTER_VEHICLE;
-    public static String PREFS_FILTER_AGENCY;
-    public static String PREFS_FILTER_COUNTRY;
-    public static String PREFS_SWITCH_NASA;
-    public static String PREFS_SWITCH_SPACEX;
-    public static String PREFS_SWITCH_ROSCOSMOS;
-    public static String PREFS_SWITCH_ULA;
-    public static String PREFS_SWITCH_ARIANE;
-    public static String PREFS_SWITCH_CASC;
-    public static String PREFS_SWITCH_ISRO;
-    public static String PREFS_SWITCH_CUSTOM;
-    public static String PREFS_SWITCH_PLES;
-    public static String PREFS_SWITCH_VAN;
-    public static String PREFS_SWITCH_CAPE;
-    public static String PREFS_SWITCH_KSC;
-    public static String PREFS_CUSTOM_STRING;
+
     public static String PREFS_LAST_VEHICLE_UPDATE;
 
 
     static {
-        PREFS_VERSION_CODE = "VERSION_CODE";
         PREFS_NAME = "SPACE_LAUNCH_NOW_PREFS";
         PREFS_FIRST_BOOT = "IS_FIRST_BOOT";
         PREFS_PREVIOUS_FIRST_BOOT = "IS_PREVIOUS_FIRST_BOOT";
@@ -106,9 +74,6 @@ public class SharedPreference {
         PREFS_PREVIOUS_FILTER_TEXT = "PREVIOUS_FILTER_TEXT";
         PREFS_UPCOMING_FILTER_TEXT = "UPCOMING_FILTER_TEXT";
         PREFS_UPCOMING_COUNT = "LAUNCH_LIST_COUNT";
-        PREFS_NIGHT_MODE_STATUS = "NIGHT_MODE_STATUS";
-        PREFS_NIGHT_MODE_START = "NIGHT_MODE_START";
-        PREFS_NIGHT_MODE_END = "NIGHT_MODE_END";
         PREFS_LAST_UPCOMING_LAUNCH_UPDATE = "LAST_UPCOMING_LAUNCH_UPDATE";
         PREFS_LAST_PREVIOUS_LAUNCH_UPDATE = "LAST_PREVIOUS_LAUNCH_UPDATE";
         PREFS_PREVIOUS_TITLE = "CURRENT_YEAR_RANGE";
@@ -119,66 +84,29 @@ public class SharedPreference {
         PREFS_LIST_VEHICLES = "LIST_VEHICLES";
         PREFS_NEXT_LAUNCH = "NEXT_LAUNCH";
         PREFS_PREV_LAUNCH = "PREV_LAUNCH";
-        PREFS_PREV_FILTERED = "PREV_FILTERED";
-        PREFS_UP_FILTERED = "UP_FILTERED";
-        PREFS_FILTER_VEHICLE = "FILTER_VEHICLE";
-        PREFS_FILTER_AGENCY = "FILTER_AGENCY";
-        PREFS_FILTER_COUNTRY = "FILTER_COUNTRY";
         PREFS_LIST_PREVIOUS_FILTERED = "LIST_PREVIOUS_FILTERED";
         PREFS_LIST_UPCOMING_FILTERED = "LIST_UPCOMING_FILTERED";
-        PREFS_SWITCH_NASA = "SWITCH_NASA";
-        PREFS_SWITCH_SPACEX = "SWITCH_SPACEX";
-        PREFS_SWITCH_ROSCOSMOS = "SWITCH_ROSCOSMOS";
-        PREFS_SWITCH_ULA = "SWITCH_ULA";
-        PREFS_SWITCH_ARIANE = "SWITCH_ARIANE";
-        PREFS_SWITCH_CASC = "SWITCH_CASC";
-        PREFS_SWITCH_ISRO = "SWITCH_ISRO";
-        PREFS_SWITCH_CUSTOM = "SWITCH_CUSTOM";
-        PREFS_CUSTOM_STRING = "CUSTOM_STRING";
-        PREFS_SWITCH_CAPE = "SWITCH_CAPE";
-        PREFS_SWITCH_VAN = "SWITCH_VAN";
-        PREFS_SWITCH_KSC = "SWITCH_KSC";
-        PREFS_SWITCH_PLES = "SWITCH_PLES";
         PREFS_LAST_VEHICLE_UPDATE = "LAST_VEHICLE_UPDATE";
-        PREFS_PREV_VEHICLE_FILTERED_WHICH = "PREV_VEHICLE_FILTERED_WHICH";
-        PREFS_PREV_AGENCY_FILTERED_WHICH = "PREV_AGENCY_FILTERED_WHICH";
-        PREFS_PREV_LOCATION_FILTERED_WHICH = "PREV_LOCATION_FILTERED_WHICH";
-        PREFS_PREV_COUNTRY_FILTERED_WHICH = "PREV_COUNTRY_FILTERED_WHICH";
-        PREFS_UP_COUNTRY_FILTERED_WHICH = "UP_COUNTRY_FILTERED_WHICH";
-        PREFS_UP_VEHICLE_FILTERED_WHICH = "UP_VEHICLE_FILTERED_WHICH";
-        PREFS_UP_AGENCY_FILTERED_WHICH = "UP_AGENCY_FILTERED_WHICH";
-        PREFS_UP_LOCATION_FILTERED_WHICH = "UP_LOCATION_FILTERED_WHICH";
         PREFS_DEBUG = "DEBUG";
         INSTANCE = null;
     }
 
-    private SharedPreference(Context context) {
+    private ListPreferences(Context context) {
         this.sharedPrefs = null;
         this.prefsEditor = null;
         this.appContext = context.getApplicationContext();
+        this.switchPreferences = SwitchPreferences.getInstance(this.appContext);
     }
 
-    public static SharedPreference getInstance(Context context) {
+    public static ListPreferences getInstance(Context context) {
         if (INSTANCE == null) {
-            INSTANCE = new SharedPreference(context);
+            INSTANCE = new ListPreferences(context);
         }
         return INSTANCE;
     }
 
     public static void create(Context context) {
-        INSTANCE = new SharedPreference(context);
-    }
-
-    public void setVersionCode(int value) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putInt(PREFS_VERSION_CODE, value);
-        this.prefsEditor.apply();
-    }
-
-    public int getVersionCode() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getInt(PREFS_VERSION_CODE, 0);
+        INSTANCE = new ListPreferences(context);
     }
 
     public long getLastVehicleUpdate() {
@@ -210,27 +138,6 @@ public class SharedPreference {
         return this.sharedPrefs.getBoolean(PREFS_DEBUG, false);
     }
 
-    public void setNightModeStart(String value) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putString(PREFS_NIGHT_MODE_START, value);
-        this.prefsEditor.apply();
-    }
-
-    public void setNightModeEnd(String value) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putString(PREFS_NIGHT_MODE_END, value);
-        this.prefsEditor.apply();
-    }
-
-    public void setNightModeStatus(boolean value) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putBoolean(PREFS_NIGHT_MODE_STATUS, value);
-        this.prefsEditor.apply();
-    }
-
     public void setFirstBoot(boolean value) {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
@@ -241,122 +148,6 @@ public class SharedPreference {
     public boolean getFirstBoot() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         return this.sharedPrefs.getBoolean(PREFS_FIRST_BOOT, true);
-    }
-
-    public void setUpVehicleFiltered(Integer[] value) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putString(PREFS_UP_VEHICLE_FILTERED_WHICH, Arrays.toString(value));
-        this.prefsEditor.apply();
-    }
-
-    public Integer[] getUpVehicleFiltered() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return toIntArray(this.sharedPrefs.getString(PREFS_UP_VEHICLE_FILTERED_WHICH, ""));
-    }
-
-    public void setUpAgencyFiltered(Integer[] value) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putString(PREFS_UP_AGENCY_FILTERED_WHICH, Arrays.toString(value));
-        this.prefsEditor.apply();
-    }
-
-    public Integer[] getUpAgencyFiltered() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return toIntArray(this.sharedPrefs.getString(PREFS_UP_AGENCY_FILTERED_WHICH, ""));
-    }
-
-    public void setUpLocationFiltered(Integer[] value) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putString(PREFS_UP_LOCATION_FILTERED_WHICH, Arrays.toString(value));
-        this.prefsEditor.apply();
-    }
-
-    public Integer[] getUpLocationFiltered() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return toIntArray(this.sharedPrefs.getString(PREFS_UP_LOCATION_FILTERED_WHICH, ""));
-    }
-
-    public void setUpCountryFiltered(Integer[] value) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putString(PREFS_UP_COUNTRY_FILTERED_WHICH, Arrays.toString(value));
-        this.prefsEditor.apply();
-    }
-
-    public Integer[] getUpCountryFiltered() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return toIntArray(this.sharedPrefs.getString(PREFS_UP_COUNTRY_FILTERED_WHICH, ""));
-    }
-
-    public void resetAllUpFilters() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putString(PREFS_UP_LOCATION_FILTERED_WHICH, "");
-        this.prefsEditor.putString(PREFS_UP_AGENCY_FILTERED_WHICH, "");
-        this.prefsEditor.putString(PREFS_UP_VEHICLE_FILTERED_WHICH, "");
-        this.prefsEditor.putString(PREFS_UP_COUNTRY_FILTERED_WHICH, "");
-        this.prefsEditor.apply();
-    }
-
-    public void setPrevVehicleFiltered(Integer[] value) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putString(PREFS_PREV_VEHICLE_FILTERED_WHICH, Arrays.toString(value));
-        this.prefsEditor.apply();
-    }
-
-    public Integer[] getPrevVehicleFiltered() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return toIntArray(this.sharedPrefs.getString(PREFS_PREV_VEHICLE_FILTERED_WHICH, ""));
-    }
-
-    public void setPrevAgencyFiltered(Integer[] value) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putString(PREFS_PREV_AGENCY_FILTERED_WHICH, Arrays.toString(value));
-        this.prefsEditor.apply();
-    }
-
-    public Integer[] getPrevAgencyFiltered() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return toIntArray(this.sharedPrefs.getString(PREFS_PREV_AGENCY_FILTERED_WHICH, ""));
-    }
-
-    public void setPrevLocationFiltered(Integer[] value) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putString(PREFS_PREV_LOCATION_FILTERED_WHICH, Arrays.toString(value));
-        this.prefsEditor.apply();
-    }
-
-    public Integer[] getPrevLocationFiltered() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return toIntArray(this.sharedPrefs.getString(PREFS_PREV_LOCATION_FILTERED_WHICH, ""));
-    }
-
-    public void setPrevCountryFiltered(Integer[] value) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putString(PREFS_PREV_COUNTRY_FILTERED_WHICH, Arrays.toString(value));
-        this.prefsEditor.apply();
-    }
-
-    public Integer[] getPrevCountryFiltered() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return toIntArray(this.sharedPrefs.getString(PREFS_PREV_COUNTRY_FILTERED_WHICH, ""));
-    }
-
-    public void resetAllPrevFilters() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putString(PREFS_PREV_LOCATION_FILTERED_WHICH, "");
-        this.prefsEditor.putString(PREFS_PREV_AGENCY_FILTERED_WHICH, "");
-        this.prefsEditor.putString(PREFS_PREV_VEHICLE_FILTERED_WHICH, "");
-        this.prefsEditor.putString(PREFS_PREV_COUNTRY_FILTERED_WHICH, "");
-        this.prefsEditor.apply();
     }
 
     public static Integer[] toIntArray(String input) {
@@ -372,29 +163,6 @@ public class SharedPreference {
         return null;
     }
 
-    public void setPrevFiltered(boolean value) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putBoolean(PREFS_PREV_FILTERED, value);
-        this.prefsEditor.apply();
-    }
-
-    public boolean getPrevFiltered() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_PREV_FILTERED, false);
-    }
-
-    public void setUpFiltered(boolean value) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putBoolean(PREFS_UP_FILTERED, value);
-        this.prefsEditor.apply();
-    }
-
-    public boolean getUpFiltered() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_UP_FILTERED, false);
-    }
 
     public void setUpcomingFirstBoot(boolean value) {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
@@ -502,7 +270,7 @@ public class SharedPreference {
     }
 
     public void setPreviousLaunches(List<Launch> launches) {
-        Timber.d("SharedPreference - setPrevious list:  %s ", launches.size());
+        Timber.d("ListPreferences - setPrevious list:  %s ", launches.size());
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -513,7 +281,7 @@ public class SharedPreference {
     }
 
     public void setPreviousLaunchesFiltered(List<Launch> launches) {
-        Timber.d("SharedPreference - setPreviousFiltered list:  %s ", launches.size());
+        Timber.d("ListPreferences - setPreviousFiltered list:  %s ", launches.size());
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -524,7 +292,7 @@ public class SharedPreference {
     }
 
     public void setUpcomingLaunchesFiltered(List<Launch> launches) {
-        Timber.d("SharedPreference - setUpcomingFiltered list:  %s ", launches.size());
+        Timber.d("ListPreferences - setUpcomingFiltered list:  %s ", launches.size());
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -536,7 +304,7 @@ public class SharedPreference {
 
 
     public void setAgenciesList(List<Agency> agencies) {
-        Timber.d("SharedPreference - setAgenciesList list:  %s ", agencies.size());
+        Timber.d("ListPreferences - setAgenciesList list:  %s ", agencies.size());
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
 
@@ -551,7 +319,7 @@ public class SharedPreference {
     public void setVehiclesList(List<Rocket> rockets) {
         if (rockets != null) {
 
-            Timber.d("SharedPreference - setVehiclesList list:  %s ", rockets.size());
+            Timber.d("ListPreferences - setVehiclesList list:  %s ", rockets.size());
             this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
             this.prefsEditor = this.sharedPrefs.edit();
 
@@ -953,10 +721,10 @@ public class SharedPreference {
 
         List<Launch> newList = new ArrayList<>();
 
-        if (!getPrevFiltered()) {
+        if (!this.switchPreferences.getPrevFiltered()) {
             Timber.v("Not filtered, setting filtered to true and retrieving full list");
             removeFilteredList();
-            setPrevFiltered(true);
+            this.switchPreferences.setPrevFiltered(true);
             launchList = gson.fromJson(previous, mType);
         } else {
             Timber.v("Filtered, retrieving filtered list.");
@@ -1162,10 +930,10 @@ public class SharedPreference {
 
         List<Launch> newList = new ArrayList<>();
 
-        if (!getUpFiltered()) {
+        if (!this.switchPreferences.getUpFiltered()) {
             Timber.v("Not filtered, setting filtered to true and retrieving full list");
             removeUpFilteredList();
-            setUpFiltered(true);
+            this.switchPreferences.setUpFiltered(true);
             launchList = gson.fromJson(upcoming, mType);
         } else {
             Timber.v("Filtered, retrieving filtered list.");
@@ -1360,271 +1128,44 @@ public class SharedPreference {
         this.setUpcomingLaunchesFiltered(newList);
     }
 
-    //FILTERS AND SWITCHES
-
-    //Agency Filters
-    public String getFilterAgency() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getString(PREFS_FILTER_AGENCY, "");
-    }
-
-    public void setFilterAgency(String key) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putString(PREFS_FILTER_AGENCY, key);
-        this.prefsEditor.apply();
-    }
-
-    //Vehicle Filters
-    public String getFilterVehicle() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getString(PREFS_FILTER_VEHICLE, "");
-    }
-
-    public void setFilterVehicle(String key) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putString(PREFS_FILTER_VEHICLE, key);
-        this.prefsEditor.apply();
-    }
-
-    //Country Filters
-    public String getFilterCountry() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getString(PREFS_FILTER_COUNTRY, "");
-    }
-
-    public void setFilterCountry(String key) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putString(PREFS_FILTER_COUNTRY, key);
-        this.prefsEditor.apply();
-    }
-
-    //Nasa Switch
-    public boolean getSwitchVan() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_SWITCH_VAN, true);
-    }
-
-    public void setSwitchVan(boolean key) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putBoolean(PREFS_SWITCH_VAN, key);
-        this.prefsEditor.apply();
-    }
-
-    //Nasa Switch
-    public boolean getSwitchKSC() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_SWITCH_KSC, true);
-    }
-
-    public void setSwitchKSC(boolean key) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putBoolean(PREFS_SWITCH_KSC, key);
-        this.prefsEditor.apply();
-    }
-
-    //Nasa Switch
-    public boolean getSwitchPles() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_SWITCH_PLES, true);
-    }
-
-    public void setSwitchPles(boolean key) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putBoolean(PREFS_SWITCH_PLES, key);
-        this.prefsEditor.apply();
-    }
-
-    //Nasa Switch
-    public boolean getSwitchCape() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_SWITCH_CAPE, true);
-    }
-
-    public void setSwitchCape(boolean key) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putBoolean(PREFS_SWITCH_CAPE, key);
-        this.prefsEditor.apply();
-    }
-
-    //Nasa Switch
-    public boolean getSwitchNasa() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_SWITCH_NASA, true);
-    }
-
-    public void setSwitchNasa(boolean key) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putBoolean(PREFS_SWITCH_NASA, key);
-        this.prefsEditor.apply();
-    }
-
-    //SpaceX Switch
-    public boolean getSwitchSpaceX() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_SWITCH_SPACEX, true);
-    }
-
-    public void setSwitchSpaceX(boolean key) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putBoolean(PREFS_SWITCH_SPACEX, key);
-        this.prefsEditor.apply();
-    }
-
-    //Roscosmos Switch
-    public boolean getSwitchRoscosmos() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_SWITCH_ROSCOSMOS, true);
-    }
-
-    public void setSwitchRoscosmos(boolean key) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putBoolean(PREFS_SWITCH_ROSCOSMOS, key);
-        this.prefsEditor.apply();
-    }
-
-    //ULA Switch
-    public boolean getSwitchULA() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_SWITCH_ULA, true);
-    }
-
-    public void setSwitchULA(boolean key) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putBoolean(PREFS_SWITCH_ULA, key);
-        this.prefsEditor.apply();
-    }
-
-    //Arianespace Switch
-    public boolean getSwitchArianespace() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_SWITCH_ARIANE, true);
-    }
-
-    public void setSwitchArianespace(boolean key) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putBoolean(PREFS_SWITCH_ARIANE, key);
-        this.prefsEditor.apply();
-    }
-
-    //CASC Switch
-    public boolean getSwitchCASC() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_SWITCH_CASC, true);
-    }
-
-    public void setSwitchCASC(boolean key) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putBoolean(PREFS_SWITCH_CASC, key);
-        this.prefsEditor.apply();
-    }
-
-    //ISRO Switch
-    public boolean getSwitchISRO() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_SWITCH_ISRO, true);
-    }
-
-    public void setSwitchISRO(boolean key) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putBoolean(PREFS_SWITCH_ISRO, key);
-        this.prefsEditor.apply();
-    }
-
-    //ISRO Switch
-    public boolean getAllSwitch() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_SWITCH_CUSTOM, true);
-    }
-
-    public void setAllSwitch(boolean key) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putBoolean(PREFS_SWITCH_CUSTOM, key);
-        this.prefsEditor.apply();
-        if (key) {
-            resetSwitches();
-        }
-    }
-
-    //Custom Switch
-    public String getCustomSearch() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getString(PREFS_CUSTOM_STRING, "");
-    }
-
-    public void setCustomSearch(String key) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putString(PREFS_CUSTOM_STRING, key);
-        this.prefsEditor.apply();
-    }
-
-    public void resetSwitches() {
-        setSwitchNasa(true);
-        setSwitchISRO(true);
-        setSwitchRoscosmos(true);
-        setSwitchSpaceX(true);
-        setSwitchULA(true);
-        setSwitchArianespace(true);
-        setSwitchCASC(true);
-        setSwitchCape(true);
-        setSwitchKSC(true);
-        setSwitchPles(true);
-        setSwitchVan(true);
-    }
-
     public List<Launch> filterLaunches(List<Launch> launchesUpcoming) {
         List<Integer> agency = new ArrayList<>();
         List<String> location = new ArrayList<>();
-        if (getAllSwitch()) {
+        if (this.switchPreferences.getAllSwitch()) {
             return launchesUpcoming;
         }
         List<Launch> list = new ArrayList<>();
-        if (getSwitchNasa()) {
+        if (this.switchPreferences.getSwitchNasa()) {
             agency.add(43);
         }
-        if (getSwitchSpaceX()) {
+        if (this.switchPreferences.getSwitchSpaceX()) {
             agency.add(121);
         }
-        if (getSwitchRoscosmos()) {
+        if (this.switchPreferences.getSwitchRoscosmos()) {
             agency.add(63);
         }
-        if (getSwitchArianespace()) {
+        if (this.switchPreferences.getSwitchArianespace()) {
             agency.add(115);
         }
-        if (getSwitchCASC()) {
+        if (this.switchPreferences.getSwitchCASC()) {
             agency.add(88);
         }
-        if (getSwitchULA()) {
+        if (this.switchPreferences.getSwitchULA()) {
             agency.add(124);
         }
-        if (getSwitchISRO()) {
+        if (this.switchPreferences.getSwitchISRO()) {
             agency.add(31);
         }
-        if (getSwitchVan()) {
+        if (this.switchPreferences.getSwitchVan()) {
             location.add("Vandenberg");
         }
-        if (getSwitchCape()) {
+        if (this.switchPreferences.getSwitchCape()) {
             location.add("Cape");
         }
-        if (getSwitchKSC()) {
+        if (this.switchPreferences.getSwitchKSC()) {
             location.add("Kennedy");
         }
-        if (getSwitchPles()) {
+        if (this.switchPreferences.getSwitchPles()) {
             location.add("Plesetek");
             location.add("Baikonur");
         }
@@ -1671,51 +1212,4 @@ public class SharedPreference {
         return list;
     }
 
-    public void syncUpcomingMissions() {
-        List<Mission> missionList = getMissionList();
-        List<Launch> upcomingList = getLaunchesUpcoming();
-
-        if (missionList != null && missionList.size() > 0
-                & upcomingList != null && upcomingList.size() > 0) {
-
-            int upList = upcomingList.size();
-            int missList = missionList.size();
-
-            for (int i = 0; i < missList; i++) {
-                for (int a = 0; a < upList; a++) {
-                    if (upcomingList.get(a).getMissions() != null && upcomingList.get(a).getMissions().size() > 0) {
-                        if (upcomingList.get(a).getMissions().get(0).getId().intValue() == missionList.get(i).getId().intValue()) {
-                            upcomingList.get(a).getMissions().get(0).setType(missionList.get(i).getType());
-                            upcomingList.get(a).getMissions().get(0).setTypeName(missionList.get(i).getTypeName());
-                        }
-                    }
-                }
-            }
-            setUpComingLaunches(upcomingList);
-        }
-    }
-
-    public void syncPreviousMissions() {
-        List<Mission> missionList = getMissionList();
-        List<Launch> previousList = getLaunchesPrevious();
-
-        if (missionList != null && missionList.size() > 0
-                & previousList != null && previousList.size() > 0) {
-
-            int prevList = previousList.size();
-            int missList = missionList.size();
-
-            for (int i = 0; i < missList; i++) {
-                for (int b = 0; b < prevList; b++) {
-                    if (previousList.get(b).getMissions() != null && previousList.get(b).getMissions().size() > 0) {
-                        if (previousList.get(b).getMissions().get(0).getId().intValue() == missionList.get(i).getId().intValue()) {
-                            previousList.get(b).getMissions().get(0).setType(missionList.get(i).getType());
-                            previousList.get(b).getMissions().get(0).setTypeName(missionList.get(i).getTypeName());
-                        }
-                    }
-                }
-            }
-            setPreviousLaunches(previousList);
-        }
-    }
 }

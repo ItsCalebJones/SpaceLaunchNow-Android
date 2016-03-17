@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import timber.log.Timber;
 
@@ -26,7 +26,7 @@ public class LaunchesViewPager extends Fragment {
     private TabLayout tabLayout;
     private UpcomingLaunchesFragment launchesFragment;
     private PreviousLaunchesFragment previousLaunchesFragment;
-    private static SharedPreference sharedPreference;
+    private static ListPreferences sharedPreference;
     private Context context;
 
 
@@ -38,7 +38,7 @@ public class LaunchesViewPager extends Fragment {
         this.context = getActivity().getApplicationContext();
 
 
-        sharedPreference = SharedPreference.getInstance(this.context);
+        sharedPreference = ListPreferences.getInstance(this.context);
 
         if (sharedPreference.getNightMode()) {
             mlayout = R.layout.dark_fragment_launches_view_pager;

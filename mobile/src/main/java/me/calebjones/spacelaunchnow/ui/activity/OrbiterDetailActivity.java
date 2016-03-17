@@ -1,30 +1,22 @@
 package me.calebjones.spacelaunchnow.ui.activity;
 
-import android.animation.Animator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
-import android.transition.Transition;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,17 +24,10 @@ import com.bumptech.glide.Glide;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 
-import java.util.List;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.adapter.VehicleListAdapter;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
-import me.calebjones.spacelaunchnow.content.models.Rocket;
-import me.calebjones.spacelaunchnow.ui.fragment.vehicles.LaunchVehicleFragment;
-import me.calebjones.spacelaunchnow.utils.CustomAnimatorListener;
-import me.calebjones.spacelaunchnow.utils.CustomTransitionListener;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;
@@ -52,7 +37,7 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
     private static final int PERCENTAGE_TO_ANIMATE_AVATAR = 20;
     private boolean mIsAvatarShown = true;
 
-    private SharedPreference sharedPreference;
+    private ListPreferences sharedPreference;
     private android.content.SharedPreferences SharedPreferences;
     private CustomTabActivityHelper customTabActivityHelper;
     private View view, title_container, gridview;
@@ -72,7 +57,7 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
         final int statusColor;
         this.context = getApplicationContext();
 
-        sharedPreference = SharedPreference.getInstance(this.context);
+        sharedPreference = ListPreferences.getInstance(this.context);
         customTabActivityHelper = new CustomTabActivityHelper();
 
         if (sharedPreference.getNightMode()) {

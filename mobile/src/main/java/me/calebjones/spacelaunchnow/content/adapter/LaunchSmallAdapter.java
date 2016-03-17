@@ -6,8 +6,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -33,7 +30,7 @@ import java.util.Date;
 import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 import timber.log.Timber;
@@ -48,7 +45,7 @@ public class LaunchSmallAdapter extends RecyclerView.Adapter<LaunchSmallAdapter.
     private Context mContext;
     private Calendar rightNow;
     private SharedPreferences sharedPref;
-    private static SharedPreference sharedPreference;
+    private static ListPreferences sharedPreference;
 
     public LaunchSmallAdapter(Context context) {
         rightNow = Calendar.getInstance();
@@ -88,7 +85,7 @@ public class LaunchSmallAdapter extends RecyclerView.Adapter<LaunchSmallAdapter.
         int m_theme;
 
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        sharedPreference = SharedPreference.getInstance(mContext);
+        sharedPreference = ListPreferences.getInstance(mContext);
 
         if (sharedPreference.getNightMode()) {
             m_theme = R.layout.dark_content_list_item;
