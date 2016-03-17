@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.util.Util;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,11 +22,10 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.DatabaseManager;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.RocketDetails;
 import me.calebjones.spacelaunchnow.content.models.Rocket;
 import me.calebjones.spacelaunchnow.utils.Utils;
-import timber.log.Timber;
 
 public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.ViewHolder> {
 
@@ -38,7 +36,7 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
     private SharedPreferences sharedPref;
     private DatabaseManager databaseManager;
     private List<Rocket> items = new ArrayList<Rocket>();
-    private static SharedPreference sharedPreference;
+    private static ListPreferences sharedPreference;
     private RocketDetails launchVehicle;
     private int defaultBackgroundcolor;
     private static final int SCALE_DELAY = 30;
@@ -47,7 +45,7 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
     public VehicleListAdapter(Context context, Activity activity) {
         rightNow = Calendar.getInstance();
         items = new ArrayList();
-        sharedPreference = SharedPreference.getInstance(context);
+        sharedPreference = ListPreferences.getInstance(context);
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         this.mContext = context;
         this.activity = activity;
@@ -73,7 +71,7 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
         int m_theme;
 
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        sharedPreference = SharedPreference.getInstance(mContext);
+        sharedPreference = ListPreferences.getInstance(mContext);
         databaseManager = new DatabaseManager(mContext);
 
         if (sharedPreference.getNightMode()) {

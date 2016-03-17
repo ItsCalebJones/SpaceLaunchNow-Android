@@ -7,9 +7,8 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.Preference.OnPreferenceClickListener;
 
-import me.calebjones.spacelaunchnow.LaunchApplication;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements OnPreferenceClickListener {
     
@@ -17,7 +16,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements OnPref
     private static final String LAUNCH_TRACKING_OPTIONS = "launch_tracking_options";
     private static final String APPEARANCE = "appearance";
     
-    private static SharedPreference sharedPreference;
+    private static ListPreferences sharedPreference;
     private Context context;
     private Callback mCallback;
 
@@ -43,7 +42,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements OnPref
         super.onCreate(savedInstanceState);
         
         context = getActivity().getApplicationContext();
-        sharedPreference = SharedPreference.getInstance(context);
+        sharedPreference = ListPreferences.getInstance(context);
 
         try {
             if (sharedPreference.getNightMode()) {

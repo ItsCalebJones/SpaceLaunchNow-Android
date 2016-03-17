@@ -24,14 +24,14 @@ import java.util.regex.Pattern;
 
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Mission;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 /**
- * This adapter takes data from SharedPreference/LoaderService and applies it to the UpcomingLaunchesFragment
+ * This adapter takes data from ListPreferences/LoaderService and applies it to the UpcomingLaunchesFragment
  */
 public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHolder> implements FastScrollRecyclerView.SectionedAdapter {
     public int position;
@@ -40,11 +40,11 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
     private Context mContext;
     private Context aContext;
     private Boolean night;
-    private static SharedPreference sharedPreference;
+    private static ListPreferences sharedPreference;
 
     public MissionAdapter(Context context, Context aContext) {
         missionList = new ArrayList();
-        sharedPreference = SharedPreference.getInstance(context);
+        sharedPreference = ListPreferences.getInstance(context);
         this.mContext = context;
         this.aContext = aContext;
     }
@@ -66,7 +66,7 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 
         int m_theme;
-        sharedPreference = SharedPreference.getInstance(mContext);
+        sharedPreference = ListPreferences.getInstance(mContext);
 
         if (sharedPreference.getNightMode()) {
             night = true;

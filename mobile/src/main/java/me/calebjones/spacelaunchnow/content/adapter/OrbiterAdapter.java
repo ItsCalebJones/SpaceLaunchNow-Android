@@ -2,7 +2,6 @@ package me.calebjones.spacelaunchnow.content.adapter;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -10,7 +9,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,16 +24,14 @@ import java.util.Calendar;
 import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.GridItem;
-import me.calebjones.spacelaunchnow.ui.activity.OrbiterDetailActivity;
-import me.calebjones.spacelaunchnow.ui.activity.VehicleDetailActivity;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 /**
- * This adapter takes data from SharedPreference/LoaderService and applies it to the UpcomingLaunchesFragment
+ * This adapter takes data from ListPreferences/LoaderService and applies it to the UpcomingLaunchesFragment
  */
 public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHolder>{
 
@@ -44,7 +40,7 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
     private Calendar rightNow;
     private SharedPreferences sharedPref;
     private List<GridItem> items = new ArrayList<GridItem>();
-    private static SharedPreference sharedPreference;
+    private static ListPreferences sharedPreference;
     private OnItemClickListener onItemClickListener;
     private int defaultBackgroundcolor;
     private static final int SCALE_DELAY = 30;
@@ -54,7 +50,7 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
     public OrbiterAdapter(Context context) {
         rightNow = Calendar.getInstance();
         items = new ArrayList();
-        sharedPreference = SharedPreference.getInstance(context);
+        sharedPreference = ListPreferences.getInstance(context);
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         this.mContext = context;
     }
@@ -79,7 +75,7 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
         int m_theme;
 
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        sharedPreference = SharedPreference.getInstance(mContext);
+        sharedPreference = ListPreferences.getInstance(mContext);
 
         if (sharedPreference.getNightMode()) {
             night = true;

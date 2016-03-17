@@ -16,13 +16,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
@@ -37,7 +34,8 @@ import java.util.concurrent.TimeUnit;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -51,7 +49,8 @@ public class NextLaunchTracker extends IntentService implements
     private Launch nextLaunch;
     private Launch storedLaunch;
     private SharedPreferences sharedPref;
-    private SharedPreference sharedPreference;
+    private ListPreferences sharedPreference;
+    private SwitchPreferences switchPreferences;
     public static List<Launch> upcomingLaunchList;
     private Calendar rightNow;
     private AlarmManager alarmManager;
@@ -80,7 +79,8 @@ public class NextLaunchTracker extends IntentService implements
 
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        this.sharedPreference = SharedPreference.getInstance(getApplicationContext());
+        this.sharedPreference = ListPreferences.getInstance(getApplicationContext());
+        this.switchPreferences = SwitchPreferences.getInstance(getApplicationContext());
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         return super.onStartCommand(intent, flags, startId);
@@ -121,7 +121,7 @@ public class NextLaunchTracker extends IntentService implements
             //If they do not match this means nextLaunch has changed IE a launch executed.
             if (nextLaunch.getId().intValue() != storedLaunch.getId().intValue()) {
                 this.sharedPreference.setNextLaunch(nextLaunch);
-                this.sharedPreference.setPrevFiltered(false);
+                this.switchPreferences.setPrevFiltered(false);
 
                 Intent updatePreviousLaunches = new Intent(this, LaunchDataService.class);
                 updatePreviousLaunches.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
@@ -442,18 +442,20 @@ public class NextLaunchTracker extends IntentService implements
 
     // Create a data map and put data in it
     private void sendToWear(Launch launch) {
-        Timber.v("Sending data...");
-        PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/nextLaunch");
+        if (launch != null) {
+            Timber.v("Sending data...");
+            PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/nextLaunch");
 
-        putDataMapReq.getDataMap().putString(NAME_KEY, launch.getName());
-        putDataMapReq.getDataMap().putInt(TIME_KEY, launch.getNetstamp());
-        putDataMapReq.getDataMap().putLong("time", new Date().getTime());
+            putDataMapReq.getDataMap().putString(NAME_KEY, launch.getName());
+            putDataMapReq.getDataMap().putInt(TIME_KEY, launch.getNetstamp());
+            putDataMapReq.getDataMap().putLong("time", new Date().getTime());
 
-        PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
-        Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
-        DataApi.DataItemResult dataItemResult = Wearable.DataApi
-                .putDataItem(mGoogleApiClient, putDataReq).await();
-        Timber.v("Sent");
+            PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
+            Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
+            DataApi.DataItemResult dataItemResult = Wearable.DataApi
+                    .putDataItem(mGoogleApiClient, putDataReq).await();
+            Timber.v("Sent");
+        }
     }
 
     @Override

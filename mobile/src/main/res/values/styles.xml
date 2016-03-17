@@ -67,7 +67,7 @@
         <item name="spinBars">true</item>
     </style>
 
-    <style name="AppTheme.ActionBar.Transparent" parent="LightTheme"></style>
+    <style name="AppTheme.ActionBar.Transparent" parent="LightTheme"/>
 
     <style name="ToolBarWithNavigationBack">
         <item name="navigationIcon">@drawable/ic_arrow_back</item>
@@ -83,14 +83,13 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="LightTheme.Transparent" parent="LightTheme"></style>
+    <style name="LightTheme.Transparent" parent="LightTheme"/>
 
-    <style name="DarkTheme.Transparent" parent="DarkTheme"></style>
+    <style name="DarkTheme.Transparent" parent="DarkTheme"/>
 
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"></style>
-
-    <style name="AppTheme.AppBarOverlay.Dark" parent="ThemeOverlay.AppCompat.Dark.ActionBar"></style>
+    <style name="AppTheme.AppBarOverlay.Dark" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
@@ -105,5 +104,37 @@
     <style name="LightTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="LightTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="SPL">
+    </style>
+
+    <style name="SPL.SnackBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="SPL.SnackBar.Layout">
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <style name="SPL.SnackBar.Text">
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">left</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="SPL.SnackBar.Button">
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SPL.SnackBar.Button.Decline">
+        <item name="android:background">@null</item>
+        <item name="android:layout_width">40dp</item>
+    </style>
 
 </resources>

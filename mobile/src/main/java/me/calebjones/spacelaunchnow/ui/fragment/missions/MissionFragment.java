@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 
 import java.util.ArrayList;
@@ -27,7 +25,7 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.MissionAdapter;
-import me.calebjones.spacelaunchnow.content.database.SharedPreference;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Mission;
 import me.calebjones.spacelaunchnow.content.services.MissionDataService;
 import timber.log.Timber;
@@ -40,14 +38,14 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private StaggeredGridLayoutManager staggeredLayoutManager;
     private LinearLayoutManager layoutManager;
     private List<Mission> missionList;
-    private SharedPreference sharedPreference;
+    private ListPreferences sharedPreference;
     private android.content.SharedPreferences SharedPreferences;
     private FloatingActionButton menu;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getActivity());
-        this.sharedPreference = SharedPreference.getInstance(getActivity().getApplicationContext());
+        this.sharedPreference = ListPreferences.getInstance(getActivity().getApplicationContext());
         this.missionList = new ArrayList();
         adapter = new MissionAdapter(getActivity().getApplicationContext(), getActivity());
     }
