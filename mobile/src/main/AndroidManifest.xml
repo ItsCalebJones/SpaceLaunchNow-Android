@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="me.calebjones.spacelaunchnow"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="me.calebjones.spacelaunchnow">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -12,15 +12,14 @@
     <!-- Required to act as a custom watch face. -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-
     <application
-        tools:replace="label"
         android:name=".LaunchApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="${appNameLabel}"
         android:supportsRtl="true"
-        android:theme="@style/LightTheme">
+        android:theme="@style/LightTheme"
+        tools:replace="label">
         <activity
             android:name=".MainActivity"
             android:theme="@style/LightTheme.Launcher"
@@ -38,7 +37,6 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/GoogleMapsKey" />
@@ -92,6 +90,15 @@
             android:label="@string/title_activity_debug"
             android:theme="@style/LightTheme" />
         <activity android:name=".ui.activity.WebviewActivity" />
+        <activity
+            android:name=".ui.activity.FullscreenImageActivity"
+            android:label="@string/title_activity_fullscreen_image"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/LightTheme.Transparent">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="me.calebjones.spacelaunchnow.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

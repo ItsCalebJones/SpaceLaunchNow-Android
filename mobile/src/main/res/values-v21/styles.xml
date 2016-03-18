@@ -39,10 +39,16 @@
 
     <style name="LightTheme.Transparent" parent="LightTheme">
         <item name="android:windowTranslucentStatus">true</item>
+        <!-- enable overlapping of exiting and entering activities-->
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
     </style>
 
     <style name="DarkTheme.Transparent" parent="DarkTheme">
         <item name="android:windowTranslucentStatus">true</item>
+        <!-- enable overlapping of exiting and entering activities-->
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
     </style>
 
     <style name="PreferenceTheme" parent="@style/PreferenceThemeOverlay">
