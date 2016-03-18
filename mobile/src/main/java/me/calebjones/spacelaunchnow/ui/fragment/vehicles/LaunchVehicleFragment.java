@@ -110,7 +110,6 @@ public class LaunchVehicleFragment extends CustomFragment {
 
         @Override
         public void onClick(View v, int position) {
-
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                 Timber.d("Starting Activity at %s", position);
 

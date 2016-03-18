@@ -142,6 +142,7 @@
     <style name="SPL.SnackBar.Button">
         <item name="android:padding">10dp</item>
         <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_margin">5dp</item>
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:textStyle">bold</item>
     </style>

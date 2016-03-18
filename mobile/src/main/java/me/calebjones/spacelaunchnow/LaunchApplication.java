@@ -56,7 +56,7 @@ public class LaunchApplication extends Application {
         sharedPreference = ListPreferences.getInstance(this);
         switchPreferences = SwitchPreferences.getInstance(this);
 
-        //TODO Ready reivews before release.
+        //TODO Ready reviews before release.
 //        DefaultRuleEngine.trackAppStart(this);
 
         if (!sharedPreference.getFirstBoot()) {

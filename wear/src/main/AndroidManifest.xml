@@ -18,7 +18,7 @@
         android:theme="@android:style/Theme.DeviceDefault">
         <service
             android:name=".SpaceLaunchWatchFace"
-            android:label="${applicationNameLabel}"
+            android:label="${applicationLabel}"
             android:permission="android.permission.BIND_WALLPAPER">
             <meta-data
                 android:name="android.service.wallpaper"
