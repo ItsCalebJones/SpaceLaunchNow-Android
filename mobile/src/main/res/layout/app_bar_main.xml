@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
-        app:elevation="8dp">
+        app:elevation="0dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -32,7 +32,7 @@
             <!--style="@style/SPL.SnackBar.Layout"-->
             <!--android:visibility="gone"-->
             <!--irr:autoEvaluateDefaultRuleEngine="true"-->
-            <!--irr:defaultRuleAppStartCount="5"-->
+            <!--irr:defaultRuleAppStartCount="10"-->
             <!--irr:defaultRuleDismissMaxCount="3"-->
             <!--irr:defaultRuleDismissPostponeDays="3"-->
             <!--irr:defaultRuleDistinctDays="1"-->

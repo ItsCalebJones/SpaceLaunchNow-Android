@@ -442,7 +442,7 @@ public class NextLaunchTracker extends IntentService implements
 
     // Create a data map and put data in it
     private void sendToWear(Launch launch) {
-        if (launch != null) {
+        if (launch != null && launch.getName() != null && launch.getNetstamp() != null) {
             Timber.v("Sending data...");
             PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/nextLaunch");
 
