@@ -70,11 +70,14 @@ Quisque tincidunt magna quis viverra faucibus. Vivamus rhoncus elit vel mi trist
     <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
 
     <string name="whats_new_title">Whats New! v1.0-beta.11</string>
-    <string name="whats_new_content">Two big requests were answered this release, first being an Android Wear Watch Face with a simple countdown for the next launch. And for the second I rewrote the logic behind filtering and you can now filter both Upcoming and Previous. As always i\'ll be watching for crash reports through Crashlytics, if anything new pops up i\'ll be on it.\n\n
+    <string name="whats_new_content">Hey everyone, looking at having one more small Beta release next week before moving into production. So far around 900 people have installed the application, thanks to everyone thats poured into the application with feedback and kind words.\n\n
     New Features:\n
     \u2022 Android Wear Watch Face - Simple digital watch with countdown to the next launch.\n
     \u2022 Added moar filtering options and enabled for both Upcoming and Previous\n
     \u2022 Added moar new data now available from Launch Library v1.2 should notice an increase in images available.\n
+    \u2022 View rocket images fullscreen in Vehicle details.\n
+    \u2022 Improved startup improvement, nearly half the time to cold start.\n
+    \u2022 Added some tools to help me troubleshoot memory leak caused by Google Maps.\n
     </string>
     <string name="link_feedback">https://www.reddit.com/r/spacelaunchnow</string>
     <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>
