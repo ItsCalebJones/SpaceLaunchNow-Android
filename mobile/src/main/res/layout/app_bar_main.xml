@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="me.calebjones.spacelaunchnow.MainActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="0dp">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--<net.mediavrog.irr.IrrLayout xmlns:irr="http://schemas.android.com/apk/res-auto"-->
+            <!--android:id="@+id/irr_layout"-->
+            <!--style="@style/SPL.SnackBar.Layout"-->
+            <!--android:visibility="gone"-->
+            <!--irr:autoEvaluateDefaultRuleEngine="true"-->
+            <!--irr:defaultRuleAppStartCount="10"-->
+            <!--irr:defaultRuleDismissMaxCount="3"-->
+            <!--irr:defaultRuleDismissPostponeDays="3"-->
+            <!--irr:defaultRuleDistinctDays="1"-->
+            <!--irr:feedbackUrl="@string/link_feedback"-->
+            <!--irr:ratingUrl="@string/link_store">-->
+
+            <!--<LinearLayout-->
+                <!--android:id="@id/irr_nudge_layout"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal"-->
+                <!--tools:visibility="visible">-->
+
+                <!--<TextView-->
+                    <!--android:id="@id/irr_nudge_text"-->
+                    <!--style="@style/SPL.SnackBar.Text"-->
+                    <!--android:text="Enjoying this app?" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@id/irr_nudge_accept_btn"-->
+                    <!--style="@style/SPL.SnackBar.Button"-->
+                    <!--android:text="VERY MUCH" />-->
+
+                <!--<Button-->
+                    <!--android:id="@id/irr_nudge_decline_btn"-->
+                    <!--style="@style/SPL.SnackBar.Button.Decline"-->
+                    <!--android:text="x" />-->
+            <!--</LinearLayout>-->
+
+            <!--<LinearLayout-->
+                <!--android:id="@id/irr_rate_layout"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal"-->
+                <!--tools:visibility="gone">-->
+
+                <!--<TextView-->
+                    <!--android:id="@id/irr_rate_text"-->
+                    <!--style="@style/SPL.SnackBar.Text"-->
+                    <!--android:text="How about rating it?" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@id/irr_rate_accept_btn"-->
+                    <!--style="@style/SPL.SnackBar.Button"-->
+                    <!--android:text="SURE" />-->
+
+                <!--<Button-->
+                    <!--android:id="@id/irr_rate_decline_btn"-->
+                    <!--style="@style/SPL.SnackBar.Button.Decline"-->
+                    <!--android:text="×" />-->
+            <!--</LinearLayout>-->
+
+            <!--<LinearLayout-->
+                <!--android:id="@id/irr_feedback_layout"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal"-->
+                <!--tools:visibility="visible">-->
+
+                <!--<TextView-->
+                    <!--android:id="@id/irr_feedback_text"-->
+                    <!--style="@style/SPL.SnackBar.Text"-->
+                    <!--android:text="Got some feedback?" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@id/irr_feedback_accept_btn"-->
+                    <!--style="@style/SPL.SnackBar.Button"-->
+                    <!--android:text="YES" />-->
+
+                <!--<Button-->
+                    <!--android:id="@id/irr_feedback_decline_btn"-->
+                    <!--style="@style/SPL.SnackBar.Button.Decline"-->
+                    <!--android:text="×" />-->
+            <!--</LinearLayout>-->
+
+        <!--</net.mediavrog.irr.IrrLayout>-->
+
+        <FrameLayout
+            android:id="@+id/flContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:context="me.calebjones.spacelaunchnow.MainActivity"
+            tools:showIn="@layout/app_bar_main" />
+    </FrameLayout>
+
+</LinearLayout>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tabs">
+        <item>Upcoming</item>
+        <item>Previous</item>
+    </string-array>
+
+    <string-array name="vehicles_tabs">
+        <item>Launch Vehicles</item>
+    </string-array>
+
+    <string-array name="agencies">
+        <item>NASA</item>
+        <item>SpaceX</item>
+        <item>ROSCOSMOS</item>
+        <item>ULA</item>
+        <item>Arianespace</item>
+        <item>CASC</item>
+        <item>ISRO</item>
+    </string-array>
+
+    <string-array name="vehicles">
+        <item>Falcon</item>
+        <item>Proton</item>
+        <item>Soyuz</item>
+        <item>Atlas</item>
+        <item>Delta</item>
+        <item>Long March</item>
+        <item>PSLV/GSLV</item>
+        <item>Ariane</item>
+        <item>Zenit</item>
+        <item>Rokot</item>
+    </string-array>
+
+    <string-array name="country">
+        <item>USA</item>
+        <item>China</item>
+        <item>Russia</item>
+        <item>India</item>
+        <item>Multi</item>
+    </string-array>
+
+    <string-array name="location">
+        <item>Cape Canaveral, FL, USA</item>
+        <item>Kennedy Space Center, FL, USA</item>
+        <item>Vandenberg AFB, CA, USA</item>
+        <item>Wallops Island, Virginia, USA</item>
+        <item>Jiuquan, China</item>
+        <item>Taiyuan, China</item>
+        <item>Xichang Satellite Launching Center, China</item>
+        <item>Wechang Satellite Launching Center, China</item>
+        <item>Kourou, French Guiana</item>
+        <item>Sriharikota, India</item>
+        <item>Kagoshima / Tanegashima, Japan</item>
+        <item>Baikonur Cosmodrome, Kazakhstan, Russia</item>
+        <item>Plesetsk Cosmodrome, Russia</item>
+        <item>Kapustin Yar, Russia</item>
+        <item>Svobodney Cosmodrome, Russia</item>
+        <item>Dombarovskiy, Russia</item>
+        <item>Sea Launch</item>
+        <item>Woomera, Australia</item>
+        <item>Kiatorete Spit, New Zealand</item>
+        <item>Kodiak Launch Complex, US</item>
+        <item>Ohae Launch Station, North Korea</item>
+    </string-array>
+
+    <string-array name="upcoming_array">
+        <item>One</item>
+        <item>Two</item>
+        <item>Five</item>
+        <item>Ten</item>
+        <item>Twenty</item>
+        <item>All</item>
+    </string-array>
+
+    <string-array name="upcoming_array_values">
+        <item>1</item>
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+        <item>1000</item>
+    </string-array>
+    <string-array name="previous_array">
+        <item>Twenty</item>
+        <item>Fifty</item>
+        <item>One Hundred</item>
+        <item>Two Hundred</item>
+        <item>All</item>
+    </string-array>
+    <string-array name="previous_array_values">
+        <item>20</item>
+        <item>50</item>
+        <item>100</item>
+        <item>200</item>
+        <item>1000</item>
+    </string-array>
+    <string-array name="sync_timer">
+        <item>One Hour</item>
+        <item>Four Hours</item>
+        <item>Eight Hours</item>
+        <item>One Day</item>
+        <item>Three Days</item>
+        <item>One Week</item>
+    </string-array>
+    <string-array name="sync_timer_values">
+        <item>1</item>
+        <item>4</item>
+        <item>8</item>
+        <item>24</item>
+        <item>72</item>
+        <item>168</item>
+    </string-array>
+</resources>
