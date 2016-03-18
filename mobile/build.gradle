@@ -22,7 +22,7 @@ android {
     compileSdkVersion 23
     buildToolsVersion '23.0.2'
     defaultConfig {
-        manifestPlaceholders = [ appNameLabel:"@string/application_name"]
+        manifestPlaceholders = [appNameLabel: "@string/application_name"]
         applicationId "me.calebjones.spacelaunchnow"
         minSdkVersion 15
         targetSdkVersion 23
@@ -33,7 +33,7 @@ android {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
-            manifestPlaceholders = [ appNameLabel:"Space Launch Now - Debug"]
+            manifestPlaceholders = [appNameLabel: "Space Launch Now - Debug"]
         }
     }
     productFlavors {
@@ -58,6 +58,7 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
+
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'com.android.support:design:23.2.1'
     compile 'com.android.support:customtabs:23.2.1'
@@ -66,8 +67,8 @@ dependencies {
     compile 'com.android.support:palette-v7:23.2.1'
     compile 'com.android.support:support-v4:23.2.1'
     compile 'com.android.support:preference-v7:23.2.1'
-
     compile 'com.google.android.gms:play-services-location:8.4.0'
+    compile 'com.github.chrisbanes.photoview:library:1.2.3'
     compile 'com.google.code.gson:gson:2.5'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'

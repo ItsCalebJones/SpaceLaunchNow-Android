@@ -127,7 +127,17 @@ public class LaunchDetailActivity extends AppCompatActivity
             launch = ((Launch) mIntent.getSerializableExtra("launch"));
         }
         if (launch.getRocket() != null || launch.getRocket().getName() != null) {
-            getLaunchVehicle(launch);
+            if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0) {
+                Glide.with(this)
+                        .load(launch.getRocket().getImageURL())
+                        .centerCrop()
+                        .placeholder(R.drawable.placeholder)
+                        .crossFade()
+                        .into(detail_profile_backdrop);
+                getLaunchVehicle(launch, false);
+            } else {
+                getLaunchVehicle(launch, true);
+            }
         } else {
             Intent homeIntent = new Intent(this, MainActivity.class);
             startActivity(homeIntent);
@@ -300,7 +310,7 @@ public class LaunchDetailActivity extends AppCompatActivity
         super.onResume();
     }
 
-    private void getLaunchVehicle(Launch result) {
+    private void getLaunchVehicle(Launch result, boolean setImage) {
         String query;
         if (result.getRocket().getName().contains("Space Shuttle")) {
             query = "Space Shuttle";
@@ -309,17 +319,17 @@ public class LaunchDetailActivity extends AppCompatActivity
         }
         DatabaseManager databaseManager = new DatabaseManager(this);
         RocketDetails launchVehicle = databaseManager.getLaunchVehicle(query);
-        if (launchVehicle != null && launchVehicle.getImageURL().length() > 0) {
-            Glide.with(this)
-                    .load(launchVehicle
-                            .getImageURL())
-                    .centerCrop()
-                    .placeholder(R.drawable.placeholder)
-                    .crossFade()
-                    .into(detail_profile_backdrop);
-            Timber.d("Glide Loading: %s %s", launchVehicle.getLVName(), launchVehicle.getImageURL());
-        } else {
-
+        if (setImage) {
+            if (launchVehicle != null && launchVehicle.getImageURL().length() > 0) {
+                Glide.with(this)
+                        .load(launchVehicle
+                                .getImageURL())
+                        .centerCrop()
+                        .placeholder(R.drawable.placeholder)
+                        .crossFade()
+                        .into(detail_profile_backdrop);
+                Timber.d("Glide Loading: %s %s", launchVehicle.getLVName(), launchVehicle.getImageURL());
+            }
         }
     }
 

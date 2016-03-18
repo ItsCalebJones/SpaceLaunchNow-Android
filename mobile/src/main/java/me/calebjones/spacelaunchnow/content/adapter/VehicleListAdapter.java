@@ -1,8 +1,11 @@
 package me.calebjones.spacelaunchnow.content.adapter;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
@@ -25,6 +28,7 @@ import me.calebjones.spacelaunchnow.content.database.DatabaseManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.RocketDetails;
 import me.calebjones.spacelaunchnow.content.models.Rocket;
+import me.calebjones.spacelaunchnow.ui.activity.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
 public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.ViewHolder> {
@@ -216,7 +220,15 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
                     Utils.openCustomTab(activity, mContext, items.get(position).getWikiURL());
                     break;
                 case R.id.vehicle_fab:
-                    Toast.makeText(mContext, items.get(position).getName() + " | Work in progress!", Toast.LENGTH_SHORT);
+                    Toast.makeText(activity, items.get(position).getName() + " | Work in progress!", Toast.LENGTH_SHORT);
+
+                    Intent animateIntent = new Intent(activity, FullscreenImageActivity.class);
+                    animateIntent.putExtra("imageURL", items.get(position).getImageURL());
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        activity.startActivity(animateIntent, ActivityOptions.makeSceneTransitionAnimation(activity, item_icon, "imageCover").toBundle());
+                    } else {
+                        activity.startActivity(animateIntent);
+                    }
                     break;
             }
         }

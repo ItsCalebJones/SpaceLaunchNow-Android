@@ -158,7 +158,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                         }
                     } else {
                         active = false;
-                        menu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_add_alert));
+                        menu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_filter));
                         mSwipeRefreshLayout.setEnabled(true);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             hideView();

@@ -29,9 +29,10 @@
     <color name="darkIcons">#ffffffff</color>
 
 
-
     <color name="slide_one">#448AFF</color>
     <color name="slide_two">#61aabe</color>
     <color name="slide_three">#302c27</color>
     <color name="slide_four">#b5bdb3</color>
+
+    <color name="black_overlay">#66000000</color>
 </resources>

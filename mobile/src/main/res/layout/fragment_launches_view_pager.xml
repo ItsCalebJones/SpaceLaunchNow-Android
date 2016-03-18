@@ -8,6 +8,7 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:elevation="8dp"
         app:tabMode="fixed"
         app:tabGravity="fill"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
