@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.fabric.sdk.android.services.common.Crash;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
@@ -394,7 +395,9 @@ public class LaunchDataService extends IntentService implements
                 try {
                     launch.setLaunchDate(df.parse(launchesObj.optString("net")));
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    Timber.e("%s", e.getLocalizedMessage());
+                    Crashlytics.logException(e);
+                    launch.setLaunchDate(null);
                 }
                 launch.setWindowstart(launchesObj.optString("windowstart"));
                 launch.setWindowend(launchesObj.optString("windowend"));
@@ -544,7 +547,9 @@ public class LaunchDataService extends IntentService implements
                 try {
                     launch.setLaunchDate(df.parse(launchesObj.optString("net")));
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    Timber.e("%s", e.getLocalizedMessage());
+                    Crashlytics.logException(e);
+                    launch.setLaunchDate(null);
                 }
                 launch.setWindowstart(launchesObj.optString("windowstart"));
                 launch.setWindowend(launchesObj.optString("windowend"));
