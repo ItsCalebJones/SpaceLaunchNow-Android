@@ -89,14 +89,14 @@ public class LaunchVehicleFragment extends CustomFragment {
         });
         adapter.setOnItemClickListener(recyclerRowClickListener);
 
+        items.add(new GridItem("Space Shuttle", "NASA","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944167/shuttle_vc2xnw.jpg"));
         items.add(new GridItem("Soyuz", "Roscosmos","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944167/soyuz_rjwr7s.jpg"));
         items.add(new GridItem("Falcon", "SpaceX", "http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/falcon_xtbyia.jpg"));
-        items.add(new GridItem("Proton", "Khrunichev" ,"http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/proton_yaojbm.jpg"));
+        items.add(new GridItem("Atlas", "Lockheed Martin","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/atlas_ahqjya.jpg"));
         items.add(new GridItem("Delta", "United Launch Alliance" ,"http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/delta_lbwmgy.jpg"));
         items.add(new GridItem("Ariane", "Ariancespace & ESA", "http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/ariane_qouki7.jpg"));
-        items.add(new GridItem("Space Shuttle", "NASA","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944167/shuttle_vc2xnw.jpg"));
+        items.add(new GridItem("Proton", "Khrunichev" ,"http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/proton_yaojbm.jpg"));
         items.add(new GridItem("Long March", "China Academy of Space Technology","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/long_ywtbw6.jpg"));
-        items.add(new GridItem("Atlas", "Lockheed Martin","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/atlas_ahqjya.jpg"));
         items.add(new GridItem("PSLV", "Indian Space Research Organisation","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944167/pslv_vjcdww.jpg"));
         items.add(new GridItem("Vega", "Arianespace","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944167/vega_tnkdms.jpg"));
         items.add(new GridItem("Zenit", "Yuzhnoye Design Bureau","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944167/zenit_hxl4gd.jpg"));
