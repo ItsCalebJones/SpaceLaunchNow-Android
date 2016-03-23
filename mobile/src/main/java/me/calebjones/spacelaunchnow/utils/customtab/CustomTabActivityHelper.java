@@ -38,15 +38,17 @@ public class CustomTabActivityHelper {
                                      CustomTabFallback fallback) {
         String packageName = CustomTabHelper.getPackageNameToUse(activity);
 
-        //If we cant find a package name, it means theres no browser that supports
-        //Chrome Custom Tabs installed. So, we fallback to the webview
-        if (packageName == null) {
-            if (fallback != null) {
-                fallback.openUri(activity, uri);
+        if (uri != null) {
+            //If we cant find a package name, it means theres no browser that supports
+            //Chrome Custom Tabs installed. So, we fallback to the webview
+            if (packageName == null) {
+                if (fallback != null) {
+                    fallback.openUri(activity, uri);
+                }
+            } else {
+                customTabsIntent.intent.setPackage(packageName);
+                customTabsIntent.launchUrl(activity, uri);
             }
-        } else {
-            customTabsIntent.intent.setPackage(packageName);
-            customTabsIntent.launchUrl(activity, uri);
         }
     }
 
