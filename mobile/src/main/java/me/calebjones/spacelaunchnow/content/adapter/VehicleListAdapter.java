@@ -5,6 +5,7 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -30,6 +31,7 @@ import me.calebjones.spacelaunchnow.content.models.RocketDetails;
 import me.calebjones.spacelaunchnow.content.models.Rocket;
 import me.calebjones.spacelaunchnow.ui.activity.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
+import timber.log.Timber;
 
 public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.ViewHolder> {
 
@@ -97,7 +99,6 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
         launchVehicle = new RocketDetails();
 
         String query;
-        //TODO Update JSON with each Space Shuttle
         if (item.getName().contains("Space Shuttle")){
             query = "Space Shuttle";
         } else {
@@ -107,8 +108,8 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
 
         if (launchVehicle != null){
             holder.vehicle_spec_view.setVisibility(View.VISIBLE);
-            holder.launch_vehicle_description.setVisibility(View.VISIBLE);
-            if (launchVehicle.getDescription() != null) {
+            if (launchVehicle.getDescription() != null && launchVehicle.getDescription().length() > 0) {
+                holder.launch_vehicle_description.setVisibility(View.VISIBLE);
                 holder.launch_vehicle_description.setText(launchVehicle.getDescription());
             } else {
                 holder.launch_vehicle_description.setVisibility(View.GONE);
@@ -125,8 +126,15 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
             holder.vehicle_spec_view.setVisibility(View.GONE);
         }
 
+        if (item.getImageURL().length() == 0){
+            holder.fab.setVisibility(View.INVISIBLE);
+        } else {
+            holder.fab.setVisibility(View.VISIBLE);
+        }
+
         Glide.with(mContext)
                 .load(item.getImageURL())
+                .placeholder(R.drawable.placeholder)
                 .error(R.drawable.placeholder)
                 .into(holder.item_icon);
 
@@ -136,10 +144,14 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
             if(launchVehicle.getInfoURL().length() > 0) {
                 items.get(i).setInfoURL(launchVehicle.getInfoURL());
                 holder.infoButton.setVisibility(View.VISIBLE);
-            } else {
-                holder.infoButton.setVisibility(View.GONE);
+            } else if (item.getInfoURL() != null && !item.getInfoURL().contains("null")) {
+                if (item.getInfoURL().length() > 0) {
+                    holder.infoButton.setVisibility(View.VISIBLE);
+                } else {
+                    holder.infoButton.setVisibility(View.GONE);
+                }
             }
-        }  else if (item.getInfoURL() != null){
+        }  else if (item.getInfoURL() != null && !item.getInfoURL().contains("null")){
             if(item.getInfoURL().length() > 0){
                 holder.infoButton.setVisibility(View.VISIBLE);
             }  else {
@@ -153,10 +165,14 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
             if(launchVehicle.getWikiURL().length() > 0) {
                 items.get(i).setWikiURL(launchVehicle.getWikiURL());
                 holder.wikiButton.setVisibility(View.VISIBLE);
-            } else {
-                holder.wikiButton.setVisibility(View.GONE);
+            }   else if (item.getWikiURL() != null && !item.getWikiURL().contains("null")){
+                if(item.getWikiURL().length() > 0){
+                    holder.wikiButton.setVisibility(View.VISIBLE);
+                }  else {
+                    holder.wikiButton.setVisibility(View.GONE);
+                }
             }
-        }  else if (item.getWikiURL() != null){
+        }  else if (item.getWikiURL() != null && !item.getWikiURL().contains("null")){
             if(item.getWikiURL().length() > 0){
                 holder.wikiButton.setVisibility(View.VISIBLE);
             }  else {
@@ -164,6 +180,12 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
             }
         } else {
             holder.infoButton.setVisibility(View.GONE);
+        }
+
+        if (holder.infoButton.getVisibility() == View.GONE && holder.wikiButton.getVisibility() == View.GONE){
+            holder.button_layout.setVisibility(View.GONE);
+        } else {
+            holder.button_layout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -175,7 +197,7 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ImageView item_icon;
-        public View vehicle_spec_view, vehicle_container;
+        public View vehicle_spec_view, vehicle_container, button_layout;
         public FloatingActionButton fab;
         public TextView item_title,launch_vehicle_specs_height,
                 launch_vehicle_specs_diameter,launch_vehicle_specs_stages,launch_vehicle_specs_leo,
@@ -190,6 +212,7 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
             fab = (FloatingActionButton) view.findViewById(R.id.vehicle_fab);
             vehicle_container = view.findViewById(R.id.vehicle_container);
             vehicle_spec_view = view.findViewById(R.id.vehicle_spec_view);
+            button_layout = view.findViewById(R.id.button_layout);
             item_icon = (ImageView) view.findViewById(R.id.item_icon);
             item_title = (TextView) view.findViewById(R.id.item_title);
             launch_vehicle_specs_stages = (TextView) view.findViewById(R.id.launch_vehicle_specs_stages);

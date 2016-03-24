@@ -1,9 +1,12 @@
 package me.calebjones.spacelaunchnow;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
+import com.onesignal.OneSignal;
 import com.squareup.leakcanary.LeakCanary;
 
 import net.mediavrog.irr.DefaultRuleEngine;
@@ -34,11 +37,17 @@ public class LaunchApplication extends Application {
         return mInstance;
     }
 
+    @NonNull
+    public static LaunchApplication get(@NonNull Context anyContext) {
+        return (LaunchApplication) anyContext.getApplicationContext();
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
         LeakCanary.install(this);
+        OneSignal.startInit(this).init();
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
