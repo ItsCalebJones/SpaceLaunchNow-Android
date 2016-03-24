@@ -280,11 +280,6 @@ public class NextLaunchTracker extends IntentService implements
 
         PendingIntent appIntent = PendingIntent.getActivity(this, 0, mainActivityIntent, 0);
 
-        // Sets up the Open and Share action buttons that will appear in the
-        // big view of the notification.
-        Intent vidIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(launchURL));
-        PendingIntent vidPendingIntent = PendingIntent.getActivity(this, 0, vidIntent, 0);
-
         Intent shareLaunch = Utils.buildIntent(launch);
         PendingIntent sharePendingIntent = PendingIntent.getActivity(this, 0, shareLaunch, 0);
 
@@ -306,8 +301,16 @@ public class NextLaunchTracker extends IntentService implements
                         .setSummaryText(launchDate))
                 .extend(wearableExtender)
                 .setSound(alarmSound)
-                .addAction(R.drawable.ic_open_in_browser_white, "Watch Live", vidPendingIntent)
                 .addAction(R.drawable.ic_menu_share_white, "Share", sharePendingIntent);
+
+        if (launch.getVidURL() != null && launch.getVidURL().length() > 0){
+            // Sets up the Open and Share action buttons that will appear in the
+            // big view of the notification.
+            Intent vidIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(launchURL));
+            PendingIntent vidPendingIntent = PendingIntent.getActivity(this, 0, vidIntent, 0);
+
+            mBuilder.addAction(R.drawable.ic_open_in_browser_white, "Watch Live", vidPendingIntent);
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
             mBuilder.setPriority(Notification.PRIORITY_HIGH)
