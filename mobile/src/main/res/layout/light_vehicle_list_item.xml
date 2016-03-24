@@ -227,7 +227,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="bottom"
                 android:orientation="horizontal"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                android:id="@+id/button_layout">
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/infoButton"

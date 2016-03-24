@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
 
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Launch;
@@ -51,7 +52,6 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
     private Context aContext;
     private Calendar rightNow;
     private SharedPreferences sharedPref;
-    private CountDownTimer timer;
     private Boolean night;
     private Boolean play = false;
     private static ListPreferences sharedPreference;
@@ -89,9 +89,6 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
     public void clear() {
         launchList.clear();
         this.notifyDataSetChanged();
-        if (timer != null) {
-            timer.cancel();
-        }
     }
 
     @Override
@@ -184,7 +181,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
 
             if (timeToFinish < 86400000) {
-                timer = new CountDownTimer(future.getTimeInMillis() - now.getTimeInMillis(), 1000) {
+                holder.timer = new CountDownTimer(future.getTimeInMillis() - now.getTimeInMillis(), 1000) {
                     StringBuilder time = new StringBuilder();
 
                     @Override
@@ -216,8 +213,8 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
                     }
                 }.start();
             } else {
-                if (timer != null) {
-                    timer.cancel();
+                if (holder.timer != null) {
+                    holder.timer.cancel();
                 }
                 long days = timeToFinish / 86400000;
                 long hours = (timeToFinish / 3600000) % 24;
@@ -225,8 +222,8 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             }
 
         } else {
-            if (timer != null) {
-                timer.cancel();
+            if (holder.timer != null) {
+                holder.timer.cancel();
             }
             if (launchItem.getStatus() != 1) {
                 if (launchItem.getRocket().getAgencies().size() > 0) {
@@ -348,6 +345,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         public LinearLayout content_mission_description_view;
         public ImageView categoryIcon;
         public FloatingActionButton exploreFab;
+        public CountDownTimer timer;
 
         public MapView map_view;
         public GoogleMap gMap;
