@@ -6,12 +6,19 @@ import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import me.calebjones.spacelaunchnow.content.models.Agency;
@@ -196,6 +203,7 @@ public class ListPreferences {
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.serializeSpecialFloatingPointValues();
+        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
         this.prefsEditor.putString(PREFS_LAUNCH_LIST_NEXT, gson.toJson(launches));
@@ -211,6 +219,7 @@ public class ListPreferences {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.serializeSpecialFloatingPointValues();
         Gson gson = gsonBuilder.setPrettyPrinting().create();
+        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
         this.prefsEditor.putString(PREFS_NEXT_LAUNCH, gson.toJson(launch));
         this.prefsEditor.apply();
 
@@ -231,6 +240,7 @@ public class ListPreferences {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.serializeSpecialFloatingPointValues();
         Gson gson = gsonBuilder.setPrettyPrinting().create();
+        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
         this.prefsEditor.putString(PREFS_PREV_LAUNCH, gson.toJson(launch));
         this.prefsEditor.apply();
     }
@@ -240,6 +250,7 @@ public class ListPreferences {
         this.prefsEditor = this.sharedPrefs.edit();
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.serializeSpecialFloatingPointValues();
+        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
         this.prefsEditor.putString(PREFS_LIST_UPCOMING, gson.toJson(launches));
         this.prefsEditor.apply();
@@ -264,6 +275,7 @@ public class ListPreferences {
         this.prefsEditor = this.sharedPrefs.edit();
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.serializeSpecialFloatingPointValues();
+        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
         this.prefsEditor.putString(PREFS_MISSION_LIST_UPCOMING, gson.toJson(missions));
         this.prefsEditor.apply();
@@ -275,6 +287,7 @@ public class ListPreferences {
         this.prefsEditor = this.sharedPrefs.edit();
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.serializeSpecialFloatingPointValues();
+        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
         this.prefsEditor.putString(PREFS_LIST_PREVIOUS, gson.toJson(launches));
         this.prefsEditor.apply();
@@ -286,6 +299,7 @@ public class ListPreferences {
         this.prefsEditor = this.sharedPrefs.edit();
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.serializeSpecialFloatingPointValues();
+        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
         this.prefsEditor.putString(PREFS_LIST_PREVIOUS_FILTERED, gson.toJson(launches));
         this.prefsEditor.apply();
@@ -297,6 +311,7 @@ public class ListPreferences {
         this.prefsEditor = this.sharedPrefs.edit();
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.serializeSpecialFloatingPointValues();
+        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
         this.prefsEditor.putString(PREFS_LIST_UPCOMING_FILTERED, gson.toJson(launches));
         this.prefsEditor.apply();
@@ -310,6 +325,7 @@ public class ListPreferences {
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.serializeSpecialFloatingPointValues();
+        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
         this.prefsEditor.putString(PREFS_LIST_AGENCY, gson.toJson(agencies));
@@ -325,6 +341,7 @@ public class ListPreferences {
 
             GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.serializeSpecialFloatingPointValues();
+            gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
             Gson gson = gsonBuilder.setPrettyPrinting().create();
 
             this.prefsEditor.putString(PREFS_LIST_VEHICLES, gson.toJson(rockets));
@@ -367,7 +384,9 @@ public class ListPreferences {
         if (!this.sharedPrefs.contains(PREFS_NEXT_LAUNCH)) {
             return null;
         }
-        Gson gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
         SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         String jsonPreferences = sharedPref.getString(PREFS_NEXT_LAUNCH, null);
 
@@ -382,7 +401,9 @@ public class ListPreferences {
         if (!this.sharedPrefs.contains(PREFS_LIST_UPCOMING)) {
             return null;
         }
-        Gson gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
         List<Launch> productFromShared;
         SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         String jsonPreferences = sharedPref.getString(PREFS_LIST_UPCOMING, null);
@@ -399,7 +420,9 @@ public class ListPreferences {
         if (!this.sharedPrefs.contains(PREFS_LIST_PREVIOUS)) {
             return null;
         }
-        Gson gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
         List<Launch> productFromShared;
         SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         String jsonPreferences = sharedPref.getString(PREFS_LIST_PREVIOUS, null);
@@ -419,7 +442,9 @@ public class ListPreferences {
         if (!this.sharedPrefs.contains(PREFS_LIST_PREVIOUS)) {
             return null;
         }
-        Gson gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
         List<Launch> productFromShared;
         SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         String jsonPreferences = sharedPref.getString(PREFS_LIST_PREVIOUS_FILTERED, null);
@@ -435,7 +460,9 @@ public class ListPreferences {
         if (!this.sharedPrefs.contains(PREFS_LIST_UPCOMING)) {
             return null;
         }
-        Gson gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
         List<Launch> productFromShared;
         SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         String jsonPreferences = sharedPref.getString(PREFS_LIST_UPCOMING_FILTERED, null);
@@ -451,7 +478,9 @@ public class ListPreferences {
         if (!this.sharedPrefs.contains(PREFS_LIST_VEHICLES)) {
             return null;
         }
-        Gson gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
         List<Rocket> vehicleList;
         SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         String jsonPreferences = sharedPref.getString(PREFS_LIST_VEHICLES, null);
@@ -469,7 +498,9 @@ public class ListPreferences {
         if (!this.sharedPrefs.contains(PREFS_LIST_VEHICLES)) {
             return null;
         }
-        Gson gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
         List<Rocket> fullVehicleList;
         List<Rocket> sortedVehicleList = new ArrayList();
         SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
@@ -516,7 +547,9 @@ public class ListPreferences {
         if (!this.sharedPrefs.contains(PREFS_LIST_AGENCY)) {
             return null;
         }
-        Gson gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
         List<Agency> productFromShared;
         SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         String jsonPreferences = sharedPref.getString(PREFS_LIST_AGENCY, null);
@@ -533,7 +566,9 @@ public class ListPreferences {
         if (!this.sharedPrefs.contains(PREFS_LAUNCH_LIST_NEXT)) {
             return null;
         }
-        Gson gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
         List<Launch> favorites;
         SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         String jsonPreferences = sharedPref.getString(PREFS_LAUNCH_LIST_NEXT, null);
@@ -549,7 +584,9 @@ public class ListPreferences {
         if (!this.sharedPrefs.contains(PREFS_LIST_UPCOMING)) {
             return null;
         }
-        Gson gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
         List<Mission> productFromShared;
         SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         String jsonPreferences = sharedPref.getString(PREFS_MISSION_LIST_UPCOMING, null);
@@ -606,7 +643,9 @@ public class ListPreferences {
         Launch launch = new Launch();
 
         //Get Previous Launches List
-        Gson gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
         List<Launch> launchList;
         SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         String jsonPreferences = sharedPref.getString(PREFS_LIST_PREVIOUS, null);
@@ -615,8 +654,7 @@ public class ListPreferences {
         }.getType();
         launchList = gson.fromJson(jsonPreferences, type);
 
-        //Get Upcoming Launches List List
-        Gson gsonUpcoming = new Gson();
+        Gson gsonUpcoming = gsonBuilder.setPrettyPrinting().create();
         List<Launch> launchListUpComing;
         SharedPreferences sharedPrefUpcoming = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         String jsonPreferencesUpcoming = sharedPrefUpcoming.getString(PREFS_LIST_UPCOMING, null);
@@ -642,7 +680,9 @@ public class ListPreferences {
         Mission mission = new Mission();
 
         //Get Mission List
-        Gson gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
         List<Mission> missionList;
         SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         String jsonPreferences = sharedPref.getString(PREFS_MISSION_LIST_UPCOMING, null);
@@ -709,7 +749,9 @@ public class ListPreferences {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
 
         //Get Previous Launches List
-        Gson gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
         List<Launch> launchList;
         SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         String previous = sharedPref.getString(PREFS_LIST_PREVIOUS, null);
@@ -918,7 +960,9 @@ public class ListPreferences {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
 
         //Get Previous Launches List
-        Gson gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
         List<Launch> launchList;
         SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         String upcoming = sharedPref.getString(PREFS_LIST_UPCOMING, null);
@@ -1212,4 +1256,32 @@ public class ListPreferences {
         return list;
     }
 
+    public class GsonDateDeSerializer implements JsonDeserializer<Date> {
+
+        private SimpleDateFormat format1 = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss a");
+        private SimpleDateFormat format2 = new SimpleDateFormat("HH:mm:ss");
+
+        @Override
+        public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            try {
+                String j = json.getAsJsonPrimitive().getAsString();
+                return parseDate(j);
+            } catch (ParseException e) {
+                throw new JsonParseException(e.getMessage(), e);
+            }
+        }
+
+        private Date parseDate(String dateString) throws ParseException {
+            if (dateString != null && dateString.trim().length() > 0) {
+                try {
+                    return format1.parse(dateString);
+                } catch (ParseException pe) {
+                    return format2.parse(dateString);
+                }
+            } else {
+                return null;
+            }
+        }
+
+    }
 }
