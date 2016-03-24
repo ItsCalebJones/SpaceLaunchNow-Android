@@ -1259,7 +1259,7 @@ public class ListPreferences {
     public class GsonDateDeSerializer implements JsonDeserializer<Date> {
 
         private SimpleDateFormat format1 = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss a");
-        private SimpleDateFormat format2 = new SimpleDateFormat("HH:mm:ss");
+        private SimpleDateFormat format2 = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss");
 
         @Override
         public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
