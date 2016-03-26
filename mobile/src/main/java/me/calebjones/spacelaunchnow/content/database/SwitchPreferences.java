@@ -4,6 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.onesignal.OneSignal;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -347,6 +352,21 @@ public class SwitchPreferences {
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_VAN, key);
         this.prefsEditor.apply();
+        JSONObject tags = new JSONObject();
+        if (key) {
+            try {
+                tags.put("Van", 1);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                tags.put("Van", 0);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        OneSignal.sendTags(tags);
     }
 
     //Nasa Switch
@@ -360,6 +380,21 @@ public class SwitchPreferences {
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_KSC, key);
         this.prefsEditor.apply();
+        JSONObject tags = new JSONObject();
+        if (key) {
+            try {
+                tags.put("KSC", 1);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                tags.put("KSC", 0);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        OneSignal.sendTags(tags);
     }
 
     //Nasa Switch
@@ -373,6 +408,21 @@ public class SwitchPreferences {
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_PLES, key);
         this.prefsEditor.apply();
+        JSONObject tags = new JSONObject();
+        if (key) {
+            try {
+                tags.put("Ples", 1);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                tags.put("Ples", 0);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        OneSignal.sendTags(tags);
     }
 
     //Nasa Switch
@@ -386,6 +436,21 @@ public class SwitchPreferences {
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_CAPE, key);
         this.prefsEditor.apply();
+        JSONObject tags = new JSONObject();
+        if (key) {
+            try {
+                tags.put("Cape", 1);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                tags.put("Cape", 0);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        OneSignal.sendTags(tags);
     }
 
     //Nasa Switch
@@ -399,6 +464,21 @@ public class SwitchPreferences {
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_NASA, key);
         this.prefsEditor.apply();
+        JSONObject tags = new JSONObject();
+        if (key) {
+            try {
+                tags.put("Nasa", 1);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                tags.put("Nasa", 0);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        OneSignal.sendTags(tags);
     }
 
     //SpaceX Switch
@@ -412,6 +492,21 @@ public class SwitchPreferences {
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_SPACEX, key);
         this.prefsEditor.apply();
+        JSONObject tags = new JSONObject();
+        if (key) {
+            try {
+                tags.put("SpaceX", 1);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                tags.put("SpaceX", 0);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        OneSignal.sendTags(tags);
     }
 
     //Roscosmos Switch
@@ -425,6 +520,21 @@ public class SwitchPreferences {
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_ROSCOSMOS, key);
         this.prefsEditor.apply();
+        JSONObject tags = new JSONObject();
+        if (key) {
+            try {
+                tags.put("Roscosmos", 1);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                tags.put("Roscosmos", 0);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        OneSignal.sendTags(tags);
     }
 
     //ULA Switch
@@ -438,6 +548,21 @@ public class SwitchPreferences {
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_ULA, key);
         this.prefsEditor.apply();
+        JSONObject tags = new JSONObject();
+        if (key) {
+            try {
+                tags.put("ULA", 1);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                tags.put("ULA", 0);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        OneSignal.sendTags(tags);
     }
 
     //Arianespace Switch
@@ -451,6 +576,21 @@ public class SwitchPreferences {
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_ARIANE, key);
         this.prefsEditor.apply();
+        JSONObject tags = new JSONObject();
+        if (key) {
+            try {
+                tags.put("Arianespace", 1);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                tags.put("Arianespace", 0);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        OneSignal.sendTags(tags);
     }
 
     //CASC Switch
@@ -464,6 +604,21 @@ public class SwitchPreferences {
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_CASC, key);
         this.prefsEditor.apply();
+        JSONObject tags = new JSONObject();
+        if (key) {
+            try {
+                tags.put("CASC", 1);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                tags.put("CASC", 0);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        OneSignal.sendTags(tags);
     }
 
     //ISRO Switch
@@ -477,6 +632,21 @@ public class SwitchPreferences {
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_ISRO, key);
         this.prefsEditor.apply();
+        JSONObject tags = new JSONObject();
+        if (key) {
+            try {
+                tags.put("ISRO", 1);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                tags.put("ISRO", 0);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        OneSignal.sendTags(tags);
     }
 
     //All Switch
@@ -492,6 +662,14 @@ public class SwitchPreferences {
         this.prefsEditor.apply();
         if (key) {
             resetSwitches();
+        } else {
+            JSONObject tags = new JSONObject();
+            try {
+                tags.put("all", 0);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            OneSignal.sendTags(tags);
         }
     }
 
@@ -507,6 +685,22 @@ public class SwitchPreferences {
         setSwitchKSC(true);
         setSwitchPles(true);
         setSwitchVan(true);
+        JSONObject tags = new JSONObject();
+        try {
+            tags.put("Nasa", 1);
+            tags.put("ISRO", 1);
+            tags.put("ROSCOSMOS", 1);
+            tags.put("ULA", 1);
+            tags.put("Arianespace", 1);
+            tags.put("KSC", 1);
+            tags.put("Ples", 1);
+            tags.put("Van", 1);
+            tags.put("SpaceX", 1);
+            tags.put("all", 1);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        OneSignal.sendTags(tags);
     }
 
 }

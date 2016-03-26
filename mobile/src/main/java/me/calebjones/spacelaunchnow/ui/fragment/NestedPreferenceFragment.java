@@ -8,6 +8,8 @@ import android.preference.PreferenceManager;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.widget.TextView;
 
+import com.onesignal.OneSignal;
+
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
@@ -60,6 +62,9 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
                     themeEditor.putBoolean("recreate", true);
                     themeEditor.apply();
                     NestedPreferenceFragment.this.getActivity().recreate();
+                }
+                if (key.equals("notifications_launch_imminent_updates")){
+                    OneSignal.setSubscription(this.valprefs.getBoolean(key, false));
                 }
             } catch (NullPointerException e) {
 

@@ -35,6 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -141,7 +142,7 @@ public class LaunchDataService extends IntentService implements
             if(listPreference.getDebugLaunch()){
                 url = new URL("http://calebjones.me/app/debug_launch.json");
             } else {
-                url = new URL(Strings.NEXT_URL);
+                url = new URL(String.format(Strings.NEXT_URL, listPreference.getNextLaunches().get(0).getId()));
             }
 
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -377,7 +378,7 @@ public class LaunchDataService extends IntentService implements
 
             /*Initialize array if null*/
             upcomingLaunchList = new ArrayList<>();
-            SimpleDateFormat df = new SimpleDateFormat("MMMM dd, yyyy kk:mm:ss zzz");
+            SimpleDateFormat df = new SimpleDateFormat("MMMM dd, yyyy kk:mm:ss zzz", Locale.US);
             df.toLocalizedPattern();
 
             JSONObject response = new JSONObject(result);
@@ -395,8 +396,6 @@ public class LaunchDataService extends IntentService implements
                 try {
                     launch.setLaunchDate(df.parse(launchesObj.optString("net")));
                 } catch (ParseException e) {
-                    Timber.e("%s", e.getLocalizedMessage());
-                    Crashlytics.logException(e);
                     launch.setLaunchDate(null);
                 }
                 launch.setWindowstart(launchesObj.optString("windowstart"));
@@ -528,7 +527,7 @@ public class LaunchDataService extends IntentService implements
 
             /*Initialize array if null*/
             previousLaunchList = new ArrayList<>();
-            SimpleDateFormat df = new SimpleDateFormat("MMMM dd, yyyy kk:mm:ss zzz");
+            SimpleDateFormat df = new SimpleDateFormat("MMMM dd, yyyy kk:mm:ss zzz", Locale.US);
             df.toLocalizedPattern();
 
             JSONObject response = new JSONObject(result);
@@ -547,8 +546,6 @@ public class LaunchDataService extends IntentService implements
                 try {
                     launch.setLaunchDate(df.parse(launchesObj.optString("net")));
                 } catch (ParseException e) {
-                    Timber.e("%s", e.getLocalizedMessage());
-                    Crashlytics.logException(e);
                     launch.setLaunchDate(null);
                 }
                 launch.setWindowstart(launchesObj.optString("windowstart"));

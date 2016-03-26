@@ -3,6 +3,8 @@ package me.calebjones.spacelaunchnow;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
@@ -32,6 +34,7 @@ public class LaunchApplication extends Application {
     public OkHttpClient client;
     private static ListPreferences sharedPreference;
     private SwitchPreferences switchPreferences;
+    private SharedPreferences sharedPref;
 
     public static synchronized LaunchApplication getInstance() {
         return mInstance;
@@ -45,14 +48,27 @@ public class LaunchApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         Fabric.with(this, new Crashlytics());
         LeakCanary.install(this);
         OneSignal.startInit(this).init();
+        OneSignal.enableNotificationsWhenActive(true);
+        OneSignal.enableInAppAlertNotification(true);
+        if (sharedPref.getBoolean("notifications_launch_imminent_updates", true)){
+            OneSignal.setSubscription(true);
+        } else {
+            OneSignal.setSubscription(false);
+        }
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
+            OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.ERROR);
         }
         mInstance = this;
 
+        ListPreferences.create(this);
+
+        sharedPreference = ListPreferences.getInstance(this);
+        switchPreferences = SwitchPreferences.getInstance(this);
         int cacheSize = 10 * 1024 * 1024;
         Cache cache = new Cache(getCacheDir(), cacheSize);
 
@@ -60,10 +76,6 @@ public class LaunchApplication extends Application {
                 .cache(cache)
                 .build();
 
-        ListPreferences.create(this);
-
-        sharedPreference = ListPreferences.getInstance(this);
-        switchPreferences = SwitchPreferences.getInstance(this);
 
         //TODO Ready reviews before release.
 //        DefaultRuleEngine.trackAppStart(this);

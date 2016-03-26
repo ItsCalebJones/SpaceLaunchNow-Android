@@ -32,5 +32,11 @@
             android:summaryOff="Do not notify when a launch is imminent."
             android:summaryOn="Receive notification when a launch is within one hour."
             android:title="Imminent Launch Notification" />
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="notifications_launch_imminent_updates"
+            android:summaryOff="Do not update when a launch is imminent."
+            android:summaryOn="Receive update notification for launch status changes."
+            android:title="Launch Status Updates" />
     </PreferenceCategory>
 </PreferenceScreen>

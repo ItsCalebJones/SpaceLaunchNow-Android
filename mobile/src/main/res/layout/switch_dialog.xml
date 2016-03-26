@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="New Opt-in Feature"
+        style="@style/Base.TextAppearance.AppCompat.Title"
+        android:textColor="@color/abc_primary_text_material_light" />
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/notification_switch"
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Launch Status Updates"/>
+    <TextView
+        android:id="@+id/custom_text_view"
+        android:text="This feature will provide updates when high profile launches are scrubbed or rescheduled near their launch window."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="Bug Fixes"
+        style="@style/Base.TextAppearance.AppCompat.Title"
+        android:textColor="@color/abc_primary_text_material_light" />
+    <TextView
+        android:text="@string/whats_new_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"/>
+</LinearLayout>

@@ -19,8 +19,10 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,8 +31,11 @@ import android.widget.ImageView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.Theme;
 import com.crashlytics.android.Crashlytics;
+import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
+import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
+import com.onesignal.OneSignal;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -43,9 +48,9 @@ import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.MissionDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
 import me.calebjones.spacelaunchnow.ui.activity.SettingsActivity;
+import me.calebjones.spacelaunchnow.ui.fragment.launches.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.NextLaunchFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.missions.MissionFragment;
-import me.calebjones.spacelaunchnow.ui.fragment.launches.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.fragment.vehicles.VehiclesViewPager;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
@@ -325,7 +330,7 @@ public class MainActivity extends AppCompatActivity
             });
 
             t.start();
-            if (Utils.getVersionName(context) != switchPreferences.getVersionCode()){
+            if (Utils.getVersionName(context) != switchPreferences.getVersionCode()) {
                 switchPreferences.setVersionCode(Utils.getVersionName(context));
                 showWhatsNew();
             }
@@ -334,40 +339,61 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showWhatsNew() {
-        Theme theme;
-        if(listPreferences.getNightMode()){
-            theme = Theme.DARK;
-        } else {
-            theme = Theme.LIGHT;
-        }
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View customView = inflater.inflate(R.layout.switch_dialog, null);
 
-        //TODO Update Every Release
-        new MaterialDialog.Builder(this)
-                .title(R.string.whats_new_title)
-                .content(R.string.whats_new_content)
-                .positiveText("Dismiss")
-                .negativeText("Feedback")
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
+        SwitchCompat switchButton = (SwitchCompat) customView.findViewById(R.id.notification_switch);
+        switchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit();
+                if (!PreferenceManager.getDefaultSharedPreferences(MainActivity.this)
+                        .getBoolean("notifications_launch_imminent_updates", false)) {
+                    editor.putBoolean("notifications_launch_imminent_updates", true);
+                    editor.apply();
+                    OneSignal.setSubscription(true);
+                } else {
+                    editor.putBoolean("notifications_launch_imminent_updates", false);
+                    editor.apply();
+                    OneSignal.setSubscription(false);
+                }
+            }
+        });
+        switchButton.setChecked(PreferenceManager.getDefaultSharedPreferences(MainActivity.this)
+                .getBoolean("notifications_launch_imminent_updates", false));
+
+        MaterialStyledDialog dialog = new MaterialStyledDialog(this)
+                .withIconAnimation(false)
+                .withDialogAnimation(true)
+                .setIcon(new IconicsDrawable(context).icon(MaterialDesignIconic.Icon.gmi_info).color(Color.WHITE))
+                .setTitle(getResources().getString(R.string.whats_new_title))
+                .setScrollable(true)
+                .setPositive("Dismiss", new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onClick(@NonNull MaterialDialog dialog,
-                                        @NonNull DialogAction which) {
+                    public void onClick(MaterialDialog dialog, DialogAction which) {
                         dialog.dismiss();
                     }
                 })
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                .setNegative("Feedback", new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onClick(@NonNull MaterialDialog dialog,
-                                        @NonNull DialogAction which) {
-                        String url = "https://www.reddit.com/r/spacelaunchnow";
-                        Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(url));
-                        startActivity(i);
+                    public void onClick(MaterialDialog dialog, DialogAction which) {
+                        Utils.openCustomTab(MainActivity.this, context, "https://www.reddit.com/r/spacelaunchnow");
                     }
                 })
-                .theme(theme)
-                .autoDismiss(false)
-                .icon(ContextCompat.getDrawable(context, R.mipmap.ic_launcher))
-                .show();
+                .setCustomView(customView);
+
+        if (listPreferences.getNightMode())
+
+        {
+            dialog.setHeaderColor(R.color.darkPrimary);
+        } else
+
+        {
+            dialog.setHeaderColor(R.color.colorPrimary);
+        }
+
+        dialog.show();
+
     }
 
     private void refreshLaunches() {
