@@ -11,8 +11,6 @@ import com.crashlytics.android.Crashlytics;
 import com.onesignal.OneSignal;
 import com.squareup.leakcanary.LeakCanary;
 
-import net.mediavrog.irr.DefaultRuleEngine;
-
 import io.fabric.sdk.android.Fabric;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
@@ -98,9 +96,7 @@ public class LaunchApplication extends Application {
                     this.startService(launchIntent);
 
                     this.startService(new Intent(this, MissionDataService.class));
-                } else if (Utils.getVersionName(this) != switchPreferences.getVersionCode()){
-                    switchPreferences.setVersionCode(Utils.getVersionName(this));
-
+                } else if (Utils.getVersionCode(this) != switchPreferences.getVersionCode()){
                         Intent launchIntent = new Intent(this, LaunchDataService.class);
                         launchIntent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
                         launchIntent.putExtra("URL", Utils.getBaseURL());

@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.text.format.DateFormat;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -379,7 +381,6 @@ public class LaunchDataService extends IntentService implements
             /*Initialize array if null*/
             upcomingLaunchList = new ArrayList<>();
             SimpleDateFormat df = new SimpleDateFormat("MMMM dd, yyyy kk:mm:ss zzz", Locale.US);
-            df.toLocalizedPattern();
 
             JSONObject response = new JSONObject(result);
             JSONArray launchesArray = response.optJSONArray("launches");
@@ -396,6 +397,11 @@ public class LaunchDataService extends IntentService implements
                 try {
                     launch.setLaunchDate(df.parse(launchesObj.optString("net")));
                 } catch (ParseException e) {
+                    Timber.e("%s", e.getLocalizedMessage());
+                    Crashlytics.logException(e);
+                    Crashlytics.setString("Timezone", String.valueOf(TimeZone.getDefault()));
+                    Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
+                    Crashlytics.setBool("is24", DateFormat.is24HourFormat(getApplicationContext()));
                     launch.setLaunchDate(null);
                 }
                 launch.setWindowstart(launchesObj.optString("windowstart"));
@@ -528,7 +534,6 @@ public class LaunchDataService extends IntentService implements
             /*Initialize array if null*/
             previousLaunchList = new ArrayList<>();
             SimpleDateFormat df = new SimpleDateFormat("MMMM dd, yyyy kk:mm:ss zzz", Locale.US);
-            df.toLocalizedPattern();
 
             JSONObject response = new JSONObject(result);
             JSONArray launchesArray = response.optJSONArray("launches");
@@ -546,6 +551,11 @@ public class LaunchDataService extends IntentService implements
                 try {
                     launch.setLaunchDate(df.parse(launchesObj.optString("net")));
                 } catch (ParseException e) {
+                    Timber.e("%s", e.getLocalizedMessage());
+                    Crashlytics.setString("Timezone", String.valueOf(TimeZone.getDefault()));
+                    Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
+                    Crashlytics.setBool("is24", DateFormat.is24HourFormat(getApplicationContext()));
+                    Crashlytics.logException(e);
                     launch.setLaunchDate(null);
                 }
                 launch.setWindowstart(launchesObj.optString("windowstart"));

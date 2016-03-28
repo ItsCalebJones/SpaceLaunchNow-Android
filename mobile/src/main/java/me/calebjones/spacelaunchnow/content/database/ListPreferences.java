@@ -3,7 +3,9 @@ package me.calebjones.spacelaunchnow.content.database;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.format.DateFormat;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -20,7 +22,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
+import io.fabric.sdk.android.services.common.Crash;
 import me.calebjones.spacelaunchnow.content.models.Agency;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.RocketDetails;
@@ -906,42 +911,42 @@ public class ListPreferences {
                         key.set(x, "1");
                     } else if (key.get(x).contains("Taiyuan")) {
                         key.set(x, "2");
-                    }  else if (key.get(x).contains("Xichang")) {
+                    } else if (key.get(x).contains("Xichang")) {
                         key.set(x, "86");
-                    }  else if (key.get(x).contains("Wechang")) {
+                    } else if (key.get(x).contains("Wechang")) {
                         key.set(x, "33");
-                    }  else if (key.get(x).contains("Kourou")) {
+                    } else if (key.get(x).contains("Kourou")) {
                         key.set(x, "3");
-                    }  else if (key.get(x).contains("Sriharikota")) {
+                    } else if (key.get(x).contains("Sriharikota")) {
                         key.set(x, "5");
-                    }  else if (key.get(x).contains("Kagoshima")) {
+                    } else if (key.get(x).contains("Kagoshima")) {
                         key.set(x, "8");
-                    }  else if (key.get(x).contains("Tanegashima")) {
+                    } else if (key.get(x).contains("Tanegashima")) {
                         key.set(x, "9");
-                    }  else if (key.get(x).contains("Baikonur")) {
+                    } else if (key.get(x).contains("Baikonur")) {
                         key.set(x, "10");
-                    }  else if (key.get(x).contains("Plesetsk")) {
+                    } else if (key.get(x).contains("Plesetsk")) {
                         key.set(x, "11");
-                    }  else if (key.get(x).contains("Kapustin")) {
+                    } else if (key.get(x).contains("Kapustin")) {
                         key.set(x, "12");
-                    }  else if (key.get(x).contains("Svobodney")) {
+                    } else if (key.get(x).contains("Svobodney")) {
                         key.set(x, "13");
-                    }  else if (key.get(x).contains("Sea")) {
+                    } else if (key.get(x).contains("Sea")) {
                         key.set(x, "15");
-                    }  else if (key.get(x).contains("Woomera")) {
+                    } else if (key.get(x).contains("Woomera")) {
                         key.set(x, "20");
-                    }  else if (key.get(x).contains("Kiatorete")) {
+                    } else if (key.get(x).contains("Kiatorete")) {
                         key.set(x, "24");
-                    }  else if (key.get(x).contains("Kodiak")) {
+                    } else if (key.get(x).contains("Kodiak")) {
                         key.set(x, "32");
-                    }  else if (key.get(x).contains("Ohae")) {
+                    } else if (key.get(x).contains("Ohae")) {
                         key.set(x, "29");
                     } else {
                         Timber.v("Unable to find matching ID for key");
                         break;
                     }
                     for (int i = 0; i < size; i++) {
-                        if (launchList.get(i).getLocation().getId().toString().equals(key.get(x))){
+                        if (launchList.get(i).getLocation().getId().toString().equals(key.get(x))) {
                             newList.add(launchList.get(i));
                         }
                     }
@@ -950,7 +955,7 @@ public class ListPreferences {
         }
         Collections.sort(newList, new Comparator<Launch>() {
             public int compare(Launch m1, Launch m2) {
-                return m2.getLaunchDate().compareTo(m1.getLaunchDate());
+                return m2.getNetstamp() - m1.getNetstamp();
             }
         });
         this.setPreviousLaunchesFiltered(newList);
@@ -1122,42 +1127,42 @@ public class ListPreferences {
                         key.set(x, "1");
                     } else if (key.get(x).contains("Taiyuan")) {
                         key.set(x, "2");
-                    }  else if (key.get(x).contains("Xichang")) {
+                    } else if (key.get(x).contains("Xichang")) {
                         key.set(x, "86");
-                    }  else if (key.get(x).contains("Wechang")) {
+                    } else if (key.get(x).contains("Wechang")) {
                         key.set(x, "33");
-                    }  else if (key.get(x).contains("Kourou")) {
+                    } else if (key.get(x).contains("Kourou")) {
                         key.set(x, "3");
-                    }  else if (key.get(x).contains("Sriharikota")) {
+                    } else if (key.get(x).contains("Sriharikota")) {
                         key.set(x, "5");
-                    }  else if (key.get(x).contains("Kagoshima")) {
+                    } else if (key.get(x).contains("Kagoshima")) {
                         key.set(x, "8");
-                    }  else if (key.get(x).contains("Tanegashima")) {
+                    } else if (key.get(x).contains("Tanegashima")) {
                         key.set(x, "9");
-                    }  else if (key.get(x).contains("Baikonur")) {
+                    } else if (key.get(x).contains("Baikonur")) {
                         key.set(x, "10");
-                    }  else if (key.get(x).contains("Plesetsk")) {
+                    } else if (key.get(x).contains("Plesetsk")) {
                         key.set(x, "11");
-                    }  else if (key.get(x).contains("Kapustin")) {
+                    } else if (key.get(x).contains("Kapustin")) {
                         key.set(x, "12");
-                    }  else if (key.get(x).contains("Svobodney")) {
+                    } else if (key.get(x).contains("Svobodney")) {
                         key.set(x, "13");
-                    }  else if (key.get(x).contains("Sea")) {
+                    } else if (key.get(x).contains("Sea")) {
                         key.set(x, "15");
-                    }  else if (key.get(x).contains("Woomera")) {
+                    } else if (key.get(x).contains("Woomera")) {
                         key.set(x, "20");
-                    }  else if (key.get(x).contains("Kiatorete")) {
+                    } else if (key.get(x).contains("Kiatorete")) {
                         key.set(x, "24");
-                    }  else if (key.get(x).contains("Kodiak")) {
+                    } else if (key.get(x).contains("Kodiak")) {
                         key.set(x, "32");
-                    }  else if (key.get(x).contains("Ohae")) {
+                    } else if (key.get(x).contains("Ohae")) {
                         key.set(x, "29");
                     } else {
                         Timber.v("Unable to find matching ID for key");
                         break;
                     }
                     for (int i = 0; i < size; i++) {
-                        if (launchList.get(i).getLocation().getId().toString().equals(key.get(x))){
+                        if (launchList.get(i).getLocation().getId().toString().equals(key.get(x))) {
                             newList.add(launchList.get(i));
                         }
                     }
@@ -1166,6 +1171,8 @@ public class ListPreferences {
         }
         Collections.sort(newList, new Comparator<Launch>() {
             public int compare(Launch m1, Launch m2) {
+                if (m1.getLaunchDate() == null || m2.getLaunchDate() == null)
+                    return 1;
                 return m1.getLaunchDate().compareTo(m2.getLaunchDate());
             }
         });
@@ -1258,16 +1265,21 @@ public class ListPreferences {
 
     public class GsonDateDeSerializer implements JsonDeserializer<Date> {
 
-        private SimpleDateFormat format1 = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss a");
-        private SimpleDateFormat format2 = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss");
+        private SimpleDateFormat format1 = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss a", Locale.US);
+        private SimpleDateFormat format2 = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss", Locale.US);
 
         @Override
         public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             try {
                 String j = json.getAsJsonPrimitive().getAsString();
-                return parseDate(j);
+                Date date = parseDate(j);
+                return date;
             } catch (ParseException e) {
-                throw new JsonParseException(e.getMessage(), e);
+                Crashlytics.setString("Timezone", String.valueOf(TimeZone.getDefault()));
+                Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
+                Crashlytics.setBool("is24", DateFormat.is24HourFormat(appContext));
+                Crashlytics.logException(new JsonParseException(e.getMessage(), e));
+                return null;
             }
         }
 
