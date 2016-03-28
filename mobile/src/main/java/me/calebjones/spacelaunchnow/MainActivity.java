@@ -330,10 +330,6 @@ public class MainActivity extends AppCompatActivity
             });
 
             t.start();
-            if (Utils.getVersionName(context) != switchPreferences.getVersionCode()) {
-                switchPreferences.setVersionCode(Utils.getVersionName(context));
-                showWhatsNew();
-            }
             navigate(mNavItemId);
         }
     }
@@ -422,6 +418,10 @@ public class MainActivity extends AppCompatActivity
             editor.putBoolean("recreate", false);
             editor.apply();
             recreate();
+        }
+        if (Utils.getVersionCode(context) != switchPreferences.getVersionCode()) {
+            switchPreferences.setVersionCode(Utils.getVersionCode(context));
+            showWhatsNew();
         }
     }
 

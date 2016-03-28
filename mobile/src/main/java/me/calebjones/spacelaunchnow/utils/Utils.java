@@ -394,7 +394,7 @@ public class Utils {
         }
     }
 
-    public static int getVersionName(Context context)
+    public static int getVersionCode(Context context)
     {
         try {
             ComponentName comp = new ComponentName(context, context.getClass());
