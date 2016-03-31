@@ -68,7 +68,6 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
 
         sharedPreference = ListPreferences.getInstance(this.context);
 
-
         if (sharedPreference.getNightMode()) {
             view = inflater.inflate(R.layout.dark_launch_summary, container, false);
         } else {
@@ -168,7 +167,7 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
                 break;
         }
 
-        if (detailLaunch.getVidURL() != null && detailLaunch.getVidURL().length() > 0 && !detailLaunch.getVidURL().contains("null")){
+        if (detailLaunch.getVidURL() != null && detailLaunch.getVidURL().length() > 0 && detailLaunch.getVidURL().contains("http")){
             watchButton.setVisibility(View.VISIBLE);
             watchButton.setOnClickListener(new View.OnClickListener() {
                 @Override

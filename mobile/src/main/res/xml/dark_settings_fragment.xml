@@ -15,4 +15,9 @@
         android:key="appearance"
         android:layout="@layout/dark_settings_appearance_layout"
         android:title="Appearance" />
+    <Preference
+        android:persistent="false"
+        android:key="wear"
+        android:layout="@layout/dark_settings_wear_layout"
+        android:title="Wear" />
 </PreferenceScreen>

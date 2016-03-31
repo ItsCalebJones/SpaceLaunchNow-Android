@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen android:title="Wear"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Watch Face">
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="wear_hour_mode"
+        android:summaryOff="Allow Notifications for upcoming launches."
+        android:summaryOn="Notifications are on for upcoming launches."
+        android:title="Watch Hour Mode" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

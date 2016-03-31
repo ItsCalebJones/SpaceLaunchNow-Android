@@ -164,7 +164,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingBottom="8dp"
+                android:paddingBottom="4dp"
                 android:paddingLeft="28dp"
                 android:paddingRight="28dp"
                 android:paddingTop="8dp">
@@ -182,15 +182,16 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:gravity="left"
-                        android:paddingBottom="8dp"
+                        android:paddingBottom="4dp"
                         android:paddingTop="4dp"
                         android:singleLine="false"
                         android:text="Unknown Launch Status"
                         android:textAlignment="center"
                         android:textColor="?android:textColorSecondary"
-                        android:textSize="16sp"
+                        android:textSize="20dp"
+                        android:theme="@style/LightTheme"
                         android:textStyle="bold"
-                        android:theme="@style/LightTheme" />
+                        android:textIsSelectable="false" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -210,7 +211,7 @@
                         android:text="Unknown CountDown Status"
                         android:textAlignment="center"
                         android:textColor="?android:textColorSecondary"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         android:theme="@style/LightTheme" />
 
                 </LinearLayout>
