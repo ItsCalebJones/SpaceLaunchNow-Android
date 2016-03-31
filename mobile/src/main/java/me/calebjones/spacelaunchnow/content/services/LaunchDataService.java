@@ -164,7 +164,7 @@ public class LaunchDataService extends IntentService implements
                 while ((line = r.readLine()) != null) {
                     response.append(line);
                 }
-                parseUpcomingResult(response.toString());
+                upcomingLaunchList = parseResult(response.toString(), upcomingLaunchList);
 
                 if (BuildConfig.DEBUG) {
                     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
@@ -201,7 +201,7 @@ public class LaunchDataService extends IntentService implements
 
         } catch (Exception e) {
             Timber.e("LaunchDataService - updateNextLaunch ERROR: %s", e.getLocalizedMessage());
-            Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to update next launch: " + e.getLocalizedMessage());
+            Crashlytics.logException(e);
 
             if (BuildConfig.DEBUG) {
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
@@ -213,6 +213,10 @@ public class LaunchDataService extends IntentService implements
                         getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
                 mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
             }
+
+            Intent broadcastIntent = new Intent();
+            broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
+            LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
         }
     }
 
@@ -243,7 +247,7 @@ public class LaunchDataService extends IntentService implements
                     response.append(line);
                 }
 
-                parsePreviousResult(response.toString());
+                previousLaunchList = parseResult(response.toString(), previousLaunchList);
 
                 Timber.d("LaunchDataService - Previous Launches list:  %s ", previousLaunchList.size());
 
@@ -272,8 +276,7 @@ public class LaunchDataService extends IntentService implements
 
         } catch (Exception e) {
             Timber.e("LaunchDataService - getPreviousLaunches ERROR: %s", e.getLocalizedMessage());
-
-            Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to retrieve previous launches: " + e.getLocalizedMessage());
+            Crashlytics.logException(e);
 
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_FAILURE_PREV_LAUNCHES);
@@ -282,7 +285,6 @@ public class LaunchDataService extends IntentService implements
     }
 
     private void getUpcomingLaunches() {
-        LaunchDataService.this.cleanCacheUpcoming();
         HttpURLConnection urlConnection;
         try {
             /* forming th java.net.URL object */
@@ -312,7 +314,7 @@ public class LaunchDataService extends IntentService implements
                 while ((line = r.readLine()) != null) {
                     response.append(line);
                 }
-                parseUpcomingResult(response.toString());
+                upcomingLaunchList = parseResult(response.toString(), upcomingLaunchList);
 
                 if (BuildConfig.DEBUG) {
                     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
@@ -325,6 +327,7 @@ public class LaunchDataService extends IntentService implements
                     mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
                 }
 
+                LaunchDataService.this.cleanCacheUpcoming();
                 this.listPreference.setUpComingLaunches(upcomingLaunchList);
 //                this.listPreference.syncUpcomingMissions();
 
@@ -348,7 +351,7 @@ public class LaunchDataService extends IntentService implements
 
         } catch (Exception e) {
             Timber.e("LaunchDataService - getUpcomingLaunches ERROR: %s", e.getLocalizedMessage());
-            Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to retrieve upcoming launches: " + e.getLocalizedMessage());
+            Crashlytics.logException(e);
 
             if (BuildConfig.DEBUG) {
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
@@ -375,164 +378,11 @@ public class LaunchDataService extends IntentService implements
         this.listPreference.removePreviousLaunches();
     }
 
-    public void parseUpcomingResult(String result) throws JSONException {
+    public List<Launch> parseResult(String result, List<Launch> list) throws JSONException {
         try {
 
             /*Initialize array if null*/
-            upcomingLaunchList = new ArrayList<>();
-            SimpleDateFormat df = new SimpleDateFormat("MMMM dd, yyyy kk:mm:ss zzz", Locale.US);
-
-            JSONObject response = new JSONObject(result);
-            JSONArray launchesArray = response.optJSONArray("launches");
-
-            for (int i = 0; i < launchesArray.length(); i++) {
-                JSONObject launchesObj = launchesArray.optJSONObject(i);
-                JSONObject rocketObj = launchesObj.optJSONObject("rocket");
-                JSONObject locationObj = launchesObj.optJSONObject("location");
-                Launch launch = new Launch();
-
-                launch.setName(launchesObj.optString("name"));
-                launch.setId(launchesObj.optInt("id"));
-                launch.setNet(launchesObj.optString("net"));
-                try {
-                    launch.setLaunchDate(df.parse(launchesObj.optString("net")));
-                } catch (ParseException e) {
-                    Timber.e("%s", e.getLocalizedMessage());
-                    Crashlytics.logException(e);
-                    Crashlytics.setString("Timezone", String.valueOf(TimeZone.getDefault()));
-                    Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
-                    Crashlytics.setBool("is24", DateFormat.is24HourFormat(getApplicationContext()));
-                    launch.setLaunchDate(null);
-                }
-                launch.setWindowstart(launchesObj.optString("windowstart"));
-                launch.setWindowend(launchesObj.optString("windowend"));
-                launch.setNetstamp(launchesObj.optInt("netstamp"));
-                launch.setWsstamp(launchesObj.optInt("wsstamp"));
-                launch.setWestamp(launchesObj.optInt("westamp"));
-                launch.setStatus(launchesObj.optInt("status"));
-                //TODO remove later once 1.2 is stable
-//                launch.setVidURL(launchesObj.optString("vidURL"));
-                JSONArray vidURLs = launchesObj.getJSONArray("vidURLs");
-                if (vidURLs.length() > 0){
-                    launch.setVidURL(vidURLs.get(0).toString());
-                    ArrayList<String> listData = new ArrayList<String>();
-                    if (vidURLs != null) {
-                        for (int o=0;o<vidURLs.length();o++){
-                            listData.add(vidURLs.get(o).toString());
-                        }
-                        launch.setVidURLs(listData);
-                    }
-                }
-
-                //Start Parsing Rockets
-                if (rocketObj != null) {
-                    RocketAgency rocketAgency = new RocketAgency();
-                    Rocket rocket = new Rocket();
-                    rocket.setId(rocketObj.optInt("id"));
-                    rocket.setName(rocketObj.optString("name", ""));
-                    rocket.setFamilyname(rocketObj.optString("familyname", ""));
-                    rocket.setConfiguration(rocketObj.optString("configuration", ""));
-                    rocket.setImageURL(rocketObj.optString("imageURL"));
-
-                    JSONArray agencies = rocketObj.optJSONArray("agencies");
-                    if (agencies != null) {
-                        List<RocketAgency> rocketList = new ArrayList<>();
-                        for (int a = 0; a < agencies.length(); a++) {
-                            JSONObject agencyObj = agencies.optJSONObject(a);
-                            rocketAgency.setId(agencyObj.optInt("id"));
-                            rocketAgency.setName(agencyObj.optString("name"));
-                            rocketAgency.setAbbrev(agencyObj.optString("abbrev"));
-                            rocketAgency.setCountryCode(agencyObj.optString("countryCode"));
-                            rocketAgency.setType(agencyObj.optInt("type"));
-                            rocketAgency.setInfoURL(agencyObj.optString("infoURL"));
-                            rocketAgency.setWikiURL(agencyObj.optString("wikiURL"));
-
-                            rocketList.add(rocketAgency);
-                        }
-                        rocket.setAgencies(rocketList);
-                    }
-                    launch.setRocket(rocket);
-                }
-
-                //Start Parsing Locations
-                if (locationObj != null) {
-                    JSONArray pads = locationObj.optJSONArray("pads");
-                    Location location = new Location();
-
-                    if (pads != null) {
-                        List<Pad> locationPadsList = new ArrayList<>();
-                        for (int a = 0; a < pads.length(); a++) {
-                            JSONObject padsObj = pads.optJSONObject(a);
-                            location.setId(locationObj.optInt("id"));
-                            location.setName(locationObj.optString("name"));
-                            Pad locationPads = new Pad();
-                            locationPads.setName(padsObj.optString("name"));
-                            locationPads.setId(padsObj.optInt("id"));
-                            locationPads.setLatitude(padsObj.optDouble("latitude"));
-                            locationPads.setLongitude(padsObj.optDouble("longitude"));
-                            locationPads.setMapURL(padsObj.optString("mapURL"));
-                            locationPads.setInfoURL(padsObj.optString("infoURL"));
-                            locationPads.setWikiURL(padsObj.optString("wikiURL"));
-
-                            JSONArray padAgencies = padsObj.optJSONArray("agencies");
-                            if (padAgencies != null) {
-                                List<LocationAgency> locationAgencies = new ArrayList<>();
-                                for (int b = 0; b < padAgencies.length(); b++) {
-                                    JSONObject padAgenciesObj = padAgencies.optJSONObject(b);
-                                    LocationAgency locationAgency = new LocationAgency();
-                                    locationAgency.setName(padAgenciesObj.optString("name"));
-                                    locationAgency.setId(padAgenciesObj.optInt("id"));
-                                    locationAgency.setAbbrev(padAgenciesObj.optString("abbrev"));
-                                    locationAgency.setCountryCode(padAgenciesObj
-                                            .optString("countryCode"));
-                                    locationAgency.setType(padAgenciesObj.optInt("type"));
-                                    locationAgency.setInfoURL(padAgenciesObj.optString("infoURL"));
-                                    locationAgency.setWikiURL(padAgenciesObj.optString("wikiURL"));
-
-                                    locationAgencies.add(locationAgency);
-                                }
-                                locationPads.setAgencies(locationAgencies);
-                            }
-                            locationPadsList.add(locationPads);
-                        }
-                        location.setPads(locationPadsList);
-                    }
-                    launch.setLocation(location);
-                }
-
-                // Start parsing Missions
-                JSONArray missions = launchesObj.optJSONArray("missions");
-                if (missions != null) {
-                    List<Mission> missionList = new ArrayList<>();
-                    for (int c = 0; c < missions.length(); c++) {
-                        JSONObject missionObj = missions.optJSONObject(c);
-                        Mission mission = new Mission();
-                        mission.setId(missionObj.optInt("id"));
-                        mission.setType(missionObj.optInt("type"));
-                        mission.setTypeName(Utils.getTypeName(missionObj.optInt("type")));
-                        mission.setName(missionObj.optString("name"));
-                        mission.setDescription(missionObj.optString("description"));
-
-                        missionList.add(mission);
-                    }
-                    launch.setMissions(missionList);
-                }
-
-                Timber.v("Adding launch %s", launch.getName());
-                upcomingLaunchList.add(launch);
-            }
-        } catch (JSONException e) {
-            Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to parse upcoming results: " + e.getLocalizedMessage());
-            Timber.v("parseUpcomingResult - ERROR: %s", e.getLocalizedMessage());
-            e.printStackTrace();
-        }
-    }
-
-    public void parsePreviousResult(String result) throws JSONException {
-        try {
-
-            /*Initialize array if null*/
-            previousLaunchList = new ArrayList<>();
+            list = new ArrayList<>();
             SimpleDateFormat df = new SimpleDateFormat("MMMM dd, yyyy kk:mm:ss zzz", Locale.US);
 
             JSONObject response = new JSONObject(result);
@@ -552,9 +402,6 @@ public class LaunchDataService extends IntentService implements
                     launch.setLaunchDate(df.parse(launchesObj.optString("net")));
                 } catch (ParseException e) {
                     Timber.e("%s", e.getLocalizedMessage());
-                    Crashlytics.setString("Timezone", String.valueOf(TimeZone.getDefault()));
-                    Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
-                    Crashlytics.setBool("is24", DateFormat.is24HourFormat(getApplicationContext()));
                     Crashlytics.logException(e);
                     launch.setLaunchDate(null);
                 }
@@ -564,7 +411,6 @@ public class LaunchDataService extends IntentService implements
                 launch.setWsstamp(launchesObj.optInt("wsstamp"));
                 launch.setWestamp(launchesObj.optInt("westamp"));
                 launch.setStatus(launchesObj.optInt("status"));
-//                launch.setVidURL(launchesObj.optString("vidURL"));
                 JSONArray vidURLs = launchesObj.getJSONArray("vidURLs");
                 if (vidURLs.length() > 0){
                     launch.setVidURL(vidURLs.get(0).toString());
@@ -676,12 +522,14 @@ public class LaunchDataService extends IntentService implements
                 }
 
                 if (launch.getStatus() != 1-2){
-                    previousLaunchList.add(launch);
+                    list.add(launch);
                 }
             }
+            return list;
         } catch (JSONException e) {
-            Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to parse previous results: " + e.getLocalizedMessage());
+            Crashlytics.logException(e);
             e.printStackTrace();
+            return null;
         }
     }
 

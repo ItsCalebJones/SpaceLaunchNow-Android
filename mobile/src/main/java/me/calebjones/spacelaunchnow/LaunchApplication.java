@@ -6,10 +6,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.text.format.DateFormat;
 
 import com.crashlytics.android.Crashlytics;
 import com.onesignal.OneSignal;
 import com.squareup.leakcanary.LeakCanary;
+
+import java.util.Locale;
+import java.util.TimeZone;
 
 import io.fabric.sdk.android.Fabric;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
@@ -47,7 +51,13 @@ public class LaunchApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        //Init Crashlytics and gather device information.
         Fabric.with(this, new Crashlytics());
+        Crashlytics.setString("Timezone", String.valueOf(TimeZone.getDefault()));
+        Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
+        Crashlytics.setBool("is24", DateFormat.is24HourFormat(getApplicationContext()));
+
         LeakCanary.install(this);
         OneSignal.startInit(this).init();
         OneSignal.enableNotificationsWhenActive(true);

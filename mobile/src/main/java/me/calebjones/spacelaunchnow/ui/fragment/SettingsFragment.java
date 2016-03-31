@@ -15,6 +15,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements OnPref
     private static final String NOTIFICATIONS = "notifications";
     private static final String LAUNCH_TRACKING_OPTIONS = "launch_tracking_options";
     private static final String APPEARANCE = "appearance";
+    private static final String WEAR = "wear";
     
     private static ListPreferences sharedPreference;
     private Context context;
@@ -30,6 +31,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements OnPref
         }
         if (preference.getKey().equals(APPEARANCE)) {
             mCallback.onNestedPreferenceSelected(3);
+        }
+        if (preference.getKey().equals(WEAR)) {
+            mCallback.onNestedPreferenceSelected(4);
         }
         return false;
     }
@@ -60,6 +64,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements OnPref
         findPreference(NOTIFICATIONS).setOnPreferenceClickListener(this);
         findPreference(LAUNCH_TRACKING_OPTIONS).setOnPreferenceClickListener(this);
         findPreference(APPEARANCE).setOnPreferenceClickListener(this);
+        findPreference(WEAR).setOnPreferenceClickListener(this);
     }
 
     @Override

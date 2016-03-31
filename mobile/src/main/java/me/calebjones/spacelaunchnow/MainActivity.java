@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
+import com.github.javiersantos.materialstyleddialogs.enums.Style;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.onesignal.OneSignal;
@@ -124,6 +126,10 @@ public class MainActivity extends AppCompatActivity
                         if (mMissionFragment.isVisible()) {
                             mMissionFragment.onFinishedRefreshing();
                         }
+                    }
+                } else if (Strings.ACTION_FAILURE_UP_LAUNCHES.equals(action)) {
+                    if (mNavItemId == R.id.menu_next_launch){
+                        mUpcomingFragment.hideLoading();
                     }
                 }
             }
@@ -337,8 +343,9 @@ public class MainActivity extends AppCompatActivity
     private void showWhatsNew() {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.switch_dialog, null);
+        View nightView = inflater.inflate(R.layout.switch_dialog_night, null);
 
-        SwitchCompat switchButton = (SwitchCompat) customView.findViewById(R.id.notification_switch);
+        SwitchCompat switchButton = (SwitchCompat) customView.findViewById(R.id.notification_switch_status);
         switchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -358,6 +365,24 @@ public class MainActivity extends AppCompatActivity
         switchButton.setChecked(PreferenceManager.getDefaultSharedPreferences(MainActivity.this)
                 .getBoolean("notifications_launch_imminent_updates", false));
 
+        SwitchCompat switchNotificationButton = (SwitchCompat) customView.findViewById(R.id.notification_switch_minute);
+        switchNotificationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences.Editor minuteEditor = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit();
+                if (!PreferenceManager.getDefaultSharedPreferences(MainActivity.this)
+                        .getBoolean("notifications_launch_minute", false)) {
+                    minuteEditor.putBoolean("notifications_launch_minute", true);
+                    minuteEditor.apply();
+                } else {
+                    minuteEditor.putBoolean("notifications_launch_minute", false);
+                    minuteEditor.apply();
+                }
+            }
+        });
+        switchNotificationButton.setChecked(PreferenceManager.getDefaultSharedPreferences(MainActivity.this)
+                .getBoolean("notifications_launch_minute", false));
+
         MaterialStyledDialog dialog = new MaterialStyledDialog(this)
                 .withIconAnimation(false)
                 .withDialogAnimation(true)
@@ -375,17 +400,19 @@ public class MainActivity extends AppCompatActivity
                     public void onClick(MaterialDialog dialog, DialogAction which) {
                         Utils.openCustomTab(MainActivity.this, context, "https://www.reddit.com/r/spacelaunchnow");
                     }
-                })
-                .setCustomView(customView);
+                });
 
         if (listPreferences.getNightMode())
 
         {
+
             dialog.setHeaderColor(R.color.darkPrimary);
+            dialog.setCustomView(nightView);
         } else
 
         {
             dialog.setHeaderColor(R.color.colorPrimary);
+            dialog.setCustomView(customView);
         }
 
         dialog.show();
@@ -624,6 +651,4 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
-
-
 }
