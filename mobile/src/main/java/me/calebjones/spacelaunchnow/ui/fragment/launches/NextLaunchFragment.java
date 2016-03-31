@@ -41,6 +41,8 @@ import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.LaunchBigAdapter;
+import me.calebjones.spacelaunchnow.content.adapter.LaunchCompactAdapter;
+import me.calebjones.spacelaunchnow.content.adapter.LaunchSmallAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Launch;
@@ -76,9 +78,11 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     AppCompatCheckBox isroSwitch;
     @Bind(R.id.all_switch)
     AppCompatCheckBox customSwitch;
+
     private View view;
     private SuperRecyclerView mRecyclerView;
     private LaunchBigAdapter adapter;
+    private LaunchSmallAdapter smallAdapter;
     private StaggeredGridLayoutManager layoutManager;
     private LinearLayoutManager linearLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -91,6 +95,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     private Context context;
     private boolean active;
     private boolean switchChanged;
+    private boolean cardSizeSmall;
 
     public NextLaunchFragment() {
         // Required empty public constructor
@@ -100,10 +105,6 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         super.onCreate(savedInstanceState);
         sharedPreference = ListPreferences.getInstance(getActivity().getApplication());
         switchPreferences = SwitchPreferences.getInstance(getActivity().getApplication());
-        rocketLaunches = new ArrayList();
-        if (adapter == null) {
-            adapter = new LaunchBigAdapter(getActivity().getApplicationContext(), getActivity());
-        }
     }
 
 
@@ -114,6 +115,17 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         context = getActivity().getApplicationContext();
         final int color;
         active = false;
+
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        rocketLaunches = new ArrayList();
+        cardSizeSmall = sharedPref.getBoolean("card_size_small", false);
+        if (cardSizeSmall) {
+            smallAdapter = new LaunchSmallAdapter(getActivity());
+        } else {
+            if (adapter == null) {
+                adapter = new LaunchBigAdapter(getActivity().getApplicationContext(), getActivity());
+            }
+        }
 
         if (sharedPreference.getNightMode()) {
             color = R.color.darkPrimary;
@@ -196,7 +208,12 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
             linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
             mRecyclerView.setLayoutManager(linearLayoutManager);
         }
-        mRecyclerView.setAdapter(adapter);
+
+        if (cardSizeSmall) {
+            mRecyclerView.setAdapter(smallAdapter);
+        } else {
+            mRecyclerView.setAdapter(adapter);
+        }
 
         /*Set up Pull to refresh*/
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.activity_main_swipe_refresh_layout);
@@ -222,23 +239,35 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
 
     private void refreshView() {
         rocketLaunches = sharedPreference.filterLaunches(sharedPreference.getLaunchesUpcoming());
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
         int size = Integer.parseInt(sharedPref.getString("upcoming_value", "10"));
         if (rocketLaunches.size() > size){
             rocketLaunches = rocketLaunches.subList(0,size);
         }
         sharedPreference.setNextLaunches(rocketLaunches);
-        adapter.clear();
+
+        if (cardSizeSmall) {
+            smallAdapter.clear();
+        } else {
+            adapter.clear();
+        }
 
         if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && rocketLaunches.size() == 1){
             linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
             mRecyclerView.setLayoutManager(linearLayoutManager);
-            mRecyclerView.setAdapter(adapter);
+            if (cardSizeSmall) {
+                mRecyclerView.setAdapter(smallAdapter);
+            } else {
+                mRecyclerView.setAdapter(adapter);
+            }
         } else if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
             layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
             mRecyclerView.setLayoutManager(layoutManager);
-            mRecyclerView.setAdapter(adapter);
+            if (cardSizeSmall) {
+                mRecyclerView.setAdapter(smallAdapter);
+            } else {
+                mRecyclerView.setAdapter(adapter);
+            }
         }
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
         {
@@ -255,8 +284,14 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                 super.onScrollStateChanged(recyclerView, newState);
             }
         });
-        adapter.addItems(rocketLaunches);
-        adapter.notifyDataSetChanged();
+
+        if (cardSizeSmall) {
+            smallAdapter.addItems(rocketLaunches);
+            smallAdapter.notifyDataSetChanged();
+        } else {
+            adapter.addItems(rocketLaunches);
+            adapter.notifyDataSetChanged();
+        }
     }
 
 
@@ -270,15 +305,29 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                 if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && rocketLaunches.size() == 1){
                     linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
                     mRecyclerView.setLayoutManager(linearLayoutManager);
-                    mRecyclerView.setAdapter(adapter);
+                    if (cardSizeSmall) {
+                        mRecyclerView.setAdapter(smallAdapter);
+                    } else {
+                        mRecyclerView.setAdapter(adapter);
+                    }
                 } else if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
                     layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
                     mRecyclerView.setLayoutManager(layoutManager);
-                    mRecyclerView.setAdapter(adapter);
+                    if (cardSizeSmall) {
+                        mRecyclerView.setAdapter(smallAdapter);
+                    } else {
+                        mRecyclerView.setAdapter(adapter);
+                    }
                 }
-                adapter.clear();
-                adapter.addItems(rocketLaunches);
-                adapter.notifyDataSetChanged();
+                if (cardSizeSmall) {
+                    smallAdapter.clear();
+                    smallAdapter.addItems(rocketLaunches);
+                    smallAdapter.notifyDataSetChanged();
+                } else {
+                    adapter.clear();
+                    adapter.addItems(rocketLaunches);
+                    adapter.notifyDataSetChanged();
+                }
             }
         }
     }

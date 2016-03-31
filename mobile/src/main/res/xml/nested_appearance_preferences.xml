@@ -7,4 +7,10 @@
         android:summaryOff="Night mode is disabled."
         android:summaryOn="Night Mode is enabled."
         android:title="Night mode" />
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="card_size_small"
+        android:summaryOff="Use full-size content card."
+        android:summaryOn="Use compact content card. (EXPERIMENTAL)"
+        android:title="Compact Launch Card" />
 </PreferenceScreen>

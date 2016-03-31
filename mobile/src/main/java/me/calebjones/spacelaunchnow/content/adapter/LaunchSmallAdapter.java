@@ -3,13 +3,16 @@ package me.calebjones.spacelaunchnow.content.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
@@ -38,13 +41,14 @@ import timber.log.Timber;
 /**
  * Adapts UpcomingLaunch data to the LaunchFragment
  */
-public class LaunchSmallAdapter extends RecyclerView.Adapter<LaunchSmallAdapter.ViewHolder> implements SectionIndexer {
+public class LaunchSmallAdapter extends RecyclerView.Adapter<LaunchSmallAdapter.ViewHolder> {
     public int position;
     private String launchDate;
     private List<Launch> launchList;
     private Context mContext;
     private Calendar rightNow;
     private SharedPreferences sharedPref;
+    private Boolean night;
     private static ListPreferences sharedPreference;
 
     public LaunchSmallAdapter(Context context) {
@@ -88,8 +92,10 @@ public class LaunchSmallAdapter extends RecyclerView.Adapter<LaunchSmallAdapter.
         sharedPreference = ListPreferences.getInstance(mContext);
 
         if (sharedPreference.getNightMode()) {
+            night = true;
             m_theme = R.layout.dark_content_list_item;
         } else {
+            night = false;
             m_theme = R.layout.light_small_content_list_item;
         }
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(m_theme, viewGroup, false);
@@ -102,8 +108,36 @@ public class LaunchSmallAdapter extends RecyclerView.Adapter<LaunchSmallAdapter.
 
         position = i;
 
+        //Retrieve missionType
+        if (launchItem.getMissions().size() != 0) {
+            setCategoryIcon(holder, launchItem.getMissions().get(0).getTypeName());
+        }
+
         SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
         df.toLocalizedPattern();
+
+        switch (launchItem.getStatus()) {
+            case 1:
+                //GO for launch
+                holder.content_status.setText(R.string.status_go);
+                holder.content_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorGo));
+                break;
+            case 2:
+                //NO GO for launch
+                holder.content_status.setText(R.string.status_nogo);
+                holder.content_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorAccent));
+                break;
+            case 3:
+                //Success for launch
+                holder.content_status.setText(R.string.status_success);
+                holder.content_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorGo));
+                break;
+            case 4:
+                //Failure to launch
+                holder.content_status.setText(R.string.status_failure);
+                holder.content_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorAccent));
+                break;
+        }
 
         //If timestamp is available calculate TMinus and date.
         if (launchItem.getNetstamp() > 0) {
@@ -113,56 +147,99 @@ public class LaunchSmallAdapter extends RecyclerView.Adapter<LaunchSmallAdapter.
 
             Calendar future = DateToCalendar(date);
             Calendar now = rightNow;
-            CountDownTimer timer;
 
             now.setTimeInMillis(System.currentTimeMillis());
-            long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
-            if (timeToFinish < 86400000) {
-                timer = new CountDownTimer(future.getTimeInMillis() - now.getTimeInMillis(), 1000) {
-                    StringBuilder time = new StringBuilder();
 
-                    @Override
-                    public void onFinish() {
-                        holder.content_TMinus_status.setText("Check back later for launch status.");
-                        //mTextView.setText("Times Up!");
+            holder.timer = new CountDownTimer(future.getTimeInMillis() - now.getTimeInMillis(), 1000) {
+                StringBuilder time = new StringBuilder();
+
+                @Override
+                public void onFinish() {
+                    holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
+                    holder.content_TMinus_status.setTextColor(ContextCompat.getColor(mContext,R.color.colorTextSecondary));
+                    if (launchItem.getStatus() == 1) {
+                        holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
+
+                        //TODO - Get hold reason and show it
+                    } else {
+                        holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
+                    }
+                }
+
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    time.setLength(0);
+                    // Use days if appropriate
+                    long longDays = millisUntilFinished / 86400000;
+                    long longHours = (millisUntilFinished / 3600000) % 24;
+                    long longMins = (millisUntilFinished / 60000) % 60;
+                    long longSeconds = (millisUntilFinished / 1000) % 60;
+
+                    String days = String.valueOf(longDays);
+                    String hours;
+                    String minutes;
+                    String seconds;
+                    if (longHours < 10){
+                        hours = "0" + String.valueOf(longHours);
+                    } else {
+                        hours = String.valueOf(longHours);
                     }
 
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        time.setLength(0);
-                        // Use days if appropriate
-                        long hours = (millisUntilFinished / 3600000) % 24;
-                        long mins = (millisUntilFinished / 60000) % 60;
-                        long seconds = (millisUntilFinished / 1000) % 60;
-
-                        if (Long.valueOf(hours) >= 1) {
-                            holder.content_TMinus_status.setText(String.format("%s Hours : %s Minutes : %s Seconds", hours, mins, seconds));
-                        } else if (Long.valueOf(mins) > 1) {
-                            holder.content_TMinus_status.setText(String.format("%s Minutes : %s Seconds", mins, seconds));
-                        }
+                    if (longMins < 10){
+                        minutes = "0" + String.valueOf(longMins);
+                    } else {
+                        minutes = String.valueOf(longMins);
                     }
-                }.start();
-            } else {
-                long days = timeToFinish / 86400000;
-                long hours = (timeToFinish / 3600000) % 24;
-                holder.content_TMinus_status.setText(String.format("%s Day(s) : %s Hour(s)", Long.valueOf(days), Long.valueOf(hours)));
-            }
+
+                    if (longSeconds < 10){
+                        seconds = "0" + String.valueOf(longSeconds);
+                    } else {
+                        seconds = String.valueOf(longSeconds);
+                    }
+                    holder.content_TMinus_status.setTypeface(Typeface.SANS_SERIF);
+                    holder.content_TMinus_status.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+                    holder.content_TMinus_status.setText(String.format("L - %s %s:%s:%s", days, hours, minutes, seconds));
+                }
+            }.start();
 
         } else {
-            holder.content_TMinus_status.setText(" Unknown");
+            holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
+            holder.content_TMinus_status.setTextColor(ContextCompat.getColor(mContext,R.color.colorTextSecondary));
+            if (holder.timer != null) {
+                holder.timer.cancel();
+            }
+            if (launchItem.getStatus() != 1) {
+                if (launchItem.getRocket().getAgencies().size() > 0) {
+                    holder.content_TMinus_status.setText(String.format("Pending confirmed GO from %s", launchItem.getRocket().getAgencies().get(0).getName()));
+                } else {
+                    holder.content_TMinus_status.setText("Pending confirmed GO from launch agency");
+                }
+            } else {
+                holder.content_TMinus_status.setText("Unknown");
+            }
         }
 
         //Get launch date
-        if (sharedPref.getBoolean("local_time", true)) {
-            Date date = new Date(launchItem.getWindowstart());
-            launchDate = df.format(date);
-        } else {
-            launchDate = launchItem.getWindowstart();
-        }
-        holder.launch_date.setText(launchDate);
+        if (launchItem.getStatus() == 2) {
+            //Get launch date
+            if (sharedPref.getBoolean("local_time", true)) {
+                SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy.");
+                sdf.toLocalizedPattern();
+                Date date = new Date(launchItem.getWindowstart());
+                launchDate = sdf.format(date);
+            } else {
+                launchDate = launchItem.getWindowstart();
+            }
 
-        if (launchItem.getVidURL().length() == 0) {
-            holder.watchButton.setVisibility(View.GONE);
+            holder.launch_date.setText("To be determined... " + launchDate);
+        } else {
+            if (sharedPref.getBoolean("local_time", true)) {
+                Date date = new Date(launchItem.getWindowstart());
+                launchDate = df.format(date);
+            } else {
+                launchDate = launchItem.getWindowstart();
+            }
+            holder.launch_date.setText(launchDate);
         }
 
 
@@ -184,38 +261,9 @@ public class LaunchSmallAdapter extends RecyclerView.Adapter<LaunchSmallAdapter.
         holder.title.setText(launchItem.getRocket().getName());
     }
 
-    //Recycling GoogleMap for list item
-    @Override
-    public void onViewRecycled(ViewHolder holder) {
-        // Cleanup MapView here?
-        if (holder.gMap != null) {
-            holder.gMap.clear();
-        }
-    }
-
     @Override
     public int getItemCount() {
         return launchList.size();
-    }
-
-    @Override
-    public Object[] getSections() {
-        return new Object[0];
-    }
-
-    @Override
-    public int getPositionForSection(int sectionIndex) {
-        return 0;
-    }
-
-    @Override
-    public int getSectionForPosition(int position) {
-
-        if (position >= getItemCount()) {
-            position = getItemCount() - 1;
-        }
-
-        return 0;
     }
 
     public static Calendar DateToCalendar(Date date) {
@@ -225,20 +273,21 @@ public class LaunchSmallAdapter extends RecyclerView.Adapter<LaunchSmallAdapter.
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, OnMapReadyCallback {
-        public TextView title, content, location, content_mission_description,
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public TextView title, content, location, content_mission_description, content_status,
                 launch_date, content_TMinus_status,
                 watchButton, shareButton, exploreButton;
+        public ImageView categoryIcon;
         public LinearLayout content_mission_description_view;
+        public CountDownTimer timer;
 
-        public MapView map_view;
-        public GoogleMap gMap;
-        protected LatLng mMapLocation;
 
         //Add content to the card
         public ViewHolder(View view) {
             super(view);
 
+            content_status = (TextView) view.findViewById(R.id.content_status);
+            categoryIcon = (ImageView) view.findViewById(R.id.categoryIcon);
             exploreButton = (TextView) view.findViewById(R.id.exploreButton);
             shareButton = (TextView) view.findViewById(R.id.shareButton);
             watchButton = (TextView) view.findViewById(R.id.watchButton);
@@ -250,17 +299,9 @@ public class LaunchSmallAdapter extends RecyclerView.Adapter<LaunchSmallAdapter.
             content_TMinus_status = (TextView) view.findViewById(R.id.content_TMinus_status);
             content_mission_description_view = (LinearLayout) view.findViewById(R.id.content_mission_description_view);
 
-            map_view = (MapView) view.findViewById(R.id.map_view);
-
             shareButton.setOnClickListener(this);
             exploreButton.setOnClickListener(this);
             watchButton.setOnClickListener(this);
-
-            if (map_view != null) {
-                map_view.onCreate(null);
-                map_view.onResume();
-                map_view.getMapAsync(this);
-            }
         }
 
         //React to click events.
@@ -340,43 +381,120 @@ public class LaunchSmallAdapter extends RecyclerView.Adapter<LaunchSmallAdapter.
                     break;
             }
         }
+    }
 
-        public void setMapLocation(double lat, double lng) {
-            mMapLocation = new LatLng(lat, lng);
-
-            // If the map is ready, update its content.
-            if (gMap != null) {
-                updateMapContents();
+    private void setCategoryIcon(ViewHolder holder, String type) {
+        if (type != null) {
+            switch (type) {
+                case "Earth Science":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_earth_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_earth));
+                    }
+                    break;
+                case "Planetary Science":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_planetary_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_planetary));
+                    }
+                    break;
+                case "Astrophysics":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_astrophysics_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_astrophysics));
+                    }
+                    break;
+                case "Heliophysics":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_heliophysics_alt_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_heliophysics_alt));
+                    }
+                    break;
+                case "Human Exploration":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_human_explore_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_human_explore));
+                    }
+                    break;
+                case "Robotic Exploration":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_robotic_explore_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_robotic_explore));
+                    }
+                    break;
+                case "Government/Top Secret":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_top_secret_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_top_secret));
+                    }
+                    break;
+                case "Tourism":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_tourism_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_tourism));
+                    }
+                    break;
+                case "Unknown":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_unknown_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_unknown));
+                    }
+                    break;
+                case "Communications":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_satellite_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_satellite));
+                    }
+                    break;
+                case "Resupply":
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_resupply_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_resupply));
+                    }
+                    break;
+                default:
+                    if (night) {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_unknown_white));
+                    } else {
+                        holder.categoryIcon.setImageDrawable(
+                                ContextCompat.getDrawable(mContext, R.drawable.ic_unknown));
+                    }
+                    break;
             }
-        }
-
-        @Override
-        public void onMapReady(GoogleMap googleMap) {
-            //TODO: Allow user to update this 1-normal 2-satellite 3-Terrain
-            // https://goo.gl/OkexW7
-            MapsInitializer.initialize(mContext);
-
-            gMap = googleMap;
-            gMap.getUiSettings().setAllGesturesEnabled(false);
-
-            googleMap.setMapType(1);
-            googleMap.getUiSettings().setMapToolbarEnabled(false);
-
-            // If we have map data, update the map content.
-            if (mMapLocation != null) {
-                updateMapContents();
-            }
-        }
-
-        protected void updateMapContents() {
-            // Since the mapView is re-used, need to remove pre-existing mapView features.
-            gMap.clear();
-
-            // Update the mapView feature data and camera position.
-            gMap.addMarker(new MarkerOptions().position(mMapLocation));
-
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mMapLocation, 3.2f);
-            gMap.moveCamera(cameraUpdate);
         }
     }
 }
