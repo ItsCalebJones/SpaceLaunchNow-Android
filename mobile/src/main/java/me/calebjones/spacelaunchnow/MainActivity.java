@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -340,7 +341,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void showWhatsNew() {
+    public void showWhatsNew() {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.switch_dialog, null);
         View nightView = inflater.inflate(R.layout.switch_dialog_night, null);
@@ -445,10 +446,6 @@ public class MainActivity extends AppCompatActivity
             editor.putBoolean("recreate", false);
             editor.apply();
             recreate();
-        }
-        if (Utils.getVersionCode(context) != switchPreferences.getVersionCode()) {
-            switchPreferences.setVersionCode(Utils.getVersionCode(context));
-            showWhatsNew();
         }
     }
 
