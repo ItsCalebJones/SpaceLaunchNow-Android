@@ -30,7 +30,6 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.malinskiy.superrecyclerview.SuperRecyclerView;
-import com.squareup.haha.perflib.Main;
 
 import java.util.ArrayList;
 import java.util.List;
