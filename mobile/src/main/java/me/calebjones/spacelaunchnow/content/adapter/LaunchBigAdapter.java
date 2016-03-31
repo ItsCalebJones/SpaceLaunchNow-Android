@@ -186,7 +186,11 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
                 @Override
                 public void onFinish() {
                     holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
-                    holder.content_TMinus_status.setTextColor(ContextCompat.getColor(mContext,R.color.colorTextSecondary));
+                    if (night){
+                        holder.content_TMinus_status.setTextColor(ContextCompat.getColor(mContext, R.color.dark_theme_secondary_text_color));
+                    } else {
+                        holder.content_TMinus_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorTextSecondary));
+                    }
                     if (launchItem.getStatus() == 1) {
                         holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
 
@@ -234,7 +238,11 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
 
         } else {
             holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
-            holder.content_TMinus_status.setTextColor(ContextCompat.getColor(mContext,R.color.colorTextSecondary));
+            if (night){
+                holder.content_TMinus_status.setTextColor(ContextCompat.getColor(mContext, R.color.dark_theme_secondary_text_color));
+            } else {
+                holder.content_TMinus_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorTextSecondary));
+            }
             if (holder.timer != null) {
                 holder.timer.cancel();
             }
@@ -506,7 +514,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         public void onMapReady(GoogleMap googleMap) {
             //TODO: Allow user to update this 1-normal 2-satellite 3-Terrain
             // https://goo.gl/OkexW7
-            MapsInitializer.initialize(mContext.getApplicationContext());
+            MapsInitializer.initialize(mContext);
 
             gMap = googleMap;
             gMap.getUiSettings().setAllGesturesEnabled(false);

@@ -574,9 +574,11 @@ public class ListPreferences {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
+
         List<Launch> favorites;
         SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         String jsonPreferences = sharedPref.getString(PREFS_LAUNCH_LIST_NEXT, null);
+
         Type type = new TypeToken<List<Launch>>() {
         }.getType();
         favorites = gson.fromJson(jsonPreferences, type);
