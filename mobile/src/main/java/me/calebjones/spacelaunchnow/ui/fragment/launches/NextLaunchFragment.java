@@ -30,6 +30,7 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.malinskiy.superrecyclerview.SuperRecyclerView;
+import com.squareup.haha.perflib.Main;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,7 @@ import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -372,6 +374,10 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     public void onResume() {
         setTitle();
         Timber.d("OnResume!");
+        if (Utils.getVersionCode(context) != switchPreferences.getVersionCode()) {
+            switchPreferences.setVersionCode(Utils.getVersionCode(context));
+            ((MainActivity)getActivity()).showWhatsNew();
+        }
         super.onResume();
     }
 
