@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import timber.log.Timber;
-
 public class Launch implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -29,20 +27,20 @@ public class Launch implements Serializable {
     private Date date;
     private boolean isNotifiedDay = false;
     private boolean isNotifiedHour = false;
-    private boolean isNotifiedCustom = false;
+    private boolean isNotifiedTenMinute = false;
     private boolean favorite = false;
     private List<Mission> missions = new ArrayList<Mission>();
     private String vidURL;
     private ArrayList<String> vidURLs;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    public boolean getIsNotifiedCustom() {
-        return isNotifiedCustom;
+    public boolean getIsNotifiedTenMinute() {
+        return isNotifiedTenMinute;
     }
 
 
-    public void setIsNotifiedCustom(boolean isNotifiedCustom) {
-        this.isNotifiedCustom = isNotifiedCustom;
+    public void setIsNotifiedTenMinute(boolean isNotifiedTenMinute) {
+        this.isNotifiedTenMinute = isNotifiedTenMinute;
     }
 
     public boolean getIsNotifiedHour() {

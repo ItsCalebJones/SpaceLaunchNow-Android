@@ -66,6 +66,9 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
     private static final TimeZone timeZone = TimeZone.getTimeZone("EDT");
     private static final String NAME_KEY = "me.calebjones.spacelaunchnow.wear.nextname";
     private static final String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
+    private static final String HOUR_KEY = "me.calebjones.spacelaunchnow.wear.hourmode";
+    private boolean twentyfourhourmode = true;
+    private String timeText;
 
     /**
      * Update rate in milliseconds for interactive mode. We update once a second since seconds are
@@ -269,12 +272,17 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
 //                canvas.drawRect(0, 0, bounds.width(), bounds.height(), mBackgroundPaint);
             }
 
-            // Draw H:MM in ambient mode or H:MM:SS in interactive mode.
-            mTime = Calendar.getInstance();
             Date now = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("h:mm");
-
-            String text = sdf.format(now);
+            mTime = Calendar.getInstance();
+            if(twentyfourhourmode) {
+                // Draw H:MM in ambient mode or H:MM:SS in interactive mode.
+                SimpleDateFormat sdf = new SimpleDateFormat("h:mm");
+                timeText = sdf.format(now);
+            } else {
+                // Draw H:MM in ambient mode or H:MM:SS in interactive mode.
+                SimpleDateFormat sdf = new SimpleDateFormat("kk:mm");
+                timeText = sdf.format(now);
+            }
 
 
             Calendar utcTime = Calendar.getInstance(timeZone);
@@ -333,11 +341,11 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             //If round, align text in a rough cross.
             if (isRound) {
 
-                timeXoffset = computeXOffset(text, mTextPaint, bounds);
-                timeYoffset = computeTimeYOffset(text, mTextPaint, bounds);
+                timeXoffset = computeXOffset(timeText, mTextPaint, bounds);
+                timeYoffset = computeTimeYOffset(timeText, mTextPaint, bounds);
 
                 //Current Time
-                canvas.drawText(text,
+                canvas.drawText(timeText,
                         timeXoffset,
                         timeYoffset,
                         mTextPaint);
@@ -350,7 +358,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
 
                 //UTC Text
                 canvas.drawText(utcText,
-                        computeUTCRoundOffset(text, mDatePaint, bounds),
+                        computeUTCRoundOffset(timeText, mDatePaint, bounds),
                         computeCenterYOffset(utcText, mDatePaint, bounds) + 1,
                         mDatePaint);
 
@@ -381,10 +389,10 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
                         .build();
                 setWatchFaceStyle(watchFaceStyle);
 
-                timeXoffset = computeXStart(text, mTextPaint, bounds) + 60;
-                timeYoffset = computeTimeYOffset(text, mTextPaint, bounds);
+                timeXoffset = computeXStart(timeText, mTextPaint, bounds) + 76;
+                timeYoffset = computeTimeYOffset(timeText, mTextPaint, bounds);
 
-                canvas.drawText(text,
+                canvas.drawText(timeText,
                         timeXoffset - 5,
                         timeYoffset,
                         mTextPaint);
@@ -556,6 +564,13 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
                 if (dataMap.containsKey(TIME_KEY)) {
                     launchTime = dataMap.getInt(TIME_KEY);
                     Log.v("Space Launch Wear", "Name = " + launchTime);
+                }
+            }
+            if (item.getUri().getPath().equals("/config")) {
+                DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
+                if (dataMap.containsKey(HOUR_KEY)) {
+                    twentyfourhourmode = dataMap.getBoolean(HOUR_KEY);
+                    Log.v("Space Launch Wear", "Name = " + launchName);
                 }
             }
         }
