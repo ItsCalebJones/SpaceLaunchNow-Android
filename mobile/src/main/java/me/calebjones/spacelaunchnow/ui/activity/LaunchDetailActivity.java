@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -17,6 +18,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
@@ -74,6 +76,8 @@ public class LaunchDetailActivity extends AppCompatActivity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         int m_theme;
         final int statusColor;
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -103,7 +107,6 @@ public class LaunchDetailActivity extends AppCompatActivity
         }
 
         setTheme(m_theme);
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch_detail);
 
         //Setup Views
@@ -120,12 +123,14 @@ public class LaunchDetailActivity extends AppCompatActivity
         Intent mIntent = getIntent();
         String type = mIntent.getStringExtra("TYPE");
 
+
         if (type.equals("LaunchID")) {
             int id = mIntent.getIntExtra("id", 0);
             launch = sharedPreference.getLaunchByID(id);
         } else if (type.equals("Launch")) {
             launch = ((Launch) mIntent.getSerializableExtra("launch"));
         }
+
         if (launch.getRocket() != null || launch.getRocket().getName() != null) {
             if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0) {
                 Glide.with(this)

@@ -69,13 +69,12 @@ Quisque tincidunt magna quis viverra faucibus. Vivamus rhoncus elit vel mi trist
     <string name="title_activity_debug">DebugActivity</string>
     <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
 
-    <string name="whats_new_title">Whats New! v1.0-beta.11</string>
-    <string name="whats_new_content">Hotfix Release!\n\n
-    Bug Fixes:\n
-    \u2022 Fixed Countdown timer issue.\n
-    \u2022 More crash fixes in Vehicles tab.\n
-    \u2022 Added ability to send Push notifications.\n
-    \u2022 Fixed layouts in Night Mode, again.\n
+    <string name="whats_new_title">Whats New! v1.0-beta.12</string>
+    <string name="whats_new_content">
+    \u2022 Added 24 hour mode to watch face.\n
+    \u2022 Added optional ten minute notification.\n
+    \u2022 Better crash logging and analytics for troubleshooting.\n
+    \u2022 Added Wear WatchFace settings page, to be expanded!\n
     </string>
     <string name="link_feedback">https://www.reddit.com/r/spacelaunchnow</string>
     <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>

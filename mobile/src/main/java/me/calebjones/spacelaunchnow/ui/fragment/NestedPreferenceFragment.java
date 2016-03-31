@@ -5,8 +5,19 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.widget.TextView;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
+import com.google.android.gms.wearable.Wearable;
+import com.onesignal.OneSignal;
+
+import java.util.Date;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
@@ -14,7 +25,8 @@ import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.utils.TimeRangePickerDialogCustom;
 import timber.log.Timber;
 
-public class NestedPreferenceFragment extends PreferenceFragmentCompat implements TimeRangePickerDialogCustom.OnTimeRangeSelectedListener {
+public class NestedPreferenceFragment extends PreferenceFragmentCompat implements TimeRangePickerDialogCustom.OnTimeRangeSelectedListener, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
 
     // Give your color picker dialog unique IDs if you
@@ -34,6 +46,23 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
     private static ListPreferences listPreferences;
     private SwitchPreferences switchPreferences;
     private Context context;
+    private GoogleApiClient mGoogleApiClient;
+    private static final String HOUR_KEY = "me.calebjones.spacelaunchnow.wear.hourmode";
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
 
     class SharedPreferenceListener implements SharedPreferences.OnSharedPreferenceChangeListener {
         final /* synthetic */ SharedPreferences valprefs;
@@ -61,6 +90,17 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
                     themeEditor.apply();
                     NestedPreferenceFragment.this.getActivity().recreate();
                 }
+                if (key.equals("notifications_launch_imminent_updates")){
+                    OneSignal.setSubscription(this.valprefs.getBoolean(key, false));
+                }
+                if (key.equals("wear_hour_mode")){
+                    PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/config");
+                    putDataMapReq.getDataMap().putBoolean(HOUR_KEY, this.valprefs.getBoolean(key, false));
+                    putDataMapReq.getDataMap().putLong("time", new Date().getTime());
+
+                    PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
+                    Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
+                }
             } catch (NullPointerException e) {
 
             }
@@ -77,12 +117,21 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         if (getActivity() != null) {
             this.toolbarTitle = (TextView) getActivity().findViewById(R.id.title_text);
         }
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Wearable.API)
+                .build();
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         prefs.registerOnSharedPreferenceChangeListener(new SharedPreferenceListener(prefs));
         checkPreferenceResource();
+
     }
 
     @Override
@@ -98,6 +147,7 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
     }
 
     private void checkPreferenceResource() {
+        mGoogleApiClient.connect();
         switch (getArguments().getInt(TAG_KEY)) {
             case NESTED_SCREEN_1_KEY:
                 addPreferencesFromResource(R.xml.nested_notification_preferences);
@@ -115,6 +165,12 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
                 addPreferencesFromResource(R.xml.nested_appearance_preferences);
                 if (this.toolbarTitle != null) {
                     this.toolbarTitle.setText("Appearance");
+                }
+                break;
+            case NESTED_SCREEN_4_KEY:
+                addPreferencesFromResource(R.xml.nested_wear_preferences);
+                if (this.toolbarTitle != null) {
+                    this.toolbarTitle.setText("Wear");
                 }
                 break;
             default:
@@ -155,6 +211,16 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
         switchPreferences.setNightModeStart(startH + ":" + startM);
         switchPreferences.setNightModeEnd(endH + ":" + endM);
         listPreferences.getNightMode();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Timber.d("onDestroy");
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            Timber.d("Google Client Disconnect");
+            mGoogleApiClient.disconnect();
+        }
     }
 
 }

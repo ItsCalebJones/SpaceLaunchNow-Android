@@ -393,7 +393,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         hideLoading();
     }
 
-    private void hideLoading() {
+    public void hideLoading() {
         CircularProgressView progressView = (CircularProgressView)
                 view.findViewById(R.id.progress_View);
         progressView.setVisibility(View.GONE);
@@ -426,6 +426,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
             } else {
                 sharedPreference.setDebugLaunch(true);
             }
+            Timber.v("%s", sharedPreference.getDebugLaunch());
             onRefresh();
         } else if (id == R.id.debug_next_launch){
             Intent nextIntent = new Intent(getActivity(), LaunchDataService.class);

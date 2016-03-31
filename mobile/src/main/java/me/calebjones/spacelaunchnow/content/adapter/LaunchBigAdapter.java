@@ -3,6 +3,7 @@ package me.calebjones.spacelaunchnow.content.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
@@ -61,7 +62,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         launchList = new ArrayList<>();
         this.mContext = context;
         this.aContext = aContext;
-        if(Utils.checkPlayServices(mContext)){
+        if (Utils.checkPlayServices(mContext)) {
             play = true;
         }
     }
@@ -178,50 +179,62 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             Calendar now = rightNow;
 
             now.setTimeInMillis(System.currentTimeMillis());
-            long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
 
-            if (timeToFinish < 86400000) {
-                holder.timer = new CountDownTimer(future.getTimeInMillis() - now.getTimeInMillis(), 1000) {
-                    StringBuilder time = new StringBuilder();
+            holder.timer = new CountDownTimer(future.getTimeInMillis() - now.getTimeInMillis(), 1000) {
+                StringBuilder time = new StringBuilder();
 
-                    @Override
-                    public void onFinish() {
-                        if (launchItem.getStatus() == 1) {
-                            holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
+                @Override
+                public void onFinish() {
+                    holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
+                    holder.content_TMinus_status.setTextColor(ContextCompat.getColor(mContext,R.color.colorTextSecondary));
+                    if (launchItem.getStatus() == 1) {
+                        holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
 
-                            //TODO - Get hold reason and show it
-                        } else {
-                            holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
-                        }
+                        //TODO - Get hold reason and show it
+                    } else {
+                        holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
                     }
-
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        time.setLength(0);
-                        // Use days if appropriate
-                        long hours = (millisUntilFinished / 3600000) % 24;
-                        long mins = (millisUntilFinished / 60000) % 60;
-                        long seconds = (millisUntilFinished / 1000) % 60;
-
-                        if (hours >= 1) {
-                            holder.content_TMinus_status.setText(String.format("%s Hours : %s Minutes : %s Seconds", hours, mins, seconds));
-                        } else if (mins > 0) {
-                            holder.content_TMinus_status.setText(String.format("%s Minutes : %s Seconds", mins, seconds));
-                        } else if (seconds > 0) {
-                            holder.content_TMinus_status.setText(String.format("%s Seconds", seconds));
-                        }
-                    }
-                }.start();
-            } else {
-                if (holder.timer != null) {
-                    holder.timer.cancel();
                 }
-                long days = timeToFinish / 86400000;
-                long hours = (timeToFinish / 3600000) % 24;
-                holder.content_TMinus_status.setText(String.format("%s Day(s) : %s Hour(s)", Long.valueOf(days), Long.valueOf(hours)));
-            }
+
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    time.setLength(0);
+                    // Use days if appropriate
+                    long longDays = millisUntilFinished / 86400000;
+                    long longHours = (millisUntilFinished / 3600000) % 24;
+                    long longMins = (millisUntilFinished / 60000) % 60;
+                    long longSeconds = (millisUntilFinished / 1000) % 60;
+
+                    String days = String.valueOf(longDays);
+                    String hours;
+                    String minutes;
+                    String seconds;
+                    if (longHours < 10){
+                        hours = "0" + String.valueOf(longHours);
+                    } else {
+                        hours = String.valueOf(longHours);
+                    }
+
+                    if (longMins < 10){
+                        minutes = "0" + String.valueOf(longMins);
+                    } else {
+                        minutes = String.valueOf(longMins);
+                    }
+
+                    if (longSeconds < 10){
+                        seconds = "0" + String.valueOf(longSeconds);
+                    } else {
+                        seconds = String.valueOf(longSeconds);
+                    }
+                    holder.content_TMinus_status.setTypeface(Typeface.SANS_SERIF);
+                    holder.content_TMinus_status.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+                    holder.content_TMinus_status.setText(String.format("L - %s %s:%s:%s", days, hours, minutes, seconds));
+                }
+            }.start();
 
         } else {
+            holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
+            holder.content_TMinus_status.setTextColor(ContextCompat.getColor(mContext,R.color.colorTextSecondary));
             if (holder.timer != null) {
                 holder.timer.cancel();
             }
@@ -287,7 +300,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         }
 
         //If pad and agency exist add it to location, otherwise get whats always available
-        if (launchItem.getLocation() != null){
+        if (launchItem.getLocation() != null) {
             holder.location.setText(launchItem.getLocation().getName());
         }
         holder.title.setText(launchItem.getRocket().getName());
