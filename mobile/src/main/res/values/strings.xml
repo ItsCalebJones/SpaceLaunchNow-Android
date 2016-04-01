@@ -70,11 +70,12 @@ Quisque tincidunt magna quis viverra faucibus. Vivamus rhoncus elit vel mi trist
     <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
 
     <string name="whats_new_title">Whats New! v1.0-beta.12</string>
-    <string name="whats_new_content">
-    \u2022 Added 24 hour mode to watch face.\n
-    \u2022 Added optional ten minute notification.\n
-    \u2022 Better crash logging and analytics for troubleshooting.\n
-    \u2022 Added Wear WatchFace settings page, to be expanded!\n
+    <string name="whats_new_content">\u2022 Added 24 hour mode to watch face.
+        \n\u2022 Added optional ten minute notification.
+        \n\u2022 Added Wear WatchFace settings page, to be expanded!
+        \n\u2022 Added experimental \'compact\' card option in settings.
+        \n\u2022 Better crash logging and analytics for troubleshooting.
+        \n\u2022 Final prep for full release, fixed last minute bugs.
     </string>
     <string name="link_feedback">https://www.reddit.com/r/spacelaunchnow</string>
     <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>
