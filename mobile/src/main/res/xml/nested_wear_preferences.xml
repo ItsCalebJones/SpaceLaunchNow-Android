@@ -6,10 +6,9 @@
     <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="wear_hour_mode"
-        android:summaryOff="Allow Notifications for upcoming launches."
-        android:summaryOn="Notifications are on for upcoming launches."
+        android:summaryOff="Use AM/PM mode for keeping time."
+        android:summaryOn="Use 24 Hour mode for keeping time."
         android:title="Watch Hour Mode" />
-
     </PreferenceCategory>
 
 </PreferenceScreen>

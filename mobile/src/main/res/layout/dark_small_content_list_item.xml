@@ -52,7 +52,8 @@
                     android:layout_gravity="center|left"
                     android:layout_marginLeft="4dp"
                     android:padding="8dp"
-                    android:src="@drawable/ic_mission" />
+                    android:src="@drawable/ic_unknown_white" />
+
 
                 <TextView
                     android:id="@+id/launch_rocket"
@@ -130,7 +131,7 @@
                         android:orientation="vertical" >
 
                         <TextView
-                            style="@style/LightTheme"
+                            style="@style/DarkTheme"
                             android:id="@+id/content_status"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -143,7 +144,7 @@
                             android:textAlignment="center"
                             android:textColor="?android:textColorSecondary"
                             android:textSize="20dp"
-                            android:theme="@style/LightTheme"
+                            android:theme="@style/DarkTheme"
                             android:textStyle="bold"
                             android:textIsSelectable="false" />
                     </LinearLayout>
@@ -166,7 +167,7 @@
                             android:textAlignment="center"
                             android:textColor="?android:textColorSecondary"
                             android:textSize="14sp"
-                            android:theme="@style/LightTheme" />
+                            android:theme="@style/DarkTheme" />
 
                         <TextView
                             android:id="@+id/content_mission_description"
