@@ -57,9 +57,10 @@ public class LaunchApplication extends Application {
 
         //Init Crashlytics and gather device information.
         Fabric.with(this, new Crashlytics());
-        Crashlytics.setString("Timezone", String.valueOf(TimeZone.getDefault()));
+        Crashlytics.setString("Timezone", String.valueOf(TimeZone.getDefault().getDisplayName()));
         Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
         Crashlytics.setBool("is24", DateFormat.is24HourFormat(getApplicationContext()));
+        Crashlytics.setBool("Network", Utils.isNetworkAvailable(this));
 
         LeakCanary.install(this);
         OneSignal.startInit(this).init();
