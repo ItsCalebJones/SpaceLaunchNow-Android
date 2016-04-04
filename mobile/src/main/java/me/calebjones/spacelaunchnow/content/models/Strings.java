@@ -39,7 +39,8 @@ public final class Strings {
     public static String MISSION_URL = "https://launchlibrary.net/1.2/mission?limit=1000&mode=verbose";
     public static String AGENCY_URL = "https://launchlibrary.net/1.2/agency?mode=verbose&limit=1000";
     public static String VEHICLE_URL = "https://launchlibrary.net/1.2/rocket?mode=verbose&limit=1000";
-    public static String NEXT_URL = "https://launchlibrary.net/1.2/launch/%s?mode=verbose";
+    public static String NEXT_URL = "https://launchlibrary.net/1.2/launch/next/1?mode=verbose";
+    public static String NEXT_URL_BY_ID = "https://launchlibrary.net/1.2/launch/%s?mode=verbose";
 
     private Strings() {
     }

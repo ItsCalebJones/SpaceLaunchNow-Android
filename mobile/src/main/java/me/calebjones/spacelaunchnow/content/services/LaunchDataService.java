@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.text.format.DateFormat;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -37,11 +36,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.fabric.sdk.android.services.common.Crash;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
@@ -106,32 +103,36 @@ public class LaunchDataService extends IntentService implements
         mGoogleApiClient.connect();
         Timber.d("mGoogleApiClient - connect");
 
-        if (Strings.ACTION_GET_ALL.equals(action)) {
-            if (this.sharedPref.getBoolean("background", true)) {
-                scheduleLaunchUpdates();
-            }
-            Timber.d("LaunchDataService - onHandleIntent: %s | Background: %s", action,
-                    this.sharedPref.getBoolean("background", true));
+//        if (Utils.isNetworkAvailable(this)) {
+            if (Strings.ACTION_GET_ALL.equals(action)) {
+                if (this.sharedPref.getBoolean("background", true)) {
+                    scheduleLaunchUpdates();
+                }
+                Timber.d("LaunchDataService - onHandleIntent: %s | Background: %s", action,
+                        this.sharedPref.getBoolean("background", true));
 
-            startService(new Intent(this, MissionDataService.class));
-            getUpcomingLaunches();
-            getPreviousLaunches(getBaseURL());
-        } else if (Strings.ACTION_GET_UP_LAUNCHES.equals(action)) {
-            if (this.sharedPref.getBoolean("background", true)) {
-                scheduleLaunchUpdates();
+                startService(new Intent(this, MissionDataService.class));
+                getUpcomingLaunches();
+                getPreviousLaunches(getBaseURL());
+            } else if (Strings.ACTION_GET_UP_LAUNCHES.equals(action)) {
+                if (this.sharedPref.getBoolean("background", true)) {
+                    scheduleLaunchUpdates();
+                }
+                Timber.d("LaunchDataService - onHandleIntent: %s | Background: %s", action,
+                        this.sharedPref.getBoolean("background", true));
+                getUpcomingLaunches();
+            } else if (Strings.ACTION_GET_PREV_LAUNCHES.equals(action)) {
+                Timber.d("LaunchDataService - onHandleIntent:  %s ", action);
+                getPreviousLaunches(intent.getStringExtra("URL"));
+            } else if (Strings.ACTION_UPDATE_NEXT_LAUNCH.equals(action)) {
+                Timber.d("LaunchDataService - onHandleIntent:  %s ", action);
+                getUpcomingLaunches();
+            } else {
+                Timber.e("LaunchDataService - onHandleIntent: ERROR - Unknown Intent %s", action);
             }
-            Timber.d("LaunchDataService - onHandleIntent: %s | Background: %s", action,
-                    this.sharedPref.getBoolean("background", true));
-            getUpcomingLaunches();
-        } else if (Strings.ACTION_GET_PREV_LAUNCHES.equals(action)) {
-            Timber.d("LaunchDataService - onHandleIntent:  %s ", action);
-            getPreviousLaunches(intent.getStringExtra("URL"));
-        } else if (Strings.ACTION_UPDATE_NEXT_LAUNCH.equals(action)){
-            Timber.d("LaunchDataService - onHandleIntent:  %s ", action);
-            updateNextLaunch();
-        } else {
-            Timber.e("LaunchDataService - onHandleIntent: ERROR - Unknown Intent %s", action);
-        }
+//        } else {
+//            Crashlytics.setBool("Network", false);
+//        }
     }
 
     private void updateNextLaunch(){
@@ -143,8 +144,10 @@ public class LaunchDataService extends IntentService implements
             //Used for loading debug lauches/reproducing bugs
             if(listPreference.getDebugLaunch()){
                 url = new URL("http://calebjones.me/app/debug_launch.json");
+            } else if (listPreference.getNextLaunches().size() > 0) {
+                url = new URL(String.format(Strings.NEXT_URL_BY_ID, listPreference.getNextLaunches().get(0).getId()));
             } else {
-                url = new URL(String.format(Strings.NEXT_URL, listPreference.getNextLaunches().get(0).getId()));
+                url = new URL(Strings.NEXT_URL);
             }
 
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -201,6 +204,7 @@ public class LaunchDataService extends IntentService implements
 
         } catch (Exception e) {
             Timber.e("LaunchDataService - updateNextLaunch ERROR: %s", e.getLocalizedMessage());
+            Crashlytics.setBool("Network", Utils.isNetworkAvailable(this));
             Crashlytics.logException(e);
 
             if (BuildConfig.DEBUG) {
@@ -276,6 +280,7 @@ public class LaunchDataService extends IntentService implements
 
         } catch (Exception e) {
             Timber.e("LaunchDataService - getPreviousLaunches ERROR: %s", e.getLocalizedMessage());
+            Crashlytics.setBool("Network", Utils.isNetworkAvailable(this));
             Crashlytics.logException(e);
 
             Intent broadcastIntent = new Intent();
@@ -331,11 +336,11 @@ public class LaunchDataService extends IntentService implements
                 this.listPreference.setUpComingLaunches(upcomingLaunchList);
 //                this.listPreference.syncUpcomingMissions();
 
+                startService(new Intent(this, NextLaunchTracker.class));
+
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
                 LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
-
-                startService(new Intent(this, NextLaunchTracker.class));
             } else {
                 Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to retrieve upcoming launches: " + statusCode);
 
@@ -351,6 +356,7 @@ public class LaunchDataService extends IntentService implements
 
         } catch (Exception e) {
             Timber.e("LaunchDataService - getUpcomingLaunches ERROR: %s", e.getLocalizedMessage());
+            Crashlytics.setBool("Network", Utils.isNetworkAvailable(this));
             Crashlytics.logException(e);
 
             if (BuildConfig.DEBUG) {
