@@ -16,6 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
+import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -172,9 +175,32 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
             watchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(detailLaunch.getVidURL()));
-                    startActivity(i);
+                    if (detailLaunch.getVidURLs().size() > 1) {
+                        final MaterialSimpleListAdapter adapter = new MaterialSimpleListAdapter(context);
+                        for (String s : detailLaunch.getVidURLs()) {
+                            //Do your stuff here
+                            adapter.add(new MaterialSimpleListItem.Builder(context)
+                                    .content(s)
+                                    .build());
+                        }
+
+                        new MaterialDialog.Builder(context)
+                                .title("Select a source:")
+                                .adapter(adapter, new MaterialDialog.ListCallback() {
+                                    @Override
+                                    public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                                        Uri watchUri = Uri.parse(detailLaunch.getVidURLs().get(which));
+                                        Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
+                                        startActivity(i);
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
+                    } else {
+                        Uri watchUri = Uri.parse(detailLaunch.getVidURL());
+                        Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
+                        startActivity(i);
+                    }
                 }
             });
         } else {

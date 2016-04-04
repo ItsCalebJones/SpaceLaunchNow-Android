@@ -126,7 +126,7 @@ public class LaunchDataService extends IntentService implements
                 getPreviousLaunches(intent.getStringExtra("URL"));
             } else if (Strings.ACTION_UPDATE_NEXT_LAUNCH.equals(action)) {
                 Timber.d("LaunchDataService - onHandleIntent:  %s ", action);
-                updateNextLaunch();
+                getUpcomingLaunches();
             } else {
                 Timber.e("LaunchDataService - onHandleIntent: ERROR - Unknown Intent %s", action);
             }
@@ -336,11 +336,11 @@ public class LaunchDataService extends IntentService implements
                 this.listPreference.setUpComingLaunches(upcomingLaunchList);
 //                this.listPreference.syncUpcomingMissions();
 
+                startService(new Intent(this, NextLaunchTracker.class));
+
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
                 LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
-
-                startService(new Intent(this, NextLaunchTracker.class));
             } else {
                 Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to retrieve upcoming launches: " + statusCode);
 
