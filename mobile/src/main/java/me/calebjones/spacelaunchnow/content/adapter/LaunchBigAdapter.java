@@ -3,6 +3,7 @@ package me.calebjones.spacelaunchnow.content.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.CountDownTimer;
@@ -19,6 +20,9 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
+import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -424,9 +428,32 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             switch (v.getId()) {
                 case R.id.watchButton:
                     Timber.d("Watch: %s", launchList.get(position).getVidURL());
+                    if (launchList.get(position).getVidURLs().size() > 1) {
+                        final MaterialSimpleListAdapter adapter = new MaterialSimpleListAdapter(aContext);
+                        for (String s : launchList.get(position).getVidURLs()) {
+                            //Do your stuff here
+                            adapter.add(new MaterialSimpleListItem.Builder(aContext)
+                                    .content(s)
+                                    .build());
+                        }
+
+                        new MaterialDialog.Builder(aContext)
+                                .title("Select a source:")
+                                .adapter(adapter, new MaterialDialog.ListCallback() {
+                                    @Override
+                                    public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                                        Uri watchUri = Uri.parse(launchList.get(position).getVidURLs().get(which));
+                                        Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
+                                        aContext.startActivity(i);
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
+                    } else {
                     Uri watchUri = Uri.parse(launchList.get(position).getVidURL());
                     Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
                     aContext.startActivity(i);
+                    }
                     break;
                 case R.id.exploreButton:
                     Timber.d("Explore: %s", launchList.get(position).getId());
