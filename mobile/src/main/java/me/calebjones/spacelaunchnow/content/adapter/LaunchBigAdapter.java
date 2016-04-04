@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.CountDownTimer;
@@ -287,6 +288,8 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         if (launchItem.getVidURL() != null) {
             if (launchItem.getVidURL().length() == 0 || launchItem.getVidURL().contains("null")) {
                 holder.watchButton.setVisibility(View.GONE);
+            } else {
+                holder.watchButton.setVisibility(View.VISIBLE);
             }
         } else {
             holder.watchButton.setVisibility(View.GONE);

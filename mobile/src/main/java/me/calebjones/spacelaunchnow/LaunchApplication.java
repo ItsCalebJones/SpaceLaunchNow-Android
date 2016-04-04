@@ -71,7 +71,24 @@ public class LaunchApplication extends Application {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
             OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.ERROR);
+
+            JSONObject tags = new JSONObject();
+            try {
+                tags.put("DEBUG", 1);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            OneSignal.sendTags(tags);
+        } else {
+            JSONObject tags = new JSONObject();
+            try {
+                tags.put("DEBUG", 0);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            OneSignal.sendTags(tags);
         }
+        
         mInstance = this;
 
         ListPreferences.create(this);
