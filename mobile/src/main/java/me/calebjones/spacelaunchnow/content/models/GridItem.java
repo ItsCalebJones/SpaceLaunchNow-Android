@@ -17,5 +17,7 @@ public class GridItem {
         return agency;
     }
 
-    public String getImageURL(){return imageURL;}
+    public String getImageURL(){
+        return imageURL;
+    }
 }

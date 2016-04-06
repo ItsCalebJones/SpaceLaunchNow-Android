@@ -29,6 +29,7 @@ import android.view.animation.OvershootInterpolator;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.borax12.materialdaterangepicker.date.DatePickerDialog;
+import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.SearchEvent;
@@ -45,6 +46,7 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
+import io.fabric.sdk.android.services.common.Crash;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.content.adapter.LaunchCompactAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
@@ -655,6 +657,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
                 sChildFragmentManagerField.set(this, null);
             } catch (Exception e) {
                 e.getLocalizedMessage();
+                Crashlytics.logException(e);
                 Timber.e("Error setting mChildFragmentManager field %s", e.getLocalizedMessage());
             }
         }

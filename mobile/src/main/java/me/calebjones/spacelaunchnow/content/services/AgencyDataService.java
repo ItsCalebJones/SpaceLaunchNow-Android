@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -97,7 +99,7 @@ public class AgencyDataService extends IntentService {
             }
 
         } catch (Exception e) {
-            Timber.e("VehicleDataService - ERROR: ", e.getLocalizedMessage());
+            Crashlytics.logException(e);
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_FAILURE_AGENCY);
             AgencyDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
@@ -124,6 +126,7 @@ public class AgencyDataService extends IntentService {
                 agencyList.add(agency);
             }
         } catch (JSONException e) {
+            Crashlytics.logException(e);
             e.printStackTrace();
         }
     }

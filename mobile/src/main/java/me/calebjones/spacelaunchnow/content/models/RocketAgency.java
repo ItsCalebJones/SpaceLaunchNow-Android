@@ -2,6 +2,7 @@
 package me.calebjones.spacelaunchnow.content.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,132 +15,71 @@ public class RocketAgency implements Serializable {
     private Integer type;
     private String infoURL;
     private String wikiURL;
+    private ArrayList<String> infoURLs;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    /**
-     * 
-     * @return
-     *     The id
-     */
     public Integer getId() {
         return id;
     }
 
-    /**
-     * 
-     * @param id
-     *     The id
-     */
     public void setId(Integer id) {
         this.id = id;
     }
 
-    /**
-     * 
-     * @return
-     *     The name
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * 
-     * @param name
-     *     The name
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * 
-     * @return
-     *     The abbrev
-     */
     public String getAbbrev() {
         return abbrev;
     }
 
-    /**
-     * 
-     * @param abbrev
-     *     The abbrev
-     */
     public void setAbbrev(String abbrev) {
         this.abbrev = abbrev;
     }
 
-    /**
-     * 
-     * @return
-     *     The countryCode
-     */
     public String getCountryCode() {
         return countryCode;
     }
 
-    /**
-     * 
-     * @param countryCode
-     *     The countryCode
-     */
     public void setCountryCode(String countryCode) {
         this.countryCode = countryCode;
     }
 
-    /**
-     * 
-     * @return
-     *     The type
-     */
     public Integer getType() {
         return type;
     }
 
-    /**
-     * 
-     * @param type
-     *     The type
-     */
     public void setType(Integer type) {
         this.type = type;
     }
 
-    /**
-     * 
-     * @return
-     *     The infoURL
-     */
     public String getInfoURL() {
         return infoURL;
     }
 
-    /**
-     * 
-     * @param infoURL
-     *     The infoURL
-     */
     public void setInfoURL(String infoURL) {
         this.infoURL = infoURL;
     }
 
-    /**
-     * 
-     * @return
-     *     The wikiURL
-     */
     public String getWikiURL() {
         return wikiURL;
     }
 
-    /**
-     * 
-     * @param wikiURL
-     *     The wikiURL
-     */
     public void setWikiURL(String wikiURL) {
         this.wikiURL = wikiURL;
+    }
+
+    public ArrayList<String> getInfoURLs() {
+        return infoURLs;
+    }
+
+    public void setInfoURLs(ArrayList<String> infoURLs) {
+        this.infoURLs = infoURLs;
     }
 
     public Map<String, Object> getAdditionalProperties() {

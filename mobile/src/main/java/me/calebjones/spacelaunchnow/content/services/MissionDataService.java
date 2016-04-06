@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -99,6 +101,7 @@ public class MissionDataService extends IntentService {
 
         } catch (Exception e) {
             Timber.e("getMissionLaunches ERROR: %s", e.getLocalizedMessage());
+            Crashlytics.logException(e);
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_FAILURE_MISSIONS);
             MissionDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
@@ -141,6 +144,7 @@ public class MissionDataService extends IntentService {
                 missionList.add(mission);
             }
         } catch (JSONException e) {
+            Crashlytics.logException(e);
             e.printStackTrace();
         }
     }

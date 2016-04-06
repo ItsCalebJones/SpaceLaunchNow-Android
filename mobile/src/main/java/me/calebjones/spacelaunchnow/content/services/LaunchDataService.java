@@ -416,6 +416,10 @@ public class LaunchDataService extends IntentService implements
                 launch.setNetstamp(launchesObj.optInt("netstamp"));
                 launch.setWsstamp(launchesObj.optInt("wsstamp"));
                 launch.setWestamp(launchesObj.optInt("westamp"));
+                launch.setProbability(launchesObj.optInt("probability"));
+                launch.setHashtag(launchesObj.optString("hashtag"));
+                launch.setFailreason(launchesObj.optString("failreason"));
+                launch.setHoldreason(launchesObj.optString("holdreason"));
                 launch.setStatus(launchesObj.optInt("status"));
                 JSONArray vidURLs = launchesObj.getJSONArray("vidURLs");
                 if (vidURLs.length() > 0){

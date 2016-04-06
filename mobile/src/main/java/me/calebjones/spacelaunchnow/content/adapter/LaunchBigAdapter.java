@@ -327,8 +327,6 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         Timber.v("onViewRecyled!");
         // Cleanup MapView here?
         if (play) {
-            if (holder.gMap != null) {
-                System.gc();
                 holder.gMap.clear();
             }
         }
@@ -404,12 +402,6 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             exploreButton.setOnClickListener(this);
             watchButton.setOnClickListener(this);
             exploreFab.setOnClickListener(this);
-
-            if (play && map_view != null) {
-                map_view.onCreate(null);
-                map_view.onResume();
-                map_view.getMapAsync(this);
-            }
         }
 
         //React to click events.
@@ -544,13 +536,10 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         public void onMapReady(GoogleMap googleMap) {
             //TODO: Allow user to update this 1-normal 2-satellite 3-Terrain
             // https://goo.gl/OkexW7
-            MapsInitializer.initialize(mContext);
 
             gMap = googleMap;
             gMap.getUiSettings().setAllGesturesEnabled(false);
 
-            googleMap.setMapType(1);
-            googleMap.getUiSettings().setMapToolbarEnabled(false);
 
             // If we have map data, update the map content.
             if (mMapLocation != null) {

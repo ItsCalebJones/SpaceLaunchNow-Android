@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.SearchEvent;
@@ -417,6 +418,7 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
             f = Fragment.class.getDeclaredField("mChildFragmentManager");
             f.setAccessible(true);
         } catch (NoSuchFieldException e) {
+            Crashlytics.logException(e);
             Timber.e("Error getting mChildFragmentManager field %s", e);
         }
         sChildFragmentManagerField = f;
@@ -430,6 +432,7 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
             try {
                 sChildFragmentManagerField.set(this, null);
             } catch (Exception e) {
+                Crashlytics.logException(e);
                 e.getLocalizedMessage();
                 Timber.e("Error setting mChildFragmentManager field %s ", e);
             }
