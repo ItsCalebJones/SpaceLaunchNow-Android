@@ -10,7 +10,7 @@ android {
         applicationId "me.calebjones.spacelaunchnow"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 12
+        versionCode 13
         versionName "1.0.0"
     }
     buildTypes {

@@ -88,7 +88,7 @@ public class LaunchApplication extends Application {
             }
             OneSignal.sendTags(tags);
         }
-        
+
         mInstance = this;
 
         ListPreferences.create(this);
