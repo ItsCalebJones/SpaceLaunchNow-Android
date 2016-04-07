@@ -40,7 +40,6 @@ import com.github.javiersantos.materialstyleddialogs.enums.Style;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.onesignal.OneSignal;
-import com.squareup.haha.perflib.Main;
 
 import java.util.ArrayList;
 import java.util.Random;
