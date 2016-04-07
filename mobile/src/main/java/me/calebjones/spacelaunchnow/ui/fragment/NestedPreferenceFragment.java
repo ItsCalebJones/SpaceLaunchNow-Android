@@ -1,20 +1,33 @@
 package me.calebjones.spacelaunchnow.ui.fragment;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.multi.CompositeMultiplePermissionsListener;
+import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.onesignal.OneSignal;
 
 import java.util.Date;
@@ -22,8 +35,10 @@ import java.util.Date;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.content.receivers.MultiplePermissionListener;
 import me.calebjones.spacelaunchnow.utils.TimeRangePickerDialogCustom;
 import timber.log.Timber;
+
 
 public class NestedPreferenceFragment extends PreferenceFragmentCompat implements TimeRangePickerDialogCustom.OnTimeRangeSelectedListener, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
@@ -47,6 +62,7 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
     private SwitchPreferences switchPreferences;
     private Context context;
     private GoogleApiClient mGoogleApiClient;
+    private MultiplePermissionsListener allPermissionsListener;
     private static final String HOUR_KEY = "me.calebjones.spacelaunchnow.wear.hourmode";
 
     @Override
@@ -62,6 +78,15 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    public void checkCalendarPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            if (Dexter.isRequestOngoing()) {
+                return;
+            }
+            Dexter.checkPermissions(allPermissionsListener, Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR);
+        }
     }
 
     class SharedPreferenceListener implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -101,8 +126,19 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
                     PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
                     Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
                 }
+                if (key.equals("calendar_sync_state")){
+                    if (this.valprefs.getBoolean(key, true)) {
+                        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission_group.CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+                            switchPreferences.setCalendarStatus(true);
+                        } else {
+                            checkCalendarPermission();
+                        }
+                    } else {
+                        switchPreferences.setCalendarStatus(false);
+                    }
+                }
             } catch (NullPointerException e) {
-
+                Crashlytics.logException(e);
             }
         }
     }
@@ -117,7 +153,9 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        context = getContext();
+        createPermissionListeners();
+        Dexter.continuePendingRequestsIfPossible(allPermissionsListener);
 
         if (getActivity() != null) {
             this.toolbarTitle = (TextView) getActivity().findViewById(R.id.title_text);
@@ -221,6 +259,58 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
             Timber.d("Google Client Disconnect");
             mGoogleApiClient.disconnect();
         }
+    }
+
+    private void createPermissionListeners() {
+        MultiplePermissionsListener feedbackViewMultiplePermissionListener =
+                new MultiplePermissionListener(this);
+
+        allPermissionsListener =
+                new CompositeMultiplePermissionsListener(feedbackViewMultiplePermissionListener,
+                        DialogOnAnyDeniedMultiplePermissionsListener.Builder.withContext(context)
+                                .withTitle("Permission Denied")
+                                .withMessage("If you change your mind, try to enable again. Or go to Settings -> Application -> Space Launch Now -> Permissions.")
+                                .withButtonText(android.R.string.ok)
+                                .withIcon(R.mipmap.ic_launcher)
+                                .build());
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public void showPermissionRationale(final PermissionToken token) {
+        new AlertDialog.Builder(context).setTitle("Calendar Permission Needed")
+                .setMessage("This permission is needed to sync launches with your calendar.")
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialog, int which) {
+                        switchPreferences.setCalendarStatus(false);
+                        dialog.dismiss();
+                        token.cancelPermissionRequest();
+                    }
+                })
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        token.continuePermissionRequest();
+                    }
+                })
+                .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override public void onDismiss(DialogInterface dialog) {
+                        switchPreferences.setCalendarStatus(false);
+                        token.cancelPermissionRequest();
+                    }
+                })
+                .show();
+    }
+
+    public void showPermissionGranted(String permission) {
+        switchPreferences.setCalendarStatus(true);
+    }
+
+    public void showPermissionDenied(String permission, boolean isPermanentlyDenied) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean("calendar_sync_state", false);
+        editor.apply();
+        switchPreferences.setCalendarStatus(false);
     }
 
 }

@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.text.format.DateFormat;
 
 import com.crashlytics.android.Crashlytics;
+import com.karumi.dexter.Dexter;
 import com.onesignal.OneSignal;
 import com.squareup.leakcanary.LeakCanary;
 
@@ -66,6 +67,8 @@ public class LaunchApplication extends Application {
         OneSignal.startInit(this).init();
         OneSignal.enableNotificationsWhenActive(true);
         OneSignal.enableInAppAlertNotification(true);
+
+        Dexter.initialize(this);
 
 
         if (BuildConfig.DEBUG) {

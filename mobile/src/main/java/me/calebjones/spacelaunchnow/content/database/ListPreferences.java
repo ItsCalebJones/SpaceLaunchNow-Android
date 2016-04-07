@@ -18,6 +18,7 @@ import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -25,8 +26,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import io.fabric.sdk.android.services.common.Crash;
 import me.calebjones.spacelaunchnow.content.models.Agency;
+import me.calebjones.spacelaunchnow.content.models.CalendarItem;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.RocketDetails;
 import me.calebjones.spacelaunchnow.content.models.Mission;
@@ -44,6 +45,7 @@ public class ListPreferences {
 
     public static String PREFS_LIST_PREVIOUS;
     public static String PREFS_LIST_UPCOMING;
+    public static String PREFS_LIST_CALENDAR;
     public static String PREFS_LIST_PREVIOUS_FILTERED;
     public static String PREFS_LIST_UPCOMING_FILTERED;
     public static String PREFS_LIST_AGENCY;
@@ -78,6 +80,7 @@ public class ListPreferences {
         PREFS_PREVIOUS_FIRST_BOOT = "IS_PREVIOUS_FIRST_BOOT";
         PREFS_UPCOMING_FIRST_BOOT = "IS_UPCOMING_FIRST_BOOT";
         PREFS_POSITION = "POSITION_VALUE";
+        PREFS_LIST_UPCOMING = "LAUNCH_LIST_CALENDAR";
         PREFS_LIST_UPCOMING = "LAUNCH_LIST_UPCOMING";
         PREFS_LIST_PREVIOUS = "LAUNCH_LIST_PREVIOUS";
         PREFS_MISSION_LIST_UPCOMING = "MISSION_LIST";
@@ -198,6 +201,19 @@ public class ListPreferences {
     public boolean getPreviousFirstBoot() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         return this.sharedPrefs.getBoolean(PREFS_PREVIOUS_FIRST_BOOT, true);
+    }
+
+    //Set methods for storing data.
+    public void setListCalendarItems(List<CalendarItem> items) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.serializeSpecialFloatingPointValues();
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+
+        this.prefsEditor.putString(PREFS_LIST_CALENDAR, gson.toJson(items));
+        this.prefsEditor.apply();
     }
 
 
@@ -564,6 +580,26 @@ public class ListPreferences {
         productFromShared = gson.fromJson(jsonPreferences, type);
 
         return productFromShared;
+    }
+
+    public List<CalendarItem> getListCalendarItems() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        if (!this.sharedPrefs.contains(PREFS_LIST_CALENDAR)) {
+            return null;
+        }
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+
+        List<CalendarItem> items;
+        SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        String jsonPreferences = sharedPref.getString(PREFS_LIST_CALENDAR, null);
+
+        Type type = new TypeToken<List<Launch>>() {
+        }.getType();
+        items = gson.fromJson(jsonPreferences, type);
+
+        return items;
     }
 
     public List<Launch> getNextLaunches() {
@@ -1173,9 +1209,9 @@ public class ListPreferences {
         }
         Collections.sort(newList, new Comparator<Launch>() {
             public int compare(Launch m1, Launch m2) {
-                if (m1.getLaunchDate() == null || m2.getLaunchDate() == null)
+                if (m1.getStartDate() == null || m2.getStartDate() == null)
                     return 1;
-                return m1.getLaunchDate().compareTo(m2.getLaunchDate());
+                return m1.getStartDate().compareTo(m2.getStartDate());
             }
         });
         this.setUpcomingLaunchesFiltered(newList);

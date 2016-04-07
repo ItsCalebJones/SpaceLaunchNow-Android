@@ -9,16 +9,16 @@ import com.onesignal.OneSignal;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import me.calebjones.spacelaunchnow.content.models.Launch;
+import me.calebjones.spacelaunchnow.utils.CalendarUtil;
 
-public class SwitchPreferences {
+public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static SwitchPreferences INSTANCE;
     private static SharedPreferences SETTINGS;
+    private static ListPreferences listPreferences;
     private SharedPreferences sharedPrefs;
     private Context appContext;
     SharedPreferences.Editor prefsEditor;
@@ -52,6 +52,7 @@ public class SwitchPreferences {
     public static String PREFS_SWITCH_CAPE;
     public static String PREFS_SWITCH_KSC;
     public static String PREFS_SWITCH_ALL;
+    public static String PREFS_CALENDAR_STATUS;
     public static String PREFS_VERSION_CODE;
 
 
@@ -87,6 +88,7 @@ public class SwitchPreferences {
         PREFS_UP_VEHICLE_FILTERED_WHICH = "UP_VEHICLE_FILTERED_WHICH";
         PREFS_UP_AGENCY_FILTERED_WHICH = "UP_AGENCY_FILTERED_WHICH";
         PREFS_UP_LOCATION_FILTERED_WHICH = "UP_LOCATION_FILTERED_WHICH";
+        PREFS_CALENDAR_STATUS = "CALENDAR_STATUS";
         INSTANCE = null;
     }
 
@@ -94,6 +96,7 @@ public class SwitchPreferences {
         this.sharedPrefs = null;
         this.prefsEditor = null;
         this.appContext = context.getApplicationContext();
+        appContext.getSharedPreferences(PREFS_NAME, 0).registerOnSharedPreferenceChangeListener(this);
     }
 
     public static SwitchPreferences getInstance(Context context) {
@@ -119,11 +122,31 @@ public class SwitchPreferences {
         return this.sharedPrefs.getInt(PREFS_VERSION_CODE, 0);
     }
 
+    public boolean getCalendarStatus() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getBoolean(PREFS_CALENDAR_STATUS, false);
+    }
+
+
+    public void setCalendarStatus(boolean value) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean(PREFS_CALENDAR_STATUS, value);
+        this.prefsEditor.apply();
+    }
+
     public boolean getNightMode() {
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this.appContext);
         return this.sharedPrefs.getBoolean("theme", false);
     }
 
+
+    public void setNightModeStatus(boolean value) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean(PREFS_NIGHT_MODE_STATUS, value);
+        this.prefsEditor.apply();
+    }
 
     public void setNightModeStart(String value) {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
@@ -136,13 +159,6 @@ public class SwitchPreferences {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putString(PREFS_NIGHT_MODE_END, value);
-        this.prefsEditor.apply();
-    }
-
-    public void setNightModeStatus(boolean value) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putBoolean(PREFS_NIGHT_MODE_STATUS, value);
         this.prefsEditor.apply();
     }
 
@@ -703,4 +719,23 @@ public class SwitchPreferences {
         OneSignal.sendTags(tags);
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(PREFS_CALENDAR_STATUS) && !getCalendarStatus()) {
+            CalendarUtil provider = new CalendarUtil();
+            provider.deleteEvent(appContext, listPreferences.getNextLaunch());
+        } else {
+            //Get the list of launches
+            Launch launch = listPreferences.getNextLaunch();
+            CalendarUtil provider = new CalendarUtil();
+
+            if (launch.getCalendarID() == null) {
+                Integer id = provider.addEvent(appContext, launch);
+                launch.setCalendarID(id);
+                listPreferences.setNextLaunch(launch);
+            } else {
+                provider.updateEvent(appContext, launch);
+            }
+        }
+    }
 }
