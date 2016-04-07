@@ -64,6 +64,24 @@
         <item>Ohae Launch Station, North Korea</item>
     </string-array>
 
+    <string-array name="calendar_reminder">
+        <item>One</item>
+        <item>Five</item>
+        <item>Ten</item>
+        <item>Fifteen</item>
+        <item>Thirty</item>
+        <item>Hour</item>
+    </string-array>
+
+    <string-array name="calendar_reminder_values">
+        <item>1</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+    </string-array>
+
     <string-array name="upcoming_array">
         <item>One</item>
         <item>Two</item>

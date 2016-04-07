@@ -9,6 +9,10 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <!-- Required to act as a calendar service. -->
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+
     <!-- Required to act as a custom watch face. -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
@@ -22,9 +26,9 @@
         tools:replace="label">
         <activity
             android:name=".MainActivity"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/LightTheme.Launcher"
-            android:windowSoftInputMode="adjustResize"
-            android:configChanges="orientation|screenSize">
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -100,6 +104,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="me.calebjones.spacelaunchnow.MainActivity" />
         </activity>
+
+        <service
+            android:name=".content.services.CalendarSyncService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

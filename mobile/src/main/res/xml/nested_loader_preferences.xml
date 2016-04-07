@@ -10,13 +10,6 @@
             android:entryValues="@array/upcoming_array_values"
             android:summary="Specify how many upcoming launches to load."
             android:title="Upcoming Launches" />
-        <ListPreference
-            android:defaultValue="1000"
-            android:key="previous_value"
-            android:entries="@array/previous_array"
-            android:entryValues="@array/previous_array_values"
-            android:summary="Specify how many previous launches to load."
-            android:title="Previous Launches" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Background Sync">
@@ -35,13 +28,21 @@
             android:summary="Select desired time between syncs."
             android:title="Background Sync Interval" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Other Settings">
+    <PreferenceCategory android:title="Calender Settings">
         <SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="local_time"
-            android:summaryOff="Allow times to be represented in UTC."
-            android:summaryOn="Allow locally translated times to fit your current timezone."
-            android:title="Timezone Settings" />
+            android:defaultValue="false"
+            android:key="calendar_sync_state"
+            android:summary="Allow next launch to sync with default Calendar."
+            android:title="Sync Calendar - (EXPERIMENTAL)" />
+        <ListPreference
+            android:defaultValue="5"
+            android:key="calendar_reminder"
+            android:summary="Set custom reminders for calendar notifications."
+            android:entries="@array/calendar_reminder"
+            android:entryValues="@array/calendar_reminder_values"
+            android:title="Default Calendar Reminder"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Other Settings">
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="confirm_exit"

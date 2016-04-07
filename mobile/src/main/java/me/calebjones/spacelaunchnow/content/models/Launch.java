@@ -29,12 +29,14 @@ public class Launch implements Serializable {
     private Integer status;
     private Integer inhold;
     private Integer tbdtime;
+    private Integer calendarID;
 
     private Location location;
 
     private Rocket rocket;
 
-    private Date date;
+    private Date startDate;
+    private Date endDate;
 
     private boolean isNotifiedDay = false;
     private boolean isNotifiedHour = false;
@@ -78,6 +80,14 @@ public class Launch implements Serializable {
 
     public void setProbability(Integer probability) {
         this.probability = probability;
+    }
+
+    public Integer getCalendarID() {
+        return calendarID;
+    }
+
+    public void setCalendarID(Integer calendarID) {
+        this.calendarID = calendarID;
     }
 
     public Integer getId() {
@@ -256,11 +266,19 @@ public class Launch implements Serializable {
         this.favorite = favorite;
     }
 
-    public Date getLaunchDate() {
-        return date;
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public void setLaunchDate(Date date) {
-        this.date = date;
+    public void setStartDate(Date date) {
+        this.startDate = date;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 }
