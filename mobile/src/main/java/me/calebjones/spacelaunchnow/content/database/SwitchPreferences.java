@@ -721,20 +721,22 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(PREFS_CALENDAR_STATUS) && !getCalendarStatus()) {
-            CalendarUtil provider = new CalendarUtil();
-            provider.deleteEvent(appContext, listPreferences.getNextLaunch());
-        } else {
-            //Get the list of launches
-            Launch launch = listPreferences.getNextLaunch();
-            CalendarUtil provider = new CalendarUtil();
-
-            if (launch.getCalendarID() == null) {
-                Integer id = provider.addEvent(appContext, launch);
-                launch.setCalendarID(id);
-                listPreferences.setNextLaunch(launch);
+        if (listPreferences != null) {
+            if (key.equals(PREFS_CALENDAR_STATUS) && !getCalendarStatus()) {
+                CalendarUtil provider = new CalendarUtil();
+                provider.deleteEvent(appContext, listPreferences.getNextLaunch());
             } else {
-                provider.updateEvent(appContext, launch);
+                //Get the list of launches
+                Launch launch = listPreferences.getNextLaunch();
+                CalendarUtil provider = new CalendarUtil();
+
+                if (launch.getCalendarID() == null) {
+                    Integer id = provider.addEvent(appContext, launch);
+                    launch.setCalendarID(id);
+                    listPreferences.setNextLaunch(launch);
+                } else {
+                    provider.updateEvent(appContext, launch);
+                }
             }
         }
     }
