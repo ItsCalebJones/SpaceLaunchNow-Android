@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.ui.fragment;
+package me.calebjones.spacelaunchnow.ui.fragment.settings;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -9,12 +9,12 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.preference.PreferenceFragmentCompat;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -36,11 +36,10 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.receivers.MultiplePermissionListener;
-import me.calebjones.spacelaunchnow.utils.TimeRangePickerDialogCustom;
 import timber.log.Timber;
 
 
-public class NestedPreferenceFragment extends PreferenceFragmentCompat implements TimeRangePickerDialogCustom.OnTimeRangeSelectedListener, GoogleApiClient.ConnectionCallbacks,
+public class NestedPreferenceFragment extends PreferenceFragment implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
 
@@ -127,10 +126,14 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
                     Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
                 }
                 if (key.equals("calendar_sync_state")){
+                    Timber.v("Calendar Sync State: %s", this.valprefs.getBoolean(key, true));
                     if (this.valprefs.getBoolean(key, true)) {
-                        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission_group.CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+                        Timber.v("Calendar Status: %s", switchPreferences.getCalendarStatus());
+                        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+                            Timber.v("Calendar Permission - Granted");
                             switchPreferences.setCalendarStatus(true);
                         } else {
+                            Timber.v("Calendar Permission - Denied/Pending");
                             checkCalendarPermission();
                         }
                     } else {
@@ -153,7 +156,7 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getContext();
+        context = getActivity();
         createPermissionListeners();
         Dexter.continuePendingRequestsIfPossible(allPermissionsListener);
 
@@ -169,11 +172,6 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         prefs.registerOnSharedPreferenceChangeListener(new SharedPreferenceListener(prefs));
         checkPreferenceResource();
-
-    }
-
-    @Override
-    public void onCreatePreferences(Bundle bundle, String s) {
 
     }
 
@@ -213,42 +211,6 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
                 break;
             default:
         }
-    }
-
-    @Override
-    public void onTimeRangeSelected(int startHour, int startMin, int endHour, int endMin) {
-        this.context = getContext();
-        String startH, startM, endH, endM;
-
-        //Format Values to something more extensible.
-        if (startHour < 10){
-            startH = "0" + startHour;
-        } else {
-            startH = String.valueOf(startHour);
-        }
-
-        if (startMin < 10){
-            startM = "0" + startMin;
-        } else {
-            startM = String.valueOf(startMin);
-        }
-
-        if (endHour < 10){
-            endH = "0" + endHour;
-        } else {
-            endH = String.valueOf(endHour);
-        }
-
-        if (endMin < 10){
-            endM = "0" + endMin;
-        } else {
-            endM = String.valueOf(endMin);
-        }
-
-        listPreferences = ListPreferences.getInstance(this.context);
-        switchPreferences.setNightModeStart(startH + ":" + startM);
-        switchPreferences.setNightModeEnd(endH + ":" + endM);
-        listPreferences.getNightMode();
     }
 
     @Override
@@ -312,5 +274,4 @@ public class NestedPreferenceFragment extends PreferenceFragmentCompat implement
         editor.apply();
         switchPreferences.setCalendarStatus(false);
     }
-
 }

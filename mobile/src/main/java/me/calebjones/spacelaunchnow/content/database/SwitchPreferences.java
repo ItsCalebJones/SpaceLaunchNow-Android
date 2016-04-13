@@ -735,7 +735,11 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
                     launch.setCalendarID(id);
                     listPreferences.setNextLaunch(launch);
                 } else {
-                    provider.updateEvent(appContext, launch);
+                    if (!provider.updateEvent(appContext, launch)){
+                        Integer id = provider.addEvent(appContext, launch);
+                        launch.setCalendarID(id);
+                        listPreferences.setNextLaunch(launch);
+                    }
                 }
             }
         }

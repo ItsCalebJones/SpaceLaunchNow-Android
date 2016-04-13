@@ -107,7 +107,7 @@
 
         <service
             android:name=".content.services.CalendarSyncService"
-            android:exported="false"></service>
+            android:exported="false"/>
     </application>
 
 </manifest>

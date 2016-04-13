@@ -15,6 +15,9 @@ import android.support.v4.app.ActivityCompat;
 
 import com.crashlytics.android.Crashlytics;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.TimeZone;
 
 import me.calebjones.spacelaunchnow.content.models.Launch;
@@ -42,6 +45,14 @@ public class CalendarUtil {
         int selection = Integer.parseInt(sharedPrefs.getString("calendar_reminder", "5"));
         Timber.v("Reminder time: %s", String.valueOf(selection));
 
+
+        Set<String> prefSelections = sharedPrefs.getStringSet("calendar_reminder_array", new HashSet<>(Arrays.asList("5", "1440")));
+        String[] strings = prefSelections.toArray(new String[prefSelections.size()]);
+        int[] prefSelected = new int[prefSelections.size()];
+        for (int i = 0; i < prefSelected.length ; i++){
+            prefSelected[i] = Integer.parseInt(strings[i]);
+        }
+
         // Get list of Calendars (after Jim Blackler, http://jimblackler.net/blog/?p=151)
         ContentResolver contentResolver = context.getContentResolver();
 
@@ -65,14 +76,14 @@ public class CalendarUtil {
 
         //Build Description String and assign it.
         String description = "";
-        if (launch.getVidURLs().size() >= 1) {
+        if (launch.getVidURLs() != null && launch.getVidURLs().size() >= 1) {
             description = "Video URLs: \n";
             for (int i = 0; i < launch.getVidURLs().size(); i++) {
-                description = description + launch.getVidURLs().get(i) + "\n";
+                description = description + launch.getVidURLs().get(i) + "\n\n";
             }
         }
-        if (launch.getMissions().size() > 0) {
-            description = description + "\n" + launch.getMissions().get(0).getDescription();
+        if (launch.getMissions() != null && launch.getMissions().size() > 0) {
+            description = description + launch.getMissions().get(0).getDescription();
         }
 
         calEvent.put(CalendarContract.Events.DESCRIPTION, description);
@@ -87,43 +98,46 @@ public class CalendarUtil {
             cursor.close();
         }
         if (uri != null) {
-            setReminder(context, Long.parseLong(uri.getLastPathSegment()), selection);
+            for (int i = 0; i < prefSelected.length; i++){
+                setReminder(context, Long.parseLong(uri.getLastPathSegment()), prefSelected[i]);
+            }
             return Integer.parseInt(uri.getLastPathSegment());
         } else {
             return null;
         }
     }
 
-    public void updateEvent(Context context, Launch launch) {
-        ContentResolver cr = context.getContentResolver();
-        ContentValues calEvent = new ContentValues();
+    public boolean updateEvent(Context context, Launch launch) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+            sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+            ContentResolver cr = context.getContentResolver();
+            ContentValues calEvent = new ContentValues();
 
-        // The new title for the event
-        calEvent.put(CalendarContract.Events.TITLE, launch.getName());
+            // The new title for the event
+            calEvent.put(CalendarContract.Events.TITLE, launch.getName());
 
-        //Build Description String and assign it.
-        String description = "";
-        if (launch.getVidURLs().size() >= 1) {
-            description = "Video URLs: \n";
-            for (int i = 0; i < launch.getVidURLs().size(); i++) {
-                description = description + launch.getVidURLs().get(i) + "\n";
+            //Build Description String and assign it.
+            String description = "";
+            if (launch.getVidURLs() != null && launch.getVidURLs().size() >= 1) {
+                description = "Video URLs: \n";
+                for (int i = 0; i < launch.getVidURLs().size(); i++) {
+                    description = description + launch.getVidURLs().get(i) + "\n\n";
+                }
             }
-        }
-        if (launch.getMissions().size() > 0) {
-            description = description + "\n" + launch.getMissions().get(0).getDescription();
-        }
+            if (launch.getMissions() != null && launch.getMissions().size() > 0) {
+                description = description + launch.getMissions().get(0).getDescription();
+            }
 
-        calEvent.put(CalendarContract.Events.DESCRIPTION, description);
-        calEvent.put(CalendarContract.Events.EVENT_LOCATION, launch.getLocation().getName());
-        calEvent.put(CalendarContract.Events.DTSTART, launch.getStartDate().getTime());
-        calEvent.put(CalendarContract.Events.DTEND, launch.getEndDate().getTime());
-        calEvent.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getDisplayName());
+            calEvent.put(CalendarContract.Events.DESCRIPTION, description);
+            calEvent.put(CalendarContract.Events.EVENT_LOCATION, launch.getLocation().getName());
+            calEvent.put(CalendarContract.Events.DTSTART, launch.getStartDate().getTime());
+            calEvent.put(CalendarContract.Events.DTEND, launch.getEndDate().getTime());
+            calEvent.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getDisplayName());
 
-        Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, launch.getCalendarID());
+            Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, launch.getCalendarID());
 
-        if (cr.update(updateUri, calEvent, null, null) == 0) {
-            addEvent(context, launch);
-        }
+            return cr.update(updateUri, calEvent, null, null) > 0;
+        } return false;
     }
 
     public int deleteEvent(Context context, Launch launch) {
@@ -145,6 +159,7 @@ public class CalendarUtil {
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
+
             ContentResolver contentResolver = context.getContentResolver();
             ContentValues values = new ContentValues();
             values.put(CalendarContract.Reminders.MINUTES, timeBefore);

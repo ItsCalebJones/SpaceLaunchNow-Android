@@ -82,6 +82,31 @@
         <item>60</item>
     </string-array>
 
+    <string-array name="multi_calendar_reminder">
+        <item>One Minute</item>
+        <item>Five Minutes</item>
+        <item>Thirty Minutes</item>
+        <item>One Hour</item>
+        <item>Two Hours</item>
+        <item>Four Hours</item>
+        <item>One Day</item>
+    </string-array>
+
+    <string-array name="multi_calendar_reminder_values">
+        <item>1</item>
+        <item>5</item>
+        <item>30</item>
+        <item>60</item>
+        <item>240</item>
+        <item>480</item>
+        <item>1440</item>
+    </string-array>
+
+    <string-array name="multi_calendar_reminder_default">
+        <item>5</item>
+        <item>1440</item>
+    </string-array>
+
     <string-array name="upcoming_array">
         <item>One</item>
         <item>Two</item>

@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.ui.fragment;
+package me.calebjones.spacelaunchnow.ui.fragment.settings;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
