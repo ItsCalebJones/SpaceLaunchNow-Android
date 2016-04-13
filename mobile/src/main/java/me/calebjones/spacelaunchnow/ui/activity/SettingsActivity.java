@@ -7,13 +7,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.ui.fragment.NestedPreferenceFragment;
-import me.calebjones.spacelaunchnow.ui.fragment.SettingsFragment;
-import me.calebjones.spacelaunchnow.ui.fragment.SettingsFragment.Callback;
+import me.calebjones.spacelaunchnow.ui.fragment.settings.NestedPreferenceFragment;
+import me.calebjones.spacelaunchnow.ui.fragment.settings.SettingsFragment;
+import me.calebjones.spacelaunchnow.ui.fragment.settings.SettingsFragment.Callback;
 
 public class SettingsActivity extends AppCompatActivity implements Callback {
     private static final String NESTED = "NESTED";
@@ -54,37 +52,37 @@ public class SettingsActivity extends AppCompatActivity implements Callback {
 
         toolbarTitle.setText(R.string.action_settings);
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().add(R.id.settings_content_frame, new SettingsFragment()).commit();
+            getFragmentManager().beginTransaction().add(R.id.settings_content_frame, new SettingsFragment()).commit();
         }
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            if (getFragmentManager().getBackStackEntryCount() == 0) {
                 super.onBackPressed();
-            } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-                getSupportFragmentManager().popBackStack();
+            } else if (getFragmentManager().getBackStackEntryCount() == 1) {
+                getFragmentManager().popBackStack();
                 toolbarTitle.setText(R.string.settings);
             } else {
-                getSupportFragmentManager().popBackStack();
+                getFragmentManager().popBackStack();
             }
         }
         return super.onOptionsItemSelected(item);
     }
 
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+        if (getFragmentManager().getBackStackEntryCount() == 0) {
             super.onBackPressed();
-        } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-            getSupportFragmentManager().popBackStack();
+        } else if (getFragmentManager().getBackStackEntryCount() == 1) {
+            getFragmentManager().popBackStack();
             this.toolbarTitle.setText(R.string.settings);
         } else {
-            getSupportFragmentManager().popBackStack();
+            getFragmentManager().popBackStack();
         }
     }
 
     public void onNestedPreferenceSelected(int key) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.settings_content_frame, NestedPreferenceFragment.newInstance(key), NESTED).addToBackStack(NESTED).commit();
+        getFragmentManager().beginTransaction().replace(R.id.settings_content_frame, NestedPreferenceFragment.newInstance(key), NESTED).addToBackStack(NESTED).commit();
     }
 
 }

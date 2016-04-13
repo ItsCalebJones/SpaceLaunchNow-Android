@@ -66,6 +66,7 @@ public class NextLaunchTracker extends IntentService implements
     }
 
     public void onCreate() {
+        super.onCreate();
         Timber.d("NextLaunchTracker - onCreate");
         rightNow = Calendar.getInstance();
         super.onCreate();
@@ -77,18 +78,13 @@ public class NextLaunchTracker extends IntentService implements
                 .build();
     }
 
-
-    public int onStartCommand(Intent intent, int flags, int startId) {
-
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        Timber.d("onHandleIntent - %s", intent.describeContents());
         this.listPreferences = ListPreferences.getInstance(getApplicationContext());
         this.switchPreferences = SwitchPreferences.getInstance(getApplicationContext());
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
-    protected void onHandleIntent(Intent intent) {
         upcomingLaunchList = this.listPreferences.getNextLaunches();
 
         mGoogleApiClient.connect();
@@ -105,6 +101,7 @@ public class NextLaunchTracker extends IntentService implements
                 syncCalendar();
             }
         }
+        stopSelf();
     }
 
     private void checkNextLaunch() {
@@ -171,7 +168,6 @@ public class NextLaunchTracker extends IntentService implements
             this.listPreferences.setNextLaunch(nextLaunch);
             checkStatus(nextLaunch);
         }
-
         //If Calendar Sync is enabled sync it up
         if (switchPreferences.getCalendarStatus()){
             syncCalendar();
@@ -190,7 +186,11 @@ public class NextLaunchTracker extends IntentService implements
             listPreferences.setNextLaunch(launch);
         } else {
             //Try to update, if it fails create event.
-            provider.updateEvent(this, launch);
+            if (!provider.updateEvent(this, launch)){
+                Integer id = provider.addEvent(this, launch);
+                launch.setCalendarID(id);
+                listPreferences.setNextLaunch(launch);
+            }
         }
     }
 
@@ -462,7 +462,9 @@ public class NextLaunchTracker extends IntentService implements
             }
         }
 
-        sendToWear(listPreferences.getNextLaunch());
+        if (Utils.checkPlayServices(this)){
+            sendToWear(listPreferences.getNextLaunch());
+        }
         alarmManager.set(AlarmManager.RTC_WAKEUP, nextUpdate,
                 PendingIntent.getBroadcast(this, 165432, new Intent(Strings.ACTION_CHECK_NEXT_LAUNCH_TIMER), 0));
     }

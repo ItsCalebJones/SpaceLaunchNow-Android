@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen android:title="Appearance"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <SwitchPreferenceCompat
+    <SwitchPreference
         android:defaultValue="false"
         android:key="theme"
         android:summaryOff="Night mode is disabled."
         android:summaryOn="Night Mode is enabled."
         android:title="Night mode" />
-    <SwitchPreferenceCompat
+    <SwitchPreference
         android:defaultValue="true"
         android:key="local_time"
         android:summaryOff="Allow times to be represented in UTC."
         android:summaryOn="Allow locally translated times to fit your current timezone."
         android:title="Timezone Settings" />
-    <SwitchPreferenceCompat
+    <SwitchPreference
         android:defaultValue="false"
         android:key="card_size_small"
         android:summaryOff="Use full-size content card."

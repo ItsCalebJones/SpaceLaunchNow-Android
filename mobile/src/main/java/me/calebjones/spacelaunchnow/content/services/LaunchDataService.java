@@ -180,8 +180,10 @@ public class LaunchDataService extends IntentService implements
 
         } catch (Exception e) {
             Timber.e("LaunchDataService - getPreviousLaunches ERROR: %s", e.getLocalizedMessage());
-            Crashlytics.setBool("Network", Utils.isNetworkAvailable(this));
-            Crashlytics.logException(e);
+            if(Utils.isNetworkAvailable(this)) {
+                Crashlytics.setBool("Network", Utils.isNetworkAvailable(this));
+                Crashlytics.logException(e);
+            }
 
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_FAILURE_PREV_LAUNCHES);
@@ -256,8 +258,10 @@ public class LaunchDataService extends IntentService implements
 
         } catch (Exception e) {
             Timber.e("LaunchDataService - getUpcomingLaunches ERROR: %s", e.getLocalizedMessage());
-            Crashlytics.setBool("Network", Utils.isNetworkAvailable(this));
-            Crashlytics.logException(e);
+            if(Utils.isNetworkAvailable(this)) {
+                Crashlytics.setBool("Network", Utils.isNetworkAvailable(this));
+                Crashlytics.logException(e);
+            }
 
             if (BuildConfig.DEBUG) {
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());

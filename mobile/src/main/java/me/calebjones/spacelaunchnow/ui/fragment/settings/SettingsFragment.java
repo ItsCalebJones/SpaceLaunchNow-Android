@@ -1,16 +1,15 @@
-package me.calebjones.spacelaunchnow.ui.fragment;
+package me.calebjones.spacelaunchnow.ui.fragment.settings;
 
 import android.content.Context;
 import android.os.Bundle;
 
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.Preference.OnPreferenceClickListener;
+import android.preference.Preference;
+import android.preference.PreferenceFragment;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 
-public class SettingsFragment extends PreferenceFragmentCompat implements OnPreferenceClickListener {
+public class SettingsFragment extends PreferenceFragment implements android.preference.Preference.OnPreferenceClickListener {
     
     private static final String NOTIFICATIONS = "notifications";
     private static final String LAUNCH_TRACKING_OPTIONS = "launch_tracking_options";
@@ -65,11 +64,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements OnPref
         findPreference(LAUNCH_TRACKING_OPTIONS).setOnPreferenceClickListener(this);
         findPreference(APPEARANCE).setOnPreferenceClickListener(this);
         findPreference(WEAR).setOnPreferenceClickListener(this);
-    }
-
-    @Override
-    public void onCreatePreferences(Bundle bundle, String s) {
-
     }
 
     public void onResume() {

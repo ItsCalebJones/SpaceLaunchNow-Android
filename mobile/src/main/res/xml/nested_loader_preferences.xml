@@ -13,7 +13,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Background Sync">
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:defaultValue="true"
             android:key="background_sync"
             android:summaryOff="Allow Launch Data to sync in the background, required for launch notifications."
@@ -29,21 +29,22 @@
             android:title="Background Sync Interval" />
     </PreferenceCategory>
     <PreferenceCategory android:title="Calender Settings">
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:defaultValue="false"
             android:key="calendar_sync_state"
             android:summary="Allow next launch to sync with default Calendar."
             android:title="Sync Calendar - (EXPERIMENTAL)" />
-        <ListPreference
-            android:defaultValue="5"
-            android:key="calendar_reminder"
+        <MultiSelectListPreference
+            android:defaultValue="@array/multi_calendar_reminder_default"
+            android:key="calendar_reminder_array"
             android:summary="Set custom reminders for calendar notifications."
-            android:entries="@array/calendar_reminder"
-            android:entryValues="@array/calendar_reminder_values"
+            android:entries="@array/multi_calendar_reminder"
+            android:entryValues="@array/multi_calendar_reminder_values"
+            android:persistent="true"
             android:title="Default Calendar Reminder"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="Other Settings">
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:defaultValue="false"
             android:key="confirm_exit"
             android:summary="Show confirm dialog before exit."

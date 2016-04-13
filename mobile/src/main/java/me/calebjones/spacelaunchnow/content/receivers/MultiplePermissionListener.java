@@ -10,7 +10,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.util.List;
 
-import me.calebjones.spacelaunchnow.ui.fragment.NestedPreferenceFragment;
+import me.calebjones.spacelaunchnow.ui.fragment.settings.NestedPreferenceFragment;
 
 public class MultiplePermissionListener implements MultiplePermissionsListener {
 
