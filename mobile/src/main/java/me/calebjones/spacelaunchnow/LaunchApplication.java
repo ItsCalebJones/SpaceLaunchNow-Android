@@ -13,6 +13,8 @@ import com.karumi.dexter.Dexter;
 import com.onesignal.OneSignal;
 import com.squareup.leakcanary.LeakCanary;
 
+import net.mediavrog.irr.DefaultRuleEngine;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -107,8 +109,7 @@ public class LaunchApplication extends Application {
 
         checkSubscriptions();
 
-        //TODO Ready reviews before release.
-//        DefaultRuleEngine.trackAppStart(this);
+        DefaultRuleEngine.trackAppStart(this);
 
         if (!sharedPreference.getFirstBoot()) {
             Intent nextIntent = new Intent(this, LaunchDataService.class);
