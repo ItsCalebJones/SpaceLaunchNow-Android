@@ -4,7 +4,9 @@ import com.android.vending.billing.IInAppBillingService;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.AddToCartEvent;
 import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.PurchaseEvent;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -31,6 +33,8 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+import java.util.Currency;
 import java.util.List;
 
 import butterknife.Bind;
@@ -39,6 +43,7 @@ import butterknife.OnClick;
 import io.fabric.sdk.android.Fabric;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.models.Products;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 import xyz.hanks.library.SmallBang;
@@ -163,6 +168,13 @@ public class SupportActivity extends AppCompatActivity implements BillingProcess
     private void makePurchase(String sku) {
         if(BillingProcessor.isIabServiceAvailable(this)) {
             // continue
+            Products products = getProduct(sku);
+            Answers.getInstance().logAddToCart(new AddToCartEvent()
+                    .putItemPrice(products.getPrice())
+                    .putCurrency(Currency.getInstance("USD"))
+                    .putItemName(products.getName())
+                    .putItemType(products.getType())
+                    .putItemId(sku));
             bp.purchase(this, sku);
         } else {
             Toast.makeText(this, "Issues connecting to Google Play Billing", Toast.LENGTH_LONG).show();
@@ -175,6 +187,14 @@ public class SupportActivity extends AppCompatActivity implements BillingProcess
         Timber.v("%s purchased.", productId);
         Toast.makeText(this, "Thanks for helping keep the gears turning!", Toast.LENGTH_LONG).show();
         animatePurchase(productId);
+        Products products = getProduct(productId);
+        Answers.getInstance().logPurchase(new PurchaseEvent()
+                .putItemPrice(products.getPrice())
+                .putCurrency(Currency.getInstance("USD"))
+                .putItemName(products.getName())
+                .putItemType(products.getType())
+                .putItemId(productId)
+                .putSuccess(true));
         }
 
 
@@ -228,5 +248,26 @@ public class SupportActivity extends AppCompatActivity implements BillingProcess
                 twelve.setText("PURCHASED");
                 break;
         }
+    }
+
+    private Products getProduct(String productID){
+        Products product = new Products();
+        if (productID.equals(SKU_TWO_DOLLAR)) {
+            product.setName("Founder 2016 - Bronze");
+            product.setDescription("This ensures you will always have access to every supporter features.");
+            product.setType("Supporter");
+            product.setPrice(BigDecimal.valueOf(1.99));
+        } else if (productID.equals(SKU_SIX_DOLLAR)){
+            product.setName("Founder 2016 - Silver");
+            product.setDescription("This ensures you will always have access to every supporter features.");
+            product.setType("Supporter");
+            product.setPrice(BigDecimal.valueOf(5.99));
+        } else if (productID.equals(SKU_TWELVE_DOLLAR)){
+            product.setName("Founder 2016 - Gold");
+            product.setDescription("This ensures you will always have access to every supporter features.");
+            product.setType("Supporter");
+            product.setPrice(BigDecimal.valueOf(11.99));
+        }
+        return product;
     }
 }
