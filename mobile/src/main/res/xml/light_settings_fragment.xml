@@ -21,4 +21,14 @@
         android:key="wear"
         android:layout="@layout/light_settings_wear_layout"
         android:title="Wear" />
+    <Preference
+        android:persistent="false"
+        android:key="about"
+        android:layout="@layout/light_settings_about_layout"
+        android:title="About" />
+    <Preference
+        android:persistent="false"
+        android:key="support"
+        android:layout="@layout/light_settings_support_layout"
+        android:title="Support" />
 </PreferenceScreen>

@@ -1,0 +1,192 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="me.calebjones.spacelaunchnow.ui.activity.SupportActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        ads:elevation="0dp">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_support"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            ads:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/nav_header" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="@string/supporter_title"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                    android:textSize="30dp"
+                    android:id="@+id/title" />
+
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:padding="10dp"
+                    android:text="@string/supporter_description" />
+
+                <TextView
+                    android:id="@+id/supporter_feature_title"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Supporter Features:"
+                    android:paddingLeft="25dp"
+                    android:paddingRight="20dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/supporter_features"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/supporter_features"
+                    android:paddingLeft="25dp"
+                    android:paddingBottom="10dp"
+                    android:paddingRight="20dp" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="1.0dip"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="5.0dip">
+
+                    <android.support.v7.widget.AppCompatButton
+                        android:id="@+id/twoDollar"
+                        style="@style/Base.Widget.AppCompat.Button.Colored"
+                        android:layout_width="0.0dip"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center"
+                        android:text="$1.99 - Beer"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:layout_weight="1.0"/>
+
+                    <android.support.v7.widget.AppCompatButton
+                        android:id="@+id/sixDollar"
+                        style="@style/Base.Widget.AppCompat.Button.Colored"
+                        android:layout_width="0.0dip"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center"
+                        android:text="$5.99 - Lunch"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:layout_weight="1.0"/>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="1dip"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="5dip">
+
+                    <android.support.v7.widget.AppCompatButton
+                        android:id="@+id/twelveDollar"
+                        style="@style/Base.Widget.AppCompat.Button.Colored"
+                        android:layout_width="0.0dip"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="1.0"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center"
+                        android:text="$11.99 - Dinner"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+
+                    <android.support.v7.widget.AppCompatButton
+                        android:id="@+id/other"
+                        style="@style/Base.Widget.AppCompat.Button.Colored"
+                        android:layout_width="0.0dip"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="1.0"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center"
+                        android:text="Other"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/add_description"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/adView"
+            android:gravity="center_horizontal"
+            android:text="Here&apos;s the only place you&apos;ll see advertisements."
+            android:paddingLeft="25dp"
+            android:paddingBottom="10dp"
+            android:paddingRight="20dp" />
+        <!-- view for AdMob Banner Ad -->
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id" />
+    </RelativeLayout>
+
+</LinearLayout>

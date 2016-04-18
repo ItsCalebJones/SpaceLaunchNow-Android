@@ -29,16 +29,20 @@
         <menu>
             <item
                 android:checkable="false"
-                android:id="@+id/menu_settings"
-                android:title="Settings" />
-            <item
-                android:checkable="false"
                 android:id="@+id/menu_new"
                 android:title="Whats New" />
             <item
                 android:checkable="false"
+                android:id="@+id/menu_settings"
+                android:title="Settings" />
+            <item
+                android:checkable="false"
                 android:id="@+id/menu_feedback"
-                android:title="Send feedback" />
+                android:title="Feedback" />
+            <item
+                android:checkable="false"
+                android:id="@+id/menu_support"
+                android:title="Contribute" />
         </menu>
     </item>
 </menu>
