@@ -42,7 +42,7 @@
             <item
                 android:checkable="false"
                 android:id="@+id/menu_support"
-                android:title="Contribute" />
+                android:title="Supporters" />
         </menu>
     </item>
 </menu>
