@@ -545,7 +545,8 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         }
 
         public void setMapLocation(double lat, double lng) {
-            mMapLocation = new LatLng(lat, lng);
+            LatLng latLng = new LatLng(lat, lng);
+            mMapLocation = latLng;
 
             // If the map is ready, update its content.
             if (gMap != null) {

@@ -6,12 +6,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -30,13 +28,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
-import com.github.javiersantos.materialstyleddialogs.enums.Style;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.onesignal.OneSignal;
@@ -52,6 +48,7 @@ import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.MissionDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
 import me.calebjones.spacelaunchnow.ui.activity.SettingsActivity;
+import me.calebjones.spacelaunchnow.ui.activity.SupportActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.NextLaunchFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.missions.MissionFragment;
@@ -388,7 +385,7 @@ public class MainActivity extends AppCompatActivity
                 .withIconAnimation(false)
                 .withDialogAnimation(true)
                 .setIcon(new IconicsDrawable(context).icon(MaterialDesignIconic.Icon.gmi_info).color(Color.WHITE))
-                .setTitle(getResources().getString(R.string.whats_new_title))
+                .setTitle("Whats New? " + getResources().getString(R.string.new_version))
                 .setScrollable(true)
                 .setPositive("Dismiss", new MaterialDialog.SingleButtonCallback() {
                     @Override
@@ -399,7 +396,8 @@ public class MainActivity extends AppCompatActivity
                 .setNegative("Feedback", new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(MaterialDialog dialog, DialogAction which) {
-                        Utils.openCustomTab(MainActivity.this, context, "https://www.reddit.com/r/spacelaunchnow");
+                        dialog.dismiss();
+                        showFeedback();
                     }
                 });
 
@@ -592,16 +590,48 @@ public class MainActivity extends AppCompatActivity
             case R.id.menu_new:
                 showWhatsNew();
                 break;
+            case R.id.menu_support:
+                Intent supportIntent = new Intent(this, SupportActivity.class);
+                startActivity(supportIntent);
+                break;
             case R.id.menu_feedback:
-                String url = "https://www.reddit.com/r/spacelaunchnow";
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                startActivity(i);
+                showFeedback();
                 break;
             default:
                 // ignore
                 break;
         }
+    }
+
+    private void showFeedback() {
+        new MaterialDialog.Builder(this)
+                .title("Submit Feedback")
+                .autoDismiss(true)
+                .content("Feel free to submit bugs or feature requests.")
+                .negativeText("Reddit")
+                .positiveColor(R.color.colorPrimary)
+                .positiveText("Email")
+                .onNegative( new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        String url = "https://www.reddit.com/r/spacelaunchnow";
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                    }
+                })
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                        emailIntent.setData(Uri.parse("mailto:"));
+                        emailIntent.setType("message/rfc822");
+                        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@calebjones.me"});
+                        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "SpaceLaunchNow - Feedback");
+                        startActivity(Intent.createChooser(emailIntent, "Send Email"));
+                    }
+                })
+                .show();
     }
 
     protected void onSaveInstanceState(final Bundle outState) {

@@ -69,13 +69,18 @@ Quisque tincidunt magna quis viverra faucibus. Vivamus rhoncus elit vel mi trist
     <string name="title_activity_debug">DebugActivity</string>
     <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
 
-    <string name="whats_new_title">Whats New! v1.0-beta.12</string>
-    <string name="whats_new_content">\u2022 Added 24 hour mode to watch face.
-        \n\u2022 Added optional ten minute notification.
-        \n\u2022 Added Wear WatchFace settings page, to be expanded!
-        \n\u2022 Added experimental \'compact\' card option in settings.
-        \n\u2022 Better crash logging and analytics for troubleshooting.
-        \n\u2022 Final prep for full release, fixed last minute bugs.
+    <string name="new_version">1.0.0</string>
+    <string name="whats_new_content">These are features that will likely take significant development effort to ensure a quality product. Initially i\'m hoping to deliver syncing all upcoming events to calendar and custom watchface backgrounds and settings.\n\n
+        Fixes and Features!\n
+    \u2022Added a Contribute page that allows you to become a Supporter.\n
+        \u2022Added an About menu with links to libraries used.\n
+        \u2022Fixed Experimental \'Add to Calendar\' feature and added multiple reminders.\n
+        \u2022Fixed width of splash screen text.</string>
+        <string name="whats_new_content_html">\u2022 Added an About menu with links to libraries used.
+        <![CDATA[<br/>]]>\u2022
+    </string>
+    <string name="previous_changelog_html">v1.0-beta.12
+        <![CDATA[<br/>]]>\u2022
     </string>
     <string name="link_feedback">https://www.reddit.com/r/spacelaunchnow</string>
     <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>
@@ -83,4 +88,11 @@ Quisque tincidunt magna quis viverra faucibus. Vivamus rhoncus elit vel mi trist
     <string name="title_activity_fullscreen_image">FullscreenImageActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_support">SupportActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+
+    <string name="supporter_title">Be a Supporter</string>
+    <string name="supporter_description">By becoming a supporter you ensure continued updates and timely bug fixes, as well as access to supporter only features. Pay what you want, you\'ll get the same value.</string>
+    <string name="supporter_features">Nothing yet! All features are enabled for all users.</string>
 </resources>
