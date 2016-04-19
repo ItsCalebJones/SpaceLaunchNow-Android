@@ -7,6 +7,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
@@ -487,13 +489,13 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         end_date = yearEnd + "-" + monthDayEnd + "-" + dayDateEnd;
 
         if (switchPreferences.getPrevFiltered()){
-            this.listPreferences.setPreviousTitle(listPreferences.getPreviousTitle()
+            listPreferences.setPreviousTitle(listPreferences.getPreviousTitle()
                     + " | " + formatDatesForTitle(start_date)
                     + " - " + formatDatesForTitle(end_date));
         } else {
-            this.listPreferences.setPreviousTitle(formatDatesForTitle(start_date)
+            listPreferences.setPreviousTitle(formatDatesForTitle(start_date)
                     + " - " + formatDatesForTitle(end_date));
-            this.switchPreferences.setPrevFiltered(true);
+            switchPreferences.setPrevFiltered(true);
         }
 
         setTitle();

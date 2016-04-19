@@ -400,7 +400,6 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
 
     @Override
     public void onResume() {
-        setTitle();
         Timber.d("OnResume!");
         super.onResume();
     }
