@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorControlActivated">@color/materialGrey</item>
         <item name="android:textColorPrimary">@color/colorTextPrimary</item>
         <item name="android:textColorSecondary">@color/colorTextSecondary</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
@@ -26,7 +27,7 @@
         <item name="colorPrimary">@color/darkPrimary</item>
         <item name="colorPrimaryDark">@color/darkPrimary_dark</item>
         <item name="colorAccent">@color/darkAccent</item>
-
+        <item name="android:colorControlActivated">@color/materialGrey</item>
         <item name="android:statusBarColor">@color/darkPrimary_dark</item>
         <item name="colorControlNormal">@color/darkIcons</item>
         <item name="android:windowActivityTransitions">true</item>
