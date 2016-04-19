@@ -37,7 +37,6 @@ public class LaunchesViewPager extends Fragment {
         int mlayout;
         this.context = getActivity().getApplicationContext();
 
-
         sharedPreference = ListPreferences.getInstance(this.context);
 
         if (sharedPreference.getNightMode()) {
