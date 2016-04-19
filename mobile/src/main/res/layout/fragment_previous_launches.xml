@@ -43,16 +43,18 @@
     </android.support.v4.widget.SwipeRefreshLayout>
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="bottom|right"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
         app:menu_colorNormal="@color/colorAccent"
         app:menu_colorPressed="@color/colorAccentLight"
         app:menu_fab_hide_animation="@anim/hide_to_bottom"
         app:menu_fab_show_animation="@anim/show_from_bottom"
         app:menu_icon="@drawable/ic_sort"
+        app:menu_backgroundColor="#4d8e8e8e"
         app:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
         app:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
         app:menu_showShadow="true">
@@ -111,5 +113,11 @@
 
 
     </com.github.clans.fab.FloatingActionMenu>
+
+    <FrameLayout
+        android:id="@+id/fl_interceptor"
+        android:descendantFocusability="blocksDescendants"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </FrameLayout>

@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
+import android.widget.FrameLayout;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.borax12.materialdaterangepicker.date.DatePickerDialog;
@@ -119,6 +120,18 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         reset = (FloatingActionButton) view.findViewById(R.id.reset);
         menu = (FloatingActionMenu) view.findViewById(R.id.menu);
         empty = view.findViewById(R.id.empty_launch_root);
+
+        FrameLayout mInterceptorFrame = (FrameLayout) view.findViewById(R.id.fl_interceptor);
+        mInterceptorFrame.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (menu.isOpened()) {
+                    menu.close(true);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         /*Set up Pull to refresh*/
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.previous_swipe_refresh_layout);
