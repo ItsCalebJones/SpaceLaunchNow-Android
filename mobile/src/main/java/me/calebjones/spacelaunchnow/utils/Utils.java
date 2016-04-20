@@ -407,6 +407,16 @@ public class Utils {
         }
     }
 
+    public static String getVersionName(Context context)
+    {
+        try {
+            ComponentName comp = new ComponentName(context, context.getClass());
+            return context.getPackageManager().getPackageInfo(comp.getPackageName(), 0).versionName;
+        } catch (android.content.pm.PackageManager.NameNotFoundException e) {
+            return null;
+        }
+    }
+
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();

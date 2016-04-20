@@ -75,7 +75,8 @@ Quisque tincidunt magna quis viverra faucibus. Vivamus rhoncus elit vel mi trist
     \u2022Added a Contribute page that allows you to become a Supporter.\n
         \u2022Added an About menu with links to libraries used.\n
         \u2022Fixed Experimental \'Add to Calendar\' feature and added multiple reminders.\n
-        \u2022Fixed width of splash screen text.</string>
+        \u2022Fixed width of splash screen text.\n
+        \u2022Fixed an issue with Filtering.</string>
         <string name="whats_new_content_html">\u2022 Added an About menu with links to libraries used.
         <![CDATA[<br/>]]>\u2022
     </string>

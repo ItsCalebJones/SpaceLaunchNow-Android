@@ -39,8 +39,8 @@ android {
                                 onesignal_google_project_number: "${google_project_number}"]
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 40
-        versionName "1.0.0"
+        versionCode 41
+        versionName "1.0.0.41"
         signingConfig signingConfigs.config
     }
     buildTypes {
