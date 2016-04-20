@@ -15,74 +15,34 @@ public class Model implements Serializable {
     private Integer count;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    /**
-     * 
-     * @return
-     *     The total
-     */
     public Integer getTotal() {
         return total;
     }
 
-    /**
-     * 
-     * @param total
-     *     The total
-     */
     public void setTotal(Integer total) {
         this.total = total;
     }
 
-    /**
-     * 
-     * @return
-     *     The launches
-     */
     public List<Launch> getLaunches() {
         return launches;
     }
 
-    /**
-     * 
-     * @param launches
-     *     The launches
-     */
     public void setLaunches(List<Launch> launches) {
         this.launches = launches;
     }
 
-    /**
-     * 
-     * @return
-     *     The offset
-     */
     public Integer getOffset() {
         return offset;
     }
 
-    /**
-     * 
-     * @param offset
-     *     The offset
-     */
     public void setOffset(Integer offset) {
         this.offset = offset;
     }
 
-    /**
-     * 
-     * @return
-     *     The count
-     */
     public Integer getCount() {
         return count;
     }
 
-    /**
-     * 
-     * @param count
-     *     The count
-     */
     public void setCount(Integer count) {
         this.count = count;
     }

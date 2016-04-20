@@ -10,17 +10,10 @@
             android:entryValues="@array/upcoming_array_values"
             android:summary="Specify how many upcoming launches to load."
             android:title="Upcoming Launches" />
-        <ListPreference
-            android:defaultValue="1000"
-            android:key="previous_value"
-            android:entries="@array/previous_array"
-            android:entryValues="@array/previous_array_values"
-            android:summary="Specify how many previous launches to load."
-            android:title="Previous Launches" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Background Sync">
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:defaultValue="true"
             android:key="background_sync"
             android:summaryOff="Allow Launch Data to sync in the background, required for launch notifications."
@@ -35,14 +28,23 @@
             android:summary="Select desired time between syncs."
             android:title="Background Sync Interval" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="Calender Settings">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="calendar_sync_state"
+            android:summary="Allow next launch to sync with default Calendar."
+            android:title="Sync Calendar - (EXPERIMENTAL)" />
+        <MultiSelectListPreference
+            android:defaultValue="@array/multi_calendar_reminder_default"
+            android:key="calendar_reminder_array"
+            android:summary="Set custom reminders for calendar notifications."
+            android:entries="@array/multi_calendar_reminder"
+            android:entryValues="@array/multi_calendar_reminder_values"
+            android:persistent="true"
+            android:title="Default Calendar Reminder"/>
+    </PreferenceCategory>
     <PreferenceCategory android:title="Other Settings">
-        <SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="local_time"
-            android:summaryOff="Allow times to be represented in UTC."
-            android:summaryOn="Allow locally translated times to fit your current timezone."
-            android:title="Timezone Settings" />
-        <SwitchPreferenceCompat
+        <SwitchPreference
             android:defaultValue="false"
             android:key="confirm_exit"
             android:summary="Show confirm dialog before exit."
