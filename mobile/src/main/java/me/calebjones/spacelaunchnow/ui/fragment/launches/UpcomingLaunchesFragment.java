@@ -21,9 +21,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
+import android.widget.FrameLayout;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
@@ -112,6 +114,18 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
 
         reset = (FloatingActionButton) view.findViewById(R.id.reset);
         menu = (FloatingActionMenu) view.findViewById(R.id.menu);
+
+        FrameLayout mInterceptorFrame = (FrameLayout) view.findViewById(R.id.fl_interceptor);
+        mInterceptorFrame.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (menu.isOpened()) {
+                    menu.close(true);
+                    return true;
+                }
+                return false;
+            }
+        });
                 /*Set up Pull to refresh*/
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.launches_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);

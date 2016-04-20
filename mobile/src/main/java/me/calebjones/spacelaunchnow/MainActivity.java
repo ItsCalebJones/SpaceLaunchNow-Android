@@ -387,7 +387,7 @@ public class MainActivity extends AppCompatActivity
                 .setIcon(new IconicsDrawable(context).icon(MaterialDesignIconic.Icon.gmi_info).color(Color.WHITE))
                 .setTitle("Whats New? " + getResources().getString(R.string.new_version))
                 .setScrollable(true)
-                .setPositive("Dismiss", new MaterialDialog.SingleButtonCallback() {
+                .setPositive("Okay", new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(MaterialDialog dialog, DialogAction which) {
                         dialog.dismiss();
