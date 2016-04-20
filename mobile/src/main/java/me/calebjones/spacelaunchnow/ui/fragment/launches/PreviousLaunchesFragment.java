@@ -121,17 +121,6 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         menu = (FloatingActionMenu) view.findViewById(R.id.menu);
         empty = view.findViewById(R.id.empty_launch_root);
 
-        FrameLayout mInterceptorFrame = (FrameLayout) view.findViewById(R.id.fl_interceptor);
-        mInterceptorFrame.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (menu.isOpened()) {
-                    menu.close(true);
-                    return true;
-                }
-                return false;
-            }
-        });
 
         /*Set up Pull to refresh*/
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.previous_swipe_refresh_layout);
