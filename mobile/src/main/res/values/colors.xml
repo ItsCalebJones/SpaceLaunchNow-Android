@@ -14,6 +14,7 @@
     <color name="colorAccentLight">#ffab40</color>
     <color name="colorTextPrimary">#212121</color>
     <color name="colorTextSecondary">#727272</color>
+    <color name="materialGrey">#607D8B</color>
 
     <color name="colorGo">#4CAF50</color>
     <color name="View_Separator">#B6B6B6</color>

@@ -11,10 +11,12 @@ import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
@@ -139,6 +141,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
                     holder.exploreFab.setVisibility(View.GONE);
                 }
             } else {
+                holder.initializeMapView();
                 holder.map_view.setVisibility(View.VISIBLE);
                 holder.exploreFab.setVisibility(View.VISIBLE);
                 holder.setMapLocation(dlat, dlon);
@@ -153,8 +156,12 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
 
         switch (launchItem.getStatus()) {
             case 1:
+                String go = mContext.getResources().getString(R.string.status_go);
+                if (launchItem.getProbability() != null && launchItem.getProbability() > 0){
+                    go = String.format("%s | Forecast - %s%%", go, launchItem.getProbability());
+                }
                 //GO for launch
-                holder.content_status.setText(R.string.status_go);
+                holder.content_status.setText(go);
                 holder.content_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorGo));
                 break;
             case 2:
@@ -184,7 +191,9 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             Calendar now = rightNow;
 
             now.setTimeInMillis(System.currentTimeMillis());
-
+            if (holder.timer != null){
+                holder.timer.cancel();
+            }
             holder.timer = new CountDownTimer(future.getTimeInMillis() - now.getTimeInMillis(), 1000) {
                 StringBuilder time = new StringBuilder();
 
@@ -255,7 +264,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
                 if (launchItem.getRocket().getAgencies().size() > 0) {
                     holder.content_TMinus_status.setText(String.format("Pending confirmed GO from %s", launchItem.getRocket().getAgencies().get(0).getName()));
                 } else {
-                    holder.content_TMinus_status.setText("Pending confirmed GO from launch agency");
+                    holder.content_TMinus_status.setText("Pending confirmed GO for Launch from launch agency");
                 }
             } else {
                 holder.content_TMinus_status.setText("Unknown");
@@ -327,9 +336,10 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         Timber.v("onViewRecyled!");
         // Cleanup MapView here?
         if (play) {
-            if (holder.gMap != null) {
-                System.gc();
+            if (holder != null && holder.gMap != null) {
+                // Clear the map and free up resources by changing the map type to none
                 holder.gMap.clear();
+                holder.gMap.setMapType(GoogleMap.MAP_TYPE_NONE);
             }
         }
     }
@@ -404,12 +414,6 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             exploreButton.setOnClickListener(this);
             watchButton.setOnClickListener(this);
             exploreFab.setOnClickListener(this);
-
-            if (play && map_view != null) {
-                map_view.onCreate(null);
-                map_view.onResume();
-                map_view.getMapAsync(this);
-            }
         }
 
         //React to click events.
@@ -531,8 +535,18 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             }
         }
 
+        public void initializeMapView() {
+            if (map_view != null) {
+                // Initialise the MapView
+                map_view.onCreate(null);
+                // Set the map ready callback to receive the GoogleMap object
+                map_view.getMapAsync(this);
+            }
+        }
+
         public void setMapLocation(double lat, double lng) {
-            mMapLocation = new LatLng(lat, lng);
+            LatLng latLng = new LatLng(lat, lng);
+            mMapLocation = latLng;
 
             // If the map is ready, update its content.
             if (gMap != null) {
@@ -544,13 +558,14 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         public void onMapReady(GoogleMap googleMap) {
             //TODO: Allow user to update this 1-normal 2-satellite 3-Terrain
             // https://goo.gl/OkexW7
-            MapsInitializer.initialize(mContext);
+            MapsInitializer.initialize(mContext.getApplicationContext());
+
+            googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            googleMap.getUiSettings().setMapToolbarEnabled(false);
 
             gMap = googleMap;
             gMap.getUiSettings().setAllGesturesEnabled(false);
 
-            googleMap.setMapType(1);
-            googleMap.getUiSettings().setMapToolbarEnabled(false);
 
             // If we have map data, update the map content.
             if (mMapLocation != null) {

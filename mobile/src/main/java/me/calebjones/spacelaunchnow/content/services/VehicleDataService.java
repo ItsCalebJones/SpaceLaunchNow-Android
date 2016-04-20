@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -68,7 +70,7 @@ public class VehicleDataService extends IntentService {
 
     private void getVehicleDetails() {
         InputStream inputStream = null;
-        Integer result = 0;
+        boolean result;
         HttpURLConnection urlConnection = null;
         try {
             /* forming th java.net.URL object */
@@ -96,7 +98,7 @@ public class VehicleDataService extends IntentService {
                 }
 
                 result = addToDB(response);
-                if (result == 1) {
+                if (result) {
                     Intent broadcastIntent = new Intent();
                     broadcastIntent.setAction(Strings.ACTION_SUCCESS_VEHICLE_DETAILS);
                     VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
@@ -110,6 +112,7 @@ public class VehicleDataService extends IntentService {
 
         } catch (Exception e) {
             Timber.e("VehicleDataService - ERROR: %s", e.getLocalizedMessage());
+            Crashlytics.logException(e);
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_FAILURE_VEHICLE_DETAILS);
             VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
@@ -117,7 +120,6 @@ public class VehicleDataService extends IntentService {
     }
 
     private void getVehicles() {
-        VehicleDataService.this.cleanVehiclesCache();
         InputStream inputStream = null;
         Integer result = 0;
         HttpURLConnection urlConnection = null;
@@ -145,6 +147,7 @@ public class VehicleDataService extends IntentService {
 
                 parseUpcomingResult(response.toString());
                 Timber.d("Vehicle list:  %s ", vehicleList.size());
+                VehicleDataService.this.cleanVehiclesCache();
                 this.sharedPreference.setVehiclesList(vehicleList);
 
                 Intent broadcastIntent = new Intent();
@@ -155,6 +158,7 @@ public class VehicleDataService extends IntentService {
 
         } catch (Exception e) {
             Timber.e("VehicleDataService - ERROR: %s", e.getLocalizedMessage());
+            Crashlytics.logException(e);
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_FAILURE_VEHICLES);
             VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
@@ -191,6 +195,7 @@ public class VehicleDataService extends IntentService {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            Crashlytics.logException(e);
         }
     }
 
@@ -198,7 +203,7 @@ public class VehicleDataService extends IntentService {
         this.sharedPreference.removeVehicles();
     }
 
-    private Integer addToDB(StringBuilder response) {
+    private boolean addToDB(StringBuilder response) {
         DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
 
         try {
@@ -238,11 +243,11 @@ public class VehicleDataService extends IntentService {
             }
             //Success
             Timber.d("addToDB - Success! Database Size:  %s ", databaseManager.getCount());
-            return 1;
+            return true;
         } catch (JSONException e) {
-            Timber.e("VehicleDataService - " + e.getLocalizedMessage());
+            Crashlytics.logException(e);
             //Error
-            return 0;
+            return false;
         }
     }
 }

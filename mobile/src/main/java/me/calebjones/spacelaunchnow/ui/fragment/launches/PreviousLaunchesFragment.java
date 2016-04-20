@@ -7,6 +7,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -21,14 +22,17 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
+import android.widget.FrameLayout;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.borax12.materialdaterangepicker.date.DatePickerDialog;
+import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.SearchEvent;
@@ -45,6 +49,7 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
+import io.fabric.sdk.android.services.common.Crash;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.content.adapter.LaunchCompactAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
@@ -115,6 +120,18 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         reset = (FloatingActionButton) view.findViewById(R.id.reset);
         menu = (FloatingActionMenu) view.findViewById(R.id.menu);
         empty = view.findViewById(R.id.empty_launch_root);
+
+        FrameLayout mInterceptorFrame = (FrameLayout) view.findViewById(R.id.fl_interceptor);
+        mInterceptorFrame.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (menu.isOpened()) {
+                    menu.close(true);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         /*Set up Pull to refresh*/
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.previous_swipe_refresh_layout);
@@ -485,13 +502,13 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         end_date = yearEnd + "-" + monthDayEnd + "-" + dayDateEnd;
 
         if (switchPreferences.getPrevFiltered()){
-            this.listPreferences.setPreviousTitle(listPreferences.getPreviousTitle()
+            listPreferences.setPreviousTitle(listPreferences.getPreviousTitle()
                     + " | " + formatDatesForTitle(start_date)
                     + " - " + formatDatesForTitle(end_date));
         } else {
-            this.listPreferences.setPreviousTitle(formatDatesForTitle(start_date)
+            listPreferences.setPreviousTitle(formatDatesForTitle(start_date)
                     + " - " + formatDatesForTitle(end_date));
-            this.switchPreferences.setPrevFiltered(true);
+            switchPreferences.setPrevFiltered(true);
         }
 
         setTitle();
@@ -655,6 +672,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
                 sChildFragmentManagerField.set(this, null);
             } catch (Exception e) {
                 e.getLocalizedMessage();
+                Crashlytics.logException(e);
                 Timber.e("Error setting mChildFragmentManager field %s", e.getLocalizedMessage());
             }
         }

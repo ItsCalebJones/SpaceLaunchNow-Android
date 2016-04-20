@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorControlActivated">@color/materialGrey</item>
         <item name="android:textColorPrimary">@color/colorTextPrimary</item>
         <item name="android:textColorSecondary">@color/colorTextSecondary</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
@@ -26,7 +27,7 @@
         <item name="colorPrimary">@color/darkPrimary</item>
         <item name="colorPrimaryDark">@color/darkPrimary_dark</item>
         <item name="colorAccent">@color/darkAccent</item>
-
+        <item name="android:colorControlActivated">@color/materialGrey</item>
         <item name="android:statusBarColor">@color/darkPrimary_dark</item>
         <item name="colorControlNormal">@color/darkIcons</item>
         <item name="android:windowActivityTransitions">true</item>
@@ -150,5 +151,25 @@
     <style name="SPL.SnackBar.Button.Decline">
         <item name="android:background">@null</item>
         <item name="android:layout_width">40dp</item>
+    </style>
+
+    <style name="AboutLibrariesLight" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <!-- Here we setting appcompat’s actionBarStyle -->
+        <item name="drawerArrowStyle">@style/AboutLibrariesTheme.DrawerArrowStyle</item>
+        <item name="android:scrollbarStyle">@color/white</item>
+        <!-- AboutLibraries specific values -->
+        <item name="android:windowBackground">@color/white</item>
+        <item name="about_libraries_card">@color/about_libraries_card</item>
+        <item name="about_libraries_special_button_openSource">
+            @color/about_libraries_special_button_openSource
+        </item>
+        <item name="about_libraries_dividerDark_openSource">
+            @color/about_libraries_dividerDark_openSource
+        </item>
+        <item name="about_libraries_dividerLight_openSource">
+            @color/about_libraries_dividerLight_openSource
+        </item>
     </style>
 </resources>

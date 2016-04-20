@@ -3,6 +3,8 @@ package me.calebjones.spacelaunchnow.content.loader;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -105,6 +107,7 @@ public class VehicleLoader extends AsyncTask<String, Void, Integer> {
             //Success
             return 1;
         } catch (JSONException e) {
+            Crashlytics.logException(e);
             Timber.e(e.getLocalizedMessage());
             //Error
             return 0;

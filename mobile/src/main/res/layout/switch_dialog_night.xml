@@ -7,7 +7,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:text="New Opt-in Features"
+        android:text="Opt-in Features"
         style="@style/Base.TextAppearance.AppCompat.Title"
         android:textColor="@color/colorTextPrimary" />
     <android.support.v7.widget.SwitchCompat
@@ -40,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:text="Bug Fixes"
+        android:text="Coming Soon: Supporter only features!"
         style="@style/Base.TextAppearance.AppCompat.Title"
         android:textColor="@color/colorTextPrimary" />
     <TextView

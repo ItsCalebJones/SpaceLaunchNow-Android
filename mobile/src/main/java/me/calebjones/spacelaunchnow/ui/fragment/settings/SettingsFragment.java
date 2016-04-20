@@ -1,21 +1,27 @@
-package me.calebjones.spacelaunchnow.ui.fragment;
+package me.calebjones.spacelaunchnow.ui.fragment.settings;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.Preference.OnPreferenceClickListener;
+import android.preference.Preference;
+import android.preference.PreferenceFragment;
+
+import com.crashlytics.android.Crashlytics;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.ui.activity.AboutActivity;
+import me.calebjones.spacelaunchnow.ui.activity.SupportActivity;
 
-public class SettingsFragment extends PreferenceFragmentCompat implements OnPreferenceClickListener {
+public class SettingsFragment extends PreferenceFragment implements android.preference.Preference.OnPreferenceClickListener {
     
     private static final String NOTIFICATIONS = "notifications";
     private static final String LAUNCH_TRACKING_OPTIONS = "launch_tracking_options";
     private static final String APPEARANCE = "appearance";
     private static final String WEAR = "wear";
+    private static final String ABOUT = "about";
+    private static final String SUPPORT = "support";
     
     private static ListPreferences sharedPreference;
     private Context context;
@@ -34,6 +40,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements OnPref
         }
         if (preference.getKey().equals(WEAR)) {
             mCallback.onNestedPreferenceSelected(4);
+        }
+        if (preference.getKey().equals(ABOUT)) {
+            Intent intent = new Intent(getActivity().getApplicationContext(), AboutActivity.class);
+            startActivity(intent);
+        }
+        if (preference.getKey().equals(SUPPORT)) {
+            Intent intent = new Intent(getActivity().getApplicationContext(), SupportActivity.class);
+            startActivity(intent);
         }
         return false;
     }
@@ -55,6 +69,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements OnPref
                 addPreferencesFromResource(R.xml.light_settings_fragment);
             }
         } catch (NullPointerException e) {
+            Crashlytics.logException(e);
         }
 
         if (getActivity() instanceof Callback) {
@@ -65,11 +80,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements OnPref
         findPreference(LAUNCH_TRACKING_OPTIONS).setOnPreferenceClickListener(this);
         findPreference(APPEARANCE).setOnPreferenceClickListener(this);
         findPreference(WEAR).setOnPreferenceClickListener(this);
-    }
-
-    @Override
-    public void onCreatePreferences(Bundle bundle, String s) {
-
+        findPreference(ABOUT).setOnPreferenceClickListener(this);
+        findPreference(SUPPORT).setOnPreferenceClickListener(this);
     }
 
     public void onResume() {
