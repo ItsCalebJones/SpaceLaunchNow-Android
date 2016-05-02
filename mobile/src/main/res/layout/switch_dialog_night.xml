@@ -3,39 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:text="Opt-in Features"
-        style="@style/Base.TextAppearance.AppCompat.Title"
-        android:textColor="@color/colorTextPrimary" />
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/notification_switch_status"
-        android:padding="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Launch Status Updates"
-        android:textColor="@color/colorTextPrimary"/>
-    <TextView
-        android:text="This feature will provide updates when high profile launches are scrubbed or rescheduled near their launch window."
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorTextSecondary"
-        android:padding="8dp"/>
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/notification_switch_minute"
-        android:padding="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Ten Minute Notification"
-        android:textColor="@color/colorTextPrimary"/>
-    <TextView
-        android:text="This feature will give you a last minute ten minute notification. Note: This applies to all launches you're following."
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:textColor="@color/colorTextSecondary"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

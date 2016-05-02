@@ -62,8 +62,19 @@
                             android:text="Select Launches to Follow"
                             android:textAppearance="@style/TextAppearance.AppCompat.Title"
                             android:textColor="@color/white"
-                            android:textSize="36dp"
+                            android:textSize="26dp"
                             android:typeface="sans" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:text="Your selections will be visible on the Home page and send notifications before launch. Launches that you are not following will still be visible in Upcoming launches."
+                            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                            android:textColor="@color/white"
+                            android:textSize="16dp"
+                            android:typeface="sans"
+                            android:id="@+id/textView2" />
 
                         <View
                             android:layout_width="match_parent"

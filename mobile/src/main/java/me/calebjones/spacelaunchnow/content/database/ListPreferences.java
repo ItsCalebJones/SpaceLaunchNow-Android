@@ -67,6 +67,7 @@ public class ListPreferences {
     public static String PREFS_CURRENT_START_DATE;
     public static String PREFS_CURRENT_END_DATE;
     public static String PREFS_LAUNCH_LIST_NEXT;
+    public static String PREFS_NEXT_LAUNCH_TIMESTAMP;
     public static String PREFS_NEXT_LAUNCH;
     public static String PREFS_PREV_LAUNCH;
     public static String PREFS_DEBUG;
@@ -102,6 +103,7 @@ public class ListPreferences {
         PREFS_LIST_PREVIOUS_FILTERED = "LIST_PREVIOUS_FILTERED";
         PREFS_LIST_UPCOMING_FILTERED = "LIST_UPCOMING_FILTERED";
         PREFS_LAST_VEHICLE_UPDATE = "LAST_VEHICLE_UPDATE";
+        PREFS_NEXT_LAUNCH_TIMESTAMP = "NEXT_LAUNCH_TIMESTAMP";
         PREFS_DEBUG = "DEBUG";
         INSTANCE = null;
     }
@@ -243,16 +245,13 @@ public class ListPreferences {
         gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
         this.prefsEditor.putString(PREFS_NEXT_LAUNCH, gson.toJson(launch));
         this.prefsEditor.apply();
+    }
 
-        List<Launch> list = getLaunchesUpcoming();
-        if (list != null) {
-            for (int i = 0; i < list.size(); i++) {
-                if (launch.getId().equals(list.get(i).getId())) {
-                    list.set(i, launch);
-                    setUpComingLaunches(list);
-                }
-            }
-        }
+    public void setNextLaunchTimestamp(int timestamp) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putInt(PREFS_NEXT_LAUNCH_TIMESTAMP, timestamp);
+        this.prefsEditor.apply();
     }
 
     public void setPrevLaunch(Launch launch) {
@@ -283,7 +282,7 @@ public class ListPreferences {
 //            }
 //        }
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(appContext);
-        int size = Integer.parseInt(sharedPref.getString("upcoming_value", "10"));
+        int size = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
         launches = filterLaunches(launches);
         if (launches.size() > size) {
             launches = launches.subList(0, size);
@@ -414,6 +413,12 @@ public class ListPreferences {
         Launch launch = gson.fromJson(jsonPreferences, Launch.class);
 
         return launch;
+    }
+
+    public int getNextLaunchTimestamp() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return sharedPref.getInt(PREFS_NEXT_LAUNCH_TIMESTAMP, 0);
     }
 
 
