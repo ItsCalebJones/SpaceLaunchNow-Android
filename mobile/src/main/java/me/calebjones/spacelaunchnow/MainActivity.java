@@ -134,11 +134,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
     public MainActivity() {
         this.intentReceiver = new LaunchBroadcastReceiver();
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -338,48 +336,10 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void showWhatsNew() {
+    public void showWhatsNew(boolean firstLaunch) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.switch_dialog, null);
         View nightView = inflater.inflate(R.layout.switch_dialog_night, null);
-
-        SwitchCompat switchButton = (SwitchCompat) customView.findViewById(R.id.notification_switch_status);
-        switchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit();
-                if (!PreferenceManager.getDefaultSharedPreferences(MainActivity.this)
-                        .getBoolean("notifications_launch_imminent_updates", false)) {
-                    editor.putBoolean("notifications_launch_imminent_updates", true);
-                    editor.apply();
-                    OneSignal.setSubscription(true);
-                } else {
-                    editor.putBoolean("notifications_launch_imminent_updates", false);
-                    editor.apply();
-                    OneSignal.setSubscription(false);
-                }
-            }
-        });
-        switchButton.setChecked(PreferenceManager.getDefaultSharedPreferences(MainActivity.this)
-                .getBoolean("notifications_launch_imminent_updates", false));
-
-        SwitchCompat switchNotificationButton = (SwitchCompat) customView.findViewById(R.id.notification_switch_minute);
-        switchNotificationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences.Editor minuteEditor = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit();
-                if (!PreferenceManager.getDefaultSharedPreferences(MainActivity.this)
-                        .getBoolean("notifications_launch_minute", false)) {
-                    minuteEditor.putBoolean("notifications_launch_minute", true);
-                    minuteEditor.apply();
-                } else {
-                    minuteEditor.putBoolean("notifications_launch_minute", false);
-                    minuteEditor.apply();
-                }
-            }
-        });
-        switchNotificationButton.setChecked(PreferenceManager.getDefaultSharedPreferences(MainActivity.this)
-                .getBoolean("notifications_launch_minute", false));
 
         MaterialStyledDialog dialog = new MaterialStyledDialog(this)
                 .withIconAnimation(false)
@@ -387,12 +347,6 @@ public class MainActivity extends AppCompatActivity
                 .setIcon(new IconicsDrawable(context).icon(MaterialDesignIconic.Icon.gmi_info).color(Color.WHITE))
                 .setTitle("Whats New? " + Utils.getVersionName(this))
                 .setScrollable(true)
-                .setPositive("Okay", new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(MaterialDialog dialog, DialogAction which) {
-                        dialog.dismiss();
-                    }
-                })
                 .setNegative("Feedback", new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(MaterialDialog dialog, DialogAction which) {
@@ -401,21 +355,33 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
 
-        if (listPreferences.getNightMode())
+        if (firstLaunch){
+            dialog.setPositive("Okay", new MaterialDialog.SingleButtonCallback() {
+                @Override
+                public void onClick(MaterialDialog dialog, DialogAction which) {
+                    dialog.dismiss();
+                    if (mUpcomingFragment != null) {
+                        mUpcomingFragment.showCaseView();
+                    }
+                }
+            });
+        } else {
+            dialog.setPositive("Okay", new MaterialDialog.SingleButtonCallback() {
+                @Override
+                public void onClick(MaterialDialog dialog, DialogAction which) {
+                    dialog.dismiss();
+                }
+            });
+        }
 
-        {
-
+        if (listPreferences.getNightMode())  {
             dialog.setHeaderColor(R.color.darkPrimary);
             dialog.setCustomView(nightView);
-        } else
-
-        {
+        } else{
             dialog.setHeaderColor(R.color.colorPrimary);
             dialog.setCustomView(customView);
         }
-
         dialog.show();
-
     }
 
     private void refreshLaunches() {
@@ -588,7 +554,7 @@ public class MainActivity extends AppCompatActivity
                 startActivity(settingsIntent);
                 break;
             case R.id.menu_new:
-                showWhatsNew();
+                showWhatsNew(true);
                 break;
             case R.id.menu_support:
                 Intent supportIntent = new Intent(this, SupportActivity.class);

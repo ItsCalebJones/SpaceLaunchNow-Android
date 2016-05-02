@@ -115,54 +115,30 @@ public class NextLaunchTracker extends IntentService implements
         //Check if the stored launch is still the next launch.
         if (storedLaunch != null && nextLaunch != null) {
 
-            //If they do not match this means nextLaunch has changed IE a launch executed.
+            //If they do not match this means nextLaunch has changed (launch executed, filter change, etc)
             if (nextLaunch.getId().intValue() != storedLaunch.getId().intValue()) {
                 this.listPreferences.setNextLaunch(nextLaunch);
-                this.switchPreferences.setPrevFiltered(false);
-
-                Intent updatePreviousLaunches = new Intent(this, LaunchDataService.class);
-                updatePreviousLaunches.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
-                updatePreviousLaunches.putExtra("URL", Utils.getBaseURL());
-                startService(updatePreviousLaunches);
-
                 checkStatus(nextLaunch);
-
+                debugNotificaiton(String.format("Launch has changed - Next: %s Stored: %s"
+                        , nextLaunch.getId(), storedLaunch.getId()));
                 //They do match, check if the launch time has moved.
             } else {
+                if (listPreferences.getNextLaunchTimestamp() != 0) {
+                    if (Math.abs(listPreferences.getNextLaunchTimestamp()
+                            - storedLaunch.getNetstamp()) > 60) {
+                        debugNotificaiton(String.format("Resetting notifiers - List: %s Stored: %s "
+                                ,listPreferences.getNextLaunchTimestamp(), nextLaunch.getNetstamp()));
 
-                if (Math.abs(nextLaunch.getNetstamp() - storedLaunch.getNetstamp()) > 60) {
-
-                    listPreferences.setNextLaunch(nextLaunch);
-                    upcomingLaunchList.set(0, nextLaunch);
-                    listPreferences.setNextLaunches(upcomingLaunchList);
-                    checkStatus(nextLaunch);
-
-                    Intent broadcastIntent = new Intent();
-                    broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
-                    this.getApplicationContext().sendBroadcast(broadcastIntent);
-
-                } else {
-                    if (storedLaunch.getIsNotifiedDay()) {
-                        nextLaunch.setIsNotifiedDay(true);
+                        storedLaunch = nextLaunch;
+                        listPreferences.setNextLaunchTimestamp(storedLaunch.getNetstamp());
                     }
-                    if (storedLaunch.getIsNotifiedHour()) {
-                        nextLaunch.setIsNotifiedhour(true);
-                    }
-                    if (storedLaunch.getIsNotifiedTenMinute()) {
-                        nextLaunch.setIsNotifiedTenMinute(true);
-                    }
-                    if (storedLaunch.isFavorite()) {
-                        nextLaunch.isFavorite();
-                    }
-                    if (storedLaunch.getCalendarID() != null){
-                        nextLaunch.setCalendarID(storedLaunch.getCalendarID());
-                    }
-
-                    listPreferences.setNextLaunch(nextLaunch);
-                    upcomingLaunchList.set(0, nextLaunch);
-                    listPreferences.setNextLaunches(upcomingLaunchList);
-                    checkStatus(nextLaunch);
+                } else if (storedLaunch.getNetstamp() != 0) {
+                    listPreferences.setNextLaunchTimestamp(storedLaunch.getNetstamp());
+                    debugNotificaiton("Updated timestamp to " + storedLaunch.getNetstamp());
                 }
+                upcomingLaunchList.set(0, storedLaunch);
+                listPreferences.setNextLaunches(upcomingLaunchList);
+                checkStatus(storedLaunch);
             }
         } else if (nextLaunch != null) {
             this.listPreferences.setNextLaunch(nextLaunch);
@@ -306,7 +282,7 @@ public class NextLaunchTracker extends IntentService implements
 
         PendingIntent appIntent = PendingIntent.getActivity(this, 0, mainActivityIntent, 0);
 
-        Intent shareLaunch = Utils.buildIntent(launch);
+        Intent shareLaunch = Utils.buildShareIntent(launch);
         PendingIntent sharePendingIntent = PendingIntent.getActivity(this, 0, shareLaunch, 0);
 
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -421,6 +397,24 @@ public class NextLaunchTracker extends IntentService implements
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         return cal;
+    }
+
+    public void debugNotificaiton(String message){
+        if (BuildConfig.DEBUG) {
+            long time = new Date().getTime();
+            String tmpStr = String.valueOf(time);
+            String last4Str = tmpStr.substring(tmpStr.length() - 5);
+            int notificationId = Integer.valueOf(last4Str);
+
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
+            mBuilder.setContentTitle("Debug Notification")
+                    .setSmallIcon(R.drawable.ic_notification)
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+
+            NotificationManager mNotifyManager = (NotificationManager)
+                    getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotifyManager.notify(notificationId, mBuilder.build());
+        }
     }
 
     public void scheduleUpdate() {

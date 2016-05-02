@@ -39,8 +39,8 @@ android {
                                 onesignal_google_project_number: "${google_project_number}"]
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 41
-        versionName "1.0.0.41"
+        versionCode 43
+        versionName "1.0.0.43"
         signingConfig signingConfigs.config
     }
     buildTypes {
@@ -110,4 +110,5 @@ dependencies {
     compile 'com.karumi:dexter:2.2.2'
     compile 'com.anjlab.android.iab.v3:library:1.0.31'
     compile 'hanks.xyz:smallbang-library:0.1.2'
+    compile 'com.github.amlcurran.showcaseview:library:5.4.3'
 }

@@ -14,6 +14,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,9 +26,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.malinskiy.superrecyclerview.SuperRecyclerView;
 
@@ -41,7 +46,6 @@ import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.LaunchBigAdapter;
-import me.calebjones.spacelaunchnow.content.adapter.LaunchCompactAdapter;
 import me.calebjones.spacelaunchnow.content.adapter.LaunchSmallAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
@@ -87,7 +91,8 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     private LinearLayoutManager linearLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private View color_reveal;
-    private FloatingActionButton menu;
+    private FloatingActionButton FABMenu;
+    private Menu mMenu;
     private List<Launch> rocketLaunches;
     private ListPreferences sharedPreference;
     private SwitchPreferences switchPreferences;
@@ -107,6 +112,20 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         switchPreferences = SwitchPreferences.getInstance(getActivity().getApplication());
     }
 
+    public void showCaseView(){
+        Button customButton = (Button) getLayoutInflater(null).inflate(R.layout.view_custom_button, null);
+        ViewTarget pinMenuItem = new ViewTarget(R.id.action_alert, getActivity());
+        ShowcaseView.Builder builder = new ShowcaseView.Builder(getActivity())
+                .withNewStyleShowcase()
+                .setTarget(pinMenuItem)
+                .setContentTitle("Launch Filtering")
+                .setContentText("Only receive notifications for launches that you care about.");
+        if (sharedPreference.getNightMode()) {
+            builder.setStyle(R.style.ShowCaseThemeDark).replaceEndButton(customButton).hideOnTouchOutside().build();
+        } else {
+            builder.setStyle(R.style.ShowCaseThemeLight).replaceEndButton(customButton).hideOnTouchOutside().build();
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -154,8 +173,8 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         setUpSwitches();
         color_reveal = view.findViewById(R.id.color_reveal);
         color_reveal.setBackgroundColor(ContextCompat.getColor(context, color));
-        menu = (FloatingActionButton) view.findViewById(R.id.menu);
-        menu.setOnClickListener(new View.OnClickListener() {
+        FABMenu = (FloatingActionButton) view.findViewById(R.id.menu);
+        FABMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                     setUpSwitches();
@@ -163,7 +182,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                         switchChanged = false;
                         active = true;
                         mSwipeRefreshLayout.setEnabled(false);
-                        menu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_close));
+                        FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_close));
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             showView();
                         } else {
@@ -171,7 +190,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                         }
                     } else {
                         active = false;
-                        menu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_filter));
+                        FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_filter));
                         mSwipeRefreshLayout.setEnabled(true);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             hideView();
@@ -240,7 +259,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     private void refreshView() {
         rocketLaunches = sharedPreference.filterLaunches(sharedPreference.getLaunchesUpcoming());
 
-        int size = Integer.parseInt(sharedPref.getString("upcoming_value", "10"));
+        int size = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
         if (rocketLaunches.size() > size){
             rocketLaunches = rocketLaunches.subList(0,size);
         }
@@ -351,8 +370,8 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     private void hideView() {
 
         // get the center for the clipping circle
-        int x = (int) (menu.getX() + menu.getWidth() / 2);
-        int y = (int) (menu.getY() + menu.getHeight() / 2);
+        int x = (int) (FABMenu.getX() + FABMenu.getWidth() / 2);
+        int y = (int) (FABMenu.getY() + FABMenu.getHeight() / 2);
 
         // get the initial radius for the clipping circle
         int initialRadius = Math.max(color_reveal.getWidth(), color_reveal.getHeight());
@@ -378,8 +397,8 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     private void showView() {
 
         // get the center for the clipping circle
-        int x = (int) (menu.getX() + menu.getWidth() / 2);
-        int y = (int) (menu.getY() + menu.getHeight() / 2);
+        int x = (int) (FABMenu.getX() + FABMenu.getWidth() / 2);
+        int y = (int) (FABMenu.getY() + FABMenu.getHeight() / 2);
 
         // get the final radius for the clipping circle
         int finalRadius = Math.max(color_reveal.getWidth(), color_reveal.getHeight());
@@ -423,8 +442,12 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         setTitle();
         Timber.d("OnResume!");
         if (Utils.getVersionCode(context) != switchPreferences.getVersionCode()) {
+            if (switchPreferences.getVersionCode() <= 42 ) {
+                ((MainActivity) getActivity()).showWhatsNew(true);
+            } else {
+                ((MainActivity) getActivity()).showWhatsNew(false);
+            }
             switchPreferences.setVersionCode(Utils.getVersionCode(context));
-            ((MainActivity)getActivity()).showWhatsNew();
         }
         super.onResume();
     }
@@ -461,9 +484,11 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         if (BuildConfig.DEBUG) {
             menu.clear();
             inflater.inflate(R.menu.debug_menu, menu);
+            mMenu = menu;
         } else {
             menu.clear();
             inflater.inflate(R.menu.next_menu, menu);
+            mMenu = menu;
         }
     }
 
@@ -491,7 +516,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                 switchChanged = false;
                 active = true;
                 mSwipeRefreshLayout.setEnabled(false);
-                menu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_close));
+                FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_close));
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     showView();
                 } else {
@@ -499,7 +524,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                 }
             } else {
                 active = false;
-                menu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_add_alert));
+                FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_add_alert));
                 mSwipeRefreshLayout.setEnabled(true);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     hideView();
@@ -527,7 +552,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
 
     private void confirm() {
         if (!switchChanged) {
-            menu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_check));
+            FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_check));
         }
         switchChanged = true;
     }

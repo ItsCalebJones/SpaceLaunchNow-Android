@@ -42,6 +42,7 @@ Quisque tincidunt magna quis viverra faucibus. Vivamus rhoncus elit vel mi trist
     <string name="dragon_description">SpaceX is additionally developing a crewed variant of the Dragon called Dragon V2. Dragon V2 will be able to carry up to seven astronauts, or some combination of crew and cargo, to and from low Earth orbit. The V2 heat shield is designed to withstand Earth re-entry velocities from Lunar and Martian spaceflights.</string>
     <string name="orion_history">The Orion Multi-Purpose Crew Vehicle (Orion MPCV) is an American spacecraft intended to carry a crew of four astronauts to destinations at or beyond low Earth orbit (LEO). Currently under development by NASA for launch on the Space Launch System, Orion is intended to facilitate human exploration of asteroids and of Mars, as well as to provide a means of delivering or retrieving crew or supplies from the ISS if needed.</string>
     <string name="orion_description">The Orion MPCV takes basic design elements from the Apollo Command Module that took astronauts to the moon, but its technology and capability are more advanced. It is designed to support long-duration deep space missions, with up to 21 days active crew time plus 6 months quiescent. During the quiescent period crew life support would be provided by another module such as a Deep Space Habitat. The spacecraft\'s life support, propulsion, thermal protection and avionics systems are designed to be upgradeable as new technologies become available. \n\n The MPCV spacecraft includes both crew and service modules, and a spacecraft adaptor. The MPCV\'s crew module is larger than Apollo\'s and can support more crew members for short or long-duration missions. The service module fuels and propels the spacecraft as well as storing oxygen and water for astronauts. The service module\'s structure is also being designed to provide locations to mount scientific experiments and cargo.</string>
+
     <string name="spacex_logo">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950103/3BqROn0_pfsamc.jpg</string>
     <string name="Yuzhnoye_logo">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950107/KnDMy7l_ua9lnu.png</string>
     <string name="usa_flag">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950350/usa_flag_pewvgy.png</string>
@@ -69,19 +70,13 @@ Quisque tincidunt magna quis viverra faucibus. Vivamus rhoncus elit vel mi trist
     <string name="title_activity_debug">DebugActivity</string>
     <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
 
-    <string name="new_version">1.0.0</string>
+    <string name="new_version">1.0.0.43</string>
     <string name="whats_new_content">These are features that will likely take significant development effort to ensure a quality product. Initially i\'m hoping to deliver syncing all upcoming events to calendar and custom watchface backgrounds and settings.\n\n
         Fixes and Features!\n
-    \u2022Added a Contribute page that allows you to become a Supporter.\n
-        \u2022Added an About menu with links to libraries used.\n
-        \u2022Fixed Experimental \'Add to Calendar\' feature and added multiple reminders.\n
-        \u2022Fixed width of splash screen text.\n
-        \u2022Fixed an issue with Filtering.</string>
-        <string name="whats_new_content_html">\u2022 Added an About menu with links to libraries used.
-        <![CDATA[<br/>]]>\u2022
-    </string>
-    <string name="previous_changelog_html">v1.0-beta.12
-        <![CDATA[<br/>]]>\u2022
+    \u2022Added ShowcaseView to tutorial and first launch to demonstrate how to filter launch notifications.\n
+    \u2022Fixed NightMode issues in several UI fields.\n
+    \u2022Streamlined data usage, using about 5-10% of the bandwidth of previous versions.\n
+    \u2022Fixed various crashes.\n
     </string>
     <string name="link_feedback">https://www.reddit.com/r/spacelaunchnow</string>
     <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>
