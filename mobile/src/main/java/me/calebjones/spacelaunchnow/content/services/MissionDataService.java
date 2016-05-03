@@ -67,7 +67,7 @@ public class MissionDataService extends IntentService {
         try {
             URL url;
             //Used for loading debug launches/reproducing bugs
-            if (listPreference.getDebugLaunch()) {
+            if (listPreference.isDebugEnabled()) {
                 url = new URL(Strings.DEBUG_MISSION_URL);
             } else {
                 url = new URL(Strings.MISSION_URL);

@@ -127,7 +127,7 @@ public class VehicleDataService extends IntentService {
             /* forming th java.net.URL object */
             URL url;
             //Used for loading debug launches/reproducing bugs
-            if (listPreference.getDebugLaunch()) {
+            if (listPreference.isDebugEnabled()) {
                 url = new URL(Strings.DEBUG_VEHICLE_URL);
             } else {
                 url = new URL(Strings.VEHICLE_URL);

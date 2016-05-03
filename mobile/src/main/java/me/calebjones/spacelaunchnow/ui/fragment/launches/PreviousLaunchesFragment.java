@@ -7,7 +7,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -22,13 +21,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
-import android.widget.FrameLayout;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.borax12.materialdaterangepicker.date.DatePickerDialog;
@@ -49,7 +46,6 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import io.fabric.sdk.android.services.common.Crash;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.content.adapter.LaunchCompactAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
@@ -405,7 +401,12 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
     public void fetchData() {
         showLoading();
-        String url = "https://launchlibrary.net/1.2/launch/" + this.start_date + "/" + this.end_date + "?sort=desc&limit=1000";
+        String url;
+        if (listPreferences.isDebugEnabled()) {
+            url = "https://launchlibrary.net/dev/launch/" + this.start_date + "/" + this.end_date + "?sort=desc&limit=1000";
+        } else {
+            url = "https://launchlibrary.net/1.2/launch/" + this.start_date + "/" + this.end_date + "?sort=desc&limit=1000";
+        }
         Timber.d("Sending Intent URL: %s", url);
         Intent intent = new Intent(getContext(), LaunchDataService.class);
         intent.putExtra("URL", url);

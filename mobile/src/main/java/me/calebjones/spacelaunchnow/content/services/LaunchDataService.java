@@ -200,7 +200,7 @@ public class LaunchDataService extends IntentService implements
             URL url;
 
             //Used for loading debug launches/reproducing bugs
-            if (listPreference.getDebugLaunch()) {
+            if (listPreference.isDebugEnabled()) {
                 url = new URL(Strings.DEBUG_LAUNCH_URL);
             } else {
                 url = new URL(Strings.LAUNCH_URL);
@@ -289,7 +289,7 @@ public class LaunchDataService extends IntentService implements
             URL url;
 
             //Used for loading debug launches/reproducing bugs
-            if (listPreference.getDebugLaunch()) {
+            if (listPreference.isDebugEnabled()) {
                 url = new URL(Strings.DEBUG_NEXT_URL);
             } else {
                 url = new URL(Strings.NEXT_URL);
@@ -375,7 +375,7 @@ public class LaunchDataService extends IntentService implements
             URL url;
 
             //Used for loading debug lauches/reproducing bugs
-            if (listPreference.getDebugLaunch()) {
+            if (listPreference.isDebugEnabled()) {
                 url = new URL(String.format(Strings.DEBUG_NEXT_URL_BY_ID, id));
             } else {
                 url = new URL(String.format(Strings.NEXT_URL_BY_ID, id));
@@ -412,7 +412,7 @@ public class LaunchDataService extends IntentService implements
 
                 Launch nextLaunch = parseSingleResult(response.toString());
                 Launch storedLaunch = listPreference.getNextLaunch();
-                if (nextLaunch.getId() == listPreference.getNextLaunch().getId()) {
+                if (nextLaunch.getId().intValue() == listPreference.getNextLaunch().getId().intValue()) {
                     if (storedLaunch.getIsNotifiedDay()) {
                         nextLaunch.setIsNotifiedDay(true);
                     }
@@ -428,7 +428,7 @@ public class LaunchDataService extends IntentService implements
                     if (storedLaunch.getCalendarID() != null) {
                         nextLaunch.setCalendarID(storedLaunch.getCalendarID());
                     }
-                    this.listPreference.setNextLaunch(nextLaunch);
+                    listPreference.setNextLaunch(nextLaunch);
                 }
             } else {
                 Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to retrieve next launch: " + statusCode);
@@ -466,7 +466,7 @@ public class LaunchDataService extends IntentService implements
             URL url;
 
             //Used for loading debug lauches/reproducing bugs
-            if (listPreference.getDebugLaunch()) {
+            if (listPreference.isDebugEnabled()) {
                 url = new URL(String.format(Strings.DEBUG_NEXT_URL_BY_ID, listPreference.getNextLaunch().getId()));
             } else {
                 url = new URL(String.format(Strings.NEXT_URL_BY_ID, listPreference.getNextLaunch().getId()));
@@ -656,7 +656,7 @@ public class LaunchDataService extends IntentService implements
         JSONArray vidURLs = launchesObj.getJSONArray("vidURLs");
         if (vidURLs.length() > 0) {
             launch.setVidURL(vidURLs.get(0).toString());
-            ArrayList<String> listdata = new ArrayList<String>();
+            ArrayList<String> listdata = new ArrayList<>();
             for (int o = 0; o < vidURLs.length(); o++) {
                 listdata.add(vidURLs.get(o).toString());
             }
@@ -798,7 +798,12 @@ public class LaunchDataService extends IntentService implements
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = df.format(c.getTime());
 
-        return "https://launchlibrary.net/1.2/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
+        //Used for loading debug lauches/reproducing bugs
+        if (listPreference.isDebugEnabled()) {
+            return "https://launchlibrary.net/dev/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
+        } else {
+            return "https://launchlibrary.net/1.2/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
+        }
     }
 
     // Create a data map and put data in it
