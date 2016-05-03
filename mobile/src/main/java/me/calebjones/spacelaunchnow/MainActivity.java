@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity
                         }
                     }
                 } else if (Strings.ACTION_FAILURE_UP_LAUNCHES.equals(action)) {
-                    if (mNavItemId == R.id.menu_next_launch){
+                    if (mNavItemId == R.id.menu_next_launch) {
                         mUpcomingFragment.hideLoading();
                     }
                 }
@@ -321,7 +321,7 @@ public class MainActivity extends AppCompatActivity
                     }
                     if (listPreferences.getLaunchesPrevious() == null || listPreferences.getLaunchesPrevious().size() == 0) {
                         Intent launchPrevIntent = new Intent(context, LaunchDataService.class);
-                        launchPrevIntent.putExtra("URL", Utils.getBaseURL());
+                        launchPrevIntent.putExtra("URL", Utils.getBaseURL(context));
                         launchPrevIntent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
                         context.startService(launchPrevIntent);
                     }
@@ -336,7 +336,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void showWhatsNew(boolean firstLaunch) {
+    public void showWhatsNew() {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.switch_dialog, null);
         View nightView = inflater.inflate(R.layout.switch_dialog_night, null);
@@ -355,29 +355,18 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
 
-        if (firstLaunch){
-            dialog.setPositive("Okay", new MaterialDialog.SingleButtonCallback() {
-                @Override
-                public void onClick(MaterialDialog dialog, DialogAction which) {
-                    dialog.dismiss();
-                    if (mUpcomingFragment != null) {
-                        mUpcomingFragment.showCaseView();
-                    }
-                }
-            });
-        } else {
-            dialog.setPositive("Okay", new MaterialDialog.SingleButtonCallback() {
-                @Override
-                public void onClick(MaterialDialog dialog, DialogAction which) {
-                    dialog.dismiss();
-                }
-            });
-        }
 
-        if (listPreferences.getNightMode())  {
+        dialog.setPositive("Okay", new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(MaterialDialog dialog, DialogAction which) {
+                dialog.dismiss();
+            }
+        });
+
+        if (listPreferences.getNightMode()) {
             dialog.setHeaderColor(R.color.darkPrimary);
             dialog.setCustomView(nightView);
-        } else{
+        } else {
             dialog.setHeaderColor(R.color.colorPrimary);
             dialog.setCustomView(customView);
         }
@@ -393,7 +382,7 @@ public class MainActivity extends AppCompatActivity
     public void getFirstLaunches() {
         Intent launchIntent = new Intent(this.context, LaunchDataService.class);
         launchIntent.setAction(Strings.ACTION_GET_ALL);
-        launchIntent.putExtra("URL", Utils.getBaseURL());
+        launchIntent.putExtra("URL", Utils.getBaseURL(this));
         this.context.startService(launchIntent);
 
         Intent rocketIntent = new Intent(this.context, VehicleDataService.class);
@@ -554,7 +543,7 @@ public class MainActivity extends AppCompatActivity
                 startActivity(settingsIntent);
                 break;
             case R.id.menu_new:
-                showWhatsNew(true);
+                showWhatsNew();
                 break;
             case R.id.menu_support:
                 Intent supportIntent = new Intent(this, SupportActivity.class);
@@ -577,7 +566,7 @@ public class MainActivity extends AppCompatActivity
                 .negativeText("Reddit")
                 .positiveColor(R.color.colorPrimary)
                 .positiveText("Email")
-                .onNegative( new MaterialDialog.SingleButtonCallback() {
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         String url = "https://www.reddit.com/r/spacelaunchnow";

@@ -23,7 +23,7 @@ public class BootReceiver extends BroadcastReceiver{
         if (sharedPref.getBoolean("background_sync", true)) {
             Intent launchIntent = new Intent(context, LaunchDataService.class);
             launchIntent.setAction(Strings.ACTION_GET_ALL);
-            launchIntent.putExtra("URL", Utils.getBaseURL());
+            launchIntent.putExtra("URL", Utils.getBaseURL(context));
             context.startService(launchIntent);
         }
     }

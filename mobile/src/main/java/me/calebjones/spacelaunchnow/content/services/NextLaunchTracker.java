@@ -48,7 +48,7 @@ public class NextLaunchTracker extends IntentService implements
         GoogleApiClient.OnConnectionFailedListener {
 
     private Launch nextLaunch;
-    private Launch storedLaunch;
+    private Launch updatedLaunch;
     private SharedPreferences sharedPref;
     private ListPreferences listPreferences;
     private SwitchPreferences switchPreferences;
@@ -109,36 +109,46 @@ public class NextLaunchTracker extends IntentService implements
 
         if (upcomingLaunchList != null && upcomingLaunchList.size() > 0) {
             nextLaunch = upcomingLaunchList.get(0);
-            storedLaunch = listPreferences.getNextLaunch();
+            updatedLaunch = listPreferences.getNextLaunch();
         }
 
         //Check if the stored launch is still the next launch.
-        if (storedLaunch != null && nextLaunch != null) {
+        if (updatedLaunch != null && nextLaunch != null) {
 
             //If they do not match this means nextLaunch has changed (launch executed, filter change, etc)
-            if (nextLaunch.getId().intValue() != storedLaunch.getId().intValue()) {
-                this.listPreferences.setNextLaunch(nextLaunch);
-                checkStatus(nextLaunch);
+            if (nextLaunch.getId().intValue() != updatedLaunch.getId().intValue()) {
+
                 debugNotificaiton(String.format("Launch has changed - Next: %s Stored: %s"
-                        , nextLaunch.getId(), storedLaunch.getId()));
+                        , nextLaunch.getId(), updatedLaunch.getId()));
+                Intent nextIntent = new Intent(this, LaunchDataService.class);
+                nextIntent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
+                startService(nextIntent);
                 //They do match, check if the launch time has moved.
             } else {
                 if (listPreferences.getNextLaunchTimestamp() != 0) {
                     if (Math.abs(listPreferences.getNextLaunchTimestamp()
-                            - storedLaunch.getNetstamp()) > 60) {
+                            - updatedLaunch.getNetstamp()) > 60) {
                         debugNotificaiton(String.format("Resetting notifiers - List: %s Stored: %s "
                                 ,listPreferences.getNextLaunchTimestamp(), nextLaunch.getNetstamp()));
+                        updatedLaunch.resetNotifiers();
+                        listPreferences.setNextLaunchTimestamp(updatedLaunch.getNetstamp());
 
-                        storedLaunch = nextLaunch;
-                        listPreferences.setNextLaunchTimestamp(storedLaunch.getNetstamp());
+                        upcomingLaunchList.set(0, updatedLaunch);
+                        listPreferences.setNextLaunches(upcomingLaunchList);
+                        checkStatus(updatedLaunch);
+
+                        Intent broadcastIntent = new Intent();
+                        broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
+                        this.getApplicationContext().sendBroadcast(broadcastIntent);
                     }
-                } else if (storedLaunch.getNetstamp() != 0) {
-                    listPreferences.setNextLaunchTimestamp(storedLaunch.getNetstamp());
-                    debugNotificaiton("Updated timestamp to " + storedLaunch.getNetstamp());
+                } else if (updatedLaunch.getNetstamp() != 0) {
+                    listPreferences.setNextLaunchTimestamp(updatedLaunch.getNetstamp());
+                    debugNotificaiton("Updated timestamp to " + updatedLaunch.getNetstamp());
+
+                    upcomingLaunchList.set(0, updatedLaunch);
+                    listPreferences.setNextLaunches(upcomingLaunchList);
+                    checkStatus(updatedLaunch);
                 }
-                upcomingLaunchList.set(0, storedLaunch);
-                listPreferences.setNextLaunches(upcomingLaunchList);
-                checkStatus(storedLaunch);
             }
         } else if (nextLaunch != null) {
             this.listPreferences.setNextLaunch(nextLaunch);
@@ -422,14 +432,14 @@ public class NextLaunchTracker extends IntentService implements
         long nextUpdate = Calendar.getInstance().getTimeInMillis() + interval;
 
         if (BuildConfig.DEBUG) {
-            storedLaunch = listPreferences.getNextLaunch();
+            updatedLaunch = listPreferences.getNextLaunch();
             upcomingLaunchList = listPreferences.getNextLaunches();
 
             if (upcomingLaunchList != null && upcomingLaunchList.size() > 0) {
                 nextLaunch = upcomingLaunchList.get(0);
             }
 
-            if (nextLaunch != null && storedLaunch != null) {
+            if (nextLaunch != null && updatedLaunch != null) {
                 // Create a DateFormatter object for displaying date in specified format.
                 SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss zz");
                 Calendar calendar = Calendar.getInstance();
@@ -445,7 +455,7 @@ public class NextLaunchTracker extends IntentService implements
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
                 mBuilder.setContentTitle("LaunchData Worked! - Next Launch")
                         .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText("Next Launch = " + nextLaunch.getName() + "\n\nStored Launch = " + storedLaunch.getName())
+                                .bigText("Next Launch = " + nextLaunch.getName() + "\n\nStored Launch = " + updatedLaunch.getName())
                                 .setSummaryText(String.format("Interval: %s | ", intevalString) + formatter.format(calendar.getTime())))
                         .setSmallIcon(R.drawable.ic_notification)
                         .setAutoCancel(true);

@@ -203,14 +203,18 @@ public class Utils {
         return propertyAnimator;
     }
 
-    public static String getBaseURL() {
+    public static String getBaseURL(Context context) {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DATE, 1);
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = df.format(c.getTime());
 
-        return "https://launchlibrary.net/1.2/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
+        if (ListPreferences.getInstance(context).isDebugEnabled()) {
+            return "https://launchlibrary.net/dev/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
+        } else {
+            return "https://launchlibrary.net/1.2/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
+        }
     }
 
     public static Calendar DateToCalendar(Date date) {
@@ -361,14 +365,14 @@ public class Utils {
     public static boolean checkPlayServices(Context context) {
         GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
         int result = googleAPI.isGooglePlayServicesAvailable(context);
-        if(result != ConnectionResult.SUCCESS) {
+        if (result != ConnectionResult.SUCCESS) {
             return false;
         }
         return true;
     }
 
     public static String getTypeName(int type) {
-        switch (type){
+        switch (type) {
             case 1:
                 return "Earth Science";
             case 2:
@@ -396,8 +400,7 @@ public class Utils {
         }
     }
 
-    public static int getVersionCode(Context context)
-    {
+    public static int getVersionCode(Context context) {
         try {
             ComponentName comp = new ComponentName(context, context.getClass());
             PackageInfo pinfo = context.getPackageManager().getPackageInfo(comp.getPackageName(), 0);
@@ -407,8 +410,7 @@ public class Utils {
         }
     }
 
-    public static String getVersionName(Context context)
-    {
+    public static String getVersionName(Context context) {
         try {
             ComponentName comp = new ComponentName(context, context.getClass());
             return context.getPackageManager().getPackageInfo(comp.getPackageName(), 0).versionName;

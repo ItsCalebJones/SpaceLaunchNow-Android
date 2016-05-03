@@ -150,7 +150,7 @@ public class ListPreferences {
         this.prefsEditor.apply();
     }
 
-    public boolean getDebugLaunch() {
+    public boolean isDebugEnabled() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         return this.sharedPrefs.getBoolean(PREFS_DEBUG, false);
     }

@@ -125,14 +125,14 @@ public class LaunchApplication extends Application {
 
                     Intent launchIntent = new Intent(this, LaunchDataService.class);
                     launchIntent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
-                    launchIntent.putExtra("URL", Utils.getBaseURL());
+                    launchIntent.putExtra("URL", Utils.getBaseURL(this));
                     this.startService(launchIntent);
 
                     this.startService(new Intent(this, MissionDataService.class));
                 } else if (Utils.getVersionCode(this) != switchPreferences.getVersionCode()) {
                     Intent launchIntent = new Intent(this, LaunchDataService.class);
                     launchIntent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
-                    launchIntent.putExtra("URL", Utils.getBaseURL());
+                    launchIntent.putExtra("URL", Utils.getBaseURL(this));
                     this.startService(launchIntent);
 
                     Intent rocketIntent = new Intent(this, VehicleDataService.class);
