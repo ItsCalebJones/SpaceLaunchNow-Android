@@ -459,7 +459,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                     public void onDismissed(Snackbar snackbar, int event) {
                         super.onDismissed(snackbar, event);
                         Timber.v("Current Version code: %s", switchPreferences.getVersionCode());
-                        if (switchPreferences.getVersionCode() <= 42) {
+                        if (switchPreferences.getVersionCode() <= 43) {
                             showCaseView();
                         }
                         switchPreferences.setVersionCode(Utils.getVersionCode(context));
