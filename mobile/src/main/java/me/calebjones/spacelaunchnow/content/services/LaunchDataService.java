@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -116,6 +117,8 @@ public class LaunchDataService extends IntentService implements
                 scheduleLaunchUpdates();
             }
             getUpcomingLaunches();
+            getNextLaunches();
+            startService(new Intent(this, NextLaunchTracker.class));
         } else if (Strings.ACTION_GET_PREV_LAUNCHES.equals(action)) {
             getPreviousLaunches(intent.getStringExtra("URL"));
         } else if (Strings.ACTION_UPDATE_NEXT_LAUNCH.equals(action)) {
@@ -129,7 +132,7 @@ public class LaunchDataService extends IntentService implements
     private void getPreviousLaunches(String sUrl) {
         InputStream inputStream = null;
         Integer result = 0;
-        HttpURLConnection urlConnection = null;
+        HttpURLConnection urlConnection;
         try {
             /* forming th java.net.URL object */
             URL url = new URL(sUrl);
@@ -239,7 +242,6 @@ public class LaunchDataService extends IntentService implements
                 LaunchDataService.this.cleanCacheUpcoming();
                 this.listPreference.setUpComingLaunches(upcomingLaunchList);
 
-                startService(new Intent(this, NextLaunchTracker.class));
 //                CalendarSyncService.startActionSync(this);
 
                 Intent broadcastIntent = new Intent();
@@ -412,23 +414,27 @@ public class LaunchDataService extends IntentService implements
 
                 Launch nextLaunch = parseSingleResult(response.toString());
                 Launch storedLaunch = listPreference.getNextLaunch();
-                if (nextLaunch.getId().intValue() == listPreference.getNextLaunch().getId().intValue()) {
-                    if (storedLaunch.getIsNotifiedDay()) {
-                        nextLaunch.setIsNotifiedDay(true);
+                if (nextLaunch != null) {
+                    if (nextLaunch.getId().intValue() == listPreference.getNextLaunch().getId().intValue()) {
+                        if (storedLaunch.getIsNotifiedDay()) {
+                            nextLaunch.setIsNotifiedDay(true);
+                        }
+                        if (storedLaunch.getIsNotifiedHour()) {
+                            nextLaunch.setIsNotifiedhour(true);
+                        }
+                        if (storedLaunch.getIsNotifiedTenMinute()) {
+                            nextLaunch.setIsNotifiedTenMinute(true);
+                        }
+                        if (storedLaunch.isFavorite()) {
+                            nextLaunch.isFavorite();
+                        }
+                        if (storedLaunch.getCalendarID() != null) {
+                            nextLaunch.setCalendarID(storedLaunch.getCalendarID());
+                        }
+                        listPreference.setNextLaunch(nextLaunch);
+                    } else {
+                        listPreference.setNextLaunch(nextLaunch);
                     }
-                    if (storedLaunch.getIsNotifiedHour()) {
-                        nextLaunch.setIsNotifiedhour(true);
-                    }
-                    if (storedLaunch.getIsNotifiedTenMinute()) {
-                        nextLaunch.setIsNotifiedTenMinute(true);
-                    }
-                    if (storedLaunch.isFavorite()) {
-                        nextLaunch.isFavorite();
-                    }
-                    if (storedLaunch.getCalendarID() != null) {
-                        nextLaunch.setCalendarID(storedLaunch.getCalendarID());
-                    }
-                    listPreference.setNextLaunch(nextLaunch);
                 }
             } else {
                 Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to retrieve next launch: " + statusCode);
@@ -503,7 +509,7 @@ public class LaunchDataService extends IntentService implements
 
                 Launch nextLaunch = parseSingleResult(response.toString());
                 Launch storedLaunch = listPreference.getNextLaunch();
-                if (nextLaunch.getId() == listPreference.getNextLaunch().getId()) {
+                if (nextLaunch != null && nextLaunch.getId().intValue() == listPreference.getNextLaunch().getId().intValue()) {
                     if (storedLaunch.getIsNotifiedDay()) {
                         nextLaunch.setIsNotifiedDay(true);
                     }
@@ -560,7 +566,7 @@ public class LaunchDataService extends IntentService implements
 
     @Nullable
     private Launch parseSingleResult(String result) {
-        JSONObject response = null;
+        JSONObject response;
         try {
             response = new JSONObject(result);
             JSONArray launchesArray = response.optJSONArray("launches");
@@ -828,7 +834,7 @@ public class LaunchDataService extends IntentService implements
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Timber.e("onConnectionFailed %s", connectionResult.getErrorMessage());
     }
 
