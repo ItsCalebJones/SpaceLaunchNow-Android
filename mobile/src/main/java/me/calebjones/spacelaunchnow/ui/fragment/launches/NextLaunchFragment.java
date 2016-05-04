@@ -35,7 +35,7 @@ import com.crashlytics.android.answers.ContentViewEvent;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
-import com.malinskiy.superrecyclerview.SuperRecyclerView;
+import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +85,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     AppCompatCheckBox customSwitch;
 
     private View view;
-    private SuperRecyclerView mRecyclerView;
+    private FastScrollRecyclerView mRecyclerView;
     private LaunchBigAdapter adapter;
     private LaunchSmallAdapter smallAdapter;
     private StaggeredGridLayoutManager layoutManager;
@@ -206,7 +206,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
             }
         });
 
-        mRecyclerView = (SuperRecyclerView) view.findViewById(R.id.recycler_view);
+        mRecyclerView = (FastScrollRecyclerView) view.findViewById(R.id.recycler_view);
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
