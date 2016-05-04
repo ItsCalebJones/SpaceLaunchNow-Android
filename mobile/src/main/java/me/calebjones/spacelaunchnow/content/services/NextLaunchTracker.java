@@ -120,6 +120,7 @@ public class NextLaunchTracker extends IntentService implements
 
                 debugNotificaiton(String.format("Launch has changed - Next: %s Stored: %s"
                         , nextLaunch.getId(), updatedLaunch.getId()));
+                listPreferences.setNextLaunch(updatedLaunch);
                 Intent nextIntent = new Intent(this, LaunchDataService.class);
                 nextIntent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
                 startService(nextIntent);
