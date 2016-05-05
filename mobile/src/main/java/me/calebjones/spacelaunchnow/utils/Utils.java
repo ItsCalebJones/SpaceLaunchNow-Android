@@ -210,7 +210,7 @@ public class Utils {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = df.format(c.getTime());
 
-        if (ListPreferences.getInstance(context).isDebugEnabled()) {
+        if (ListPreferences.getInstance(context.getApplicationContext()).isDebugEnabled()) {
             return "https://launchlibrary.net/dev/launch/2016-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=100";
         } else {
             return "https://launchlibrary.net/1.2/launch/2016-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=100";
