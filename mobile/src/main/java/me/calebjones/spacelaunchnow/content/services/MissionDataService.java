@@ -57,6 +57,7 @@ public class MissionDataService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Timber.d("MissionDataService - Intent received:  %s ", intent.getAction());
         getMissionLaunches();
+        onDestroy();
     }
 
     private void getMissionLaunches() {

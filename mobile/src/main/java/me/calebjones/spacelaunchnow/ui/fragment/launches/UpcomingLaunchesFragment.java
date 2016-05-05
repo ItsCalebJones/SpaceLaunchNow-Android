@@ -21,11 +21,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
-import android.widget.FrameLayout;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
@@ -42,7 +40,7 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.MainActivity;
-import me.calebjones.spacelaunchnow.content.adapter.LaunchCompactAdapter;
+import me.calebjones.spacelaunchnow.content.adapter.LaunchAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
@@ -58,7 +56,7 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
 
     private View view;
     private RecyclerView mRecyclerView;
-    private LaunchCompactAdapter adapter;
+    private LaunchAdapter adapter;
     private LinearLayoutManager layoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<Launch> rocketLaunches;
@@ -82,7 +80,7 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
         this.listPreference = ListPreferences.getInstance(getContext());
         this.switchPreferences = SwitchPreferences.getInstance(getContext());
         this.rocketLaunches = new ArrayList();
-        adapter = new LaunchCompactAdapter(getContext());
+        adapter = new LaunchAdapter(getContext());
     }
 
 
