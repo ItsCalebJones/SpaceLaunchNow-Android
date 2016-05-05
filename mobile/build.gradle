@@ -38,7 +38,7 @@ android {
         versionCode 46
         versionName "1.0.0.46"
         signingConfig signingConfigs.config
-//        resConfigs "en"
+        resConfigs "en"
     }
     buildTypes {
         debug {
@@ -47,8 +47,8 @@ android {
             manifestPlaceholders = [appNameLabel: "Space Launch Now - Debug"]
         }
         release {
-//            minifyEnabled true
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     productFlavors {
