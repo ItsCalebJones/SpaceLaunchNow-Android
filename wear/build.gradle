@@ -1,5 +1,22 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.moallemi.advanced-build-version'
 
+advancedVersioning {
+    nameOptions {
+        versionMajor 1
+        versionMinor 0
+        versionPatch 1
+
+    }
+    codeOptions {
+        versionCodeType org.moallemi.gradle.internal.VersionCodeType.AUTO_INCREMENT_ONE_STEP
+        dependsOnTasks 'release'
+    }
+    outputOptions { }
+}
+
+def appVersionName = advancedVersioning.versionName
+def appVersionCode = advancedVersioning.versionCode
 
 android {
     compileSdkVersion 23
@@ -10,8 +27,8 @@ android {
         applicationId "me.calebjones.spacelaunchnow"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 28
-        versionName "1.0.0.28"
+        versionCode appVersionCode
+        versionName appVersionName
     }
     buildTypes {
         release {

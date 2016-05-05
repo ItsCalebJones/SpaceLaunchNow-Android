@@ -9,11 +9,31 @@ buildscript {
 }
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
+apply plugin: 'org.moallemi.advanced-build-version'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
+advancedVersioning {
+    nameOptions {
+        versionMajor 1
+        versionMinor 0
+        versionPatch 1
+
+    }
+    codeOptions {
+        versionCodeType org.moallemi.gradle.internal.VersionCodeType.AUTO_INCREMENT_ONE_STEP
+        dependsOnTasks 'release'
+    }
+    outputOptions {
+        renameOutput true
+        nameFormat '${projectName}-${buildType}-${versionName}.${versionCode}'
+    }
+}
+
+def appVersionName = advancedVersioning.versionName
+def appVersionCode = advancedVersioning.versionCode
 
 android {
 
@@ -35,8 +55,8 @@ android {
                                 onesignal_google_project_number: "${google_project_number}"]
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 46
-        versionName "1.0.0.46"
+        versionCode appVersionCode
+        versionName appVersionName
         signingConfig signingConfigs.config
         resConfigs "en"
     }
