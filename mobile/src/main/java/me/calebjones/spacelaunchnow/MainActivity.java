@@ -31,6 +31,7 @@ import android.widget.ImageView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -236,16 +237,9 @@ public class MainActivity extends AppCompatActivity
 
         View header = navigationView.getHeaderView(0);
         ImageView imageView = (ImageView) header.findViewById(R.id.backgroundView);
-
-        //Figure this shit out
-        int[] images = {
-                R.drawable.nav_header,
-                R.drawable.navbar_one,
-                R.drawable.navbar_three,
-                R.drawable.navbar_four,
-        };
-        int idx = new Random().nextInt(images.length);
-        imageView.setImageDrawable(ContextCompat.getDrawable(context, images[idx]));
+        Glide.with(this)
+                .load("http://res.cloudinary.com/dnkkbfy3m/image/upload/v1462465326/navbar_one_sqfhes.png")
+                .into(imageView);
 
         // select the correct nav menu item
         navigationView.getMenu().findItem(mNavItemId).setChecked(true);

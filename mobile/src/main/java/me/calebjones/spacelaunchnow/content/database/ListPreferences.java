@@ -778,7 +778,7 @@ public class ListPreferences {
 
     public String getStartDate() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getString(PREFS_CURRENT_START_DATE, "2016-01-01");
+        return this.sharedPrefs.getString(PREFS_CURRENT_START_DATE, "1950-01-01");
     }
 
     public void setEndDate(String endDate) {

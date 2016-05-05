@@ -1,24 +1,13 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">180dp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="detail_backdrop_height">256dp</dimen>
     <dimen name="card_margin">8dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="list_item_avatar_size">40dp</dimen>
-    <dimen name="item_margin">1dp</dimen>
-    <dimen name="column_width">200dp</dimen>
-    <dimen name="column_width_fetch">320dp</dimen>
-    <dimen name="item_margin_fetch">1dp</dimen>
-    <dimen name="list_item_height">72dp</dimen>
     <dimen name="product_bottom">16dp</dimen>
     <dimen name="product_bottom_text">48dp</dimen>
 
-    <integer name="anim_duration_very_long">1500</integer>
-    <integer name="anim_duration_long">500</integer>
-    <integer name="anim_duration_medium">300</integer>
 </resources>
