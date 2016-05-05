@@ -1,12 +1,13 @@
 package me.calebjones.spacelaunchnow.content.models;
 
-public class GridItem {
-    final String name, agency, imageURL;
+public class Launcher {
+    final String name, agency, imageURL, nationURL;
 
-    public GridItem(String name, String agency, String imageURL) {
+    public Launcher(String name, String agency, String imageURL, String nationURL) {
         this.name = name;
         this.agency = agency;
         this.imageURL = imageURL;
+        this.nationURL = nationURL;
     }
 
     public String getName() {
@@ -20,4 +21,7 @@ public class GridItem {
     public String getImageURL(){
         return imageURL;
     }
+
+    public String getNationURL(){return nationURL;}
+
 }

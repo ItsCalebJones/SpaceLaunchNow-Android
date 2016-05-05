@@ -50,6 +50,8 @@ public final class Strings {
     public static String DEBUG_NEXT_URL = "https://launchlibrary.net/dev/launch?next=10&fields=id,netstamp";
     public static String DEBUG_NEXT_URL_BY_ID = "https://launchlibrary.net/dev/launch/%s?mode=verbose";
 
+    public static String BASE_URL = "http://calebjones.me/app/";
+
     private Strings() {
     }
 }

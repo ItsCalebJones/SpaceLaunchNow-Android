@@ -17,25 +17,36 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.VehicleAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.GridItem;
-import me.calebjones.spacelaunchnow.ui.activity.VehicleDetailActivity;
+import me.calebjones.spacelaunchnow.content.models.Launcher;
+import me.calebjones.spacelaunchnow.content.models.LauncherResponse;
+import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.ui.activity.LauncherDetailActivity;
 import me.calebjones.spacelaunchnow.utils.CustomFragment;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
+import me.calebjones.spacelaunchnow.utils.RequestInterface;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
-public class LaunchVehicleFragment extends CustomFragment {
+public class LauncherFragment extends CustomFragment {
 
     private ListPreferences sharedPreference;
     private VehicleAdapter adapter;
     private android.content.SharedPreferences SharedPreferences;
     private GridLayoutManager layoutManager;
-    private List<GridItem> items = new ArrayList<GridItem>();
+    private List<Launcher> items = new ArrayList<>();
     private Context context;
     private View view;
     private RecyclerView mRecyclerView;
@@ -88,35 +99,50 @@ public class LaunchVehicleFragment extends CustomFragment {
             }
         });
         adapter.setOnItemClickListener(recyclerRowClickListener);
-
-        items.add(new GridItem("Space Shuttle", "NASA","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944167/shuttle_vc2xnw.jpg"));
-        items.add(new GridItem("Soyuz", "Roscosmos","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944167/soyuz_rjwr7s.jpg"));
-        items.add(new GridItem("Falcon", "SpaceX", "http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/falcon_xtbyia.jpg"));
-        items.add(new GridItem("Atlas", "Lockheed Martin","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/atlas_ahqjya.jpg"));
-        items.add(new GridItem("Delta", "United Launch Alliance" ,"http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/delta_lbwmgy.jpg"));
-        items.add(new GridItem("Ariane", "Ariancespace & ESA", "http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/ariane_qouki7.jpg"));
-        items.add(new GridItem("Proton", "Khrunichev" ,"http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/proton_yaojbm.jpg"));
-        items.add(new GridItem("Long March", "China Academy of Space Technology","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/long_ywtbw6.jpg"));
-        items.add(new GridItem("PSLV", "Indian Space Research Organisation","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944167/pslv_vjcdww.jpg"));
-        items.add(new GridItem("Vega", "Arianespace","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944167/vega_tnkdms.jpg"));
-        items.add(new GridItem("Zenit", "Yuzhnoye Design Bureau","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944167/zenit_hxl4gd.jpg"));
-
-        adapter.addItems(items);
-
+        loadJSON();
         return view;
+    }
+
+    private void loadJSON(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Strings.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        RequestInterface request = retrofit.create(RequestInterface.class);
+        Call<LauncherResponse> call = request.getLaunchers();
+        call.enqueue(new Callback<LauncherResponse>() {
+            @Override
+            public void onResponse(Call<LauncherResponse> call, Response<LauncherResponse> response) {
+
+                LauncherResponse jsonResponse = response.body();
+                items = new ArrayList<>(Arrays.asList(jsonResponse.getItem()));
+                adapter.addItems(items);
+                mRecyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFailure(Call<LauncherResponse> call, Throwable t) {
+                Timber.e(t.getMessage());
+            }
+        });
     }
 
     private OnItemClickListener recyclerRowClickListener = new OnItemClickListener() {
 
         @Override
         public void onClick(View v, int position) {
+
+            Gson gson = new Gson();
+            String jsonItem = gson.toJson(items.get(position));
+
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                 Timber.d("Starting Activity at %s", position);
 
-                Intent detailIntent = new Intent(getActivity(), VehicleDetailActivity.class);
+                Intent detailIntent = new Intent(getActivity(), LauncherDetailActivity.class);
                 detailIntent.putExtra("position", position);
                 detailIntent.putExtra("family", items.get(position).getName());
                 detailIntent.putExtra("agency", items.get(position).getAgency());
+                detailIntent.putExtra("json", jsonItem);
 
                 ImageView coverImage = (ImageView) v.findViewById(R.id.picture);
                 ((ViewGroup) coverImage.getParent()).setTransitionGroup(false);
@@ -128,9 +154,10 @@ public class LaunchVehicleFragment extends CustomFragment {
 
                 startActivity(detailIntent, options.toBundle());
             } else {
-                Intent intent = new Intent(getActivity(), VehicleDetailActivity.class);
+                Intent intent = new Intent(getActivity(), LauncherDetailActivity.class);
                 intent.putExtra("family", items.get(position).getName());
                 intent.putExtra("agency", items.get(position).getAgency());
+                intent.putExtra("json", jsonItem);
                 startActivity(intent);
             }
         }

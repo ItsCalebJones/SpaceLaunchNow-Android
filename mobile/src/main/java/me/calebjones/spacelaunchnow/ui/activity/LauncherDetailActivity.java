@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -33,11 +34,14 @@ import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.VehicleListAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.models.Launch;
+import me.calebjones.spacelaunchnow.content.models.Launcher;
+import me.calebjones.spacelaunchnow.content.models.Orbiter;
 import me.calebjones.spacelaunchnow.content.models.Rocket;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
-public class VehicleDetailActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
+public class LauncherDetailActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
 
     private static final int PERCENTAGE_TO_ANIMATE_AVATAR = 20;
     private boolean mIsAvatarShown = true;
@@ -73,9 +77,9 @@ public class VehicleDetailActivity extends AppCompatActivity implements AppBarLa
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
         }
 
-        if (!BuildConfig.DEBUG){
+        if (!BuildConfig.DEBUG) {
             Answers.getInstance().logContentView(new ContentViewEvent()
-                    .putContentName("VehicleDetailActivity")
+                    .putContentName("LauncherDetailActivity")
                     .putContentType("Activity"));
         }
 
@@ -169,80 +173,32 @@ public class VehicleDetailActivity extends AppCompatActivity implements AppBarLa
 
     public void displayRockets() {
         Intent intent = getIntent();
-        this.rocketLaunches = this.sharedPreference.getRocketsByFamily(intent.getStringExtra("family"));
-        String launcher = intent.getStringExtra("family");
-        detail_rocket.setText(launcher);
-        detail_vehicle_agency.setText(intent.getStringExtra("agency"));
+        Gson gson = new Gson();
+        final Launcher launcher = gson.fromJson(intent.getStringExtra("json"), Launcher.class);
+
+        String name = launcher.getName();
+        String agency = launcher.getAgency();
+        this.rocketLaunches = this.sharedPreference.getRocketsByFamily(name);
+        detail_rocket.setText(name);
+        detail_vehicle_agency.setText(agency);
         adapter.clear();
         adapter.addItems(rocketLaunches);
-        if (launcher.contains("Soyuz")) {
 
-            applyProfileBackdrop(R.string.soyuz_image);
-            applyProfileLogo(R.string.rus_logo);
-
-        } else if (launcher.contains("Falcon")) {
-
-            applyProfileBackdrop(R.string.falcon_image);
-            applyProfileLogo(R.string.spacex_logo);
-
-        } else if (launcher.contains("Proton")) {
-
-            applyProfileBackdrop(R.string.proton_image);
-            applyProfileLogo(R.string.rus_logo);
-
-        } else if (launcher.contains("Delta")) {
-
-            applyProfileBackdrop(R.string.delta_image);
-            applyProfileLogo(R.string.ula_logo);
-
-        } else if (launcher.contains("Ariane")) {
-
-            applyProfileBackdrop(R.string.ariane_image);
-            applyProfileLogo(R.string.ariane_logo);
-
-        } else if (launcher.contains("Space")) {
-
-            applyProfileBackdrop(R.string.shuttle_image);
-            applyProfileLogo(getString(R.string.usa_flag));
-
-        } else if (launcher.contains("Long")) {
-
-            applyProfileBackdrop(R.string.long_image);
-            applyProfileLogo(R.string.chn_logo);
-
-        } else if (launcher.contains("Atlas")) {
-
-            applyProfileBackdrop(R.string.atlas_image);
-            applyProfileLogo(getString(R.string.usa_flag));
-
-        } else if (launcher.contains("PSLV")) {
-
-            applyProfileBackdrop(R.string.pslv_image);
-            applyProfileLogo(R.string.ind_logo);
-
-        } else if (launcher.contains("Vega")) {
-
-            applyProfileBackdrop(R.string.vega_image);
-            applyProfileLogo(R.drawable.icon_international);
-
-        } else if (launcher.contains("Zenit")) {
-
-            applyProfileBackdrop(R.string.zenit_image);
-            applyProfileLogo(R.string.Yuzhnoye_logo);
-        }
+        applyProfileBackdrop(launcher.getImageURL());
+        applyProfileLogo(launcher.getNationURL());
     }
 
-    private void applyProfileBackdrop(int drawableURL) {
-        Timber.d("VehicleDetailActivity - Loading Backdrop Image url: %s ", drawableURL);
+    private void applyProfileBackdrop(String drawableURL) {
+        Timber.d("LauncherDetailActivity - Loading Backdrop Image url: %s ", drawableURL);
         Glide.with(this)
-                .load(getString(drawableURL))
+                .load(drawableURL)
                 .centerCrop()
                 .crossFade()
                 .into(detail_profile_backdrop);
     }
 
     private void applyProfileLogo(String url) {
-        Timber.d("VehicleDetailActivity - Loading Profile Image url: %s ", url);
+        Timber.d("LauncherDetailActivity - Loading Profile Image url: %s ", url);
 
         Glide.with(this)
                 .load(url)
@@ -252,7 +208,7 @@ public class VehicleDetailActivity extends AppCompatActivity implements AppBarLa
     }
 
     private void applyProfileLogo(int drawableURL) {
-        Timber.d("VehicleDetailActivity - Loading Profile Image url: %s ", drawableURL);
+        Timber.d("LauncherDetailActivity - Loading Profile Image url: %s ", drawableURL);
 
         Glide.with(this)
                 .load(getString(drawableURL))
