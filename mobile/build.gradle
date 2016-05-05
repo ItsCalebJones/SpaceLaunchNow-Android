@@ -121,4 +121,6 @@ dependencies {
     compile 'com.anjlab.android.iab.v3:library:1.0.31'
     compile 'hanks.xyz:smallbang-library:0.1.2'
     compile 'com.github.amlcurran.showcaseview:library:5.4.3'
+    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
 }

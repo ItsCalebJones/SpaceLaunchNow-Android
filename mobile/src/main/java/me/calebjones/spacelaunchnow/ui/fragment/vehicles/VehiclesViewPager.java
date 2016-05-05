@@ -25,7 +25,7 @@ public class VehiclesViewPager extends Fragment {
     private PagerAdapter pagerAdapter;
     private int current_tab;
     private TabLayout tabLayout;
-    private LaunchVehicleFragment launchVehicleFragment;
+    private LauncherFragment launchVehicleFragment;
     private OrbiterFragment orbiterFragment;
     private static ListPreferences sharedPreference;
     private Context context;
@@ -134,7 +134,7 @@ public class VehiclesViewPager extends Fragment {
 
             switch (position) {
                 case 0:
-                    launchVehicleFragment = new LaunchVehicleFragment();
+                    launchVehicleFragment = new LauncherFragment();
                     return launchVehicleFragment;
                 case 1:
                     orbiterFragment = new OrbiterFragment();

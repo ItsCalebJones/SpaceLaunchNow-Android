@@ -17,16 +17,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.OrbiterAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.GridItem;
+import me.calebjones.spacelaunchnow.content.models.Orbiter;
+import me.calebjones.spacelaunchnow.content.models.OrbiterResponse;
+import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.ui.activity.OrbiterDetailActivity;
 import me.calebjones.spacelaunchnow.utils.CustomFragment;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
+import me.calebjones.spacelaunchnow.utils.RequestInterface;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
 public class OrbiterFragment extends CustomFragment {
@@ -38,7 +49,7 @@ public class OrbiterFragment extends CustomFragment {
     private OrbiterAdapter adapter;
     private RecyclerView mRecyclerView;
     private GridLayoutManager layoutManager;
-    private List<GridItem> items = new ArrayList<GridItem>();
+    private List<Orbiter> items = new ArrayList<Orbiter>();
     public static SparseArray<Bitmap> photoCache = new SparseArray<Bitmap>(1);
 
     public void onCreate(Bundle savedInstanceState) {
@@ -79,7 +90,6 @@ public class OrbiterFragment extends CustomFragment {
             layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 2);
         }
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(adapter);
         mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -87,20 +97,41 @@ public class OrbiterFragment extends CustomFragment {
             }
         });
         adapter.setOnItemClickListener(recyclerRowClickListener);
-
-        items.add(new GridItem("Soyuz", "Russian Federal Space Agency ","http://res.cloudinary.com/dnkkbfy3m/image/upload/c_scale,w_1080/v1454944174/soyuz_snfim6.jpg"));
-        items.add(new GridItem("Shenzhou", "Chinese National Manned Space Program","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944173/shenzhou_vzayjm.jpg"));
-        items.add(new GridItem("Dragon", "SpaceX","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944174/dragon_q9cxq9.jpg"));
-        items.add(new GridItem("Orion", "National Aeronautics and Space Administration (NASA)","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944173/orion_sgl9rs.jpg"));
-
-        adapter.addItems(items);
+        loadJSON();
         return view;
+    }
+
+    private void loadJSON(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Strings.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        RequestInterface request = retrofit.create(RequestInterface.class);
+        Call<OrbiterResponse> call = request.getOrbiter();
+        call.enqueue(new Callback<OrbiterResponse>() {
+            @Override
+            public void onResponse(Call<OrbiterResponse> call, Response<OrbiterResponse> response) {
+
+                OrbiterResponse jsonResponse = response.body();
+                items = new ArrayList<>(Arrays.asList(jsonResponse.getItem()));
+                adapter.addItems(items);
+                mRecyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFailure(Call<OrbiterResponse> call, Throwable t) {
+                Timber.e(t.getMessage());
+            }
+        });
     }
 
     private OnItemClickListener recyclerRowClickListener = new OnItemClickListener() {
 
         @Override
         public void onClick(View v, int position) {
+
+            Gson gson = new Gson();
+            String jsonItem = gson.toJson(items.get(position));
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                 Timber.d("Starting Activity at %s", position);
@@ -109,6 +140,7 @@ public class OrbiterFragment extends CustomFragment {
                 detailIntent.putExtra("position", position + 1);
                 detailIntent.putExtra("family", items.get(position).getName());
                 detailIntent.putExtra("agency", items.get(position).getAgency());
+                detailIntent.putExtra("json", jsonItem);
 
                 ImageView coverImage = (ImageView) v.findViewById(R.id.picture);
                 ((ViewGroup) coverImage.getParent()).setTransitionGroup(false);
@@ -123,6 +155,7 @@ public class OrbiterFragment extends CustomFragment {
                 Intent intent = new Intent(getActivity(), OrbiterDetailActivity.class);
                 intent.putExtra("family", items.get(position).getName());
                 intent.putExtra("agency", items.get(position).getAgency());
+                intent.putExtra("json", jsonItem);
                 startActivity(intent);
             }
         }
