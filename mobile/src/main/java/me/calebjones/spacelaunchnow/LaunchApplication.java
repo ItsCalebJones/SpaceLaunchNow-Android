@@ -142,11 +142,6 @@ public class LaunchApplication extends Application {
                     this.startService(new Intent(this, MissionDataService.class));
                 }
             }
-            //Needed for users that will be upgrading
-        } else {
-            Intent rocketIntent = new Intent(this, VehicleDataService.class);
-            rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
-            this.startService(rocketIntent);
         }
     }
 

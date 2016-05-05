@@ -66,6 +66,7 @@ public class VehicleDataService extends IntentService {
                 getVehicles();
             }
         }
+        onDestroy();
     }
 
     private void getVehicleDetails() {
@@ -249,6 +250,7 @@ public class VehicleDataService extends IntentService {
             }
             //Success
             Timber.d("addToDB - Success! Database Size:  %s ", databaseManager.getCount());
+            databaseManager.close();
             return true;
         } catch (JSONException e) {
             Crashlytics.logException(e);

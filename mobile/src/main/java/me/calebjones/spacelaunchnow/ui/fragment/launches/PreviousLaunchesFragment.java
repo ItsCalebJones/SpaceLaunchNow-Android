@@ -47,7 +47,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.BuildConfig;
-import me.calebjones.spacelaunchnow.content.adapter.LaunchCompactAdapter;
+import me.calebjones.spacelaunchnow.content.adapter.LaunchAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
@@ -63,7 +63,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
     private View view, empty;
     private RecyclerView mRecyclerView;
-    private LaunchCompactAdapter adapter;
+    private LaunchAdapter adapter;
     private String newURL;
     private FloatingActionMenu menu;
     private String start_date, end_date;
@@ -88,7 +88,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         this.switchPreferences = SwitchPreferences.getInstance(getContext());
         this.sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         this.rocketLaunches = new ArrayList();
-        adapter = new LaunchCompactAdapter(getActivity());
+        adapter = new LaunchAdapter(getActivity());
     }
 
     @Override

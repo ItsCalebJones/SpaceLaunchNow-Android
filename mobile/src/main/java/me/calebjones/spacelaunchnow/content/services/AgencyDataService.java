@@ -57,6 +57,7 @@ public class AgencyDataService extends IntentService {
             String action = intent.getAction();
             if (Strings.ACTION_GET_AGENCY.equals(action)) {
                 getAgency();
+                onDestroy();
             }
         }
     }

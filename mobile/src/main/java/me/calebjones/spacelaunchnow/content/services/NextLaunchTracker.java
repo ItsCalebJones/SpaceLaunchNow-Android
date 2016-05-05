@@ -101,7 +101,7 @@ public class NextLaunchTracker extends IntentService implements
                 syncCalendar();
             }
         }
-        stopSelf();
+        onDestroy();
     }
 
     private void checkNextLaunch() {

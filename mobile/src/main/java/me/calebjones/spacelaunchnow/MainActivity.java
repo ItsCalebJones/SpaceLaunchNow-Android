@@ -303,35 +303,6 @@ public class MainActivity extends AppCompatActivity
             getFirstLaunches();
             loadTutorial();
         } else {
-
-            //Spawn thread to check if data is in a bad state.
-            final Context context = this;
-            Thread t = new Thread(new Runnable() {
-                public void run() {
-                    if (listPreferences.getVehicles() == null || listPreferences.getVehicles().size() == 0) {
-                        Intent rocketIntent = new Intent(context, VehicleDataService.class);
-                        rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
-                        context.startService(rocketIntent);
-
-                    }
-                    if (listPreferences.getLaunchesUpcoming() == null || listPreferences.getLaunchesUpcoming().size() == 0) {
-                        Intent launchUpIntent = new Intent(context, LaunchDataService.class);
-                        launchUpIntent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
-                        context.startService(launchUpIntent);
-                    }
-                    if (listPreferences.getLaunchesPrevious() == null || listPreferences.getLaunchesPrevious().size() == 0) {
-                        Intent launchPrevIntent = new Intent(context, LaunchDataService.class);
-                        launchPrevIntent.putExtra("URL", Utils.getBaseURL(context));
-                        launchPrevIntent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
-                        context.startService(launchPrevIntent);
-                    }
-                    if (listPreferences.getMissionList() == null || listPreferences.getMissionList().size() == 0) {
-                        context.startService(new Intent(context, MissionDataService.class));
-                    }
-                }
-            });
-
-            t.start();
             navigate(mNavItemId);
         }
     }
@@ -384,12 +355,6 @@ public class MainActivity extends AppCompatActivity
         launchIntent.setAction(Strings.ACTION_GET_ALL);
         launchIntent.putExtra("URL", Utils.getBaseURL(this));
         this.context.startService(launchIntent);
-
-        Intent rocketIntent = new Intent(this.context, VehicleDataService.class);
-        rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
-        this.context.startService(rocketIntent);
-
-        this.context.startService(new Intent(this, MissionDataService.class));
     }
 
     public void onResume() {
@@ -596,12 +561,11 @@ public class MainActivity extends AppCompatActivity
 
     public void loadTutorial() {
         Intent mainAct = new Intent(this, MaterialTutorialActivity.class);
-        mainAct.putParcelableArrayListExtra(MaterialTutorialActivity.MATERIAL_TUTORIAL_ARG_TUTORIAL_ITEMS, getTutorialItems(this));
+        mainAct.putParcelableArrayListExtra(MaterialTutorialActivity.MATERIAL_TUTORIAL_ARG_TUTORIAL_ITEMS, getTutorialItems());
         startActivityForResult(mainAct, REQUEST_CODE);
-
     }
 
-    private ArrayList<TutorialItem> getTutorialItems(Context context) {
+    private ArrayList<TutorialItem> getTutorialItems() {
         TutorialItem tutorialItem1 = new TutorialItem("Space Launch Now", "Keep up to date on all your favorite  orbital launches, missions, and launch vehicles.",
                 R.color.slide_one, R.drawable.intro_slide_one_foreground, R.drawable.intro_slide_background);
 

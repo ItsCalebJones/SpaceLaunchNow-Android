@@ -109,9 +109,15 @@ public class LaunchDataService extends IntentService implements
             if (this.sharedPref.getBoolean("background", true)) {
                 scheduleLaunchUpdates();
             }
-            startService(new Intent(this, MissionDataService.class));
+
             getUpcomingLaunches();
-            getPreviousLaunches(getBaseURL());
+            getPreviousLaunches(Utils.getBaseURL(getApplicationContext()));
+
+            Intent rocketIntent = new Intent(getApplicationContext(), VehicleDataService.class);
+            rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
+            startService(rocketIntent);
+
+            startService(new Intent(this, MissionDataService.class));
         } else if (Strings.ACTION_GET_UP_LAUNCHES.equals(action)) {
             if (this.sharedPref.getBoolean("background", true)) {
                 scheduleLaunchUpdates();
@@ -123,15 +129,14 @@ public class LaunchDataService extends IntentService implements
             getPreviousLaunches(intent.getStringExtra("URL"));
         } else if (Strings.ACTION_UPDATE_NEXT_LAUNCH.equals(action)) {
             getNextLaunches();
-            startService(new Intent(this, NextLaunchTracker.class));
+            startService(new Intent(getApplicationContext(), NextLaunchTracker.class));
         } else {
             Timber.e("LaunchDataService - onHandleIntent: ERROR - Unknown Intent %s", action);
         }
+        onDestroy();
     }
 
     private void getPreviousLaunches(String sUrl) {
-        InputStream inputStream = null;
-        Integer result = 0;
         HttpURLConnection urlConnection;
         try {
             /* forming th java.net.URL object */
@@ -795,20 +800,6 @@ public class LaunchDataService extends IntentService implements
                     PendingIntent.getBroadcast(this, 165435, new Intent(Strings.ACTION_UPDATE_UP_LAUNCHES), 0));
         } else {
             Timber.e("LaunchDataService - Error setting alarm, failed to change %s to milliseconds", notificationTimer);
-        }
-    }
-
-    public String getBaseURL() {
-        Calendar c = Calendar.getInstance();
-
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        String formattedDate = df.format(c.getTime());
-
-        //Used for loading debug lauches/reproducing bugs
-        if (listPreference.isDebugEnabled()) {
-            return "https://launchlibrary.net/dev/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
-        } else {
-            return "https://launchlibrary.net/1.2/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
         }
     }
 

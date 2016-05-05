@@ -30,7 +30,7 @@ import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 /**
  * This adapter takes data from ListPreferences/LoaderService and applies it to the UpcomingLaunchesFragment
  */
-public class LaunchCompactAdapter extends RecyclerView.Adapter<LaunchCompactAdapter.ViewHolder> implements FastScrollRecyclerView.SectionedAdapter {
+public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.ViewHolder> implements FastScrollRecyclerView.SectionedAdapter {
     public int position;
     private List<Launch> launchList;
     private List<Integer> mSectionPositions;
@@ -41,7 +41,7 @@ public class LaunchCompactAdapter extends RecyclerView.Adapter<LaunchCompactAdap
     private Boolean night;
     private static ListPreferences sharedPreference;
 
-    public LaunchCompactAdapter(Context context) {
+    public LaunchAdapter(Context context) {
         rightNow = Calendar.getInstance();
         launchList = new ArrayList();
         mSectionPositions = new ArrayList<>();

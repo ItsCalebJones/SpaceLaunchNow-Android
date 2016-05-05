@@ -57,6 +57,7 @@ public class CalendarSyncService extends IntentService {
                 handleActionDeleteEvent(param1, param2);
             }
         }
+        onDestroy();
     }
 
     private void handleActionSyncAll() {
