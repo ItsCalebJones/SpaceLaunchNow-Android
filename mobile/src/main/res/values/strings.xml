@@ -1,6 +1,5 @@
 <resources>
     <string name="application_name">Space Launch Now</string>
-    <string name="title_activity_main">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
@@ -8,20 +7,8 @@
     <string name="status_nogo">"Launch is NO GO"</string>
     <string name="status_success">"Successful Launch"</string>
     <string name="status_failure">"Launch Failure"</string>
-    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ac malesuada dolor. Nulla velit augue, vulputate nec turpis id, malesuada commodo risus. Suspendisse ac posuere urna. Fusce eu cursus lacus. Aliquam dignissim sodales urna, id porttitor lectus rhoncus sit amet. Mauris semper neque libero, at ornare eros ullamcorper non. Integer condimentum a dolor in commodo. Sed nec nunc a metus ullamcorper dignissim a blandit eros. Nam a tortor nisi. Curabitur vehicula maximus metus vel imperdiet.\n\n
-
-Morbi vel lorem enim. Nullam eget metus lectus. Mauris a leo velit. Suspendisse iaculis venenatis lacinia. Donec accumsan at turpis vitae sodales. Proin auctor egestas nulla et lobortis. Nam tempus vehicula orci ac sollicitudin. Nam ut elit vitae turpis placerat egestas id et orci. \n\n
-
-Nulla tristique elit nulla, eu laoreet diam commodo vel. Donec et ligula at lacus pellentesque blandit. Nulla ligula libero, rhoncus eget nulla sed, blandit fringilla erat. Vestibulum aliquam tempus volutpat. Integer fermentum, sapien ac laoreet imperdiet, risus felis sollicitudin justo, et maximus velit turpis nec massa. Nullam elementum pharetra erat sit amet ultrices. Aenean ut mi enim. Pellentesque magna augue, porta ac nulla ut, condimentum maximus sapien. Integer maximus, purus id faucibus congue, tortor lectus condimentum lacus, vitae fringilla lectus risus eget lacus. Morbi vehicula dapibus sem nec lobortis. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam blandit orci et dui venenatis luctus. Etiam eros nisl, facilisis nec orci elementum, commodo mollis arcu.\n\n
-
-Nulla pretium vehicula lacus. Etiam facilisis tortor a urna rutrum, sit amet iaculis odio tristique. Donec et urna non tellus ornare cursus. Sed facilisis in risus eget tincidunt. Donec quis placerat ex. Quisque condimentum lorem sollicitudin efficitur accumsan. Vestibulum malesuada quam odio, at facilisis ipsum ullamcorper quis. Etiam euismod finibus tellus sed fermentum. Cras sollicitudin, purus id pulvinar vehicula, est urna tincidunt urna, hendrerit vestibulum mauris elit vitae erat. Praesent ac diam sed eros molestie feugiat ac id metus. Pellentesque eget leo elementum, sagittis velit non, semper nisl. Maecenas blandit consequat aliquet. \n\n
-
-Quisque tincidunt magna quis viverra faucibus. Vivamus rhoncus elit vel mi tristique mattis. Curabitur dapibus consectetur tempus. Nulla scelerisque arcu gravida vulputate accumsan. Mauris metus odio, mollis ut tincidunt in, vestibulum quis augue. Donec pulvinar pharetra diam vel mattis. Aenean in erat aliquet, ornare dui vehicula, iaculis dui. Duis tempor dolor interdum nunc fermentum, sit amet aliquet tellus placerat. Nunc posuere tempor aliquam. Nam at tincidunt mi, vel congue diam. Aliquam ultricies pellentesque tortor venenatis faucibus. Maecenas sagittis lobortis lacus, vitae ornare sapien facilisis vel. Fusce eleifend mauris eu malesuada efficitur. Nulla congue orci in rutrum sodales. Cras et suscipit purus. Sed ultrices erat in libero lacinia, quis consequat sem rhoncus.</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="settings">Settings</string>
-    <string name="instant_window">An instantaneous window is often used when trying to reach time specific orbits such as when docking with the International Space Station.</string>
-    <string name="launch_explainer">In the context of spaceflight, a launch window is a time period during which a particular launch vehicle must be launched in order to reach its intended target. If the rocket is not launched within the \'window\', it has to wait for the next window. - Wikipedia</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="spacex_summary">SpaceX designs, manufactures and launches advanced rockets and spacecraft. The company was founded in 2002 to revolutionize space technology, with the ultimate goal of enabling people to live on other planets.</string>
     <string name="usaf_summary">The United States Air Force is the aerial warfare service branch of the United States Armed Forces and one of the seven American uniformed services.</string>
     <string name="casc_summary">The China Aerospace Science and Technology Corporation(CASC) is the main contractor for the Chinese space program. It is state-owned and has a number of subordinate entities which design, develop and manufacture a range of spacecraft, launch vehicles, strategic and tactical missile systems, and ground equipment.</string>
@@ -44,25 +31,9 @@ Quisque tincidunt magna quis viverra faucibus. Vivamus rhoncus elit vel mi trist
     <string name="ind_logo">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950125/Caj9kpG_xo8s1g.png</string>
     <string name="jpn_logo">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950129/QOdDYa5_dhdlct.png</string>
     <string name="ariane_logo">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950133/yffq0aI_oyyhmj.jpg</string>
-    <string name="soyuz_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944167/soyuz_rjwr7s.jpg</string>
-    <string name="falcon_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/falcon_xtbyia.jpg</string>
-    <string name="proton_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/proton_yaojbm.jpg</string>
-    <string name="delta_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/delta_lbwmgy.jpg</string>
-    <string name="ariane_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/ariane_qouki7.jpg</string>
-    <string name="shuttle_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944167/shuttle_vc2xnw.jpg</string>
-    <string name="long_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/long_ywtbw6.jpg</string>
-    <string name="atlas_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/atlas_ahqjya.jpg</string>
-    <string name="pslv_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944167/pslv_vjcdww.jpg</string>
-    <string name="vega_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944167/vega_tnkdms.jpg</string>
-    <string name="zenit_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944167/zenit_hxl4gd.jpg</string>
-    <string name="soyuz_orbiter_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944174/soyuz_snfim6.jpg</string>
-    <string name="shenzhou_orbiter_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944173/shenzhou_vzayjm.jpg</string>
-    <string name="dragon_orbiter_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944174/dragon_q9cxq9.jpg</string>
-    <string name="orion_orbiter_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944173/orion_sgl9rs.jpg</string>
     <string name="title_activity_debug">DebugActivity</string>
     <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
 
-    <string name="new_version">1.0.0.43</string>
     <string name="whats_new_content">These are features that will likely take significant development effort to ensure a quality product. Initially i\'m hoping to deliver syncing all upcoming events to calendar and custom watchface backgrounds and settings.\n\n
         Fixes and Features!\n
     \u2022Added ShowcaseView to tutorial and first launch to demonstrate how to filter launch notifications.\n
@@ -74,11 +45,6 @@ Quisque tincidunt magna quis viverra faucibus. Vivamus rhoncus elit vel mi trist
     <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>
 
     <string name="title_activity_fullscreen_image">FullscreenImageActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="title_activity_support">SupportActivity</string>
-
-    <string name="hello_world">Hello world!</string>
 
     <string name="supporter_title">Be a Supporter</string>
     <string name="supporter_description">By becoming a supporter you ensure continued updates and timely bug fixes, as well as access to supporter only features. Pay what you want, you\'ll get the same value.</string>

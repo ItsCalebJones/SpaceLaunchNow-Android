@@ -207,17 +207,6 @@ public class LauncherDetailActivity extends AppCompatActivity implements AppBarL
                 .into(detail_profile_image);
     }
 
-    private void applyProfileLogo(int drawableURL) {
-        Timber.d("LauncherDetailActivity - Loading Profile Image url: %s ", drawableURL);
-
-        Glide.with(this)
-                .load(getString(drawableURL))
-                .centerCrop()
-                .error(R.drawable.icon_international)
-                .into(detail_profile_image);
-    }
-
-
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setupWindowAnimations() {
         Slide slide = new Slide();
