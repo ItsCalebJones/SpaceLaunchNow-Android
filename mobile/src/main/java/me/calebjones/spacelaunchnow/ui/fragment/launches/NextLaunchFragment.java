@@ -85,7 +85,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     AppCompatCheckBox customSwitch;
 
     private View view;
-    private FastScrollRecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView;
     private LaunchBigAdapter adapter;
     private LaunchSmallAdapter smallAdapter;
     private StaggeredGridLayoutManager layoutManager;
@@ -206,7 +206,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
             }
         });
 
-        mRecyclerView = (FastScrollRecyclerView) view.findViewById(R.id.recycler_view);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
