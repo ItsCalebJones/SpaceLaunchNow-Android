@@ -97,11 +97,10 @@ public class NextLaunchTracker extends IntentService implements
             scheduleUpdate();
 
             //If Calendar Sync is enabled sync it up
-            if (switchPreferences.getCalendarStatus()){
+            if (switchPreferences.getCalendarStatus()) {
                 syncCalendar();
             }
         }
-        onDestroy();
     }
 
     private void checkNextLaunch() {
@@ -124,41 +123,45 @@ public class NextLaunchTracker extends IntentService implements
                 Intent nextIntent = new Intent(this, LaunchDataService.class);
                 nextIntent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
                 startService(nextIntent);
+
                 //They do match, check if the launch time has moved.
-            } else {
-                if (listPreferences.getNextLaunchTimestamp() != 0) {
-                    if (Math.abs(listPreferences.getNextLaunchTimestamp()
-                            - updatedLaunch.getNetstamp()) > 60) {
-                        debugNotificaiton(String.format("Resetting notifiers - List: %s Stored: %s "
-                                ,listPreferences.getNextLaunchTimestamp(), nextLaunch.getNetstamp()));
-                        updatedLaunch.resetNotifiers();
-                        listPreferences.setNextLaunchTimestamp(updatedLaunch.getNetstamp());
-
-                        upcomingLaunchList.set(0, updatedLaunch);
-                        listPreferences.setNextLaunches(upcomingLaunchList);
-                        checkStatus(updatedLaunch);
-
-                        Intent broadcastIntent = new Intent();
-                        broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
-                        this.getApplicationContext().sendBroadcast(broadcastIntent);
-                    }
-                } else if (updatedLaunch.getNetstamp() != 0) {
+            } else if (listPreferences.getNextLaunchTimestamp() != 0) {
+                if (Math.abs(listPreferences.getNextLaunchTimestamp()
+                        - updatedLaunch.getNetstamp()) > 60) {
+                    debugNotificaiton(String.format("Resetting notifiers - List: %s Stored: %s "
+                            , listPreferences.getNextLaunchTimestamp(), nextLaunch.getNetstamp()));
+                    updatedLaunch.resetNotifiers();
                     listPreferences.setNextLaunchTimestamp(updatedLaunch.getNetstamp());
-                    debugNotificaiton("Updated timestamp to " + updatedLaunch.getNetstamp());
 
-                    upcomingLaunchList.set(0, updatedLaunch);
-                    listPreferences.setNextLaunches(upcomingLaunchList);
-                    checkStatus(updatedLaunch);
+                    resetAndCheck(updatedLaunch);
+                } else {
+                    resetAndCheck(updatedLaunch);
                 }
+            } else if (updatedLaunch.getNetstamp() != 0) {
+                listPreferences.setNextLaunchTimestamp(updatedLaunch.getNetstamp());
+                debugNotificaiton("Updated timestamp to " + updatedLaunch.getNetstamp());
+                resetAndCheck(updatedLaunch);
+            } else {
+                resetAndCheck(updatedLaunch);
             }
         } else if (nextLaunch != null) {
             this.listPreferences.setNextLaunch(nextLaunch);
             checkStatus(nextLaunch);
         }
         //If Calendar Sync is enabled sync it up
-        if (switchPreferences.getCalendarStatus()){
+        if (switchPreferences.getCalendarStatus()) {
             syncCalendar();
         }
+    }
+
+    private void resetAndCheck(Launch updatedLaunch) {
+        upcomingLaunchList.set(0, updatedLaunch);
+        listPreferences.setNextLaunches(upcomingLaunchList);
+        checkStatus(updatedLaunch);
+
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
+        this.getApplicationContext().sendBroadcast(broadcastIntent);
     }
 
     private void syncCalendar() {
@@ -173,7 +176,7 @@ public class NextLaunchTracker extends IntentService implements
             listPreferences.setNextLaunch(launch);
         } else {
             //Try to update, if it fails create event.
-            if (!provider.updateEvent(this, launch)){
+            if (!provider.updateEvent(this, launch)) {
                 Integer id = provider.addEvent(this, launch);
                 launch.setCalendarID(id);
                 listPreferences.setNextLaunch(launch);
@@ -201,12 +204,14 @@ public class NextLaunchTracker extends IntentService implements
                     if (notify) {
                         int minutes = (int) ((timeToFinish / (1000 * 60)) % 60);
                         //Check settings to see if user should be notified.
-                        if (this.sharedPref.getBoolean("notifications_launch_minute", false)) {
-                            if (!launch.getIsNotifiedTenMinute()) {
-                                notifyUserImminent(launch, minutes);
-                                launch.setIsNotifiedTenMinute(true);
-                                this.listPreferences.setNextLaunch(launch);
-                            }
+                        if (!launch.getIsNotifiedTenMinute() && this.sharedPref.getBoolean("notifications_launch_minute", false)) {
+                            notifyUserImminent(launch, minutes);
+                            launch.setIsNotifiedTenMinute(true);
+                            this.listPreferences.setNextLaunch(launch);
+                        } else if (!launch.getIsNotifiedHour() && this.sharedPref.getBoolean("notifications_launch_imminent", true)) {
+                            notifyUserImminent(launch, minutes);
+                            launch.setIsNotifiedhour(true);
+                            this.listPreferences.setNextLaunch(launch);
                         }
                     }
                     interval = (future.getTimeInMillis() + 3600000);
@@ -313,6 +318,7 @@ public class NextLaunchTracker extends IntentService implements
                         .bigText(expandedText)
                         .setSummaryText(launchDate))
                 .extend(wearableExtender)
+                .setContentIntent(appIntent)
                 .setSound(alarmSound)
                 .addAction(R.drawable.ic_menu_share_white, "Share", sharePendingIntent);
 
@@ -410,7 +416,7 @@ public class NextLaunchTracker extends IntentService implements
         return cal;
     }
 
-    public void debugNotificaiton(String message){
+    public void debugNotificaiton(String message) {
         if (BuildConfig.DEBUG) {
             long time = new Date().getTime();
             String tmpStr = String.valueOf(time);
@@ -467,7 +473,7 @@ public class NextLaunchTracker extends IntentService implements
             }
         }
 
-        if (Utils.checkPlayServices(this)){
+        if (Utils.checkPlayServices(this)) {
             sendToWear(listPreferences.getNextLaunch());
         }
         alarmManager.set(AlarmManager.RTC_WAKEUP, nextUpdate,

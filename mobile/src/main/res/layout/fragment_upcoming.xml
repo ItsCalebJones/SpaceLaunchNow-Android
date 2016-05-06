@@ -29,13 +29,13 @@
                     android:visibility="gone"
                     app:cpv_indeterminate="true" />
 
-                <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
+                <android.support.v7.widget.RecyclerView
                     xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:clipToPadding="false"
-                    android:columnWidth="320dp"/>
+                    android:columnWidth="320dp" />
 
                 <FrameLayout
                     android:id="@+id/color_reveal"

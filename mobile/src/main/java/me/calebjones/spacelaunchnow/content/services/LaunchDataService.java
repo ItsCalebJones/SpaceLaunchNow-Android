@@ -129,7 +129,7 @@ public class LaunchDataService extends IntentService implements
             getPreviousLaunches(intent.getStringExtra("URL"));
         } else if (Strings.ACTION_UPDATE_NEXT_LAUNCH.equals(action)) {
             getNextLaunches();
-            startService(new Intent(getApplicationContext(), NextLaunchTracker.class));
+            startService(new Intent(this, NextLaunchTracker.class));
         } else {
             Timber.e("LaunchDataService - onHandleIntent: ERROR - Unknown Intent %s", action);
         }
@@ -319,23 +319,37 @@ public class LaunchDataService extends IntentService implements
                 while ((line = r.readLine()) != null) {
                     response.append(line);
                 }
-                List<Launch> launches = parseSimpleMultipleResult(response.toString());
+                List<Launch> launches = parseMultipleResult(response.toString());
 
                 upcomingLaunchList = listPreference.getNextLaunches();
+                launches = listPreference.filterLaunches(launches);
 
-                //TODO describe this
-                boolean found = false;
-                for (int i = 0; i < launches.size(); i++) {
-                    Launch launch = launches.get(i);
-                    if (launch != null) {
-                        if (upcomingLaunchList.get(0).getId().intValue() == launch.getId().intValue()) {
-                            updateNextLaunchById(launch.getId());
-                            found = true;
-                            break;
+                if (upcomingLaunchList.get(0).getId().intValue() == launches.get(0).getId().intValue()) {
+                    Launch storedLaunch = listPreference.getNextLaunch();
+                    Launch nextLaunch = launches.get(0);
+                    if (nextLaunch != null) {
+                        if (nextLaunch.getId().intValue() == listPreference.getNextLaunch().getId().intValue()) {
+                            if (storedLaunch.getIsNotifiedDay()) {
+                                nextLaunch.setIsNotifiedDay(true);
+                            }
+                            if (storedLaunch.getIsNotifiedHour()) {
+                                nextLaunch.setIsNotifiedhour(true);
+                            }
+                            if (storedLaunch.getIsNotifiedTenMinute()) {
+                                nextLaunch.setIsNotifiedTenMinute(true);
+                            }
+                            if (storedLaunch.isFavorite()) {
+                                nextLaunch.isFavorite();
+                            }
+                            if (storedLaunch.getCalendarID() != null) {
+                                nextLaunch.setCalendarID(storedLaunch.getCalendarID());
+                            }
+                            listPreference.setNextLaunch(nextLaunch);
+                        } else {
+                            listPreference.setNextLaunch(nextLaunch);
                         }
                     }
-                }
-                if (!found){
+                } else {
                     getUpcomingLaunches();
                 }
             } else {
@@ -439,6 +453,11 @@ public class LaunchDataService extends IntentService implements
                         listPreference.setNextLaunch(nextLaunch);
                     } else {
                         listPreference.setNextLaunch(nextLaunch);
+                    }
+                    List<Launch> mLaunchList = listPreference.getNextLaunches();
+                    if (mLaunchList.get(0).getId().intValue() == nextLaunch.getId().intValue()) {
+                        mLaunchList.set(0, nextLaunch);
+                        listPreference.setNextLaunches(mLaunchList);
                     }
                 }
             } else {
