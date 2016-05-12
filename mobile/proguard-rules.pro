@@ -20,21 +20,7 @@
 # of the models that are JSON parsed using something like Jackson.
 
 #-keep class com.yourpackage.app.model.User { *; }
--keep class me.calebjones.spacelaunchnow.content.modeles.Agency { *; }
--keep class me.calebjones.spacelaunchnow.content.modeles.CalendarItem { *; }
--keep class me.calebjones.spacelaunchnow.content.modeles.Family { *; }
--keep class me.calebjones.spacelaunchnow.content.modeles.GridItem { *; }
--keep class me.calebjones.spacelaunchnow.content.modeles.Launch { *; }
--keep class me.calebjones.spacelaunchnow.content.modeles.Locaiton { *; }
--keep class me.calebjones.spacelaunchnow.content.modeles.LocationAgency { *; }
--keep class me.calebjones.spacelaunchnow.content.modeles.Mission { *; }
--keep class me.calebjones.spacelaunchnow.content.modeles.Model { *; }
--keep class me.calebjones.spacelaunchnow.content.modeles.Pad { *; }
--keep class me.calebjones.spacelaunchnow.content.modeles.Products { *; }
--keep class me.calebjones.spacelaunchnow.content.modeles.Rocket { *; }
--keep class me.calebjones.spacelaunchnow.content.modeles.RocketAgency { *; }
--keep class me.calebjones.spacelaunchnow.content.modeles.RocketDetails { *; }
--keep class me.calebjones.spacelaunchnow.content.modeles.Strings { *; }
+-keep class me.calebjones.spacelaunchnow.content.models.** { *;}
 
 -dontwarn android.support.**
 
