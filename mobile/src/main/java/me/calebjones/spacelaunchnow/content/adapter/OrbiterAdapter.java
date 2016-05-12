@@ -25,7 +25,7 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.GridItem;
+import me.calebjones.spacelaunchnow.content.models.Orbiter;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
@@ -39,7 +39,7 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
     private Context mContext;
     private Calendar rightNow;
     private SharedPreferences sharedPref;
-    private List<GridItem> items = new ArrayList<GridItem>();
+    private List<Orbiter> items = new ArrayList<Orbiter>();
     private static ListPreferences sharedPreference;
     private OnItemClickListener onItemClickListener;
     private int defaultBackgroundcolor;
@@ -55,7 +55,7 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
         this.mContext = context;
     }
 
-    public void addItems(List<GridItem> items) {
+    public void addItems(List<Orbiter> items) {
         if (this.items == null) {
             this.items = items;
         } else {
@@ -93,7 +93,7 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        final GridItem item = items.get(i);
+        final Orbiter item = items.get(i);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             Glide.with(mContext)

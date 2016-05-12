@@ -1,10 +1,16 @@
 package me.calebjones.spacelaunchnow.ui.fragment.missions;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,17 +23,22 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
+import com.google.android.gms.maps.MapView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.MissionAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Mission;
+import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.MissionDataService;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener {
@@ -39,6 +50,7 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private LinearLayoutManager layoutManager;
     private List<Mission> missionList;
     private ListPreferences sharedPreference;
+    private CoordinatorLayout coordinatorLayout;
     private android.content.SharedPreferences SharedPreferences;
     private FloatingActionButton menu;
 
@@ -62,6 +74,7 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
         view = lf.inflate(R.layout.fragment_missions, container, false);
         empty = view.findViewById(R.id.empty_launch_root);
         menu = (FloatingActionButton) view.findViewById(R.id.menu);
+        coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.coordinatorLayout);
         menu.setVisibility(View.GONE);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
@@ -80,9 +93,9 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (this.sharedPreference.getUpcomingFirstBoot()) {
             this.sharedPreference.setUpcomingFirstBoot(false);
             Timber.d("Mission Fragment: First Boot.");
+            displayMissions();
         } else {
             Timber.d("Mission Fragment: Not First Boot.");
-            this.missionList.clear();
             displayMissions();
         }
         return view;
@@ -103,20 +116,51 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
     }
 
+    private final BroadcastReceiver nextLaunchReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Timber.v("Received: %s", intent.getAction());
+            if (intent.getAction().equals(Strings.ACTION_SUCCESS_MISSIONS)){
+                onFinishedRefreshing();
+            } else if (intent.getAction().equals(Strings.ACTION_FAILURE_MISSIONS)){
+                hideLoading();
+                showErrorSnackbar(intent.getStringExtra("error"));
+            }
+        }
+    };
+
+    @Override
+    public void onResume() {
+        Timber.d("OnResume!");
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Strings.ACTION_SUCCESS_MISSIONS);
+        intentFilter.addAction(Strings.ACTION_FAILURE_MISSIONS);
+
+        getActivity().registerReceiver(nextLaunchReceiver, intentFilter);
+
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        getActivity().unregisterReceiver(nextLaunchReceiver);
+        super.onPause();
+    }
+
     @Override
     public void onRefresh() {
         fetchData();
     }
 
     public void onFinishedRefreshing() {
-        this.missionList.clear();
+        missionList.clear();
         displayMissions();
         hideLoading();
     }
 
     public void fetchData() {
-        this.sharedPreference.removeMissionsList();
         Timber.d("Sending service intent!");
+        showLoading();
         getContext().startService(new Intent(getContext(), MissionDataService.class));
     }
 
@@ -132,6 +176,13 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 view.findViewById(R.id.progress_View);
         progressView.setVisibility(View.GONE);
         progressView.resetAnimation();
+    }
+
+    private void showErrorSnackbar(String error) {
+        Snackbar
+                .make(coordinatorLayout, "Error - " + error, Snackbar.LENGTH_LONG)
+                .setActionTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary))
+                .show();
     }
 
     @Override
@@ -152,7 +203,6 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
         int id = item.getItemId();
 
         if (id == R.id.action_refresh) {
-            adapter.clear();
             showLoading();
             fetchData();
             return true;

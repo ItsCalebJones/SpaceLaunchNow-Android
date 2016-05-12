@@ -54,7 +54,7 @@
             android:label="@string/title_activity_settings"
             android:theme="@style/LightTheme" />
         <activity android:name=".ui.activity.OrbiterDetailActivity" />
-        <activity android:name=".ui.activity.VehicleDetailActivity" />
+        <activity android:name=".ui.activity.LauncherDetailActivity" />
 
         <service
             android:name=".content.services.LaunchDataService"

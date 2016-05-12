@@ -24,7 +24,7 @@
 
     <item
         android:id="@+id/debug_add_launch"
-        android:title="Add Launch"
+        android:title="Debug Launch"
         app:showAsAction="never"
         android:icon="@drawable/fab_add"/>
 </menu>

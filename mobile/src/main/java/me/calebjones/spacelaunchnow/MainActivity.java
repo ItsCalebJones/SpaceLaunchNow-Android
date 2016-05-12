@@ -31,6 +31,7 @@ import android.widget.ImageView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String NAV_ITEM_ID = "navItemId";
+    private static ListPreferences listPreferences;
     private final Handler mDrawerActionHandler = new Handler();
     private LaunchesViewPager mlaunchesViewPager;
     private MissionFragment mMissionFragment;
@@ -72,12 +74,9 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawer;
     private SharedPreferences sharedPref;
     private NavigationView navigationView;
-    private static ListPreferences listPreferences;
     private SwitchPreferences switchPreferences;
     private CustomTabActivityHelper customTabActivityHelper;
     private Context context;
-    private Boolean bool;
-    private BroadcastReceiver intentReceiver;
 
     private static final int REQUEST_CODE = 5467;
 
@@ -93,52 +92,8 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    class LaunchBroadcastReceiver extends BroadcastReceiver {
-        LaunchBroadcastReceiver() {
-        }
-
-        public void onReceive(Context context, Intent intent) {
-            Timber.v("Broadcast received...");
-            if (intent != null) {
-                String action = intent.getAction();
-                Timber.d("Broadcast action : %s", action);
-                if (Strings.ACTION_SUCCESS_UP_LAUNCHES.equals(action)) {
-                    if (mNavItemId == R.id.menu_next_launch && !listPreferences.getFirstBoot()) {
-                        if (mUpcomingFragment != null) {
-                            mUpcomingFragment.onFinishedRefreshing();
-                        }
-                    }
-                    if (mNavItemId == R.id.menu_launches) {
-                        if (mlaunchesViewPager != null) {
-                            mlaunchesViewPager.restartViews(Strings.ACTION_SUCCESS_UP_LAUNCHES);
-                        }
-                    }
-                } else if (Strings.ACTION_SUCCESS_PREV_LAUNCHES.equals(action)) {
-                    if (mNavItemId == R.id.menu_launches) {
-                        if (mlaunchesViewPager != null) {
-                            mlaunchesViewPager.restartViews(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
-                        }
-                    }
-                } else if (Strings.ACTION_SUCCESS_MISSIONS.equals(action)) {
-                    if (mMissionFragment != null) {
-                        if (mMissionFragment.isVisible()) {
-                            mMissionFragment.onFinishedRefreshing();
-                        }
-                    }
-                } else if (Strings.ACTION_FAILURE_UP_LAUNCHES.equals(action)) {
-                    if (mNavItemId == R.id.menu_next_launch){
-                        mUpcomingFragment.hideLoading();
-                    }
-                }
-            }
-        }
-    }
-
-
     public MainActivity() {
-        this.intentReceiver = new LaunchBroadcastReceiver();
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -238,16 +193,9 @@ public class MainActivity extends AppCompatActivity
 
         View header = navigationView.getHeaderView(0);
         ImageView imageView = (ImageView) header.findViewById(R.id.backgroundView);
-
-        //Figure this shit out
-        int[] images = {
-                R.drawable.nav_header,
-                R.drawable.navbar_one,
-                R.drawable.navbar_three,
-                R.drawable.navbar_four,
-        };
-        int idx = new Random().nextInt(images.length);
-        imageView.setImageDrawable(ContextCompat.getDrawable(context, images[idx]));
+        Glide.with(this)
+                .load("http://res.cloudinary.com/dnkkbfy3m/image/upload/v1462465326/navbar_one_sqfhes.png")
+                .into(imageView);
 
         // select the correct nav menu item
         navigationView.getMenu().findItem(mNavItemId).setChecked(true);
@@ -275,27 +223,12 @@ public class MainActivity extends AppCompatActivity
         super.onStart();
         Timber.v("MainActivity onStart!");
         customTabActivityHelper.bindCustomTabsService(this);
-
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
-        intentFilter.addAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
-        intentFilter.addAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
-        intentFilter.addAction(Strings.ACTION_FAILURE_PREV_LAUNCHES);
-        intentFilter.addAction(Strings.ACTION_SUCCESS_MISSIONS);
-        intentFilter.addAction(Strings.ACTION_FAILURE_MISSIONS);
-        intentFilter.addAction(Strings.ACTION_SUCCESS_VEHICLE_DETAILS);
-        intentFilter.addAction(Strings.ACTION_FAILURE_VEHICLE_DETAILS);
-        intentFilter.addAction(Strings.ACTION_SUCCESS_VEHICLES);
-        intentFilter.addAction(Strings.ACTION_FAILURE_VEHICLES);
-        registerReceiver(this.intentReceiver, intentFilter);
-
         mayLaunchUrl(Uri.parse("https://launchlibrary.net/"));
     }
 
     public void onStop() {
         super.onStop();
         Timber.v("MainActivity onStop!");
-        unregisterReceiver(this.intentReceiver);
         customTabActivityHelper.unbindCustomTabsService(this);
     }
 
@@ -305,35 +238,6 @@ public class MainActivity extends AppCompatActivity
             getFirstLaunches();
             loadTutorial();
         } else {
-
-            //Spawn thread to check if data is in a bad state.
-            final Context context = this;
-            Thread t = new Thread(new Runnable() {
-                public void run() {
-                    if (listPreferences.getVehicles() == null || listPreferences.getVehicles().size() == 0) {
-                        Intent rocketIntent = new Intent(context, VehicleDataService.class);
-                        rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
-                        context.startService(rocketIntent);
-
-                    }
-                    if (listPreferences.getLaunchesUpcoming() == null || listPreferences.getLaunchesUpcoming().size() == 0) {
-                        Intent launchUpIntent = new Intent(context, LaunchDataService.class);
-                        launchUpIntent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
-                        context.startService(launchUpIntent);
-                    }
-                    if (listPreferences.getLaunchesPrevious() == null || listPreferences.getLaunchesPrevious().size() == 0) {
-                        Intent launchPrevIntent = new Intent(context, LaunchDataService.class);
-                        launchPrevIntent.putExtra("URL", Utils.getBaseURL());
-                        launchPrevIntent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
-                        context.startService(launchPrevIntent);
-                    }
-                    if (listPreferences.getMissionList() == null || listPreferences.getMissionList().size() == 0) {
-                        context.startService(new Intent(context, MissionDataService.class));
-                    }
-                }
-            });
-
-            t.start();
             navigate(mNavItemId);
         }
     }
@@ -343,56 +247,12 @@ public class MainActivity extends AppCompatActivity
         View customView = inflater.inflate(R.layout.switch_dialog, null);
         View nightView = inflater.inflate(R.layout.switch_dialog_night, null);
 
-        SwitchCompat switchButton = (SwitchCompat) customView.findViewById(R.id.notification_switch_status);
-        switchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit();
-                if (!PreferenceManager.getDefaultSharedPreferences(MainActivity.this)
-                        .getBoolean("notifications_launch_imminent_updates", false)) {
-                    editor.putBoolean("notifications_launch_imminent_updates", true);
-                    editor.apply();
-                    OneSignal.setSubscription(true);
-                } else {
-                    editor.putBoolean("notifications_launch_imminent_updates", false);
-                    editor.apply();
-                    OneSignal.setSubscription(false);
-                }
-            }
-        });
-        switchButton.setChecked(PreferenceManager.getDefaultSharedPreferences(MainActivity.this)
-                .getBoolean("notifications_launch_imminent_updates", false));
-
-        SwitchCompat switchNotificationButton = (SwitchCompat) customView.findViewById(R.id.notification_switch_minute);
-        switchNotificationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences.Editor minuteEditor = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit();
-                if (!PreferenceManager.getDefaultSharedPreferences(MainActivity.this)
-                        .getBoolean("notifications_launch_minute", false)) {
-                    minuteEditor.putBoolean("notifications_launch_minute", true);
-                    minuteEditor.apply();
-                } else {
-                    minuteEditor.putBoolean("notifications_launch_minute", false);
-                    minuteEditor.apply();
-                }
-            }
-        });
-        switchNotificationButton.setChecked(PreferenceManager.getDefaultSharedPreferences(MainActivity.this)
-                .getBoolean("notifications_launch_minute", false));
-
         MaterialStyledDialog dialog = new MaterialStyledDialog(this)
                 .withIconAnimation(false)
                 .withDialogAnimation(true)
                 .setIcon(new IconicsDrawable(context).icon(MaterialDesignIconic.Icon.gmi_info).color(Color.WHITE))
-                .setTitle("Whats New? " + getResources().getString(R.string.new_version))
+                .setTitle("Whats New? " + Utils.getVersionName(this))
                 .setScrollable(true)
-                .setPositive("Okay", new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(MaterialDialog dialog, DialogAction which) {
-                        dialog.dismiss();
-                    }
-                })
                 .setNegative("Feedback", new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(MaterialDialog dialog, DialogAction which) {
@@ -401,40 +261,29 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
 
-        if (listPreferences.getNightMode())
 
-        {
+        dialog.setPositive("Okay", new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(MaterialDialog dialog, DialogAction which) {
+                dialog.dismiss();
+            }
+        });
 
+        if (listPreferences.getNightMode()) {
             dialog.setHeaderColor(R.color.darkPrimary);
             dialog.setCustomView(nightView);
-        } else
-
-        {
+        } else {
             dialog.setHeaderColor(R.color.colorPrimary);
             dialog.setCustomView(customView);
         }
-
         dialog.show();
-
-    }
-
-    private void refreshLaunches() {
-        Intent update_upcoming_launches = new Intent(context, LaunchDataService.class);
-        update_upcoming_launches.setAction(Strings.ACTION_GET_UP_LAUNCHES);
-        context.startService(update_upcoming_launches);
     }
 
     public void getFirstLaunches() {
         Intent launchIntent = new Intent(this.context, LaunchDataService.class);
         launchIntent.setAction(Strings.ACTION_GET_ALL);
-        launchIntent.putExtra("URL", Utils.getBaseURL());
+        launchIntent.putExtra("URL", Utils.getBaseURL(this));
         this.context.startService(launchIntent);
-
-        Intent rocketIntent = new Intent(this.context, VehicleDataService.class);
-        rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
-        this.context.startService(rocketIntent);
-
-        this.context.startService(new Intent(this, MissionDataService.class));
     }
 
     public void onResume() {
@@ -611,7 +460,7 @@ public class MainActivity extends AppCompatActivity
                 .negativeText("Reddit")
                 .positiveColor(R.color.colorPrimary)
                 .positiveText("Email")
-                .onNegative( new MaterialDialog.SingleButtonCallback() {
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         String url = "https://www.reddit.com/r/spacelaunchnow";
@@ -641,12 +490,11 @@ public class MainActivity extends AppCompatActivity
 
     public void loadTutorial() {
         Intent mainAct = new Intent(this, MaterialTutorialActivity.class);
-        mainAct.putParcelableArrayListExtra(MaterialTutorialActivity.MATERIAL_TUTORIAL_ARG_TUTORIAL_ITEMS, getTutorialItems(this));
+        mainAct.putParcelableArrayListExtra(MaterialTutorialActivity.MATERIAL_TUTORIAL_ARG_TUTORIAL_ITEMS, getTutorialItems());
         startActivityForResult(mainAct, REQUEST_CODE);
-
     }
 
-    private ArrayList<TutorialItem> getTutorialItems(Context context) {
+    private ArrayList<TutorialItem> getTutorialItems() {
         TutorialItem tutorialItem1 = new TutorialItem("Space Launch Now", "Keep up to date on all your favorite  orbital launches, missions, and launch vehicles.",
                 R.color.slide_one, R.drawable.intro_slide_one_foreground, R.drawable.intro_slide_background);
 
@@ -675,6 +523,7 @@ public class MainActivity extends AppCompatActivity
             if (listPreferences.getFirstBoot()) {
                 listPreferences.setFirstBoot(false);
                 recreate();
+
             }
         }
     }

@@ -1,236 +1,251 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_feed_content"
+    android:id="@+id/coordinatorLayout"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    tools:context="${relativePackage}.${activityClass}">
+    android:layout_height="fill_parent">
 
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/activity_main_swipe_refresh_layout"
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/fragment_feed_content"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        tools:context="${relativePackage}.${activityClass}">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
-            <com.github.rahatarmanahmed.cpv.CircularProgressView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/progress_View"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:visibility="gone"
-                app:cpv_indeterminate="true" />
-
-            <com.malinskiy.superrecyclerview.SuperRecyclerView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:columnWidth="320dp"
-                app:layout_empty="@layout/empty_next_launch" />
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/activity_main_swipe_refresh_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
 
             <FrameLayout
-                android:id="@+id/color_reveal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorPrimary"
-                android:elevation="2dp"
-                android:visibility="invisible">
+                android:layout_height="match_parent">
 
-                <ScrollView
+
+                <android.support.v7.widget.RecyclerView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
->
+                    android:clipToPadding="false"
+                    android:columnWidth="320dp" />
 
-                    <LinearLayout
+                <com.github.rahatarmanahmed.cpv.CircularProgressView xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/progress_View"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:visibility="gone"
+                    app:cpv_indeterminate="true" />
+
+                <FrameLayout
+                    android:id="@+id/color_reveal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimary"
+                    android:elevation="2dp"
+                    android:visibility="invisible">
+
+                    <ScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="28dp"
-                        android:layout_marginRight="28dp"
-                        android:layout_marginTop="16dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:text="Select Launches to Follow"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                            android:textColor="@color/white"
-                            android:textSize="36dp"
-                            android:typeface="sans" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="2dp"
-                            android:layout_margin="8dp"
-                            android:background="@color/white"
-                            android:padding="12dp" />
+                        android:layout_height="match_parent">
 
                         <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="fill_parent"
-                            android:orientation="horizontal">
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="28dp"
+                            android:layout_marginRight="28dp"
+                            android:layout_marginTop="16dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="8dp"
+                                android:text="Select Launches to Follow"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                                android:textColor="@color/white"
+                                android:textSize="26dp"
+                                android:typeface="sans" />
+
+                            <TextView
+                                android:id="@+id/textView2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="8dp"
+                                android:text="Your selections will be visible on the Home page and send notifications before launch. Launches that you are not following will still be visible in Upcoming launches."
+                                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                                android:textColor="@color/white"
+                                android:textSize="16dp"
+                                android:typeface="sans" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="2dp"
+                                android:layout_margin="8dp"
+                                android:background="@color/white"
+                                android:padding="12dp" />
 
                             <LinearLayout
                                 android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="12dp"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
+                                android:layout_height="fill_parent"
+                                android:orientation="horizontal">
 
-                                <android.support.v7.widget.AppCompatCheckBox
-                                    android:id="@+id/nasa_switch"
-                                    android:layout_width="wrap_content"
+                                <LinearLayout
+                                    android:layout_width="fill_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="12dp"
-                                    android:checked="false"
-                                    android:text="NASA"
-                                    android:textColor="@color/white"
-                                    app:buttonTint="@color/white" />
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
 
-                                <android.support.v7.widget.AppCompatCheckBox
-                                    android:id="@+id/spacex_switch"
-                                    android:layout_width="wrap_content"
+                                    <android.support.v7.widget.AppCompatCheckBox
+                                        android:id="@+id/nasa_switch"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="12dp"
+                                        android:checked="false"
+                                        android:text="NASA"
+                                        android:textColor="@color/white"
+                                        app:buttonTint="@color/white" />
+
+                                    <android.support.v7.widget.AppCompatCheckBox
+                                        android:id="@+id/spacex_switch"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="12dp"
+                                        android:checked="false"
+                                        android:text="SpaceX"
+                                        android:textColor="@color/white"
+                                        app:buttonTint="@color/white" />
+
+                                    <android.support.v7.widget.AppCompatCheckBox
+                                        android:id="@+id/roscosmos_switch"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="12dp"
+                                        android:checked="false"
+                                        android:text="ROSCOSMOS"
+                                        android:textColor="@color/white"
+                                        app:buttonTint="@color/white" />
+
+                                    <android.support.v7.widget.AppCompatCheckBox
+                                        android:id="@+id/ula_switch"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="12dp"
+                                        android:checked="false"
+                                        android:text="ULA"
+                                        android:textColor="@color/white"
+                                        app:buttonTint="@color/white" />
+
+                                    <android.support.v7.widget.AppCompatCheckBox
+                                        android:id="@+id/KSC_switch"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="12dp"
+                                        android:checked="false"
+                                        android:text="Kennedy Space Center"
+                                        android:textColor="@color/white"
+                                        app:buttonTint="@color/white" />
+
+                                    <android.support.v7.widget.AppCompatCheckBox
+                                        android:id="@+id/van_switch"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="12dp"
+                                        android:checked="false"
+                                        android:text="Vandenberg AFB"
+                                        android:textColor="@color/white"
+                                        app:buttonTint="@color/white" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="fill_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="12dp"
-                                    android:checked="false"
-                                    android:text="SpaceX"
-                                    android:textColor="@color/white"
-                                    app:buttonTint="@color/white" />
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
 
-                                <android.support.v7.widget.AppCompatCheckBox
-                                    android:id="@+id/roscosmos_switch"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="12dp"
-                                    android:checked="false"
-                                    android:text="ROSCOSMOS"
-                                    android:textColor="@color/white"
-                                    app:buttonTint="@color/white" />
+                                    <android.support.v7.widget.AppCompatCheckBox
+                                        android:id="@+id/arianespace_switch"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="12dp"
+                                        android:checked="false"
+                                        android:text="Arianespace"
+                                        android:textColor="@color/white"
+                                        app:buttonTint="@color/white" />
 
-                                <android.support.v7.widget.AppCompatCheckBox
-                                    android:id="@+id/ula_switch"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="12dp"
-                                    android:checked="false"
-                                    android:text="ULA"
-                                    android:textColor="@color/white"
-                                    app:buttonTint="@color/white" />
+                                    <android.support.v7.widget.AppCompatCheckBox
+                                        android:id="@+id/casc_switch"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="12dp"
+                                        android:checked="false"
+                                        android:text="CASC"
+                                        android:textColor="@color/white"
+                                        app:buttonTint="@color/white" />
 
-                                <android.support.v7.widget.AppCompatCheckBox
-                                    android:id="@+id/KSC_switch"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="12dp"
-                                    android:checked="false"
-                                    android:text="Kennedy Space Center"
-                                    android:textColor="@color/white"
-                                    app:buttonTint="@color/white" />
+                                    <android.support.v7.widget.AppCompatCheckBox
+                                        android:id="@+id/isro_switch"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="12dp"
+                                        android:checked="false"
+                                        android:text="ISRO"
+                                        android:textColor="@color/white"
+                                        app:buttonTint="@color/white" />
 
-                                <android.support.v7.widget.AppCompatCheckBox
-                                    android:id="@+id/van_switch"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="12dp"
-                                    android:checked="false"
-                                    android:text="Vandenberg AFB"
-                                    android:textColor="@color/white"
-                                    app:buttonTint="@color/white" />
-                            </LinearLayout>
+                                    <android.support.v7.widget.AppCompatCheckBox
+                                        android:id="@+id/cape_switch"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="12dp"
+                                        android:checked="false"
+                                        android:text="Cape Canaveral"
+                                        android:textColor="@color/white"
+                                        app:buttonTint="@color/white" />
 
-                            <LinearLayout
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="12dp"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
+                                    <android.support.v7.widget.AppCompatCheckBox
+                                        android:id="@+id/ples_switch"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="12dp"
+                                        android:checked="false"
+                                        android:text="Plesetsk Cosmodrome"
+                                        android:textColor="@color/white"
+                                        app:buttonTint="@color/white" />
 
-                                <android.support.v7.widget.AppCompatCheckBox
-                                    android:id="@+id/arianespace_switch"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="12dp"
-                                    android:checked="false"
-                                    android:text="Arianespace"
-                                    android:textColor="@color/white"
-                                    app:buttonTint="@color/white" />
-
-                                <android.support.v7.widget.AppCompatCheckBox
-                                    android:id="@+id/casc_switch"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="12dp"
-                                    android:checked="false"
-                                    android:text="CASC"
-                                    android:textColor="@color/white"
-                                    app:buttonTint="@color/white" />
-
-                                <android.support.v7.widget.AppCompatCheckBox
-                                    android:id="@+id/isro_switch"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="12dp"
-                                    android:checked="false"
-                                    android:text="ISRO"
-                                    android:textColor="@color/white"
-                                    app:buttonTint="@color/white" />
-
-                                <android.support.v7.widget.AppCompatCheckBox
-                                    android:id="@+id/cape_switch"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="12dp"
-                                    android:checked="false"
-                                    android:text="Cape Canaveral"
-                                    android:textColor="@color/white"
-                                    app:buttonTint="@color/white" />
-
-                                <android.support.v7.widget.AppCompatCheckBox
-                                    android:id="@+id/ples_switch"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="12dp"
-                                    android:checked="false"
-                                    android:text="Plesetsk Cosmodrome"
-                                    android:textColor="@color/white"
-                                    app:buttonTint="@color/white" />
-
-                                <android.support.v7.widget.AppCompatCheckBox
-                                    android:id="@+id/all_switch"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="12dp"
-                                    android:checked="false"
-                                    android:text="All"
-                                    android:textColor="@color/white"
-                                    app:buttonTint="@color/white" />
+                                    <android.support.v7.widget.AppCompatCheckBox
+                                        android:id="@+id/all_switch"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="12dp"
+                                        android:checked="false"
+                                        android:text="All"
+                                        android:textColor="@color/white"
+                                        app:buttonTint="@color/white" />
+                                </LinearLayout>
                             </LinearLayout>
                         </LinearLayout>
-                    </LinearLayout>
 
-                </ScrollView>
+                    </ScrollView>
 
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/menu"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|right"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginRight="16dp"
-                    android:src="@drawable/ic_add_alert">
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/menu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|right"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginRight="16dp"
+                        app:srcCompat="@drawable/ic_add_alert">
 
-                </android.support.design.widget.FloatingActionButton>
+                    </android.support.design.widget.FloatingActionButton>
+                </FrameLayout>
+
             </FrameLayout>
 
-        </FrameLayout>
+        </android.support.v4.widget.SwipeRefreshLayout>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
-
-</FrameLayout>
+    </FrameLayout>
+</android.support.design.widget.CoordinatorLayout>

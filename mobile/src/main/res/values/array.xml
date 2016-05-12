@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="tabs">
-        <item>Upcoming</item>
-        <item>Previous</item>
-    </string-array>
-
-    <string-array name="vehicles_tabs">
-        <item>Launch Vehicles</item>
-    </string-array>
 
     <string-array name="agencies">
         <item>NASA</item>
@@ -64,24 +56,6 @@
         <item>Ohae Launch Station, North Korea</item>
     </string-array>
 
-    <string-array name="calendar_reminder">
-        <item>One</item>
-        <item>Five</item>
-        <item>Ten</item>
-        <item>Fifteen</item>
-        <item>Thirty</item>
-        <item>Hour</item>
-    </string-array>
-
-    <string-array name="calendar_reminder_values">
-        <item>1</item>
-        <item>5</item>
-        <item>10</item>
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-    </string-array>
-
     <string-array name="multi_calendar_reminder">
         <item>One Minute</item>
         <item>Five Minutes</item>
@@ -122,20 +96,6 @@
         <item>5</item>
         <item>10</item>
         <item>20</item>
-        <item>1000</item>
-    </string-array>
-    <string-array name="previous_array">
-        <item>Twenty</item>
-        <item>Fifty</item>
-        <item>One Hundred</item>
-        <item>Two Hundred</item>
-        <item>All</item>
-    </string-array>
-    <string-array name="previous_array_values">
-        <item>20</item>
-        <item>50</item>
-        <item>100</item>
-        <item>200</item>
         <item>1000</item>
     </string-array>
     <string-array name="sync_timer">

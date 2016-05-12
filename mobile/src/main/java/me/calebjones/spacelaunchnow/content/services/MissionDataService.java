@@ -36,7 +36,7 @@ public class MissionDataService extends IntentService {
 
     public static List<Mission> missionList;
     private SharedPreferences sharedPref;
-    private ListPreferences sharedPreference;
+    private ListPreferences listPreference;
 
     public MissionDataService() {
         super("MissionDataService");
@@ -48,7 +48,7 @@ public class MissionDataService extends IntentService {
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-        this.sharedPreference = ListPreferences.getInstance(getApplicationContext());
+        this.listPreference = ListPreferences.getInstance(getApplicationContext());
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         return super.onStartCommand(intent, flags, startId);
     }
@@ -60,13 +60,17 @@ public class MissionDataService extends IntentService {
     }
 
     private void getMissionLaunches() {
-        MissionDataService.this.cleanCachePrevious();
         InputStream inputStream = null;
         Integer result = 0;
         HttpURLConnection urlConnection = null;
         try {
-            /* forming th java.net.URL object */
-            URL url = new URL(Strings.MISSION_URL);
+            URL url;
+            //Used for loading debug launches/reproducing bugs
+            if (listPreference.isDebugEnabled()) {
+                url = new URL(Strings.DEBUG_MISSION_URL);
+            } else {
+                url = new URL(Strings.MISSION_URL);
+            }
 
             urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -91,7 +95,8 @@ public class MissionDataService extends IntentService {
                 Timber.d("getMissionLaunches - Mission list:  %s ", missionList.size());
 
                 Collections.reverse(missionList);
-                this.sharedPreference.setMissionList(missionList);
+                this.listPreference.removeMissionsList();
+                this.listPreference.setMissionList(missionList);
 
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_MISSIONS);
@@ -103,13 +108,10 @@ public class MissionDataService extends IntentService {
             Timber.e("getMissionLaunches ERROR: %s", e.getLocalizedMessage());
             Crashlytics.logException(e);
             Intent broadcastIntent = new Intent();
+            broadcastIntent.putExtra("error", e.getLocalizedMessage());
             broadcastIntent.setAction(Strings.ACTION_FAILURE_MISSIONS);
             MissionDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
         }
-    }
-
-    private void cleanCachePrevious() {
-        this.sharedPreference.removeMissionsList();
     }
 
     public void parseMissionsResult(String result) throws JSONException {

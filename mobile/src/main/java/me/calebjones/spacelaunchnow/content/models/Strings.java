@@ -23,6 +23,7 @@ public final class Strings {
     public static final String ACTION_SUCCESS_AGENCY = "SUCCESS_GET_AGENCY";
     public static final String ACTION_SUCCESS_VEHICLES = "SUCCESS_GET_VEHICLES";
 
+    public static final String ACTION_UPDATE_STORED_LAUNCH = "UPDATE_STORED_LAUNCH";
     public static final String ACTION_UPDATE_NEXT_LAUNCH = "UPDATE_NEXT_LAUNCH";
     public static final String ACTION_UPDATE_UP_LAUNCHES = "UPDATE_UP_LAUNCHES";
     public static final String ACTION_UPDATE_PREV_LAUNCHES = "UPDATE_PREV_LAUNCHES";
@@ -39,8 +40,17 @@ public final class Strings {
     public static String MISSION_URL = "https://launchlibrary.net/1.2/mission?limit=1000&mode=verbose";
     public static String AGENCY_URL = "https://launchlibrary.net/1.2/agency?mode=verbose&limit=1000";
     public static String VEHICLE_URL = "https://launchlibrary.net/1.2/rocket?mode=verbose&limit=1000";
-    public static String NEXT_URL = "https://launchlibrary.net/1.2/launch/next/1?mode=verbose";
+    public static String NEXT_URL = "https://launchlibrary.net/1.2/launch?next=10&mode=verbose";
     public static String NEXT_URL_BY_ID = "https://launchlibrary.net/1.2/launch/%s?mode=verbose";
+
+    public static String DEBUG_LAUNCH_URL = "https://launchlibrary.net/dev/launch/next/1000&mode=verbose";
+    public static String DEBUG_MISSION_URL = "https://launchlibrary.net/dev/mission?limit=1000&mode=verbose";
+    public static String DEBUG_AGENCY_URL = "https://launchlibrary.net/dev/agency?mode=verbose&limit=1000";
+    public static String DEBUG_VEHICLE_URL = "https://launchlibrary.net/dev/rocket?mode=verbose&limit=1000";
+    public static String DEBUG_NEXT_URL = "https://launchlibrary.net/dev/launch?next=10&mode=verbose";
+    public static String DEBUG_NEXT_URL_BY_ID = "https://launchlibrary.net/dev/launch/%s?mode=verbose";
+
+    public static String BASE_URL = "http://calebjones.me/app/";
 
     private Strings() {
     }

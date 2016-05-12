@@ -28,5 +28,11 @@
 gradle.properties
 
 app/src/main/res/values/api_keys.xml
-
+mobile/fabric.properties
 mobile/src/main/res/values/api_keys.xml
+
+mobile/fabric.properties
+
+mobile/version.properties
+
+wear/version.properties

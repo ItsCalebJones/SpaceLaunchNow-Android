@@ -22,7 +22,7 @@
         android:layout_height="match_parent"
         android:transitionName="image"
         android:scaleType="centerCrop"
-        android:src="@drawable/placeholder"
+        app:srcCompat="@drawable/placeholder"
         />
 
     <TextView

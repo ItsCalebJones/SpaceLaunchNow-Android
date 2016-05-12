@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.WindowDecorActionBar;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -37,6 +38,7 @@ public class CalendarUtil {
     };
 
     public Integer addEvent(Context context, Launch launch) {
+        Timber.v("Adding launch event: %s", launch.getName());
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             return null;
@@ -108,6 +110,7 @@ public class CalendarUtil {
     }
 
     public boolean updateEvent(Context context, Launch launch) {
+        Timber.v("Updating launch event: %s", launch.getName());
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
             sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
             ContentResolver cr = context.getContentResolver();
@@ -141,6 +144,7 @@ public class CalendarUtil {
     }
 
     public int deleteEvent(Context context, Launch launch) {
+        Timber.v("Deleting launch event: %s", launch.getName());
         int iNumRowsDeleted = 0;
 
         if (launch.getCalendarID() > 0) {
