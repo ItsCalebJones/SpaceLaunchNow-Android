@@ -49,15 +49,14 @@ public class NextLaunchTracker extends IntentService implements
 
     private Launch nextLaunch;
     private Launch updatedLaunch;
+    private boolean wear = false;
     private SharedPreferences sharedPref;
     private ListPreferences listPreferences;
     private SwitchPreferences switchPreferences;
-    public static List<Launch> upcomingLaunchList;
+    private List<Launch> upcomingLaunchList;
     private Calendar rightNow;
     private AlarmManager alarmManager;
     private long interval;
-    private static final String NAME_KEY = "me.calebjones.spacelaunchnow.wear.nextname";
-    private static final String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -117,18 +116,17 @@ public class NextLaunchTracker extends IntentService implements
             //If they do not match this means nextLaunch has changed (launch executed, filter change, etc)
             if (nextLaunch.getId().intValue() != updatedLaunch.getId().intValue()) {
 
-                debugNotificaiton(String.format("Launch has changed - Next: %s Stored: %s"
+                debugNotification(String.format("Launch has changed - Next: %s Updated: %s"
                         , nextLaunch.getId(), updatedLaunch.getId()));
                 listPreferences.setNextLaunch(updatedLaunch);
-                Intent nextIntent = new Intent(this, LaunchDataService.class);
-                nextIntent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
-                startService(nextIntent);
+                Timber.v("Launch has changed - Next: %s Updated: %s", nextLaunch.getId(), updatedLaunch.getId());
+                checkStatus(updatedLaunch);
 
                 //They do match, check if the launch time has moved.
             } else if (listPreferences.getNextLaunchTimestamp() != 0) {
                 if (Math.abs(listPreferences.getNextLaunchTimestamp()
                         - updatedLaunch.getNetstamp()) > 60) {
-                    debugNotificaiton(String.format("Resetting notifiers - List: %s Stored: %s "
+                    debugNotification(String.format("Resetting notifiers - List: %s Stored: %s "
                             , listPreferences.getNextLaunchTimestamp(), nextLaunch.getNetstamp()));
                     updatedLaunch.resetNotifiers();
                     listPreferences.setNextLaunchTimestamp(updatedLaunch.getNetstamp());
@@ -139,7 +137,7 @@ public class NextLaunchTracker extends IntentService implements
                 }
             } else if (updatedLaunch.getNetstamp() != 0) {
                 listPreferences.setNextLaunchTimestamp(updatedLaunch.getNetstamp());
-                debugNotificaiton("Updated timestamp to " + updatedLaunch.getNetstamp());
+                debugNotification("Updated timestamp to " + updatedLaunch.getNetstamp());
                 resetAndCheck(updatedLaunch);
             } else {
                 resetAndCheck(updatedLaunch);
@@ -416,7 +414,7 @@ public class NextLaunchTracker extends IntentService implements
         return cal;
     }
 
-    public void debugNotificaiton(String message) {
+    public void debugNotification(String message) {
         if (BuildConfig.DEBUG) {
             long time = new Date().getTime();
             String tmpStr = String.valueOf(time);
@@ -470,6 +468,8 @@ public class NextLaunchTracker extends IntentService implements
                 NotificationManager mNotifyManager = (NotificationManager)
                         getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
                 mNotifyManager.notify(Strings.NOTIF_ID + 1, mBuilder.build());
+
+                Timber.v("Scheduling Update - Interval: %s | %s", interval, formatter.format(calendar.getTime()));
             }
         }
 
@@ -482,34 +482,43 @@ public class NextLaunchTracker extends IntentService implements
 
     // Create a data map and put data in it
     private void sendToWear(Launch launch) {
-        if (launch != null && launch.getName() != null && launch.getNetstamp() != null) {
-            Timber.v("Sending data...");
-            PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/nextLaunch");
+        if (wear) {
+            if(launch != null && launch.getName() != null && launch.getNetstamp() != null) {
+                Timber.v("Sending data to wear...");
+                PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/nextLaunch");
 
-            putDataMapReq.getDataMap().putString(NAME_KEY, launch.getName());
-            putDataMapReq.getDataMap().putInt(TIME_KEY, launch.getNetstamp());
-            putDataMapReq.getDataMap().putLong("time", new Date().getTime());
+                String NAME_KEY = "me.calebjones.spacelaunchnow.wear.nextname";
+                putDataMapReq.getDataMap().putString(NAME_KEY, launch.getName());
+                String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
+                putDataMapReq.getDataMap().putInt(TIME_KEY, launch.getNetstamp());
+                putDataMapReq.getDataMap().putLong("time", new Date().getTime());
 
-            PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
-            Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
-            DataApi.DataItemResult dataItemResult = Wearable.DataApi
-                    .putDataItem(mGoogleApiClient, putDataReq).await();
-            Timber.v("Sent");
+                PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
+                Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
+                DataApi.DataItemResult dataItemResult = Wearable.DataApi
+                        .putDataItem(mGoogleApiClient, putDataReq).await();
+                Timber.v("Sent");
+            }
+        } else {
+            Timber.v("Android Wear not connected.");
         }
     }
 
     @Override
     public void onConnected(Bundle bundle) {
+        wear = true;
         Timber.d("onConnected");
     }
 
     @Override
     public void onConnectionSuspended(int i) {
+        wear = false;
         Timber.e("onConnectionSuspended");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+        wear = false;
         Timber.e("onConnectionFailed %s", connectionResult.getErrorMessage());
     }
 

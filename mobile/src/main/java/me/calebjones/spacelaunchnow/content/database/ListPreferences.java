@@ -442,42 +442,61 @@ public class ListPreferences {
     }
 
     public List<Launch> getLaunchesPrevious() {
+        long time = System.currentTimeMillis();
+        Timber.v("Starting time: %s", System.currentTimeMillis() - time);
+
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         if (!this.sharedPrefs.contains(PREFS_LIST_PREVIOUS)) {
             return null;
         }
+        Timber.v("getSharedPreference - Ellapsed Time: %s", System.currentTimeMillis() - time);
+
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
+        Timber.v("GsonBuilder - Ellapsed Time: %s", System.currentTimeMillis() - time);
+
         List<Launch> productFromShared;
         SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         String jsonPreferences = sharedPref.getString(PREFS_LIST_PREVIOUS, null);
+        Timber.v("getString - Ellapsed Time: %s", System.currentTimeMillis() - time);
 
         Type type = new TypeToken<List<Launch>>() {
         }.getType();
         productFromShared = gson.fromJson(jsonPreferences, type);
+        Timber.v("productFromShared - Ellapsed Time: %s", System.currentTimeMillis() - time);
 
         if (productFromShared != null) {
             Timber.v("getLaunchesPrevious - Size: %s", productFromShared.size());
+            Timber.v("Show Size - Ellapsed Time: %s", System.currentTimeMillis() - time);
         }
         return productFromShared;
     }
 
     public List<Launch> getLaunchesPreviousFiltered() {
+        long time = System.currentTimeMillis();
+        Timber.v("Starting time: %s", System.currentTimeMillis() - time);
+
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         if (!this.sharedPrefs.contains(PREFS_LIST_PREVIOUS)) {
             return null;
         }
+        Timber.v("getSharedPreference - Ellapsed Time: %s", System.currentTimeMillis() - time);
+
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
+        Timber.v("GsonBuilder - Ellapsed Time: %s", System.currentTimeMillis() - time);
+
         List<Launch> productFromShared;
         SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         String jsonPreferences = sharedPref.getString(PREFS_LIST_PREVIOUS_FILTERED, null);
+        Timber.v("getString - Ellapsed Time: %s", System.currentTimeMillis() - time);
 
         Type type = new TypeToken<List<Launch>>() {
         }.getType();
         productFromShared = gson.fromJson(jsonPreferences, type);
+        Timber.v("productFromShared - Ellapsed Time: %s", System.currentTimeMillis() - time);
         return productFromShared;
     }
 

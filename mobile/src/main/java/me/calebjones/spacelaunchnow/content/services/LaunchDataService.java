@@ -106,6 +106,7 @@ public class LaunchDataService extends IntentService implements
         Timber.d("mGoogleApiClient - connect");
 
         if (Strings.ACTION_GET_ALL.equals(action)) {
+            Timber.v("Intent action received: %s", action);
             if (this.sharedPref.getBoolean("background", true)) {
                 scheduleLaunchUpdates();
             }
@@ -119,6 +120,7 @@ public class LaunchDataService extends IntentService implements
 
             startService(new Intent(this, MissionDataService.class));
         } else if (Strings.ACTION_GET_UP_LAUNCHES.equals(action)) {
+            Timber.v("Intent action received: %s", action);
             if (this.sharedPref.getBoolean("background", true)) {
                 scheduleLaunchUpdates();
             }
@@ -126,14 +128,17 @@ public class LaunchDataService extends IntentService implements
             getNextLaunches();
             startService(new Intent(this, NextLaunchTracker.class));
         } else if (Strings.ACTION_GET_PREV_LAUNCHES.equals(action)) {
+            Timber.v("Intent action received: %s", action);
             getPreviousLaunches(intent.getStringExtra("URL"));
         } else if (Strings.ACTION_UPDATE_NEXT_LAUNCH.equals(action)) {
+            Timber.v("Intent action received: %s", action);
             getNextLaunches();
-            startService(new Intent(this, NextLaunchTracker.class));
+            Timber.v("Starting service NextLaunchTracker");
+            this.startService(new Intent(this, NextLaunchTracker.class));
         } else {
             Timber.e("LaunchDataService - onHandleIntent: ERROR - Unknown Intent %s", action);
         }
-        onDestroy();
+        Timber.v("Finished!");
     }
 
     private void getPreviousLaunches(String sUrl) {
@@ -184,6 +189,7 @@ public class LaunchDataService extends IntentService implements
                         .putCustomAttribute("Status", statusCode));
 
                 Intent broadcastIntent = new Intent();
+                broadcastIntent.putExtra("error", "Network Code: " + statusCode);
                 broadcastIntent.setAction(Strings.ACTION_FAILURE_PREV_LAUNCHES);
                 LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
             }
@@ -196,6 +202,7 @@ public class LaunchDataService extends IntentService implements
             }
 
             Intent broadcastIntent = new Intent();
+            broadcastIntent.putExtra("error", e.getLocalizedMessage());
             broadcastIntent.setAction(Strings.ACTION_FAILURE_PREV_LAUNCHES);
             LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
         }
@@ -251,7 +258,7 @@ public class LaunchDataService extends IntentService implements
 
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
-                LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+                LaunchDataService.this.sendBroadcast(broadcastIntent);
             } else {
                 Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to retrieve upcoming launches: " + statusCode);
 
@@ -261,8 +268,9 @@ public class LaunchDataService extends IntentService implements
                 }
 
                 Intent broadcastIntent = new Intent();
+                broadcastIntent.putExtra("error", "Network Status: " + statusCode);
                 broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
-                LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+                LaunchDataService.this.sendBroadcast(broadcastIntent);
             }
 
         } catch (Exception e) {
@@ -273,19 +281,20 @@ public class LaunchDataService extends IntentService implements
             }
 
             if (BuildConfig.DEBUG) {
-                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
                 mBuilder.setContentTitle("LaunchData Failed!")
                         .setSmallIcon(R.drawable.ic_notification)
                         .setAutoCancel(true);
 
                 NotificationManager mNotifyManager = (NotificationManager)
-                        getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                        this.getSystemService(Context.NOTIFICATION_SERVICE);
                 mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
             }
 
             Intent broadcastIntent = new Intent();
+            broadcastIntent.putExtra("error", e.getLocalizedMessage());
             broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
-            LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+            LaunchDataService.this.sendBroadcast(broadcastIntent);
         }
     }
 
@@ -361,6 +370,7 @@ public class LaunchDataService extends IntentService implements
                 }
 
                 Intent broadcastIntent = new Intent();
+                broadcastIntent.putExtra("error", "Network Code: " + statusCode);
                 broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
                 LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
             }
@@ -384,6 +394,7 @@ public class LaunchDataService extends IntentService implements
             }
 
             Intent broadcastIntent = new Intent();
+            broadcastIntent.putExtra("error", e.getLocalizedMessage());
             broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
             LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
         }

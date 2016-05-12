@@ -2,6 +2,7 @@ package me.calebjones.spacelaunchnow.ui.fragment.launches.details;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.TimeZone;
 
 import me.calebjones.spacelaunchnow.R;
@@ -39,6 +41,7 @@ import me.calebjones.spacelaunchnow.content.database.DatabaseManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.RocketDetails;
+import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
@@ -99,14 +102,54 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
         vehicle_spec_view = (LinearLayout) view.findViewById(R.id.vehicle_spec_view);
         fab = (FloatingActionButton) view.findViewById(R.id.fab_explore);
 
-        setUpViews();
+        setUpViews(savedInstanceState);
         return view;
     }
 
-    private void setUpMap() {
+    @Override
+    public void onResume() {
         if (map_view != null) {
-            map_view.onCreate(null);
             map_view.onResume();
+        }
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        if (map_view != null) {
+            map_view.onPause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onLowMemory(){
+        if (map_view != null) {
+            map_view.onLowMemory();
+        }
+        super.onLowMemory();
+    }
+
+    @Override
+    public void onDestroy(){
+        if (map_view != null) {
+            map_view.onDestroy();
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (map_view != null) {
+            map_view.onSaveInstanceState(outState);
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    private void setUpMap(Bundle savedInstanceState) {
+        if (map_view != null) {
+            map_view.onCreate(savedInstanceState);
+
             map_view.getMapAsync(this);
         }
         double dlat = detailLaunch.getLocation().getPads().get(0).getLatitude();
@@ -114,12 +157,12 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
         setMapLocation(dlat, dlon);
     }
 
-    public void setUpViews(){
+    public void setUpViews(Bundle savedInstanceState){
         detailLaunch = ((LaunchDetailActivity)getActivity()).getLaunch();
         getLaunchVehicle(detailLaunch);
 
         if (Utils.checkPlayServices(context)) {
-            setUpMap();
+            setUpMap(savedInstanceState);
 
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -336,7 +379,7 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         //TODO: Allow user to update this 1-normal 2-satellite 3-Terrain
         // https://goo.gl/OkexW7
-        MapsInitializer.initialize(getActivity().getApplicationContext());
+        MapsInitializer.initialize(context.getApplicationContext());
 
         gMap = googleMap;
         gMap.getUiSettings().setAllGesturesEnabled(false);

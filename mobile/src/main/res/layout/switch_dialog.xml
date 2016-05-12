@@ -7,13 +7,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:text="Coming Soon: Support only features!"
+        android:paddingBottom="4dp"
+        android:text="Coming Soon: Supporter only features!"
         style="@style/Base.TextAppearance.AppCompat.Title"
         android:textColor="@color/abc_primary_text_material_light" />
     <TextView
         android:text="@string/whats_new_content"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="8dp"/>
+        android:layout_height="wrap_content"/>
 </LinearLayout>

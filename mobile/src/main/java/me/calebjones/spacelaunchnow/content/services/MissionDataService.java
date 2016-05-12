@@ -57,11 +57,9 @@ public class MissionDataService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Timber.d("MissionDataService - Intent received:  %s ", intent.getAction());
         getMissionLaunches();
-        onDestroy();
     }
 
     private void getMissionLaunches() {
-        MissionDataService.this.cleanCachePrevious();
         InputStream inputStream = null;
         Integer result = 0;
         HttpURLConnection urlConnection = null;
@@ -97,6 +95,7 @@ public class MissionDataService extends IntentService {
                 Timber.d("getMissionLaunches - Mission list:  %s ", missionList.size());
 
                 Collections.reverse(missionList);
+                this.listPreference.removeMissionsList();
                 this.listPreference.setMissionList(missionList);
 
                 Intent broadcastIntent = new Intent();
@@ -109,13 +108,10 @@ public class MissionDataService extends IntentService {
             Timber.e("getMissionLaunches ERROR: %s", e.getLocalizedMessage());
             Crashlytics.logException(e);
             Intent broadcastIntent = new Intent();
+            broadcastIntent.putExtra("error", e.getLocalizedMessage());
             broadcastIntent.setAction(Strings.ACTION_FAILURE_MISSIONS);
             MissionDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
         }
-    }
-
-    private void cleanCachePrevious() {
-        this.listPreference.removeMissionsList();
     }
 
     public void parseMissionsResult(String result) throws JSONException {

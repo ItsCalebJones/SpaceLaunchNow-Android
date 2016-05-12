@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String NAV_ITEM_ID = "navItemId";
+    private static ListPreferences listPreferences;
     private final Handler mDrawerActionHandler = new Handler();
     private LaunchesViewPager mlaunchesViewPager;
     private MissionFragment mMissionFragment;
@@ -73,12 +74,9 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawer;
     private SharedPreferences sharedPref;
     private NavigationView navigationView;
-    private static ListPreferences listPreferences;
     private SwitchPreferences switchPreferences;
     private CustomTabActivityHelper customTabActivityHelper;
     private Context context;
-    private Boolean bool;
-    private BroadcastReceiver intentReceiver;
 
     private static final int REQUEST_CODE = 5467;
 
@@ -94,49 +92,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    class LaunchBroadcastReceiver extends BroadcastReceiver {
-        LaunchBroadcastReceiver() {
-        }
-
-        public void onReceive(Context context, Intent intent) {
-            Timber.v("Broadcast received...");
-            if (intent != null) {
-                String action = intent.getAction();
-                Timber.d("Broadcast action : %s", action);
-                if (Strings.ACTION_SUCCESS_UP_LAUNCHES.equals(action)) {
-                    if (mNavItemId == R.id.menu_next_launch && !listPreferences.getFirstBoot()) {
-                        if (mUpcomingFragment != null) {
-                            mUpcomingFragment.onFinishedRefreshing();
-                        }
-                    }
-                    if (mNavItemId == R.id.menu_launches) {
-                        if (mlaunchesViewPager != null) {
-                            mlaunchesViewPager.restartViews(Strings.ACTION_SUCCESS_UP_LAUNCHES);
-                        }
-                    }
-                } else if (Strings.ACTION_SUCCESS_PREV_LAUNCHES.equals(action)) {
-                    if (mNavItemId == R.id.menu_launches) {
-                        if (mlaunchesViewPager != null) {
-                            mlaunchesViewPager.restartViews(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
-                        }
-                    }
-                } else if (Strings.ACTION_SUCCESS_MISSIONS.equals(action)) {
-                    if (mMissionFragment != null) {
-                        if (mMissionFragment.isVisible()) {
-                            mMissionFragment.onFinishedRefreshing();
-                        }
-                    }
-                } else if (Strings.ACTION_FAILURE_UP_LAUNCHES.equals(action)) {
-                    if (mNavItemId == R.id.menu_next_launch) {
-                        mUpcomingFragment.hideLoading();
-                    }
-                }
-            }
-        }
-    }
-
     public MainActivity() {
-        this.intentReceiver = new LaunchBroadcastReceiver();
     }
 
     @Override
@@ -267,27 +223,12 @@ public class MainActivity extends AppCompatActivity
         super.onStart();
         Timber.v("MainActivity onStart!");
         customTabActivityHelper.bindCustomTabsService(this);
-
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
-        intentFilter.addAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
-        intentFilter.addAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
-        intentFilter.addAction(Strings.ACTION_FAILURE_PREV_LAUNCHES);
-        intentFilter.addAction(Strings.ACTION_SUCCESS_MISSIONS);
-        intentFilter.addAction(Strings.ACTION_FAILURE_MISSIONS);
-        intentFilter.addAction(Strings.ACTION_SUCCESS_VEHICLE_DETAILS);
-        intentFilter.addAction(Strings.ACTION_FAILURE_VEHICLE_DETAILS);
-        intentFilter.addAction(Strings.ACTION_SUCCESS_VEHICLES);
-        intentFilter.addAction(Strings.ACTION_FAILURE_VEHICLES);
-        registerReceiver(this.intentReceiver, intentFilter);
-
         mayLaunchUrl(Uri.parse("https://launchlibrary.net/"));
     }
 
     public void onStop() {
         super.onStop();
         Timber.v("MainActivity onStop!");
-        unregisterReceiver(this.intentReceiver);
         customTabActivityHelper.unbindCustomTabsService(this);
     }
 
@@ -336,12 +277,6 @@ public class MainActivity extends AppCompatActivity
             dialog.setCustomView(customView);
         }
         dialog.show();
-    }
-
-    private void refreshLaunches() {
-        Intent update_upcoming_launches = new Intent(context, LaunchDataService.class);
-        update_upcoming_launches.setAction(Strings.ACTION_GET_UP_LAUNCHES);
-        context.startService(update_upcoming_launches);
     }
 
     public void getFirstLaunches() {
@@ -588,6 +523,7 @@ public class MainActivity extends AppCompatActivity
             if (listPreferences.getFirstBoot()) {
                 listPreferences.setFirstBoot(false);
                 recreate();
+
             }
         }
     }
