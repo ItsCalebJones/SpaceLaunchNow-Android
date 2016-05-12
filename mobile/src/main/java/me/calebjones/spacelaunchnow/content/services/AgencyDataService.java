@@ -63,7 +63,6 @@ public class AgencyDataService extends IntentService {
     }
 
     private void getAgency() {
-        cleanAgencyCache();
         InputStream inputStream = null;
         Integer result = 0;
         HttpURLConnection urlConnection = null;
@@ -92,6 +91,7 @@ public class AgencyDataService extends IntentService {
 
                 parseUpcomingResult(response.toString());
                 Timber.d("LaunchDataService - Upcoming Launches list:  %s ", agencyList.size());
+                cleanAgencyCache();
                 this.sharedPreference.setAgenciesList(agencyList);
 
                 Intent broadcastIntent = new Intent();

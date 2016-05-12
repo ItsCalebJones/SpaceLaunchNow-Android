@@ -28,7 +28,7 @@ advancedVersioning {
     }
     outputOptions {
         renameOutput true
-        nameFormat '${projectName}-${buildType}-${versionName}.${versionCode}'
+        nameFormat '${projectName}-${buildType}-${versionName}-${versionCode}'
     }
 }
 
@@ -59,12 +59,12 @@ android {
         versionName appVersionName
         signingConfig signingConfigs.config
         resConfigs "en"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         debug {
             applicationIdSuffix '.debug'
-            versionNameSuffix '-DEBUG'
-            manifestPlaceholders = [appNameLabel: "Space Launch Now - Debug"]
+            manifestPlaceholders = [appNameLabel: "SLN - Debug"]
         }
         release {
             minifyEnabled true

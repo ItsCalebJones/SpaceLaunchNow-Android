@@ -5,12 +5,19 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.preference.PreferenceManager;
@@ -29,7 +36,6 @@ import android.view.animation.OvershootInterpolator;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.borax12.materialdaterangepicker.date.DatePickerDialog;
-import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.SearchEvent;
@@ -37,7 +43,6 @@ import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 
-import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,24 +52,24 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.BuildConfig;
+import me.calebjones.spacelaunchnow.MainActivity;
+import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.LaunchAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.loader.PreviousLoader;
 import me.calebjones.spacelaunchnow.content.models.Launch;
-import me.calebjones.spacelaunchnow.MainActivity;
-import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 
-public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener, DatePickerDialog.OnDateSetListener {
+public class PreviousLaunchesFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Launch>>, SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener, DatePickerDialog.OnDateSetListener {
 
     private View view, empty;
     private RecyclerView mRecyclerView;
     private LaunchAdapter adapter;
-    private String newURL;
     private FloatingActionMenu menu;
     private String start_date, end_date;
     private List<Launch> rocketLaunches;
@@ -72,27 +77,24 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     private ListPreferences listPreferences;
     private SwitchPreferences switchPreferences;
     private SharedPreferences sharedPrefs;
-    private int mScrollPosition;
     private FloatingActionButton agency, vehicle, country, location, reset;
     private int mScrollOffset = 4;
-    private static final Field sChildFragmentManagerField;
     private LinearLayoutManager layoutManager;
+
+    private CoordinatorLayout coordinatorLayout;
+    String getRequestId;
 
     public PreviousLaunchesFragment() {
         // Required empty public constructor
     }
 
-    public void onCreate(Bundle savedInstanceState) {
+    @Override
+    public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        this.listPreferences = ListPreferences.getInstance(getContext());
-        this.switchPreferences = SwitchPreferences.getInstance(getContext());
-        this.sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        this.rocketLaunches = new ArrayList();
-        adapter = new LaunchAdapter(getActivity());
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
@@ -109,6 +111,12 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         view = lf.inflate(R.layout.fragment_previous_launches, container, false);
         ButterKnife.bind(getActivity());
 
+        this.listPreferences = ListPreferences.getInstance(getContext());
+        this.switchPreferences = SwitchPreferences.getInstance(getContext());
+        this.sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        this.rocketLaunches = new ArrayList();
+        adapter = new LaunchAdapter(getContext());
+
         agency = (FloatingActionButton) view.findViewById(R.id.agency);
         vehicle = (FloatingActionButton) view.findViewById(R.id.vehicle);
         country = (FloatingActionButton) view.findViewById(R.id.country);
@@ -116,6 +124,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         reset = (FloatingActionButton) view.findViewById(R.id.reset);
         menu = (FloatingActionMenu) view.findViewById(R.id.menu);
         empty = view.findViewById(R.id.empty_launch_root);
+        coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.coordinatorLayout);
 
 
         /*Set up Pull to refresh*/
@@ -142,31 +151,27 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
                         menu.showMenu(true);
                     }
                 }
-                int topRowVerticalPosition =
-                        (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
-                mSwipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
-
+                mSwipeRefreshLayout.setEnabled(layoutManager.findFirstCompletelyVisibleItemPosition() == 0);
             }
         });
-
-        if (this.listPreferences.getPreviousFirstBoot()) {
-            this.listPreferences.setPreviousFirstBoot(false);
-            Timber.d("Previous Launch Fragment: First Boot.");
-            getDefaultDateRange();
-            if(this.listPreferences.getLaunchesPrevious() == null || this.listPreferences.getLaunchesPrevious().size() == 0){
-                fetchData();
-            } else {
-                this.rocketLaunches.clear();
-                displayLaunches();
-            }
-        } else {
-            Timber.d("Previous Launch Fragment: Not First Boot.");
-            this.rocketLaunches.clear();
-            getDateRange();
-            displayLaunches();
-        }
         setUpFab();
+
+        CircularProgressView progressView = (CircularProgressView)
+                view.findViewById(R.id.progress_View);
+        progressView.setVisibility(View.VISIBLE);
+        progressView.startAnimation();
         return view;
+    }
+
+    public static PreviousLaunchesFragment newInstance(String text) {
+
+        PreviousLaunchesFragment p = new PreviousLaunchesFragment();
+        Bundle b = new Bundle();
+        b.putString("msg", text);
+
+        p.setArguments(b);
+
+        return p;
     }
 
     private void setUpFab() {
@@ -350,14 +355,17 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         return null;
     }
 
-    //TODO Test empty
+
     public void displayLaunches() {
-        Timber.v("DisplayLaunches - Filtered - %s", switchPreferences.getPrevFiltered());
+        //TODO fix the bottleneck
+        long time = System.currentTimeMillis();
+        Timber.v("Getting list!");
         if (!switchPreferences.getPrevFiltered()){
             rocketLaunches = listPreferences.getLaunchesPrevious();
         } else {
             rocketLaunches = listPreferences.getLaunchesPreviousFiltered();
         }
+        Timber.v("Getting list took %s", Math.abs(time - System.currentTimeMillis()));
 
         if (rocketLaunches != null) {
             Timber.v("DisplayLaunches - List size: %s", rocketLaunches.size());
@@ -415,10 +423,19 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     }
 
     private void showLoading() {
+        if(!mSwipeRefreshLayout.isRefreshing()){
+            mSwipeRefreshLayout.setRefreshing(true);
+        }
+    }
+
+    private void hideLoading() {
+        if(mSwipeRefreshLayout.isRefreshing()){
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
         CircularProgressView progressView = (CircularProgressView)
                 view.findViewById(R.id.progress_View);
-        progressView.setVisibility(View.VISIBLE);
-        progressView.startAnimation();
+        progressView.setVisibility(View.GONE);
+        progressView.resetAnimation();
     }
 
     // Three types: 0 - Agency 1 - Vehicle 2 - Country
@@ -618,15 +635,49 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         return filteredModelList;
     }
 
+    private final BroadcastReceiver nextLaunchReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Timber.v("Received: %s", intent.getAction());
+            hideLoading();
+            if (intent.getAction().equals(Strings.ACTION_SUCCESS_PREV_LAUNCHES)) {
+                displayLaunches();
+            } else if (intent.getAction().equals(Strings.ACTION_FAILURE_PREV_LAUNCHES)) {
+                Snackbar.make(coordinatorLayout, intent.getStringExtra("error"), Snackbar.LENGTH_LONG).show();
+            }
+        }
+    };
+
+
     @Override
     public void onResume() {
         Timber.d("OnResume!");
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
+        intentFilter.addAction(Strings.ACTION_FAILURE_PREV_LAUNCHES);
+
+        getActivity().registerReceiver(nextLaunchReceiver, intentFilter);
+
+        if (listPreferences.getPreviousFirstBoot()) {
+            listPreferences.setPreviousFirstBoot(false);
+            Timber.d("Previous Launch Fragment: First Boot.");
+            getDefaultDateRange();
+        } else {
+            Timber.d("Previous Launch Fragment: Not First Boot.");
+            getDateRange();
+        }
+        getLoaderManager().initLoader(1, null, this).forceLoad();
         super.onResume();
     }
 
     @Override
+    public void onPause() {
+        getActivity().unregisterReceiver(nextLaunchReceiver);
+        super.onPause();
+    }
+
+    @Override
     public void onRefresh() {
-        adapter.clear();
         this.switchPreferences.setPrevFiltered(false);
         this.switchPreferences.resetAllPrevFilters();
         getDefaultDateRange();
@@ -641,30 +692,26 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         menu.animate().translationX(0).setInterpolator(new DecelerateInterpolator(4)).start();
     }
 
-    static {
-        Field f = null;
-        try {
-            f = Fragment.class.getDeclaredField("mChildFragmentManager");
-            f.setAccessible(true);
-        } catch (NoSuchFieldException e) {
-            e.getLocalizedMessage();
-            Timber.e("Error getting mChildFragmentManager field %s", e.getLocalizedMessage());
-        }
-        sChildFragmentManagerField = f;
-    }
-
     @Override
     public void onDetach() {
         super.onDetach();
+    }
 
-        if (sChildFragmentManagerField != null) {
-            try {
-                sChildFragmentManagerField.set(this, null);
-            } catch (Exception e) {
-                e.getLocalizedMessage();
-                Crashlytics.logException(e);
-                Timber.e("Error setting mChildFragmentManager field %s", e.getLocalizedMessage());
-            }
-        }
+    @Override
+    public Loader<List<Launch>> onCreateLoader(int id, Bundle args) {
+        return new PreviousLoader(getContext());
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Launch>> loader, List<Launch> data) {
+        adapter.clear();
+        adapter.addItems(data);
+        hideLoading();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Launch>> loader) {
     }
 }
+
+

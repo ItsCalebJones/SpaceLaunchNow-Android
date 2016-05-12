@@ -4,8 +4,10 @@ package me.calebjones.spacelaunchnow.ui.fragment.launches;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,9 +37,11 @@ import com.crashlytics.android.answers.ContentViewEvent;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
+import com.google.android.gms.maps.MapView;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import butterknife.Bind;
@@ -144,7 +148,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
             smallAdapter = new LaunchSmallAdapter(getActivity());
         } else {
             if (adapter == null) {
-                adapter = new LaunchBigAdapter(getActivity().getApplicationContext(), getActivity());
+                adapter = new LaunchBigAdapter(getActivity());
             }
         }
 
@@ -244,10 +248,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         if (this.sharedPreference.getUpcomingFirstBoot()) {
             this.sharedPreference.setUpcomingFirstBoot(false);
             Timber.d("Upcoming Launch Fragment: First Boot.");
-            if (this.sharedPreference.getLaunchesUpcoming() == null || this.sharedPreference.getLaunchesUpcoming().size() == 0) {
-                showLoading();
-                fetchData();
-            } else {
+            if (this.sharedPreference.getLaunchesUpcoming() != null) {
                 this.rocketLaunches.clear();
                 displayLaunches();
             }
@@ -343,11 +344,9 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                 if (cardSizeSmall) {
                     smallAdapter.clear();
                     smallAdapter.addItems(rocketLaunches);
-                    smallAdapter.notifyDataSetChanged();
                 } else {
                     adapter.clear();
                     adapter.addItems(rocketLaunches);
-                    adapter.notifyDataSetChanged();
                 }
             }
         }
@@ -425,6 +424,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
 
     public void fetchData() {
         this.sharedPreference.removeUpcomingLaunches();
+        Timber.v("Sending GET_UP_LAUNCHES");
         Intent intent = new Intent(getContext(), LaunchDataService.class);
         intent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
         Timber.d("Sending service intent!");
@@ -443,11 +443,68 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     public void onResume() {
         setTitle();
         Timber.d("OnResume!");
-        //TODO test this
         if (Utils.getVersionCode(context) != switchPreferences.getVersionCode()) {
             showChangelogSnackbar();
         }
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
+        intentFilter.addAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
+
+        getActivity().registerReceiver(nextLaunchReceiver, intentFilter);
+
+        if (adapter != null) {
+            HashSet<MapView> maps = adapter.getMaps();
+            for (MapView map : maps) {
+                map.onResume();
+            }
+        }
         super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        getActivity().unregisterReceiver(nextLaunchReceiver);
+        if (adapter != null) {
+            HashSet<MapView> maps = adapter.getMaps();
+            for (MapView map : maps) {
+                map.onPause();
+            }
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onLowMemory(){
+        if (adapter != null) {
+            HashSet<MapView> maps = adapter.getMaps();
+            for (MapView map : maps) {
+                map.onLowMemory();
+            }
+        }
+        super.onLowMemory();
+    }
+
+    @Override
+    public void onDestroy(){
+        if (adapter != null) {
+            HashSet<MapView> maps = adapter.getMaps();
+            for (MapView map : maps) {
+                map.onDestroy();
+            }
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (adapter != null) {
+            HashSet<MapView> maps = adapter.getMaps();
+            for (MapView map : maps) {
+                map.onSaveInstanceState(outState);
+            }
+        }
+        super.onSaveInstanceState(outState);
     }
 
     private void showChangelogSnackbar() {
@@ -474,6 +531,26 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         snackbar.show();
     }
 
+    private final BroadcastReceiver nextLaunchReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Timber.v("Received: %s", intent.getAction());
+            if (intent.getAction().equals(Strings.ACTION_SUCCESS_UP_LAUNCHES)){
+                onFinishedRefreshing();
+            } else if (intent.getAction().equals(Strings.ACTION_FAILURE_UP_LAUNCHES)){
+                hideLoading();
+                showErrorSnackbar(intent.getStringExtra("error"));
+            }
+        }
+    };
+
+    private void showErrorSnackbar(String error) {
+        Snackbar
+                .make(coordinatorLayout, "Error - " + error, Snackbar.LENGTH_LONG)
+                .setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
+                .show();
+    }
+
     @Override
     public void onRefresh() {
         fetchData();
@@ -497,6 +574,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                 view.findViewById(R.id.progress_View);
         progressView.setVisibility(View.GONE);
         progressView.resetAnimation();
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     //Currently only used to debug
