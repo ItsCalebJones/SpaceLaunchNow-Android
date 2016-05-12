@@ -96,6 +96,7 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
         }
 
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            switchPreferences = SwitchPreferences.getInstance(getActivity());
             Timber.d("onSharedPreferenceChanged:  %s ", key);
             try {
                 if (key.equals("notifications")) {

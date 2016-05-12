@@ -5,13 +5,20 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,11 +28,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
-import android.widget.FrameLayout;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
@@ -42,9 +47,11 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.MainActivity;
-import me.calebjones.spacelaunchnow.content.adapter.LaunchCompactAdapter;
+import me.calebjones.spacelaunchnow.content.adapter.LaunchAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.content.loader.PreviousLoader;
+import me.calebjones.spacelaunchnow.content.loader.UpcomingLoader;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.R;
@@ -54,11 +61,11 @@ import timber.log.Timber;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
+public class UpcomingLaunchesFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Launch>>, SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
 
     private View view;
     private RecyclerView mRecyclerView;
-    private LaunchCompactAdapter adapter;
+    private LaunchAdapter adapter;
     private LinearLayoutManager layoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<Launch> rocketLaunches;
@@ -69,22 +76,13 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
     private FloatingActionButton agency, vehicle, country, location, reset;
     private int mScrollOffset = 4;
     private Context context;
+    private CoordinatorLayout coordinatorLayout;
 
     private static final Field sChildFragmentManagerField;
 
     public UpcomingLaunchesFragment() {
         // Required empty public constructor
     }
-
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        SharedPreferences = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getActivity());
-        this.listPreference = ListPreferences.getInstance(getContext());
-        this.switchPreferences = SwitchPreferences.getInstance(getContext());
-        this.rocketLaunches = new ArrayList();
-        adapter = new LaunchCompactAdapter(getContext());
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -103,6 +101,12 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
 
         setHasOptionsMenu(true);
 
+        SharedPreferences = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getContext());
+        this.listPreference = ListPreferences.getInstance(getContext());
+        this.switchPreferences = SwitchPreferences.getInstance(getContext());
+        this.rocketLaunches = new ArrayList();
+        adapter = new LaunchAdapter(getContext());
+
         LayoutInflater lf = getActivity().getLayoutInflater();
 
         view = lf.inflate(R.layout.fragment_launches, container, false);
@@ -111,21 +115,11 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
         vehicle = (FloatingActionButton) view.findViewById(R.id.vehicle);
         country = (FloatingActionButton) view.findViewById(R.id.location);
         location = (FloatingActionButton) view.findViewById(R.id.launch_location);
+        coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.coordinatorLayout);
 
         reset = (FloatingActionButton) view.findViewById(R.id.reset);
         menu = (FloatingActionMenu) view.findViewById(R.id.menu);
 
-        FrameLayout mInterceptorFrame = (FrameLayout) view.findViewById(R.id.fl_interceptor);
-        mInterceptorFrame.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (menu.isOpened()) {
-                    menu.close(true);
-                    return true;
-                }
-                return false;
-            }
-        });
                 /*Set up Pull to refresh*/
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.launches_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -149,9 +143,7 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
                         menu.showMenu(true);
                     }
                 }
-
             }
-
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -160,21 +152,24 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
 
         if (this.listPreference.getUpcomingFirstBoot()) {
             this.listPreference.setUpcomingFirstBoot(false);
-            Timber.d("Upcoming Launch Fragment: First Boot.");
-            if (this.listPreference.getLaunchesUpcoming().size() == 0) {
-                showLoading();
-                fetchData();
-            } else {
-                this.rocketLaunches.clear();
-                displayLaunches();
-            }
-        } else {
-            Timber.d("Upcoming Launch Fragment: Not First Boot.");
-            this.rocketLaunches.clear();
-            displayLaunches();
         }
+        CircularProgressView progressView = (CircularProgressView)
+                view.findViewById(R.id.progress_View);
+        progressView.setVisibility(View.VISIBLE);
+        progressView.startAnimation();
         setUpFab();
         return view;
+    }
+
+    public static UpcomingLaunchesFragment newInstance(String text) {
+
+        UpcomingLaunchesFragment u = new UpcomingLaunchesFragment();
+        Bundle b = new Bundle();
+        b.putString("msg", text);
+
+        u.setArguments(b);
+
+        return u;
     }
 
     private void setUpFab() {
@@ -371,14 +366,18 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
     }
 
     public void displayLaunches() {
+        long time = System.currentTimeMillis();
+        Timber.v("Getting list!");
         if (!switchPreferences.getUpFiltered()) {
             rocketLaunches = listPreference.getLaunchesUpcoming();
         } else {
             rocketLaunches = listPreference.getLaunchesUpcomingFiltered();
         }
+        Timber.v("Getting list took %s", Math.abs(time - System.currentTimeMillis()));
 
         if (rocketLaunches.size() == 0) {
             Timber.v("Upcoming launches is empty...");
+            Snackbar.make(coordinatorLayout, "Error displaying launch data.", Snackbar.LENGTH_LONG).show();
         } else {
             adapter.clear();
             List<Launch> goList = new ArrayList<>();
@@ -396,30 +395,61 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
     }
 
     public void fetchData() {
-        this.listPreference.removeUpcomingLaunches();
+        Timber.d("Sending GET_UP_LAUNCHES");
         Intent intent = new Intent(getContext(), LaunchDataService.class);
         intent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
-        Timber.d("Sending service intent!");
         getContext().startService(intent);
     }
 
 
-    public void showLoading() {
-        CircularProgressView progressView = (CircularProgressView)
-                view.findViewById(R.id.progress_View);
-        progressView.setVisibility(View.VISIBLE);
-        progressView.startAnimation();
+    private void showLoading() {
+        if(!mSwipeRefreshLayout.isRefreshing()){
+            mSwipeRefreshLayout.setRefreshing(true);
+        }
     }
 
+    private void hideLoading() {
+        if(mSwipeRefreshLayout.isRefreshing()){
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+        CircularProgressView progressView = (CircularProgressView)
+                view.findViewById(R.id.progress_View);
+        progressView.setVisibility(View.GONE);
+        progressView.resetAnimation();
+    }
+
+    private final BroadcastReceiver nextLaunchReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Timber.v("Received: %s", intent.getAction());
+            hideLoading();
+            if (intent.getAction().equals(Strings.ACTION_SUCCESS_UP_LAUNCHES)) {
+                displayLaunches();
+            } else if (intent.getAction().equals(Strings.ACTION_FAILURE_UP_LAUNCHES)) {
+                Snackbar.make(coordinatorLayout, intent.getStringExtra("error"), Snackbar.LENGTH_LONG).show();
+            }
+        }
+    };
 
     @Override
     public void onResume() {
         Timber.d("OnResume!");
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
+        intentFilter.addAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
+
+        getActivity().registerReceiver(nextLaunchReceiver, intentFilter);
+        getLoaderManager().initLoader(1, null, this).forceLoad();
         super.onResume();
     }
 
+    @Override
+    public void onPause() {
+        getActivity().unregisterReceiver(nextLaunchReceiver);
+        super.onPause();
+    }
+
     public void onRefresh() {
-        adapter.clear();
         switchPreferences.setUpFiltered(false);
         switchPreferences.resetAllUpFilters();
         fetchData();
@@ -530,5 +560,36 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
             }
         }
         return filteredModelList;
+    }
+
+    @Override
+    public Loader<List<Launch>> onCreateLoader(int id, Bundle args) {
+        return new UpcomingLoader(getContext());
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Launch>> loader, List<Launch> data) {
+        if (data.size() == 0) {
+            Timber.v("Upcoming launches is empty...");
+            Snackbar.make(coordinatorLayout, "Error displaying launch data.", Snackbar.LENGTH_LONG).show();
+        } else {
+            adapter.clear();
+            List<Launch> goList = new ArrayList<>();
+            List<Launch> noList = new ArrayList<>();
+            for (int i = 0; i < data.size(); i++) {
+                if (data.get(i).getStatus() == 1) {
+                    goList.add(data.get(i));
+                } else {
+                    noList.add(data.get(i));
+                }
+            }
+            goList.addAll(noList);
+            adapter.addItems(goList);
+        }
+        hideLoading();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Launch>> loader) {
     }
 }

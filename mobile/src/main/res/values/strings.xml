@@ -1,6 +1,5 @@
 <resources>
     <string name="application_name">Space Launch Now</string>
-    <string name="title_activity_main">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
@@ -8,20 +7,8 @@
     <string name="status_nogo">"Launch is NO GO"</string>
     <string name="status_success">"Successful Launch"</string>
     <string name="status_failure">"Launch Failure"</string>
-    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ac malesuada dolor. Nulla velit augue, vulputate nec turpis id, malesuada commodo risus. Suspendisse ac posuere urna. Fusce eu cursus lacus. Aliquam dignissim sodales urna, id porttitor lectus rhoncus sit amet. Mauris semper neque libero, at ornare eros ullamcorper non. Integer condimentum a dolor in commodo. Sed nec nunc a metus ullamcorper dignissim a blandit eros. Nam a tortor nisi. Curabitur vehicula maximus metus vel imperdiet.\n\n
-
-Morbi vel lorem enim. Nullam eget metus lectus. Mauris a leo velit. Suspendisse iaculis venenatis lacinia. Donec accumsan at turpis vitae sodales. Proin auctor egestas nulla et lobortis. Nam tempus vehicula orci ac sollicitudin. Nam ut elit vitae turpis placerat egestas id et orci. \n\n
-
-Nulla tristique elit nulla, eu laoreet diam commodo vel. Donec et ligula at lacus pellentesque blandit. Nulla ligula libero, rhoncus eget nulla sed, blandit fringilla erat. Vestibulum aliquam tempus volutpat. Integer fermentum, sapien ac laoreet imperdiet, risus felis sollicitudin justo, et maximus velit turpis nec massa. Nullam elementum pharetra erat sit amet ultrices. Aenean ut mi enim. Pellentesque magna augue, porta ac nulla ut, condimentum maximus sapien. Integer maximus, purus id faucibus congue, tortor lectus condimentum lacus, vitae fringilla lectus risus eget lacus. Morbi vehicula dapibus sem nec lobortis. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam blandit orci et dui venenatis luctus. Etiam eros nisl, facilisis nec orci elementum, commodo mollis arcu.\n\n
-
-Nulla pretium vehicula lacus. Etiam facilisis tortor a urna rutrum, sit amet iaculis odio tristique. Donec et urna non tellus ornare cursus. Sed facilisis in risus eget tincidunt. Donec quis placerat ex. Quisque condimentum lorem sollicitudin efficitur accumsan. Vestibulum malesuada quam odio, at facilisis ipsum ullamcorper quis. Etiam euismod finibus tellus sed fermentum. Cras sollicitudin, purus id pulvinar vehicula, est urna tincidunt urna, hendrerit vestibulum mauris elit vitae erat. Praesent ac diam sed eros molestie feugiat ac id metus. Pellentesque eget leo elementum, sagittis velit non, semper nisl. Maecenas blandit consequat aliquet. \n\n
-
-Quisque tincidunt magna quis viverra faucibus. Vivamus rhoncus elit vel mi tristique mattis. Curabitur dapibus consectetur tempus. Nulla scelerisque arcu gravida vulputate accumsan. Mauris metus odio, mollis ut tincidunt in, vestibulum quis augue. Donec pulvinar pharetra diam vel mattis. Aenean in erat aliquet, ornare dui vehicula, iaculis dui. Duis tempor dolor interdum nunc fermentum, sit amet aliquet tellus placerat. Nunc posuere tempor aliquam. Nam at tincidunt mi, vel congue diam. Aliquam ultricies pellentesque tortor venenatis faucibus. Maecenas sagittis lobortis lacus, vitae ornare sapien facilisis vel. Fusce eleifend mauris eu malesuada efficitur. Nulla congue orci in rutrum sodales. Cras et suscipit purus. Sed ultrices erat in libero lacinia, quis consequat sem rhoncus.</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="settings">Settings</string>
-    <string name="instant_window">An instantaneous window is often used when trying to reach time specific orbits such as when docking with the International Space Station.</string>
-    <string name="launch_explainer">In the context of spaceflight, a launch window is a time period during which a particular launch vehicle must be launched in order to reach its intended target. If the rocket is not launched within the \'window\', it has to wait for the next window. - Wikipedia</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="spacex_summary">SpaceX designs, manufactures and launches advanced rockets and spacecraft. The company was founded in 2002 to revolutionize space technology, with the ultimate goal of enabling people to live on other planets.</string>
     <string name="usaf_summary">The United States Air Force is the aerial warfare service branch of the United States Armed Forces and one of the seven American uniformed services.</string>
     <string name="casc_summary">The China Aerospace Science and Technology Corporation(CASC) is the main contractor for the Chinese space program. It is state-owned and has a number of subordinate entities which design, develop and manufacture a range of spacecraft, launch vehicles, strategic and tactical missile systems, and ground equipment.</string>
@@ -34,14 +21,7 @@ Quisque tincidunt magna quis viverra faucibus. Vivamus rhoncus elit vel mi trist
     <string name="asa_summary">Arianespace SA is a French multinational company founded in 1980 as the world\'s first commercial launch service provider.</string>
     <string name="TsSKB_summary">The Progress State Research and Production Space Centre, also known as TsSKB-Progress, is a Russian \"Federal State Unitary Enterprise\" under the jurisdiction of Roscosmos, the Russian Federal Space Agency responsible for space science and aerospace research. It is the developer of the famous Soyuz-FG rocket used for manned space flight, as well as Soyuz-U used for launching unmanned probes.</string>
     <string name="nasa_summary">The National Aeronautics and Space Administration (NASA) is the United States government agency responsible for the civilian space program as well as aeronautics and aerospace research.</string>
-    <string name="soyuz_description">The Soyuz TMA-M is an upgrade of the baseline Soyuz-TMA, using a new computer, digital interior displays, updated docking equipment and vehicle\'s total mass has been reduced by 70 kilograms. This new version debuted on 7 October 2010 with the launch of TMA-01M, carrying the ISS Expedition 25 crew. The Soyuz TMA-08M set a new record for the fastest manned docking into space station, event utilized the new 6-hour fast rendezvous instead of the previous Soyuz launches which had, since 1986, taken two days.</string>
-    <string name="soyuz_history_description">Soyuz is a series of spacecraft designed for the Soviet space programme by the Korolyov Design Bureau (now RKK Energia) in the 1960s that remains in service today. The Soyuz succeeded the Voskhod spacecraft and was originally built as part of the Soviet Manned Lunar programme. \n\n The Soyuz spacecraft is launched on a Soyuz rocket, the most frequently used and most reliable launch vehicle in the world to date. The Soyuz rocket design is based on the Vostok launcher, which in turn was based on the 8K74 or R-7A Semyorka, a Soviet intercontinental ballistic missile. All Soyuz spacecraft are launched from the Baikonur Cosmodrome in Kazakhstan.</string>
-    <string name="shenzhou_history">Shenzhou is a spacecraft dev Its design resembles the Russian Soyuz spacecraft, but it is larger in size and all-new in construction. The first launch was on November 19, 1999 and the first manned launch was on October 15, 2003.</string>
-    <string name="shenzhou_description">The Shenzhou spacecraft resembles the Soyuz, although it is longer, with a larger habitable volume. It features a powered service module like the Soyuz, and prior to Shenzhou 8 its orbital module was capable of autonomous flight. The general designer of Shenzhou-1 through Shenzhou-5 was Mr. Qi Faren (戚发轫, Apr 26, 1933 -), and from Shenzhou-6 on, the general design was turned over to Mr. Zhang Bainan (张柏楠, Jun 23, 1962 -).</string>
-    <string name="dragon_history">Dragon is a spacecraft developed by SpaceX, an American private space transportation company based in Hawthorne, California. Dragon is launched into space by the SpaceX Falcon 9 two-stage-to-orbit launch vehicle, and SpaceX is developing a crewed version called the Dragon V2.</string>
-    <string name="dragon_description">SpaceX is additionally developing a crewed variant of the Dragon called Dragon V2. Dragon V2 will be able to carry up to seven astronauts, or some combination of crew and cargo, to and from low Earth orbit. The V2 heat shield is designed to withstand Earth re-entry velocities from Lunar and Martian spaceflights.</string>
-    <string name="orion_history">The Orion Multi-Purpose Crew Vehicle (Orion MPCV) is an American spacecraft intended to carry a crew of four astronauts to destinations at or beyond low Earth orbit (LEO). Currently under development by NASA for launch on the Space Launch System, Orion is intended to facilitate human exploration of asteroids and of Mars, as well as to provide a means of delivering or retrieving crew or supplies from the ISS if needed.</string>
-    <string name="orion_description">The Orion MPCV takes basic design elements from the Apollo Command Module that took astronauts to the moon, but its technology and capability are more advanced. It is designed to support long-duration deep space missions, with up to 21 days active crew time plus 6 months quiescent. During the quiescent period crew life support would be provided by another module such as a Deep Space Habitat. The spacecraft\'s life support, propulsion, thermal protection and avionics systems are designed to be upgradeable as new technologies become available. \n\n The MPCV spacecraft includes both crew and service modules, and a spacecraft adaptor. The MPCV\'s crew module is larger than Apollo\'s and can support more crew members for short or long-duration missions. The service module fuels and propels the spacecraft as well as storing oxygen and water for astronauts. The service module\'s structure is also being designed to provide locations to mount scientific experiments and cargo.</string>
+
     <string name="spacex_logo">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950103/3BqROn0_pfsamc.jpg</string>
     <string name="Yuzhnoye_logo">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950107/KnDMy7l_ua9lnu.png</string>
     <string name="usa_flag">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950350/usa_flag_pewvgy.png</string>
@@ -51,46 +31,24 @@ Quisque tincidunt magna quis viverra faucibus. Vivamus rhoncus elit vel mi trist
     <string name="ind_logo">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950125/Caj9kpG_xo8s1g.png</string>
     <string name="jpn_logo">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950129/QOdDYa5_dhdlct.png</string>
     <string name="ariane_logo">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950133/yffq0aI_oyyhmj.jpg</string>
-    <string name="soyuz_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944167/soyuz_rjwr7s.jpg</string>
-    <string name="falcon_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/falcon_xtbyia.jpg</string>
-    <string name="proton_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/proton_yaojbm.jpg</string>
-    <string name="delta_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/delta_lbwmgy.jpg</string>
-    <string name="ariane_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/ariane_qouki7.jpg</string>
-    <string name="shuttle_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944167/shuttle_vc2xnw.jpg</string>
-    <string name="long_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/long_ywtbw6.jpg</string>
-    <string name="atlas_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944166/atlas_ahqjya.jpg</string>
-    <string name="pslv_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944167/pslv_vjcdww.jpg</string>
-    <string name="vega_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944167/vega_tnkdms.jpg</string>
-    <string name="zenit_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944167/zenit_hxl4gd.jpg</string>
-    <string name="soyuz_orbiter_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944174/soyuz_snfim6.jpg</string>
-    <string name="shenzhou_orbiter_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944173/shenzhou_vzayjm.jpg</string>
-    <string name="dragon_orbiter_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944174/dragon_q9cxq9.jpg</string>
-    <string name="orion_orbiter_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944173/orion_sgl9rs.jpg</string>
     <string name="title_activity_debug">DebugActivity</string>
     <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
 
-    <string name="new_version">1.0.0</string>
     <string name="whats_new_content">These are features that will likely take significant development effort to ensure a quality product. Initially i\'m hoping to deliver syncing all upcoming events to calendar and custom watchface backgrounds and settings.\n\n
         Fixes and Features!\n
-    \u2022Added a Contribute page that allows you to become a Supporter.\n
-        \u2022Added an About menu with links to libraries used.\n
-        \u2022Fixed Experimental \'Add to Calendar\' feature and added multiple reminders.\n
-        \u2022Fixed width of splash screen text.</string>
-        <string name="whats_new_content_html">\u2022 Added an About menu with links to libraries used.
-        <![CDATA[<br/>]]>\u2022
-    </string>
-    <string name="previous_changelog_html">v1.0-beta.12
-        <![CDATA[<br/>]]>\u2022
+    \u2022Added ShowcaseView to tutorial and first launch to demonstrate how to filter launch notifications.\n
+    \u2022Fixed NightMode issues in several UI fields.\n
+    \u2022Streamlined data usage, using about 5-10% of the bandwidth of previous versions.\n
+    \u2022Fixed various crashes.\n
+        \u2022Added robust error handling.\n
+        \u2022UI performance increases on older or low RAM devices.\n
+        \u2022Fixed a battery drain issue when network is spotty.\n
+
     </string>
     <string name="link_feedback">https://www.reddit.com/r/spacelaunchnow</string>
     <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>
 
     <string name="title_activity_fullscreen_image">FullscreenImageActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="title_activity_support">SupportActivity</string>
-
-    <string name="hello_world">Hello world!</string>
 
     <string name="supporter_title">Be a Supporter</string>
     <string name="supporter_description">By becoming a supporter you ensure continued updates and timely bug fixes, as well as access to supporter only features. Pay what you want, you\'ll get the same value.</string>

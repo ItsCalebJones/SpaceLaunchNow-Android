@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/vehicle_container"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
@@ -35,7 +36,7 @@
                     android:layout_height="175dp"
                     android:scaleType="centerCrop"
                     android:transitionName="imageCover"
-                    android:src="@drawable/placeholder"
+                    app:srcCompat="@drawable/placeholder"
                     android:elevation="2dp" />
 
             </FrameLayout>
@@ -272,7 +273,7 @@
         android:layout_marginRight="20dp"
         android:clickable="true"
         android:elevation="8dp"
-        android:src="@drawable/ic_fullscreen"
+        app:srcCompat="@drawable/ic_fullscreen"
         app:backgroundTint="@color/darkAccent"
         app:layout_anchor="@id/item_icon"
         app:layout_anchorGravity="bottom|right|end"/>

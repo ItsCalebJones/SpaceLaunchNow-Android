@@ -48,16 +48,15 @@ public class NextLaunchTracker extends IntentService implements
         GoogleApiClient.OnConnectionFailedListener {
 
     private Launch nextLaunch;
-    private Launch storedLaunch;
+    private Launch updatedLaunch;
+    private boolean wear = false;
     private SharedPreferences sharedPref;
     private ListPreferences listPreferences;
     private SwitchPreferences switchPreferences;
-    public static List<Launch> upcomingLaunchList;
+    private List<Launch> upcomingLaunchList;
     private Calendar rightNow;
     private AlarmManager alarmManager;
     private long interval;
-    private static final String NAME_KEY = "me.calebjones.spacelaunchnow.wear.nextname";
-    private static final String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -97,11 +96,10 @@ public class NextLaunchTracker extends IntentService implements
             scheduleUpdate();
 
             //If Calendar Sync is enabled sync it up
-            if (switchPreferences.getCalendarStatus()){
+            if (switchPreferences.getCalendarStatus()) {
                 syncCalendar();
             }
         }
-        stopSelf();
     }
 
     private void checkNextLaunch() {
@@ -109,69 +107,59 @@ public class NextLaunchTracker extends IntentService implements
 
         if (upcomingLaunchList != null && upcomingLaunchList.size() > 0) {
             nextLaunch = upcomingLaunchList.get(0);
-            storedLaunch = listPreferences.getNextLaunch();
+            updatedLaunch = listPreferences.getNextLaunch();
         }
 
         //Check if the stored launch is still the next launch.
-        if (storedLaunch != null && nextLaunch != null) {
+        if (updatedLaunch != null && nextLaunch != null) {
 
-            //If they do not match this means nextLaunch has changed IE a launch executed.
-            if (nextLaunch.getId().intValue() != storedLaunch.getId().intValue()) {
-                this.listPreferences.setNextLaunch(nextLaunch);
-                this.switchPreferences.setPrevFiltered(false);
+            //If they do not match this means nextLaunch has changed (launch executed, filter change, etc)
+            if (nextLaunch.getId().intValue() != updatedLaunch.getId().intValue()) {
 
-                Intent updatePreviousLaunches = new Intent(this, LaunchDataService.class);
-                updatePreviousLaunches.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
-                updatePreviousLaunches.putExtra("URL", Utils.getBaseURL());
-                startService(updatePreviousLaunches);
-
-                checkStatus(nextLaunch);
+                debugNotification(String.format("Launch has changed - Next: %s Updated: %s"
+                        , nextLaunch.getId(), updatedLaunch.getId()));
+                listPreferences.setNextLaunch(updatedLaunch);
+                Timber.v("Launch has changed - Next: %s Updated: %s", nextLaunch.getId(), updatedLaunch.getId());
+                checkStatus(updatedLaunch);
 
                 //They do match, check if the launch time has moved.
-            } else {
+            } else if (listPreferences.getNextLaunchTimestamp() != 0) {
+                if (Math.abs(listPreferences.getNextLaunchTimestamp()
+                        - updatedLaunch.getNetstamp()) > 60) {
+                    debugNotification(String.format("Resetting notifiers - List: %s Stored: %s "
+                            , listPreferences.getNextLaunchTimestamp(), nextLaunch.getNetstamp()));
+                    updatedLaunch.resetNotifiers();
+                    listPreferences.setNextLaunchTimestamp(updatedLaunch.getNetstamp());
 
-                if (Math.abs(nextLaunch.getNetstamp() - storedLaunch.getNetstamp()) > 60) {
-
-                    listPreferences.setNextLaunch(nextLaunch);
-                    upcomingLaunchList.set(0, nextLaunch);
-                    listPreferences.setNextLaunches(upcomingLaunchList);
-                    checkStatus(nextLaunch);
-
-                    Intent broadcastIntent = new Intent();
-                    broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
-                    this.getApplicationContext().sendBroadcast(broadcastIntent);
-
+                    resetAndCheck(updatedLaunch);
                 } else {
-                    if (storedLaunch.getIsNotifiedDay()) {
-                        nextLaunch.setIsNotifiedDay(true);
-                    }
-                    if (storedLaunch.getIsNotifiedHour()) {
-                        nextLaunch.setIsNotifiedhour(true);
-                    }
-                    if (storedLaunch.getIsNotifiedTenMinute()) {
-                        nextLaunch.setIsNotifiedTenMinute(true);
-                    }
-                    if (storedLaunch.isFavorite()) {
-                        nextLaunch.isFavorite();
-                    }
-                    if (storedLaunch.getCalendarID() != null){
-                        nextLaunch.setCalendarID(storedLaunch.getCalendarID());
-                    }
-
-                    listPreferences.setNextLaunch(nextLaunch);
-                    upcomingLaunchList.set(0, nextLaunch);
-                    listPreferences.setNextLaunches(upcomingLaunchList);
-                    checkStatus(nextLaunch);
+                    resetAndCheck(updatedLaunch);
                 }
+            } else if (updatedLaunch.getNetstamp() != 0) {
+                listPreferences.setNextLaunchTimestamp(updatedLaunch.getNetstamp());
+                debugNotification("Updated timestamp to " + updatedLaunch.getNetstamp());
+                resetAndCheck(updatedLaunch);
+            } else {
+                resetAndCheck(updatedLaunch);
             }
         } else if (nextLaunch != null) {
             this.listPreferences.setNextLaunch(nextLaunch);
             checkStatus(nextLaunch);
         }
         //If Calendar Sync is enabled sync it up
-        if (switchPreferences.getCalendarStatus()){
+        if (switchPreferences.getCalendarStatus()) {
             syncCalendar();
         }
+    }
+
+    private void resetAndCheck(Launch updatedLaunch) {
+        upcomingLaunchList.set(0, updatedLaunch);
+        listPreferences.setNextLaunches(upcomingLaunchList);
+        checkStatus(updatedLaunch);
+
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
+        this.getApplicationContext().sendBroadcast(broadcastIntent);
     }
 
     private void syncCalendar() {
@@ -186,7 +174,7 @@ public class NextLaunchTracker extends IntentService implements
             listPreferences.setNextLaunch(launch);
         } else {
             //Try to update, if it fails create event.
-            if (!provider.updateEvent(this, launch)){
+            if (!provider.updateEvent(this, launch)) {
                 Integer id = provider.addEvent(this, launch);
                 launch.setCalendarID(id);
                 listPreferences.setNextLaunch(launch);
@@ -214,12 +202,14 @@ public class NextLaunchTracker extends IntentService implements
                     if (notify) {
                         int minutes = (int) ((timeToFinish / (1000 * 60)) % 60);
                         //Check settings to see if user should be notified.
-                        if (this.sharedPref.getBoolean("notifications_launch_minute", false)) {
-                            if (!launch.getIsNotifiedTenMinute()) {
-                                notifyUserImminent(launch, minutes);
-                                launch.setIsNotifiedTenMinute(true);
-                                this.listPreferences.setNextLaunch(launch);
-                            }
+                        if (!launch.getIsNotifiedTenMinute() && this.sharedPref.getBoolean("notifications_launch_minute", false)) {
+                            notifyUserImminent(launch, minutes);
+                            launch.setIsNotifiedTenMinute(true);
+                            this.listPreferences.setNextLaunch(launch);
+                        } else if (!launch.getIsNotifiedHour() && this.sharedPref.getBoolean("notifications_launch_imminent", true)) {
+                            notifyUserImminent(launch, minutes);
+                            launch.setIsNotifiedhour(true);
+                            this.listPreferences.setNextLaunch(launch);
                         }
                     }
                     interval = (future.getTimeInMillis() + 3600000);
@@ -306,7 +296,7 @@ public class NextLaunchTracker extends IntentService implements
 
         PendingIntent appIntent = PendingIntent.getActivity(this, 0, mainActivityIntent, 0);
 
-        Intent shareLaunch = Utils.buildIntent(launch);
+        Intent shareLaunch = Utils.buildShareIntent(launch);
         PendingIntent sharePendingIntent = PendingIntent.getActivity(this, 0, shareLaunch, 0);
 
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -326,6 +316,7 @@ public class NextLaunchTracker extends IntentService implements
                         .bigText(expandedText)
                         .setSummaryText(launchDate))
                 .extend(wearableExtender)
+                .setContentIntent(appIntent)
                 .setSound(alarmSound)
                 .addAction(R.drawable.ic_menu_share_white, "Share", sharePendingIntent);
 
@@ -423,19 +414,37 @@ public class NextLaunchTracker extends IntentService implements
         return cal;
     }
 
+    public void debugNotification(String message) {
+        if (BuildConfig.DEBUG) {
+            long time = new Date().getTime();
+            String tmpStr = String.valueOf(time);
+            String last4Str = tmpStr.substring(tmpStr.length() - 5);
+            int notificationId = Integer.valueOf(last4Str);
+
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
+            mBuilder.setContentTitle("Debug Notification")
+                    .setSmallIcon(R.drawable.ic_notification)
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+
+            NotificationManager mNotifyManager = (NotificationManager)
+                    getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotifyManager.notify(notificationId, mBuilder.build());
+        }
+    }
+
     public void scheduleUpdate() {
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         long nextUpdate = Calendar.getInstance().getTimeInMillis() + interval;
 
         if (BuildConfig.DEBUG) {
-            storedLaunch = listPreferences.getNextLaunch();
+            updatedLaunch = listPreferences.getNextLaunch();
             upcomingLaunchList = listPreferences.getNextLaunches();
 
             if (upcomingLaunchList != null && upcomingLaunchList.size() > 0) {
                 nextLaunch = upcomingLaunchList.get(0);
             }
 
-            if (nextLaunch != null && storedLaunch != null) {
+            if (nextLaunch != null && updatedLaunch != null) {
                 // Create a DateFormatter object for displaying date in specified format.
                 SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss zz");
                 Calendar calendar = Calendar.getInstance();
@@ -451,7 +460,7 @@ public class NextLaunchTracker extends IntentService implements
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
                 mBuilder.setContentTitle("LaunchData Worked! - Next Launch")
                         .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText("Next Launch = " + nextLaunch.getName() + "\n\nStored Launch = " + storedLaunch.getName())
+                                .bigText("Next Launch = " + nextLaunch.getName() + "\n\nStored Launch = " + updatedLaunch.getName())
                                 .setSummaryText(String.format("Interval: %s | ", intevalString) + formatter.format(calendar.getTime())))
                         .setSmallIcon(R.drawable.ic_notification)
                         .setAutoCancel(true);
@@ -459,10 +468,12 @@ public class NextLaunchTracker extends IntentService implements
                 NotificationManager mNotifyManager = (NotificationManager)
                         getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
                 mNotifyManager.notify(Strings.NOTIF_ID + 1, mBuilder.build());
+
+                Timber.v("Scheduling Update - Interval: %s | %s", interval, formatter.format(calendar.getTime()));
             }
         }
 
-        if (Utils.checkPlayServices(this)){
+        if (Utils.checkPlayServices(this)) {
             sendToWear(listPreferences.getNextLaunch());
         }
         alarmManager.set(AlarmManager.RTC_WAKEUP, nextUpdate,
@@ -471,34 +482,43 @@ public class NextLaunchTracker extends IntentService implements
 
     // Create a data map and put data in it
     private void sendToWear(Launch launch) {
-        if (launch != null && launch.getName() != null && launch.getNetstamp() != null) {
-            Timber.v("Sending data...");
-            PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/nextLaunch");
+        if (wear) {
+            if(launch != null && launch.getName() != null && launch.getNetstamp() != null) {
+                Timber.v("Sending data to wear...");
+                PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/nextLaunch");
 
-            putDataMapReq.getDataMap().putString(NAME_KEY, launch.getName());
-            putDataMapReq.getDataMap().putInt(TIME_KEY, launch.getNetstamp());
-            putDataMapReq.getDataMap().putLong("time", new Date().getTime());
+                String NAME_KEY = "me.calebjones.spacelaunchnow.wear.nextname";
+                putDataMapReq.getDataMap().putString(NAME_KEY, launch.getName());
+                String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
+                putDataMapReq.getDataMap().putInt(TIME_KEY, launch.getNetstamp());
+                putDataMapReq.getDataMap().putLong("time", new Date().getTime());
 
-            PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
-            Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
-            DataApi.DataItemResult dataItemResult = Wearable.DataApi
-                    .putDataItem(mGoogleApiClient, putDataReq).await();
-            Timber.v("Sent");
+                PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
+                Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
+                DataApi.DataItemResult dataItemResult = Wearable.DataApi
+                        .putDataItem(mGoogleApiClient, putDataReq).await();
+                Timber.v("Sent");
+            }
+        } else {
+            Timber.v("Android Wear not connected.");
         }
     }
 
     @Override
     public void onConnected(Bundle bundle) {
+        wear = true;
         Timber.d("onConnected");
     }
 
     @Override
     public void onConnectionSuspended(int i) {
+        wear = false;
         Timber.e("onConnectionSuspended");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+        wear = false;
         Timber.e("onConnectionFailed %s", connectionResult.getErrorMessage());
     }
 

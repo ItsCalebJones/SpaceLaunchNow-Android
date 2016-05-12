@@ -1,7 +1,10 @@
 package me.calebjones.spacelaunchnow.ui.fragment.launches;
 
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -28,7 +31,6 @@ public class LaunchesViewPager extends Fragment {
     private PreviousLaunchesFragment previousLaunchesFragment;
     private static ListPreferences sharedPreference;
     private Context context;
-
 
 
     @Override
@@ -62,7 +64,7 @@ public class LaunchesViewPager extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
                 current_tab = tab.getPosition();
-                if (tab.getPosition() == 0){
+                if (tab.getPosition() == 0) {
                     ((MainActivity) getActivity()).setActionBarTitle("Space Launch Now");
                 } else {
                     ((MainActivity) getActivity()).setActionBarTitle(sharedPreference.getPreviousTitle());
@@ -83,37 +85,34 @@ public class LaunchesViewPager extends Fragment {
         return inflatedView;
     }
 
-    public void restartViews(String action) {
-        Timber.d("Restarting view: %s", action);
-        if (pagerAdapter != null){
-            if (Strings.ACTION_SUCCESS_UP_LAUNCHES.equals(action) ) {
-                pagerAdapter.notifyDataSetChanged();
-            } else if (Strings.ACTION_SUCCESS_PREV_LAUNCHES.equals(action)) {
-                pagerAdapter.notifyDataSetChanged();
-            }
-        }
-    }
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         // Do your stuff
     }
 
+
+
     @Override
-    public void onPause(){
+    public void onResume() {
+
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
         Timber.d("onPause");
         super.onPause();
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         Timber.d("onStop");
         super.onStop();
     }
 
     @Override
-    public void onDetach(){
+    public void onDetach() {
         Timber.d("onDetach");
         super.onDetach();
     }
@@ -131,12 +130,8 @@ public class LaunchesViewPager extends Fragment {
         public Fragment getItem(int position) {
 
             switch (position) {
-                case 0:
-                    launchesFragment = new UpcomingLaunchesFragment();
-                    return launchesFragment;
-                case 1:
-                    previousLaunchesFragment = new PreviousLaunchesFragment();
-                    return previousLaunchesFragment;
+                case 0: return UpcomingLaunchesFragment.newInstance("Upcoming");
+                case 1: return PreviousLaunchesFragment.newInstance("Previous");
                 default:
                     return null;
             }

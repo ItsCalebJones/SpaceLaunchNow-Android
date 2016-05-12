@@ -281,4 +281,10 @@ public class Launch implements Serializable {
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
+
+    public void resetNotifiers(){
+        isNotifiedDay = false;
+        isNotifiedHour = false;
+        isNotifiedTenMinute = false;
+    }
 }

@@ -67,6 +67,7 @@ public class ListPreferences {
     public static String PREFS_CURRENT_START_DATE;
     public static String PREFS_CURRENT_END_DATE;
     public static String PREFS_LAUNCH_LIST_NEXT;
+    public static String PREFS_NEXT_LAUNCH_TIMESTAMP;
     public static String PREFS_NEXT_LAUNCH;
     public static String PREFS_PREV_LAUNCH;
     public static String PREFS_DEBUG;
@@ -102,6 +103,7 @@ public class ListPreferences {
         PREFS_LIST_PREVIOUS_FILTERED = "LIST_PREVIOUS_FILTERED";
         PREFS_LIST_UPCOMING_FILTERED = "LIST_UPCOMING_FILTERED";
         PREFS_LAST_VEHICLE_UPDATE = "LAST_VEHICLE_UPDATE";
+        PREFS_NEXT_LAUNCH_TIMESTAMP = "NEXT_LAUNCH_TIMESTAMP";
         PREFS_DEBUG = "DEBUG";
         INSTANCE = null;
     }
@@ -148,7 +150,7 @@ public class ListPreferences {
         this.prefsEditor.apply();
     }
 
-    public boolean getDebugLaunch() {
+    public boolean isDebugEnabled() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         return this.sharedPrefs.getBoolean(PREFS_DEBUG, false);
     }
@@ -243,16 +245,13 @@ public class ListPreferences {
         gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
         this.prefsEditor.putString(PREFS_NEXT_LAUNCH, gson.toJson(launch));
         this.prefsEditor.apply();
+    }
 
-        List<Launch> list = getLaunchesUpcoming();
-        if (list != null) {
-            for (int i = 0; i < list.size(); i++) {
-                if (launch.getId().equals(list.get(i).getId())) {
-                    list.set(i, launch);
-                    setUpComingLaunches(list);
-                }
-            }
-        }
+    public void setNextLaunchTimestamp(int timestamp) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putInt(PREFS_NEXT_LAUNCH_TIMESTAMP, timestamp);
+        this.prefsEditor.apply();
     }
 
     public void setPrevLaunch(Launch launch) {
@@ -283,7 +282,7 @@ public class ListPreferences {
 //            }
 //        }
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(appContext);
-        int size = Integer.parseInt(sharedPref.getString("upcoming_value", "10"));
+        int size = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
         launches = filterLaunches(launches);
         if (launches.size() > size) {
             launches = launches.subList(0, size);
@@ -416,6 +415,12 @@ public class ListPreferences {
         return launch;
     }
 
+    public int getNextLaunchTimestamp() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return sharedPref.getInt(PREFS_NEXT_LAUNCH_TIMESTAMP, 0);
+    }
+
 
     public List<Launch> getLaunchesUpcoming() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
@@ -437,42 +442,61 @@ public class ListPreferences {
     }
 
     public List<Launch> getLaunchesPrevious() {
+        long time = System.currentTimeMillis();
+        Timber.v("Starting time: %s", System.currentTimeMillis() - time);
+
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         if (!this.sharedPrefs.contains(PREFS_LIST_PREVIOUS)) {
             return null;
         }
+        Timber.v("getSharedPreference - Ellapsed Time: %s", System.currentTimeMillis() - time);
+
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
+        Timber.v("GsonBuilder - Ellapsed Time: %s", System.currentTimeMillis() - time);
+
         List<Launch> productFromShared;
         SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         String jsonPreferences = sharedPref.getString(PREFS_LIST_PREVIOUS, null);
+        Timber.v("getString - Ellapsed Time: %s", System.currentTimeMillis() - time);
 
         Type type = new TypeToken<List<Launch>>() {
         }.getType();
         productFromShared = gson.fromJson(jsonPreferences, type);
+        Timber.v("productFromShared - Ellapsed Time: %s", System.currentTimeMillis() - time);
 
         if (productFromShared != null) {
             Timber.v("getLaunchesPrevious - Size: %s", productFromShared.size());
+            Timber.v("Show Size - Ellapsed Time: %s", System.currentTimeMillis() - time);
         }
         return productFromShared;
     }
 
     public List<Launch> getLaunchesPreviousFiltered() {
+        long time = System.currentTimeMillis();
+        Timber.v("Starting time: %s", System.currentTimeMillis() - time);
+
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         if (!this.sharedPrefs.contains(PREFS_LIST_PREVIOUS)) {
             return null;
         }
+        Timber.v("getSharedPreference - Ellapsed Time: %s", System.currentTimeMillis() - time);
+
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
+        Timber.v("GsonBuilder - Ellapsed Time: %s", System.currentTimeMillis() - time);
+
         List<Launch> productFromShared;
         SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         String jsonPreferences = sharedPref.getString(PREFS_LIST_PREVIOUS_FILTERED, null);
+        Timber.v("getString - Ellapsed Time: %s", System.currentTimeMillis() - time);
 
         Type type = new TypeToken<List<Launch>>() {
         }.getType();
         productFromShared = gson.fromJson(jsonPreferences, type);
+        Timber.v("productFromShared - Ellapsed Time: %s", System.currentTimeMillis() - time);
         return productFromShared;
     }
 
@@ -773,7 +797,7 @@ public class ListPreferences {
 
     public String getStartDate() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getString(PREFS_CURRENT_START_DATE, "1900-01-01");
+        return this.sharedPrefs.getString(PREFS_CURRENT_START_DATE, "1950-01-01");
     }
 
     public void setEndDate(String endDate) {
@@ -785,7 +809,7 @@ public class ListPreferences {
 
     public String getEndDate() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getString(PREFS_CURRENT_END_DATE, "2016-01-01");
+        return this.sharedPrefs.getString(PREFS_CURRENT_END_DATE, "2016-05-04");
     }
 
     public void setPrevFilter(int type, ArrayList<String> key) {

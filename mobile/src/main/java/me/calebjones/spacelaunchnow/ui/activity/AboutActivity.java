@@ -3,10 +3,8 @@ package me.calebjones.spacelaunchnow.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
@@ -17,15 +15,14 @@ import com.mikepenz.aboutlibraries.ui.LibsActivity;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.utils.Utils;
-import timber.log.Timber;
 
 public class AboutActivity extends LibsActivity {
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         int m_theme;
-        final Context context = this;
 
-        ListPreferences sharedPreference = ListPreferences.getInstance(context);
+        ListPreferences sharedPreference = ListPreferences.getInstance(this);
 
         if (sharedPreference.getNightMode()) {
             m_theme = R.style.AboutLibrariesDark;
@@ -57,8 +54,7 @@ public class AboutActivity extends LibsActivity {
             @Override
             public boolean onExtraClicked(View v, Libs.SpecialButton specialButton) {
                 if(specialButton.ordinal() == 1){
-                    Intent intent = new Intent(getApplicationContext(), SupportActivity.class);
-                    startActivity(intent);
+                    specialButtonOne();
                 } else if (specialButton.ordinal() == 2) {
                     customTabCallback();
                 }
@@ -96,11 +92,17 @@ public class AboutActivity extends LibsActivity {
                 .withAboutSpecial2("Support")
                 .withAboutSpecial3("Change Log")
                 .withFields(R.string.class.getFields())
-                .intent(this));
+                .intent(this.getApplicationContext()));
         super.onCreate(savedInstanceState);
     }
 
-    public void customTabCallback(){
-        Utils.openCustomTab(this, getApplicationContext(), "https://github.com/caman9119/SpaceLaunchNow/releases");
+    private void specialButtonOne() {
+        Intent intent = new Intent(this, SupportActivity.class);
+        startActivity(intent);
     }
+
+    public void customTabCallback(){
+        Utils.openCustomTab(this, this, "https://github.com/caman9119/SpaceLaunchNow/releases");
+    }
+
 }

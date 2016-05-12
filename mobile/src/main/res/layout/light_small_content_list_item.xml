@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
@@ -52,7 +53,7 @@
                     android:layout_gravity="center|left"
                     android:layout_marginLeft="4dp"
                     android:padding="8dp"
-                    android:src="@drawable/ic_mission" />
+                    app:srcCompat="@drawable/ic_mission" />
 
                 <TextView
                     android:id="@+id/launch_rocket"

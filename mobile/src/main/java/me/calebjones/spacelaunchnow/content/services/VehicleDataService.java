@@ -35,7 +35,7 @@ public class VehicleDataService extends IntentService {
 
     public static List<Rocket> vehicleList;
     private SharedPreferences sharedPref;
-    private ListPreferences sharedPreference;
+    private ListPreferences listPreference;
 
     public VehicleDataService() {
         super("VehicleDataService");
@@ -47,7 +47,7 @@ public class VehicleDataService extends IntentService {
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-        this.sharedPreference = ListPreferences.getInstance(getApplicationContext());
+        this.listPreference = ListPreferences.getInstance(getApplicationContext());
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         return super.onStartCommand(intent, flags, startId);
     }
@@ -58,7 +58,7 @@ public class VehicleDataService extends IntentService {
         if (intent != null) {
             String action = intent.getAction();
             if (Strings.ACTION_GET_VEHICLES_DETAIL.equals(action)) {
-                sharedPreference.setLastVehicleUpdate(System.currentTimeMillis());
+                listPreference.setLastVehicleUpdate(System.currentTimeMillis());
                 getVehicleDetails();
                 getVehicles();
             }
@@ -66,6 +66,7 @@ public class VehicleDataService extends IntentService {
                 getVehicles();
             }
         }
+        onDestroy();
     }
 
     private void getVehicleDetails() {
@@ -125,7 +126,13 @@ public class VehicleDataService extends IntentService {
         HttpURLConnection urlConnection = null;
         try {
             /* forming th java.net.URL object */
-            URL url = new URL(Strings.VEHICLE_URL);
+            URL url;
+            //Used for loading debug launches/reproducing bugs
+            if (listPreference.isDebugEnabled()) {
+                url = new URL(Strings.DEBUG_VEHICLE_URL);
+            } else {
+                url = new URL(Strings.VEHICLE_URL);
+            }
 
             urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -148,7 +155,7 @@ public class VehicleDataService extends IntentService {
                 parseUpcomingResult(response.toString());
                 Timber.d("Vehicle list:  %s ", vehicleList.size());
                 VehicleDataService.this.cleanVehiclesCache();
-                this.sharedPreference.setVehiclesList(vehicleList);
+                this.listPreference.setVehiclesList(vehicleList);
 
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_VEHICLES);
@@ -200,7 +207,7 @@ public class VehicleDataService extends IntentService {
     }
 
     private void cleanVehiclesCache() {
-        this.sharedPreference.removeVehicles();
+        this.listPreference.removeVehicles();
     }
 
     private boolean addToDB(StringBuilder response) {
@@ -243,6 +250,7 @@ public class VehicleDataService extends IntentService {
             }
             //Success
             Timber.d("addToDB - Success! Database Size:  %s ", databaseManager.getCount());
+            databaseManager.close();
             return true;
         } catch (JSONException e) {
             Crashlytics.logException(e);
