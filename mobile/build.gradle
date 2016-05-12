@@ -27,8 +27,6 @@ advancedVersioning {
         dependsOnTasks 'release'
     }
     outputOptions {
-        renameOutput true
-        nameFormat '${projectName}-${buildType}-${versionName}-${versionCode}'
     }
 }
 
@@ -67,8 +65,8 @@ android {
             manifestPlaceholders = [appNameLabel: "SLN - Debug"]
         }
         release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            minifyEnabled true
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     productFlavors {
