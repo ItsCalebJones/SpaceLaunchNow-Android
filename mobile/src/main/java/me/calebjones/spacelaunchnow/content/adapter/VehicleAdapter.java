@@ -93,20 +93,22 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
             Glide.with(mContext)
                     .load(item.getImageURL())
                     .asBitmap()
+                    .placeholder(R.drawable.placeholder)
                     .fitCenter()
                     .into(new BitmapImageViewTarget(holder.picture) {
                         @Override
                         public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
                             super.onResourceReady(bitmap, anim);
                             setCellColors(bitmap, holder, position);
-                            amimateCell(holder);
                         }
                     });
+            amimateCell(holder);
         } else {
             holder.grid_root.setScaleY(1);
             holder.grid_root.setScaleX(1);
             Glide.with(mContext)
                     .load(item.getImageURL())
+                    .placeholder(R.drawable.placeholder)
                     .fitCenter()
                     .into(holder.picture);
         }
@@ -152,12 +154,12 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
                         viewHolder.name.setTextColor(swatch.getTitleTextColor());
                         viewHolder.picture.setTransitionName("cover" + position);
 
-                        Utils.animateViewColor(viewHolder.grid_root, defaultBackgroundColor,
+                        Utils.animateViewColor(viewHolder.name, defaultBackgroundColor,
                                 swatch.getRgb());
 
                     } else {
 
-                        Timber.e("BookAdapter onGenerated - The swatch was null at: %s", position);
+                        Timber.e("onGenerated - The swatch was null at: %s", position);
                     }
                 }
             });

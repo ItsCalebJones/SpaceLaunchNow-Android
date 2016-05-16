@@ -159,7 +159,7 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
                         viewHolder.name.setTextColor(swatch.getTitleTextColor());
                         viewHolder.picture.setTransitionName("cover" + position);
 
-                        Utils.animateViewColor(viewHolder.grid_root, defaultBackgroundcolor,
+                        Utils.animateViewColor(viewHolder.name, defaultBackgroundcolor,
                                 swatch.getRgb());
 
                     } else {
