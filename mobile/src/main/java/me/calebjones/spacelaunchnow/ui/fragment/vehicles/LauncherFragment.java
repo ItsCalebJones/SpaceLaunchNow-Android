@@ -92,12 +92,6 @@ public class LauncherFragment extends CustomFragment {
         }
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(adapter);
-        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
-            }
-        });
         adapter.setOnItemClickListener(recyclerRowClickListener);
         loadJSON();
         return view;
