@@ -58,12 +58,12 @@ android {
         versionName appVersionName
         signingConfig signingConfigs.config
         resConfigs "en"
-        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         debug {
             applicationIdSuffix '.debug'
-            manifestPlaceholders = [appNameLabel: "SLN - Debug"]
+            manifestPlaceholders = [appNameLabel: "SLN - Debug",
+                                    manifestApplicationId: "me.calebjones.spacelaunchnow.debug"]
         }
         release {
 //            minifyEnabled true
