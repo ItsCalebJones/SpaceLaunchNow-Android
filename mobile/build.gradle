@@ -12,6 +12,7 @@ apply plugin: 'io.fabric'
 apply plugin: 'org.moallemi.advanced-build-version'
 
 repositories {
+    jcenter()
     maven { url 'https://maven.fabric.io/public' }
 }
 
@@ -86,10 +87,9 @@ dependencies {
         transitive = true
     }
 
-    compile('com.afollestad.material-dialogs:commons:0.8.5.9@aar') {
-        transitive = true
-    }
-    
+    compile('com.github.afollestad.material-dialogs:core:0.8.5.8@aar') { transitive = true }
+    compile('com.github.afollestad.material-dialogs:commons:0.8.5.8@aar')
+
     compile 'com.mikepenz:iconics-core:2.5.10@aar'
     compile 'com.mikepenz:material-design-iconic-typeface:2.2.0.1@aar'
     compile 'com.android.support:design:23.4.0'
