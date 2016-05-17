@@ -58,9 +58,13 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
     public void addItems(List<Orbiter> items) {
         if (this.items == null) {
             this.items = items;
+        } else if (this.items.size() == 0) {
+            this.items.addAll(items);
         } else {
+            this.items.clear();
             this.items.addAll(items);
         }
+        notifyDataSetChanged();
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
