@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +22,7 @@ import android.widget.ImageView;
 
 import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,7 +44,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
-public class LauncherFragment extends CustomFragment {
+public class LauncherFragment extends CustomFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private ListPreferences sharedPreference;
     private VehicleAdapter adapter;
@@ -50,6 +54,8 @@ public class LauncherFragment extends CustomFragment {
     private Context context;
     private View view;
     private RecyclerView mRecyclerView;
+    private CoordinatorLayout coordinatorLayout;
+    private SwipeRefreshLayout swipeRefreshLayout;
     public SparseArray<Bitmap> photoCache = new SparseArray<Bitmap>(1);
     private int defaultBackgroundcolor;
     private static final int SCALE_DELAY = 30;
@@ -85,25 +91,43 @@ public class LauncherFragment extends CustomFragment {
         view = lf.inflate(R.layout.fragment_launch_vehicles, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.gridview);
+        coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.vehicle_coordinator);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
+        swipeRefreshLayout.setOnRefreshListener(this);
         if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
             layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 3);
         } else {
             layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 2);
         }
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(adapter);
-        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                int topRowVerticalPosition =
+                        (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
+                swipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
+
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
             }
         });
         adapter.setOnItemClickListener(recyclerRowClickListener);
+        mRecyclerView.setAdapter(adapter);
         loadJSON();
         return view;
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+    }
+
     private void loadJSON(){
+        Timber.v("Loading vehicles...");
+        showLoading();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Strings.API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -114,18 +138,38 @@ public class LauncherFragment extends CustomFragment {
         call.enqueue(new Callback<LauncherResponse>() {
             @Override
             public void onResponse(Call<LauncherResponse> call, Response<LauncherResponse> response) {
-
-                LauncherResponse jsonResponse = response.body();
-                items = new ArrayList<>(Arrays.asList(jsonResponse.getItem()));
-                adapter.addItems(items);
-                mRecyclerView.setAdapter(adapter);
+                if (response.isSuccess()) {
+                    LauncherResponse jsonResponse = response.body();
+                    items = new ArrayList<>(Arrays.asList(jsonResponse.getItem()));
+                    adapter.addItems(items);
+                } else {
+                    try {
+                        onFailure(call, new Throwable(response.errorBody().string()));
+                    } catch (IOException e) {
+                        onFailure(call, e);
+                    }
+                }
+                hideLoading();
             }
-
             @Override
             public void onFailure(Call<LauncherResponse> call, Throwable t) {
                 Timber.e(t.getMessage());
+                hideLoading();
+                Snackbar.make(coordinatorLayout, t.getLocalizedMessage(),Snackbar.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void hideLoading(){
+        if (swipeRefreshLayout.isRefreshing()){
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    private void showLoading(){
+        if (!swipeRefreshLayout.isRefreshing()){
+            swipeRefreshLayout.setRefreshing(true);
+        }
     }
 
     private OnItemClickListener recyclerRowClickListener = new OnItemClickListener() {
@@ -163,4 +207,9 @@ public class LauncherFragment extends CustomFragment {
             }
         }
     };
+
+    @Override
+    public void onRefresh() {
+        loadJSON();
+    }
 }

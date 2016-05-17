@@ -2,6 +2,7 @@ package me.calebjones.spacelaunchnow.ui.fragment.vehicles;
 
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
@@ -29,7 +32,6 @@ public class VehiclesViewPager extends Fragment {
     private OrbiterFragment orbiterFragment;
     private static ListPreferences sharedPreference;
     private Context context;
-
 
 
     @Override
@@ -77,7 +79,6 @@ public class VehiclesViewPager extends Fragment {
 
             }
         });
-
         return inflatedView;
     }
 
@@ -88,21 +89,25 @@ public class VehiclesViewPager extends Fragment {
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         Timber.d("onPause");
         super.onPause();
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         Timber.d("onStop");
         super.onStop();
     }
 
     @Override
-    public void onDetach(){
-        Timber.d("onDetach");
+    public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
     }
 
     @Override

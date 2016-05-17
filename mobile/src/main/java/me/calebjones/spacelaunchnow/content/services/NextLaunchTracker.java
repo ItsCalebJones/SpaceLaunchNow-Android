@@ -296,9 +296,6 @@ public class NextLaunchTracker extends IntentService implements
 
         PendingIntent appIntent = PendingIntent.getActivity(this, 0, mainActivityIntent, 0);
 
-        Intent shareLaunch = Utils.buildShareIntent(launch);
-        PendingIntent sharePendingIntent = PendingIntent.getActivity(this, 0, shareLaunch, 0);
-
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         //TODO add launch image when ready from LL
@@ -317,8 +314,7 @@ public class NextLaunchTracker extends IntentService implements
                         .setSummaryText(launchDate))
                 .extend(wearableExtender)
                 .setContentIntent(appIntent)
-                .setSound(alarmSound)
-                .addAction(R.drawable.ic_menu_share_white, "Share", sharePendingIntent);
+                .setSound(alarmSound);
 
         if (launch.getVidURL() != null && launch.getVidURL().length() > 0) {
             // Sets up the Open and Share action buttons that will appear in the
@@ -332,11 +328,11 @@ public class NextLaunchTracker extends IntentService implements
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
             mBuilder.setPriority(Notification.PRIORITY_HIGH)
                     .setVibrate(new long[]{1000, 1000})
-                    .setLights(Color.RED, 3000, 3000);
+                    .setLights(Color.GREEN, 3000, 3000);
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN && sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
             mBuilder.setVibrate(new long[]{1000, 1000})
-                    .setLights(Color.RED, 3000, 3000);
+                    .setLights(Color.GREEN, 3000, 3000);
         }
 
         NotificationManager mNotifyManager = (NotificationManager)
