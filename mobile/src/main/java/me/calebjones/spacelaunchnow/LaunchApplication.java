@@ -22,6 +22,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import io.fabric.sdk.android.Fabric;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
@@ -76,6 +78,13 @@ public class LaunchApplication extends Application {
         OneSignal.enableInAppAlertNotification(true);
 
         Dexter.initialize(this);
+
+        // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder(this)
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        // Get a Realm instance for this thread
+        Realm.setDefaultConfiguration(realmConfig);
 
 
         if (BuildConfig.DEBUG) {

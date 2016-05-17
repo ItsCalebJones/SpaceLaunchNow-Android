@@ -51,6 +51,7 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
@@ -109,6 +110,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     private SwitchPreferences switchPreferences;
     private SharedPreferences sharedPref;
     private Context context;
+    private Realm realm;
     private boolean active;
     private boolean switchChanged;
     private boolean cardSizeSmall;
@@ -251,17 +253,19 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.activity_main_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        if (this.sharedPreference.getUpcomingFirstBoot()) {
-            this.sharedPreference.setUpcomingFirstBoot(false);
-            Timber.d("Upcoming Launch Fragment: First Boot.");
-            if (this.sharedPreference.getLaunchesUpcoming() != null) {
-                displayLaunches();
-            }
-        } else {
-            Timber.d("Upcoming Launch Fragment: Not First Boot.");
-            displayLaunches();
-        }
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        realm = Realm.getDefaultInstance();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        realm.close();
     }
 
     private void refreshView() {
@@ -314,15 +318,9 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
 
 
     public void displayLaunches() {
-        // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder(context)
-                .deleteRealmIfMigrationNeeded()
-                .build();
-        // Get a Realm instance for this thread
-        Realm realm = Realm.getInstance(realmConfig);
+        int size = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
         RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class);
-        RealmResults<LaunchRealm> results = query.findAll();
-        results.size();
+        RealmResults<LaunchRealm> results = query.findAll().sort("netstamp", Sort.DESCENDING);
         rocketLaunches = results;
 
         if (rocketLaunches != null) {
@@ -446,6 +444,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
 
     @Override
     public void onResume() {
+        super.onResume();
         setTitle();
         Timber.d("OnResume!");
         if (Utils.getVersionCode(context) != switchPreferences.getVersionCode()) {
@@ -464,7 +463,16 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                 map.onResume();
             }
         }
-        super.onResume();
+        if (this.sharedPreference.getUpcomingFirstBoot()) {
+            this.sharedPreference.setUpcomingFirstBoot(false);
+            Timber.d("Upcoming Launch Fragment: First Boot.");
+            if (this.sharedPreference.getLaunchesUpcoming() != null) {
+                displayLaunches();
+            }
+        } else {
+            Timber.d("Upcoming Launch Fragment: Not First Boot.");
+            displayLaunches();
+        }
     }
 
     @Override
@@ -566,9 +574,6 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     }
 
     public void onFinishedRefreshing() {
-        if (rocketLaunches != null) {
-            rocketLaunches.clear();
-        }
         displayLaunches();
         mSwipeRefreshLayout.setRefreshing(false);
         hideLoading();
@@ -610,8 +615,12 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
             } else {
                 sharedPreference.setDebugLaunch(true);
             }
+            RealmResults<LaunchRealm> results = realm.where(LaunchRealm.class).findAll();
+            realm.beginTransaction();
+            results.deleteAllFromRealm();
+            realm.commitTransaction();
             Timber.v("%s", sharedPreference.isDebugEnabled());
-            Toast.makeText(context, "Debug: " + sharedPreference.isDebugEnabled(), Toast.LENGTH_LONG).show();
+            Snackbar.make(coordinatorLayout, "Debug: " + sharedPreference.isDebugEnabled(), Snackbar.LENGTH_LONG).show();
             onRefresh();
         } else if (id == R.id.debug_next_launch) {
             Intent nextIntent = new Intent(getActivity(), LaunchDataService.class);
