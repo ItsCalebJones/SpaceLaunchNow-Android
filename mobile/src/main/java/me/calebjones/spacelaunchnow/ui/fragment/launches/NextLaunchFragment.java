@@ -47,6 +47,10 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
@@ -56,6 +60,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -99,7 +104,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     private View color_reveal;
     private FloatingActionButton FABMenu;
     private Menu mMenu;
-    private List<Launch> rocketLaunches;
+    private RealmResults<LaunchRealm> rocketLaunches;
     private ListPreferences sharedPreference;
     private SwitchPreferences switchPreferences;
     private SharedPreferences sharedPref;
@@ -142,7 +147,6 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         active = false;
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        rocketLaunches = new ArrayList();
         cardSizeSmall = sharedPref.getBoolean("card_size_small", false);
         if (cardSizeSmall) {
             smallAdapter = new LaunchSmallAdapter(getActivity());
@@ -249,26 +253,16 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
             this.sharedPreference.setUpcomingFirstBoot(false);
             Timber.d("Upcoming Launch Fragment: First Boot.");
             if (this.sharedPreference.getLaunchesUpcoming() != null) {
-                this.rocketLaunches.clear();
                 displayLaunches();
             }
         } else {
             Timber.d("Upcoming Launch Fragment: Not First Boot.");
-            this.rocketLaunches.clear();
             displayLaunches();
         }
         return view;
     }
 
     private void refreshView() {
-        rocketLaunches = sharedPreference.filterLaunches(sharedPreference.getLaunchesUpcoming());
-
-        int size = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
-        if (rocketLaunches.size() > size) {
-            rocketLaunches = rocketLaunches.subList(0, size);
-        }
-        sharedPreference.setNextLaunches(rocketLaunches);
-
         if (cardSizeSmall) {
             smallAdapter.clear();
         } else {
@@ -308,8 +302,8 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         });
 
         if (cardSizeSmall) {
-            smallAdapter.addItems(rocketLaunches);
-            smallAdapter.notifyDataSetChanged();
+            adapter.addItems(rocketLaunches);
+            adapter.notifyDataSetChanged();
         } else {
             adapter.addItems(rocketLaunches);
             adapter.notifyDataSetChanged();
@@ -318,7 +312,14 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
 
 
     public void displayLaunches() {
-        rocketLaunches = sharedPreference.getNextLaunches();
+        // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder(context).build();
+        // Get a Realm instance for this thread
+        Realm realm = Realm.getInstance(realmConfig);
+        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class);
+        RealmResults<LaunchRealm> results = query.findAll();
+        results.size();
+        rocketLaunches = results;
 
         if (rocketLaunches != null) {
             if (rocketLaunches.size() == 0) {
@@ -342,8 +343,8 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                     }
                 }
                 if (cardSizeSmall) {
-                    smallAdapter.clear();
-                    smallAdapter.addItems(rocketLaunches);
+                    adapter.clear();
+                    adapter.addItems(rocketLaunches);
                 } else {
                     adapter.clear();
                     adapter.addItems(rocketLaunches);

@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -22,29 +23,46 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmList;
+import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.interfaces.LibraryRequestInterface;
+import me.calebjones.spacelaunchnow.content.models.Launcher;
+import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.Location;
@@ -53,7 +71,16 @@ import me.calebjones.spacelaunchnow.content.models.Mission;
 import me.calebjones.spacelaunchnow.content.models.Pad;
 import me.calebjones.spacelaunchnow.content.models.Rocket;
 import me.calebjones.spacelaunchnow.content.models.RocketAgency;
+import me.calebjones.spacelaunchnow.content.responses.LaunchResponse;
+import me.calebjones.spacelaunchnow.content.responses.LauncherResponse;
 import me.calebjones.spacelaunchnow.utils.Utils;
+import me.calebjones.spacelaunchnow.utils.custom.RealmStr;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
 public class LaunchDataService extends IntentService implements
@@ -74,6 +101,8 @@ public class LaunchDataService extends IntentService implements
     private static final String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
 
     private GoogleApiClient mGoogleApiClient;
+
+    private Realm mRealm;
 
     public LaunchDataService() {
         super("LaunchDataService");
@@ -125,8 +154,6 @@ public class LaunchDataService extends IntentService implements
                 scheduleLaunchUpdates();
             }
             getUpcomingLaunches();
-            getNextLaunches();
-            startService(new Intent(this, NextLaunchTracker.class));
         } else if (Strings.ACTION_GET_PREV_LAUNCHES.equals(action)) {
             Timber.v("Intent action received: %s", action);
             getPreviousLaunches(intent.getStringExtra("URL"));
@@ -134,12 +161,14 @@ public class LaunchDataService extends IntentService implements
             Timber.v("Intent action received: %s", action);
             getNextLaunches();
             Timber.v("Starting service NextLaunchTracker");
-            this.startService(new Intent(this, NextLaunchTracker.class));
         } else {
             Timber.e("LaunchDataService - onHandleIntent: ERROR - Unknown Intent %s", action);
         }
         Timber.v("Finished!");
     }
+
+
+
 
     private void getPreviousLaunches(String sUrl) {
         HttpURLConnection urlConnection;
@@ -209,92 +238,78 @@ public class LaunchDataService extends IntentService implements
     }
 
     private void getUpcomingLaunches() {
-        HttpURLConnection urlConnection;
+        // create a converter compatible with Realm
+        // GSON can parse the data.
+        // Note there is a bug in GSON 2.5 that can cause it to StackOverflow when working with RealmObjects.
+        // To work around this, use the ExclusionStrategy below or downgrade to 1.7.1
+        // See more here: https://code.google.com/p/google-gson/issues/detail?id=440
+        Type token = new TypeToken<RealmList<RealmStr>>(){}.getType();
+        Gson gson = new GsonBuilder()
+                .setExclusionStrategies(new ExclusionStrategy() {
+                    @Override
+                    public boolean shouldSkipField(FieldAttributes f) {
+                        return f.getDeclaringClass().equals(RealmObject.class);
+                    }
+
+                    @Override
+                    public boolean shouldSkipClass(Class<?> clazz) {
+                        return false;
+                    }
+                })
+                .registerTypeAdapter(token, new TypeAdapter<RealmList<RealmStr>>() {
+
+                    @Override
+                    public void write(JsonWriter out, RealmList<RealmStr> value) throws io.realm.internal.IOException {
+                        // Ignore
+                    }
+
+                    @Override
+                    public RealmList<RealmStr> read(JsonReader in) throws io.realm.internal.IOException, java.io.IOException {
+                        RealmList<RealmStr> list = new RealmList<RealmStr>();
+                        in.beginArray();
+                        while (in.hasNext()) {
+                            list.add(new RealmStr(in.nextString()));
+                        }
+                        in.endArray();
+                        return list;
+                    }
+                })
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Strings.LIBRARY_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
+        Call<LaunchResponse> call = request.getNextLaunches();
+        Response<LaunchResponse> launchResponse;
         try {
-            /* forming th java.net.URL object */
-            URL url;
+            // Init Realm
+            RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
+                    .deleteRealmIfMigrationNeeded()
+                    .build();
 
-            //Used for loading debug launches/reproducing bugs
-            if (listPreference.isDebugEnabled()) {
-                url = new URL(Strings.DEBUG_LAUNCH_URL);
+            // Clear the realm from last time
+            //Realm.deleteRealm(realmConfiguration);
+
+            // Create a new empty instance of Realm
+            mRealm = Realm.getInstance(realmConfiguration);
+
+            launchResponse = call.execute();
+            if(launchResponse.isSuccess()){
+                RealmList<LaunchRealm> items = new RealmList<>(launchResponse.body().getLaunches());
+
+                mRealm.beginTransaction();
+                mRealm.copyToRealm(items);
+                mRealm.commitTransaction();
+                mRealm.close();
             } else {
-                url = new URL(Strings.LAUNCH_URL);
+                Timber.e("ERROR: %s", launchResponse.errorBody());
             }
-
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestProperty("Accept", "*/*");
-            urlConnection.setConnectTimeout(5000);
-            urlConnection.setRequestMethod("GET");
-
-            int statusCode = urlConnection.getResponseCode();
-
-                /* 200 represents HTTP OK */
-            if (statusCode == 200) {
-
-                BufferedReader r = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                StringBuilder response = new StringBuilder();
-                String line;
-
-                while ((line = r.readLine()) != null) {
-                    response.append(line);
-                }
-                upcomingLaunchList = parseMultipleResult(response.toString());
-
-                if (BuildConfig.DEBUG) {
-                    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
-                    mBuilder.setContentTitle("LaunchData Worked!")
-                            .setSmallIcon(R.drawable.ic_notification)
-                            .setAutoCancel(true);
-
-                    NotificationManager mNotifyManager = (NotificationManager)
-                            getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-                    mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
-                }
-
-                LaunchDataService.this.cleanCacheUpcoming();
-                this.listPreference.setUpComingLaunches(upcomingLaunchList);
-
-//                CalendarSyncService.startActionSync(this);
-
-                Intent broadcastIntent = new Intent();
-                broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
-                LaunchDataService.this.sendBroadcast(broadcastIntent);
-            } else {
-                Crashlytics.log(Log.ERROR, "LaunchDataService", "Failed to retrieve upcoming launches: " + statusCode);
-
-                if (!BuildConfig.DEBUG) {
-                    Answers.getInstance().logCustom(new CustomEvent("Failed Data Sync")
-                            .putCustomAttribute("Status", statusCode));
-                }
-
-                Intent broadcastIntent = new Intent();
-                broadcastIntent.putExtra("error", "Network Status: " + statusCode);
-                broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
-                LaunchDataService.this.sendBroadcast(broadcastIntent);
-            }
-
-        } catch (Exception e) {
-            Timber.e("LaunchDataService - getUpcomingLaunches ERROR: %s", e.getLocalizedMessage());
-            if (Utils.isNetworkAvailable(this)) {
-                Crashlytics.setBool("Network", Utils.isNetworkAvailable(this));
-                Crashlytics.logException(e);
-            }
-
-            if (BuildConfig.DEBUG) {
-                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-                mBuilder.setContentTitle("LaunchData Failed!")
-                        .setSmallIcon(R.drawable.ic_notification)
-                        .setAutoCancel(true);
-
-                NotificationManager mNotifyManager = (NotificationManager)
-                        this.getSystemService(Context.NOTIFICATION_SERVICE);
-                mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
-            }
-
-            Intent broadcastIntent = new Intent();
-            broadcastIntent.putExtra("error", e.getLocalizedMessage());
-            broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
-            LaunchDataService.this.sendBroadcast(broadcastIntent);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Timber.e("Error: %s", e.getLocalizedMessage());
         }
     }
 

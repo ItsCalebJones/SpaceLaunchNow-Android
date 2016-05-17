@@ -27,12 +27,12 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.VehicleAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Launcher;
-import me.calebjones.spacelaunchnow.content.models.LauncherResponse;
+import me.calebjones.spacelaunchnow.content.responses.LauncherResponse;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.ui.activity.LauncherDetailActivity;
 import me.calebjones.spacelaunchnow.utils.CustomFragment;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
-import me.calebjones.spacelaunchnow.utils.RequestInterface;
+import me.calebjones.spacelaunchnow.content.interfaces.APIRequestInterface;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -105,10 +105,11 @@ public class LauncherFragment extends CustomFragment {
 
     private void loadJSON(){
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Strings.BASE_URL)
+                .baseUrl(Strings.API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        RequestInterface request = retrofit.create(RequestInterface.class);
+
+        APIRequestInterface request = retrofit.create(APIRequestInterface.class);
         Call<LauncherResponse> call = request.getLaunchers();
         call.enqueue(new Callback<LauncherResponse>() {
             @Override

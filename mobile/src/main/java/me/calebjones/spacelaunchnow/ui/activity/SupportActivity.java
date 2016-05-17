@@ -7,9 +7,6 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.AddToCartEvent;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.PurchaseEvent;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
 
 import android.app.PendingIntent;
 import android.content.ComponentName;
@@ -96,14 +93,6 @@ public class SupportActivity extends AppCompatActivity implements BillingProcess
         });
 
         mSmallBang = SmallBang.attach2Window(this);
-
-        // Load an ad into the AdMob banner view.
-        AdView adView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
-        if (adView != null) {
-            adView.loadAd(adRequest);
-        }
 
         bp = new BillingProcessor(this, getResources().getString(R.string.rsa_key), this);
         bp.loadOwnedPurchasesFromGoogle();
