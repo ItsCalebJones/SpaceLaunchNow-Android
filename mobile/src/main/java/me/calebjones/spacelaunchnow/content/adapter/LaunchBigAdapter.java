@@ -38,11 +38,15 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
+import io.realm.RealmList;
+import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
+import me.calebjones.spacelaunchnow.utils.custom.RealmStr;
 import timber.log.Timber;
 
 /**
@@ -51,7 +55,7 @@ import timber.log.Timber;
 public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.ViewHolder> implements SectionIndexer {
     public int position;
     private String launchDate;
-    private List<Launch> launchList;
+    private RealmList<LaunchRealm> launchList;
     private Context context;
     private Calendar rightNow;
     private SharedPreferences sharedPref;
@@ -62,20 +66,21 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
 
     public LaunchBigAdapter(Context context) {
         rightNow = Calendar.getInstance();
-        launchList = new ArrayList<>();
+        launchList = new RealmList<>();
         this.context = context;
         if (Utils.checkPlayServices(this.context)) {
             play = true;
         }
     }
 
-    public void addItems(List<Launch> launchList) {
-        if (this.launchList == null) {
-            this.launchList = launchList;
+    public void addItems(RealmResults<LaunchRealm> launchList) {
+        if (this.launchList != null) {
+            this.launchList.addAll(launchList.subList(0, launchList.size()));
         } else {
-            this.launchList.addAll(launchList);
-            this.notifyDataSetChanged();
+            this.launchList = new RealmList<>();
+            this.launchList.addAll(launchList.subList(0, launchList.size()));
         }
+        this.notifyDataSetChanged();
     }
 
     public void clearData() {
@@ -115,7 +120,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        final Launch launchItem = launchList.get(i);
+        final LaunchRealm launchItem = launchList.get(i);
 
         position = i;
 
@@ -429,7 +434,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             final int position = getAdapterPosition();
             Timber.d("onClick at %s", position);
 
-            Launch launch = new Launch();
+            LaunchRealm launch = new LaunchRealm();
             launch = launchList.get(position);
             Intent sendIntent = new Intent();
 
@@ -444,10 +449,10 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
                     Timber.d("Watch: %s", launchList.get(position).getVidURL());
                     if (launchList.get(position).getVidURLs().size() > 1) {
                         final MaterialSimpleListAdapter adapter = new MaterialSimpleListAdapter(context);
-                        for (String s : launchList.get(position).getVidURLs()) {
+                        for (RealmStr s : launchList.get(position).getVidURLs()) {
                             //Do your stuff here
                             adapter.add(new MaterialSimpleListItem.Builder(context)
-                                    .content(s)
+                                    .content(s.toString())
                                     .build());
                         }
 
@@ -456,7 +461,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
                                 .adapter(adapter, new MaterialDialog.ListCallback() {
                                     @Override
                                     public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                                        Uri watchUri = Uri.parse(launchList.get(position).getVidURLs().get(which));
+                                        Uri watchUri = Uri.parse(launchList.get(position).getVidURLs().get(which).toString());
                                         Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
                                         context.startActivity(i);
                                         dialog.dismiss();
@@ -473,7 +478,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
                     Timber.d("Explore: %s", launchList.get(position).getId());
                     Intent exploreIntent = new Intent(context, LaunchDetailActivity.class);
                     exploreIntent.putExtra("TYPE", "Launch");
-                    exploreIntent.putExtra("launch", launch);
+                    exploreIntent.putExtra("launchID", launch.getId());
                     context.startActivity(exploreIntent);
                     break;
                 case R.id.shareButton:

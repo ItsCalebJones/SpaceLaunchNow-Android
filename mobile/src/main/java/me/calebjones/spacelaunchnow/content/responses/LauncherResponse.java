@@ -1,4 +1,6 @@
-package me.calebjones.spacelaunchnow.content.models;
+package me.calebjones.spacelaunchnow.content.responses;
+
+import me.calebjones.spacelaunchnow.content.models.Launcher;
 
 public class LauncherResponse {
     private Launcher[] items;

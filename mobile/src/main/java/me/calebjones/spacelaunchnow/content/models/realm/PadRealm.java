@@ -1,0 +1,90 @@
+
+package me.calebjones.spacelaunchnow.content.models.realm;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import me.calebjones.spacelaunchnow.content.models.LocationAgency;
+
+public class PadRealm extends RealmObject {
+
+    private Integer id;
+    private String name;
+    private String infoURL;
+    private String wikiURL;
+    private String mapURL;
+    private Double latitude;
+    private Double longitude;
+    private RealmList<LocationAgencyRealm> agencies = new RealmList<>();
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getInfoURL() {
+        return infoURL;
+    }
+
+    public void setInfoURL(String infoURL) {
+        this.infoURL = infoURL;
+    }
+
+    public String getWikiURL() {
+        return wikiURL;
+    }
+
+    public void setWikiURL(String wikiURL) {
+        this.wikiURL = wikiURL;
+    }
+
+    public String getMapURL() {
+        return mapURL;
+    }
+
+    public void setMapURL(String mapURL) {
+        this.mapURL = mapURL;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public RealmList<LocationAgencyRealm> getAgencies() {
+        return agencies;
+    }
+
+    public void setAgencies(RealmList<LocationAgencyRealm> agencies) {
+        this.agencies = agencies;
+    }
+
+
+}

@@ -54,6 +54,11 @@ public class LaunchApplication extends Application {
     }
 
     @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -100,12 +105,6 @@ public class LaunchApplication extends Application {
 
         sharedPreference = ListPreferences.getInstance(this);
         switchPreferences = SwitchPreferences.getInstance(this);
-        int cacheSize = 10 * 1024 * 1024;
-        Cache cache = new Cache(getCacheDir(), cacheSize);
-
-        client = new OkHttpClient.Builder()
-                .cache(cache)
-                .build();
 
         checkSubscriptions();
 
