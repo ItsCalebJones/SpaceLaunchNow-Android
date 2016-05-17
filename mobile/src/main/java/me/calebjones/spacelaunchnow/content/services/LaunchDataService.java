@@ -282,7 +282,14 @@ public class LaunchDataService extends IntentService implements
                 .build();
 
         LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
-        Call<LaunchResponse> call = request.getNextLaunches();
+        Call<LaunchResponse> call;
+
+        if(listPreference.isDebugEnabled()){
+            call = request.getDebugNextLaunches();
+        } else {
+            call = request.getNextLaunches();
+        }
+
         Response<LaunchResponse> launchResponse;
         try {
             // Init Realm
@@ -301,15 +308,26 @@ public class LaunchDataService extends IntentService implements
                 RealmList<LaunchRealm> items = new RealmList<>(launchResponse.body().getLaunches());
 
                 mRealm.beginTransaction();
-                mRealm.copyToRealm(items);
+                mRealm.copyToRealmOrUpdate(items);
                 mRealm.commitTransaction();
                 mRealm.close();
+
+                Intent broadcastIntent = new Intent();
+                broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
+                LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
             } else {
                 Timber.e("ERROR: %s", launchResponse.errorBody());
+                Intent broadcastIntent = new Intent();
+                broadcastIntent.putExtra("error", launchResponse.errorBody().toString());
+                broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
+                LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
             }
         } catch (IOException e) {
-            e.printStackTrace();
             Timber.e("Error: %s", e.getLocalizedMessage());
+            Intent broadcastIntent = new Intent();
+            broadcastIntent.putExtra("error", e.getLocalizedMessage());
+            broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
+            LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
         }
     }
 
