@@ -38,6 +38,7 @@
         Fixes and Features!\n
         \u2022Removed adds completely to save APK space.\n
         \u2022Fixed a crash when trying to use a new Vector Drawable in a notification.\n
+        \u2022Performance optimization for Map View, still some jankiness when first loading but try out flinging the view!\n
     </string>
     <string name="link_feedback">https://www.reddit.com/r/spacelaunchnow</string>
     <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>
