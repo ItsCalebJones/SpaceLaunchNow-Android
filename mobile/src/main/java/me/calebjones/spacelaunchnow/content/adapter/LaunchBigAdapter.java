@@ -136,7 +136,6 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
                     holder.exploreFab.setVisibility(View.GONE);
                 }
             } else {
-                holder.initializeMapView();
                 holder.map_view.setVisibility(View.VISIBLE);
                 holder.exploreFab.setVisibility(View.VISIBLE);
                 holder.setMapLocation(dlat, dlon);
@@ -244,7 +243,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
                     }
                     holder.content_TMinus_status.setTypeface(Typeface.SANS_SERIF);
                     holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context,R.color.red));
-                    holder.content_TMinus_status.setText(String.format("L - %s %s:%s:%s", days, hours, minutes, seconds));
+                    holder.content_TMinus_status.setText(String.format("L - %s days - %s:%s:%s", days, hours, minutes, seconds));
                 }
             }.start();
 
@@ -337,20 +336,6 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         return mMaps;
     }
 
-    //Recycling GoogleMap for list item
-    @Override
-    public void onViewRecycled(ViewHolder holder) {
-        Timber.v("onViewRecyled!");
-        // Cleanup MapView here?
-        if (play) {
-            if (holder != null && holder.gMap != null) {
-                // Clear the map and free up resources by changing the map type to none
-                holder.gMap.clear();
-                holder.gMap.setMapType(GoogleMap.MAP_TYPE_NONE);
-            }
-        }
-    }
-
     @Override
     public int getItemCount() {
         return launchList.size();
@@ -372,7 +357,6 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         if (position >= getItemCount()) {
             position = getItemCount() - 1;
         }
-
         return 0;
     }
 
@@ -416,6 +400,8 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             content_mission_description_view = (LinearLayout) view.findViewById(R.id.content_mission_description_view);
 
             map_view = (MapView) view.findViewById(R.id.map_view);
+            map_view.setClickable(false);
+            initializeMapView();
 
             shareButton.setOnClickListener(this);
             exploreButton.setOnClickListener(this);
@@ -567,12 +553,10 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             // https://goo.gl/OkexW7
             MapsInitializer.initialize(context.getApplicationContext());
 
-            googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-            googleMap.getUiSettings().setMapToolbarEnabled(false);
-
             gMap = googleMap;
+            gMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            gMap.getUiSettings().setMapToolbarEnabled(false);
             gMap.getUiSettings().setAllGesturesEnabled(false);
-
 
             // If we have map data, update the map content.
             if (mMapLocation != null) {
@@ -587,8 +571,8 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             // Update the mapView feature data and camera position.
             gMap.addMarker(new MarkerOptions().position(mMapLocation));
 
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mMapLocation, 3.2f);
-            gMap.moveCamera(cameraUpdate);
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mMapLocation, 4);
+            gMap.animateCamera(cameraUpdate);
         }
     }
 
