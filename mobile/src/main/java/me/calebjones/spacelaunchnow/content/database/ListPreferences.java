@@ -205,19 +205,6 @@ public class ListPreferences {
         return this.sharedPrefs.getBoolean(PREFS_PREVIOUS_FIRST_BOOT, true);
     }
 
-    //Set methods for storing data.
-    public void setListCalendarItems(List<CalendarItem> items) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.serializeSpecialFloatingPointValues();
-        Gson gson = gsonBuilder.setPrettyPrinting().create();
-
-        this.prefsEditor.putString(PREFS_LIST_CALENDAR, gson.toJson(items));
-        this.prefsEditor.apply();
-    }
-
 
     //Set methods for storing data.
     public void setNextLaunches(List<Launch> launches) {
@@ -275,12 +262,6 @@ public class ListPreferences {
         this.prefsEditor.putString(PREFS_LIST_UPCOMING, gson.toJson(launches));
         this.prefsEditor.apply();
 
-//        List<Launch> goList = new ArrayList<>();
-//        for (int i = 0; i < launches.size(); i++) {
-//            if (launches.get(i).getStatus() == 1) {
-//                goList.add(launches.get(i));
-//            }
-//        }
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(appContext);
         int size = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
         launches = filterLaunches(launches);
