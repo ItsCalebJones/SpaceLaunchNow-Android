@@ -217,6 +217,16 @@ public class Utils {
         }
     }
 
+    public static String getEndDate(Context context) {
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, 1);
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = df.format(c.getTime());
+
+        return String.valueOf(formattedDate);
+    }
+
     public static Calendar DateToCalendar(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);

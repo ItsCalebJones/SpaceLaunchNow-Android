@@ -12,4 +12,7 @@ public interface APIRequestInterface {
 
     @GET("launchers")
     Call<LauncherResponse> getLaunchers();
+
+    @GET("launchvehicle.json")
+    Call<LauncherResponse> getLaunchVehicles();
 }

@@ -141,7 +141,6 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
                     holder.exploreFab.setVisibility(View.GONE);
                 }
             } else {
-                holder.initializeMapView();
                 holder.map_view.setVisibility(View.VISIBLE);
                 holder.exploreFab.setVisibility(View.VISIBLE);
                 holder.setMapLocation(dlat, dlon);
@@ -341,21 +340,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
     public HashSet<MapView> getMaps() {
         return mMaps;
     }
-
-    //Recycling GoogleMap for list item
-    @Override
-    public void onViewRecycled(ViewHolder holder) {
-        Timber.v("onViewRecyled!");
-        // Cleanup MapView here?
-        if (play) {
-            if (holder != null && holder.gMap != null) {
-                // Clear the map and free up resources by changing the map type to none
-                holder.gMap.clear();
-                holder.gMap.setMapType(GoogleMap.MAP_TYPE_NONE);
-            }
-        }
-    }
-
+    
     @Override
     public int getItemCount() {
         return launchList.size();
@@ -421,6 +406,8 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             content_mission_description_view = (LinearLayout) view.findViewById(R.id.content_mission_description_view);
 
             map_view = (MapView) view.findViewById(R.id.map_view);
+            map_view.setClickable(false);
+            initializeMapView();
 
             shareButton.setOnClickListener(this);
             exploreButton.setOnClickListener(this);
@@ -563,6 +550,8 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             // If the map is ready, update its content.
             if (gMap != null) {
                 updateMapContents();
+            } else {
+                Timber.e("MapView is null");
             }
         }
 
@@ -582,6 +571,8 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             // If we have map data, update the map content.
             if (mMapLocation != null) {
                 updateMapContents();
+            } else {
+                Timber.e("mMapLocation is null");
             }
         }
 
