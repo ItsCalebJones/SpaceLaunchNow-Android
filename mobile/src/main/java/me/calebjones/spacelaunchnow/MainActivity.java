@@ -1,9 +1,7 @@
 package me.calebjones.spacelaunchnow;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
@@ -19,7 +17,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
 import android.view.LayoutInflater;
@@ -36,18 +33,14 @@ import com.crashlytics.android.Crashlytics;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
-import com.onesignal.OneSignal;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import io.fabric.sdk.android.Fabric;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
-import me.calebjones.spacelaunchnow.content.services.MissionDataService;
-import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
 import me.calebjones.spacelaunchnow.ui.activity.SettingsActivity;
 import me.calebjones.spacelaunchnow.ui.activity.SupportActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.LaunchesViewPager;
@@ -244,8 +237,8 @@ public class MainActivity extends AppCompatActivity
 
     public void showWhatsNew() {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View customView = inflater.inflate(R.layout.switch_dialog, null);
-        View nightView = inflater.inflate(R.layout.switch_dialog_night, null);
+        View customView = inflater.inflate(R.layout.whats_new, null);
+        View nightView = inflater.inflate(R.layout.whats_new_night, null);
 
         MaterialStyledDialog dialog = new MaterialStyledDialog(this)
                 .withIconAnimation(false)
