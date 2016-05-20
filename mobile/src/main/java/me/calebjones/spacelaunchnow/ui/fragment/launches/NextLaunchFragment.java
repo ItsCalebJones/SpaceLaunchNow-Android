@@ -119,17 +119,19 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     }
 
     public void showCaseView() {
-        Button customButton = (Button) getLayoutInflater(null).inflate(R.layout.view_custom_button, null);
-        ViewTarget pinMenuItem = new ViewTarget(R.id.action_alert, getActivity());
-        ShowcaseView.Builder builder = new ShowcaseView.Builder(getActivity())
-                .withNewStyleShowcase()
-                .setTarget(pinMenuItem)
-                .setContentTitle("Launch Filtering")
-                .setContentText("Only receive notifications for launches that you care about.");
-        if (sharedPreference.getNightMode()) {
-            builder.setStyle(R.style.ShowCaseThemeDark).replaceEndButton(customButton).hideOnTouchOutside().build();
-        } else {
-            builder.setStyle(R.style.ShowCaseThemeLight).replaceEndButton(customButton).hideOnTouchOutside().build();
+        if (NextLaunchFragment.this.isVisible()) {
+            Button customButton = (Button) getLayoutInflater(null).inflate(R.layout.view_custom_button, null);
+            ViewTarget pinMenuItem = new ViewTarget(R.id.action_alert, getActivity());
+            ShowcaseView.Builder builder = new ShowcaseView.Builder(getActivity())
+                    .withNewStyleShowcase()
+                    .setTarget(pinMenuItem)
+                    .setContentTitle("Launch Filtering")
+                    .setContentText("Only receive notifications for launches that you care about.");
+            if (sharedPreference.getNightMode()) {
+                builder.setStyle(R.style.ShowCaseThemeDark).replaceEndButton(customButton).hideOnTouchOutside().build();
+            } else {
+                builder.setStyle(R.style.ShowCaseThemeLight).replaceEndButton(customButton).hideOnTouchOutside().build();
+            }
         }
     }
 

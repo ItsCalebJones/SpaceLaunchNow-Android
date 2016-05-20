@@ -36,14 +36,10 @@
 
     <string name="whats_new_content">These are features that will likely take significant development effort to ensure a quality product. Initially i\'m hoping to deliver syncing all upcoming events to calendar and custom watchface backgrounds and settings.\n\n
         Fixes and Features!\n
-    \u2022Added ShowcaseView to tutorial and first launch to demonstrate how to filter launch notifications.\n
-    \u2022Fixed NightMode issues in several UI fields.\n
-    \u2022Streamlined data usage, using about 5-10% of the bandwidth of previous versions.\n
-    \u2022Fixed various crashes.\n
-        \u2022Added robust error handling.\n
-        \u2022UI performance increases on older or low RAM devices.\n
-        \u2022Fixed a battery drain issue when network is spotty.\n
-
+        \u2022Removed adds completely to save APK space.\n
+        \u2022Fixed a crash when trying to use a new Vector Drawable in a notification.\n
+        \u2022Added refresh toggle to Vehicles.\n
+        \u2022Performance optimization for Map View, still some jankiness when first loading but try out flinging the view!\n
     </string>
     <string name="link_feedback">https://www.reddit.com/r/spacelaunchnow</string>
     <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>
