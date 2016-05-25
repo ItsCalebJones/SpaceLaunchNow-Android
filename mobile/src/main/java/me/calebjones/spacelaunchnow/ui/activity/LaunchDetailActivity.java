@@ -37,6 +37,7 @@ import java.util.Date;
 import java.util.Scanner;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.realm.Realm;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
@@ -44,6 +45,8 @@ import me.calebjones.spacelaunchnow.content.database.DatabaseManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.RocketDetails;
+import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.content.responses.LaunchResponse;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.details.AgencyDetailFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.details.PayloadDetailFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.details.SummaryDetailFragment;
@@ -72,11 +75,15 @@ public class LaunchDetailActivity extends AppCompatActivity
     private Calendar rightNow = Calendar.getInstance();
 
     public String response;
-    public Launch launch;
+    public LaunchRealm launch;
+
+    private Realm realm;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        realm = Realm.getDefaultInstance();
+
 
         int m_theme;
         final int statusColor;
@@ -125,23 +132,23 @@ public class LaunchDetailActivity extends AppCompatActivity
 
 
         if (type.equals("LaunchID")) {
-            int id = mIntent.getIntExtra("id", 0);
-            launch = sharedPreference.getLaunchByID(id);
-        } else if (type.equals("Launch")) {
-            launch = ((Launch) mIntent.getSerializableExtra("launch"));
+            int id = mIntent.getIntExtra("launchID", 0);
+            launch = realm.where(LaunchRealm.class).equalTo("id", id).findFirst();
         }
 
-        if (launch.getRocket() != null || launch.getRocket().getName() != null) {
-            if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0) {
-                Glide.with(this)
-                        .load(launch.getRocket().getImageURL())
-                        .centerCrop()
-                        .placeholder(R.drawable.placeholder)
-                        .crossFade()
-                        .into(detail_profile_backdrop);
-                getLaunchVehicle(launch, false);
-            } else {
-                getLaunchVehicle(launch, true);
+        if (launch.getRocket() != null) {
+            if (launch.getRocket().getName() != null) {
+                if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0) {
+                    Glide.with(this)
+                            .load(launch.getRocket().getImageURL())
+                            .centerCrop()
+                            .placeholder(R.drawable.placeholder)
+                            .crossFade()
+                            .into(detail_profile_backdrop);
+                    getLaunchVehicle(launch, false);
+                } else {
+                    getLaunchVehicle(launch, true);
+                }
             }
         } else {
             Intent homeIntent = new Intent(this, MainActivity.class);
@@ -151,13 +158,8 @@ public class LaunchDetailActivity extends AppCompatActivity
         SimpleDateFormat df = new SimpleDateFormat("MMMM dd, yyyy HH:mm:ss zzz");
         Date date;
         long future;
-        try {
-            date = df.parse(launch.getNet());
-            future = date.getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
-            future = 0;
-        }
+        date = launch.getNet();
+        future = date.getTime();
 
         Calendar now = rightNow;
         now.setTimeInMillis(System.currentTimeMillis());
@@ -170,8 +172,7 @@ public class LaunchDetailActivity extends AppCompatActivity
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         toolbar.setNavigationOnClickListener(
-                new View.OnClickListener()
-                {
+                new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         onBackPressed();
@@ -220,6 +221,12 @@ public class LaunchDetailActivity extends AppCompatActivity
                 }
 
         );
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
     }
 
     public int reverseNumber(int num, int min, int max) {
@@ -315,7 +322,7 @@ public class LaunchDetailActivity extends AppCompatActivity
         super.onResume();
     }
 
-    private void getLaunchVehicle(Launch result, boolean setImage) {
+    private void getLaunchVehicle(LaunchRealm result, boolean setImage) {
         String query;
         if (result.getRocket().getName().contains("Space Shuttle")) {
             query = "Space Shuttle";
@@ -350,7 +357,7 @@ public class LaunchDetailActivity extends AppCompatActivity
         scanner.close();
     }
 
-    public Launch getLaunch() {
+    public LaunchRealm getLaunch() {
         return launch;
     }
 

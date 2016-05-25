@@ -65,6 +65,7 @@ public class LaunchDataService extends IntentService {
         }.getType();
 
         Gson gson = new GsonBuilder()
+                .setDateFormat("MMMM dd, yyyy hh:mm:ss zzz")
                 .setExclusionStrategies(new ExclusionStrategy() {
                     @Override
                     public boolean shouldSkipField(FieldAttributes f) {
@@ -158,12 +159,12 @@ public class LaunchDataService extends IntentService {
 
             Timber.v("Intent action received: %s", action);
             getNextLaunches();
-
+            this.startService(new Intent(this, NextLaunchTracker.class));
         } else {
             Timber.e("LaunchDataService - onHandleIntent: ERROR - Unknown Intent %s", action);
         }
         Timber.v("Finished!");
-        mRealm.close();
+        
     }
 
     private void getPreviousLaunches(String startDate, String endDate) {

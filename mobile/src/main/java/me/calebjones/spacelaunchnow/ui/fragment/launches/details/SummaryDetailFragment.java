@@ -42,8 +42,10 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.RocketDetails;
 import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
+import me.calebjones.spacelaunchnow.utils.custom.RealmStr;
 import timber.log.Timber;
 
 
@@ -56,7 +58,7 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
     public GoogleMap gMap;
     protected LatLng mMapLocation;
 
-    public static Launch detailLaunch;
+    public static LaunchRealm detailLaunch;
     private RocketDetails launchVehicle;
     private FloatingActionButton fab;
     private LinearLayout agency_one, agency_two, vehicle_spec_view;
@@ -220,10 +222,10 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
                 public void onClick(View v) {
                     if (detailLaunch.getVidURLs().size() > 1) {
                         final MaterialSimpleListAdapter adapter = new MaterialSimpleListAdapter(context);
-                        for (String s : detailLaunch.getVidURLs()) {
+                        for (RealmStr s : detailLaunch.getVidURLs()) {
                             //Do your stuff here
                             adapter.add(new MaterialSimpleListItem.Builder(context)
-                                    .content(s)
+                                    .content(s.toString())
                                     .build());
                         }
 
@@ -232,7 +234,7 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
                                 .adapter(adapter, new MaterialDialog.ListCallback() {
                                     @Override
                                     public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                                        Uri watchUri = Uri.parse(detailLaunch.getVidURLs().get(which));
+                                        Uri watchUri = Uri.parse(detailLaunch.getVidURLs().get(which).toString());
                                         Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
                                         startActivity(i);
                                         dialog.dismiss();
@@ -267,14 +269,10 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
         }
 
         //Try to convert to Month day, Year.
-        try {
-            mDate = input.parse(detailLaunch.getNet());
-            dateText = output.format(mDate);
-            if (mDate.before(Calendar.getInstance().getTime())){
-                launch_date_title.setText("Launch Date");
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
+        mDate = detailLaunch.getNet();
+        dateText = output.format(mDate);
+        if (mDate.before(Calendar.getInstance().getTime())){
+            launch_date_title.setText("Launch Date");
         }
 
         date.setText(dateText);
@@ -288,7 +286,7 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
 
     }
 
-    private void getLaunchVehicle(Launch vehicle) {
+    private void getLaunchVehicle(LaunchRealm vehicle) {
         String query;
         if (vehicle.getRocket().getName().contains("Space Shuttle")){
             query = "Space Shuttle";
@@ -340,8 +338,8 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
 
     private void setWindowStartEnd() {
         if (!detailLaunch.getWindowstart().equals(detailLaunch.getWindowend())){
-            if(detailLaunch.getWindowstart().length() > 0
-                    || detailLaunch.getWindowend().length() > 0){
+            if(detailLaunch.getWindowstart().toString().length() > 0
+                    || detailLaunch.getWindowend().toString().length() > 0){
                 launch_window_start.setText("Launch Window unavailable.");
                 launch_window_end.setVisibility(View.INVISIBLE);
             } else{

@@ -18,6 +18,7 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.RocketDetails;
+import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
@@ -27,7 +28,7 @@ public class AgencyDetailFragment extends Fragment {
     private static ListPreferences sharedPreference;
     private Context context;
 
-    public static Launch detailLaunch;
+    public static LaunchRealm detailLaunch;
     private RocketDetails launchVehicle;
     private LinearLayout mission_one, mission_two, launch_one, launch_two;
     private TextView mission_agency_type, mission_agency_one, mission_agency_type_one,
