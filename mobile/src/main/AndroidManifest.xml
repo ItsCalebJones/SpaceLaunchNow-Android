@@ -31,7 +31,8 @@
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/LightTheme.Launcher"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

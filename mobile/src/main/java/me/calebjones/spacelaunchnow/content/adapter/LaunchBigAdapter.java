@@ -73,12 +73,13 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         }
     }
 
-    public void addItems(RealmResults<LaunchRealm> launchList) {
+    public void addItems(List<LaunchRealm> launchList) {
+
         if (this.launchList != null) {
-            this.launchList.addAll(launchList.subList(0, launchList.size()));
+            this.launchList.addAll(launchList);
         } else {
             this.launchList = new RealmList<>();
-            this.launchList.addAll(launchList.subList(0, launchList.size()));
+            this.launchList.addAll(launchList);
         }
         this.notifyDataSetChanged();
     }
@@ -89,7 +90,6 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             for (int i = 0; i < size; i++) {
                 this.launchList.remove(0);
             }
-
             this.notifyItemRangeRemoved(0, size);
         }
     }
@@ -159,7 +159,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         switch (launchItem.getStatus()) {
             case 1:
                 String go = context.getResources().getString(R.string.status_go);
-                if (launchItem.getProbability() != null && launchItem.getProbability() > 0){
+                if (launchItem.getProbability() != null && launchItem.getProbability() > 0) {
                     go = String.format("%s | Forecast - %s%%", go, launchItem.getProbability());
                 }
                 //GO for launch
@@ -193,7 +193,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             Calendar now = rightNow;
 
             now.setTimeInMillis(System.currentTimeMillis());
-            if (holder.timer != null){
+            if (holder.timer != null) {
                 holder.timer.cancel();
             }
             holder.timer = new CountDownTimer(future.getTimeInMillis() - now.getTimeInMillis(), 1000) {
@@ -202,7 +202,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
                 @Override
                 public void onFinish() {
                     holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
-                    if (night){
+                    if (night) {
                         holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color));
                     } else {
                         holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary));
@@ -229,32 +229,32 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
                     String hours;
                     String minutes;
                     String seconds;
-                    if (longHours < 10){
+                    if (longHours < 10) {
                         hours = "0" + String.valueOf(longHours);
                     } else {
                         hours = String.valueOf(longHours);
                     }
 
-                    if (longMins < 10){
+                    if (longMins < 10) {
                         minutes = "0" + String.valueOf(longMins);
                     } else {
                         minutes = String.valueOf(longMins);
                     }
 
-                    if (longSeconds < 10){
+                    if (longSeconds < 10) {
                         seconds = "0" + String.valueOf(longSeconds);
                     } else {
                         seconds = String.valueOf(longSeconds);
                     }
                     holder.content_TMinus_status.setTypeface(Typeface.SANS_SERIF);
-                    holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context,R.color.red));
+                    holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.red));
                     holder.content_TMinus_status.setText(String.format("L - %s %s:%s:%s", days, hours, minutes, seconds));
                 }
             }.start();
 
         } else {
             holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
-            if (night){
+            if (night) {
                 holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color));
             } else {
                 holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary));
@@ -276,22 +276,20 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
         //Get launch date
         if (launchItem.getStatus() == 2) {
             //Get launch date
-            if (sharedPref.getBoolean("local_time", true)) {
-                SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy.");
-                sdf.toLocalizedPattern();
-                Date date = new Date(launchItem.getWindowstart());
-                launchDate = sdf.format(date);
-            } else {
-                launchDate = launchItem.getWindowstart();
-            }
+            SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy.");
+            sdf.toLocalizedPattern();
+            Date date = launchItem.getWindowstart();
+            launchDate = sdf.format(date);
 
             holder.launch_date.setText("To be determined... " + launchDate);
         } else {
             if (sharedPref.getBoolean("local_time", true)) {
-                Date date = new Date(launchItem.getWindowstart());
+                Date date = launchItem.getWindowstart();
                 launchDate = df.format(date);
             } else {
-                launchDate = launchItem.getWindowstart();
+                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy hh:mm a zzz");
+                Date date = launchItem.getWindowstart();
+                launchDate = sdf.format(date);
             }
             holder.launch_date.setText(launchDate);
         }
@@ -340,7 +338,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
     public HashSet<MapView> getMaps() {
         return mMaps;
     }
-    
+
     @Override
     public int getItemCount() {
         return launchList.size();
@@ -428,7 +426,7 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
             SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy hh:mm a zzz");
             df.toLocalizedPattern();
 
-            Date date = new Date(launch.getWindowstart());
+            Date date = launch.getWindowstart();
             String launchDate = df.format(date);
 
             switch (v.getId()) {
@@ -456,15 +454,15 @@ public class LaunchBigAdapter extends RecyclerView.Adapter<LaunchBigAdapter.View
                                 })
                                 .show();
                     } else {
-                    Uri watchUri = Uri.parse(launchList.get(position).getVidURL());
-                    Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
-                    context.startActivity(i);
+                        Uri watchUri = Uri.parse(launchList.get(position).getVidURL());
+                        Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
+                        context.startActivity(i);
                     }
                     break;
                 case R.id.exploreButton:
                     Timber.d("Explore: %s", launchList.get(position).getId());
                     Intent exploreIntent = new Intent(context, LaunchDetailActivity.class);
-                    exploreIntent.putExtra("TYPE", "Launch");
+                    exploreIntent.putExtra("TYPE", "LaunchID");
                     exploreIntent.putExtra("launchID", launch.getId());
                     context.startActivity(exploreIntent);
                     break;

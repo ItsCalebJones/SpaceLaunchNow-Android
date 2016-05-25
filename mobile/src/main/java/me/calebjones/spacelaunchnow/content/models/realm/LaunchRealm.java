@@ -16,9 +16,9 @@ import me.calebjones.spacelaunchnow.utils.custom.RealmStr;
 public class LaunchRealm extends RealmObject {
 
     private String name;
-    private String windowstart;
-    private String windowend;
-    private String net;
+    private Date windowstart;
+    private Date windowend;
+    private Date net;
     private String holdreason;
     private String failreason;
     private String hashtag;
@@ -32,6 +32,7 @@ public class LaunchRealm extends RealmObject {
     private Integer wsstamp;
     private Integer westamp;
     private Integer netstamp;
+    private Integer launchTimeStamp;
 
     private Integer status;
 
@@ -141,27 +142,27 @@ public class LaunchRealm extends RealmObject {
         this.name = name;
     }
 
-    public String getWindowstart() {
+    public Date getWindowstart() {
         return windowstart;
     }
 
-    public void setWindowstart(String windowstart) {
+    public void setWindowstart(Date windowstart) {
         this.windowstart = windowstart;
     }
 
-    public String getWindowend() {
+    public Date getWindowend() {
         return windowend;
     }
 
-    public void setWindowend(String windowend) {
+    public void setWindowend(Date windowend) {
         this.windowend = windowend;
     }
 
-    public String getNet() {
+    public Date getNet() {
         return net;
     }
 
-    public void setNet(String net) {
+    public void setNet(Date net) {
         this.net = net;
     }
 
@@ -289,5 +290,13 @@ public class LaunchRealm extends RealmObject {
         isNotifiedDay = false;
         isNotifiedHour = false;
         isNotifiedTenMinute = false;
+    }
+
+    public Integer getLaunchTimeStamp() {
+        return launchTimeStamp;
+    }
+
+    public void setLaunchTimeStamp(Integer launchTimeStamp) {
+        this.launchTimeStamp = launchTimeStamp;
     }
 }
