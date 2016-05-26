@@ -39,6 +39,7 @@ import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.google.android.gms.maps.MapView;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.TimeZone;
 
@@ -47,6 +48,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.BuildConfig;
@@ -209,7 +211,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                         color_reveal.setVisibility(View.INVISIBLE);
                     }
                     if (switchChanged) {
-                        refreshView();
+                        displayLaunches();
                     }
                 }
             }
@@ -268,53 +270,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         realm.close();
     }
 
-    private void refreshView() {
-        if (cardSizeSmall) {
-            smallAdapter.clear();
-        } else {
-            adapter.clear();
-        }
 
-        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && launchRealms.size() == 1) {
-            linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-            mRecyclerView.setLayoutManager(linearLayoutManager);
-            if (cardSizeSmall) {
-                mRecyclerView.setAdapter(smallAdapter);
-            } else {
-                mRecyclerView.setAdapter(adapter);
-            }
-        } else if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
-            layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-            mRecyclerView.setLayoutManager(layoutManager);
-            if (cardSizeSmall) {
-                mRecyclerView.setAdapter(smallAdapter);
-            } else {
-                mRecyclerView.setAdapter(adapter);
-            }
-        }
-        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                int topRowVerticalPosition =
-                        (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
-                mSwipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
-
-            }
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
-
-        if (cardSizeSmall) {
-            adapter.addItems(launchRealms);
-            adapter.notifyDataSetChanged();
-        } else {
-            adapter.addItems(launchRealms);
-            adapter.notifyDataSetChanged();
-        }
-    }
 
     private RealmChangeListener callback = new RealmChangeListener() {
         @Override
@@ -364,13 +320,73 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                 mRecyclerView.setAdapter(adapter);
             }
         }
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-        long time = cal.getTimeInMillis() / 1000;
+        Date date = new Date();
 
         Timber.v("displayLaunches - Realm query created.");
-        launchRealms = realm.where(LaunchRealm.class)
-                .greaterThan("netstamp", time)
-                .findAllSortedAsync("netstamp", Sort.ASCENDING);
+        if(switchPreferences.getAllSwitch()) {
+            launchRealms = realm.where(LaunchRealm.class)
+                    .greaterThanOrEqualTo("net", date)
+                    .findAllSortedAsync("net", Sort.ASCENDING);
+            launchRealms.addChangeListener(callback);
+        } else {
+            filterLaunchRealm();
+        }
+    }
+
+    private void filterLaunchRealm() {
+        Date date = new Date();
+        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class).greaterThanOrEqualTo("net", date);
+        if (!switchPreferences.getSwitchNasa()){
+            query.notEqualTo("rocket.agencies.id",44);
+            query.notEqualTo("location.pads.agencies.id", 44);
+        }
+
+        if (!switchPreferences.getSwitchArianespace()){
+            query.notEqualTo("rocket.agencies.id",115);
+            query.notEqualTo("location.pads.agencies.id", 115);
+        }
+
+        if (!switchPreferences.getSwitchSpaceX()){
+            query.notEqualTo("rocket.agencies.id",121);
+            query.notEqualTo("location.pads.agencies.id", 121);
+        }
+
+        if (!switchPreferences.getSwitchULA()){
+            query.notEqualTo("rocket.agencies.id",124);
+            query.notEqualTo("location.pads.agencies.id", 124);
+        }
+
+        if (!switchPreferences.getSwitchRoscosmos()){
+            query.notEqualTo("rocket.agencies.id",111);
+            query.notEqualTo("rocket.agencies.id",163);
+            query.notEqualTo("rocket.agencies.id",63);
+            query.notEqualTo("location.pads.agencies.id", 111);
+            query.notEqualTo("location.pads.agencies.id", 163);
+            query.notEqualTo("location.pads.agencies.id", 63);
+        }
+        if (!switchPreferences.getSwitchCASC()){
+            query.notEqualTo("rocket.agencies.id",88);
+            query.notEqualTo("location.pads.agencies.id", 88);
+        }
+
+        if (!switchPreferences.getSwitchISRO()){
+            query.notEqualTo("rocket.agencies.id",31);
+            query.notEqualTo("location.pads.agencies.id", 31);
+        }
+
+        if(!switchPreferences.getSwitchCape()){
+
+        }
+
+        if(!switchPreferences.getSwitchPles()){
+
+        }
+
+        if(!switchPreferences.getSwitchVan()){
+
+        }
+
+        launchRealms = query.findAllSortedAsync("net", Sort.ASCENDING);
         launchRealms.addChangeListener(callback);
     }
 
@@ -665,7 +681,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                     color_reveal.setVisibility(View.INVISIBLE);
                 }
                 if (switchChanged) {
-                    refreshView();
+                    displayLaunches();
                 }
             }
         } else if (id == R.id.debug_vehicle) {

@@ -30,6 +30,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -174,7 +176,6 @@ public class NextLaunchTracker extends IntentService implements
         }
     }
 
-    //TODO Create transactions for all SET methods
     private void checkStatus() {
         if (nextLaunch != null && nextLaunch.getNetstamp() > 0) {
 
@@ -258,8 +259,18 @@ public class NextLaunchTracker extends IntentService implements
                 scheduleUpdate();
             }
         } else {
-            interval = (86400000);
-            scheduleUpdate();
+            //Get sync period.
+            String notificationTimer = this.sharedPref.getString("notification_sync_time", "24");
+
+
+            Pattern p = Pattern.compile("(\\d+)");
+            Matcher m = p.matcher(notificationTimer);
+
+            if (m.matches()) {
+                int hrs = Integer.parseInt(m.group(1));
+                interval = (long) hrs * 60 * 60 * 1000;
+                scheduleUpdate();
+            }
         }
     }
 
