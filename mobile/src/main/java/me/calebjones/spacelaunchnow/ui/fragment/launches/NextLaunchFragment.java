@@ -271,7 +271,6 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     }
 
 
-
     private RealmChangeListener callback = new RealmChangeListener() {
         @Override
         public void onChange(Object element) {
@@ -293,7 +292,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                     adapter.addItems(launchRealms);
                 }
             } else {
-                showErrorSnackbar("Unable to load launch data.");
+                showErrorSnackbar("Unable to find matching launches.");
             }
 
             hideLoading();
@@ -323,7 +322,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         Date date = new Date();
 
         Timber.v("displayLaunches - Realm query created.");
-        if(switchPreferences.getAllSwitch()) {
+        if (switchPreferences.getAllSwitch()) {
             launchRealms = realm.where(LaunchRealm.class)
                     .greaterThanOrEqualTo("net", date)
                     .findAllSortedAsync("net", Sort.ASCENDING);
@@ -334,56 +333,123 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     }
 
     private void filterLaunchRealm() {
+        boolean first = true;
         Date date = new Date();
         RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class).greaterThanOrEqualTo("net", date);
-        if (!switchPreferences.getSwitchNasa()){
-            query.notEqualTo("rocket.agencies.id",44);
-            query.notEqualTo("location.pads.agencies.id", 44);
+        if (switchPreferences.getSwitchNasa()) {
+            first = false;
+            query.equalTo("rocket.agencies.id", 44)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 44);
         }
 
-        if (!switchPreferences.getSwitchArianespace()){
-            query.notEqualTo("rocket.agencies.id",115);
-            query.notEqualTo("location.pads.agencies.id", 115);
+        if (switchPreferences.getSwitchArianespace()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("rocket.agencies.id", 115)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 115);
         }
 
-        if (!switchPreferences.getSwitchSpaceX()){
-            query.notEqualTo("rocket.agencies.id",121);
-            query.notEqualTo("location.pads.agencies.id", 121);
+        if (switchPreferences.getSwitchSpaceX()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("rocket.agencies.id", 121)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 121);
         }
 
-        if (!switchPreferences.getSwitchULA()){
-            query.notEqualTo("rocket.agencies.id",124);
-            query.notEqualTo("location.pads.agencies.id", 124);
+        if (switchPreferences.getSwitchULA()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("rocket.agencies.id", 124)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 124);
         }
 
-        if (!switchPreferences.getSwitchRoscosmos()){
-            query.notEqualTo("rocket.agencies.id",111);
-            query.notEqualTo("rocket.agencies.id",163);
-            query.notEqualTo("rocket.agencies.id",63);
-            query.notEqualTo("location.pads.agencies.id", 111);
-            query.notEqualTo("location.pads.agencies.id", 163);
-            query.notEqualTo("location.pads.agencies.id", 63);
+        if (switchPreferences.getSwitchRoscosmos()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("rocket.agencies.id", 111)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 111)
+                    .or()
+                    .equalTo("rocket.agencies.id", 163)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 163)
+                    .or()
+                    .equalTo("rocket.agencies.id", 63)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 63);
         }
-        if (!switchPreferences.getSwitchCASC()){
-            query.notEqualTo("rocket.agencies.id",88);
-            query.notEqualTo("location.pads.agencies.id", 88);
+        if (switchPreferences.getSwitchCASC()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("rocket.agencies.id", 88)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 88);
         }
 
-        if (!switchPreferences.getSwitchISRO()){
-            query.notEqualTo("rocket.agencies.id",31);
-            query.notEqualTo("location.pads.agencies.id", 31);
+        if (switchPreferences.getSwitchISRO()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("rocket.agencies.id", 31)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 31);
         }
 
-        if(!switchPreferences.getSwitchCape()){
-
+        if (switchPreferences.getSwitchKSC()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("rocket.agencies.id", 17)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 17);
         }
 
-        if(!switchPreferences.getSwitchPles()){
-
+        if (switchPreferences.getSwitchCape()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("location.id", 16);
         }
 
-        if(!switchPreferences.getSwitchVan()){
+        if (switchPreferences.getSwitchPles()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("location.id", 11);
+        }
 
+        if (switchPreferences.getSwitchVan()) {
+            if (!first) {
+                query.or();
+            }
+            query.equalTo("location.id", 18);
         }
 
         launchRealms = query.findAllSortedAsync("net", Sort.ASCENDING);
@@ -590,9 +656,15 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     };
 
     private void showErrorSnackbar(String error) {
-        Snackbar
-                .make(coordinatorLayout, "Error - " + error, Snackbar.LENGTH_LONG)
-                .setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
+        final Snackbar snackbar = Snackbar.make(coordinatorLayout, "Error - " + error, Snackbar.LENGTH_INDEFINITE);
+
+        snackbar.setActionTextColor(ContextCompat.getColor(context, R.color.colorAccent))
+                .setAction("DISMISS", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        snackbar.dismiss();
+                    }
+                })
                 .show();
     }
 
@@ -706,10 +778,18 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         switchChanged = true;
     }
 
+    private void checkAll() {
+        if (switchPreferences.getAllSwitch()) {
+            switchPreferences.setAllSwitch(false);
+            customSwitch.setChecked(false);
+        }
+    }
+
     @OnClick(R.id.nasa_switch)
     public void nasa_switch() {
         confirm();
         switchPreferences.setSwitchNasa(!switchPreferences.getSwitchNasa());
+        checkAll();
     }
 
 
@@ -717,60 +797,70 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     public void spacex_switch() {
         confirm();
         switchPreferences.setSwitchSpaceX(!switchPreferences.getSwitchSpaceX());
+        checkAll();
     }
 
     @OnClick(R.id.roscosmos_switch)
     public void roscosmos_switch() {
         confirm();
         switchPreferences.setSwitchRoscosmos(!switchPreferences.getSwitchRoscosmos());
+        checkAll();
     }
 
     @OnClick(R.id.ula_switch)
     public void ula_switch() {
         confirm();
         switchPreferences.setSwitchULA(!switchPreferences.getSwitchULA());
+        checkAll();
     }
 
     @OnClick(R.id.arianespace_switch)
     public void arianespace_switch() {
         confirm();
         switchPreferences.setSwitchArianespace(!switchPreferences.getSwitchArianespace());
+        checkAll();
     }
 
     @OnClick(R.id.casc_switch)
     public void casc_switch() {
         confirm();
         switchPreferences.setSwitchCASC(!switchPreferences.getSwitchCASC());
+        checkAll();
     }
 
     @OnClick(R.id.isro_switch)
     public void isro_switch() {
         confirm();
         switchPreferences.setSwitchISRO(!switchPreferences.getSwitchISRO());
+        checkAll();
     }
 
     @OnClick(R.id.KSC_switch)
     public void KSC_switch() {
         confirm();
         switchPreferences.setSwitchKSC(!switchPreferences.getSwitchKSC());
+        checkAll();
     }
 
     @OnClick(R.id.ples_switch)
     public void ples_switch() {
         confirm();
-        switchPreferences.setSwitchPles(!switchPreferences.getSwitchPles());
+        switchPreferences.setSwitchPles(plesSwitch.isChecked());
+        checkAll();
     }
 
     @OnClick(R.id.van_switch)
     public void van_switch() {
         confirm();
         switchPreferences.setSwitchVan(!switchPreferences.getSwitchVan());
+        checkAll();
     }
 
     @OnClick(R.id.cape_switch)
     public void cape_switch() {
         confirm();
         switchPreferences.setSwitchCape(!switchPreferences.getSwitchCape());
+        checkAll();
     }
 
     @OnClick(R.id.all_switch)

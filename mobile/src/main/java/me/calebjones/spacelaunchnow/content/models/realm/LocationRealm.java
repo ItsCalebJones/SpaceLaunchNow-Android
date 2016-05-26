@@ -15,6 +15,7 @@ import me.calebjones.spacelaunchnow.content.models.Pad;
 public class LocationRealm extends RealmObject {
 
     @PrimaryKey
+    private String primaryID;
     private Integer id;
     private String name;
     private RealmList<PadRealm> pads = new RealmList<>();
@@ -41,6 +42,14 @@ public class LocationRealm extends RealmObject {
 
     public void setPads(RealmList<PadRealm> pads) {
         this.pads = pads;
+    }
+
+    public void setPrimaryID(){
+        if (pads != null && id != null) {
+            if (pads.size() > 0) {
+                this.primaryID = String.valueOf(id) + "-" + String.valueOf(pads.get(0).getId());
+            }
+        }
     }
 
 }

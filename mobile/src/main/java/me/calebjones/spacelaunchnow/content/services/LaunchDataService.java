@@ -180,6 +180,7 @@ public class LaunchDataService extends IntentService {
         Response<LaunchResponse> launchResponse;
         try {
             launchResponse = call.execute();
+            Timber.v("Response: %s", launchResponse.body());
             if (launchResponse.isSuccess()) {
                 RealmList<LaunchRealm> items = new RealmList<>(launchResponse.body().getLaunches());
 
@@ -193,6 +194,7 @@ public class LaunchDataService extends IntentService {
                     item.setIsNotifiedDay(previous.getIsNotifiedDay());
                     item.setIsNotifiedHour(previous.getIsNotifiedHour());
                     item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
+                    item.getLocation().setPrimaryID();
                     mRealm.copyToRealmOrUpdate(item);
                     mRealm.commitTransaction();
                 }
@@ -224,6 +226,7 @@ public class LaunchDataService extends IntentService {
         Response<LaunchResponse> launchResponse;
         try {
             launchResponse = call.execute();
+            Timber.v("Response: %s", launchResponse.body());
             if (launchResponse.isSuccess()) {
                 RealmList<LaunchRealm> items = new RealmList<>(launchResponse.body().getLaunches());
 
@@ -238,6 +241,7 @@ public class LaunchDataService extends IntentService {
                         item.setIsNotifiedDay(previous.getIsNotifiedDay());
                         item.setIsNotifiedHour(previous.getIsNotifiedHour());
                         item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
+                        item.getLocation().setPrimaryID();
                     }
                     mRealm.copyToRealmOrUpdate(item);
                     mRealm.commitTransaction();
@@ -270,6 +274,7 @@ public class LaunchDataService extends IntentService {
         Response<LaunchResponse> launchResponse;
         try {
             launchResponse = call.execute();
+            Timber.v("Response: %s", launchResponse.body());
             if (launchResponse.isSuccess()) {
                 RealmList<LaunchRealm> items = new RealmList<>(launchResponse.body().getLaunches());
                 for(LaunchRealm item : items){
@@ -283,6 +288,7 @@ public class LaunchDataService extends IntentService {
                         item.setIsNotifiedDay(previous.getIsNotifiedDay());
                         item.setIsNotifiedHour(previous.getIsNotifiedHour());
                         item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
+                        item.getLocation().setPrimaryID();
                     }
                     mRealm.copyToRealmOrUpdate(item);
                     mRealm.commitTransaction();
@@ -328,6 +334,7 @@ public class LaunchDataService extends IntentService {
                         item.setIsNotifiedDay(previous.getIsNotifiedDay());
                         item.setIsNotifiedHour(previous.getIsNotifiedHour());
                         item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
+                        item.getLocation().setPrimaryID();
                     }
                     mRealm.copyToRealmOrUpdate(item);
                     mRealm.commitTransaction();
