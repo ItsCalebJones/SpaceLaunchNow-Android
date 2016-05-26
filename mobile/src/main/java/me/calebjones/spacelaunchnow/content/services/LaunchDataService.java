@@ -183,10 +183,19 @@ public class LaunchDataService extends IntentService {
             if (launchResponse.isSuccess()) {
                 RealmList<LaunchRealm> items = new RealmList<>(launchResponse.body().getLaunches());
 
-                mRealm.beginTransaction();
-                mRealm.copyToRealmOrUpdate(items);
-                mRealm.commitTransaction();
-                mRealm.close();
+                for(LaunchRealm item : items){
+                    LaunchRealm previous = mRealm.where(LaunchRealm.class)
+                            .equalTo("id", item.getId())
+                            .findFirst();
+                    mRealm.beginTransaction();
+                    item.setFavorite(previous.isFavorite());
+                    item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
+                    item.setIsNotifiedDay(previous.getIsNotifiedDay());
+                    item.setIsNotifiedHour(previous.getIsNotifiedHour());
+                    item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
+                    mRealm.copyToRealmOrUpdate(item);
+                    mRealm.commitTransaction();
+                }
 
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
@@ -218,10 +227,21 @@ public class LaunchDataService extends IntentService {
             if (launchResponse.isSuccess()) {
                 RealmList<LaunchRealm> items = new RealmList<>(launchResponse.body().getLaunches());
 
-                mRealm.beginTransaction();
-                mRealm.copyToRealmOrUpdate(items);
-                mRealm.commitTransaction();
-                mRealm.close();
+                for(LaunchRealm item : items){
+                    LaunchRealm previous = mRealm.where(LaunchRealm.class)
+                            .equalTo("id", item.getId())
+                            .findFirst();
+                    mRealm.beginTransaction();
+                    if (previous != null) {
+                        item.setFavorite(previous.isFavorite());
+                        item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
+                        item.setIsNotifiedDay(previous.getIsNotifiedDay());
+                        item.setIsNotifiedHour(previous.getIsNotifiedHour());
+                        item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
+                    }
+                    mRealm.copyToRealmOrUpdate(item);
+                    mRealm.commitTransaction();
+                }
 
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
@@ -252,11 +272,21 @@ public class LaunchDataService extends IntentService {
             launchResponse = call.execute();
             if (launchResponse.isSuccess()) {
                 RealmList<LaunchRealm> items = new RealmList<>(launchResponse.body().getLaunches());
-
-                mRealm.beginTransaction();
-                mRealm.copyToRealmOrUpdate(items);
-                mRealm.commitTransaction();
-                mRealm.close();
+                for(LaunchRealm item : items){
+                    LaunchRealm previous = mRealm.where(LaunchRealm.class)
+                            .equalTo("id", item.getId())
+                            .findFirst();
+                    mRealm.beginTransaction();
+                    if (previous != null) {
+                        item.setFavorite(previous.isFavorite());
+                        item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
+                        item.setIsNotifiedDay(previous.getIsNotifiedDay());
+                        item.setIsNotifiedHour(previous.getIsNotifiedHour());
+                        item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
+                    }
+                    mRealm.copyToRealmOrUpdate(item);
+                    mRealm.commitTransaction();
+                }
 
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
@@ -287,11 +317,21 @@ public class LaunchDataService extends IntentService {
             launchResponse = call.execute();
             if (launchResponse.isSuccess()) {
                 RealmList<LaunchRealm> items = new RealmList<>(launchResponse.body().getLaunches());
-
-                mRealm.beginTransaction();
-                mRealm.copyToRealmOrUpdate(items);
-                mRealm.commitTransaction();
-                mRealm.close();
+                for(LaunchRealm item : items){
+                    LaunchRealm previous = mRealm.where(LaunchRealm.class)
+                            .equalTo("id", item.getId())
+                            .findFirst();
+                    mRealm.beginTransaction();
+                    if (previous != null) {
+                        item.setFavorite(previous.isFavorite());
+                        item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
+                        item.setIsNotifiedDay(previous.getIsNotifiedDay());
+                        item.setIsNotifiedHour(previous.getIsNotifiedHour());
+                        item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
+                    }
+                    mRealm.copyToRealmOrUpdate(item);
+                    mRealm.commitTransaction();
+                }
         } else throw new IOException(launchResponse.errorBody().toString());
 
         } catch (IOException e) {

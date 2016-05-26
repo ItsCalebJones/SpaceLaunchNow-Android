@@ -94,7 +94,7 @@ public class NextLaunchTracker extends IntentService implements
 
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         Calendar calDay = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-        calDay.add(Calendar.DATE, 1);
+        calDay.add(Calendar.HOUR, 36);
         long time = cal.getTimeInMillis() / 1000;
         long timeNext = calDay.getTimeInMillis() / 1000;
 
@@ -126,15 +126,19 @@ public class NextLaunchTracker extends IntentService implements
                     debugNotification(String.format("Resetting notifiers - Launch: %s Timestamp: %s"
                             ,nextLaunch.getName() , nextLaunch.getNetstamp()));
 
+                    realm.beginTransaction();
                     nextLaunch.resetNotifiers();
                     nextLaunch.setLaunchTimeStamp(nextLaunch.getNetstamp());
+                    realm.commitTransaction();
 
                     checkStatus();
                 } else {
                     checkStatus();
                 }
             } else if (nextLaunch.getNetstamp() != null) {
-                listPreferences.setNextLaunchTimestamp(nextLaunch.getNetstamp());
+                realm.beginTransaction();
+                nextLaunch.setLaunchTimeStamp(nextLaunch.getNetstamp());
+                realm.commitTransaction();
                 debugNotification("Updated timestamp to " + nextLaunch.getNetstamp());
                 checkStatus();
             } else {
@@ -170,6 +174,7 @@ public class NextLaunchTracker extends IntentService implements
         }
     }
 
+    //TODO Create transactions for all SET methods
     private void checkStatus() {
         if (nextLaunch != null && nextLaunch.getNetstamp() > 0) {
 
@@ -192,10 +197,14 @@ public class NextLaunchTracker extends IntentService implements
                         //Check settings to see if user should be notified.
                         if (!nextLaunch.getIsNotifiedTenMinute() && this.sharedPref.getBoolean("notifications_launch_minute", false)) {
                             notifyUserImminent(nextLaunch, minutes);
+                            realm.beginTransaction();
                             nextLaunch.setIsNotifiedTenMinute(true);
+                            realm.commitTransaction();
                         } else if (!nextLaunch.getIsNotifiedHour() && this.sharedPref.getBoolean("notifications_launch_imminent", true)) {
                             notifyUserImminent(nextLaunch, minutes);
-                            nextLaunch.setIsNotifiedhour(true);
+                            realm.beginTransaction();
+                            nextLaunch.setIsNotifiedHour(true);
+                            realm.commitTransaction();
                         }
                     }
                     interval = (future.getTimeInMillis() + 3600000);
@@ -207,7 +216,9 @@ public class NextLaunchTracker extends IntentService implements
                         if (this.sharedPref.getBoolean("notifications_launch_imminent", true)) {
                             if (!nextLaunch.getIsNotifiedHour()) {
                                 notifyUserImminent(nextLaunch, minutes);
-                                nextLaunch.setIsNotifiedhour(true);
+                                realm.beginTransaction();
+                                nextLaunch.setIsNotifiedHour(true);
+                                realm.commitTransaction();
                             }
                         }
                     }
@@ -223,7 +234,9 @@ public class NextLaunchTracker extends IntentService implements
                         if (this.sharedPref.getBoolean("notifications_launch_day", true)) {
                             if (!nextLaunch.getIsNotifiedDay()) {
                                 notifyUser(nextLaunch, hours);
+                                realm.beginTransaction();
                                 nextLaunch.setIsNotifiedDay(true);
+                                realm.commitTransaction();
                             }
                         }
                     }

@@ -9,10 +9,12 @@ import java.util.Map;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 import me.calebjones.spacelaunchnow.content.models.Pad;
 
 public class LocationRealm extends RealmObject {
 
+    @PrimaryKey
     private Integer id;
     private String name;
     private RealmList<PadRealm> pads = new RealmList<>();

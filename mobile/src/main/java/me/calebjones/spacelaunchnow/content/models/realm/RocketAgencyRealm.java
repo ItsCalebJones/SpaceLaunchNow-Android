@@ -7,9 +7,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class RocketAgencyRealm extends RealmObject {
 
+    @PrimaryKey
     private Integer id;
     private String name;
     private String abbrev;

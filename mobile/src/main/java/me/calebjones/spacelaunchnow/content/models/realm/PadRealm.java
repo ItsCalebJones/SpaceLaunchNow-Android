@@ -9,10 +9,12 @@ import java.util.Map;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 import me.calebjones.spacelaunchnow.content.models.LocationAgency;
 
 public class PadRealm extends RealmObject {
 
+    @PrimaryKey
     private Integer id;
     private String name;
     private String infoURL;
