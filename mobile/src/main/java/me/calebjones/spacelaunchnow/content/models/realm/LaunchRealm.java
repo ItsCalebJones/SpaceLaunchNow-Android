@@ -74,7 +74,7 @@ public class LaunchRealm extends RealmObject {
         return isNotifiedHour;
     }
 
-    public void setIsNotifiedhour(boolean isNotifiedHour) {
+    public void setIsNotifiedHour(boolean isNotifiedHour) {
         this.isNotifiedHour = isNotifiedHour;
     }
 
