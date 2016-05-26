@@ -413,6 +413,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         OneSignal.sendTags(tags);
     }
 
+
     //Nasa Switch
     public boolean getSwitchPles() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
@@ -705,7 +706,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         try {
             tags.put("Nasa", 1);
             tags.put("ISRO", 1);
-            tags.put("ROSCOSMOS", 1);
+            tags.put("Roscosmos", 1);
             tags.put("ULA", 1);
             tags.put("Arianespace", 1);
             tags.put("KSC", 1);
