@@ -345,7 +345,7 @@ public class LaunchDataService extends IntentService {
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         //Get sync period.
-        String notificationTimer = this.sharedPref.getString("notification_sync_time", "4");
+        String notificationTimer = this.sharedPref.getString("notification_sync_time", "24");
 
         long interval;
 
@@ -359,7 +359,7 @@ public class LaunchDataService extends IntentService {
 
             long nextUpdate = Calendar.getInstance().getTimeInMillis() + interval;
             Timber.d("LaunchDataService - Scheduling Alarm at %s with interval of %s", nextUpdate, interval);
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, nextUpdate, interval,
+            alarmManager.setInexactRepeating(AlarmManager.RTC, nextUpdate, interval,
                     PendingIntent.getBroadcast(this, 165435, new Intent(Strings.ACTION_UPDATE_UP_LAUNCHES), 0));
         } else {
             Timber.e("LaunchDataService - Error setting alarm, failed to change %s to milliseconds", notificationTimer);
