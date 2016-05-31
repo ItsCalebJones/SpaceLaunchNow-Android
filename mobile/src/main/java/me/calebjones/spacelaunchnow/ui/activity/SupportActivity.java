@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.legacy.Products;
+import me.calebjones.spacelaunchnow.content.models.natives.Products;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 import xyz.hanks.library.SmallBang;
