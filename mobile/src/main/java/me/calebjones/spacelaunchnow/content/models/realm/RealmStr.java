@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.utils.custom;
+package me.calebjones.spacelaunchnow.content.models.realm;
 
 import io.realm.RealmObject;
 
@@ -10,6 +10,10 @@ public class RealmStr extends RealmObject {
 
     public RealmStr(String val) {
         this.val = val;
+    }
+
+    public String getVal(){
+        return val;
     }
 
 }

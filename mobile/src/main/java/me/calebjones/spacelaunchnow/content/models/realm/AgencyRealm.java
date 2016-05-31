@@ -1,13 +1,12 @@
 
-package me.calebjones.spacelaunchnow.content.models;
+package me.calebjones.spacelaunchnow.content.models.realm;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
-public class LocationAgency implements Serializable {
+public class AgencyRealm extends RealmObject {
 
+    @PrimaryKey
     private Integer id;
     private String name;
     private String abbrev;
@@ -15,8 +14,6 @@ public class LocationAgency implements Serializable {
     private Integer type;
     private String infoURL;
     private String wikiURL;
-    private ArrayList<String> infoURLs;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public Integer getId() {
         return id;
@@ -72,22 +69,6 @@ public class LocationAgency implements Serializable {
 
     public void setWikiURL(String wikiURL) {
         this.wikiURL = wikiURL;
-    }
-
-    public ArrayList<String> getInfoURLs() {
-        return infoURLs;
-    }
-
-    public void setInfoURLs(ArrayList<String> infoURLs) {
-        this.infoURLs = infoURLs;
-    }
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
     }
 
 }

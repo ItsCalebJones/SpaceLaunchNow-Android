@@ -1,17 +1,11 @@
 
 package me.calebjones.spacelaunchnow.content.models.realm;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.Date;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import me.calebjones.spacelaunchnow.content.models.Location;
-import me.calebjones.spacelaunchnow.content.models.Mission;
-import me.calebjones.spacelaunchnow.content.models.Rocket;
-import me.calebjones.spacelaunchnow.utils.custom.RealmStr;
 
 public class LaunchRealm extends RealmObject {
 

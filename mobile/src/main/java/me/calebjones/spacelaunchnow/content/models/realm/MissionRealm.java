@@ -3,7 +3,6 @@ package me.calebjones.spacelaunchnow.content.models.realm;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import me.calebjones.spacelaunchnow.content.models.Launch;
 
 public class MissionRealm extends RealmObject {
 

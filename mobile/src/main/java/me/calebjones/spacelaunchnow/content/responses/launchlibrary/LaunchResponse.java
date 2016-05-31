@@ -1,9 +1,8 @@
-package me.calebjones.spacelaunchnow.content.responses;
+package me.calebjones.spacelaunchnow.content.responses.launchlibrary;
 
-import java.util.List;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 
-public class LaunchResponse {
+public class LaunchResponse extends BaseResponse {
     private LaunchRealm[] launches;
 
     public LaunchRealm[] getLaunches() {

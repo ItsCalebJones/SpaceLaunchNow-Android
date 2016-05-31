@@ -11,7 +11,7 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 
-import me.calebjones.spacelaunchnow.content.models.Launch;
+import me.calebjones.spacelaunchnow.content.models.legacy.Launch;
 import me.calebjones.spacelaunchnow.utils.CalendarUtil;
 
 public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceChangeListener {

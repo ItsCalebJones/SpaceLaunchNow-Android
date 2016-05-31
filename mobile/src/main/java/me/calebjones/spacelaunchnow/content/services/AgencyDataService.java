@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.Agency;
+import me.calebjones.spacelaunchnow.content.models.legacy.Agency;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import timber.log.Timber;
 

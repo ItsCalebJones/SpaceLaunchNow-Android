@@ -34,13 +34,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.realm.Realm;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.models.Launch;
+import me.calebjones.spacelaunchnow.content.models.legacy.Launch;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.utils.CalendarUtil;
@@ -100,7 +101,13 @@ public class NextLaunchTracker extends IntentService implements
         long time = cal.getTimeInMillis() / 1000;
         long timeNext = calDay.getTimeInMillis() / 1000;
 
-        launchRealms = realm.where(LaunchRealm.class).between("netstamp", time, timeNext).findAll();
+        if (switchPreferences.getAllSwitch()) {
+            launchRealms = realm.where(LaunchRealm.class)
+                    .between("netstamp", time, timeNext)
+                    .findAll();
+        } else {
+            filterLaunchRealm(time, timeNext);
+        }
 
         if (launchRealms.size() > 0) {
             for (LaunchRealm realm : launchRealms) {
@@ -118,12 +125,135 @@ public class NextLaunchTracker extends IntentService implements
         realm.close();
     }
 
+    private void filterLaunchRealm(long time, long timeNext) {
+        boolean first = true;
+        Date date = new Date();
+        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class).between("netstamp", time, timeNext);
+        if (switchPreferences.getSwitchNasa()) {
+            first = false;
+            query.equalTo("rocket.agencies.id", 44)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 44);
+        }
+
+        if (switchPreferences.getSwitchArianespace()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("rocket.agencies.id", 115)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 115);
+        }
+
+        if (switchPreferences.getSwitchSpaceX()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("rocket.agencies.id", 121)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 121);
+        }
+
+        if (switchPreferences.getSwitchULA()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("rocket.agencies.id", 124)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 124);
+        }
+
+        if (switchPreferences.getSwitchRoscosmos()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("rocket.agencies.id", 111)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 111)
+                    .or()
+                    .equalTo("rocket.agencies.id", 163)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 163)
+                    .or()
+                    .equalTo("rocket.agencies.id", 63)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 63);
+        }
+        if (switchPreferences.getSwitchCASC()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("rocket.agencies.id", 88)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 88);
+        }
+
+        if (switchPreferences.getSwitchISRO()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("rocket.agencies.id", 31)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 31);
+        }
+
+        if (switchPreferences.getSwitchKSC()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("rocket.agencies.id", 17)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 17);
+        }
+
+        if (switchPreferences.getSwitchCape()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("location.id", 16);
+        }
+
+        if (switchPreferences.getSwitchPles()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("location.id", 11);
+        }
+
+        if (switchPreferences.getSwitchVan()) {
+            if (!first) {
+                query.or();
+            }
+            query.equalTo("location.id", 18);
+        }
+
+        launchRealms = query.findAll();
+    }
+
     private void checkNextLaunches(LaunchRealm launch) {
         nextLaunch = launch;
 
         if (nextLaunch != null) {
             if (nextLaunch.getLaunchTimeStamp() != null) {
-                if (Math.abs(listPreferences.getNextLaunchTimestamp()
+                if (Math.abs(nextLaunch.getLaunchTimeStamp()
                         - nextLaunch.getNetstamp()) > 60) {
                     debugNotification(String.format("Resetting notifiers - Launch: %s Timestamp: %s"
                             ,nextLaunch.getName() , nextLaunch.getNetstamp()));
@@ -261,7 +391,6 @@ public class NextLaunchTracker extends IntentService implements
         } else {
             //Get sync period.
             String notificationTimer = this.sharedPref.getString("notification_sync_time", "24");
-
 
             Pattern p = Pattern.compile("(\\d+)");
             Matcher m = p.matcher(notificationTimer);
