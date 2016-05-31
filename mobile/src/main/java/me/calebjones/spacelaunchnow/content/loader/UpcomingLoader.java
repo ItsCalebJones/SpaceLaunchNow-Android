@@ -6,7 +6,7 @@ import android.support.v4.content.AsyncTaskLoader;
 import java.util.List;
 
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.Launch;
+import me.calebjones.spacelaunchnow.content.models.legacy.Launch;
 
 public class UpcomingLoader extends AsyncTaskLoader<List<Launch>> {
 

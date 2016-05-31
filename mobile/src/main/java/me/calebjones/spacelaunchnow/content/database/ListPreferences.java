@@ -18,7 +18,6 @@ import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -26,12 +25,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import me.calebjones.spacelaunchnow.content.models.Agency;
-import me.calebjones.spacelaunchnow.content.models.CalendarItem;
-import me.calebjones.spacelaunchnow.content.models.Launch;
-import me.calebjones.spacelaunchnow.content.models.RocketDetails;
-import me.calebjones.spacelaunchnow.content.models.Mission;
-import me.calebjones.spacelaunchnow.content.models.Rocket;
+import me.calebjones.spacelaunchnow.content.models.legacy.Agency;
+import me.calebjones.spacelaunchnow.content.models.legacy.CalendarItem;
+import me.calebjones.spacelaunchnow.content.models.legacy.Launch;
+import me.calebjones.spacelaunchnow.content.models.legacy.RocketDetails;
+import me.calebjones.spacelaunchnow.content.models.legacy.Mission;
+import me.calebjones.spacelaunchnow.content.models.legacy.Rocket;
 import timber.log.Timber;
 
 public class ListPreferences {

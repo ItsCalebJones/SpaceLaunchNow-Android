@@ -1,17 +1,9 @@
 
 package me.calebjones.spacelaunchnow.content.models.realm;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import me.calebjones.spacelaunchnow.content.models.Family;
-import me.calebjones.spacelaunchnow.content.models.RocketAgency;
 
 public class RocketRealm extends RealmObject {
 

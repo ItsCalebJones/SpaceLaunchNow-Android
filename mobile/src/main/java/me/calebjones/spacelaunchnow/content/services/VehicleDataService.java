@@ -21,10 +21,10 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.content.database.DatabaseManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.Family;
-import me.calebjones.spacelaunchnow.content.models.Rocket;
+import me.calebjones.spacelaunchnow.content.models.legacy.Family;
+import me.calebjones.spacelaunchnow.content.models.legacy.Rocket;
 import me.calebjones.spacelaunchnow.content.models.Strings;
-import me.calebjones.spacelaunchnow.content.models.RocketDetails;
+import me.calebjones.spacelaunchnow.content.models.legacy.RocketDetails;
 import timber.log.Timber;
 
 

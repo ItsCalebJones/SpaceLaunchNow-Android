@@ -38,10 +38,8 @@ import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.google.android.gms.maps.MapView;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.TimeZone;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -54,8 +52,8 @@ import io.realm.Sort;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.adapter.LaunchBigAdapter;
-import me.calebjones.spacelaunchnow.content.adapter.LaunchSmallAdapter;
+import me.calebjones.spacelaunchnow.content.adapter.CardBigAdapter;
+import me.calebjones.spacelaunchnow.content.adapter.CardSmallAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
@@ -94,8 +92,8 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
 
     private View view;
     private RecyclerView mRecyclerView;
-    private LaunchBigAdapter adapter;
-    private LaunchSmallAdapter smallAdapter;
+    private CardBigAdapter adapter;
+    private CardSmallAdapter smallAdapter;
     private StaggeredGridLayoutManager layoutManager;
     private LinearLayoutManager linearLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -152,10 +150,10 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         cardSizeSmall = sharedPref.getBoolean("card_size_small", false);
         if (cardSizeSmall) {
-            smallAdapter = new LaunchSmallAdapter(getActivity());
+            smallAdapter = new CardSmallAdapter(getActivity());
         } else {
             if (adapter == null) {
-                adapter = new LaunchBigAdapter(getActivity());
+                adapter = new CardBigAdapter(getActivity());
             }
         }
 
@@ -270,7 +268,6 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         realm.close();
     }
 
-
     private RealmChangeListener callback = new RealmChangeListener() {
         @Override
         public void onChange(Object element) {
@@ -294,7 +291,6 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
             } else {
                 showErrorSnackbar("Unable to find matching launches.");
             }
-
             hideLoading();
         }
     };

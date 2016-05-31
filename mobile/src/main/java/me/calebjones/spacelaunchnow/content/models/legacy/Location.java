@@ -1,68 +1,41 @@
-package me.calebjones.spacelaunchnow.content.models;
+
+package me.calebjones.spacelaunchnow.content.models.legacy;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class Family implements Serializable {
+public class Location implements Serializable {
 
     private Integer id;
     private String name;
-    private String agencies;
+    private List<Pad> pads = new ArrayList<Pad>();
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    /**
-     *
-     * @return
-     * The id
-     */
     public Integer getId() {
         return id;
     }
 
-    /**
-     *
-     * @param id
-     * The id
-     */
     public void setId(Integer id) {
         this.id = id;
     }
 
-    /**
-     *
-     * @return
-     * The name
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     *
-     * @param name
-     * The name
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     *
-     * @return
-     * The agencies
-     */
-    public String getAgencies() {
-        return agencies;
+    public List<Pad> getPads() {
+        return pads;
     }
 
-    /**
-     *
-     * @param agencies
-     * The agencies
-     */
-    public void setAgencies(String agencies) {
-        this.agencies = agencies;
+    public void setPads(List<Pad> pads) {
+        this.pads = pads;
     }
 
     public Map<String, Object> getAdditionalProperties() {

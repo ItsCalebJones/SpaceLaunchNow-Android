@@ -15,9 +15,7 @@ import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.preference.PreferenceManager;
@@ -51,28 +49,30 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
+import io.realm.Sort;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.adapter.LaunchAdapter;
+import me.calebjones.spacelaunchnow.content.adapter.ListAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.loader.PreviousLoader;
-import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
-import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 
-public class PreviousLaunchesFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Launch>>, SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener, DatePickerDialog.OnDateSetListener {
+public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener, DatePickerDialog.OnDateSetListener {
 
     private View view, empty;
     private RecyclerView mRecyclerView;
-    private LaunchAdapter adapter;
+    private ListAdapter adapter;
     private FloatingActionMenu menu;
     private String start_date, end_date;
-    private List<Launch> rocketLaunches;
+    private RealmResults<LaunchRealm> rocketLaunches;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ListPreferences listPreferences;
     private SwitchPreferences switchPreferences;
@@ -80,6 +80,8 @@ public class PreviousLaunchesFragment extends Fragment implements LoaderManager.
     private FloatingActionButton agency, vehicle, country, location, reset;
     private int mScrollOffset = 4;
     private LinearLayoutManager layoutManager;
+    private Context context;
+    private Realm realm;
 
     private CoordinatorLayout coordinatorLayout;
     String getRequestId;
@@ -96,9 +98,9 @@ public class PreviousLaunchesFragment extends Fragment implements LoaderManager.
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
+        this.context = getContext();
 
-        setHasOptionsMenu(true);
+        listPreferences = ListPreferences.getInstance(this.context);
 
         if (!BuildConfig.DEBUG){
             Answers.getInstance().logContentView(new ContentViewEvent()
@@ -106,16 +108,17 @@ public class PreviousLaunchesFragment extends Fragment implements LoaderManager.
                     .putContentType("Fragment"));
         }
 
-        LayoutInflater lf = getActivity().getLayoutInflater();
+        super.onCreateView(inflater, container, savedInstanceState);
+        setHasOptionsMenu(true);
 
+        LayoutInflater lf = getActivity().getLayoutInflater();
         view = lf.inflate(R.layout.fragment_previous_launches, container, false);
         ButterKnife.bind(getActivity());
 
         this.listPreferences = ListPreferences.getInstance(getContext());
         this.switchPreferences = SwitchPreferences.getInstance(getContext());
         this.sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        this.rocketLaunches = new ArrayList();
-        adapter = new LaunchAdapter(getContext());
+        adapter = new ListAdapter(getContext());
 
         agency = (FloatingActionButton) view.findViewById(R.id.agency);
         vehicle = (FloatingActionButton) view.findViewById(R.id.vehicle);
@@ -172,6 +175,19 @@ public class PreviousLaunchesFragment extends Fragment implements LoaderManager.
         p.setArguments(b);
 
         return p;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        realm = Realm.getDefaultInstance();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        rocketLaunches.removeChangeListener(callback);
+        realm.close();
     }
 
     private void setUpFab() {
@@ -355,56 +371,45 @@ public class PreviousLaunchesFragment extends Fragment implements LoaderManager.
         return null;
     }
 
-
-    public void displayLaunches() {
-        //TODO fix the bottleneck
-        long time = System.currentTimeMillis();
-        Timber.v("Getting list!");
-        if (!switchPreferences.getPrevFiltered()){
-            rocketLaunches = listPreferences.getLaunchesPrevious();
-        } else {
-            rocketLaunches = listPreferences.getLaunchesPreviousFiltered();
-        }
-        Timber.v("Getting list took %s", Math.abs(time - System.currentTimeMillis()));
-
-        if (rocketLaunches != null) {
-            Timber.v("DisplayLaunches - List size: %s", rocketLaunches.size());
+    private RealmChangeListener callback = new RealmChangeListener() {
+        @Override
+        public void onChange(Object element) {
+            Timber.v("Data changed - size: %s - element:", rocketLaunches.size(), element.toString());
 
             adapter.clear();
-            if (rocketLaunches.size() > 0) {
-                List<Launch> launches = new ArrayList<>();
-                Calendar rightNow = Calendar.getInstance();
-                for (int i = 0; i < rocketLaunches.size(); i++){
-                    if (rocketLaunches.get(i) != null && rocketLaunches.get(i).getNetstamp() > 0) {
-                        final Date date = new Date((rocketLaunches.get(i).getNetstamp()) * 1000);
 
-                        Calendar future = Utils.DateToCalendar(date);
-                        rightNow.setTimeInMillis(System.currentTimeMillis());
-                        long timeToFinish = future.getTimeInMillis() - rightNow.getTimeInMillis();
-                        if (timeToFinish < 0) {
-                            launches.add(rocketLaunches.get(i));
-                        }
-                    }
-                }
-                if (launches.size() > 0) {
-                    empty.setVisibility(View.GONE);
-                    adapter.addItems(launches);
-                } else {
-                    empty.setVisibility(View.VISIBLE);
-                }
+            if (rocketLaunches.size() > 0) {
+                adapter.addItems(rocketLaunches);
             } else {
-                empty.setVisibility(View.VISIBLE);
+                showErrorSnackbar("Unable to find matching launches.");
             }
-            //Animate the FAB's loading
-            view.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    fabSlideIn();
-                }
-            }, 750);
-        } else {
-            empty.setVisibility(View.VISIBLE);
+            hideLoading();
         }
+    };
+
+    private void showErrorSnackbar(String error) {
+        final Snackbar snackbar = Snackbar.make(coordinatorLayout, "Error - " + error, Snackbar.LENGTH_INDEFINITE);
+
+        snackbar.setActionTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent))
+                .setAction("DISMISS", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        snackbar.dismiss();
+                    }
+                })
+                .show();
+    }
+
+
+    public void displayLaunches() {
+        Date date = new Date();
+        if (realm.isClosed()) {
+            realm = Realm.getDefaultInstance();
+        }
+        rocketLaunches = realm.where(LaunchRealm.class)
+                .lessThan("net", date)
+                .findAllSortedAsync("net", Sort.ASCENDING);
+        rocketLaunches.addChangeListener(callback);
     }
 
     public void fetchData() {
@@ -586,7 +591,7 @@ public class PreviousLaunchesFragment extends Fragment implements LoaderManager.
     @Override
     public boolean onQueryTextChange(String query) {
         // Here is where we are going to implement our filter logic
-        final List<Launch> filteredModelList = filter(rocketLaunches, query);
+        final List<LaunchRealm> filteredModelList = filter(rocketLaunches, query);
         if (query.length() > 3){
             if (!BuildConfig.DEBUG){
                 Answers.getInstance().logSearch(new SearchEvent()
@@ -609,11 +614,11 @@ public class PreviousLaunchesFragment extends Fragment implements LoaderManager.
         return false;
     }
 
-    private List<Launch> filter(List<Launch> models, String query) {
+    private List<LaunchRealm> filter(List<LaunchRealm> models, String query) {
         query = query.toLowerCase();
 
-        final List<Launch> filteredModelList = new ArrayList<>();
-        for (Launch model : models) {
+        final List<LaunchRealm> filteredModelList = new ArrayList<>();
+        for (LaunchRealm model : models) {
             final String name = model.getName().toLowerCase();
             final String rocketName = model.getRocket().getName().toLowerCase();
             final String locationName = model.getLocation().getName().toLowerCase();
@@ -666,7 +671,7 @@ public class PreviousLaunchesFragment extends Fragment implements LoaderManager.
             Timber.d("Previous Launch Fragment: Not First Boot.");
             getDateRange();
         }
-        getLoaderManager().initLoader(1, null, this).forceLoad();
+        displayLaunches();
         super.onResume();
     }
 
@@ -695,22 +700,6 @@ public class PreviousLaunchesFragment extends Fragment implements LoaderManager.
     @Override
     public void onDetach() {
         super.onDetach();
-    }
-
-    @Override
-    public Loader<List<Launch>> onCreateLoader(int id, Bundle args) {
-        return new PreviousLoader(getContext());
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<Launch>> loader, List<Launch> data) {
-        adapter.clear();
-        adapter.addItems(data);
-        hideLoading();
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<Launch>> loader) {
     }
 }
 

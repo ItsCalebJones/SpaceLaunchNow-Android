@@ -1,7 +1,7 @@
 package me.calebjones.spacelaunchnow.content.interfaces;
 
-import me.calebjones.spacelaunchnow.content.responses.LauncherResponse;
-import me.calebjones.spacelaunchnow.content.responses.OrbiterResponse;
+import me.calebjones.spacelaunchnow.content.responses.base.LauncherResponse;
+import me.calebjones.spacelaunchnow.content.responses.base.OrbiterResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 

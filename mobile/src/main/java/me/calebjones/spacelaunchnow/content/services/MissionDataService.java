@@ -21,8 +21,8 @@ import java.util.Collections;
 import java.util.List;
 
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.Launch;
-import me.calebjones.spacelaunchnow.content.models.Mission;
+import me.calebjones.spacelaunchnow.content.models.legacy.Launch;
+import me.calebjones.spacelaunchnow.content.models.legacy.Mission;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;

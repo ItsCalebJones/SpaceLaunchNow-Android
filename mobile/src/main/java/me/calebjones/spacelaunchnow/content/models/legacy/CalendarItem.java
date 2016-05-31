@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.content.models;
+package me.calebjones.spacelaunchnow.content.models.legacy;
 
 public class CalendarItem {
     String name, location, description;

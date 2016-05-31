@@ -1,5 +1,5 @@
 
-package me.calebjones.spacelaunchnow.content.models;
+package me.calebjones.spacelaunchnow.content.models.legacy;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -7,16 +7,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Pad implements Serializable {
+public class Rocket implements Serializable {
 
     private Integer id;
     private String name;
+    private String configuration;
+    private String familyname;
     private String infoURL;
     private String wikiURL;
-    private String mapURL;
-    private Double latitude;
-    private Double longitude;
-    private List<LocationAgency> agencies = new ArrayList<LocationAgency>();
+    private String imageURL;
+    private Family family;
+    private List<RocketAgency> agencies = new ArrayList<RocketAgency>();
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public Integer getId() {
@@ -51,35 +52,43 @@ public class Pad implements Serializable {
         this.wikiURL = wikiURL;
     }
 
-    public String getMapURL() {
-        return mapURL;
+    public String getConfiguration() {
+        return configuration;
     }
 
-    public void setMapURL(String mapURL) {
-        this.mapURL = mapURL;
+    public void setConfiguration(String configuration) {
+        this.configuration = configuration;
     }
 
-    public Double getLatitude() {
-        return latitude;
+    public Family getFamily() {
+        return family;
     }
 
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
+    public void setFamily(Family family) {
+        this.family = family;
     }
 
-    public Double getLongitude() {
-        return longitude;
+    public String getFamilyname() {
+        return familyname;
     }
 
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
+    public void setFamilyname(String familyname) {
+        this.familyname = familyname;
     }
 
-    public List<LocationAgency> getAgencies() {
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
+    public List<RocketAgency> getAgencies() {
         return agencies;
     }
 
-    public void setAgencies(List<LocationAgency> agencies) {
+    public void setAgencies(List<RocketAgency> agencies) {
         this.agencies = agencies;
     }
 

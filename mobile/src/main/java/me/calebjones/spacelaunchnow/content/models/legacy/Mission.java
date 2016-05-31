@@ -1,14 +1,14 @@
 
-package me.calebjones.spacelaunchnow.content.models;
+package me.calebjones.spacelaunchnow.content.models.legacy;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Agency implements Serializable {
+public class Mission implements Serializable {
 
     private Integer id,type;
-    private String name, description,infoURL, wikiURL;
+    private String name, description,infoURL, wikiURL, typeName;
     private Launch launch;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -68,6 +68,10 @@ public class Agency implements Serializable {
     public void setWikiURL(String wikiURL) {
         this.wikiURL = wikiURL;
     }
+
+    public String getTypeName(){return typeName;}
+
+    public void setTypeName(String typeName){this.typeName = typeName;}
 
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;

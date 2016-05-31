@@ -17,7 +17,7 @@ import java.net.URL;
 import java.util.List;
 
 import me.calebjones.spacelaunchnow.content.database.DatabaseManager;
-import me.calebjones.spacelaunchnow.content.models.RocketDetails;
+import me.calebjones.spacelaunchnow.content.models.legacy.RocketDetails;
 import timber.log.Timber;
 
 

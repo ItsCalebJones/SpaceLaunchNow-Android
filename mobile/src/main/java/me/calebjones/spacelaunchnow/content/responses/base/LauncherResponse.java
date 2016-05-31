@@ -1,6 +1,6 @@
-package me.calebjones.spacelaunchnow.content.responses;
+package me.calebjones.spacelaunchnow.content.responses.base;
 
-import me.calebjones.spacelaunchnow.content.models.Launcher;
+import me.calebjones.spacelaunchnow.content.models.legacy.Launcher;
 
 public class LauncherResponse {
     private Launcher[] items;

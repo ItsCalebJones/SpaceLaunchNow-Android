@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.WindowDecorActionBar;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -21,7 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.TimeZone;
 
-import me.calebjones.spacelaunchnow.content.models.Launch;
+import me.calebjones.spacelaunchnow.content.models.legacy.Launch;
 import timber.log.Timber;
 
 // these imports are used in the following code

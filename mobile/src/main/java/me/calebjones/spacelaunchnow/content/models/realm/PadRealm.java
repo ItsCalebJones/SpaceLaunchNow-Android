@@ -1,21 +1,15 @@
 
 package me.calebjones.spacelaunchnow.content.models.realm;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import me.calebjones.spacelaunchnow.content.models.LocationAgency;
 
 public class PadRealm extends RealmObject {
 
     @PrimaryKey
     private Integer id;
+    private Integer padType;
     private String name;
     private String infoURL;
     private String wikiURL;
@@ -88,5 +82,11 @@ public class PadRealm extends RealmObject {
         this.agencies = agencies;
     }
 
+    public Integer getPadType() {
+        return padType;
+    }
 
+    public void setPadType(Integer padType) {
+        this.padType = padType;
+    }
 }

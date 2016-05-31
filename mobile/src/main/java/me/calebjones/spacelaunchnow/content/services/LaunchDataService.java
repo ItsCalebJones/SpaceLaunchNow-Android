@@ -19,6 +19,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,9 +32,9 @@ import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.interfaces.LibraryRequestInterface;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
-import me.calebjones.spacelaunchnow.content.responses.LaunchResponse;
+import me.calebjones.spacelaunchnow.content.responses.launchlibrary.LaunchResponse;
 import me.calebjones.spacelaunchnow.utils.Utils;
-import me.calebjones.spacelaunchnow.utils.custom.RealmStr;
+import me.calebjones.spacelaunchnow.content.models.realm.RealmStr;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -132,7 +133,7 @@ public class LaunchDataService extends IntentService {
             }
 
             getUpcomingLaunches();
-            getPreviousLaunches("1950-01-01", Utils.getEndDate(this));
+            getLaunchesByDate("1950-01-01", Utils.getEndDate(this));
 
             Intent rocketIntent = new Intent(getApplicationContext(), VehicleDataService.class);
             rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
@@ -151,8 +152,7 @@ public class LaunchDataService extends IntentService {
         } else if (Strings.ACTION_GET_PREV_LAUNCHES.equals(action)) {
 
             Timber.v("Intent action received: %s", action);
-            getPreviousLaunches(intent.getStringExtra("startDate"),
-                    intent.getStringExtra("endDate"));
+            getLaunchesByDate(intent.getStringExtra("startDate"), intent.getStringExtra("endDate"));
 
 
         } else if (Strings.ACTION_UPDATE_NEXT_LAUNCH.equals(action)) {
@@ -164,45 +164,51 @@ public class LaunchDataService extends IntentService {
             Timber.e("LaunchDataService - onHandleIntent: ERROR - Unknown Intent %s", action);
         }
         Timber.v("Finished!");
-        
+
     }
 
-    private void getPreviousLaunches(String startDate, String endDate) {
+    private void getLaunchesByDate(String startDate, String endDate) {
         LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
         Call<LaunchResponse> call;
-
-        if (listPreference.isDebugEnabled()) {
-            call = request.getDebugPreviousLaunches(startDate, endDate);
-        } else {
-            call = request.getPreviousLaunches(startDate, endDate);
-        }
-
         Response<LaunchResponse> launchResponse;
-        try {
-            launchResponse = call.execute();
-            Timber.v("Response: %s", launchResponse.body());
-            if (launchResponse.isSuccess()) {
-                RealmList<LaunchRealm> items = new RealmList<>(launchResponse.body().getLaunches());
+        RealmList<LaunchRealm> items = new RealmList<>();
+        int offset = 0;
+        int total = 10;
+        int count;
 
-                for(LaunchRealm item : items){
-                    LaunchRealm previous = mRealm.where(LaunchRealm.class)
-                            .equalTo("id", item.getId())
-                            .findFirst();
-                    mRealm.beginTransaction();
+        try {
+            while (total != offset) {
+                if (listPreference.isDebugEnabled()) {
+                    call = request.getDebugLaunchesByDate(startDate, endDate, offset);
+                } else {
+                    call = request.getLaunchesByDate(startDate, endDate, offset);
+                }
+                launchResponse = call.execute();
+                total = launchResponse.body().getTotal();
+                count = launchResponse.body().getCount();
+                offset = offset + count;
+                Collections.addAll(items, launchResponse.body().getLaunches());
+            }
+            for (LaunchRealm item : items) {
+                LaunchRealm previous = mRealm.where(LaunchRealm.class)
+                        .equalTo("id", item.getId())
+                        .findFirst();
+                mRealm.beginTransaction();
+                if (previous != null) {
                     item.setFavorite(previous.isFavorite());
                     item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
                     item.setIsNotifiedDay(previous.getIsNotifiedDay());
                     item.setIsNotifiedHour(previous.getIsNotifiedHour());
                     item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
                     item.getLocation().setPrimaryID();
-                    mRealm.copyToRealmOrUpdate(item);
-                    mRealm.commitTransaction();
                 }
+                mRealm.copyToRealmOrUpdate(item);
+                mRealm.commitTransaction();
+            }
 
-                Intent broadcastIntent = new Intent();
-                broadcastIntent.setAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
-                LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
-            } else throw new IOException(launchResponse.errorBody().toString());
+            Intent broadcastIntent = new Intent();
+            broadcastIntent.setAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
+            LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
 
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());
@@ -216,45 +222,50 @@ public class LaunchDataService extends IntentService {
     private void getUpcomingLaunches() {
         LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
         Call<LaunchResponse> call;
-
-        if (listPreference.isDebugEnabled()) {
-            call = request.getDebugUpcomingLaunches();
-        } else {
-            call = request.getUpcomingLaunches();
-        }
-
         Response<LaunchResponse> launchResponse;
+        RealmList<LaunchRealm> items = new RealmList<>();
+        int offset = 0;
+        int total = 10;
+        int count;
+
         try {
-            launchResponse = call.execute();
-            Timber.v("Response: %s", launchResponse.body());
-            if (launchResponse.isSuccess()) {
-                RealmList<LaunchRealm> items = new RealmList<>(launchResponse.body().getLaunches());
-
-                for(LaunchRealm item : items){
-                    LaunchRealm previous = mRealm.where(LaunchRealm.class)
-                            .equalTo("id", item.getId())
-                            .findFirst();
-                    mRealm.beginTransaction();
-                    if (previous != null) {
-                        item.setFavorite(previous.isFavorite());
-                        item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
-                        item.setIsNotifiedDay(previous.getIsNotifiedDay());
-                        item.setIsNotifiedHour(previous.getIsNotifiedHour());
-                        item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
-                        item.getLocation().setPrimaryID();
-                    }
-                    mRealm.copyToRealmOrUpdate(item);
-                    mRealm.commitTransaction();
+            while (total != offset) {
+                if (listPreference.isDebugEnabled()) {
+                    call = request.getDebugUpcomingLaunches(offset);
+                } else {
+                    call = request.getUpcomingLaunches(offset);
                 }
+                launchResponse = call.execute();
+                total = launchResponse.body().getTotal();
+                count = launchResponse.body().getCount();
+                offset = offset + count;
+                Collections.addAll(items, launchResponse.body().getLaunches());
+            }
+            for (LaunchRealm item : items) {
+                LaunchRealm previous = mRealm.where(LaunchRealm.class)
+                        .equalTo("id", item.getId())
+                        .findFirst();
+                mRealm.beginTransaction();
+                if (previous != null) {
+                    item.setFavorite(previous.isFavorite());
+                    item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
+                    item.setIsNotifiedDay(previous.getIsNotifiedDay());
+                    item.setIsNotifiedHour(previous.getIsNotifiedHour());
+                    item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
+                    item.getLocation().setPrimaryID();
+                }
+                mRealm.copyToRealmOrUpdate(item);
+                mRealm.commitTransaction();
+            }
 
-                Intent broadcastIntent = new Intent();
-                broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
-                LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
-            } else throw new IOException(launchResponse.errorBody().toString());
+            Intent broadcastIntent = new Intent();
+            broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
+            LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
 
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());
             Intent broadcastIntent = new Intent();
+
             broadcastIntent.putExtra("error", e.getLocalizedMessage());
             broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
             LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
@@ -264,40 +275,45 @@ public class LaunchDataService extends IntentService {
     private void getNextLaunches() {
         LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
         Call<LaunchResponse> call;
-
-        if (listPreference.isDebugEnabled()) {
-            call = request.getDebugNextLaunches();
-        } else {
-            call = request.getNextLaunches();
-        }
-
         Response<LaunchResponse> launchResponse;
-        try {
-            launchResponse = call.execute();
-            Timber.v("Response: %s", launchResponse.body());
-            if (launchResponse.isSuccess()) {
-                RealmList<LaunchRealm> items = new RealmList<>(launchResponse.body().getLaunches());
-                for(LaunchRealm item : items){
-                    LaunchRealm previous = mRealm.where(LaunchRealm.class)
-                            .equalTo("id", item.getId())
-                            .findFirst();
-                    mRealm.beginTransaction();
-                    if (previous != null) {
-                        item.setFavorite(previous.isFavorite());
-                        item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
-                        item.setIsNotifiedDay(previous.getIsNotifiedDay());
-                        item.setIsNotifiedHour(previous.getIsNotifiedHour());
-                        item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
-                        item.getLocation().setPrimaryID();
-                    }
-                    mRealm.copyToRealmOrUpdate(item);
-                    mRealm.commitTransaction();
-                }
+        RealmList<LaunchRealm> items = new RealmList<>();
+        int offset = 0;
+        int total = 10;
+        int count;
 
-                Intent broadcastIntent = new Intent();
-                broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
-                LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
-            } else throw new IOException(launchResponse.errorBody().toString());
+        try {
+            while (total != offset) {
+                if (listPreference.isDebugEnabled()) {
+                    call = request.getDebugNextLaunches(offset);
+                } else {
+                    call = request.getNextLaunches(offset);
+                }
+                launchResponse = call.execute();
+                total = launchResponse.body().getTotal();
+                count = launchResponse.body().getCount();
+                offset = offset + count;
+                Collections.addAll(items, launchResponse.body().getLaunches());
+            }
+            for (LaunchRealm item : items) {
+                LaunchRealm previous = mRealm.where(LaunchRealm.class)
+                        .equalTo("id", item.getId())
+                        .findFirst();
+                mRealm.beginTransaction();
+                if (previous != null) {
+                    item.setFavorite(previous.isFavorite());
+                    item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
+                    item.setIsNotifiedDay(previous.getIsNotifiedDay());
+                    item.setIsNotifiedHour(previous.getIsNotifiedHour());
+                    item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
+                    item.getLocation().setPrimaryID();
+                }
+                mRealm.copyToRealmOrUpdate(item);
+                mRealm.commitTransaction();
+            }
+
+            Intent broadcastIntent = new Intent();
+            broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
+            LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
 
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());
@@ -323,7 +339,7 @@ public class LaunchDataService extends IntentService {
             launchResponse = call.execute();
             if (launchResponse.isSuccess()) {
                 RealmList<LaunchRealm> items = new RealmList<>(launchResponse.body().getLaunches());
-                for(LaunchRealm item : items){
+                for (LaunchRealm item : items) {
                     LaunchRealm previous = mRealm.where(LaunchRealm.class)
                             .equalTo("id", item.getId())
                             .findFirst();
@@ -339,8 +355,7 @@ public class LaunchDataService extends IntentService {
                     mRealm.copyToRealmOrUpdate(item);
                     mRealm.commitTransaction();
                 }
-        } else throw new IOException(launchResponse.errorBody().toString());
-
+            }
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());
         }
