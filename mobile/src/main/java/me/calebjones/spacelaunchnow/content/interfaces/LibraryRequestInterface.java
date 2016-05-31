@@ -6,7 +6,7 @@ import me.calebjones.spacelaunchnow.content.responses.launchlibrary.LocationResp
 import me.calebjones.spacelaunchnow.content.responses.launchlibrary.MissionResponse;
 import me.calebjones.spacelaunchnow.content.responses.launchlibrary.PadResponse;
 import me.calebjones.spacelaunchnow.content.responses.launchlibrary.RocketFamilyResponse;
-import me.calebjones.spacelaunchnow.content.responses.launchlibrary.VehiclesResponse;
+import me.calebjones.spacelaunchnow.content.responses.launchlibrary.RocketResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -77,16 +77,16 @@ public interface LibraryRequestInterface {
     //Get Rocket Methods
 
     @GET(version + "/rocket?next=10&mode=verbose")
-    Call<VehiclesResponse> getAllVehicles(@Query("offset") int offset);
+    Call<RocketResponse> getAllVehicles(@Query("offset") int offset);
 
     @GET("dev/rocket?next=10&mode=verbose")
-    Call<VehiclesResponse> getDebugAllVehicles(@Query("offset") int offset);
+    Call<RocketResponse> getDebugAllVehicles(@Query("offset") int offset);
 
     @GET(version + "/rocket/{vehicleID}?mode=verbose")
-    Call<VehiclesResponse> getVehiclesByID(@Path("vehicleID") int vehicleID);
+    Call<RocketResponse> getVehiclesByID(@Path("vehicleID") int vehicleID);
 
     @GET("dev/rocket/{vehicleID}?mode=verbose")
-    Call<VehiclesResponse> getDebugVehiclesByID(@Path("vehicleID") int vehicleID);
+    Call<RocketResponse> getDebugVehiclesByID(@Path("vehicleID") int vehicleID);
 
     //Get Pad Methods
 

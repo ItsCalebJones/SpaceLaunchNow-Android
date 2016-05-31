@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.content.models.legacy;
+package me.calebjones.spacelaunchnow.content.models.natives;
 
 public class Orbiter {
     final String name, agency, imageURL, nationURL, history, details, wikiLink;

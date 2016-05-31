@@ -24,7 +24,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.legacy.Family;
 import me.calebjones.spacelaunchnow.content.models.legacy.Rocket;
 import me.calebjones.spacelaunchnow.content.models.Strings;
-import me.calebjones.spacelaunchnow.content.models.legacy.RocketDetails;
+import me.calebjones.spacelaunchnow.content.models.natives.RocketDetails;
 import timber.log.Timber;
 
 

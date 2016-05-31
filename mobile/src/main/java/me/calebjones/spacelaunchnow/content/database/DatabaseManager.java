@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import me.calebjones.spacelaunchnow.content.models.legacy.RocketDetails;
+import me.calebjones.spacelaunchnow.content.models.natives.RocketDetails;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 

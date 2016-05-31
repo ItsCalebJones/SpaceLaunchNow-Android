@@ -26,9 +26,9 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import me.calebjones.spacelaunchnow.content.models.legacy.Agency;
-import me.calebjones.spacelaunchnow.content.models.legacy.CalendarItem;
+import me.calebjones.spacelaunchnow.content.models.natives.CalendarItem;
 import me.calebjones.spacelaunchnow.content.models.legacy.Launch;
-import me.calebjones.spacelaunchnow.content.models.legacy.RocketDetails;
+import me.calebjones.spacelaunchnow.content.models.natives.RocketDetails;
 import me.calebjones.spacelaunchnow.content.models.legacy.Mission;
 import me.calebjones.spacelaunchnow.content.models.legacy.Rocket;
 import timber.log.Timber;

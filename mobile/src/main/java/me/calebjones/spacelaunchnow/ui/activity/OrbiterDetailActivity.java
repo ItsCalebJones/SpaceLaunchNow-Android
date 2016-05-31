@@ -30,7 +30,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.legacy.Orbiter;
+import me.calebjones.spacelaunchnow.content.models.natives.Orbiter;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;
