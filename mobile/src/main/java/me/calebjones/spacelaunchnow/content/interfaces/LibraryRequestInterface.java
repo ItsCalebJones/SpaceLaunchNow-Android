@@ -77,16 +77,16 @@ public interface LibraryRequestInterface {
     //Get Rocket Methods
 
     @GET(version + "/rocket?next=10&mode=verbose")
-    Call<RocketResponse> getAllVehicles(@Query("offset") int offset);
+    Call<RocketResponse> getAllRockets(@Query("offset") int offset);
 
     @GET("dev/rocket?next=10&mode=verbose")
-    Call<RocketResponse> getDebugAllVehicles(@Query("offset") int offset);
+    Call<RocketResponse> getDebugAllRockets(@Query("offset") int offset);
 
     @GET(version + "/rocket/{vehicleID}?mode=verbose")
-    Call<RocketResponse> getVehiclesByID(@Path("vehicleID") int vehicleID);
+    Call<RocketResponse> getRocketsById(@Path("vehicleID") int vehicleID);
 
     @GET("dev/rocket/{vehicleID}?mode=verbose")
-    Call<RocketResponse> getDebugVehiclesByID(@Path("vehicleID") int vehicleID);
+    Call<RocketResponse> getDebugRocketsById(@Path("vehicleID") int vehicleID);
 
     //Get Pad Methods
 

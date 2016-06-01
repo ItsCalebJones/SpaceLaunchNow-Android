@@ -16,7 +16,7 @@ public class PadRealm extends RealmObject {
     private String mapURL;
     private Double latitude;
     private Double longitude;
-    private RealmList<LocationAgencyRealm> agencies = new RealmList<>();
+    private RealmList<AgencyRealm> agencies = new RealmList<>();
 
     public Integer getId() {
         return id;
@@ -74,11 +74,11 @@ public class PadRealm extends RealmObject {
         this.longitude = longitude;
     }
 
-    public RealmList<LocationAgencyRealm> getAgencies() {
+    public RealmList<AgencyRealm> getAgencies() {
         return agencies;
     }
 
-    public void setAgencies(RealmList<LocationAgencyRealm> agencies) {
+    public void setAgencies(RealmList<AgencyRealm> agencies) {
         this.agencies = agencies;
     }
 

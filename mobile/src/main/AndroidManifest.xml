@@ -27,6 +27,7 @@
         android:supportsRtl="true"
         android:theme="@style/LightTheme"
         tools:replace="label" >
+
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize"
@@ -67,7 +68,7 @@
             android:name=".content.services.VehicleDataService"
             android:exported="false" />
         <service
-            android:name=".content.services.AgencyDataService"
+            android:name=".content.services.LibraryDataService"
             android:exported="false" />
         <service
             android:name=".content.services.NextLaunchTracker"

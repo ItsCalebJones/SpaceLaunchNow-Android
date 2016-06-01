@@ -3,6 +3,7 @@ package me.calebjones.spacelaunchnow.content.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.CountDownTimer;
@@ -13,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
@@ -22,6 +24,11 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.Resource;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,7 +37,9 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.mypopsy.maps.StaticMap;
 
+import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -42,6 +51,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.ui.widget.StaticMapView;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.content.models.realm.RealmStr;
 import timber.log.Timber;
@@ -50,7 +60,7 @@ import timber.log.Timber;
  * Adapts UpcomingLaunch data to the LaunchFragment
  */
 public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHolder> implements SectionIndexer {
-    public int position;
+
     private String launchDate;
     private RealmList<LaunchRealm> launchList;
     private Context context;
@@ -58,8 +68,10 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
     private SharedPreferences sharedPref;
     private Boolean night;
     private Boolean play = false;
+
     private static ListPreferences sharedPreference;
-    private final HashSet<MapView> mMaps = new HashSet<MapView>();
+
+    public int position;
 
     public CardBigAdapter(Context context) {
         rightNow = Calendar.getInstance();
@@ -79,16 +91,6 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
             this.launchList.addAll(launchList);
         }
         this.notifyDataSetChanged();
-    }
-
-    public void clearData() {
-        int size = this.launchList.size();
-        if (size > 0) {
-            for (int i = 0; i < size; i++) {
-                this.launchList.remove(0);
-            }
-            this.notifyItemRangeRemoved(0, size);
-        }
     }
 
     public void clear() {
@@ -127,8 +129,8 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         }
 
         //TODO These are slightly rounded when converting from double to long
-        double dlat = launchItem.getLocation().getPads().get(0).getLatitude();
-        double dlon = launchItem.getLocation().getPads().get(0).getLongitude();
+        final double dlat = launchItem.getLocation().getPads().get(0).getLatitude();
+        final double dlon = launchItem.getLocation().getPads().get(0).getLongitude();
 
         // Getting status
         if (play) {
@@ -140,10 +142,33 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
             } else {
                 holder.map_view.setVisibility(View.VISIBLE);
                 holder.exploreFab.setVisibility(View.VISIBLE);
-                holder.setMapLocation(dlat, dlon);
+//                holder.setMapLocation(dlat, dlon);
+//                // Keep track of MapView
+//                mMaps.add(holder.map_view);
+                final Resources res = context.getResources();
+                final StaticMap map = new StaticMap()
+                        .center(dlat, dlon)
+                        .scale(4)
+                        .type(StaticMap.Type.ROADMAP)
+                        .zoom(4)
+                        .marker(dlat, dlon)
+                        .key(res.getString(R.string.GoogleMapsKey));
 
-                // Keep track of MapView
-                mMaps.add(holder.map_view);
+                //Strange but necessary to calculate the height/width
+                holder.map_view.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                    public boolean onPreDraw() {
+                        map.size(holder.map_view.getWidth() / 2,
+                                holder.map_view.getHeight() / 2);
+
+                        Timber.v("onPreDraw: %s", map.toString());
+                        Glide.with(context).load(map.toString())
+                                .error(R.drawable.placeholder)
+                                .into(holder.map_view);
+                        holder.map_view.getViewTreeObserver().removeOnPreDrawListener(this);
+                        return true;
+                    }
+                });
+
             }
         } else {
             holder.map_view.setVisibility(View.GONE);
@@ -327,15 +352,6 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         holder.title.setText(launchItem.getRocket().getName());
     }
 
-    /**
-     * Retuns the set of all initialised {@link MapView} objects.
-     *
-     * @return All MapViews that have been initialised programmatically by this adapter
-     */
-    public HashSet<MapView> getMaps() {
-        return mMaps;
-    }
-
     @Override
     public int getItemCount() {
         return launchList.size();
@@ -367,8 +383,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         return cal;
     }
 
-
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, OnMapReadyCallback {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView title, content, location, content_mission, content_mission_description,
                 launch_date, content_status, content_TMinus_status,
                 watchButton, shareButton, exploreButton;
@@ -377,7 +392,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         public FloatingActionButton exploreFab;
         public CountDownTimer timer;
 
-        public MapView map_view;
+        public ImageView map_view;
         public GoogleMap gMap;
         protected LatLng mMapLocation;
 
@@ -400,9 +415,9 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
             content_TMinus_status = (TextView) view.findViewById(R.id.content_TMinus_status);
             content_mission_description_view = (LinearLayout) view.findViewById(R.id.content_mission_description_view);
 
-            map_view = (MapView) view.findViewById(R.id.map_view);
+            map_view = (ImageView) view.findViewById(R.id.map_view);
             map_view.setClickable(false);
-            initializeMapView();
+//            initializeMapView();
 
             shareButton.setOnClickListener(this);
             exploreButton.setOnClickListener(this);
@@ -525,58 +540,58 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
             }
         }
 
-        public void initializeMapView() {
-            if (map_view != null) {
-                // Initialise the MapView
-                map_view.onCreate(null);
-                // Set the map ready callback to receive the GoogleMap object
-                map_view.getMapAsync(this);
-            }
-        }
-
-        public void setMapLocation(double lat, double lng) {
-            LatLng latLng = new LatLng(lat, lng);
-            mMapLocation = latLng;
-
-            // If the map is ready, update its content.
-            if (gMap != null) {
-                updateMapContents();
-            } else {
-                Timber.e("MapView is null");
-            }
-        }
-
-        @Override
-        public void onMapReady(GoogleMap googleMap) {
-            //TODO: Allow user to update this 1-normal 2-satellite 3-Terrain
-            // https://goo.gl/OkexW7
-            MapsInitializer.initialize(context.getApplicationContext());
-
-            googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-            googleMap.getUiSettings().setMapToolbarEnabled(false);
-
-            gMap = googleMap;
-            gMap.getUiSettings().setAllGesturesEnabled(false);
-
-
-            // If we have map data, update the map content.
-            if (mMapLocation != null) {
-                updateMapContents();
-            } else {
-                Timber.e("mMapLocation is null");
-            }
-        }
-
-        protected void updateMapContents() {
-            // Since the mapView is re-used, need to remove pre-existing mapView features.
-            gMap.clear();
-
-            // Update the mapView feature data and camera position.
-            gMap.addMarker(new MarkerOptions().position(mMapLocation));
-
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mMapLocation, 3.2f);
-            gMap.moveCamera(cameraUpdate);
-        }
+//        public void initializeMapView() {
+//            if (map_view != null) {
+//                // Initialise the MapView
+//                map_view.onCreate(null);
+//                // Set the map ready callback to receive the GoogleMap object
+//                map_view.getMapAsync(this);
+//            }
+//        }
+//
+//        public void setMapLocation(double lat, double lng) {
+//            LatLng latLng = new LatLng(lat, lng);
+//            mMapLocation = latLng;
+//
+//            // If the map is ready, update its content.
+//            if (gMap != null) {
+//                updateMapContents();
+//            } else {
+//                Timber.e("MapView is null");
+//            }
+//        }
+//
+//        @Override
+//        public void onMapReady(GoogleMap googleMap) {
+//            //TODO: Allow user to update this 1-normal 2-satellite 3-Terrain
+//            // https://goo.gl/OkexW7
+//            MapsInitializer.initialize(context.getApplicationContext());
+//
+//            googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+//            googleMap.getUiSettings().setMapToolbarEnabled(false);
+//
+//            gMap = googleMap;
+//            gMap.getUiSettings().setAllGesturesEnabled(false);
+//
+//
+//            // If we have map data, update the map content.
+//            if (mMapLocation != null) {
+//                updateMapContents();
+//            } else {
+//                Timber.e("mMapLocation is null");
+//            }
+//        }
+//
+//        protected void updateMapContents() {
+//            // Since the mapView is re-used, need to remove pre-existing mapView features.
+//            gMap.clear();
+//
+//            // Update the mapView feature data and camera position.
+//            gMap.addMarker(new MarkerOptions().position(mMapLocation));
+//
+//            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mMapLocation, 3.2f);
+//            gMap.moveCamera(cameraUpdate);
+//        }
     }
 
     private void setCategoryIcon(ViewHolder holder, String type) {
