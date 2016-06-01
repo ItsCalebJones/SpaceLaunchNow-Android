@@ -552,14 +552,6 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
 
         getActivity().registerReceiver(nextLaunchReceiver, intentFilter);
 
-        if (adapter != null) {
-            HashSet<MapView> maps = adapter.getMaps();
-            for (MapView map : maps) {
-                map.onResume();
-            }
-        }
-
-
         if (this.sharedPreference.getUpcomingFirstBoot()) {
             this.sharedPreference.setUpcomingFirstBoot(false);
             Timber.d("Upcoming Launch Fragment: First Boot.");
@@ -572,45 +564,21 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     @Override
     public void onPause() {
         getActivity().unregisterReceiver(nextLaunchReceiver);
-        if (adapter != null) {
-            HashSet<MapView> maps = adapter.getMaps();
-            for (MapView map : maps) {
-                map.onPause();
-            }
-        }
         super.onPause();
     }
 
     @Override
     public void onLowMemory() {
-        if (adapter != null) {
-            HashSet<MapView> maps = adapter.getMaps();
-            for (MapView map : maps) {
-                map.onLowMemory();
-            }
-        }
         super.onLowMemory();
     }
 
     @Override
     public void onDestroy() {
-        if (adapter != null) {
-            HashSet<MapView> maps = adapter.getMaps();
-            for (MapView map : maps) {
-                map.onDestroy();
-            }
-        }
         super.onDestroy();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (adapter != null) {
-            HashSet<MapView> maps = adapter.getMaps();
-            for (MapView map : maps) {
-                map.onSaveInstanceState(outState);
-            }
-        }
         super.onSaveInstanceState(outState);
     }
 

@@ -2,6 +2,7 @@ package me.calebjones.spacelaunchnow.content.interfaces;
 
 import me.calebjones.spacelaunchnow.content.responses.base.LauncherResponse;
 import me.calebjones.spacelaunchnow.content.responses.base.OrbiterResponse;
+import me.calebjones.spacelaunchnow.content.responses.base.VehicleResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 
@@ -13,6 +14,6 @@ public interface APIRequestInterface {
     @GET("launchers")
     Call<LauncherResponse> getLaunchers();
 
-    @GET("launchvehicle.json")
-    Call<LauncherResponse> getLaunchVehicles();
+    @GET("vehicle")
+    Call<VehicleResponse> getVehicles();
 }

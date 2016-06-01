@@ -1,9 +1,10 @@
 package me.calebjones.spacelaunchnow.content.models.realm;
 
 import io.realm.RealmList;
+import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class RocketFamilyRealm {
+public class RocketFamilyRealm extends RealmObject {
 
     @PrimaryKey
     private Integer id;

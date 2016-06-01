@@ -16,7 +16,7 @@ public class RocketRealm extends RealmObject {
     private String wikiURL;
     private String imageURL;
     private FamilyRealm family;
-    private RealmList<RocketAgencyRealm> agencies = new RealmList<>();
+    private RealmList<AgencyRealm> agencies = new RealmList<>();
 
     public Integer getId() {
         return id;
@@ -82,11 +82,11 @@ public class RocketRealm extends RealmObject {
         this.imageURL = imageURL;
     }
 
-    public RealmList<RocketAgencyRealm> getAgencies() {
+    public RealmList<AgencyRealm> getAgencies() {
         return agencies;
     }
 
-    public void setAgencies(RealmList<RocketAgencyRealm> agencies) {
+    public void setAgencies(RealmList<AgencyRealm> agencies) {
         this.agencies = agencies;
     }
 
