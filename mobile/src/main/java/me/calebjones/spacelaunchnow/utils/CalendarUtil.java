@@ -155,7 +155,6 @@ public class CalendarUtil {
         return iNumRowsDeleted;
     }
 
-    // routine to add reminders with the event
     public void setReminder(Context context, long eventID, int timeBefore) {
         try {
 
@@ -181,4 +180,5 @@ public class CalendarUtil {
             e.printStackTrace();
         }
     }
+
 }

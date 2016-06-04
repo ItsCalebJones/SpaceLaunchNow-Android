@@ -40,7 +40,6 @@ import com.github.rahatarmanahmed.cpv.CircularProgressView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
@@ -52,6 +51,7 @@ import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.content.adapter.ListAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.content.interfaces.QueryBuilder;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
@@ -68,7 +68,7 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
     private ListAdapter adapter;
     private LinearLayoutManager layoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private RealmResults<LaunchRealm> rocketLaunches;
+    private RealmResults<LaunchRealm> launchRealms;
     private SwitchPreferences switchPreferences;
     private ListPreferences listPreference;
     private SharedPreferences SharedPreferences;
@@ -130,8 +130,7 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(adapter);
 
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
-        {
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 int topRowVerticalPosition =
@@ -145,6 +144,7 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
                     }
                 }
             }
+
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -182,12 +182,13 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
             @Override
             public void onClick(View v) {
                 switchPreferences.resetAllUpFilters();
-                if (switchPreferences.getUpFiltered()) {
+                if (switchPreferences.isUpFiltered()) {
                     switchPreferences.setUpFiltered(false);
                     listPreference.removeFilteredList();
-                    displayLaunches();
+                    listPreference.resetUpTitle();
+                    loadData();
+                    setTitle();
                 }
-                menu.close(true);
             }
         });
 
@@ -228,13 +229,16 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
                         switchPreferences.setUpCountryFiltered(which);
                         ArrayList<String> keyArray = new ArrayList<>();
-                        for (int i = 0; i < which.length;i ++){
+                        for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
                         if (keyArray.size() > 0) {
-                            adapter.clear();
-                            fetchDataFiltered(2, keyArray);
+                            switchPreferences.setUpCountryFilteredArray(keyArray);
+                            switchPreferences.setUpFiltered(true);
+                        } else {
+                            switchPreferences.resetCountryUpFilters();
                         }
+                        fetchDataFiltered();
                         menu.toggle(false);
                         return true;
                     }
@@ -256,13 +260,16 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
                         switchPreferences.setUpLocationFiltered(which);
                         ArrayList<String> keyArray = new ArrayList<>();
-                        for (int i = 0; i < which.length;i ++){
+                        for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
                         if (keyArray.size() > 0) {
-                            adapter.clear();
-                            fetchDataFiltered(3, keyArray);
+                            switchPreferences.setUpLocationFilteredArray(keyArray);
+                            switchPreferences.setUpFiltered(true);
+                        } else {
+                            switchPreferences.resetLocationUpFilters();
                         }
+                        fetchDataFiltered();
                         menu.toggle(false);
                         return true;
                     }
@@ -284,13 +291,16 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
                         switchPreferences.setUpAgencyFiltered(which);
                         ArrayList<String> keyArray = new ArrayList<>();
-                        for (int i = 0; i < which.length;i ++){
+                        for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
                         if (keyArray.size() > 0) {
-                            adapter.clear();
-                            fetchDataFiltered(0, keyArray);
+                            switchPreferences.setUpAgencyFilterArray(keyArray);
+                            switchPreferences.setUpFiltered(true);
+                        } else {
+                            switchPreferences.resetAgencyUpFilters();
                         }
+                        fetchDataFiltered();
                         menu.toggle(false);
                         return true;
                     }
@@ -312,13 +322,16 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
                         switchPreferences.setUpVehicleFiltered(which);
                         ArrayList<String> keyArray = new ArrayList<>();
-                        for (int i = 0; i < which.length;i ++){
+                        for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
                         if (keyArray.size() > 0) {
-                            adapter.clear();
-                            fetchDataFiltered(1, keyArray);
+                            switchPreferences.setUpVehicleFilteredArray(keyArray);
+                            switchPreferences.setUpFiltered(true);
+                        } else {
+                            switchPreferences.resetVehicleUpFilters();
                         }
+                        fetchDataFiltered();
                         menu.toggle(false);
                         return true;
                     }
@@ -363,36 +376,32 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
     @Override
     public void onStart() {
         super.onStart();
-
         realm = Realm.getDefaultInstance();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        rocketLaunches.removeChangeListener(callback);
+        launchRealms.removeChangeListener(callback);
         realm.close();
     }
 
-    public void fetchDataFiltered(int type, ArrayList<String> key) {
-        Timber.d("Filtering by: %s", key);
-        Date date = new Date();
-        rocketLaunches = realm.where(LaunchRealm.class)
-                .greaterThanOrEqualTo("net", date)
-                .findAllSortedAsync("net", Sort.ASCENDING);
+    public void fetchDataFiltered() {
+        loadData();
+        rebuildTitle();
     }
 
-    private RealmChangeListener callback = new RealmChangeListener() {
+    private RealmChangeListener callback = new RealmChangeListener<RealmResults<LaunchRealm>>() {
         @Override
-        public void onChange(Object element) {
-            Timber.v("Data changed - size: %s - element:", rocketLaunches.size(), element.toString());
-
-            adapter.clear();
-
-            if (rocketLaunches.size() > 0) {
-                adapter.addItems(rocketLaunches);
+        public void onChange(RealmResults<LaunchRealm> results) {
+            Timber.v("Data changed - size: %s", results.size());
+            if (results.size() > 0) {
+                adapter.clear();
+                results.sort("net", Sort.ASCENDING);
+                adapter.addItems(results);
             } else {
-                showErrorSnackbar("Unable to find matching launches.");
+                adapter.clear();
+                showSnackbar("Unable to find matching launches.");
             }
             hideLoading();
         }
@@ -411,18 +420,28 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
                 .show();
     }
 
-    public void displayLaunches() {
-        Date date = new Date();
+    private void showSnackbar(String msg) {
+        final Snackbar snackbar = Snackbar.make(coordinatorLayout, msg, Snackbar.LENGTH_INDEFINITE);
+
+        snackbar.setActionTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent))
+                .setAction("Ok", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        snackbar.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    public void loadData() {
         if (realm.isClosed()) {
             realm = Realm.getDefaultInstance();
         }
-        rocketLaunches = realm.where(LaunchRealm.class)
-                .greaterThanOrEqualTo("net", date)
-                .findAllSortedAsync("net", Sort.ASCENDING);
-        rocketLaunches.addChangeListener(callback);
+        launchRealms = QueryBuilder.buildUpQuery(context, realm);
+        launchRealms.addChangeListener(callback);
     }
 
-    public void fetchData() {
+    public void getUpcomingLaunchData() {
         Timber.d("Sending GET_UP_LAUNCHES");
         Intent intent = new Intent(getContext(), LaunchDataService.class);
         intent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
@@ -431,13 +450,13 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
 
 
     private void showLoading() {
-        if(!mSwipeRefreshLayout.isRefreshing()){
+        if (!mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(true);
         }
     }
 
     private void hideLoading() {
-        if(mSwipeRefreshLayout.isRefreshing()){
+        if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
         CircularProgressView progressView = (CircularProgressView)
@@ -452,12 +471,68 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
             Timber.v("Received: %s", intent.getAction());
             hideLoading();
             if (intent.getAction().equals(Strings.ACTION_SUCCESS_UP_LAUNCHES)) {
-                displayLaunches();
+                loadData();
             } else if (intent.getAction().equals(Strings.ACTION_FAILURE_UP_LAUNCHES)) {
-                Snackbar.make(coordinatorLayout, intent.getStringExtra("error"), Snackbar.LENGTH_LONG).show();
+                showErrorSnackbar(intent.getStringExtra("error"));
             }
         }
     };
+
+    private void rebuildTitle() {
+        String title = "";
+        ArrayList<String> agency = switchPreferences.getUpAgencyFilteredArray();
+        ArrayList<String> country = switchPreferences.getUpCountryFilteredArray();
+        ArrayList<String> location = switchPreferences.getUpLocationFilteredArray();
+        ArrayList<String> vehicle = switchPreferences.getUpVehicleFilteredArray();
+
+        if (agency != null) {
+            for (String key : agency) {
+                if (title.length() == 0) {
+                    title = key;
+                } else {
+                    title = title + " | " + key;
+                }
+            }
+        }
+
+        if (country != null) {
+            for (String key : country) {
+                if (title.length() == 0) {
+                    title = key;
+                } else {
+                    title = title + " | " + key;
+                }
+            }
+        }
+
+
+        if (location != null) {
+            for (String key : location) {
+                if (title.length() == 0) {
+                    title = key;
+                } else {
+                    title = title + " | " + key;
+                }
+            }
+        }
+
+        if (vehicle != null) {
+            for (String key : vehicle) {
+                if (title.length() == 0) {
+                    title = key;
+                } else {
+                    title = title + " | " + key;
+                }
+            }
+        }
+
+        if (title.length() > 0) {
+            listPreference.setUpTitle(title);
+        } else {
+            listPreference.resetUpTitle();
+        }
+        setTitle();
+    }
 
     @Override
     public void onResume() {
@@ -470,7 +545,8 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
         if (realm.isClosed()) {
             realm = Realm.getDefaultInstance();
         }
-        displayLaunches();
+        setTitle();
+        loadData();
         super.onResume();
     }
 
@@ -481,9 +557,14 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
     }
 
     public void onRefresh() {
-        switchPreferences.setUpFiltered(false);
-        switchPreferences.resetAllUpFilters();
-        fetchData();
+        if (!switchPreferences.isUpFiltered()) {
+            getUpcomingLaunchData();
+        } else {
+            switchPreferences.setUpFiltered(false);
+            switchPreferences.resetAllUpFilters();
+            loadData();
+            setTitle();
+        }
     }
 
     static {
@@ -526,7 +607,7 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
     }
 
     private void setTitle() {
-        ((MainActivity) getActivity()).setActionBarTitle("Space Launch Now");
+        ((MainActivity) getActivity()).setActionBarTitle(listPreference.getUpTitle());
     }
 
     @Override
@@ -538,21 +619,24 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
 
         if (id == R.id.action_refresh) {
             onRefresh();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onQueryTextChange(String query) {
+        switchPreferences.setPrevFiltered(true);
         // Here is where we are going to implement our filter logic
-        final List<LaunchRealm> filteredModelList = filter(rocketLaunches, query);
-        if (query.length() > 3) {
-            if (!BuildConfig.DEBUG) {
-                Answers.getInstance().logSearch(new SearchEvent()
-                        .putQuery(query));
-            }
+        Answers.getInstance().logSearch(new SearchEvent()
+                .putQuery(query));
+        final List<LaunchRealm> filteredModelList = filter(launchRealms, query);
+        if (filteredModelList.size() > 100) {
+            adapter.clear();
+            adapter.addItems(filteredModelList);
+        } else {
+            adapter.animateTo(filteredModelList);
         }
-        adapter.animateTo(filteredModelList);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -575,20 +659,27 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
             final String name = model.getName().toLowerCase();
             final String rocketName = model.getRocket().getName().toLowerCase();
             final String locationName = model.getLocation().getName().toLowerCase();
-            String missionName;
+            String missionName = null;
+            String missionDescription = null;
+            String agencyName = null;
 
-            //If pad and agency exist add it to country, otherwise get whats always available
-            if (model.getLocation().getPads().size() > 0 && model.getLocation().getPads().
-                    get(0).getAgencies().size() > 0) {
-                missionName = model.getLocation().getPads().get(0).getAgencies().get(0).getName() + " " + (model.getRocket().getName());
-            } else {
-                missionName = model.getRocket().getName();
+            if (model.getRocket().getAgencies() != null && model.getRocket().getAgencies().size() > 0){
+                agencyName = model.getRocket().getAgencies().get(0).getName().toLowerCase();
             }
-            missionName = missionName.toLowerCase();
 
-            if (rocketName.contains(query) || locationName.contains(query) || missionName.contains(query) || name.contains(query)) {
+            if (model.getMissions().size() > 0) {
+                missionName = model.getMissions().get(0).getName().toLowerCase();
+                missionDescription = model.getMissions().get(0).getDescription().toLowerCase();
+            }
+
+            if (rocketName.contains(query) || locationName.contains(query) || (agencyName != null && agencyName.contains(query)) || name.contains(query)) {
                 filteredModelList.add(model);
+            } else {
+                if (missionName != null && (missionName.contains(query) || missionDescription.contains(query))) {
+                    filteredModelList.add(model);
+                }
             }
+
         }
         return filteredModelList;
     }

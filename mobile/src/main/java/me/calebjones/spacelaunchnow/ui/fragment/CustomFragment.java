@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.utils;
+package me.calebjones.spacelaunchnow.ui.fragment;
 
 import android.content.Intent;
 import android.os.Build;

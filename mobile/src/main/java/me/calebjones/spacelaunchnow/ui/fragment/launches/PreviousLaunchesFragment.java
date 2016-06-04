@@ -11,7 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -32,6 +32,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.borax12.materialdaterangepicker.date.DatePickerDialog;
 import com.crashlytics.android.answers.Answers;
@@ -59,6 +60,7 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.ListAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.content.interfaces.QueryBuilder;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
@@ -72,7 +74,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     private ListAdapter adapter;
     private FloatingActionMenu menu;
     private String start_date, end_date;
-    private RealmResults<LaunchRealm> rocketLaunches;
+    private RealmResults<LaunchRealm> launchRealms;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ListPreferences listPreferences;
     private SwitchPreferences switchPreferences;
@@ -91,7 +93,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
@@ -102,7 +104,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
         listPreferences = ListPreferences.getInstance(this.context);
 
-        if (!BuildConfig.DEBUG){
+        if (!BuildConfig.DEBUG) {
             Answers.getInstance().logContentView(new ContentViewEvent()
                     .putContentName("PreviousLaunchesFragment")
                     .putContentType("Fragment"));
@@ -143,7 +145,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(adapter);
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -186,7 +188,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     @Override
     public void onStop() {
         super.onStop();
-        rocketLaunches.removeChangeListener(callback);
+        launchRealms.removeChangeListener(callback);
         realm.close();
     }
 
@@ -195,17 +197,13 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
         createCustomAnimation();
 
-        reset.setOnClickListener(new View.OnClickListener(){
+        reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switchPreferences.resetAllPrevFilters();
-                if (switchPreferences.getPrevFiltered()){
-                    switchPreferences.setPrevFiltered(false);
-                    listPreferences.removeFilteredList();
-                    getDefaultDateRange();
-                    displayLaunches();
-                }
-                menu.close(true);
+                switchPreferences.resetAllPrevFilters(context);
+                switchPreferences.setPrevFiltered(false);
+                getDefaultDateRange();
+                loadLaunches();
             }
         });
 
@@ -239,25 +237,30 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     private void showCountryDialog() {
         new MaterialDialog.Builder(getContext())
                 .title("Select a Country")
-                .content("Check an country below, to remove all filters use reset icon in the toolbar.")
+                .content("Check a country below, to remove all filters use reset icon in the toolbar.")
                 .items(R.array.country)
                 .buttonRippleColorRes(R.color.colorAccentLight)
-                .itemsCallbackMultiChoice(switchPreferences.getPrevCountryFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
-                    @Override
-                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
-                        switchPreferences.setPrevCountryFiltered(which);
-                        ArrayList<String> keyArray = new ArrayList<>();
-                        for (int i = 0; i < which.length;i ++){
-                            keyArray.add(text[i].toString());
-                        }
-                        if (keyArray.size() > 0) {
-                            adapter.clear();
-                            fetchDataFiltered(2, keyArray);
-                        }
-                        menu.toggle(false);
-                        return true;
-                    }
-                })
+                .itemsCallbackMultiChoice(switchPreferences.getPrevCountryFiltered(),
+                        new MaterialDialog.ListCallbackMultiChoice() {
+                            @Override
+                            public boolean onSelection(MaterialDialog dialog, Integer[] which,
+                                                       CharSequence[] text) {
+                                switchPreferences.setPrevCountryFiltered(which);
+                                ArrayList<String> keyArray = new ArrayList<>();
+                                for (int i = 0; i < which.length; i++) {
+                                    keyArray.add(text[i].toString());
+                                }
+                                if (keyArray.size() > 0) {
+                                    switchPreferences.setPrevCountryFilteredArray(keyArray);
+                                    switchPreferences.setPrevFiltered(true);
+                                } else {
+                                    switchPreferences.resetCountryPrevFilters();
+                                }
+                                fetchDataFiltered();
+                                menu.toggle(false);
+                                return true;
+                            }
+                        })
                 .positiveText("Filter")
                 .negativeText("Close")
                 .icon(ContextCompat.getDrawable(getContext(), R.mipmap.ic_launcher))
@@ -275,13 +278,16 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
                         switchPreferences.setPrevLocationFiltered(which);
                         ArrayList<String> keyArray = new ArrayList<>();
-                        for (int i = 0; i < which.length;i ++){
+                        for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
                         if (keyArray.size() > 0) {
-                            adapter.clear();
-                            fetchDataFiltered(3, keyArray);
+                            switchPreferences.setPrevLocationFilteredArray(keyArray);
+                            switchPreferences.setPrevFiltered(true);
+                        } else {
+                            switchPreferences.resetLocationPrevFilters();
                         }
+                        fetchDataFiltered();
                         menu.toggle(false);
                         return true;
                     }
@@ -303,13 +309,16 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
                         switchPreferences.setPrevAgencyFiltered(which);
                         ArrayList<String> keyArray = new ArrayList<>();
-                        for (int i = 0; i < which.length;i ++){
+                        for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
                         if (keyArray.size() > 0) {
-                            adapter.clear();
-                            fetchDataFiltered(0, keyArray);
+                            switchPreferences.setPrevAgencyFilterArray(keyArray);
+                            switchPreferences.setPrevFiltered(true);
+                        } else {
+                            switchPreferences.resetAgencyPrevFilters();
                         }
+                        fetchDataFiltered();
                         menu.toggle(false);
                         return true;
                     }
@@ -331,13 +340,16 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
                         switchPreferences.setPrevVehicleFiltered(which);
                         ArrayList<String> keyArray = new ArrayList<>();
-                        for (int i = 0; i < which.length;i ++){
+                        for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
                         if (keyArray.size() > 0) {
-                            adapter.clear();
-                            fetchDataFiltered(1, keyArray);
+                            switchPreferences.setPrevVehicleFilteredArray(keyArray);
+                            switchPreferences.setPrevFiltered(true);
+                        } else {
+                            switchPreferences.resetVehiclePrevFilters();
                         }
+                        fetchDataFiltered();
                         menu.toggle(false);
                         return true;
                     }
@@ -352,7 +364,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         ((MainActivity) getActivity()).setActionBarTitle(this.listPreferences.getPreviousTitle());
     }
 
-    public void recreate(){
+    public void recreate() {
         recreate();
     }
 
@@ -371,17 +383,17 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         return null;
     }
 
-    private RealmChangeListener callback = new RealmChangeListener() {
+    private RealmChangeListener callback = new RealmChangeListener<RealmResults<LaunchRealm>>() {
         @Override
-        public void onChange(Object element) {
-            Timber.v("Data changed - size: %s - element:", rocketLaunches.size(), element.toString());
-
-            adapter.clear();
-
-            if (rocketLaunches.size() > 0) {
-                adapter.addItems(rocketLaunches);
+        public void onChange(RealmResults<LaunchRealm> results) {
+            Timber.v("Data changed - size: %s", results.size());
+            if (results.size() > 0) {
+                adapter.clear();
+                results.sort("net", Sort.DESCENDING);
+                adapter.addItems(results);
             } else {
-                showErrorSnackbar("Unable to find matching launches.");
+                adapter.clear();
+                showSnackbar("Unable to find matching launches.");
             }
             hideLoading();
         }
@@ -400,41 +412,63 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
                 .show();
     }
 
+    private void showSnackbar(String msg) {
+        final Snackbar snackbar = Snackbar.make(coordinatorLayout, msg, Snackbar.LENGTH_INDEFINITE);
 
-    public void displayLaunches() {
-        Date date = new Date();
+        snackbar.setActionTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent))
+                .setAction("Ok", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        snackbar.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    public void loadLaunches() {
         if (realm.isClosed()) {
             realm = Realm.getDefaultInstance();
         }
-        rocketLaunches = realm.where(LaunchRealm.class)
-                .lessThan("net", date)
-                .findAllSortedAsync("net", Sort.ASCENDING);
-        rocketLaunches.addChangeListener(callback);
+        try {
+            launchRealms = QueryBuilder.buildPrevQuery(context, realm);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        launchRealms.addChangeListener(callback);
     }
 
-    public void fetchData() {
-        showLoading();
-        String url;
-        if (listPreferences.isDebugEnabled()) {
-            url = "https://launchlibrary.net/dev/launch/" + this.start_date + "/" + this.end_date + "?sort=desc&limit=1000";
-        } else {
-            url = "https://launchlibrary.net/1.2/launch/" + this.start_date + "/" + this.end_date + "?sort=desc&limit=1000";
-        }
-        Timber.d("Sending Intent URL: %s", url);
-        Intent intent = new Intent(getContext(), LaunchDataService.class);
-        intent.putExtra("URL", url);
-        intent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
-        getContext().startService(intent);
+    public void getPrevLaunchData() {
+        new MaterialDialog.Builder(context)
+                .title("Refresh Launch Data?")
+                .content("This can take a minute to refresh, make sure you are on Wi-Fi to save data.")
+                .positiveText("Ok")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        showLoading();
+                        Intent intent = new Intent(getContext(), LaunchDataService.class);
+                        intent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
+                        getContext().startService(intent);
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        hideLoading();
+                    }
+                })
+                .negativeText("Not Now")
+                .show();
     }
 
     private void showLoading() {
-        if(!mSwipeRefreshLayout.isRefreshing()){
+        if (!mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(true);
         }
     }
 
     private void hideLoading() {
-        if(mSwipeRefreshLayout.isRefreshing()){
+        if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
         CircularProgressView progressView = (CircularProgressView)
@@ -443,22 +477,69 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         progressView.resetAnimation();
     }
 
-    // Three types: 0 - Agency 1 - Vehicle 2 - Country
-    public void fetchDataFiltered(int type, ArrayList<String> key) {
-        Timber.d("Filtering by: %s", key.toString());
+    public void fetchDataFiltered() {
+        loadLaunches();
+        rebuildTitle();
+    }
 
-        Answers.getInstance().logSearch(new SearchEvent()
-                    .putQuery(key.toString()));
+    private void rebuildTitle() {
+        String title = "";
+        ArrayList<String> agency = switchPreferences.getPrevAgencyFilteredArray();
+        ArrayList<String> country = switchPreferences.getPrevCountryFilteredArray();
+        ArrayList<String> location = switchPreferences.getPrevLocationFilteredArray();
+        ArrayList<String> vehicle = switchPreferences.getPrevVehicleFilteredArray();
+        getDateRange();
 
-
-        String title = key.toString().replaceAll("\\[", "").replaceAll("\\]","");
-        if (switchPreferences.getPrevFiltered()){
-            listPreferences.setPreviousTitle(listPreferences.getPreviousTitle() + " | " + title);
-        } else {
-            listPreferences.setPreviousTitle(title);
+        if (switchPreferences.isDateFiltered()) {
+            title = formatDatesForTitle(start_date) + " - " + formatDatesForTitle(end_date);
         }
-        listPreferences.setPrevFilter(type, key);
-        displayLaunches();
+
+        if (agency != null) {
+            for (String key : agency) {
+                if (title.length() == 0) {
+                    title = key;
+                } else {
+                    title = title + " | " + key;
+                }
+            }
+        }
+
+        if (country != null) {
+            for (String key : country) {
+                if (title.length() == 0) {
+                    title = key;
+                } else {
+                    title = title + " | " + key;
+                }
+            }
+        }
+
+
+        if (location != null) {
+            for (String key : location) {
+                if (title.length() == 0) {
+                    title = key;
+                } else {
+                    title = title + " | " + key;
+                }
+            }
+        }
+
+        if (vehicle != null) {
+            for (String key : vehicle) {
+                if (title.length() == 0) {
+                    title = key;
+                } else {
+                    title = title + " | " + key;
+                }
+            }
+        }
+
+        if (title.length() > 0) {
+            listPreferences.setPreviousTitle(title);
+        } else {
+            listPreferences.resetPreviousTitle();
+        }
         setTitle();
     }
 
@@ -495,14 +576,18 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
     //Required for DateRange Dialogue that returns data from the dialogue.
     @Override
-    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth,int yearEnd, int monthOfYearEnd, int dayOfMonthEnd) {
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth, int yearEnd, int monthOfYearEnd, int dayOfMonthEnd) {
         monthOfYear = monthOfYear + 1;
         monthOfYearEnd = monthOfYearEnd + 1;
 
-        if (monthOfYear == 0){
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        switchPreferences.setDateFiltered(true);
+
+        if (monthOfYear == 0) {
             monthOfYear = 1;
         }
-        if (monthOfYearEnd == 0){
+        if (monthOfYearEnd == 0) {
             monthOfYearEnd = 1;
         }
         String dayDateStart = dayOfMonth < 10 ? "0" + dayOfMonth : "" + dayOfMonth;
@@ -513,20 +598,22 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         start_date = year + "-" + monthDateStart + "-" + dayDateStart;
         end_date = yearEnd + "-" + monthDayEnd + "-" + dayDateEnd;
 
-        if (switchPreferences.getPrevFiltered()){
-            listPreferences.setPreviousTitle(listPreferences.getPreviousTitle()
-                    + " | " + formatDatesForTitle(start_date)
-                    + " - " + formatDatesForTitle(end_date));
-        } else {
-            listPreferences.setPreviousTitle(formatDatesForTitle(start_date)
-                    + " - " + formatDatesForTitle(end_date));
-            switchPreferences.setPrevFiltered(true);
+        listPreferences.setStartDate(start_date);
+        listPreferences.setEndDate(end_date);
+
+        Date startDate;
+        Date endDate;
+        try {
+            startDate = df.parse(start_date);
+            endDate = df.parse(end_date);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
-        setTitle();
-        adapter.clear();
-        fetchData();
+        rebuildTitle();
+        loadLaunches();
     }
+
     public void getDateRange() {
         start_date = this.listPreferences.getStartDate();
         end_date = this.listPreferences.getEndDate();
@@ -539,9 +626,11 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = df.format(c.getTime());
 
-        this.start_date = this.listPreferences.getStartDate();
-        this.end_date = String.valueOf(formattedDate);
-        this.listPreferences.resetPreviousTitle();
+        start_date = listPreferences.getStartDate();
+        end_date = String.valueOf(formattedDate);
+        listPreferences.setEndDate(end_date);
+        listPreferences.resetPreviousTitle();
+        switchPreferences.setDateFiltered(false);
         setTitle();
     }
 
@@ -553,6 +642,16 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
         final MenuItem item = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(this);
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean queryTextFocused) {
+                if (!queryTextFocused) {
+                    item.collapseActionView();
+                    searchView.setQuery("", false);
+                    loadLaunches();
+                }
+            }
+        });
     }
 
     @Override
@@ -575,14 +674,11 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
             return true;
         }
         if (id == R.id.action_refresh) {
-            adapter.clear();
-            this.switchPreferences.setPrevFiltered(false);
-            getDefaultDateRange();
-            fetchData();
+            onRefresh();
             return true;
         }
 
-        if (id == R.id.return_home){
+        if (id == R.id.return_home) {
             mRecyclerView.scrollToPosition(0);
         }
         return super.onOptionsItemSelected(item);
@@ -590,22 +686,17 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
     @Override
     public boolean onQueryTextChange(String query) {
+        switchPreferences.setPrevFiltered(true);
         // Here is where we are going to implement our filter logic
-        final List<LaunchRealm> filteredModelList = filter(rocketLaunches, query);
-        if (query.length() > 3){
-            if (!BuildConfig.DEBUG){
-                Answers.getInstance().logSearch(new SearchEvent()
-                        .putQuery(query));
-            }
+        Answers.getInstance().logSearch(new SearchEvent()
+                .putQuery(query));
+        final List<LaunchRealm> filteredModelList = filter(launchRealms, query);
+        if (filteredModelList.size() > 50) {
+            adapter.clear();
+            adapter.addItems(filteredModelList);
+        } else {
+            adapter.animateTo(filteredModelList);
         }
-        adapter.animateTo(filteredModelList);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mRecyclerView.scrollToPosition(0);
-            }
-        }, 500);
-//        mRecyclerView.scrollToPosition(0);
         return false;
     }
 
@@ -622,20 +713,27 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
             final String name = model.getName().toLowerCase();
             final String rocketName = model.getRocket().getName().toLowerCase();
             final String locationName = model.getLocation().getName().toLowerCase();
-            String missionName;
+            String missionName = null;
+            String missionDescription = null;
+            String agencyName = null;
 
-            //If pad and agency exist add it to location, otherwise get whats always available
-            if (model.getLocation().getPads().size() > 0 && model.getLocation().getPads().
-                    get(0).getAgencies().size() > 0){
-                missionName = model.getLocation().getPads().get(0).getAgencies().get(0).getName() + " " + (model.getRocket().getName());
-            } else {
-                missionName = model.getRocket().getName();
+            if (model.getRocket().getAgencies() != null && model.getRocket().getAgencies().size() > 0) {
+                agencyName = model.getRocket().getAgencies().get(0).getName().toLowerCase();
             }
-            missionName = missionName.toLowerCase();
 
-            if (rocketName.contains(query) || locationName.contains(query) || missionName.contains(query) || name.contains(query)) {
+            if (model.getMissions().size() > 0) {
+                missionName = model.getMissions().get(0).getName().toLowerCase();
+                missionDescription = model.getMissions().get(0).getDescription().toLowerCase();
+            }
+
+            if (rocketName.contains(query) || locationName.contains(query) || (agencyName != null && agencyName.contains(query)) || name.contains(query)) {
                 filteredModelList.add(model);
+            } else {
+                if (missionName != null && (missionName.contains(query) || missionDescription.contains(query))) {
+                    filteredModelList.add(model);
+                }
             }
+
         }
         return filteredModelList;
     }
@@ -646,9 +744,9 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
             Timber.v("Received: %s", intent.getAction());
             hideLoading();
             if (intent.getAction().equals(Strings.ACTION_SUCCESS_PREV_LAUNCHES)) {
-                displayLaunches();
+                loadLaunches();
             } else if (intent.getAction().equals(Strings.ACTION_FAILURE_PREV_LAUNCHES)) {
-                Snackbar.make(coordinatorLayout, intent.getStringExtra("error"), Snackbar.LENGTH_LONG).show();
+                showErrorSnackbar(intent.getStringExtra("error"));
             }
         }
     };
@@ -671,7 +769,7 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
             Timber.d("Previous Launch Fragment: Not First Boot.");
             getDateRange();
         }
-        displayLaunches();
+        loadLaunches();
         super.onResume();
     }
 
@@ -683,10 +781,15 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
 
     @Override
     public void onRefresh() {
-        this.switchPreferences.setPrevFiltered(false);
-        this.switchPreferences.resetAllPrevFilters();
-        getDefaultDateRange();
-        fetchData();
+        if (!switchPreferences.isPrevFiltered()) {
+            getDefaultDateRange();
+            getPrevLaunchData();
+        } else {
+            switchPreferences.setPrevFiltered(false);
+            switchPreferences.resetAllPrevFilters(context);
+            getDefaultDateRange();
+            loadLaunches();
+        }
     }
 
     private void fabSlideOut() {
@@ -701,6 +804,8 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     public void onDetach() {
         super.onDetach();
     }
+
+
 }
 
 

@@ -33,7 +33,7 @@ import me.calebjones.spacelaunchnow.content.models.natives.Orbiter;
 import me.calebjones.spacelaunchnow.content.responses.base.OrbiterResponse;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.ui.activity.OrbiterDetailActivity;
-import me.calebjones.spacelaunchnow.utils.CustomFragment;
+import me.calebjones.spacelaunchnow.ui.fragment.CustomFragment;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
 import me.calebjones.spacelaunchnow.content.interfaces.APIRequestInterface;
 import retrofit2.Call;

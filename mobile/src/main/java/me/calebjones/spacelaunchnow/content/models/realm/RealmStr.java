@@ -1,8 +1,10 @@
 package me.calebjones.spacelaunchnow.content.models.realm;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class RealmStr extends RealmObject {
+    @PrimaryKey
     private String val;
 
     public RealmStr() {

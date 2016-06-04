@@ -25,9 +25,10 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
+import timber.log.Timber;
 
 /**
- * This adapter takes data from ListPreferences/LoaderService and applies it to the UpcomingLaunchesFragment
+ * This adapter takes data from ListPreferences/LoaderService and applies it to RecyclerView
  */
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> implements FastScrollRecyclerView.SectionedAdapter {
     public int position;
@@ -59,7 +60,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 
     public void clear() {
         launchList.clear();
-        notifyDataSetChanged();
     }
 
     @Override
@@ -83,8 +83,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        final LaunchRealm launchItem = launchList.get(i);
-
+        final LaunchRealm launchItem = launchList.get(holder.getAdapterPosition());
 
         String missionType;
         String title;
@@ -95,6 +94,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 
         //Retrieve missionType
         if (launchItem.getMissions().size() != 0) {
+            Timber.v("%s - %s",launchItem.getName() ,launchItem.getMissions().get(0).getTypeName());
             setCategoryIcon(holder, launchItem.getMissions().get(0).getTypeName());
         }
 
@@ -203,7 +203,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
             final int position = getAdapterPosition();
             LaunchRealm launch = launchList.get(position);
             Intent intent = new Intent(mContext, LaunchDetailActivity.class);
-            intent.putExtra("TYPE", "Launch");
+            intent.putExtra("TYPE", "launch");
             intent.putExtra("launchID", launch.getId());
             mContext.startActivity(intent);
         }

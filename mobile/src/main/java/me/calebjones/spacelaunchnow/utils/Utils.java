@@ -126,50 +126,6 @@ public class Utils {
     }
 
     /**
-     * Scale and set the pivot when the animation will start from
-     *
-     * @param v the view to set the pivot
-     */
-    public static void configureHideYView(View v) {
-
-        v.setScaleY(0);
-        v.setPivotY(0);
-    }
-
-    /**
-     * Reduces the X & Y from a view
-     *
-     * @param v the view to be scaled
-     * @return the ViewPropertyAnimation to manage the animation
-     */
-    public static ViewPropertyAnimator hideViewByScaleXY(View v) {
-
-        return hideViewByScale(v, DEFAULT_DELAY, 0, 0);
-    }
-
-    /**
-     * Reduces the Y from a view
-     *
-     * @param v the view to be scaled
-     * @return the ViewPropertyAnimation to manage the animation
-     */
-    public static ViewPropertyAnimator hideViewByScaleY(View v) {
-
-        return hideViewByScale(v, DEFAULT_DELAY, 1, 0);
-    }
-
-    /**
-     * Reduces the X from a view
-     *
-     * @param v the view to be scaled
-     * @return the ViewPropertyAnimation to manage the animation
-     */
-    public static ViewPropertyAnimator hideViewByScalyInX(View v) {
-
-        return hideViewByScale(v, DEFAULT_DELAY, 0, 1);
-    }
-
-    /**
      * Reduces the X & Y
      *
      * @param v     the view to be scaled
@@ -198,20 +154,6 @@ public class Utils {
                 .scaleX(1).scaleY(1);
 
         return propertyAnimator;
-    }
-
-    public static String getBaseURL(Context context) {
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.DATE, 1);
-
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        String formattedDate = df.format(c.getTime());
-
-        if (ListPreferences.getInstance(context.getApplicationContext()).isDebugEnabled()) {
-            return "https://launchlibrary.net/dev/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
-        } else {
-            return "https://launchlibrary.net/1.2/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
-        }
     }
 
     public static String getEndDate(Context context) {

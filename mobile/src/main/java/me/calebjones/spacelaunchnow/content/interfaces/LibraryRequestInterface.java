@@ -24,12 +24,12 @@ public interface LibraryRequestInterface {
     @GET("dev/launch/next/1000&mode=verbose")
     Call<LaunchResponse> getDebugUpcomingLaunches(@Query("offset") int offset);
 
-    @GET(version + "/launch/{start_date}/{end_date}/?limit=100")
+    @GET(version + "/launch/{start_date}/{end_date}/?limit=200")
     Call<LaunchResponse> getLaunchesByDate(@Path("start_date") String start_date,
                                            @Path("end_date") String end_date,
                                            @Query("offset") int offset);
 
-    @GET("dev/launch/{start_date}/{end_date}/?limit=100")
+    @GET("dev/launch/{start_date}/{end_date}/?limit=200")
     Call<LaunchResponse> getDebugLaunchesByDate(@Path("start_date") String start_date,
                                                 @Path("end_date") String end_date,
                                                 @Query("offset") int offset);

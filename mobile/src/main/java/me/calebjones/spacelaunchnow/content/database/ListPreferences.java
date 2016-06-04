@@ -63,6 +63,7 @@ public class ListPreferences {
     public static String PREFS_LAST_UPCOMING_LAUNCH_UPDATE;
     public static String PREFS_LAST_PREVIOUS_LAUNCH_UPDATE;
     public static String PREFS_PREVIOUS_TITLE;
+    public static String PREFS_UP_TITLE;
     public static String PREFS_CURRENT_START_DATE;
     public static String PREFS_CURRENT_END_DATE;
     public static String PREFS_LAUNCH_LIST_NEXT;
@@ -92,6 +93,7 @@ public class ListPreferences {
         PREFS_LAST_UPCOMING_LAUNCH_UPDATE = "LAST_UPCOMING_LAUNCH_UPDATE";
         PREFS_LAST_PREVIOUS_LAUNCH_UPDATE = "LAST_PREVIOUS_LAUNCH_UPDATE";
         PREFS_PREVIOUS_TITLE = "CURRENT_YEAR_RANGE";
+        PREFS_UP_TITLE = "UP_CURRENT_TITLE";
         PREFS_CURRENT_START_DATE = "CURRENT_START_DATE";
         PREFS_CURRENT_END_DATE = "CURRENT_END_DATE";
         PREFS_LAUNCH_LIST_NEXT = "LAUNCH_LIST_FAVS";
@@ -768,6 +770,26 @@ public class ListPreferences {
         this.prefsEditor.apply();
     }
 
+    //Methods for saving and restoring
+    public void setUpTitle(String currentYearRange) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putString(PREFS_UP_TITLE, currentYearRange);
+        this.prefsEditor.apply();
+    }
+
+    public String getUpTitle() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getString(PREFS_UP_TITLE, "Space Launch Now");
+    }
+
+    public void resetUpTitle() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putString(PREFS_UP_TITLE, "Space Launch Now");
+        this.prefsEditor.apply();
+    }
+
     public void setStartDate(String startDate) {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
@@ -777,7 +799,7 @@ public class ListPreferences {
 
     public String getStartDate() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getString(PREFS_CURRENT_START_DATE, "1950-01-01");
+        return this.sharedPrefs.getString(PREFS_CURRENT_START_DATE, "1900-01-01");
     }
 
     public void setEndDate(String endDate) {
@@ -810,7 +832,7 @@ public class ListPreferences {
 
         List<Launch> newList = new ArrayList<>();
 
-        if (!this.switchPreferences.getPrevFiltered()) {
+        if (!this.switchPreferences.isPrevFiltered()) {
             Timber.v("Not filtered, setting filtered to true and retrieving full list");
             removeFilteredList();
             this.switchPreferences.setPrevFiltered(true);
@@ -1021,7 +1043,7 @@ public class ListPreferences {
 
         List<Launch> newList = new ArrayList<>();
 
-        if (!this.switchPreferences.getUpFiltered()) {
+        if (!this.switchPreferences.isUpFiltered()) {
             Timber.v("Not filtered, setting filtered to true and retrieving full list");
             removeUpFilteredList();
             this.switchPreferences.setUpFiltered(true);

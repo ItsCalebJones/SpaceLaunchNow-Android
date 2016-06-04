@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity
     public void getFirstLaunches() {
         Intent launchIntent = new Intent(this.context, LaunchDataService.class);
         launchIntent.setAction(Strings.ACTION_GET_ALL);
-        launchIntent.putExtra("URL", Utils.getBaseURL(this));
+
         this.context.startService(launchIntent);
     }
 

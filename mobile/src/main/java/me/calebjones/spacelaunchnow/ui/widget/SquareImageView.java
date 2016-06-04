@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.utils;
+package me.calebjones.spacelaunchnow.ui.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;

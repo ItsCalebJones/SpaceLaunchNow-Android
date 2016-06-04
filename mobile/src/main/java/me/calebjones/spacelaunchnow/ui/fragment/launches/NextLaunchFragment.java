@@ -36,17 +36,14 @@ import com.crashlytics.android.answers.ContentViewEvent;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
-import com.google.android.gms.maps.MapView;
 
 import java.util.Date;
-import java.util.HashSet;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.BuildConfig;
@@ -56,6 +53,7 @@ import me.calebjones.spacelaunchnow.content.adapter.CardBigAdapter;
 import me.calebjones.spacelaunchnow.content.adapter.CardSmallAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.content.interfaces.QueryBuilder;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
@@ -276,13 +274,16 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
             int size = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
             adapter.clear();
 
+
             if (launchRealms.size() >= size) {
+                setLayoutManager(size);
                 if (cardSizeSmall) {
                     adapter.addItems(launchRealms.subList(0, size));
                 } else {
                     adapter.addItems(launchRealms.subList(0, size));
                 }
             } else if (launchRealms.size() > 0) {
+                setLayoutManager(size);
                 if (cardSizeSmall) {
                     adapter.addItems(launchRealms);
                 } else {
@@ -296,10 +297,25 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     };
 
     public void displayLaunches() {
-        Timber.v("displayLaunches - showLoading");
+        Timber.v("loadLaunches - showLoading");
         showLoading();
-        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && launchRealms.size() == 1) {
-            linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        Date date = new Date();
+
+        Timber.v("loadLaunches - Realm query created.");
+        if (switchPreferences.getAllSwitch()) {
+            launchRealms = realm.where(LaunchRealm.class)
+                    .greaterThanOrEqualTo("net", date)
+                    .findAllSortedAsync("net", Sort.ASCENDING);
+            launchRealms.addChangeListener(callback);
+        } else {
+            filterLaunchRealm();
+        }
+    }
+
+    private void setLayoutManager(int size) {
+        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && (launchRealms != null && launchRealms.size() == 1 || size == 1 )) {
+            linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(),
+                    LinearLayoutManager.VERTICAL, false);
             mRecyclerView.setLayoutManager(linearLayoutManager);
             if (cardSizeSmall) {
                 mRecyclerView.setAdapter(smallAdapter);
@@ -315,140 +331,10 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                 mRecyclerView.setAdapter(adapter);
             }
         }
-        Date date = new Date();
-
-        Timber.v("displayLaunches - Realm query created.");
-        if (switchPreferences.getAllSwitch()) {
-            launchRealms = realm.where(LaunchRealm.class)
-                    .greaterThanOrEqualTo("net", date)
-                    .findAllSortedAsync("net", Sort.ASCENDING);
-            launchRealms.addChangeListener(callback);
-        } else {
-            filterLaunchRealm();
-        }
     }
 
     private void filterLaunchRealm() {
-        boolean first = true;
-        Date date = new Date();
-        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class).greaterThanOrEqualTo("net", date);
-        if (switchPreferences.getSwitchNasa()) {
-            first = false;
-            query.equalTo("rocket.agencies.id", 44)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 44);
-        }
-
-        if (switchPreferences.getSwitchArianespace()) {
-            if (!first) {
-                query.or();
-            } else {
-                first = false;
-            }
-            query.equalTo("rocket.agencies.id", 115)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 115);
-        }
-
-        if (switchPreferences.getSwitchSpaceX()) {
-            if (!first) {
-                query.or();
-            } else {
-                first = false;
-            }
-            query.equalTo("rocket.agencies.id", 121)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 121);
-        }
-
-        if (switchPreferences.getSwitchULA()) {
-            if (!first) {
-                query.or();
-            } else {
-                first = false;
-            }
-            query.equalTo("rocket.agencies.id", 124)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 124);
-        }
-
-        if (switchPreferences.getSwitchRoscosmos()) {
-            if (!first) {
-                query.or();
-            } else {
-                first = false;
-            }
-            query.equalTo("rocket.agencies.id", 111)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 111)
-                    .or()
-                    .equalTo("rocket.agencies.id", 163)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 163)
-                    .or()
-                    .equalTo("rocket.agencies.id", 63)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 63);
-        }
-        if (switchPreferences.getSwitchCASC()) {
-            if (!first) {
-                query.or();
-            } else {
-                first = false;
-            }
-            query.equalTo("rocket.agencies.id", 88)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 88);
-        }
-
-        if (switchPreferences.getSwitchISRO()) {
-            if (!first) {
-                query.or();
-            } else {
-                first = false;
-            }
-            query.equalTo("rocket.agencies.id", 31)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 31);
-        }
-
-        if (switchPreferences.getSwitchKSC()) {
-            if (!first) {
-                query.or();
-            } else {
-                first = false;
-            }
-            query.equalTo("rocket.agencies.id", 17)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 17);
-        }
-
-        if (switchPreferences.getSwitchCape()) {
-            if (!first) {
-                query.or();
-            } else {
-                first = false;
-            }
-            query.equalTo("location.id", 16);
-        }
-
-        if (switchPreferences.getSwitchPles()) {
-            if (!first) {
-                query.or();
-            } else {
-                first = false;
-            }
-            query.equalTo("location.id", 11);
-        }
-
-        if (switchPreferences.getSwitchVan()) {
-            if (!first) {
-                query.or();
-            }
-            query.equalTo("location.id", 18);
-        }
-
-        launchRealms = query.findAllSortedAsync("net", Sort.ASCENDING);
+        launchRealms = QueryBuilder.buildSwitchQuery(context, realm);
         launchRealms.addChangeListener(callback);
     }
 
@@ -563,7 +449,9 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
 
     @Override
     public void onPause() {
+        Timber.v("onPause");
         getActivity().unregisterReceiver(nextLaunchReceiver);
+        launchRealms.removeChangeListeners();
         super.onPause();
     }
 
@@ -635,6 +523,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     @Override
     public void onRefresh() {
         fetchData();
+        launchRealms.removeChangeListener(callback);
     }
 
     private void setTitle() {

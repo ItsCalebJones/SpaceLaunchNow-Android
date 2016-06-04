@@ -98,15 +98,16 @@ public class NextLaunchTracker extends IntentService implements
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         Calendar calDay = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         calDay.add(Calendar.HOUR, 36);
-        long time = cal.getTimeInMillis() / 1000;
-        long timeNext = calDay.getTimeInMillis() / 1000;
+        Date date = new Date();
+        Date dateDay = new Date();
+        dateDay = calDay.getTime();
 
         if (switchPreferences.getAllSwitch()) {
             launchRealms = realm.where(LaunchRealm.class)
-                    .between("netstamp", time, timeNext)
+                    .between("net", date, dateDay)
                     .findAll();
         } else {
-            filterLaunchRealm(time, timeNext);
+            filterLaunchRealm(date, dateDay);
         }
 
         if (launchRealms.size() > 0) {
@@ -125,10 +126,11 @@ public class NextLaunchTracker extends IntentService implements
         realm.close();
     }
 
-    private void filterLaunchRealm(long time, long timeNext) {
+    private void filterLaunchRealm(Date date, Date dateDay) {
         boolean first = true;
-        Date date = new Date();
-        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class).between("netstamp", time, timeNext);
+        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class)
+                .between("net", date, dateDay)
+                .beginGroup();
         if (switchPreferences.getSwitchNasa()) {
             first = false;
             query.equalTo("rocket.agencies.id", 44)
@@ -245,7 +247,7 @@ public class NextLaunchTracker extends IntentService implements
             query.equalTo("location.id", 18);
         }
 
-        launchRealms = query.findAll();
+        launchRealms = query.endGroup().findAll();
     }
 
     private void checkNextLaunches(LaunchRealm launch) {
