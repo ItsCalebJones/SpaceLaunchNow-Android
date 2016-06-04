@@ -4,11 +4,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.onesignal.OneSignal;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import me.calebjones.spacelaunchnow.content.models.legacy.Launch;
@@ -27,6 +31,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
     public static String PREFS_NIGHT_MODE_STATUS;
     public static String PREFS_NIGHT_MODE_START;
     public static String PREFS_NIGHT_MODE_END;
+    public static String PREFS_PREV_FILTERED_DATE;
     public static String PREFS_PREV_FILTERED;
     public static String PREFS_UP_FILTERED;
     public static String PREFS_PREV_VEHICLE_FILTERED_WHICH;
@@ -37,6 +42,14 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
     public static String PREFS_PREV_LOCATION_FILTERED_WHICH;
     public static String PREFS_UP_COUNTRY_FILTERED_WHICH;
     public static String PREFS_PREV_COUNTRY_FILTERED_WHICH;
+    public static String PREFS_PREV_VEHICLE_FILTERED_ARRAY;
+    public static String PREFS_UP_VEHICLE_FILTERED_ARRAY;
+    public static String PREFS_UP_AGENCY_FILTERED_ARRAY;
+    public static String PREFS_PREV_AGENCY_FILTERED_ARRAY;
+    public static String PREFS_UP_LOCATION_FILTERED_ARRAY;
+    public static String PREFS_PREV_LOCATION_FILTERED_ARRAY;
+    public static String PREFS_UP_COUNTRY_FILTERED_ARRAY;
+    public static String PREFS_PREV_COUNTRY_FILTERED_ARRAY;
     public static String PREFS_FILTER_VEHICLE;
     public static String PREFS_FILTER_AGENCY;
     public static String PREFS_FILTER_COUNTRY;
@@ -63,6 +76,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         PREFS_NIGHT_MODE_STATUS = "NIGHT_MODE_STATUS";
         PREFS_NIGHT_MODE_START = "NIGHT_MODE_START";
         PREFS_NIGHT_MODE_END = "NIGHT_MODE_END";
+        PREFS_PREV_FILTERED_DATE = "PREV_FILTERED_DATE";
         PREFS_PREV_FILTERED = "PREV_FILTERED";
         PREFS_UP_FILTERED = "UP_FILTERED";
         PREFS_FILTER_VEHICLE = "FILTER_VEHICLE";
@@ -88,6 +102,14 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         PREFS_UP_VEHICLE_FILTERED_WHICH = "UP_VEHICLE_FILTERED_WHICH";
         PREFS_UP_AGENCY_FILTERED_WHICH = "UP_AGENCY_FILTERED_WHICH";
         PREFS_UP_LOCATION_FILTERED_WHICH = "UP_LOCATION_FILTERED_WHICH";
+        PREFS_PREV_VEHICLE_FILTERED_ARRAY = "PREV_VEHICLE_FILTERED_ARRAY";
+        PREFS_PREV_AGENCY_FILTERED_ARRAY = "PREV_AGENCY_FILTERED_ARRAY";
+        PREFS_PREV_LOCATION_FILTERED_ARRAY = "PREV_LOCATION_FILTERED_ARRAY";
+        PREFS_PREV_COUNTRY_FILTERED_ARRAY = "PREV_COUNTRY_FILTERED_ARRAY";
+        PREFS_UP_COUNTRY_FILTERED_ARRAY = "UP_COUNTRY_FILTERED_ARRAY";
+        PREFS_UP_VEHICLE_FILTERED_ARRAY = "UP_VEHICLE_FILTERED_ARRAY";
+        PREFS_UP_AGENCY_FILTERED_ARRAY = "UP_AGENCY_FILTERED_ARRAY";
+        PREFS_UP_LOCATION_FILTERED_ARRAY = "UP_LOCATION_FILTERED_ARRAY";
         PREFS_CALENDAR_STATUS = "CALENDAR_STATUS";
         INSTANCE = null;
     }
@@ -132,6 +154,19 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_CALENDAR_STATUS, value);
+        this.prefsEditor.apply();
+    }
+
+    public boolean isDateFiltered() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getBoolean(PREFS_PREV_FILTERED_DATE, false);
+    }
+
+
+    public void setDateFiltered(boolean value) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean(PREFS_PREV_FILTERED_DATE, value);
         this.prefsEditor.apply();
     }
 
@@ -218,6 +253,66 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor.putString(PREFS_UP_AGENCY_FILTERED_WHICH, "");
         this.prefsEditor.putString(PREFS_UP_VEHICLE_FILTERED_WHICH, "");
         this.prefsEditor.putString(PREFS_UP_COUNTRY_FILTERED_WHICH, "");
+        this.prefsEditor.putString(PREFS_UP_LOCATION_FILTERED_ARRAY, "");
+        this.prefsEditor.putString(PREFS_UP_AGENCY_FILTERED_ARRAY, "");
+        this.prefsEditor.putString(PREFS_UP_VEHICLE_FILTERED_ARRAY, "");
+        this.prefsEditor.putString(PREFS_UP_COUNTRY_FILTERED_ARRAY, "");
+        this.prefsEditor.apply();
+    }
+
+    public void resetCountryUpFilters() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putString(PREFS_UP_COUNTRY_FILTERED_ARRAY, "");
+        this.prefsEditor.apply();
+    }
+
+    public void resetVehicleUpFilters() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putString(PREFS_UP_VEHICLE_FILTERED_ARRAY, "");
+        this.prefsEditor.apply();
+    }
+
+    public void resetAgencyUpFilters() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putString(PREFS_UP_AGENCY_FILTERED_ARRAY, "");
+        this.prefsEditor.apply();
+    }
+
+    public void resetLocationUpFilters() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putString(PREFS_UP_LOCATION_FILTERED_ARRAY, "");
+        this.prefsEditor.apply();
+    }
+
+    public void resetCountryPrevFilters() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putString(PREFS_PREV_COUNTRY_FILTERED_ARRAY, "");
+        this.prefsEditor.apply();
+    }
+
+    public void resetVehiclePrevFilters() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putString(PREFS_PREV_VEHICLE_FILTERED_ARRAY, "");
+        this.prefsEditor.apply();
+    }
+
+    public void resetAgencyPrevFilters() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putString(PREFS_PREV_AGENCY_FILTERED_ARRAY, "");
+        this.prefsEditor.apply();
+    }
+
+    public void resetLocationPrevFilters() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putString(PREFS_PREV_LOCATION_FILTERED_ARRAY, "");
         this.prefsEditor.apply();
     }
 
@@ -269,18 +364,26 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         return toIntArray(this.sharedPrefs.getString(PREFS_PREV_COUNTRY_FILTERED_WHICH, ""));
     }
 
-    public void resetAllPrevFilters() {
+    public void resetAllPrevFilters(Context context) {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putString(PREFS_PREV_LOCATION_FILTERED_WHICH, "");
         this.prefsEditor.putString(PREFS_PREV_AGENCY_FILTERED_WHICH, "");
         this.prefsEditor.putString(PREFS_PREV_VEHICLE_FILTERED_WHICH, "");
         this.prefsEditor.putString(PREFS_PREV_COUNTRY_FILTERED_WHICH, "");
+        this.prefsEditor.putString(PREFS_PREV_LOCATION_FILTERED_ARRAY, "");
+        this.prefsEditor.putString(PREFS_PREV_AGENCY_FILTERED_ARRAY, "");
+        this.prefsEditor.putString(PREFS_PREV_VEHICLE_FILTERED_ARRAY, "");
+        this.prefsEditor.putString(PREFS_PREV_COUNTRY_FILTERED_ARRAY, "");
         this.prefsEditor.apply();
+        if(listPreferences == null){
+            listPreferences = ListPreferences.getInstance(context);
+        }
+        listPreferences.setStartDate("1900-01-01");
     }
 
     public static Integer[] toIntArray(String input) {
-        if (input.length() > 0) {
+        if (input.length() > 2 && !input.equals("")) {
             String beforeSplit = input.replaceAll("\\[|\\]|\\s", "");
             String[] split = beforeSplit.split("\\,");
             Integer[] result = new Integer[split.length];
@@ -299,19 +402,25 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor.apply();
     }
 
-    public boolean getPrevFiltered() {
+    public boolean isPrevFiltered() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         return this.sharedPrefs.getBoolean(PREFS_PREV_FILTERED, false);
     }
 
     public void setUpFiltered(boolean value) {
+        if (!value){
+            if(listPreferences == null){
+                listPreferences = ListPreferences.getInstance(appContext);
+            }
+            listPreferences.resetUpTitle();
+        }
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_UP_FILTERED, value);
         this.prefsEditor.apply();
     }
 
-    public boolean getUpFiltered() {
+    public boolean isUpFiltered() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         return this.sharedPrefs.getBoolean(PREFS_UP_FILTERED, false);
     }
@@ -731,18 +840,165 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
                 Launch launch = listPreferences.getNextLaunch();
                 CalendarUtil provider = new CalendarUtil();
 
-                if (launch.getCalendarID() == null) {
-                    Integer id = provider.addEvent(appContext, launch);
-                    launch.setCalendarID(id);
-                    listPreferences.setNextLaunch(launch);
-                } else {
-                    if (!provider.updateEvent(appContext, launch)){
+                if (launch != null) {
+                    if (launch.getCalendarID() == null) {
                         Integer id = provider.addEvent(appContext, launch);
                         launch.setCalendarID(id);
                         listPreferences.setNextLaunch(launch);
+                    } else {
+                        if (!provider.updateEvent(appContext, launch)) {
+                            Integer id = provider.addEvent(appContext, launch);
+                            launch.setCalendarID(id);
+                            listPreferences.setNextLaunch(launch);
+                        }
                     }
                 }
             }
         }
     }
+
+    //Previous Get/Set
+
+    public void setPrevCountryFilteredArray(ArrayList<String> array) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(array);
+        this.prefsEditor.putString(PREFS_PREV_COUNTRY_FILTERED_ARRAY, json);
+        this.prefsEditor.apply();
+    }
+
+    public void setPrevAgencyFilterArray(ArrayList<String> array) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(array);
+        this.prefsEditor.putString(PREFS_PREV_AGENCY_FILTERED_ARRAY, json);
+        this.prefsEditor.apply();
+    }
+
+    public void setPrevLocationFilteredArray(ArrayList<String> array) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(array);
+        this.prefsEditor.putString(PREFS_PREV_LOCATION_FILTERED_ARRAY, json);
+        this.prefsEditor.apply();
+    }
+
+    public void setPrevVehicleFilteredArray(ArrayList<String> array) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(array);
+        this.prefsEditor.putString(PREFS_PREV_VEHICLE_FILTERED_ARRAY, json);
+        this.prefsEditor.apply();
+    }
+
+    public ArrayList<String> getPrevCountryFilteredArray(){
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        Gson gson = new Gson();
+        String json = sharedPrefs.getString(PREFS_PREV_COUNTRY_FILTERED_ARRAY, null);
+        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        return gson.fromJson(json, type);
+    }
+    public ArrayList<String> getPrevAgencyFilteredArray(){
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        Gson gson = new Gson();
+        String json = sharedPrefs.getString(PREFS_PREV_AGENCY_FILTERED_ARRAY, null);
+        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        return gson.fromJson(json, type);
+    }
+    public ArrayList<String> getPrevLocationFilteredArray(){
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        Gson gson = new Gson();
+        String json = sharedPrefs.getString(PREFS_PREV_LOCATION_FILTERED_ARRAY, null);
+        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        return gson.fromJson(json, type);
+    }
+    public ArrayList<String> getPrevVehicleFilteredArray(){
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        Gson gson = new Gson();
+        String json = sharedPrefs.getString(PREFS_PREV_VEHICLE_FILTERED_ARRAY, null);
+        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        return gson.fromJson(json, type);
+    }
+
+    //Up Get/Set
+
+    public void setUpCountryFilteredArray(ArrayList<String> array) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(array);
+        this.prefsEditor.putString(PREFS_UP_COUNTRY_FILTERED_ARRAY, json);
+        this.prefsEditor.apply();
+    }
+
+    public void setUpAgencyFilterArray(ArrayList<String> array) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(array);
+        this.prefsEditor.putString(PREFS_UP_AGENCY_FILTERED_ARRAY, json);
+        this.prefsEditor.apply();
+    }
+
+    public void setUpLocationFilteredArray(ArrayList<String> array) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(array);
+        this.prefsEditor.putString(PREFS_UP_LOCATION_FILTERED_ARRAY, json);
+        this.prefsEditor.apply();
+    }
+
+    public void setUpVehicleFilteredArray(ArrayList<String> array) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(array);
+        this.prefsEditor.putString(PREFS_UP_VEHICLE_FILTERED_ARRAY, json);
+        this.prefsEditor.apply();
+    }
+
+    public ArrayList<String> getUpCountryFilteredArray(){
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        Gson gson = new Gson();
+        String json = sharedPrefs.getString(PREFS_UP_COUNTRY_FILTERED_ARRAY, null);
+        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        return gson.fromJson(json, type);
+    }
+    public ArrayList<String> getUpAgencyFilteredArray(){
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        Gson gson = new Gson();
+        String json = sharedPrefs.getString(PREFS_UP_AGENCY_FILTERED_ARRAY, null);
+        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        return gson.fromJson(json, type);
+    }
+    public ArrayList<String> getUpLocationFilteredArray(){
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        Gson gson = new Gson();
+        String json = sharedPrefs.getString(PREFS_UP_LOCATION_FILTERED_ARRAY, null);
+        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        return gson.fromJson(json, type);
+    }
+    public ArrayList<String> getUpVehicleFilteredArray(){
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        Gson gson = new Gson();
+        String json = sharedPrefs.getString(PREFS_UP_VEHICLE_FILTERED_ARRAY, null);
+        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        return gson.fromJson(json, type);
+    }
+
+
+    
 }

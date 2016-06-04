@@ -126,6 +126,7 @@ public class LaunchDataService extends IntentService {
         // Create a new empty instance of Realm
         mRealm = Realm.getInstance(realmConfiguration);
 
+        //Usually called on first launch
         if (Strings.ACTION_GET_ALL.equals(action)) {
             Timber.v("Intent action received: %s", action);
             if (this.sharedPref.getBoolean("background", true)) {
@@ -141,6 +142,7 @@ public class LaunchDataService extends IntentService {
 
             startService(new Intent(this, MissionDataService.class));
 
+        // Called from NextLaunchFragment
         } else if (Strings.ACTION_GET_UP_LAUNCHES.equals(action)) {
 
             Timber.v("Intent action received: %s", action);
@@ -149,17 +151,22 @@ public class LaunchDataService extends IntentService {
             }
             getUpcomingLaunches();
 
+        // Called from PrevLaunchFragment
         } else if (Strings.ACTION_GET_PREV_LAUNCHES.equals(action)) {
 
             Timber.v("Intent action received: %s", action);
-            getLaunchesByDate(intent.getStringExtra("startDate"), intent.getStringExtra("endDate"));
-
+            if(intent.getStringExtra("startDate") != null && intent.getStringExtra("endDate") != null ) {
+                getLaunchesByDate(intent.getStringExtra("startDate"), intent.getStringExtra("endDate"));
+            } else {
+                getLaunchesByDate("1950-01-01", Utils.getEndDate(this));
+            }
 
         } else if (Strings.ACTION_UPDATE_NEXT_LAUNCH.equals(action)) {
 
             Timber.v("Intent action received: %s", action);
             getNextLaunches();
             this.startService(new Intent(this, NextLaunchTracker.class));
+
         } else {
             Timber.e("LaunchDataService - onHandleIntent: ERROR - Unknown Intent %s", action);
         }
@@ -187,6 +194,7 @@ public class LaunchDataService extends IntentService {
                 total = launchResponse.body().getTotal();
                 count = launchResponse.body().getCount();
                 offset = offset + count;
+                Timber.v("Count: ", offset);
                 Collections.addAll(items, launchResponse.body().getLaunches());
             }
             for (LaunchRealm item : items) {
@@ -195,6 +203,7 @@ public class LaunchDataService extends IntentService {
                         .findFirst();
                 mRealm.beginTransaction();
                 if (previous != null) {
+                    Timber.v("Found previous updating: ", previous.getId());
                     item.setFavorite(previous.isFavorite());
                     item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
                     item.setIsNotifiedDay(previous.getIsNotifiedDay());
@@ -206,6 +215,7 @@ public class LaunchDataService extends IntentService {
                 mRealm.commitTransaction();
             }
 
+            Timber.v("Success!");
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
             LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);

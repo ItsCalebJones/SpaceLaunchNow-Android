@@ -65,7 +65,7 @@ public class LaunchesViewPager extends Fragment {
                 viewPager.setCurrentItem(tab.getPosition());
                 current_tab = tab.getPosition();
                 if (tab.getPosition() == 0) {
-                    ((MainActivity) getActivity()).setActionBarTitle("Space Launch Now");
+                    ((MainActivity) getActivity()).setActionBarTitle(sharedPreference.getUpTitle());
                 } else {
                     ((MainActivity) getActivity()).setActionBarTitle(sharedPreference.getPreviousTitle());
                 }

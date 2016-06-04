@@ -10,7 +10,7 @@
     android:scaleY="0"
     android:padding="4dp">
 
-    <me.calebjones.spacelaunchnow.utils.SquareImageView
+    <me.calebjones.spacelaunchnow.ui.widget.SquareImageView
         android:id="@+id/picture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

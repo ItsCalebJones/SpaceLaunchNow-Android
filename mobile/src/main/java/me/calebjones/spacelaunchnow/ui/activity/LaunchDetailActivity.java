@@ -126,7 +126,7 @@ public class LaunchDetailActivity extends AppCompatActivity
         String type = mIntent.getStringExtra("TYPE");
 
 
-        if (type.equals("LaunchID")) {
+        if (type.equals("launch")) {
             int id = mIntent.getIntExtra("launchID", 0);
             launch = realm.where(LaunchRealm.class).equalTo("id", id).findFirst();
         }
