@@ -146,7 +146,11 @@ public class CardSmallAdapter extends RecyclerView.Adapter<CardSmallAdapter.View
                 @Override
                 public void onFinish() {
                     holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
-                    holder.content_TMinus_status.setTextColor(ContextCompat.getColor(mContext,R.color.colorTextSecondary));
+                    if (night){
+                        holder.content_TMinus_status.setTextColor(ContextCompat.getColor(mContext, R.color.dark_theme_secondary_text_color));
+                    } else {
+                        holder.content_TMinus_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorTextSecondary));
+                    }
                     if (launchItem.getStatus() == 1) {
                         holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
 
@@ -188,7 +192,7 @@ public class CardSmallAdapter extends RecyclerView.Adapter<CardSmallAdapter.View
                     }
                     holder.content_TMinus_status.setTypeface(Typeface.SANS_SERIF);
                     holder.content_TMinus_status.setTextColor(ContextCompat.getColor(mContext,R.color.red));
-                    holder.content_TMinus_status.setText(String.format("L - %s %s:%s:%s", days, hours, minutes, seconds));
+                    holder.content_TMinus_status.setText(String.format("L - %s days - %s:%s:%s", days, hours, minutes, seconds));
                 }
             }.start();
 
