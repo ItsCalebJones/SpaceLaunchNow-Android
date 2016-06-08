@@ -47,6 +47,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import io.realm.RealmList;
+import io.realm.annotations.PrimaryKey;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
@@ -129,8 +130,12 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         }
 
         //TODO These are slightly rounded when converting from double to long
-        final double dlat = launchItem.getLocation().getPads().get(0).getLatitude();
-        final double dlon = launchItem.getLocation().getPads().get(0).getLongitude();
+        double dlat = 0;
+        double dlon = 0;
+        if(launchItem.getLocation() != null && launchItem.getLocation().getPads() != null){
+            dlat = launchItem.getLocation().getPads().get(0).getLatitude();
+            dlon = launchItem.getLocation().getPads().get(0).getLongitude();
+        }
 
         // Getting status
         if (play) {
@@ -218,24 +223,29 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
             if (holder.timer != null) {
                 holder.timer.cancel();
             }
+
+            final int status = launchItem.getStatus();
+            final String hold = launchItem.getHoldreason();
+
             holder.timer = new CountDownTimer(future.getTimeInMillis() - now.getTimeInMillis(), 1000) {
                 StringBuilder time = new StringBuilder();
 
                 @Override
                 public void onFinish() {
+                    Timber.v("Countdown - onFinish");
                     holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
                     if (night){
                         holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color));
                     } else {
                         holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary));
                     }
-                    if (launchItem.getStatus() == 1) {
+                    if (status == 1) {
                         holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
 
                         //TODO - Get hold reason and show it
                     } else {
-                        if(launchItem.getHoldreason() != null && launchItem.getHoldreason().length() > 1) {
-                            holder.content_TMinus_status.setText(launchItem.getHoldreason());
+                        if(hold != null && hold.length() > 1) {
+                            holder.content_TMinus_status.setText(hold);
                         } else {
                             holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
                         }
@@ -244,6 +254,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
                 @Override
                 public void onTick(long millisUntilFinished) {
+                    Timber.v("Countdown - onTick: %s", millisUntilFinished);
                     time.setLength(0);
                     // Use days if appropriate
                     long longDays = millisUntilFinished / 86400000;
@@ -274,7 +285,11 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                     }
                     holder.content_TMinus_status.setTypeface(Typeface.SANS_SERIF);
                     holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context,R.color.red));
-                    holder.content_TMinus_status.setText(String.format("L - %s days - %s:%s:%s", days, hours, minutes, seconds));
+                    if (Integer.valueOf(days) > 0){
+                        holder.content_TMinus_status.setText(String.format("L - %s days - %s:%s:%s", days, hours, minutes, seconds));
+                    } else {
+                        holder.content_TMinus_status.setText(String.format("L - %s:%s:%s", hours, minutes, seconds));
+                    }
                 }
             }.start();
 
@@ -474,7 +489,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                 case R.id.exploreButton:
                     Timber.d("Explore: %s", launchList.get(position).getId());
                     Intent exploreIntent = new Intent(context, LaunchDetailActivity.class);
-                    exploreIntent.putExtra("TYPE", "LaunchID");
+                    exploreIntent.putExtra("TYPE", "launch");
                     exploreIntent.putExtra("launchID", launch.getId());
                     context.startActivity(exploreIntent);
                     break;

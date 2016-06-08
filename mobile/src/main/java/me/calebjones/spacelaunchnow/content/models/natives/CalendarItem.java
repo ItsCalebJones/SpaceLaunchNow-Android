@@ -1,13 +1,27 @@
 package me.calebjones.spacelaunchnow.content.models.natives;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 import me.calebjones.spacelaunchnow.content.models.legacy.Launch;
+import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 
-public class CalendarItem {
-    String name, location, description;
-    long start, end, id;
+public class CalendarItem extends RealmObject {
 
+    @PrimaryKey
+    int launchID;
+    String name;
+    String location;
+    String description;
+    long start;
+    long end;
+    long id;
 
-    public CalendarItem(Launch launch, long id) {
+    public  CalendarItem(){
+
+    }
+
+    public CalendarItem(LaunchRealm launch, long id) {
+        this.launchID = launch.getId();
         this.name = launch.getName();
         this.location = launch.getName();
         this.description = launch.getName();
@@ -16,7 +30,8 @@ public class CalendarItem {
         this.id = id;
     }
 
-    public void updateItem(Launch launch, long id){
+
+    public void updateItem(LaunchRealm launch, long id){
         this.name = launch.getName();
         this.location = launch.getName();
         this.description = launch.getName();
@@ -71,5 +86,13 @@ public class CalendarItem {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getLaunchID() {
+        return launchID;
+    }
+
+    public void setLaunchID(int launchID) {
+        this.launchID = launchID;
     }
 }

@@ -1,7 +1,10 @@
 package me.calebjones.spacelaunchnow.content.models.natives;
 
 public class Launcher {
-    final String name, agency, imageURL, nationURL;
+    final String name;
+    final String agency;
+    final String imageURL;
+    final String nationURL;
 
     public Launcher(String name, String agency, String imageURL, String nationURL) {
         this.name = name;

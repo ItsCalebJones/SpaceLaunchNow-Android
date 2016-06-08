@@ -171,7 +171,7 @@ public class LaunchDataService extends IntentService {
             Timber.e("LaunchDataService - onHandleIntent: ERROR - Unknown Intent %s", action);
         }
         Timber.v("Finished!");
-
+        mRealm.close();
     }
 
     private void getLaunchesByDate(String startDate, String endDate) {
@@ -194,7 +194,7 @@ public class LaunchDataService extends IntentService {
                 total = launchResponse.body().getTotal();
                 count = launchResponse.body().getCount();
                 offset = offset + count;
-                Timber.v("Count: ", offset);
+                Timber.v("LaunchesByDate Count: %s", offset);
                 Collections.addAll(items, launchResponse.body().getLaunches());
             }
             for (LaunchRealm item : items) {
@@ -249,6 +249,7 @@ public class LaunchDataService extends IntentService {
                 total = launchResponse.body().getTotal();
                 count = launchResponse.body().getCount();
                 offset = offset + count;
+                Timber.v("UpcomingLaunches Count: %s", offset);
                 Collections.addAll(items, launchResponse.body().getLaunches());
             }
             for (LaunchRealm item : items) {
@@ -257,12 +258,15 @@ public class LaunchDataService extends IntentService {
                         .findFirst();
                 mRealm.beginTransaction();
                 if (previous != null) {
+                    Timber.v("UpcomingLaunches checking items: %s", previous.getName());
                     item.setFavorite(previous.isFavorite());
                     item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
                     item.setIsNotifiedDay(previous.getIsNotifiedDay());
                     item.setIsNotifiedHour(previous.getIsNotifiedHour());
                     item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
                     item.getLocation().setPrimaryID();
+                } else {
+                    Timber.v("UpcomingLaunches checking items: %s", item.getName());
                 }
                 mRealm.copyToRealmOrUpdate(item);
                 mRealm.commitTransaction();
@@ -302,6 +306,7 @@ public class LaunchDataService extends IntentService {
                 total = launchResponse.body().getTotal();
                 count = launchResponse.body().getCount();
                 offset = offset + count;
+                Timber.v("NextLaunches Count: %s", offset);
                 Collections.addAll(items, launchResponse.body().getLaunches());
             }
             for (LaunchRealm item : items) {

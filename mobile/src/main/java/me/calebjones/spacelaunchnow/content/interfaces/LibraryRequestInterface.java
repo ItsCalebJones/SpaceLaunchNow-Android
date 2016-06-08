@@ -14,7 +14,7 @@ import retrofit2.http.Query;
 
 public interface LibraryRequestInterface {
 
-    String version = "1.2";
+    String version = "1.2.1";
 
     //Get Launches Methods
 
@@ -48,10 +48,10 @@ public interface LibraryRequestInterface {
 
     //Get Missions Methods
 
-    @GET(version + "/mission?next=10&mode=verbose")
+    @GET(version + "/mission?mode=verbose")
     Call<MissionResponse> getAllMisisons(@Query("offset") int offset);
 
-    @GET("dev/mission?next=10&mode=verbose")
+    @GET("dev/mission?mode=verbose")
     Call<MissionResponse> getDebugAllMissions(@Query("offset") int offset);
 
     @GET(version + "/mission/{missionID}?mode=verbose")

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -54,7 +53,8 @@ public class VehicleDataService extends IntentService {
     private ListPreferences listPreference;
     private Realm mRealm;
 
-    private Retrofit retrofit;
+    private Retrofit apiRetrofit;
+    private Retrofit libraryRetrofit;
 
     public VehicleDataService() {
         super("VehicleDataService");
@@ -101,10 +101,16 @@ public class VehicleDataService extends IntentService {
                 })
                 .create();
 
-        retrofit = new Retrofit.Builder()
+        libraryRetrofit = new Retrofit.Builder()
                 .baseUrl(Strings.LIBRARY_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
+
+        apiRetrofit = new Retrofit.Builder()
+                .baseUrl(Strings.API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
         super.onCreate();
     }
 
@@ -139,10 +145,11 @@ public class VehicleDataService extends IntentService {
                 getLibraryRocketsFamily();
             }
         }
+        mRealm.close();
     }
 
     private void getBaseVehicleDetails() {
-        APIRequestInterface request = retrofit.create(APIRequestInterface.class);
+        APIRequestInterface request = apiRetrofit.create(APIRequestInterface.class);
         Call<VehicleResponse> call;
         Response<VehicleResponse> launchResponse;
         RealmList<RocketDetailsRealm> items = new RealmList<>();
@@ -161,6 +168,7 @@ public class VehicleDataService extends IntentService {
             broadcastIntent.setAction(Strings.ACTION_SUCCESS_VEHICLE_DETAILS);
             VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
         } catch (IOException e) {
+
             Timber.e("VehicleDataService - ERROR: %s", e.getLocalizedMessage());
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_FAILURE_VEHICLE_DETAILS);
@@ -169,7 +177,7 @@ public class VehicleDataService extends IntentService {
     }
 
     private void getLibraryRockets() {
-        LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
+        LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
         Call<RocketResponse> call;
         Response<RocketResponse> launchResponse;
         RealmList<RocketRealm> items = new RealmList<>();
@@ -210,7 +218,7 @@ public class VehicleDataService extends IntentService {
     }
 
     private void getLibraryRocketsFamily() {
-        LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
+        LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
         Call<RocketFamilyResponse> call;
         Response<RocketFamilyResponse> launchResponse;
         RealmList<RocketFamilyRealm> items = new RealmList<>();

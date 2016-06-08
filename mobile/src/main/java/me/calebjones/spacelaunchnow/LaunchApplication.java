@@ -131,23 +131,11 @@ public class LaunchApplication extends Application {
                     rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
                     this.startService(rocketIntent);
 
-                    Intent launchIntent = new Intent(this, LaunchDataService.class);
-                    launchIntent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
-
-                    this.startService(launchIntent);
-
-                    this.startService(new Intent(this, MissionDataService.class));
                 } else if (Utils.getVersionCode(this) != switchPreferences.getVersionCode()) {
-                    Intent launchIntent = new Intent(this, LaunchDataService.class);
-                    launchIntent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
-
-                    this.startService(launchIntent);
 
                     Intent rocketIntent = new Intent(this, VehicleDataService.class);
                     rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
                     this.startService(rocketIntent);
-
-                    this.startService(new Intent(this, MissionDataService.class));
                 }
             }
         }
