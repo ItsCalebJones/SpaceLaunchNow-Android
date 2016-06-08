@@ -42,7 +42,6 @@ import java.util.Date;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -58,10 +57,11 @@ import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
+import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
-public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     @Bind(R.id.van_switch)
     AppCompatCheckBox vanSwitch;
@@ -104,7 +104,6 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     private SwitchPreferences switchPreferences;
     private SharedPreferences sharedPref;
     private Context context;
-    private Realm realm;
 
     private boolean active;
     private boolean switchChanged;
@@ -254,16 +253,16 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     @Override
     public void onStart() {
         super.onStart();
-        realm = Realm.getDefaultInstance();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        launchRealms.removeChangeListener(callback); // remove a particular listener
-        // or
-        launchRealms.removeChangeListeners(); // remove all registered listeners
-        realm.close();
+        if(!getRealm().isClosed()) {
+            launchRealms.removeChangeListener(callback); // remove a particular listener
+            // or
+            launchRealms.removeChangeListeners(); // remove all registered listeners
+        }
     }
 
     private RealmChangeListener callback = new RealmChangeListener() {
@@ -303,7 +302,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
 
         Timber.v("loadLaunches - Realm query created.");
         if (switchPreferences.getAllSwitch()) {
-            launchRealms = realm.where(LaunchRealm.class)
+            launchRealms = getRealm().where(LaunchRealm.class)
                     .greaterThanOrEqualTo("net", date)
                     .findAllSortedAsync("net", Sort.ASCENDING);
             launchRealms.addChangeListener(callback);
@@ -334,7 +333,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     }
 
     private void filterLaunchRealm() {
-        launchRealms = QueryBuilder.buildSwitchQuery(context, realm);
+        launchRealms = QueryBuilder.buildSwitchQuery(context, getRealm());
         launchRealms.addChangeListener(callback);
     }
 
@@ -531,9 +530,6 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     }
 
     public void onFinishedRefreshing() {
-        if (realm.isClosed()) {
-            realm = Realm.getDefaultInstance();
-        }
         hideLoading();
     }
 
@@ -572,11 +568,11 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
             } else {
                 sharedPreference.setDebugLaunch(true);
             }
-            RealmResults<LaunchRealm> results = realm.where(LaunchRealm.class).findAll();
+            RealmResults<LaunchRealm> results = getRealm().where(LaunchRealm.class).findAll();
 
-            realm.beginTransaction();
+            getRealm().beginTransaction();
             results.deleteAllFromRealm();
-            realm.commitTransaction();
+            getRealm().commitTransaction();
 
             Timber.v("%s", sharedPreference.isDebugEnabled());
             Snackbar.make(coordinatorLayout, "Debug: " + sharedPreference.isDebugEnabled(), Snackbar.LENGTH_LONG).show();

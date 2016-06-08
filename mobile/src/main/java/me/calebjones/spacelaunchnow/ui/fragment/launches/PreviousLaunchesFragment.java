@@ -50,7 +50,6 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -64,10 +63,11 @@ import me.calebjones.spacelaunchnow.content.interfaces.QueryBuilder;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
 import timber.log.Timber;
 
 
-public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener, DatePickerDialog.OnDateSetListener {
+public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener, DatePickerDialog.OnDateSetListener {
 
     private View view, empty;
     private RecyclerView mRecyclerView;
@@ -83,7 +83,6 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     private int mScrollOffset = 4;
     private LinearLayoutManager layoutManager;
     private Context context;
-    private Realm realm;
 
     private CoordinatorLayout coordinatorLayout;
     String getRequestId;
@@ -182,14 +181,12 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     @Override
     public void onStart() {
         super.onStart();
-        realm = Realm.getDefaultInstance();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         launchRealms.removeChangeListener(callback);
-        realm.close();
     }
 
     private void setUpFab() {
@@ -426,11 +423,8 @@ public class PreviousLaunchesFragment extends Fragment implements SwipeRefreshLa
     }
 
     public void loadLaunches() {
-        if (realm.isClosed()) {
-            realm = Realm.getDefaultInstance();
-        }
         try {
-            launchRealms = QueryBuilder.buildPrevQuery(context, realm);
+            launchRealms = QueryBuilder.buildPrevQuery(context, getRealm());
         } catch (ParseException e) {
             e.printStackTrace();
         }

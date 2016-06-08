@@ -49,7 +49,7 @@ import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;
 
 
-public class LaunchDetailActivity extends AppCompatActivity
+public class LaunchDetailActivity extends BaseActivity
         implements AppBarLayout.OnOffsetChangedListener {
 
     private static final int PERCENTAGE_TO_ANIMATE_AVATAR = 20;
@@ -72,13 +72,9 @@ public class LaunchDetailActivity extends AppCompatActivity
     public String response;
     public LaunchRealm launch;
 
-    private Realm realm;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        realm = Realm.getDefaultInstance();
-
 
         int m_theme;
         final int statusColor;
@@ -128,7 +124,7 @@ public class LaunchDetailActivity extends AppCompatActivity
 
         if (type.equals("launch")) {
             int id = mIntent.getIntExtra("launchID", 0);
-            launch = realm.where(LaunchRealm.class).equalTo("id", id).findFirst();
+            launch = getRealm().where(LaunchRealm.class).equalTo("id", id).findFirst();
         }
 
         if (launch.getRocket() != null) {
@@ -165,15 +161,17 @@ public class LaunchDetailActivity extends AppCompatActivity
         detail_rocket.setText(launch.getName());
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
-        toolbar.setNavigationOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onBackPressed();
+        if (toolbar != null) {
+            toolbar.setNavigationOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onBackPressed();
+                        }
                     }
-                }
 
-        );
+            );
+        }
 
         appBarLayout.addOnOffsetChangedListener(this);
         mMaxScrollSize = appBarLayout.getTotalScrollRange();
@@ -220,7 +218,6 @@ public class LaunchDetailActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        realm.close();
     }
 
     public int reverseNumber(int num, int min, int max) {

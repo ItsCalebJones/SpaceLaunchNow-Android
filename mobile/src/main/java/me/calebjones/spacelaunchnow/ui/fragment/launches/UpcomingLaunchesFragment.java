@@ -56,12 +56,13 @@ import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
 import timber.log.Timber;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
+public class UpcomingLaunchesFragment extends BaseFragment implements SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
 
     private View view;
     private RecyclerView mRecyclerView;
@@ -77,7 +78,6 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
     private int mScrollOffset = 4;
     private Context context;
     private CoordinatorLayout coordinatorLayout;
-    private Realm realm;
 
     private static final Field sChildFragmentManagerField;
 
@@ -376,14 +376,12 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
     @Override
     public void onStart() {
         super.onStart();
-        realm = Realm.getDefaultInstance();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         launchRealms.removeChangeListener(callback);
-        realm.close();
     }
 
     public void fetchDataFiltered() {
@@ -434,10 +432,7 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
     }
 
     public void loadData() {
-        if (realm.isClosed()) {
-            realm = Realm.getDefaultInstance();
-        }
-        launchRealms = QueryBuilder.buildUpQuery(context, realm);
+        launchRealms = QueryBuilder.buildUpQuery(context, getRealm());
         launchRealms.addChangeListener(callback);
     }
 
@@ -542,9 +537,6 @@ public class UpcomingLaunchesFragment extends Fragment implements SearchView.OnQ
         intentFilter.addAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
 
         getActivity().registerReceiver(nextLaunchReceiver, intentFilter);
-        if (realm.isClosed()) {
-            realm = Realm.getDefaultInstance();
-        }
         setTitle();
         loadData();
         super.onResume();
