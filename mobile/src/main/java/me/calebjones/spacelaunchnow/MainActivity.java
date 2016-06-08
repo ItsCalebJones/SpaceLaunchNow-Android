@@ -41,6 +41,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.ui.activity.BaseActivity;
 import me.calebjones.spacelaunchnow.ui.activity.SettingsActivity;
 import me.calebjones.spacelaunchnow.ui.activity.SupportActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.LaunchesViewPager;
@@ -53,7 +54,7 @@ import timber.log.Timber;
 import za.co.riggaroo.materialhelptutorial.TutorialItem;
 import za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String NAV_ITEM_ID = "navItemId";

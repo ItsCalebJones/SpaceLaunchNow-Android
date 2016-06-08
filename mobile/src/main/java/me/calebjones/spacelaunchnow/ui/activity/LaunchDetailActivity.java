@@ -132,6 +132,7 @@ public class LaunchDetailActivity extends AppCompatActivity
         }
 
         if (launch.getRocket() != null) {
+            findProfileLogo();
             if (launch.getRocket().getName() != null) {
                 if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0) {
                     Glide.with(this)
@@ -162,8 +163,6 @@ public class LaunchDetailActivity extends AppCompatActivity
 
         //Assign the title and mission locaiton data
         detail_rocket.setText(launch.getName());
-
-        findProfileLogo();
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         toolbar.setNavigationOnClickListener(

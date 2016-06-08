@@ -9,8 +9,12 @@ public class MissionRealm extends RealmObject {
     @PrimaryKey
     private Integer id;
     private Integer type;
-    private String name, description,infoURL, wikiURL, typeName;
-    private LaunchRealm launch;
+    private String name;
+    private String description;
+    private String infoURL;
+    private String wikiURL;
+    private String typeName;
+    private LaunchRealmMini launch;
 
     public Integer getId() {
         return id;
@@ -28,11 +32,11 @@ public class MissionRealm extends RealmObject {
         this.id = id;
     }
 
-    public LaunchRealm getLaunch() {
+    public LaunchRealmMini getLaunch() {
         return launch;
     }
 
-    public void setLaunch(LaunchRealm launch) {
+    public void setLaunch(LaunchRealmMini launch) {
         this.launch = launch;
     }
 

@@ -156,7 +156,9 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
 
     public void setUpViews(Bundle savedInstanceState){
         detailLaunch = ((LaunchDetailActivity)getActivity()).getLaunch();
-        getLaunchVehicle(detailLaunch);
+        if(detailLaunch.getRocket() != null) {
+            getLaunchVehicle(detailLaunch);
+        }
 
         if (Utils.checkPlayServices(context)) {
             setUpMap(savedInstanceState);

@@ -59,7 +59,8 @@ public class LibraryDataService extends IntentService {
 
     private Realm mRealm;
 
-    private Retrofit retrofit;
+    private Retrofit apiRetrofit;
+    private Retrofit libraryRetrofit;
 
     public LibraryDataService() {
         super("LibraryDataService");
@@ -107,8 +108,13 @@ public class LibraryDataService extends IntentService {
                 })
                 .create();
 
-        retrofit = new Retrofit.Builder()
+        libraryRetrofit = new Retrofit.Builder()
                 .baseUrl(Strings.LIBRARY_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        apiRetrofit = new Retrofit.Builder()
+                .baseUrl(Strings.API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
@@ -162,10 +168,11 @@ public class LibraryDataService extends IntentService {
                 getLibraryRocketsFamily();
             }
         }
+        mRealm.close();
     }
 
     private void getAllAgency() {
-        LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
+        LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
         Call<AgencyResponse> call;
         Response<AgencyResponse> launchResponse;
         RealmList<AgencyRealm> items = new RealmList<>();
@@ -203,7 +210,7 @@ public class LibraryDataService extends IntentService {
     }
 
     private void getAllMissions() {
-        LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
+        LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
         Call<MissionResponse> call;
         Response<MissionResponse> launchResponse;
         RealmList<MissionRealm> items = new RealmList<>();
@@ -241,7 +248,7 @@ public class LibraryDataService extends IntentService {
     }
 
     private void getAllLocations() {
-        LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
+        LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
         Call<LocationResponse> call;
         Response<LocationResponse> launchResponse;
         RealmList<LocationRealm> items = new RealmList<>();
@@ -279,7 +286,7 @@ public class LibraryDataService extends IntentService {
     }
 
     private void getAllPads() {
-        LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
+        LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
         Call<PadResponse> call;
         Response<PadResponse> launchResponse;
         RealmList<PadRealm> items = new RealmList<>();
@@ -317,7 +324,7 @@ public class LibraryDataService extends IntentService {
     }
 
     private void getBaseVehicleDetails() {
-        APIRequestInterface request = retrofit.create(APIRequestInterface.class);
+        APIRequestInterface request = apiRetrofit.create(APIRequestInterface.class);
         Call<VehicleResponse> call;
         Response<VehicleResponse> launchResponse;
         RealmList<RocketDetailsRealm> items = new RealmList<>();
@@ -344,7 +351,7 @@ public class LibraryDataService extends IntentService {
     }
 
     private void getLibraryRockets() {
-        LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
+        LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
         Call<RocketResponse> call;
         Response<RocketResponse> launchResponse;
         RealmList<RocketRealm> items = new RealmList<>();
@@ -386,7 +393,7 @@ public class LibraryDataService extends IntentService {
 
     //TODO does this need to send success/failure?
     private void getLibraryRocketsFamily() {
-        LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
+        LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
         Call<RocketFamilyResponse> call;
         Response<RocketFamilyResponse> launchResponse;
         RealmList<RocketFamilyRealm> items = new RealmList<>();

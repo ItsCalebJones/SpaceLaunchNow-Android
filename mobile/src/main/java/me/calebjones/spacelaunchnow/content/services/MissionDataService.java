@@ -6,25 +6,50 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmList;
+import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.interfaces.LibraryRequestInterface;
 import me.calebjones.spacelaunchnow.content.models.legacy.Launch;
 import me.calebjones.spacelaunchnow.content.models.legacy.Mission;
 import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.content.models.realm.MissionRealm;
+import me.calebjones.spacelaunchnow.content.models.realm.RealmStr;
+import me.calebjones.spacelaunchnow.content.responses.launchlibrary.LaunchResponse;
+import me.calebjones.spacelaunchnow.content.responses.launchlibrary.MissionResponse;
 import me.calebjones.spacelaunchnow.utils.Utils;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
 
@@ -40,12 +65,61 @@ public class MissionDataService extends IntentService {
     private SharedPreferences sharedPref;
     private ListPreferences listPreference;
 
+    private Realm mRealm;
+
+    private Retrofit retrofit;
+
     public MissionDataService() {
         super("MissionDataService");
     }
 
     public void onCreate() {
         Timber.d("MissionDataService - onCreate");
+
+        // Note there is a bug in GSON 2.5 that can cause it to StackOverflow when working with RealmObjects.
+        // To work around this, use the ExclusionStrategy below or downgrade to 1.7.1
+        // See more here: https://code.google.com/p/google-gson/issues/detail?id=440
+        Type token = new TypeToken<RealmList<RealmStr>>() {
+        }.getType();
+
+        Gson gson = new GsonBuilder()
+                .setDateFormat("MMMM dd, yyyy hh:mm:ss zzz")
+                .setExclusionStrategies(new ExclusionStrategy() {
+                    @Override
+                    public boolean shouldSkipField(FieldAttributes f) {
+                        return f.getDeclaringClass().equals(RealmObject.class);
+                    }
+
+                    @Override
+                    public boolean shouldSkipClass(Class<?> clazz) {
+                        return false;
+                    }
+                })
+                .registerTypeAdapter(token, new TypeAdapter<RealmList<RealmStr>>() {
+
+                    @Override
+                    public void write(JsonWriter out, RealmList<RealmStr> value) throws io.realm.internal.IOException {
+                        // Ignore
+                    }
+
+                    @Override
+                    public RealmList<RealmStr> read(JsonReader in) throws io.realm.internal.IOException, java.io.IOException {
+                        RealmList<RealmStr> list = new RealmList<RealmStr>();
+                        in.beginArray();
+                        while (in.hasNext()) {
+                            list.add(new RealmStr(in.nextString()));
+                        }
+                        in.endArray();
+                        return list;
+                    }
+                })
+                .create();
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl(Strings.LIBRARY_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
         super.onCreate();
     }
 
@@ -55,101 +129,90 @@ public class MissionDataService extends IntentService {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    //TODO Write two handle cases for getMissionsLaunches() and getMissionByID()
     @Override
     protected void onHandleIntent(Intent intent) {
         Timber.d("MissionDataService - Intent received:  %s ", intent.getAction());
+
+        // Init Realm
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
+                .deleteRealmIfMigrationNeeded()
+                .build();
+
+        // Create a new empty instance of Realm
+        mRealm = Realm.getInstance(realmConfiguration);
+
         getMissionLaunches();
     }
 
     private void getMissionLaunches() {
-        InputStream inputStream = null;
-        Integer result = 0;
-        HttpURLConnection urlConnection = null;
+        LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
+        Call<MissionResponse> call;
+        Response<MissionResponse> launchResponse;
+        RealmList<MissionRealm> items = new RealmList<>();
+        int offset = 0;
+        int total = 10;
+        int count;
+
         try {
-            URL url;
-            //Used for loading debug launches/reproducing bugs
-            if (listPreference.isDebugEnabled()) {
-                url = new URL(Strings.DEBUG_MISSION_URL);
-            } else {
-                url = new URL(Strings.MISSION_URL);
-            }
-
-            urlConnection = (HttpURLConnection) url.openConnection();
-
-                /* for Get request */
-            urlConnection.setRequestProperty("Accept", "*/*");
-            urlConnection.setConnectTimeout(5000);
-            urlConnection.setRequestMethod("GET");
-
-            int statusCode = urlConnection.getResponseCode();
-
-                /* 200 represents HTTP OK */
-            if (statusCode == 200) {
-
-                BufferedReader r = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                StringBuilder response = new StringBuilder();
-                String line;
-                while ((line = r.readLine()) != null) {
-                    response.append(line);
+            while (total != offset) {
+                if (listPreference.isDebugEnabled()) {
+                    call = request.getDebugAllMissions(offset);
+                } else {
+                    call = request.getAllMisisons(offset);
                 }
+                launchResponse = call.execute();
+                total = launchResponse.body().getTotal();
+                count = launchResponse.body().getCount();
+                offset = offset + count;
+                Timber.v("Count: %s", offset);
+                Collections.addAll(items, launchResponse.body().getMissions());
 
-                parseMissionsResult(response.toString());
-                Timber.d("getMissionLaunches - Mission list:  %s ", missionList.size());
-
-                Collections.reverse(missionList);
-                this.listPreference.removeMissionsList();
-                this.listPreference.setMissionList(missionList);
-
-                Intent broadcastIntent = new Intent();
-                broadcastIntent.setAction(Strings.ACTION_SUCCESS_MISSIONS);
-                MissionDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+                mRealm.beginTransaction();
+                mRealm.copyToRealmOrUpdate(items);
+                mRealm.commitTransaction();
             }
 
+            Timber.v("Success!");
 
-        } catch (Exception e) {
-            Timber.e("getMissionLaunches ERROR: %s", e.getLocalizedMessage());
-            Crashlytics.logException(e);
+            Intent broadcastIntent = new Intent();
+            broadcastIntent.setAction(Strings.ACTION_SUCCESS_MISSIONS);
+
+            MissionDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+
+        } catch (IOException e) {
+            Timber.e("Error: %s", e.getLocalizedMessage());
+
             Intent broadcastIntent = new Intent();
             broadcastIntent.putExtra("error", e.getLocalizedMessage());
             broadcastIntent.setAction(Strings.ACTION_FAILURE_MISSIONS);
+
             MissionDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
         }
     }
 
-    public void parseMissionsResult(String result) throws JSONException {
+    private void getMissionById(int id) {
+        LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
+        Call<MissionResponse> call;
+
+        if (listPreference.isDebugEnabled()) {
+            call = request.getDebugMissionByID(id);
+        } else {
+            call = request.getMissionByID(id);
+        }
+
+        Response<MissionResponse> launchResponse;
         try {
+            launchResponse = call.execute();
+            if (launchResponse.isSuccess()) {
+                RealmList<MissionRealm> items = new RealmList<>(launchResponse.body().getMissions());
 
-            /*Initialize array if null*/
-            missionList = new ArrayList<>();
-
-            JSONObject response = new JSONObject(result);
-            JSONArray missionArray = response.optJSONArray("missions");
-
-            for (int i = 0; i < missionArray.length(); i++) {
-                JSONObject missionObj = missionArray.optJSONObject(i);
-                JSONObject launchObj  = missionObj.optJSONObject("launch");
-
-                Mission mission = new Mission();
-                mission.setId(missionObj.optInt("id"));
-                mission.setType(missionObj.optInt("type"));
-                mission.setTypeName(Utils.getTypeName(missionObj.optInt("type")));
-                mission.setName(missionObj.optString("name"));
-                mission.setDescription(missionObj.optString("description"));
-                mission.setInfoURL(missionObj.optString("infoURL"));
-                mission.setWikiURL(missionObj.optString("wikiURL"));
-
-                if (launchObj != null) {
-                 Launch launch = new Launch();
-                    launch.setId(launchObj.optInt("id", 0));
-                    launch.setName(launchObj.optString("name"));
-                    launch.setNet(launchObj.optString("net"));
-                    mission.setLaunch(launch);
-                }
-                missionList.add(mission);
+                mRealm.beginTransaction();
+                mRealm.copyToRealmOrUpdate(items);
+                mRealm.commitTransaction();
             }
-        } catch (JSONException e) {
-            Crashlytics.logException(e);
-            e.printStackTrace();
+        } catch (IOException e) {
+            Timber.e("Error: %s", e.getLocalizedMessage());
         }
     }
 }

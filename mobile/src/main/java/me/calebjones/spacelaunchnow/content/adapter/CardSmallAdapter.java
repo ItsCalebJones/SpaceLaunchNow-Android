@@ -324,8 +324,8 @@ public class CardSmallAdapter extends RecyclerView.Adapter<CardSmallAdapter.View
                 case R.id.exploreButton:
                     Timber.d("Explore: %s", launchList.get(position).getId());
                     Intent exploreIntent = new Intent(mContext, LaunchDetailActivity.class);
-                    exploreIntent.putExtra("TYPE", "Launch");
-                    exploreIntent.putExtra("launch", launch);
+                    exploreIntent.putExtra("TYPE", "launch");
+                    exploreIntent.putExtra("launchID", launch);
                     mContext.startActivity(exploreIntent);
                     break;
                 case R.id.shareButton:
