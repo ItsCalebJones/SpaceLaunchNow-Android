@@ -8,7 +8,10 @@ public class RocketDetailsRealm extends RealmObject {
     private String InfoURL;
     private String WikiURL;
     private String Description;
+
     @PrimaryKey
+    private String name;
+
     private String LV_Name;
     private String LV_Family;
     private String LV_SFamily;
@@ -27,6 +30,14 @@ public class RocketDetailsRealm extends RealmObject {
     private String Apogee;
     private String Range;
     private String ImageURL;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getInfoURL() {
         return InfoURL;

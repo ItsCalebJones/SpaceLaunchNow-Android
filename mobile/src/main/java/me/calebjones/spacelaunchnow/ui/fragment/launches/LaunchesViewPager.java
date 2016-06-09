@@ -95,7 +95,7 @@ public class LaunchesViewPager extends Fragment {
 
     @Override
     public void onResume() {
-
+        Timber.d("onResume");
         super.onResume();
     }
 

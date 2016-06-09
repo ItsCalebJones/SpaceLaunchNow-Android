@@ -38,10 +38,11 @@ import io.realm.Realm;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.DatabaseManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.natives.RocketDetails;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.content.models.realm.RocketDetailsRealm;
+import me.calebjones.spacelaunchnow.content.models.realm.RocketRealm;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.details.AgencyDetailFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.details.PayloadDetailFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.details.SummaryDetailFragment;
@@ -320,8 +321,9 @@ public class LaunchDetailActivity extends BaseActivity
         } else {
             query = result.getRocket().getName();
         }
-        DatabaseManager databaseManager = new DatabaseManager(this);
-        RocketDetails launchVehicle = databaseManager.getLaunchVehicle(query);
+        RocketDetailsRealm launchVehicle = getRealm().where(RocketDetailsRealm.class)
+                .contains("name", query)
+                .findFirst();
         if (setImage) {
             if (launchVehicle != null && launchVehicle.getImageURL().length() > 0) {
                 Glide.with(this)
@@ -331,7 +333,7 @@ public class LaunchDetailActivity extends BaseActivity
                         .placeholder(R.drawable.placeholder)
                         .crossFade()
                         .into(detail_profile_backdrop);
-                Timber.d("Glide Loading: %s %s", launchVehicle.getLVName(), launchVehicle.getImageURL());
+                Timber.d("Glide Loading: %s %s", launchVehicle.getLV_Name(), launchVehicle.getImageURL());
             }
         }
     }

@@ -154,10 +154,12 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
         if (this.listPreference.getUpcomingFirstBoot()) {
             this.listPreference.setUpcomingFirstBoot(false);
         }
+
         CircularProgressView progressView = (CircularProgressView)
                 view.findViewById(R.id.progress_View);
         progressView.setVisibility(View.VISIBLE);
         progressView.startAnimation();
+
         setUpFab();
         return view;
     }
@@ -381,7 +383,6 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     @Override
     public void onStop() {
         super.onStop();
-        launchRealms.removeChangeListener(callback);
     }
 
     public void fetchDataFiltered() {
@@ -393,12 +394,12 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
         @Override
         public void onChange(RealmResults<LaunchRealm> results) {
             Timber.v("Data changed - size: %s", results.size());
+            adapter.clear();
+
             if (results.size() > 0) {
-                adapter.clear();
                 results.sort("net", Sort.ASCENDING);
                 adapter.addItems(results);
             } else {
-                adapter.clear();
                 showSnackbar("Unable to find matching launches.");
             }
             hideLoading();
@@ -441,6 +442,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
         Intent intent = new Intent(getContext(), LaunchDataService.class);
         intent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
         getContext().startService(intent);
+        getRealm().removeAllChangeListeners();
     }
 
 

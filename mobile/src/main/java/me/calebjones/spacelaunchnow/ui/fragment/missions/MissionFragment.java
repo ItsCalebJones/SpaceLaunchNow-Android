@@ -36,6 +36,7 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.MissionAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.models.realm.MissionRealm;
 import me.calebjones.spacelaunchnow.content.services.MissionDataService;
 import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
@@ -88,17 +89,18 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
         return view;
     }
 
-    private RealmChangeListener callback = new RealmChangeListener() {
+    private RealmChangeListener callback = new RealmChangeListener<RealmResults<MissionRealm>>() {
         @Override
-        public void onChange(Object element) {
-            Timber.v("Data changed - size: %s - element:", missionList.size(), element.toString());
+        public void onChange(RealmResults<MissionRealm> results) {
+            Timber.v("Data changed - size: %s - element:", missionList.size(), results.first().getName());
             adapter.clear();
 
             if (missionList.size() > 0) {
-                adapter.addItems(missionList);
+                adapter.addItems(results);
             } else {
                 showErrorSnackbar("Unable to load missions.");
             }
+
             hideLoading();
         }
     };
@@ -154,6 +156,7 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
 
     @Override
     public void onRefresh() {
+        missionList.removeChangeListeners();
         fetchData();
     }
 
