@@ -34,17 +34,17 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.DatabaseManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.natives.RocketDetails;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.content.models.realm.RocketDetailsRealm;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.content.models.realm.RealmStr;
 import timber.log.Timber;
 
 
-public class SummaryDetailFragment extends Fragment implements OnMapReadyCallback {
+public class SummaryDetailFragment extends BaseFragment implements OnMapReadyCallback {
 
     private SharedPreferences sharedPref;
     private static ListPreferences sharedPreference;
@@ -54,7 +54,7 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
     protected LatLng mMapLocation;
 
     public static LaunchRealm detailLaunch;
-    private RocketDetails launchVehicle;
+    private RocketDetailsRealm launchVehicle;
     private FloatingActionButton fab;
     private LinearLayout agency_one, agency_two, vehicle_spec_view;
     private TextView launch_date_title, date, launch_window_start, launch_window_end, launch_status
@@ -256,7 +256,7 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
             vehicle_spec_view.setVisibility(View.VISIBLE);
             launch_vehicle_specs_height.setText(String.format("Height: %s Meters", launchVehicle.getLength()));
             launch_vehicle_specs_diameter.setText(String.format("Diameter: %s Meters", launchVehicle.getDiameter()));
-            launch_vehicle_specs_stages.setText(String.format("Stages: %d", launchVehicle.getMaxStage()));
+            launch_vehicle_specs_stages.setText(String.format("Stages: %d", launchVehicle.getMax_Stage()));
             launch_vehicle_specs_leo.setText(String.format("Payload to LEO: %s kg", launchVehicle.getLEOCapacity()));
             launch_vehicle_specs_gto.setText(String.format("Payload to GTO: %s kg", launchVehicle.getGTOCapacity()));
             launch_vehicle_specs_launch_mass.setText(String.format("Mass at Launch: %s Tons", launchVehicle.getLaunchMass()));
@@ -290,8 +290,8 @@ public class SummaryDetailFragment extends Fragment implements OnMapReadyCallbac
         } else {
             query = vehicle.getRocket().getName();
         }
-        DatabaseManager databaseManager = new DatabaseManager(context);
-        launchVehicle = databaseManager.getLaunchVehicle(query);
+
+        launchVehicle = getRealm().where(RocketDetailsRealm.class).contains("name", query).findFirst();
     }
 
 

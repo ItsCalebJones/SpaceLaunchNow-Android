@@ -232,7 +232,6 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
                 @Override
                 public void onFinish() {
-                    Timber.v("Countdown - onFinish");
                     holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
                     if (night){
                         holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color));
@@ -254,7 +253,6 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
                 @Override
                 public void onTick(long millisUntilFinished) {
-                    Timber.v("Countdown - onTick: %s", millisUntilFinished);
                     time.setLength(0);
                     // Use days if appropriate
                     long longDays = millisUntilFinished / 86400000;

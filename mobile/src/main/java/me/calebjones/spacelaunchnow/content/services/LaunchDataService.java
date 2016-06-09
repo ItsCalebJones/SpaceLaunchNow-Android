@@ -201,7 +201,7 @@ public class LaunchDataService extends IntentService {
                 LaunchRealm previous = mRealm.where(LaunchRealm.class)
                         .equalTo("id", item.getId())
                         .findFirst();
-                mRealm.beginTransaction();
+
                 if (previous != null) {
                     Timber.v("Found previous updating: ", previous.getId());
                     item.setFavorite(previous.isFavorite());
@@ -211,9 +211,10 @@ public class LaunchDataService extends IntentService {
                     item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
                     item.getLocation().setPrimaryID();
                 }
-                mRealm.copyToRealmOrUpdate(item);
-                mRealm.commitTransaction();
             }
+            mRealm.beginTransaction();
+            mRealm.copyToRealmOrUpdate(items);
+            mRealm.commitTransaction();
 
             Timber.v("Success!");
             Intent broadcastIntent = new Intent();
@@ -256,21 +257,19 @@ public class LaunchDataService extends IntentService {
                 LaunchRealm previous = mRealm.where(LaunchRealm.class)
                         .equalTo("id", item.getId())
                         .findFirst();
-                mRealm.beginTransaction();
                 if (previous != null) {
-                    Timber.v("UpcomingLaunches checking items: %s", previous.getName());
+                    Timber.v("UpcomingLaunches updating items: %s", previous.getName());
                     item.setFavorite(previous.isFavorite());
                     item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
                     item.setIsNotifiedDay(previous.getIsNotifiedDay());
                     item.setIsNotifiedHour(previous.getIsNotifiedHour());
                     item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
                     item.getLocation().setPrimaryID();
-                } else {
-                    Timber.v("UpcomingLaunches checking items: %s", item.getName());
                 }
-                mRealm.copyToRealmOrUpdate(item);
-                mRealm.commitTransaction();
             }
+            mRealm.beginTransaction();
+            mRealm.copyToRealmOrUpdate(items);
+            mRealm.commitTransaction();
 
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
@@ -313,7 +312,6 @@ public class LaunchDataService extends IntentService {
                 LaunchRealm previous = mRealm.where(LaunchRealm.class)
                         .equalTo("id", item.getId())
                         .findFirst();
-                mRealm.beginTransaction();
                 if (previous != null) {
                     item.setFavorite(previous.isFavorite());
                     item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
@@ -322,9 +320,11 @@ public class LaunchDataService extends IntentService {
                     item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
                     item.getLocation().setPrimaryID();
                 }
-                mRealm.copyToRealmOrUpdate(item);
-                mRealm.commitTransaction();
             }
+
+            mRealm.beginTransaction();
+            mRealm.copyToRealmOrUpdate(items);
+            mRealm.commitTransaction();
 
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
@@ -358,7 +358,6 @@ public class LaunchDataService extends IntentService {
                     LaunchRealm previous = mRealm.where(LaunchRealm.class)
                             .equalTo("id", item.getId())
                             .findFirst();
-                    mRealm.beginTransaction();
                     if (previous != null) {
                         item.setFavorite(previous.isFavorite());
                         item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
@@ -367,9 +366,10 @@ public class LaunchDataService extends IntentService {
                         item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
                         item.getLocation().setPrimaryID();
                     }
-                    mRealm.copyToRealmOrUpdate(item);
-                    mRealm.commitTransaction();
                 }
+                mRealm.beginTransaction();
+                mRealm.copyToRealmOrUpdate(items);
+                mRealm.commitTransaction();
             }
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());

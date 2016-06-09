@@ -30,16 +30,19 @@ import com.google.gson.Gson;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.realm.RealmList;
+import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.VehicleListAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.natives.Launcher;
 import me.calebjones.spacelaunchnow.content.models.legacy.Rocket;
+import me.calebjones.spacelaunchnow.content.models.realm.RocketRealm;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
-public class LauncherDetailActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
+public class LauncherDetailActivity extends BaseActivity implements AppBarLayout.OnOffsetChangedListener {
 
     private static final int PERCENTAGE_TO_ANIMATE_AVATAR = 20;
     private boolean mIsAvatarShown = true;
@@ -55,7 +58,7 @@ public class LauncherDetailActivity extends AppCompatActivity implements AppBarL
     private CircleImageView detail_profile_image;
     private StaggeredGridLayoutManager linearLayoutManager;
     private VehicleListAdapter adapter;
-    private List<Rocket> rocketLaunches;
+    private RealmResults<RocketRealm> rocketLaunches;
     private AppBarLayout appBarLayout;
     private int mMaxScrollSize;
 
@@ -176,7 +179,7 @@ public class LauncherDetailActivity extends AppCompatActivity implements AppBarL
 
         String name = launcher.getName();
         String agency = launcher.getAgency();
-        this.rocketLaunches = this.sharedPreference.getRocketsByFamily(name);
+        rocketLaunches = getRealm().where(RocketRealm.class).contains("family.name", name).or().contains("familyname", name).findAll();
         detail_rocket.setText(name);
         detail_vehicle_agency.setText(agency);
         adapter.clear();

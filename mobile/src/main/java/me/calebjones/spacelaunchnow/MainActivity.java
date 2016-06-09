@@ -33,6 +33,7 @@ import com.crashlytics.android.Crashlytics;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
+import com.squareup.haha.perflib.Main;
 
 import java.util.ArrayList;
 
@@ -369,6 +370,7 @@ public class MainActivity extends BaseActivity
     }
 
     private void navigate(final int itemId) {
+        Timber.v("Navigate to %s", itemId);
         // perform the actual navigation logic, updating the main_menu content fragment etc
         FragmentManager fm = getSupportFragmentManager();
         switch (itemId) {
@@ -495,16 +497,12 @@ public class MainActivity extends BaseActivity
         TutorialItem tutorialItem2 = new TutorialItem("Notification for Launches", "Get notifications for upcoming launches and look into the history of spaceflight",
                 R.color.slide_two, R.drawable.intro_slide_two_foreground, R.drawable.intro_slide_background);
 
-        TutorialItem tutorialItem3 = new TutorialItem("Keep Track of Missions", "Find out whats going in the world of spaceflight.",
-                R.color.slide_three, R.drawable.intro_slide_three_foreground, R.drawable.intro_slide_background);
-
         TutorialItem tutorialItem4 = new TutorialItem("Find Launch Vehicles", "Get to know the vehicles that have taken us to orbit.",
                 R.color.slide_four, R.drawable.intro_slide_four_foreground, R.drawable.intro_slide_background);
 
         ArrayList<TutorialItem> tutorialItems = new ArrayList<>();
         tutorialItems.add(tutorialItem1);
         tutorialItems.add(tutorialItem2);
-        tutorialItems.add(tutorialItem3);
         tutorialItems.add(tutorialItem4);
 
         return tutorialItems;
@@ -516,8 +514,10 @@ public class MainActivity extends BaseActivity
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             if (listPreferences.getFirstBoot()) {
                 listPreferences.setFirstBoot(false);
-                recreate();
-
+                Timber.v("Calling Recreate!");
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
         }
     }

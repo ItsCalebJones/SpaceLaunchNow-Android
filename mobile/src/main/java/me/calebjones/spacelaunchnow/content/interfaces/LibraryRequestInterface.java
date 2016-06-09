@@ -18,18 +18,18 @@ public interface LibraryRequestInterface {
 
     //Get Launches Methods
 
-    @GET(version + "/launch/next/1000&mode=verbose")
+    @GET(version + "/launch/next/1000&mode=verbose&limit=500")
     Call<LaunchResponse> getUpcomingLaunches(@Query("offset") int offset);
 
-    @GET("dev/launch/next/1000&mode=verbose")
+    @GET("dev/launch/next/1000&mode=verbose&limit=500")
     Call<LaunchResponse> getDebugUpcomingLaunches(@Query("offset") int offset);
 
-    @GET(version + "/launch/{start_date}/{end_date}/?limit=200")
+    @GET(version + "/launch/{start_date}/{end_date}/?limit=500")
     Call<LaunchResponse> getLaunchesByDate(@Path("start_date") String start_date,
                                            @Path("end_date") String end_date,
                                            @Query("offset") int offset);
 
-    @GET("dev/launch/{start_date}/{end_date}/?limit=200")
+    @GET("dev/launch/{start_date}/{end_date}/?limit=500")
     Call<LaunchResponse> getDebugLaunchesByDate(@Path("start_date") String start_date,
                                                 @Path("end_date") String end_date,
                                                 @Query("offset") int offset);
@@ -46,12 +46,18 @@ public interface LibraryRequestInterface {
     @GET("dev/launch/{launchID}?mode=verbose")
     Call<LaunchResponse> getDebugLaunchByID(@Path("launchID") int launchID);
 
+    @GET(version + "/launch/{launchID}?mode=verbose&fields=name,id,net")
+    Call<LaunchResponse> getMiniLaunchByID(@Path("launchID") int launchID);
+
+    @GET("dev/launch/{launchID}?mode=verbose")
+    Call<LaunchResponse> getDebugMiniLaunchByID(@Path("launchID") int launchID);
+
     //Get Missions Methods
 
-    @GET(version + "/mission?mode=verbose")
+    @GET(version + "/mission?mode=verbose&limit=500")
     Call<MissionResponse> getAllMisisons(@Query("offset") int offset);
 
-    @GET("dev/mission?mode=verbose")
+    @GET("dev/mission?mode=verbose&limit=500")
     Call<MissionResponse> getDebugAllMissions(@Query("offset") int offset);
 
     @GET(version + "/mission/{missionID}?mode=verbose")
@@ -62,10 +68,10 @@ public interface LibraryRequestInterface {
 
     //Get Agency Methods
 
-    @GET(version + "/agency?next=10&mode=verbose")
+    @GET(version + "/agency?mode=verbose")
     Call<AgencyResponse> getAllAgency(@Query("offset") int offset);
 
-    @GET("dev/agency?next=10&mode=verbose")
+    @GET("dev/agency?mode=verbose")
     Call<AgencyResponse> getDebugAllAgency(@Query("offset") int offset);
 
     @GET(version + "/agency/{agencyID}?mode=verbose")
@@ -76,10 +82,10 @@ public interface LibraryRequestInterface {
 
     //Get Rocket Methods
 
-    @GET(version + "/rocket?next=10&mode=verbose")
+    @GET(version + "/rocket?mode=verbose")
     Call<RocketResponse> getAllRockets(@Query("offset") int offset);
 
-    @GET("dev/rocket?next=10&mode=verbose")
+    @GET("dev/rocket?mode=verbose")
     Call<RocketResponse> getDebugAllRockets(@Query("offset") int offset);
 
     @GET(version + "/rocket/{vehicleID}?mode=verbose")

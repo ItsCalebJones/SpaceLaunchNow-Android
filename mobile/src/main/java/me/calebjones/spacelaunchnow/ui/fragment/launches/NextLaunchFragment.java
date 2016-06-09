@@ -273,7 +273,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             int size = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
             adapter.clear();
 
-
             if (launchRealms.size() >= size) {
                 setLayoutManager(size);
                 if (cardSizeSmall) {
@@ -300,14 +299,15 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         showLoading();
         Date date = new Date();
 
-        Timber.v("loadLaunches - Realm query created.");
         if (switchPreferences.getAllSwitch()) {
             launchRealms = getRealm().where(LaunchRealm.class)
                     .greaterThanOrEqualTo("net", date)
                     .findAllSortedAsync("net", Sort.ASCENDING);
             launchRealms.addChangeListener(callback);
+            Timber.v("loadLaunches - Realm query created.");
         } else {
             filterLaunchRealm();
+            Timber.v("loadLaunches - Filtered Realm query created.");
         }
     }
 
@@ -425,8 +425,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     @Override
     public void onResume() {
         super.onResume();
-        setTitle();
         Timber.d("OnResume!");
+        setTitle();
         if (Utils.getVersionCode(context) != switchPreferences.getVersionCode()) {
             showChangelogSnackbar();
         }
@@ -448,10 +448,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     @Override
     public void onPause() {
+        super.onPause();
         Timber.v("onPause");
         getActivity().unregisterReceiver(nextLaunchReceiver);
-        launchRealms.removeChangeListeners();
-        super.onPause();
     }
 
     @Override

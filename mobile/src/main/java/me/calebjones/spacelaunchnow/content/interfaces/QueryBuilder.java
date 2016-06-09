@@ -58,6 +58,7 @@ public class QueryBuilder {
             query = filterVehicle(query, switchPreferences.getPrevVehicleFilteredArray());
         }
 
+        Timber.v("Returning Query");
         return query.findAllSortedAsync("net", Sort.DESCENDING);
     }
 
@@ -90,6 +91,7 @@ public class QueryBuilder {
 
         }
 
+        Timber.v("Returning Query");
         return query.findAllSortedAsync("net", Sort.ASCENDING);
     }
 

@@ -519,56 +519,6 @@ public class ListPreferences {
         return vehicleList;
     }
 
-    //TODO clean this up 1) Set images and rocket details into SharedPrefernces list instead of a DB.
-    public List<Rocket> getRocketsByFamily(String familyname) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        if (!this.sharedPrefs.contains(PREFS_LIST_VEHICLES)) {
-            return null;
-        }
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
-        Gson gson = gsonBuilder.setPrettyPrinting().create();
-        List<Rocket> fullVehicleList;
-        List<Rocket> sortedVehicleList = new ArrayList();
-        SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        String jsonPreferences = sharedPref.getString(PREFS_LIST_VEHICLES, null);
-
-        Type type = new TypeToken<List<Rocket>>() {
-        }.getType();
-        fullVehicleList = gson.fromJson(jsonPreferences, type);
-
-        int size = fullVehicleList.size();
-        String query;
-        DatabaseManager databaseManager = new DatabaseManager(appContext);
-
-        for (int i = 0; i < size; i++) {
-            if (fullVehicleList.get(i).getFamily().getName().contains(familyname)) {
-                if (fullVehicleList.get(i).getName().contains("Space Shuttle")) {
-                    query = "Space Shuttle";
-                } else {
-                    query = fullVehicleList.get(i).getName();
-                }
-                RocketDetails launchVehicle = databaseManager.getLaunchVehicle(query);
-                Rocket rocket = new Rocket();
-                rocket = fullVehicleList.get(i);
-                if (rocket.getImageURL().contains("placeholder")) {
-                    if (launchVehicle != null) {
-                        rocket.setImageURL(launchVehicle.getImageURL());
-                    } else {
-                        rocket.setImageURL("");
-                    }
-                }
-                sortedVehicleList.add(rocket);
-            }
-        }
-        Collections.sort(sortedVehicleList, new Comparator<Rocket>() {
-            public int compare(Rocket emp1, Rocket emp2) {
-                return emp1.getName().compareToIgnoreCase(emp2.getName());
-            }
-        });
-        return sortedVehicleList;
-    }
-
     public List<Agency> getAgencies() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         if (!this.sharedPrefs.contains(PREFS_LIST_AGENCY)) {

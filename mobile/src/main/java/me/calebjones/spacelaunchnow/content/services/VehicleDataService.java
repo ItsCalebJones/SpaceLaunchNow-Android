@@ -159,6 +159,10 @@ public class VehicleDataService extends IntentService {
             launchResponse = call.execute();
             Collections.addAll(items, launchResponse.body().getVehicles());
 
+            for(RocketDetailsRealm item : items){
+                item.setName(item.getLV_Name() + " " +item.getLV_Variant());
+            }
+
             mRealm.beginTransaction();
             mRealm.copyToRealmOrUpdate(items);
             mRealm.commitTransaction();

@@ -186,7 +186,6 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     @Override
     public void onStop() {
         super.onStop();
-        launchRealms.removeChangeListener(callback);
     }
 
     private void setUpFab() {
@@ -411,9 +410,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
 
     private void showSnackbar(String msg) {
         final Snackbar snackbar = Snackbar.make(coordinatorLayout, msg, Snackbar.LENGTH_INDEFINITE);
-
-        snackbar.setActionTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent))
-                .setAction("Ok", new View.OnClickListener() {
+        snackbar.setAction("Ok", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         snackbar.dismiss();
@@ -440,6 +437,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         showLoading();
+                        getRealm().removeAllChangeListeners();
                         Intent intent = new Intent(getContext(), LaunchDataService.class);
                         intent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
                         getContext().startService(intent);
