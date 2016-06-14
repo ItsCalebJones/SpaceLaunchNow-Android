@@ -115,8 +115,8 @@ public class NextLaunchTracker extends IntentService implements
                 checkNextLaunches(realm);
             }
         } else {
-            interval = 3600000;
-            scheduleUpdate();
+            int size = Integer.parseInt(sharedPref.getString("notification_sync_time", "24"));
+            scheduleUpdate(TimeUnit.MILLISECONDS.convert(size, TimeUnit.HOURS));
 
             //If Calendar Sync is enabled sync it up
             if (switchPreferences.getCalendarStatus()) {
@@ -251,36 +251,8 @@ public class NextLaunchTracker extends IntentService implements
     }
 
     private void checkNextLaunches(LaunchRealm launch) {
-        nextLaunch = launch;
-
-        if (nextLaunch != null) {
-            if (nextLaunch.getLaunchTimeStamp() != null) {
-                if (Math.abs(nextLaunch.getLaunchTimeStamp()
-                        - nextLaunch.getNetstamp()) > 60) {
-                    debugNotification(String.format("Resetting notifiers - Launch: %s Timestamp: %s"
-                            ,nextLaunch.getName() , nextLaunch.getNetstamp()));
-
-                    realm.beginTransaction();
-                    nextLaunch.resetNotifiers();
-                    nextLaunch.setLaunchTimeStamp(nextLaunch.getNetstamp());
-                    realm.commitTransaction();
-
-                    checkStatus();
-                } else {
-                    checkStatus();
-                }
-            } else if (nextLaunch.getNetstamp() != null) {
-                realm.beginTransaction();
-                nextLaunch.setLaunchTimeStamp(nextLaunch.getNetstamp());
-                realm.commitTransaction();
-                debugNotification("Updated timestamp to " + nextLaunch.getNetstamp());
-                checkStatus();
-            } else {
-                checkStatus();
-            }
-            realm.beginTransaction();
-            realm.copyToRealmOrUpdate(nextLaunch);
-            realm.commitTransaction();
+        if (launch != null) {
+            checkStatus(launch);
         }
         //If Calendar Sync is enabled sync it up
         if (switchPreferences.getCalendarStatus()) {
@@ -308,10 +280,10 @@ public class NextLaunchTracker extends IntentService implements
         }
     }
 
-    private void checkStatus() {
-        if (nextLaunch != null && nextLaunch.getNetstamp() > 0) {
+    private void checkStatus(LaunchRealm launch) {
+        if (launch != null && launch.getNetstamp() > 0) {
 
-            long longdate = nextLaunch.getNetstamp();
+            long longdate = launch.getNetstamp();
             longdate = longdate * 1000;
             final Date date = new Date(longdate);
 
@@ -328,35 +300,33 @@ public class NextLaunchTracker extends IntentService implements
                     if (notify) {
                         int minutes = (int) ((timeToFinish / (1000 * 60)) % 60);
                         //Check settings to see if user should be notified.
-                        if (!nextLaunch.getIsNotifiedTenMinute() && this.sharedPref.getBoolean("notifications_launch_minute", false)) {
-                            notifyUserImminent(nextLaunch, minutes);
+                        if (!launch.getIsNotifiedTenMinute() && this.sharedPref.getBoolean("notifications_launch_minute", false)) {
+                            notifyUserImminent(launch, minutes);
                             realm.beginTransaction();
-                            nextLaunch.setIsNotifiedTenMinute(true);
+                            launch.setIsNotifiedTenMinute(true);
                             realm.commitTransaction();
-                        } else if (!nextLaunch.getIsNotifiedHour() && this.sharedPref.getBoolean("notifications_launch_imminent", true)) {
-                            notifyUserImminent(nextLaunch, minutes);
+                        } else if (!launch.getIsNotifiedHour() && this.sharedPref.getBoolean("notifications_launch_imminent", true)) {
+                            notifyUserImminent(launch, minutes);
                             realm.beginTransaction();
-                            nextLaunch.setIsNotifiedHour(true);
+                            launch.setIsNotifiedHour(true);
                             realm.commitTransaction();
                         }
                     }
-                    interval = (future.getTimeInMillis() + 3600000);
-                    scheduleUpdate();
+                    scheduleUpdate(future.getTimeInMillis() + 3600000);
                 } else if (timeToFinish < 3600000) {
                     if (notify) {
                         int minutes = (int) ((timeToFinish / (1000 * 60)) % 60);
                         //Check settings to see if user should be notified.
                         if (this.sharedPref.getBoolean("notifications_launch_imminent", true)) {
-                            if (!nextLaunch.getIsNotifiedHour()) {
-                                notifyUserImminent(nextLaunch, minutes);
+                            if (!launch.getIsNotifiedHour()) {
+                                notifyUserImminent(launch, minutes);
                                 realm.beginTransaction();
-                                nextLaunch.setIsNotifiedHour(true);
+                                launch.setIsNotifiedHour(true);
                                 realm.commitTransaction();
                             }
                         }
                     }
-                    interval = ((future.getTimeInMillis() - 600000) - now.getTimeInMillis());
-                    scheduleUpdate();
+                    scheduleUpdate((future.getTimeInMillis() - 600000) - now.getTimeInMillis());
 
                     //Launch is in less then 24 hours
                 } else if (timeToFinish < 86400000) {
@@ -365,10 +335,10 @@ public class NextLaunchTracker extends IntentService implements
                         int hours = (int) ((timeToFinish / (1000 * 60 * 60)) % 24);
                         //Check settings to see if user should be notified.
                         if (this.sharedPref.getBoolean("notifications_launch_day", true)) {
-                            if (!nextLaunch.getIsNotifiedDay()) {
-                                notifyUser(nextLaunch, hours);
+                            if (!launch.getIsNotifiedDay()) {
+                                notifyUser(launch, hours);
                                 realm.beginTransaction();
-                                nextLaunch.setIsNotifiedDay(true);
+                                launch.setIsNotifiedDay(true);
                                 realm.commitTransaction();
                             }
                         }
@@ -377,18 +347,13 @@ public class NextLaunchTracker extends IntentService implements
                     if (interval < 3600000) {
                         interval = 3500000;
                     }
-                    scheduleUpdate();
+                    scheduleUpdate(interval);
                     //Launch is within 48 hours
                 } else if (timeToFinish < 172800000) {
-                    interval = ((future.getTimeInMillis() - 82800000) - now.getTimeInMillis());
-                    scheduleUpdate();
+                    scheduleUpdate((future.getTimeInMillis() - 86400000) - now.getTimeInMillis());
                 } else {
-                    interval = (timeToFinish / 2) + 43200000;
-                    scheduleUpdate();
+                    scheduleUpdate((timeToFinish / 2) + 43200000);
                 }
-            } else {
-                interval = 3600000;
-                scheduleUpdate();
             }
         } else {
             //Get sync period.
@@ -400,7 +365,7 @@ public class NextLaunchTracker extends IntentService implements
             if (m.matches()) {
                 int hrs = Integer.parseInt(m.group(1));
                 interval = (long) hrs * 60 * 60 * 1000;
-                scheduleUpdate();
+                scheduleUpdate(interval);
             }
         }
     }
@@ -571,7 +536,7 @@ public class NextLaunchTracker extends IntentService implements
         }
     }
 
-    public void scheduleUpdate() {
+    public void scheduleUpdate(long convert) {
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         long nextUpdate = Calendar.getInstance().getTimeInMillis() + interval;
 

@@ -87,7 +87,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="196dp">
 
-                    <com.google.android.gms.maps.MapView xmlns:map="http://schemas.android.com/apk/res-auto"
+                    <ImageView
                         android:id="@+id/map_view_summary"
                         android:layout_width="fill_parent"
                         android:layout_height="160dp"

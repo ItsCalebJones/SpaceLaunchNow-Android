@@ -118,7 +118,11 @@
         <activity
             android:name=".ui.activity.SupportActivity"
             android:theme="@style/LightTheme" />
-        <activity android:name=".ui.activity.BaseActivity"></activity>
+        <activity android:name=".ui.activity.BaseActivity" />
+        <activity
+            android:name=".ui.activity.DownloadActivity"
+            android:label="@string/title_activity_download"
+            android:theme="@style/LightTheme"></activity>
     </application>
 
 </manifest>

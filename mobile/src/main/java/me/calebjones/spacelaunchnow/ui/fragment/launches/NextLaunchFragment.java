@@ -9,13 +9,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatCheckBox;
@@ -31,11 +33,16 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
+import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
+import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 
 import java.util.Date;
 
@@ -57,6 +64,7 @@ import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
+import me.calebjones.spacelaunchnow.ui.activity.DownloadActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
@@ -406,7 +414,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
     public void fetchData() {
-        this.sharedPreference.removeUpcomingLaunches();
         Timber.v("Sending GET_UP_LAUNCHES");
         Intent intent = new Intent(getContext(), LaunchDataService.class);
         intent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
@@ -427,8 +434,27 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         super.onResume();
         Timber.d("OnResume!");
         setTitle();
-        if (Utils.getVersionCode(context) != switchPreferences.getVersionCode()) {
-            showChangelogSnackbar();
+
+        //First install
+        if (switchPreferences.getVersionCode() == 0){
+            switchPreferences.setVersionCode(Utils.getVersionCode(context));
+
+            //build 87 is where Realm change happened
+        } else if (switchPreferences.getVersionCode() <= 87){
+            Intent intent = new Intent(context, DownloadActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+
+            //Upgrade post Realm change.
+        } else if (Utils.getVersionCode(context) != switchPreferences.getVersionCode()) {
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showChangelogSnackbar();
+                }
+            }, 1000);
+            switchPreferences.setVersionCode(Utils.getVersionCode(context));
         }
 
         IntentFilter intentFilter = new IntentFilter();
@@ -437,12 +463,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
         getActivity().registerReceiver(nextLaunchReceiver, intentFilter);
 
-        if (this.sharedPreference.getUpcomingFirstBoot()) {
-            this.sharedPreference.setUpcomingFirstBoot(false);
-            Timber.d("Upcoming Launch Fragment: First Boot.");
-        } else {
-            Timber.d("Upcoming Launch Fragment: Not First Boot.");
-        }
         displayLaunches();
     }
 
@@ -478,9 +498,14 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                         super.onDismissed(snackbar, event);
                         Timber.v("Current Version code: %s", switchPreferences.getVersionCode());
                         if (switchPreferences.getVersionCode() <= 43) {
-                            showCaseView();
+                            final Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showCaseView();
+                                }
+                            }, 1000);
                         }
-                        switchPreferences.setVersionCode(Utils.getVersionCode(context));
                     }
                 })
                 .setAction("Changelog", new View.OnClickListener() {

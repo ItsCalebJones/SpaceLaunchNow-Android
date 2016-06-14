@@ -33,7 +33,6 @@ import com.crashlytics.android.Crashlytics;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
-import com.squareup.haha.perflib.Main;
 
 import java.util.ArrayList;
 
@@ -43,19 +42,21 @@ import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.ui.activity.BaseActivity;
+import me.calebjones.spacelaunchnow.ui.activity.DownloadActivity;
 import me.calebjones.spacelaunchnow.ui.activity.SettingsActivity;
 import me.calebjones.spacelaunchnow.ui.activity.SupportActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.NextLaunchFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.missions.MissionFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.vehicles.VehiclesViewPager;
+import me.calebjones.spacelaunchnow.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;
 import za.co.riggaroo.materialhelptutorial.TutorialItem;
 import za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity;
 
-public class MainActivity extends BaseActivity
+public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String NAV_ITEM_ID = "navItemId";
@@ -230,7 +231,6 @@ public class MainActivity extends BaseActivity
     public void checkFirstBoot() {
         if (listPreferences.getFirstBoot()) {
             switchPreferences.setPrevFiltered(false);
-            getFirstLaunches();
             loadTutorial();
         } else {
             navigate(mNavItemId);
@@ -276,8 +276,7 @@ public class MainActivity extends BaseActivity
 
     public void getFirstLaunches() {
         Intent launchIntent = new Intent(this.context, LaunchDataService.class);
-        launchIntent.setAction(Strings.ACTION_GET_ALL);
-
+        launchIntent.setAction(Strings.ACTION_GET_ALL_WIFI);
         this.context.startService(launchIntent);
     }
 
@@ -513,9 +512,7 @@ public class MainActivity extends BaseActivity
         //    super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             if (listPreferences.getFirstBoot()) {
-                listPreferences.setFirstBoot(false);
-                Timber.v("Calling Recreate!");
-                Intent intent = new Intent(this, MainActivity.class);
+                Intent intent = new Intent(this, DownloadActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }

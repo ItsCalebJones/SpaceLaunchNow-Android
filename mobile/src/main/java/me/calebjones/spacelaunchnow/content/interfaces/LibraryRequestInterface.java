@@ -34,10 +34,10 @@ public interface LibraryRequestInterface {
                                                 @Path("end_date") String end_date,
                                                 @Query("offset") int offset);
 
-    @GET(version + "/launch?next=10&mode=verbose")
+    @GET(version + "/launch?next=5&mode=verbose")
     Call<LaunchResponse> getNextLaunches(@Query("offset") int offset);
 
-    @GET("dev/launch?next=10&mode=verbose")
+    @GET("dev/launch?next=5&mode=verbose")
     Call<LaunchResponse> getDebugNextLaunches(@Query("offset") int offset);
 
     @GET(version + "/launch/{launchID}?mode=verbose")
@@ -46,11 +46,11 @@ public interface LibraryRequestInterface {
     @GET("dev/launch/{launchID}?mode=verbose")
     Call<LaunchResponse> getDebugLaunchByID(@Path("launchID") int launchID);
 
-    @GET(version + "/launch/{launchID}?mode=verbose&fields=name,id,net")
-    Call<LaunchResponse> getMiniLaunchByID(@Path("launchID") int launchID);
+    @GET(version + "/launch?next=10&fields=id,net,status")
+    Call<LaunchResponse> getMiniNextLaunch();
 
-    @GET("dev/launch/{launchID}?mode=verbose")
-    Call<LaunchResponse> getDebugMiniLaunchByID(@Path("launchID") int launchID);
+    @GET("dev/launch?next=10&fields=id,net,status")
+    Call<LaunchResponse> getDebugMiniNextLaunch();
 
     //Get Missions Methods
 

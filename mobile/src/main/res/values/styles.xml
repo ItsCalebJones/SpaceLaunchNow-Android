@@ -168,8 +168,12 @@
         <item name="about_libraries_card">@color/dark_card_background</item>
         <item name="about_libraries_title_openSource">@color/dark_theme_primary_text_color</item>
         <item name="about_libraries_text_openSource">@color/dark_theme_secondary_text_color</item>
-        <item name="about_libraries_dividerDark_openSource">@color/about_libraries_dividerDark_openSource</item>
-        <item name="about_libraries_dividerLight_openSource">@color/about_libraries_dividerLight_openSource</item>
+        <item name="about_libraries_dividerDark_openSource">
+            @color/about_libraries_dividerDark_openSource
+        </item>
+        <item name="about_libraries_dividerLight_openSource">
+            @color/about_libraries_dividerLight_openSource
+        </item>
     </style>
 
     <style name="AboutLibrariesLight" parent="Theme.AppCompat.NoActionBar">
@@ -189,6 +193,10 @@
         <item name="about_libraries_dividerLight_openSource">
             @color/about_libraries_dividerLight_openSource
         </item>
+    </style>
+
+    <style name="CircularProgress" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
 </resources>
