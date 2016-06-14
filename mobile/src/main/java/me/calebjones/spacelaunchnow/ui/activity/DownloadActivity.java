@@ -68,23 +68,6 @@ public class DownloadActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        IntentFilter launchFilter = new IntentFilter();
-        launchFilter.addAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
-        launchFilter.addAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
-        launchFilter.addAction(Strings.ACTION_SUCCESS_VEHICLE_DETAILS);
-        launchFilter.addAction(Strings.ACTION_SUCCESS_VEHICLES);
-        launchFilter.addAction(Strings.ACTION_SUCCESS_MISSIONS);
-
-        IntentFilter errorFilter = new IntentFilter();
-        errorFilter.addAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
-        errorFilter.addAction(Strings.ACTION_FAILURE_PREV_LAUNCHES);
-        errorFilter.addAction(Strings.ACTION_FAILURE_VEHICLE_DETAILS);
-        errorFilter.addAction(Strings.ACTION_FAILURE_VEHICLES);
-        errorFilter.addAction(Strings.ACTION_FAILURE_MISSIONS);
-
-        registerReceiver(launchReceiver, launchFilter);
-        registerReceiver(errorReceiver, errorFilter);
-
         int version = SwitchPreferences.getInstance(this).getVersionCode();
         if (version <= 87 && version > 0){
             showRealmMigrationDialog();
@@ -135,6 +118,22 @@ public class DownloadActivity extends AppCompatActivity {
         progressView.setIndeterminate(true);
         circularFillableLoaders.setProgress(0);
         titles.setText("Step 1 of 5: Loading upcoming launches.");
+        IntentFilter launchFilter = new IntentFilter();
+        launchFilter.addAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
+        launchFilter.addAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
+        launchFilter.addAction(Strings.ACTION_SUCCESS_VEHICLE_DETAILS);
+        launchFilter.addAction(Strings.ACTION_SUCCESS_VEHICLES);
+        launchFilter.addAction(Strings.ACTION_SUCCESS_MISSIONS);
+
+        IntentFilter errorFilter = new IntentFilter();
+        errorFilter.addAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
+        errorFilter.addAction(Strings.ACTION_FAILURE_PREV_LAUNCHES);
+        errorFilter.addAction(Strings.ACTION_FAILURE_VEHICLE_DETAILS);
+        errorFilter.addAction(Strings.ACTION_FAILURE_VEHICLES);
+        errorFilter.addAction(Strings.ACTION_FAILURE_MISSIONS);
+
+        registerReceiver(launchReceiver, launchFilter);
+        registerReceiver(errorReceiver, errorFilter);
 
         Intent launchIntent = new Intent(this, LaunchDataService.class);
         launchIntent.setAction(Strings.ACTION_GET_ALL_WIFI);

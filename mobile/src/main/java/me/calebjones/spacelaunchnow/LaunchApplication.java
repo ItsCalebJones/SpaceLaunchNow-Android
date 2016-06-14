@@ -120,10 +120,6 @@ public class LaunchApplication extends Application {
         DefaultRuleEngine.trackAppStart(this);
 
         if (!sharedPreference.getFirstBoot()) {
-            Intent nextIntent = new Intent(this, LaunchDataService.class);
-            nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
-            this.startService(nextIntent);
-
             if (sharedPreference.getLastVehicleUpdate() > 0) {
                 Timber.d("Time since last VehicleUpdate: %s", (System.currentTimeMillis() - sharedPreference.getLastVehicleUpdate()));
                 if ((System.currentTimeMillis() - sharedPreference.getLastVehicleUpdate()) > 604800000) {

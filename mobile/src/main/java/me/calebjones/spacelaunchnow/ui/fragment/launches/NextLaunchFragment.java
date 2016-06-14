@@ -455,6 +455,10 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 }
             }, 1000);
             switchPreferences.setVersionCode(Utils.getVersionCode(context));
+        } else {
+            Intent nextIntent = new Intent(this.getContext(), LaunchDataService.class);
+            nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
+            this.getActivity().startService(nextIntent);
         }
 
         IntentFilter intentFilter = new IntentFilter();
