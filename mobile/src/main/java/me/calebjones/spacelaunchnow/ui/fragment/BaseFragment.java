@@ -11,14 +11,14 @@ public class BaseFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Timber.v("onStart");
+        Timber.v("BaseFragment - onStart");
         realm = Realm.getDefaultInstance();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Timber.v("onStop");
+        Timber.v("BaseFragment - onStop");
         realm.removeAllChangeListeners();
         realm.close();
     }

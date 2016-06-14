@@ -9,12 +9,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -33,16 +31,11 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
-import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
-import com.mikepenz.iconics.IconicsDrawable;
-import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 
 import java.util.Date;
 
@@ -66,6 +59,7 @@ import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
 import me.calebjones.spacelaunchnow.ui.activity.DownloadActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
+import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
@@ -296,7 +290,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     adapter.addItems(launchRealms);
                 }
             } else {
-                showErrorSnackbar("Unable to find matching launches.");
+                SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, "Unable to find matching launches.");
             }
             hideLoading();
         }
@@ -455,10 +449,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 }
             }, 1000);
             switchPreferences.setVersionCode(Utils.getVersionCode(context));
-        } else {
-            Intent nextIntent = new Intent(this.getContext(), LaunchDataService.class);
-            nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
-            this.getActivity().startService(nextIntent);
         }
 
         IntentFilter intentFilter = new IntentFilter();
@@ -529,23 +519,10 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 onFinishedRefreshing();
             } else if (intent.getAction().equals(Strings.ACTION_FAILURE_UP_LAUNCHES)) {
                 hideLoading();
-                showErrorSnackbar(intent.getStringExtra("error"));
+                SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, intent);
             }
         }
     };
-
-    private void showErrorSnackbar(String error) {
-        final Snackbar snackbar = Snackbar.make(coordinatorLayout, "Error - " + error, Snackbar.LENGTH_INDEFINITE);
-
-        snackbar.setActionTextColor(ContextCompat.getColor(context, R.color.colorAccent))
-                .setAction("DISMISS", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        snackbar.dismiss();
-                    }
-                })
-                .show();
-    }
 
     @Override
     public void onRefresh() {

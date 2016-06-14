@@ -538,37 +538,23 @@ public class NextLaunchTracker extends IntentService implements
 
     public void scheduleUpdate(long convert) {
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        long nextUpdate = Calendar.getInstance().getTimeInMillis() + interval;
+        long nextUpdate = Calendar.getInstance().getTimeInMillis() + convert;
 
         if (BuildConfig.DEBUG) {
-            if (nextLaunch != null) {
-                // Create a DateFormatter object for displaying date in specified format.
-                SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss zz");
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(nextUpdate);
+            // Create a DateFormatter object for displaying date in specified format.
+            SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss zz");
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(nextUpdate);
 
-                String intevalString = String.format("%02d:%02d:%02d",
-                        TimeUnit.MILLISECONDS.toHours(interval),
-                        TimeUnit.MILLISECONDS.toMinutes(interval) -
-                                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(interval)), // The change is in this line
-                        TimeUnit.MILLISECONDS.toSeconds(interval) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(interval)));
-
-                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
-                mBuilder.setContentTitle("Next Launch Tracker")
-                        .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText("Next Launch = " + nextLaunch.getName())
-                                .setSummaryText(String.format("Interval: %s | ", intevalString) + formatter.format(calendar.getTime())))
-                        .setSmallIcon(R.drawable.ic_notification)
-                        .setAutoCancel(true);
-
-                NotificationManager mNotifyManager = (NotificationManager)
-                        getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-                mNotifyManager.notify(Strings.NOTIF_ID + 1, mBuilder.build());
-
-                Timber.v("Scheduling Update - Interval: %s | %s", interval, formatter.format(calendar.getTime()));
-            }
+            String intevalString = String.format("%02d:%02d:%02d",
+                    TimeUnit.MILLISECONDS.toHours(interval),
+                    TimeUnit.MILLISECONDS.toMinutes(interval) -
+                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(interval)), // The change is in this line
+                    TimeUnit.MILLISECONDS.toSeconds(interval) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(interval)));
+            Timber.v("Scheduling Update - Interval: %s - Time: %s - IntervalString - %s", convert, formatter.format(calendar.getTime()), intevalString);
         }
+
 
         if (Utils.checkPlayServices(this)) {
             sendToWear(listPreferences.getNextLaunch());

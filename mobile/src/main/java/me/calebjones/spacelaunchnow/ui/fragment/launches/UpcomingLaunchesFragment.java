@@ -57,6 +57,7 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
+import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import timber.log.Timber;
 
 /**
@@ -394,38 +395,11 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
             if (results.size() > 0) {
                 results.sort("net", Sort.ASCENDING);
                 adapter.addItems(results);
-            } else {
-                showSnackbar("Unable to find matching launches.");
             }
             hideLoading();
         }
     };
 
-    private void showErrorSnackbar(String error) {
-        final Snackbar snackbar = Snackbar.make(coordinatorLayout, "Error - " + error, Snackbar.LENGTH_INDEFINITE);
-
-        snackbar.setActionTextColor(ContextCompat.getColor(context, R.color.colorAccent))
-                .setAction("DISMISS", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        snackbar.dismiss();
-                    }
-                })
-                .show();
-    }
-
-    private void showSnackbar(String msg) {
-        final Snackbar snackbar = Snackbar.make(coordinatorLayout, msg, Snackbar.LENGTH_INDEFINITE);
-
-        snackbar.setActionTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent))
-                .setAction("Ok", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        snackbar.dismiss();
-                    }
-                })
-                .show();
-    }
 
     public void loadData() {
         launchRealms = QueryBuilder.buildUpQuery(context, getRealm());
@@ -465,7 +439,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
             if (intent.getAction().equals(Strings.ACTION_SUCCESS_UP_LAUNCHES)) {
                 loadData();
             } else if (intent.getAction().equals(Strings.ACTION_FAILURE_UP_LAUNCHES)) {
-                showErrorSnackbar(intent.getStringExtra("error"));
+                SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, intent);
             }
         }
     };
