@@ -127,7 +127,7 @@ public class LaunchDataService extends IntentService {
         mRealm = Realm.getInstance(realmConfiguration);
 
         //Usually called on first launch
-        if (Strings.ACTION_GET_ALL.equals(action)) {
+        if (Strings.ACTION_GET_ALL_WIFI.equals(action)) {
             Timber.v("Intent action received: %s", action);
             if (this.sharedPref.getBoolean("background", true)) {
                 scheduleLaunchUpdates();
@@ -142,7 +142,20 @@ public class LaunchDataService extends IntentService {
 
             startService(new Intent(this, MissionDataService.class));
 
-        // Called from NextLaunchFragment
+        } else if (Strings.ACTION_GET_ALL_NO_WIFI.equals(action)) {
+            if (this.sharedPref.getBoolean("background", true)) {
+                scheduleLaunchUpdates();
+            }
+
+            getUpcomingLaunches();
+
+            Intent rocketIntent = new Intent(getApplicationContext(), VehicleDataService.class);
+            rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
+            startService(rocketIntent);
+
+            startService(new Intent(this, MissionDataService.class));
+
+            // Called from NextLaunchFragment
         } else if (Strings.ACTION_GET_UP_LAUNCHES.equals(action)) {
 
             Timber.v("Intent action received: %s", action);
@@ -151,11 +164,11 @@ public class LaunchDataService extends IntentService {
             }
             getUpcomingLaunches();
 
-        // Called from PrevLaunchFragment
+            // Called from PrevLaunchFragment
         } else if (Strings.ACTION_GET_PREV_LAUNCHES.equals(action)) {
 
             Timber.v("Intent action received: %s", action);
-            if(intent.getStringExtra("startDate") != null && intent.getStringExtra("endDate") != null ) {
+            if (intent.getStringExtra("startDate") != null && intent.getStringExtra("endDate") != null) {
                 getLaunchesByDate(intent.getStringExtra("startDate"), intent.getStringExtra("endDate"));
             } else {
                 getLaunchesByDate("1950-01-01", Utils.getEndDate(this));
@@ -209,8 +222,8 @@ public class LaunchDataService extends IntentService {
                     item.setIsNotifiedDay(previous.getIsNotifiedDay());
                     item.setIsNotifiedHour(previous.getIsNotifiedHour());
                     item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
-                    item.getLocation().setPrimaryID();
                 }
+                item.getLocation().setPrimaryID();
             }
             mRealm.beginTransaction();
             mRealm.copyToRealmOrUpdate(items);
@@ -264,8 +277,8 @@ public class LaunchDataService extends IntentService {
                     item.setIsNotifiedDay(previous.getIsNotifiedDay());
                     item.setIsNotifiedHour(previous.getIsNotifiedHour());
                     item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
-                    item.getLocation().setPrimaryID();
                 }
+                item.getLocation().setPrimaryID();
             }
             mRealm.beginTransaction();
             mRealm.copyToRealmOrUpdate(items);
@@ -290,41 +303,31 @@ public class LaunchDataService extends IntentService {
         Call<LaunchResponse> call;
         Response<LaunchResponse> launchResponse;
         RealmList<LaunchRealm> items = new RealmList<>();
-        int offset = 0;
-        int total = 10;
-        int count;
 
         try {
-            while (total != offset) {
-                if (listPreference.isDebugEnabled()) {
-                    call = request.getDebugNextLaunches(offset);
-                } else {
-                    call = request.getNextLaunches(offset);
-                }
-                launchResponse = call.execute();
-                total = launchResponse.body().getTotal();
-                count = launchResponse.body().getCount();
-                offset = offset + count;
-                Timber.v("NextLaunches Count: %s", offset);
-                Collections.addAll(items, launchResponse.body().getLaunches());
+            if (listPreference.isDebugEnabled()) {
+                call = request.getDebugMiniNextLaunch();
+            } else {
+                call = request.getMiniNextLaunch();
             }
+            launchResponse = call.execute();
+            Collections.addAll(items, launchResponse.body().getLaunches());
             for (LaunchRealm item : items) {
                 LaunchRealm previous = mRealm.where(LaunchRealm.class)
                         .equalTo("id", item.getId())
                         .findFirst();
                 if (previous != null) {
-                    item.setFavorite(previous.isFavorite());
-                    item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
-                    item.setIsNotifiedDay(previous.getIsNotifiedDay());
-                    item.setIsNotifiedHour(previous.getIsNotifiedHour());
-                    item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
-                    item.getLocation().setPrimaryID();
+                    if((previous.getNet() != item.getNet()
+                            || (previous.getStatus().intValue() != item.getStatus().intValue()))){
+                        Timber.v("%s status has changed.", item.getName());
+                        mRealm.beginTransaction();
+                        previous.resetNotifiers();
+                        mRealm.copyToRealmOrUpdate(previous);
+                        mRealm.commitTransaction();
+                        getLaunchById(item.getId());
+                    }
                 }
             }
-
-            mRealm.beginTransaction();
-            mRealm.copyToRealmOrUpdate(items);
-            mRealm.commitTransaction();
 
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
@@ -364,8 +367,8 @@ public class LaunchDataService extends IntentService {
                         item.setIsNotifiedDay(previous.getIsNotifiedDay());
                         item.setIsNotifiedHour(previous.getIsNotifiedHour());
                         item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
-                        item.getLocation().setPrimaryID();
                     }
+                    item.getLocation().setPrimaryID();
                 }
                 mRealm.beginTransaction();
                 mRealm.copyToRealmOrUpdate(items);

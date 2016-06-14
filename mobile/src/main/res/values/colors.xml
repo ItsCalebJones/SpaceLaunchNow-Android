@@ -9,8 +9,9 @@
     <color name="colorPrimary">#448AFF</color>
     <color name="colorPrimaryDark">#1565c0</color>
     <color name="colorPrimaryLight">#2962ff</color>
-    <color name="colorAccent">#FF303A</color>
-    <color name="colorAccentLight">#ffab40</color>
+    <color name="colorPrimaryAlt">#BBDEFB</color>
+    <color name="colorAccent">#f44336</color>
+    <color name="colorAccentLight">#f44336</color>
     <color name="colorTextPrimary">#212121</color>
     <color name="colorTextSecondary">#727272</color>
     <color name="materialGrey">#607D8B</color>

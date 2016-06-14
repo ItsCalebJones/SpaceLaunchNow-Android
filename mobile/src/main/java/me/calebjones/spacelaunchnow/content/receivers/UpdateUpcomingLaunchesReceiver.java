@@ -29,7 +29,7 @@ public class UpdateUpcomingLaunchesReceiver extends BroadcastReceiver {
                 switchPreferences.setPrevFiltered(false);
 
                 Intent update_upcoming_launches = new Intent(context, LaunchDataService.class);
-                update_upcoming_launches.setAction(Strings.ACTION_GET_ALL);
+                update_upcoming_launches.setAction(Strings.ACTION_GET_ALL_WIFI);
                 context.startService(update_upcoming_launches);
 
                 context.startService(new Intent(context, MissionDataService.class));

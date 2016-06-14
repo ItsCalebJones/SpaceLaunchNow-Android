@@ -141,7 +141,7 @@ public class LibraryDataService extends IntentService {
 
         if (intent != null) {
             String action = intent.getAction();
-            if(Strings.ACTION_GET_ALL.equals(action)){
+            if(Strings.ACTION_GET_ALL_WIFI.equals(action)){
                 listPreference.setLastVehicleUpdate(System.currentTimeMillis());
                 getAllAgency();
                 getAllLocations();

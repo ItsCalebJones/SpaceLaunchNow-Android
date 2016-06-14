@@ -113,8 +113,7 @@
         <item name="android:statusBarColor">@color/darkPrimary_dark</item>
     </style>
 
-    <style name="SPL">
-    </style>
+    <style name="SPL"></style>
 
     <style name="SPL.SnackBar">
         <item name="android:elevation">6dp</item>

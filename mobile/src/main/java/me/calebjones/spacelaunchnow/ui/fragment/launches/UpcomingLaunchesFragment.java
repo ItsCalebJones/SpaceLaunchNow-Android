@@ -151,10 +151,6 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
             }
         });
 
-        if (this.listPreference.getUpcomingFirstBoot()) {
-            this.listPreference.setUpcomingFirstBoot(false);
-        }
-
         CircularProgressView progressView = (CircularProgressView)
                 view.findViewById(R.id.progress_View);
         progressView.setVisibility(View.VISIBLE);
@@ -186,7 +182,6 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
                 switchPreferences.resetAllUpFilters();
                 if (switchPreferences.isUpFiltered()) {
                     switchPreferences.setUpFiltered(false);
-                    listPreference.removeFilteredList();
                     listPreference.resetUpTitle();
                     loadData();
                     setTitle();

@@ -120,64 +120,52 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        final LaunchRealm launchItem = launchList.get(i);
-
-        position = i;
+        LaunchRealm launchItem = launchList.get(holder.getAdapterPosition());
 
         //Retrieve missionType
         if (launchItem.getMissions().size() != 0) {
             setCategoryIcon(holder, launchItem.getMissions().get(0).getTypeName());
         }
 
-        //TODO These are slightly rounded when converting from double to long
         double dlat = 0;
         double dlon = 0;
-        if(launchItem.getLocation() != null && launchItem.getLocation().getPads() != null){
+        if (launchItem.getLocation() != null && launchItem.getLocation().getPads() != null) {
             dlat = launchItem.getLocation().getPads().get(0).getLatitude();
             dlon = launchItem.getLocation().getPads().get(0).getLongitude();
         }
 
         // Getting status
-        if (play) {
-            if (dlat == 0 && dlon == 0 || Double.isNaN(dlat) || Double.isNaN(dlon) || dlat == Double.NaN || dlon == Double.NaN) {
-                if (holder.map_view != null) {
-                    holder.map_view.setVisibility(View.GONE);
-                    holder.exploreFab.setVisibility(View.GONE);
-                }
-            } else {
-                holder.map_view.setVisibility(View.VISIBLE);
-                holder.exploreFab.setVisibility(View.VISIBLE);
-//                holder.setMapLocation(dlat, dlon);
-//                // Keep track of MapView
-//                mMaps.add(holder.map_view);
-                final Resources res = context.getResources();
-                final StaticMap map = new StaticMap()
-                        .center(dlat, dlon)
-                        .scale(4)
-                        .type(StaticMap.Type.ROADMAP)
-                        .zoom(4)
-                        .marker(dlat, dlon)
-                        .key(res.getString(R.string.GoogleMapsKey));
-
-                //Strange but necessary to calculate the height/width
-                holder.map_view.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                    public boolean onPreDraw() {
-                        map.size(holder.map_view.getWidth() / 2,
-                                holder.map_view.getHeight() / 2);
-
-                        Timber.v("onPreDraw: %s", map.toString());
-                        Glide.with(context).load(map.toString())
-                                .error(R.drawable.placeholder)
-                                .into(holder.map_view);
-                        holder.map_view.getViewTreeObserver().removeOnPreDrawListener(this);
-                        return true;
-                    }
-                });
-
+        if (dlat == 0 && dlon == 0 || Double.isNaN(dlat) || Double.isNaN(dlon) || dlat == Double.NaN || dlon == Double.NaN) {
+            if (holder.map_view != null) {
+                holder.map_view.setVisibility(View.GONE);
+                holder.exploreFab.setVisibility(View.GONE);
             }
         } else {
-            holder.map_view.setVisibility(View.GONE);
-            holder.exploreFab.setVisibility(View.GONE);
+            holder.map_view.setVisibility(View.VISIBLE);
+            holder.exploreFab.setVisibility(View.VISIBLE);
+            final Resources res = context.getResources();
+            final StaticMap map = new StaticMap()
+                    .center(dlat, dlon)
+                    .scale(4)
+                    .type(StaticMap.Type.ROADMAP)
+                    .zoom(5)
+                    .marker(dlat, dlon)
+                    .key(res.getString(R.string.GoogleMapsKey));
+
+            //Strange but necessary to calculate the height/width
+            holder.map_view.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                public boolean onPreDraw() {
+                    map.size(holder.map_view.getWidth() / 2,
+                            holder.map_view.getHeight() / 2);
+
+                    Timber.v("onPreDraw: %s", map.toString());
+                    Glide.with(context).load(map.toString())
+                            .error(R.drawable.placeholder)
+                            .into(holder.map_view);
+                    holder.map_view.getViewTreeObserver().removeOnPreDrawListener(this);
+                    return true;
+                }
+            });
         }
 
         SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
@@ -233,7 +221,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                 @Override
                 public void onFinish() {
                     holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
-                    if (night){
+                    if (night) {
                         holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color));
                     } else {
                         holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary));
@@ -243,7 +231,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
                         //TODO - Get hold reason and show it
                     } else {
-                        if(hold != null && hold.length() > 1) {
+                        if (hold != null && hold.length() > 1) {
                             holder.content_TMinus_status.setText(hold);
                         } else {
                             holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
@@ -264,26 +252,26 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                     String hours;
                     String minutes;
                     String seconds;
-                    if (longHours < 10){
+                    if (longHours < 10) {
                         hours = "0" + String.valueOf(longHours);
                     } else {
                         hours = String.valueOf(longHours);
                     }
 
-                    if (longMins < 10){
+                    if (longMins < 10) {
                         minutes = "0" + String.valueOf(longMins);
                     } else {
                         minutes = String.valueOf(longMins);
                     }
 
-                    if (longSeconds < 10){
+                    if (longSeconds < 10) {
                         seconds = "0" + String.valueOf(longSeconds);
                     } else {
                         seconds = String.valueOf(longSeconds);
                     }
                     holder.content_TMinus_status.setTypeface(Typeface.SANS_SERIF);
-                    holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context,R.color.red));
-                    if (Integer.valueOf(days) > 0){
+                    holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.red));
+                    if (Integer.valueOf(days) > 0) {
                         holder.content_TMinus_status.setText(String.format("L - %s days - %s:%s:%s", days, hours, minutes, seconds));
                     } else {
                         holder.content_TMinus_status.setText(String.format("L - %s:%s:%s", hours, minutes, seconds));
@@ -556,59 +544,6 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                     break;
             }
         }
-
-//        public void initializeMapView() {
-//            if (map_view != null) {
-//                // Initialise the MapView
-//                map_view.onCreate(null);
-//                // Set the map ready callback to receive the GoogleMap object
-//                map_view.getMapAsync(this);
-//            }
-//        }
-//
-//        public void setMapLocation(double lat, double lng) {
-//            LatLng latLng = new LatLng(lat, lng);
-//            mMapLocation = latLng;
-//
-//            // If the map is ready, update its content.
-//            if (gMap != null) {
-//                updateMapContents();
-//            } else {
-//                Timber.e("MapView is null");
-//            }
-//        }
-//
-//        @Override
-//        public void onMapReady(GoogleMap googleMap) {
-//            //TODO: Allow user to update this 1-normal 2-satellite 3-Terrain
-//            // https://goo.gl/OkexW7
-//            MapsInitializer.initialize(context.getApplicationContext());
-//
-//            googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-//            googleMap.getUiSettings().setMapToolbarEnabled(false);
-//
-//            gMap = googleMap;
-//            gMap.getUiSettings().setAllGesturesEnabled(false);
-//
-//
-//            // If we have map data, update the map content.
-//            if (mMapLocation != null) {
-//                updateMapContents();
-//            } else {
-//                Timber.e("mMapLocation is null");
-//            }
-//        }
-//
-//        protected void updateMapContents() {
-//            // Since the mapView is re-used, need to remove pre-existing mapView features.
-//            gMap.clear();
-//
-//            // Update the mapView feature data and camera position.
-//            gMap.addMarker(new MarkerOptions().position(mMapLocation));
-//
-//            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mMapLocation, 3.2f);
-//            gMap.moveCamera(cameraUpdate);
-//        }
     }
 
     private void setCategoryIcon(ViewHolder holder, String type) {

@@ -3,6 +3,7 @@ package me.calebjones.spacelaunchnow.ui.fragment.launches.details;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -12,21 +13,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.mypopsy.maps.StaticMap;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -36,32 +33,43 @@ import java.util.TimeZone;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.content.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.content.models.realm.RocketDetailsRealm;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
-import me.calebjones.spacelaunchnow.utils.Utils;
-import me.calebjones.spacelaunchnow.content.models.realm.RealmStr;
 import timber.log.Timber;
 
 
-public class SummaryDetailFragment extends BaseFragment implements OnMapReadyCallback {
+public class SummaryDetailFragment extends BaseFragment {
 
     private SharedPreferences sharedPref;
     private static ListPreferences sharedPreference;
     private Context context;
-    public MapView map_view;
-    public GoogleMap gMap;
+    public ImageView staticMap;
     protected LatLng mMapLocation;
 
     public static LaunchRealm detailLaunch;
     private RocketDetailsRealm launchVehicle;
     private FloatingActionButton fab;
-    private LinearLayout agency_one, agency_two, vehicle_spec_view;
-    private TextView launch_date_title, date, launch_window_start, launch_window_end, launch_status
-            , launch_vehicle, launch_configuration, launch_family, launch_vehicle_specs_height,
-            launch_vehicle_specs_diameter,launch_vehicle_specs_stages,launch_vehicle_specs_leo,
-            launch_vehicle_specs_gto,launch_vehicle_specs_launch_mass, launch_vehicle_specs_thrust,
-            watchButton;
+    private LinearLayout agency_one;
+    private LinearLayout agency_two;
+    private LinearLayout vehicle_spec_view;
+    private TextView launch_date_title;
+    private TextView date;
+    private TextView launch_window_start;
+    private TextView launch_window_end;
+    private TextView launch_status;
+    private TextView launch_vehicle;
+    private TextView launch_configuration;
+    private TextView launch_family;
+    private TextView launch_vehicle_specs_height;
+    private TextView launch_vehicle_specs_diameter;
+    private TextView launch_vehicle_specs_stages;
+    private TextView launch_vehicle_specs_leo;
+    private TextView launch_vehicle_specs_gto;
+    private TextView launch_vehicle_specs_launch_mass;
+    private TextView launch_vehicle_specs_thrust;
+    private TextView watchButton;
 
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,7 +85,7 @@ public class SummaryDetailFragment extends BaseFragment implements OnMapReadyCal
             view = inflater.inflate(R.layout.light_launch_summary, container, false);
         }
 
-        map_view = (MapView) view.findViewById(R.id.map_view_summary);
+        staticMap = (ImageView) view.findViewById(R.id.map_view_summary);
         launch_date_title = (TextView) view.findViewById(R.id.launch_date_title);
         date = (TextView) view.findViewById(R.id.date);
         launch_window_start = (TextView) view.findViewById(R.id.launch_window_start);
@@ -98,95 +106,68 @@ public class SummaryDetailFragment extends BaseFragment implements OnMapReadyCal
         agency_two = (LinearLayout) view.findViewById(R.id.agency_two);
         vehicle_spec_view = (LinearLayout) view.findViewById(R.id.vehicle_spec_view);
         fab = (FloatingActionButton) view.findViewById(R.id.fab_explore);
-
-        setUpViews(savedInstanceState);
         return view;
     }
 
     @Override
     public void onResume() {
-        if (map_view != null) {
-            map_view.onResume();
-        }
+        setUpViews();
         super.onResume();
     }
 
     @Override
-    public void onPause() {
-        if (map_view != null) {
-            map_view.onPause();
-        }
-        super.onPause();
-    }
-
-    @Override
-    public void onLowMemory(){
-        if (map_view != null) {
-            map_view.onLowMemory();
-        }
-        super.onLowMemory();
-    }
-
-    @Override
-    public void onDestroy(){
-        if (map_view != null) {
-            map_view.onDestroy();
-        }
-        super.onDestroy();
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (map_view != null) {
-            map_view.onSaveInstanceState(outState);
-        }
         super.onSaveInstanceState(outState);
     }
 
-    private void setUpMap(Bundle savedInstanceState) {
-        if (map_view != null) {
-            map_view.onCreate(savedInstanceState);
-
-            map_view.getMapAsync(this);
-        }
-        double dlat = detailLaunch.getLocation().getPads().get(0).getLatitude();
-        double dlon = detailLaunch.getLocation().getPads().get(0).getLongitude();
-        setMapLocation(dlat, dlon);
-    }
-
-    public void setUpViews(Bundle savedInstanceState){
+    public void setUpViews(){
         detailLaunch = ((LaunchDetailActivity)getActivity()).getLaunch();
         if(detailLaunch.getRocket() != null) {
             getLaunchVehicle(detailLaunch);
         }
 
-        if (Utils.checkPlayServices(context)) {
-            setUpMap(savedInstanceState);
+        double dlat = 0;
+        double dlon = 0;
+        if (detailLaunch.getLocation() != null && detailLaunch.getLocation().getPads() != null) {
+            dlat = detailLaunch.getLocation().getPads().get(0).getLatitude();
+            dlon = detailLaunch.getLocation().getPads().get(0).getLongitude();
+        }
 
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String location = detailLaunch.getLocation().getName();
-                    location = (location.substring(location.indexOf(",") + 1));
+        // Getting status
+        if (dlat == 0 && dlon == 0 || Double.isNaN(dlat) || Double.isNaN(dlon) || dlat == Double.NaN || dlon == Double.NaN) {
+            if (staticMap != null) {
+                staticMap.setVisibility(View.GONE);
+                fab.setVisibility(View.GONE);
+            }
+        } else {
+            staticMap.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.VISIBLE);
+//                holder.setMapLocation(dlat, dlon);
+//                // Keep track of MapView
+//                mMaps.add(holder.staticMap);
+            final Resources res = context.getResources();
+            final StaticMap map = new StaticMap()
+                    .center(dlat, dlon)
+                    .scale(4)
+                    .type(StaticMap.Type.ROADMAP)
+                    .zoom(8)
+                    .marker(dlat, dlon)
+                    .key(res.getString(R.string.GoogleMapsKey));
 
-                    Timber.d("FAB: %s ", location);
+            //Strange but necessary to calculate the height/width
+            staticMap.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                public boolean onPreDraw() {
+                    map.size(staticMap.getWidth() / 2,
+                            staticMap.getHeight() / 2);
 
-                    double dlat = detailLaunch.getLocation().getPads().get(0).getLatitude();
-                    double dlon = detailLaunch.getLocation().getPads().get(0).getLongitude();
-
-                    Uri gmmIntentUri = Uri.parse("geo:" + dlat + ", " + dlon + "?z=12&q=" + dlat + ", " + dlon);
-                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                    mapIntent.setPackage("com.google.android.apps.maps");
-
-                    if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
-                        Toast.makeText(context, "Loading " + detailLaunch.getLocation().getPads().get(0).getName(), Toast.LENGTH_LONG).show();
-                        context.startActivity(mapIntent);
-                    }
+                    Timber.v("onPreDraw: %s", map.toString());
+                    Glide.with(context).load(map.toString())
+                            .error(R.drawable.placeholder)
+                            .into(staticMap);
+                    staticMap.getViewTreeObserver().removeOnPreDrawListener(this);
+                    return true;
                 }
             });
-        } else {
-            map_view.setVisibility(View.GONE);
-            fab.setVisibility(View.GONE);
         }
 
         //Setup SimpleDateFormat to parse out getNet date.
@@ -359,43 +340,5 @@ public class SummaryDetailFragment extends BaseFragment implements OnMapReadyCal
 
     public static Fragment newInstance() {
         return new SummaryDetailFragment();
-    }
-
-    public void setMapLocation(double lat, double lng) {
-        mMapLocation = new LatLng(lat, lng);
-
-        // If the map is ready, update its content.
-        if (gMap != null) {
-            updateMapContents();
-        }
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        //TODO: Allow user to update this 1-normal 2-satellite 3-Terrain
-        // https://goo.gl/OkexW7
-        MapsInitializer.initialize(context.getApplicationContext());
-
-        gMap = googleMap;
-        gMap.getUiSettings().setAllGesturesEnabled(false);
-
-        googleMap.setMapType(1);
-        googleMap.getUiSettings().setMapToolbarEnabled(false);
-
-        // If we have map data, update the map content.
-        if (mMapLocation != null) {
-            updateMapContents();
-        }
-    }
-
-    protected void updateMapContents() {
-        // Since the mapView is re-used, need to remove pre-existing mapView features.
-        gMap.clear();
-
-        // Update the mapView feature data and camera position.
-        gMap.addMarker(new MarkerOptions().position(mMapLocation));
-
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mMapLocation, 8f);
-        gMap.moveCamera(cameraUpdate);
     }
 }
