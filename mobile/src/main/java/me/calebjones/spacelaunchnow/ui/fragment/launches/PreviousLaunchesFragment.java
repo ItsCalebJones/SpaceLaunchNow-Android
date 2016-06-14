@@ -64,6 +64,7 @@ import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
+import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import timber.log.Timber;
 
 
@@ -389,35 +390,10 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
                 adapter.addItems(results);
             } else {
                 adapter.clear();
-                showSnackbar("Unable to find matching launches.");
             }
             hideLoading();
         }
     };
-
-    private void showErrorSnackbar(String error) {
-        final Snackbar snackbar = Snackbar.make(coordinatorLayout, "Error - " + error, Snackbar.LENGTH_INDEFINITE);
-
-        snackbar.setActionTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent))
-                .setAction("DISMISS", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        snackbar.dismiss();
-                    }
-                })
-                .show();
-    }
-
-    private void showSnackbar(String msg) {
-        final Snackbar snackbar = Snackbar.make(coordinatorLayout, msg, Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction("Ok", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        snackbar.dismiss();
-                    }
-                })
-                .show();
-    }
 
     public void loadLaunches() {
         try {
@@ -738,7 +714,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
             if (intent.getAction().equals(Strings.ACTION_SUCCESS_PREV_LAUNCHES)) {
                 loadLaunches();
             } else if (intent.getAction().equals(Strings.ACTION_FAILURE_PREV_LAUNCHES)) {
-                showErrorSnackbar(intent.getStringExtra("error"));
+                SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, intent);
             }
         }
     };

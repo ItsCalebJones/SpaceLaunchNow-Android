@@ -141,8 +141,8 @@ public class MissionDataService extends IntentService {
 
         // Create a new empty instance of Realm
         mRealm = Realm.getInstance(realmConfiguration);
-
         getMissionLaunches();
+        mRealm.close();
     }
 
     private void getMissionLaunches() {

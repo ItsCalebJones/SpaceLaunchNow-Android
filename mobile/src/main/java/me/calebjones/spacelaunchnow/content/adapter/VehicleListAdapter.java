@@ -47,11 +47,11 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
 
     private Realm realm;
 
-    public VehicleListAdapter(Context context, Activity activity) {
+    public VehicleListAdapter(Context context, Activity activity, Realm realm) {
         rightNow = Calendar.getInstance();
         sharedPreference = ListPreferences.getInstance(context);
         items = new RealmList<>();
-        realm = Realm.getDefaultInstance();
+        this.realm = realm;
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         this.mContext = context;
         this.activity = activity;
