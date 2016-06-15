@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:transitionGroup="true"
     android:textAlignment="center"
+    android:transitionGroup="true"
+
     tools:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <android.support.v7.widget.CardView
+        style="?attr/cardStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/card_margin"
-        android:layout_marginBottom="@dimen/card_margin"
-        android:animateLayoutChanges="true"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
-        card_view:cardBackgroundColor="@color/cardview_light_background"
+        android:animateLayoutChanges="true"
+        card_view:cardBackgroundColor="@color/dark_theme_background"
         card_view:cardCornerRadius="0dp"
         card_view:cardElevation="4dp"
         card_view:cardPreventCornerOverlap="true"
         card_view:cardUseCompatPadding="true">
 
         <LinearLayout
-            style="@style/LightTheme"
+            style="@style/DarkTheme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -32,7 +32,7 @@
 
             <TextView
                 android:id="@+id/payload_status_title"
-                style="@style/LightTheme"
+                style="@style/DarkTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -45,7 +45,7 @@
 
             <TextView
                 android:id="@+id/payload_status"
-                style="@style/LightTheme"
+                style="@style/DarkTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -56,27 +56,27 @@
                 android:text="Unknown Payload"
                 android:textAlignment="center"
                 android:textColor="?android:textColorSecondary"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:theme="@style/DarkTheme" />
 
             <TextView
                 android:id="@+id/payload_description"
-                style="@style/LightTheme"
+                style="@style/DarkTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="left"
-                android:paddingBottom="12dp"
+                android:paddingBottom="4dp"
                 android:paddingTop="4dp"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
                 android:singleLine="false"
                 android:text=""
                 android:textAlignment="center"
                 android:textColor="?android:textColorSecondary"
-                android:textSize="15sp"/>
+                android:textSize="15sp"
+                android:theme="@style/DarkTheme" />
 
             <LinearLayout
-                style="@style/LightTheme"
+                style="@style/DarkTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
