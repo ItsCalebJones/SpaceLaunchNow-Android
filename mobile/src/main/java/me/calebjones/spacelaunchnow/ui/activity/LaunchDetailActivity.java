@@ -36,7 +36,6 @@ import java.util.Scanner;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import me.calebjones.spacelaunchnow.BuildConfig;
-import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.natives.RocketDetails;

@@ -47,7 +47,7 @@
                 android:layout_height="fill_parent"
                 android:orientation="horizontal"
                 android:layout_marginTop="50dp"
-                android:minHeight="250dp">
+                android:minHeight="400dp">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -79,7 +79,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="80dp"
                         android:layout_weight="0"
-                        android:layout_marginTop="50dp">
+                        android:layout_marginTop="100dp">
 
                         <android.support.v7.widget.AppCompatButton
                             android:id="@+id/start_download"

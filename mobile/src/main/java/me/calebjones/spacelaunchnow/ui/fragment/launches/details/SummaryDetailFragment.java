@@ -22,7 +22,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.bumptech.glide.Glide;
-import com.google.android.gms.maps.model.LatLng;
 import com.mypopsy.maps.StaticMap;
 
 import java.text.SimpleDateFormat;
@@ -46,7 +45,6 @@ public class SummaryDetailFragment extends BaseFragment {
     private static ListPreferences sharedPreference;
     private Context context;
     public ImageView staticMap;
-    protected LatLng mMapLocation;
 
     public static LaunchRealm detailLaunch;
     private RocketDetailsRealm launchVehicle;

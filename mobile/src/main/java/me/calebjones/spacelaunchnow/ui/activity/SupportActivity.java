@@ -22,7 +22,7 @@ import com.crashlytics.android.answers.PurchaseEvent;
 import java.math.BigDecimal;
 import java.util.Currency;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.R;
@@ -34,11 +34,11 @@ import xyz.hanks.library.SmallBang;
 
 public class SupportActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
 
-    @Bind(R.id.toolbar_support) Toolbar toolbar;
-    @Bind(R.id.twoDollar) AppCompatButton two;
-    @Bind(R.id.sixDollar) AppCompatButton six;
-    @Bind(R.id.twelveDollar) AppCompatButton twelve;
-    @Bind(R.id.other) AppCompatButton other;
+    @BindView(R.id.toolbar_support) Toolbar toolbar;
+    @BindView(R.id.twoDollar) AppCompatButton two;
+    @BindView(R.id.sixDollar) AppCompatButton six;
+    @BindView(R.id.twelveDollar) AppCompatButton twelve;
+    @BindView(R.id.other) AppCompatButton other;
 
     // SKU for our subscription (infinite gas)
     static final String SKU_TWO_DOLLAR = "two_dollar_support";

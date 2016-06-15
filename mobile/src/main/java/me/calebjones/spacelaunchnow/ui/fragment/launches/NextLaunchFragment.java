@@ -39,14 +39,14 @@ import com.github.rahatarmanahmed.cpv.CircularProgressView;
 
 import java.util.Date;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.BuildConfig;
-import me.calebjones.spacelaunchnow.MainActivity;
+import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.CardBigAdapter;
 import me.calebjones.spacelaunchnow.content.adapter.CardSmallAdapter;
@@ -65,29 +65,29 @@ import timber.log.Timber;
 
 public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    @Bind(R.id.van_switch)
+    @BindView(R.id.van_switch)
     AppCompatCheckBox vanSwitch;
-    @Bind(R.id.ples_switch)
+    @BindView(R.id.ples_switch)
     AppCompatCheckBox plesSwitch;
-    @Bind(R.id.KSC_switch)
+    @BindView(R.id.KSC_switch)
     AppCompatCheckBox kscSwitch;
-    @Bind(R.id.cape_switch)
+    @BindView(R.id.cape_switch)
     AppCompatCheckBox capeSwitch;
-    @Bind(R.id.nasa_switch)
+    @BindView(R.id.nasa_switch)
     AppCompatCheckBox nasaSwitch;
-    @Bind(R.id.spacex_switch)
+    @BindView(R.id.spacex_switch)
     AppCompatCheckBox spacexSwitch;
-    @Bind(R.id.roscosmos_switch)
+    @BindView(R.id.roscosmos_switch)
     AppCompatCheckBox roscosmosSwitch;
-    @Bind(R.id.ula_switch)
+    @BindView(R.id.ula_switch)
     AppCompatCheckBox ulaSwitch;
-    @Bind(R.id.arianespace_switch)
+    @BindView(R.id.arianespace_switch)
     AppCompatCheckBox arianespaceSwitch;
-    @Bind(R.id.casc_switch)
+    @BindView(R.id.casc_switch)
     AppCompatCheckBox cascSwitch;
-    @Bind(R.id.isro_switch)
+    @BindView(R.id.isro_switch)
     AppCompatCheckBox isroSwitch;
-    @Bind(R.id.all_switch)
+    @BindView(R.id.all_switch)
     AppCompatCheckBox customSwitch;
 
     private View view;
@@ -622,7 +622,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     public void onDestroyView() {
         super.onDestroyView();
         Timber.v("onDestroyView");
-        ButterKnife.unbind(this);
     }
 
     private void confirm() {

@@ -13,14 +13,14 @@ public class SnackbarHandler {
     // Display error Snackbar from a string.
     public static void showErrorSnackbar(Context context,  View view, String msg){
         Snackbar
-                .make(view, "Error - " + parseErrorMessage(context, msg), Snackbar.LENGTH_SHORT)
+                .make(view, "Error - " + parseErrorMessage(context, msg), Snackbar.LENGTH_LONG)
                 .show();
     }
 
     // Display error Snackbar from a intent.
     public static void showErrorSnackbar(Context context,  View view, Intent intent){
         Snackbar
-                .make(view, "Error - " + parseErrorMessage(context, intent), Snackbar.LENGTH_SHORT)
+                .make(view, "Error - " + parseErrorMessage(context, intent), Snackbar.LENGTH_LONG)
                 .show();
     }
 

@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow;
+package me.calebjones.spacelaunchnow.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -37,19 +37,16 @@ import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic
 import java.util.ArrayList;
 
 import io.fabric.sdk.android.Fabric;
+import me.calebjones.spacelaunchnow.BuildConfig;
+import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
-import me.calebjones.spacelaunchnow.ui.activity.BaseActivity;
-import me.calebjones.spacelaunchnow.ui.activity.DownloadActivity;
-import me.calebjones.spacelaunchnow.ui.activity.SettingsActivity;
-import me.calebjones.spacelaunchnow.ui.activity.SupportActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.NextLaunchFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.missions.MissionFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.vehicles.VehiclesViewPager;
-import me.calebjones.spacelaunchnow.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;
@@ -245,6 +242,7 @@ public class MainActivity extends AppCompatActivity
         MaterialStyledDialog dialog = new MaterialStyledDialog(this)
                 .withIconAnimation(false)
                 .withDialogAnimation(true)
+                .withDivider(true)
                 .setIcon(new IconicsDrawable(context).icon(MaterialDesignIconic.Icon.gmi_info).color(Color.WHITE))
                 .setTitle("Whats New? " + Utils.getVersionName(this))
                 .setScrollable(true)
