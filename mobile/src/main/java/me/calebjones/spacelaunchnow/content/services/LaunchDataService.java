@@ -18,8 +18,12 @@ import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.DateFormat;
+import java.text.FieldPosition;
+import java.text.ParsePosition;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,6 +37,7 @@ import me.calebjones.spacelaunchnow.content.interfaces.LibraryRequestInterface;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.responses.launchlibrary.LaunchResponse;
+import me.calebjones.spacelaunchnow.utils.Stopwatch;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.content.models.realm.RealmStr;
 import retrofit2.Call;
@@ -47,9 +52,7 @@ public class LaunchDataService extends IntentService {
     private SharedPreferences sharedPref;
     private ListPreferences listPreference;
     private SwitchPreferences switchPreferences;
-
     private Realm mRealm;
-
     private Retrofit retrofit;
 
     public LaunchDataService() {
@@ -133,14 +136,15 @@ public class LaunchDataService extends IntentService {
                 scheduleLaunchUpdates();
             }
 
-            getUpcomingLaunches();
-            getLaunchesByDate("1950-01-01", Utils.getEndDate(this));
+            if(getUpcomingLaunches()) {
+                if(getLaunchesByDate("1950-01-01", Utils.getEndDate(this))) {
+                    Intent rocketIntent = new Intent(getApplicationContext(), VehicleDataService.class);
+                    rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
+                    startService(rocketIntent);
 
-            Intent rocketIntent = new Intent(getApplicationContext(), VehicleDataService.class);
-            rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
-            startService(rocketIntent);
-
-            startService(new Intent(this, MissionDataService.class));
+                    startService(new Intent(this, MissionDataService.class));
+                }
+            }
 
         } else if (Strings.ACTION_GET_ALL_NO_WIFI.equals(action)) {
             if (this.sharedPref.getBoolean("background", true)) {
@@ -187,7 +191,8 @@ public class LaunchDataService extends IntentService {
         mRealm.close();
     }
 
-    private void getLaunchesByDate(String startDate, String endDate) {
+    private boolean getLaunchesByDate(String startDate, String endDate) {
+        Stopwatch stopwatch = new Stopwatch();
         LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
         Call<LaunchResponse> call;
         Response<LaunchResponse> launchResponse;
@@ -195,6 +200,7 @@ public class LaunchDataService extends IntentService {
         int offset = 0;
         int total = 10;
         int count;
+        Timber.v("Created objects - elapsed time: %s", stopwatch.getElapsedTimeString());
 
         try {
             while (total != offset) {
@@ -203,13 +209,23 @@ public class LaunchDataService extends IntentService {
                 } else {
                     call = request.getLaunchesByDate(startDate, endDate, offset);
                 }
+                Timber.v("getLaunchesByDate - elapsed time: %s", stopwatch.getElapsedTimeString());
                 launchResponse = call.execute();
-                total = launchResponse.body().getTotal();
-                count = launchResponse.body().getCount();
-                offset = offset + count;
-                Timber.v("LaunchesByDate Count: %s", offset);
-                Collections.addAll(items, launchResponse.body().getLaunches());
+                Timber.v("Execute - elapsed time: %s", stopwatch.getElapsedTimeString());
+                if (launchResponse.isSuccessful()) {
+                    total = launchResponse.body().getTotal();
+                    Timber.v("getTotal - elapsed time: %s", stopwatch.getElapsedTimeString());
+                    count = launchResponse.body().getCount();
+                    Timber.v("getCount - elapsed time: %s", stopwatch.getElapsedTimeString());
+                    offset = offset + count;
+                    Timber.v("LaunchesByDate Count: %s", offset);
+                    Collections.addAll(items, launchResponse.body().getLaunches());
+                    Timber.v("add to collection - elapsed time: %s", stopwatch.getElapsedTimeString());
+                } else {
+                    throw new IOException(launchResponse.errorBody().string());
+                }
             }
+            Timber.v("Starting list - elapsed time: %s", stopwatch.getElapsedTimeString());
             for (LaunchRealm item : items) {
                 LaunchRealm previous = mRealm.where(LaunchRealm.class)
                         .equalTo("id", item.getId())
@@ -224,15 +240,18 @@ public class LaunchDataService extends IntentService {
                     item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
                 }
                 item.getLocation().setPrimaryID();
+                mRealm.beginTransaction();
+                mRealm.copyToRealmOrUpdate(item);
+                mRealm.commitTransaction();
             }
-            mRealm.beginTransaction();
-            mRealm.copyToRealmOrUpdate(items);
-            mRealm.commitTransaction();
+            Timber.v("iterated list - elapsed time: %s", stopwatch.getElapsedTimeString());
+            Timber.v("committed - elapsed time: %s", stopwatch.getElapsedTimeString());
 
             Timber.v("Success!");
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
             LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+            return  true;
 
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());
@@ -240,10 +259,11 @@ public class LaunchDataService extends IntentService {
             broadcastIntent.putExtra("error", e.getLocalizedMessage());
             broadcastIntent.setAction(Strings.ACTION_FAILURE_PREV_LAUNCHES);
             LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+            return false;
         }
     }
 
-    private void getUpcomingLaunches() {
+    private boolean getUpcomingLaunches() {
         LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
         Call<LaunchResponse> call;
         Response<LaunchResponse> launchResponse;
@@ -260,11 +280,15 @@ public class LaunchDataService extends IntentService {
                     call = request.getUpcomingLaunches(offset);
                 }
                 launchResponse = call.execute();
-                total = launchResponse.body().getTotal();
-                count = launchResponse.body().getCount();
-                offset = offset + count;
-                Timber.v("UpcomingLaunches Count: %s", offset);
-                Collections.addAll(items, launchResponse.body().getLaunches());
+                if (launchResponse.isSuccessful()) {
+                    total = launchResponse.body().getTotal();
+                    count = launchResponse.body().getCount();
+                    offset = offset + count;
+                    Timber.v("UpcomingLaunches Count: %s", offset);
+                    Collections.addAll(items, launchResponse.body().getLaunches());
+                } else {
+                    throw new IOException(launchResponse.errorBody().string());
+                }
             }
             for (LaunchRealm item : items) {
                 LaunchRealm previous = mRealm.where(LaunchRealm.class)
@@ -279,15 +303,15 @@ public class LaunchDataService extends IntentService {
                     item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
                 }
                 item.getLocation().setPrimaryID();
+                mRealm.beginTransaction();
+                mRealm.copyToRealmOrUpdate(item);
+                mRealm.commitTransaction();
             }
-            mRealm.beginTransaction();
-            mRealm.copyToRealmOrUpdate(items);
-            mRealm.commitTransaction();
 
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
             LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
-
+            return true;
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());
             Intent broadcastIntent = new Intent();
@@ -295,6 +319,7 @@ public class LaunchDataService extends IntentService {
             broadcastIntent.putExtra("error", e.getLocalizedMessage());
             broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
             LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+            return false;
         }
     }
 
@@ -317,8 +342,8 @@ public class LaunchDataService extends IntentService {
                         .equalTo("id", item.getId())
                         .findFirst();
                 if (previous != null) {
-                    if((previous.getNet() != item.getNet()
-                            || (previous.getStatus().intValue() != item.getStatus().intValue()))){
+                    if ((!previous.getNet().equals(item.getNet())
+                            || (previous.getStatus().intValue() != item.getStatus().intValue()))) {
                         Timber.v("%s status has changed.", item.getName());
                         mRealm.beginTransaction();
                         previous.resetNotifiers();
@@ -355,7 +380,7 @@ public class LaunchDataService extends IntentService {
         Response<LaunchResponse> launchResponse;
         try {
             launchResponse = call.execute();
-            if (launchResponse.isSuccess()) {
+            if (launchResponse.isSuccessful()) {
                 RealmList<LaunchRealm> items = new RealmList<>(launchResponse.body().getLaunches());
                 for (LaunchRealm item : items) {
                     LaunchRealm previous = mRealm.where(LaunchRealm.class)
@@ -369,10 +394,10 @@ public class LaunchDataService extends IntentService {
                         item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
                     }
                     item.getLocation().setPrimaryID();
+                    mRealm.beginTransaction();
+                    mRealm.copyToRealmOrUpdate(item);
+                    mRealm.commitTransaction();
                 }
-                mRealm.beginTransaction();
-                mRealm.copyToRealmOrUpdate(items);
-                mRealm.commitTransaction();
             }
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());

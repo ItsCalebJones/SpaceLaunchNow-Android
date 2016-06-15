@@ -137,7 +137,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
         call.enqueue(new Callback<LauncherResponse>() {
             @Override
             public void onResponse(Call<LauncherResponse> call, Response<LauncherResponse> response) {
-                if (response.isSuccess()) {
+                if (response.isSuccessful()) {
                     LauncherResponse jsonResponse = response.body();
                     items = new ArrayList<>(Arrays.asList(jsonResponse.getItem()));
                     adapter.addItems(items);

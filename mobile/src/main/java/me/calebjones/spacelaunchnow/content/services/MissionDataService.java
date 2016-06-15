@@ -204,7 +204,7 @@ public class MissionDataService extends IntentService {
         Response<MissionResponse> launchResponse;
         try {
             launchResponse = call.execute();
-            if (launchResponse.isSuccess()) {
+            if (launchResponse.isSuccessful()) {
                 RealmList<MissionRealm> items = new RealmList<>(launchResponse.body().getMissions());
 
                 mRealm.beginTransaction();

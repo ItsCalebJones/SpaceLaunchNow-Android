@@ -4,8 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 
-import me.calebjones.spacelaunchnow.ui.activity.WebviewActivity;
-import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
+import me.calebjones.spacelaunchnow.ui.activity.WebViewFallbackActivity;
 
 /**
  * A Fallback that opens a Webview when Custom Tabs is not available
@@ -13,8 +12,8 @@ import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 public class WebViewFallback implements CustomTabActivityHelper.CustomTabFallback {
     @Override
     public void openUri(Activity activity, Uri uri) {
-        Intent intent = new Intent(activity, WebviewActivity.class);
-        intent.putExtra(WebviewActivity.EXTRA_URL, uri.toString());
+        Intent intent = new Intent(activity, WebViewFallbackActivity.class);
+        intent.putExtra(WebViewFallbackActivity.EXTRA_URL, uri.toString());
         activity.startActivity(intent);
     }
 }

@@ -8,8 +8,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
@@ -18,42 +16,66 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.crashlytics.android.Crashlytics;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.mikhaellopez.circularfillableloaders.CircularFillableLoaders;
+import timber.log.Timber;
 
-import org.xml.sax.ErrorHandler;
-
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
-import me.calebjones.spacelaunchnow.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import me.calebjones.spacelaunchnow.utils.Utils;
-import timber.log.Timber;
+
 
 public class DownloadActivity extends AppCompatActivity {
 
-    @Bind(R.id.start_download)
+    @BindView(R.id.start_download)
     AppCompatButton button;
-    @Bind(R.id.progress_download)
+    @BindView(R.id.progress_download)
     ProgressBar progressView;
-    @Bind(R.id.titles)
+    @BindView(R.id.titles)
     TextView titles;
-    @Bind(R.id.coordinatorLayout)
+    @BindView(R.id.coordinatorLayout)
     CoordinatorLayout view;
-    @Bind(R.id.circularFillableLoaders)
+    @BindView(R.id.circularFillableLoaders)
     CircularFillableLoaders circularFillableLoaders;
 
+    @OnClick(R.id.start_download) void startDownload() {
+        button.setVisibility(View.GONE);
+        progressView.setVisibility(View.VISIBLE);
+        progressView.setIndeterminate(true);
+        circularFillableLoaders.setProgress(0);
+        titles.setText("Step 1 of 5: Loading upcoming launches.");
+
+        IntentFilter launchFilter = new IntentFilter();
+        launchFilter.addAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
+        launchFilter.addAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
+        launchFilter.addAction(Strings.ACTION_SUCCESS_VEHICLE_DETAILS);
+        launchFilter.addAction(Strings.ACTION_SUCCESS_VEHICLES);
+        launchFilter.addAction(Strings.ACTION_SUCCESS_MISSIONS);
+
+        IntentFilter errorFilter = new IntentFilter();
+        errorFilter.addAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
+        errorFilter.addAction(Strings.ACTION_FAILURE_PREV_LAUNCHES);
+        errorFilter.addAction(Strings.ACTION_FAILURE_VEHICLE_DETAILS);
+        errorFilter.addAction(Strings.ACTION_FAILURE_VEHICLES);
+        errorFilter.addAction(Strings.ACTION_FAILURE_MISSIONS);
+
+        registerReceiver(launchReceiver, launchFilter);
+        registerReceiver(errorReceiver, errorFilter);
+
+        Intent launchIntent = new Intent(this, LaunchDataService.class);
+        launchIntent.setAction(Strings.ACTION_GET_ALL_WIFI);
+        this.startService(launchIntent);
+    }
 
 
     @Override
@@ -61,7 +83,6 @@ public class DownloadActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download);
         ButterKnife.bind(this);
-
     }
 
     @Override
@@ -111,36 +132,6 @@ public class DownloadActivity extends AppCompatActivity {
         titles.setText(savedInstanceState.getString("status"));
     }
 
-    @OnClick(R.id.start_download)
-    public void startDownload() {
-        button.setVisibility(View.GONE);
-        progressView.setVisibility(View.VISIBLE);
-        progressView.setIndeterminate(true);
-        circularFillableLoaders.setProgress(0);
-        titles.setText("Step 1 of 5: Loading upcoming launches.");
-
-        IntentFilter launchFilter = new IntentFilter();
-        launchFilter.addAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
-        launchFilter.addAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
-        launchFilter.addAction(Strings.ACTION_SUCCESS_VEHICLE_DETAILS);
-        launchFilter.addAction(Strings.ACTION_SUCCESS_VEHICLES);
-        launchFilter.addAction(Strings.ACTION_SUCCESS_MISSIONS);
-
-        IntentFilter errorFilter = new IntentFilter();
-        errorFilter.addAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
-        errorFilter.addAction(Strings.ACTION_FAILURE_PREV_LAUNCHES);
-        errorFilter.addAction(Strings.ACTION_FAILURE_VEHICLE_DETAILS);
-        errorFilter.addAction(Strings.ACTION_FAILURE_VEHICLES);
-        errorFilter.addAction(Strings.ACTION_FAILURE_MISSIONS);
-
-        registerReceiver(launchReceiver, launchFilter);
-        registerReceiver(errorReceiver, errorFilter);
-
-        Intent launchIntent = new Intent(this, LaunchDataService.class);
-        launchIntent.setAction(Strings.ACTION_GET_ALL_WIFI);
-        this.startService(launchIntent);
-    }
-
     private final BroadcastReceiver launchReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(final Context context, Intent intent) {
@@ -170,8 +161,6 @@ public class DownloadActivity extends AppCompatActivity {
                         startActivity(mainIntent);
                     }
                 }, 2000);
-
-
             }
         }
     };
@@ -183,7 +172,10 @@ public class DownloadActivity extends AppCompatActivity {
             if (intent.getAction().contains("FAILURE")){
                 SnackbarHandler.showErrorSnackbar(context, view, intent);
                 titles.setText("Try again?");
+                unregisterReceiver(launchReceiver);
+                unregisterReceiver(errorReceiver);
                 progressView.setVisibility(View.GONE);
+                circularFillableLoaders.setProgress(95);
                 button.setVisibility(View.VISIBLE);
             }
         }

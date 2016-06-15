@@ -15,10 +15,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import timber.log.Timber;
 
 public class LaunchesViewPager extends Fragment {

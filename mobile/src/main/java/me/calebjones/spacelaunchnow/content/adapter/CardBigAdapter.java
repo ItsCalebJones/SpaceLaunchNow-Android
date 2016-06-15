@@ -25,36 +25,20 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.Resource;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.mypopsy.maps.StaticMap;
 
-import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 import io.realm.RealmList;
-import io.realm.annotations.PrimaryKey;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
-import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
-import me.calebjones.spacelaunchnow.ui.widget.StaticMapView;
-import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.content.models.realm.RealmStr;
+import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 /**
@@ -69,6 +53,8 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
     private SharedPreferences sharedPref;
     private Boolean night;
     private Boolean play = false;
+    private int nightColor;
+    private int color;
 
     private static ListPreferences sharedPreference;
 
@@ -81,6 +67,8 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         if (Utils.checkPlayServices(this.context)) {
             play = true;
         }
+        nightColor = ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color);
+        color = ContextCompat.getColor(context, R.color.colorTextSecondary);
     }
 
     public void addItems(List<LaunchRealm> launchList) {
@@ -222,9 +210,9 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                 public void onFinish() {
                     holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
                     if (night) {
-                        holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color));
+                        holder.content_TMinus_status.setTextColor(nightColor);
                     } else {
-                        holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary));
+                        holder.content_TMinus_status.setTextColor(color);
                     }
                     if (status == 1) {
                         holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
@@ -398,8 +386,6 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         public CountDownTimer timer;
 
         public ImageView map_view;
-        public GoogleMap gMap;
-        protected LatLng mMapLocation;
 
         //Add content to the card
         public ViewHolder(View view) {
