@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/grid_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:clickable="true"
+    android:orientation="vertical"
+    android:scaleX="0"
+    android:scaleY="0"
+    android:padding="4dp">
+
+    <me.calebjones.spacelaunchnow.ui.widget.SquareImageView
+        android:id="@+id/picture"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="Image of Launch Vechicle's"
+        android:scaleType="centerCrop"
+        android:transitionName="image"
+        app:srcCompat="@drawable/placeholder" />
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-medium"
+        android:background="@color/colorAccent"
+        android:lines="1"
+        android:padding="6dp"
+        android:textAlignment="center"
+        android:textSize="16sp" />
+</LinearLayout>
