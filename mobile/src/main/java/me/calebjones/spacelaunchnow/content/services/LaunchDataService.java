@@ -143,9 +143,11 @@ public class LaunchDataService extends IntentService {
                     startService(rocketIntent);
 
                     startService(new Intent(this, MissionDataService.class));
+                    this.startService(new Intent(this, NextLaunchTracker.class));
                 }
             }
 
+            //TODO Not currently used
         } else if (Strings.ACTION_GET_ALL_NO_WIFI.equals(action)) {
             if (this.sharedPref.getBoolean("background", true)) {
                 scheduleLaunchUpdates();
@@ -167,7 +169,7 @@ public class LaunchDataService extends IntentService {
                 scheduleLaunchUpdates();
             }
             getUpcomingLaunches();
-
+            this.startService(new Intent(this, NextLaunchTracker.class));
             // Called from PrevLaunchFragment
         } else if (Strings.ACTION_GET_PREV_LAUNCHES.equals(action)) {
 
@@ -182,8 +184,8 @@ public class LaunchDataService extends IntentService {
 
             Timber.v("Intent action received: %s", action);
             getNextLaunches();
-            this.startService(new Intent(this, NextLaunchTracker.class));
 
+            this.startService(new Intent(this, NextLaunchTracker.class));
         } else {
             Timber.e("LaunchDataService - onHandleIntent: ERROR - Unknown Intent %s", action);
         }

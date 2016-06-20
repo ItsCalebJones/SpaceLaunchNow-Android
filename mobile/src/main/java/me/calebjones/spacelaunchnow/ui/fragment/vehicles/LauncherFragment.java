@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -78,6 +79,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
             m_theme = R.style.DarkTheme_NoActionBar;
         } else {
             m_theme = R.style.LightTheme_NoActionBar;
+            m_theme = R.style.LightTheme_NoActionBar;
         }
         // create ContextThemeWrapper from the original Activity Context with the custom theme
         Context context = new ContextThemeWrapper(getActivity().getApplicationContext(), m_theme);
@@ -115,12 +117,14 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
         });
         adapter.setOnItemClickListener(recyclerRowClickListener);
         mRecyclerView.setAdapter(adapter);
-        loadJSON();
+        Timber.v("Returning view.");
         return view;
     }
 
     @Override
     public void onResume(){
+        Timber.v("onResume");
+        loadJSON();
         super.onResume();
     }
 
@@ -161,13 +165,23 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
 
     private void hideLoading(){
         if (swipeRefreshLayout.isRefreshing()){
-            swipeRefreshLayout.setRefreshing(false);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }, 10);
         }
     }
 
     private void showLoading(){
         if (!swipeRefreshLayout.isRefreshing()){
-            swipeRefreshLayout.setRefreshing(true);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefreshLayout.setRefreshing(true);
+                }
+            }, 10);
         }
     }
 

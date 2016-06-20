@@ -57,6 +57,7 @@ import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
+import me.calebjones.spacelaunchnow.ui.widget.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import timber.log.Timber;
 
@@ -129,6 +130,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
         mRecyclerView.setAdapter(adapter);
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -520,6 +522,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     }
 
     public void onRefresh() {
+        launchRealms.removeChangeListeners();
         if (!switchPreferences.isUpFiltered()) {
             getUpcomingLaunchData();
         } else {

@@ -64,6 +64,7 @@ import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
+import me.calebjones.spacelaunchnow.ui.widget.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import timber.log.Timber;
 
@@ -144,6 +145,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
         }
         layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -407,7 +409,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     public void getPrevLaunchData() {
         new MaterialDialog.Builder(context)
                 .title("Refresh Launch Data?")
-                .content("This can take a minute to refresh, make sure you are on Wi-Fi to save data.")
+                .content("This can take a bit to refresh, make sure you are on Wi-Fi to save data.")
                 .positiveText("Ok")
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
@@ -749,6 +751,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
 
     @Override
     public void onRefresh() {
+        launchRealms.removeChangeListener(callback);
         if (!switchPreferences.isPrevFiltered()) {
             getDefaultDateRange();
             getPrevLaunchData();

@@ -55,6 +55,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
     private Boolean play = false;
     private int nightColor;
     private int color;
+    private int accentColor;
 
     private static ListPreferences sharedPreference;
 
@@ -69,6 +70,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         }
         nightColor = ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color);
         color = ContextCompat.getColor(context, R.color.colorTextSecondary);
+        accentColor = ContextCompat.getColor(context, R.color.colorAccent);
     }
 
     public void addItems(List<LaunchRealm> launchList) {
@@ -83,8 +85,10 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
     }
 
     public void clear() {
-        launchList.clear();
-        this.notifyDataSetChanged();
+        if (launchList != null) {
+            launchList.clear();
+            this.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -258,7 +262,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                         seconds = String.valueOf(longSeconds);
                     }
                     holder.content_TMinus_status.setTypeface(Typeface.SANS_SERIF);
-                    holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.red));
+                    holder.content_TMinus_status.setTextColor(accentColor);
                     if (Integer.valueOf(days) > 0) {
                         holder.content_TMinus_status.setText(String.format("L - %s days - %s:%s:%s", days, hours, minutes, seconds));
                     } else {
