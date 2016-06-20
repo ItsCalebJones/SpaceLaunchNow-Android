@@ -536,6 +536,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     public void onFinishedRefreshing() {
         hideLoading();
+        displayLaunches();
     }
 
     public void hideLoading() {

@@ -97,7 +97,7 @@ public class NextLaunchTracker extends IntentService implements
 
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         Calendar calDay = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-        calDay.add(Calendar.HOUR, 36);
+        calDay.add(Calendar.HOUR, 72);
         Date date = new Date();
         Date dateDay = new Date();
         dateDay = calDay.getTime();
@@ -108,6 +108,13 @@ public class NextLaunchTracker extends IntentService implements
                     .findAll();
         } else {
             filterLaunchRealm(date, dateDay);
+        }
+
+        if (switchPreferences.getAllSwitch()) {
+            sendToWear(realm.where(LaunchRealm.class)
+                    .greaterThan("net", date).findFirst());
+        } else {
+            sendToWear(filterLaunchRealm(date));
         }
 
         if (launchRealms.size() > 0) {
@@ -248,6 +255,130 @@ public class NextLaunchTracker extends IntentService implements
         }
 
         launchRealms = query.endGroup().findAll();
+    }
+
+    private LaunchRealm filterLaunchRealm(Date date) {
+        boolean first = true;
+        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class)
+                .greaterThan("net", date)
+                .beginGroup();
+        if (switchPreferences.getSwitchNasa()) {
+            first = false;
+            query.equalTo("rocket.agencies.id", 44)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 44);
+        }
+
+        if (switchPreferences.getSwitchArianespace()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("rocket.agencies.id", 115)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 115);
+        }
+
+        if (switchPreferences.getSwitchSpaceX()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("rocket.agencies.id", 121)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 121);
+        }
+
+        if (switchPreferences.getSwitchULA()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("rocket.agencies.id", 124)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 124);
+        }
+
+        if (switchPreferences.getSwitchRoscosmos()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("rocket.agencies.id", 111)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 111)
+                    .or()
+                    .equalTo("rocket.agencies.id", 163)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 163)
+                    .or()
+                    .equalTo("rocket.agencies.id", 63)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 63);
+        }
+        if (switchPreferences.getSwitchCASC()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("rocket.agencies.id", 88)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 88);
+        }
+
+        if (switchPreferences.getSwitchISRO()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("rocket.agencies.id", 31)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 31);
+        }
+
+        if (switchPreferences.getSwitchKSC()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("rocket.agencies.id", 17)
+                    .or()
+                    .equalTo("location.pads.agencies.id", 17);
+        }
+
+        if (switchPreferences.getSwitchCape()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("location.id", 16);
+        }
+
+        if (switchPreferences.getSwitchPles()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("location.id", 11);
+        }
+
+        if (switchPreferences.getSwitchVan()) {
+            if (!first) {
+                query.or();
+            }
+            query.equalTo("location.id", 18);
+        }
+
+        return  query.endGroup().findFirst();
     }
 
     private void checkNextLaunches(LaunchRealm launch) {
@@ -518,24 +649,6 @@ public class NextLaunchTracker extends IntentService implements
         return cal;
     }
 
-    public void debugNotification(String message) {
-        if (BuildConfig.DEBUG) {
-            long time = new Date().getTime();
-            String tmpStr = String.valueOf(time);
-            String last4Str = tmpStr.substring(tmpStr.length() - 5);
-            int notificationId = Integer.valueOf(last4Str);
-
-            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
-            mBuilder.setContentTitle("Debug Notification")
-                    .setSmallIcon(R.drawable.ic_notification)
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
-
-            NotificationManager mNotifyManager = (NotificationManager)
-                    getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotifyManager.notify(notificationId, mBuilder.build());
-        }
-    }
-
     public void scheduleUpdate(long convert) {
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         long nextUpdate = Calendar.getInstance().getTimeInMillis() + convert;
@@ -555,16 +668,12 @@ public class NextLaunchTracker extends IntentService implements
             Timber.v("Scheduling Update - Interval: %s - Time: %s - IntervalString - %s", convert, formatter.format(calendar.getTime()), intevalString);
         }
 
-
-        if (Utils.checkPlayServices(this)) {
-            sendToWear(listPreferences.getNextLaunch());
-        }
         alarmManager.set(AlarmManager.RTC_WAKEUP, nextUpdate,
                 PendingIntent.getBroadcast(this, 165432, new Intent(Strings.ACTION_CHECK_NEXT_LAUNCH_TIMER), 0));
     }
 
     // Create a data map and put data in it
-    private void sendToWear(Launch launch) {
+    private void sendToWear(LaunchRealm launch) {
         if (wear) {
             if (launch != null && launch.getName() != null && launch.getNetstamp() != null) {
                 Timber.v("Sending data to wear...");
