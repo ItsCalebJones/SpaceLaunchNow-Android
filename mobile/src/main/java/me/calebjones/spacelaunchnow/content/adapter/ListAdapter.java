@@ -3,6 +3,7 @@ package me.calebjones.spacelaunchnow.content.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -19,11 +20,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 import timber.log.Timber;
 
@@ -83,7 +87,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        final LaunchRealm launchItem = launchList.get(holder.getAdapterPosition());
+        final LaunchRealm launchItem = launchList.get(i);
 
         String missionType;
         String title;
@@ -94,33 +98,40 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 
         //Retrieve missionType
         if (launchItem.getMissions().size() != 0) {
-            Timber.v("%s - %s",launchItem.getName() ,launchItem.getMissions().get(0).getTypeName());
+            Timber.v("Position: %s | %s - %s",position ,launchItem.getName() ,launchItem.getMissions().get(0).getTypeName());
             setCategoryIcon(holder, launchItem.getMissions().get(0).getTypeName());
+        } else {
+            if (night) {
+                holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
+            } else {
+                holder.categoryIcon.setImageResource(R.drawable.ic_unknown);
+            }
         }
 
         if (launchItem.getStatus() == 2) {
             //Get launch date
             if (sharedPref.getBoolean("local_time", true)) {
-                SimpleDateFormat df = new SimpleDateFormat("MMMM yyyy.");
+                SimpleDateFormat df = new SimpleDateFormat("MMMM dd, yyyy.");
                 df.toLocalizedPattern();
                 Date date = launchItem.getNet();
                 launchDate = df.format(date);
             } else {
-                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy hh:mm a zzz");
+                SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy zzz");
+                sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
                 Date date = launchItem.getNet();
                 launchDate = sdf.format(date);
             }
-
             holder.launch_date.setText(String.format("To be determined... %s", launchDate));
         } else {
             //Get launch date
             if (sharedPref.getBoolean("local_time", true)) {
-                SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
+                SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
                 df.toLocalizedPattern();
                 Date date = launchItem.getNet();
                 launchDate = df.format(date);
             } else {
-                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy hh:mm a zzz");
+                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
                 Date date = launchItem.getNet();
                 launchDate = sdf.format(date);
             }
@@ -139,8 +150,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
             title = launchItem.getRocket().getName();
         }
 
-        holder.mission.setText(launchItem.getName());
         holder.title.setText(title);
+        holder.mission.setText(launchItem.getName());
     }
 
     public String parseDateToMMyyyy(String time) {
@@ -200,12 +211,22 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
         //React to click events.
         @Override
         public void onClick(View v) {
-            final int position = getAdapterPosition();
-            LaunchRealm launch = launchList.get(position);
-            Intent intent = new Intent(mContext, LaunchDetailActivity.class);
-            intent.putExtra("TYPE", "launch");
-            intent.putExtra("launchID", launch.getId());
-            mContext.startActivity(intent);
+            final LaunchRealm launch = launchList.get(getAdapterPosition());
+
+            Intent updateIntent = new Intent(mContext, LaunchDataService.class);
+            updateIntent.setAction(Strings.ACTION_UPDATE_LAUNCH);
+            updateIntent.putExtra("launchID", launch.getId());
+            mContext.startService(updateIntent);
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(mContext, LaunchDetailActivity.class);
+                    intent.putExtra("TYPE", "launch");
+                    intent.putExtra("launchID", launch.getId());
+                    mContext.startActivity(intent);
+                }
+            }, 1000);
         }
     }
 

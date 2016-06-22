@@ -84,10 +84,10 @@ public class LaunchDetailActivity extends BaseActivity
         sharedPreference = ListPreferences.getInstance(context);
 
         if (sharedPreference.getNightMode()) {
-            m_theme = R.style.DarkTheme_Transparent;
+            m_theme = R.style.DarkTheme;
             statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
         } else {
-            m_theme = R.style.LightTheme_Transparent;
+            m_theme = R.style.LightTheme;
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
         }
 
@@ -125,6 +125,7 @@ public class LaunchDetailActivity extends BaseActivity
         if (type.equals("launch")) {
             int id = mIntent.getIntExtra("launchID", 0);
             launch = getRealm().where(LaunchRealm.class).equalTo("id", id).findFirst();
+            Timber.v("Loading launch %s", launch.getId());
         }
 
         if (launch.getRocket() != null) {
@@ -322,7 +323,7 @@ public class LaunchDetailActivity extends BaseActivity
         }
         RocketDetailsRealm launchVehicle = getRealm().where(RocketDetailsRealm.class)
                 .contains("name", query)
-                .findFirst();
+                .findFirstAsync();
         if (setImage) {
             if (launchVehicle != null && launchVehicle.getImageURL().length() > 0) {
                 Glide.with(this)

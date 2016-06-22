@@ -229,17 +229,25 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 super.onScrollStateChanged(recyclerView, newState);
             }
         });
-        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
-            layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-            mRecyclerView.setLayoutManager(layoutManager);
-        } else {
-            linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-            mRecyclerView.setLayoutManager(linearLayoutManager);
-        }
 
+
+        //If preference is for small card, landscape tablets get three others get two.
         if (cardSizeSmall) {
+            if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
+                layoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+            } else {
+                layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+            }
+            mRecyclerView.setLayoutManager(layoutManager);
             mRecyclerView.setAdapter(smallAdapter);
         } else {
+            if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
+                layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                mRecyclerView.setLayoutManager(layoutManager);
+            } else {
+                linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+                mRecyclerView.setLayoutManager(linearLayoutManager);
+            }
             mRecyclerView.setAdapter(adapter);
         }
 
@@ -273,26 +281,29 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             Timber.v("Data changed - size: %s - element:", launchRealms.size(), element.toString());
 
             int size = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
-            adapter.clear();
+            if (cardSizeSmall) {
+                smallAdapter.clear();
+            } else {
+                adapter.clear();
+            }
 
             if (launchRealms.size() >= size) {
                 setLayoutManager(size);
                 if (cardSizeSmall) {
-                    adapter.addItems(launchRealms.subList(0, size));
+                    smallAdapter.addItems(launchRealms.subList(0, size));
                 } else {
                     adapter.addItems(launchRealms.subList(0, size));
                 }
             } else if (launchRealms.size() > 0) {
                 setLayoutManager(size);
                 if (cardSizeSmall) {
-                    adapter.addItems(launchRealms);
+                    smallAdapter.addItems(launchRealms);
                 } else {
                     adapter.addItems(launchRealms);
                 }
-            } else {
-                SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, "Unable to find matching launches.");
             }
             hideLoading();
+            launchRealms.removeChangeListeners();
         }
     };
 

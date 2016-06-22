@@ -10,6 +10,7 @@ public final class Strings {
     public static final String ACTION_SUCCESS_AGENCY = "SUCCESS_GET_AGENCY";
     public static final String ACTION_SUCCESS_LOCATION = "SUCCESS_GET_LOCATION";
     public static final String ACTION_SUCCESS_PADS = "SUCCESS_GET_PADS";
+    public static final String ACTION_SUCCESS_LAUNCH = "SUCCESS_GET_LAUNCH";
 
     public static final String ACTION_FAILURE_PREV_LAUNCHES = "FAILURE_PREV_LAUNCHES";
     public static final String ACTION_FAILURE_UP_LAUNCHES = "FAILURE_UP_LAUNCHES";
@@ -19,6 +20,7 @@ public final class Strings {
     public static final String ACTION_FAILURE_LOCATION = "FAILURE_GET_LOCATION";
     public static final String ACTION_FAILURE_VEHICLES = "FAILURE_GET_VEHICLES";
     public static final String ACTION_FAILURE_PADS = "FAILURE_GET_PADS";
+    public static final String ACTION_FAILURE_LAUNCH = "FAILURE_GET_LAUNCH";
 
     public static final String ACTION_GET_PREV_LAUNCHES = "GET_PREV_LAUNCHES";
     public static final String ACTION_GET_UP_LAUNCHES = "GET_UP_LAUNCHES";
@@ -36,6 +38,7 @@ public final class Strings {
     public static final String ACTION_UPDATE_UP_LAUNCHES = "UPDATE_UP_LAUNCHES";
     public static final String ACTION_UPDATE_PREV_LAUNCHES = "UPDATE_PREV_LAUNCHES";
 
+    public static final String ACTION_UPDATE_LAUNCH = "UPDATE_LAUNCH";
     public static final String ACTION_UPDATE_AGENCY = "UPDATE_GET_AGENCY";
     public static final String ACTION_UPDATE_VEHICLES = "UPDATE_GET_VEHICLES";
     public static final String ACTION_CHECK_NEXT_LAUNCH_TIMER = "CHECK_NEXT_LAUNCH_TIMER";
@@ -66,4 +69,5 @@ public final class Strings {
 
     private Strings() {
     }
+
 }

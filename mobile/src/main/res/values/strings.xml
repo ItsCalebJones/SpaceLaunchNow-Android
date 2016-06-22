@@ -34,10 +34,13 @@
     <string name="title_activity_debug">DebugActivity</string>
     <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
 
-    <string name="whats_new_content">These are features that will likely take significant development effort to ensure a quality product. Initially i\'m hoping to deliver syncing all upcoming events to calendar and custom watchface backgrounds and settings.\n\n
+    <string name="whats_new_content">It\'s been a long wait on getting this version out, expect to find new unexpected bugs. I\'ll be working hard to patch them.\n\n
         Fixes and Features!\n
-        \u2022Removed adds completely to save APK space.\n
-        \u2022Fixed a crash when trying to use a new Vector Drawable in a notification.\n
+        \u2022Implement Realm db to enable further development.\n
+        \u2022Removed buggy Google Maps view for static images.\n
+        \u2022Improvements to notifications.\n
+        \u2022Data usage reduction.\n
+        \u2022Improved layouts on tablets.\n
     </string>
     <string name="link_feedback">https://www.reddit.com/r/spacelaunchnow</string>
     <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>

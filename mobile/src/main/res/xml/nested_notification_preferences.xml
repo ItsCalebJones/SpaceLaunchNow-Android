@@ -12,10 +12,28 @@
 
     <CheckBoxPreference
         android:dependency="notifications_new_message"
-        android:key="notifications_new_message_vibrate"
+        android:key="notifications_new_message_heads_up"
         android:title="Notification Priority"
-        android:summary="Allow high priority notifications."
+        android:summary="Heads-up notification for Lollipop devices."
         android:defaultValue="true" />
+    <CheckBoxPreference
+        android:dependency="notifications_new_message"
+        android:key="notifications_new_message_vibrate"
+        android:title="Notification Vibration"
+        android:summary="Allow vibration for notifications."
+        android:defaultValue="true" />
+    <CheckBoxPreference
+        android:dependency="notifications_new_message"
+        android:key="notifications_new_message_led"
+        android:title="Notification Lights"
+        android:summary="Allow LED blink with notification. (Works on some devices)"
+        android:defaultValue="true" />
+    <CheckBoxPreference
+        android:dependency="notifications_new_message"
+        android:key="notifications_new_message_webcast"
+        android:title="Notify Web-cast Only"
+        android:summary="Only notify for launches with webcast's available."
+        android:defaultValue="false" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Default Launches"
@@ -41,8 +59,8 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="notifications_launch_imminent_updates"
-            android:summaryOff="Do not update when a launch is imminent."
-            android:summaryOn="Receive update notification for launch status changes."
+            android:summaryOff="Do not update when a launch status changes."
+            android:summaryOn="Receive update notification for launch status changes. (EXPERIMENTAL)"
             android:title="Launch Status Updates" />
     </PreferenceCategory>
 </PreferenceScreen>

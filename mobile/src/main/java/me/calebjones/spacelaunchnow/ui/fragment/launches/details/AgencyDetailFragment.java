@@ -486,7 +486,6 @@ public class AgencyDetailFragment extends Fragment {
         return agency;
     }
 
-
     @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
@@ -494,6 +493,5 @@ public class AgencyDetailFragment extends Fragment {
     public static Fragment newInstance() {
         return new AgencyDetailFragment();
     }
-
 
 }

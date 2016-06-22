@@ -394,6 +394,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
                 adapter.clear();
             }
             hideLoading();
+            launchRealms.removeChangeListeners();
         }
     };
 

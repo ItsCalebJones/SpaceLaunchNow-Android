@@ -16,7 +16,9 @@
         card_view:cardCornerRadius="2dp"
         card_view:cardElevation="4dp"
         card_view:cardPreventCornerOverlap="true"
-        card_view:cardUseCompatPadding="true">
+        card_view:cardUseCompatPadding="true"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,7 +34,7 @@
                 <ImageView
                     android:id="@+id/item_icon"
                     android:layout_width="match_parent"
-                    android:layout_height="250dp"
+                    android:layout_height="wrap_content"
                     android:scaleType="centerCrop"
                     android:transitionName="imageCover"
                     app:srcCompat="@drawable/placeholder" />

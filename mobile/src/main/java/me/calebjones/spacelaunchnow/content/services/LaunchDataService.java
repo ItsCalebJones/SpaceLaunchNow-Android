@@ -136,8 +136,8 @@ public class LaunchDataService extends IntentService {
                 scheduleLaunchUpdates();
             }
 
-            if(getUpcomingLaunches()) {
-                if(getLaunchesByDate("1950-01-01", Utils.getEndDate(this))) {
+            if (getUpcomingLaunches()) {
+                if (getLaunchesByDate("1950-01-01", Utils.getEndDate(this))) {
                     Intent rocketIntent = new Intent(getApplicationContext(), VehicleDataService.class);
                     rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
                     startService(rocketIntent);
@@ -146,21 +146,12 @@ public class LaunchDataService extends IntentService {
                     this.startService(new Intent(this, NextLaunchTracker.class));
                 }
             }
-
-            //TODO Not currently used
-        } else if (Strings.ACTION_GET_ALL_NO_WIFI.equals(action)) {
-            if (this.sharedPref.getBoolean("background", true)) {
-                scheduleLaunchUpdates();
+        } else if (Strings.ACTION_UPDATE_LAUNCH.equals(action)) {
+            int id = intent.getIntExtra("launchID", 0);
+            if (id > 0) {
+                Timber.v("Updating launch id: %s", id);
+                getLaunchById(id);
             }
-
-            getUpcomingLaunches();
-
-            Intent rocketIntent = new Intent(getApplicationContext(), VehicleDataService.class);
-            rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
-            startService(rocketIntent);
-
-            startService(new Intent(this, MissionDataService.class));
-
             // Called from NextLaunchFragment
         } else if (Strings.ACTION_GET_UP_LAUNCHES.equals(action)) {
 
@@ -228,24 +219,9 @@ public class LaunchDataService extends IntentService {
                 }
             }
             Timber.v("Starting list - elapsed time: %s", stopwatch.getElapsedTimeString());
-            for (LaunchRealm item : items) {
-                LaunchRealm previous = mRealm.where(LaunchRealm.class)
-                        .equalTo("id", item.getId())
-                        .findFirst();
-
-                if (previous != null) {
-                    Timber.v("Found previous updating: ", previous.getId());
-                    item.setFavorite(previous.isFavorite());
-                    item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
-                    item.setIsNotifiedDay(previous.getIsNotifiedDay());
-                    item.setIsNotifiedHour(previous.getIsNotifiedHour());
-                    item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
-                }
-                item.getLocation().setPrimaryID();
-                mRealm.beginTransaction();
-                mRealm.copyToRealmOrUpdate(item);
-                mRealm.commitTransaction();
-            }
+            mRealm.beginTransaction();
+            mRealm.copyToRealmOrUpdate(items);
+            mRealm.commitTransaction();
             Timber.v("iterated list - elapsed time: %s", stopwatch.getElapsedTimeString());
             Timber.v("committed - elapsed time: %s", stopwatch.getElapsedTimeString());
 
@@ -253,7 +229,7 @@ public class LaunchDataService extends IntentService {
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
             LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
-            return  true;
+            return true;
 
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());
@@ -399,10 +375,19 @@ public class LaunchDataService extends IntentService {
                     mRealm.beginTransaction();
                     mRealm.copyToRealmOrUpdate(item);
                     mRealm.commitTransaction();
+                    Timber.v("Updated launch: %s", item.getId());
                 }
             }
+            Intent broadcastIntent = new Intent();
+            broadcastIntent.setAction(Strings.ACTION_SUCCESS_LAUNCH);
+            LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());
+
+            Intent broadcastIntent = new Intent();
+            broadcastIntent.putExtra("error", e.getLocalizedMessage());
+            broadcastIntent.setAction(Strings.ACTION_FAILURE_LAUNCH);
+            LaunchDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
         }
     }
 

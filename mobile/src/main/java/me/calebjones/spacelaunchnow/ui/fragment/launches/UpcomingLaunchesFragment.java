@@ -399,6 +399,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
                 adapter.addItems(results);
             }
             hideLoading();
+            launchRealms.removeChangeListeners();
         }
     };
 

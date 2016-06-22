@@ -19,6 +19,7 @@
     <color name="colorGo">#4CAF50</color>
     <color name="View_Separator">#B6B6B6</color>
     <color name="white">#FFFFFF</color>
+    <color name="transparent">#a0000000</color>
 
     <color name="dark_theme_primary_text_color">#ffffffff</color>
     <color name="dark_theme_secondary_text_color">#b3ffffff</color>
