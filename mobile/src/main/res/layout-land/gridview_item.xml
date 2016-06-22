@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/grid_root"
     android:layout_width="match_parent"
@@ -8,7 +9,7 @@
     android:orientation="vertical"
     android:scaleX="0"
     android:scaleY="0"
-    android:padding="8dp"
+    android:padding="4dp"
     app:cardUseCompatPadding="true"
     app:cardCornerRadius="4dp"
     app:cardElevation="2dp">

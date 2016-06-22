@@ -101,7 +101,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
             layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 2);
         }
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 int topRowVerticalPosition =
@@ -122,13 +122,13 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         Timber.v("onResume");
         loadJSON();
         super.onResume();
     }
 
-    private void loadJSON(){
+    private void loadJSON() {
         Timber.v("Loading vehicles...");
         showLoading();
         Retrofit retrofit = new Retrofit.Builder()
@@ -154,17 +154,18 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
                 }
                 hideLoading();
             }
+
             @Override
             public void onFailure(Call<LauncherResponse> call, Throwable t) {
                 Timber.e(t.getMessage());
                 hideLoading();
-                Snackbar.make(coordinatorLayout, t.getLocalizedMessage(),Snackbar.LENGTH_LONG).show();
+                Snackbar.make(coordinatorLayout, t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
             }
         });
     }
 
-    private void hideLoading(){
-        if (swipeRefreshLayout.isRefreshing()){
+    private void hideLoading() {
+        if (swipeRefreshLayout.isRefreshing()) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -174,8 +175,8 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
         }
     }
 
-    private void showLoading(){
-        if (!swipeRefreshLayout.isRefreshing()){
+    private void showLoading() {
+        if (!swipeRefreshLayout.isRefreshing()) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -193,32 +194,13 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
             Gson gson = new Gson();
             String jsonItem = gson.toJson(items.get(position));
 
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                Timber.d("Starting Activity at %s", position);
-
-                Intent detailIntent = new Intent(getActivity(), LauncherDetailActivity.class);
-                detailIntent.putExtra("position", position);
-                detailIntent.putExtra("family", items.get(position).getName());
-                detailIntent.putExtra("agency", items.get(position).getAgency());
-                detailIntent.putExtra("json", jsonItem);
-
-                ImageView coverImage = (ImageView) v.findViewById(R.id.picture);
-                ((ViewGroup) coverImage.getParent()).setTransitionGroup(false);
-                photoCache.put(position, coverImage.getDrawingCache());
-
-                // Setup the transition to the detail activity
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(),
-                        new Pair<View, String>(coverImage, "cover" + position));
-
-                startActivity(detailIntent, options.toBundle());
-            } else {
-                Intent intent = new Intent(getActivity(), LauncherDetailActivity.class);
-                intent.putExtra("family", items.get(position).getName());
-                intent.putExtra("agency", items.get(position).getAgency());
-                intent.putExtra("json", jsonItem);
-                startActivity(intent);
-            }
+            Intent intent = new Intent(getActivity(), LauncherDetailActivity.class);
+            intent.putExtra("family", items.get(position).getName());
+            intent.putExtra("agency", items.get(position).getAgency());
+            intent.putExtra("json", jsonItem);
+            startActivity(intent);
         }
+
     };
 
     @Override

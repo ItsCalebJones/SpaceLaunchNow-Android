@@ -31,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
@@ -74,7 +75,6 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
     }
 
     public void addItems(List<LaunchRealm> launchList) {
-
         if (this.launchList != null) {
             this.launchList.addAll(launchList);
         } else {
@@ -112,11 +112,26 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        LaunchRealm launchItem = launchList.get(holder.getAdapterPosition());
+        LaunchRealm launchItem = launchList.get(i);
+
+        String title;
+        if (launchItem.getRocket().getAgencies().size() > 0) {
+            title = launchItem.getRocket().getAgencies().get(0).getName() + " | " + (launchItem.getRocket().getName());
+        } else {
+            title = launchItem.getRocket().getName();
+        }
+
+        holder.title.setText(title);
 
         //Retrieve missionType
         if (launchItem.getMissions().size() != 0) {
             setCategoryIcon(holder, launchItem.getMissions().get(0).getTypeName());
+        }  else {
+            if (night) {
+                holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
+            } else {
+                holder.categoryIcon.setImageResource(R.drawable.ic_unknown);
+            }
         }
 
         double dlat = 0;
@@ -160,7 +175,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
             });
         }
 
-        SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
+        SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
         df.toLocalizedPattern();
 
         switch (launchItem.getStatus()) {
@@ -295,7 +310,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         //Get launch date
         if (launchItem.getStatus() == 2) {
             //Get launch date
-            SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy.");
+            SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy.");
             sdf.toLocalizedPattern();
             Date date = launchItem.getWindowstart();
             launchDate = sdf.format(date);
@@ -303,11 +318,14 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
             holder.launch_date.setText("To be determined... " + launchDate);
         } else {
             if (sharedPref.getBoolean("local_time", true)) {
+                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                sdf.toLocalizedPattern();
                 Date date = launchItem.getWindowstart();
-                launchDate = df.format(date);
+                launchDate = sdf.format(date);
             } else {
-                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy hh:mm a zzz");
+                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
                 Date date = launchItem.getWindowstart();
+                sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
                 launchDate = sdf.format(date);
             }
             holder.launch_date.setText(launchDate);
@@ -346,7 +364,6 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         if (launchItem.getLocation() != null) {
             holder.location.setText(launchItem.getLocation().getName());
         }
-        holder.title.setText(launchItem.getRocket().getName());
     }
 
     @Override
@@ -430,7 +447,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
             launch = launchList.get(position);
             Intent sendIntent = new Intent();
 
-            SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy hh:mm a zzz");
+            SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
             df.toLocalizedPattern();
 
             Date date = launch.getWindowstart();

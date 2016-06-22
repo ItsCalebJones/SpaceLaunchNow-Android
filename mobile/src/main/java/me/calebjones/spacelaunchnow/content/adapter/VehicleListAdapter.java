@@ -139,6 +139,7 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
                 .load(item.getImageURL())
                 .placeholder(R.drawable.placeholder)
                 .error(R.drawable.placeholder)
+                .centerCrop()
                 .into(holder.item_icon);
 
         holder.item_title.setText(item.getName());
@@ -250,8 +251,6 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
                     Utils.openCustomTab(activity, mContext, items.get(position).getWikiURL());
                     break;
                 case R.id.vehicle_fab:
-                    Toast.makeText(activity, items.get(position).getName() + " | Work in progress!", Toast.LENGTH_SHORT);
-
                     Intent animateIntent = new Intent(activity, FullscreenImageActivity.class);
                     animateIntent.putExtra("imageURL", items.get(position).getImageURL());
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

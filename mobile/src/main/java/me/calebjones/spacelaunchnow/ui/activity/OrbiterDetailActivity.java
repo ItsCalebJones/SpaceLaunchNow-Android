@@ -64,11 +64,11 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
         customTabActivityHelper = new CustomTabActivityHelper();
 
         if (sharedPreference.getNightMode()) {
-            m_theme = R.style.DarkTheme_Transparent;
+            m_theme = R.style.DarkTheme;
             statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
             layout = R.layout.dark_activity_orbiter_detail;
         } else {
-            m_theme = R.style.LightTheme_Transparent;
+            m_theme = R.style.LightTheme;
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
             layout = R.layout.activity_orbiter_detail;
         }

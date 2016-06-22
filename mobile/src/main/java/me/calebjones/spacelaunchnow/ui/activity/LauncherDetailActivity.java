@@ -30,6 +30,7 @@ import com.google.gson.Gson;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.realm.RealmChangeListener;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.BuildConfig;
@@ -39,6 +40,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.natives.Launcher;
 import me.calebjones.spacelaunchnow.content.models.legacy.Rocket;
 import me.calebjones.spacelaunchnow.content.models.realm.RocketRealm;
+import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
@@ -51,7 +53,6 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
     private android.content.SharedPreferences SharedPreferences;
 
     private Context context;
-    private View view, title_container, gridview;
     private RecyclerView mRecyclerView;
     private TextView toolbarTitle, detail_rocket, detail_vehicle_agency;
     private ImageView detail_profile_backdrop;
@@ -71,10 +72,10 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
         sharedPreference = ListPreferences.getInstance(this.context);
 
         if (sharedPreference.getNightMode()) {
-            m_theme = R.style.DarkTheme_Transparent;
+            m_theme = R.style.DarkTheme;
             statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
         } else {
-            m_theme = R.style.LightTheme_Transparent;
+            m_theme = R.style.LightTheme;
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
         }
 
@@ -96,19 +97,12 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
         detail_profile_image = (CircleImageView) findViewById(R.id.detail_profile_image);
         detail_profile_backdrop = (ImageView) findViewById(R.id.detail_profile_backdrop);
         appBarLayout = (AppBarLayout) findViewById(R.id.detail_appbar);
-        title_container = findViewById(R.id.detail_title_container);
-        gridview = findViewById(R.id.gridview);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
             // Fab button
             detail_profile_image.setScaleX(0);
             detail_profile_image.setScaleY(0);
-//            setupWindowAnimations();
-
-            // Recover items from the intent
-            final int position = getIntent().getIntExtra("position", 0);
-            Timber.d("Position %s", position);
 
             ViewPropertyAnimator showTitleAnimator = Utils.showViewByScale(detail_profile_image);
             showTitleAnimator.setStartDelay(500);

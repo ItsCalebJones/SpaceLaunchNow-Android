@@ -40,7 +40,7 @@
         </activity>
         <activity
             android:name=".ui.activity.LaunchDetailActivity"
-            android:theme="@style/AppTheme.ActionBar.Transparent" />
+            android:theme="@style/AppTheme" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -100,7 +100,6 @@
             android:name=".ui.activity.DebugActivity"
             android:label="@string/title_activity_debug"
             android:theme="@style/LightTheme" />
-        <activity android:name=".ui.activity.WebviewActivity" />
         <activity
             android:name=".ui.activity.FullscreenImageActivity"
             android:label="@string/title_activity_fullscreen_image"

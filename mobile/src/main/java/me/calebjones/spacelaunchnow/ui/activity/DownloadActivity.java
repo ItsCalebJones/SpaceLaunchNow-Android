@@ -38,7 +38,9 @@ import me.calebjones.spacelaunchnow.utils.Utils;
 public class DownloadActivity extends AppCompatActivity {
 
     @BindView(R.id.start_download)
-    AppCompatButton button;
+    AppCompatButton downloadButton;
+    @BindView(R.id.download_background)
+    AppCompatButton backgroundButton;
     @BindView(R.id.progress_download)
     ProgressBar progressView;
     @BindView(R.id.titles)
@@ -48,10 +50,23 @@ public class DownloadActivity extends AppCompatActivity {
     @BindView(R.id.circularFillableLoaders)
     CircularFillableLoaders circularFillableLoaders;
 
+    private boolean isLaunchReceiverRegistered = false;
+    private boolean isErrorReceiverRegistered = false;
+    private boolean downloading = false;
+    private int progress = 5;
+
+    @OnClick(R.id.download_background) void finishBackground() {
+        ListPreferences.getInstance(this).setFirstBoot(false);
+        startActivity(new Intent(this, MainActivity.class));
+    }
+
     @OnClick(R.id.start_download) void startDownload() {
-        button.setVisibility(View.GONE);
+        downloading = true;
+        downloadButton.setVisibility(View.GONE);
         progressView.setVisibility(View.VISIBLE);
+        backgroundButton.setVisibility(View.VISIBLE);
         progressView.setIndeterminate(true);
+        progress = 0;
         circularFillableLoaders.setProgress(0);
         titles.setText("Step 1 of 5: Loading upcoming launches.");
 
@@ -71,6 +86,8 @@ public class DownloadActivity extends AppCompatActivity {
 
         registerReceiver(launchReceiver, launchFilter);
         registerReceiver(errorReceiver, errorFilter);
+        isLaunchReceiverRegistered = true;
+        isErrorReceiverRegistered = true;
 
         Intent launchIntent = new Intent(this, LaunchDataService.class);
         launchIntent.setAction(Strings.ACTION_GET_ALL_WIFI);
@@ -116,20 +133,57 @@ public class DownloadActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-        unregisterReceiver(launchReceiver);
-        unregisterReceiver(errorReceiver);
+        if (isLaunchReceiverRegistered) {
+            unregisterReceiver(launchReceiver);
+            isLaunchReceiverRegistered = false;
+        }
+        if (isErrorReceiverRegistered) {
+            unregisterReceiver(errorReceiver);
+            isErrorReceiverRegistered = false;
+        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("status", titles.getText().toString());
+        outState.putBoolean("downloading", downloading);
+        outState.putInt("progress", progress);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         titles.setText(savedInstanceState.getString("status"));
+        if (savedInstanceState.getBoolean("downloading")){
+            downloading = true;
+            progress = savedInstanceState.getInt("progress");
+            circularFillableLoaders.setProgress(progress);
+
+            downloadButton.setVisibility(View.GONE);
+            progressView.setVisibility(View.VISIBLE);
+            backgroundButton.setVisibility(View.VISIBLE);
+            progressView.setIndeterminate(true);
+
+            IntentFilter launchFilter = new IntentFilter();
+            launchFilter.addAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
+            launchFilter.addAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
+            launchFilter.addAction(Strings.ACTION_SUCCESS_VEHICLE_DETAILS);
+            launchFilter.addAction(Strings.ACTION_SUCCESS_VEHICLES);
+            launchFilter.addAction(Strings.ACTION_SUCCESS_MISSIONS);
+
+            IntentFilter errorFilter = new IntentFilter();
+            errorFilter.addAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
+            errorFilter.addAction(Strings.ACTION_FAILURE_PREV_LAUNCHES);
+            errorFilter.addAction(Strings.ACTION_FAILURE_VEHICLE_DETAILS);
+            errorFilter.addAction(Strings.ACTION_FAILURE_VEHICLES);
+            errorFilter.addAction(Strings.ACTION_FAILURE_MISSIONS);
+
+            registerReceiver(launchReceiver, launchFilter);
+            registerReceiver(errorReceiver, errorFilter);
+            isLaunchReceiverRegistered = true;
+            isErrorReceiverRegistered = true;
+        }
     }
 
     private final BroadcastReceiver launchReceiver = new BroadcastReceiver() {
@@ -137,19 +191,25 @@ public class DownloadActivity extends AppCompatActivity {
         public void onReceive(final Context context, Intent intent) {
             Timber.v("Received: %s", intent.getAction());
             if (intent.getAction().equals(Strings.ACTION_SUCCESS_UP_LAUNCHES)) {
+                progress = 20;
                 circularFillableLoaders.setProgress(20);
                 titles.setText("Step 2 of 5: Loading historical launches.");
             } else if (intent.getAction().equals(Strings.ACTION_SUCCESS_PREV_LAUNCHES)) {
+                progress = 40;
                 circularFillableLoaders.setProgress(40);
                 titles.setText("Step 3 of 5: Loading vehicle information.");
             } else if (intent.getAction().equals(Strings.ACTION_SUCCESS_VEHICLE_DETAILS)) {
+                progress = 60;
                 circularFillableLoaders.setProgress(60);
                 titles.setText("Step 4 of 5: Loading extra vehicle details.");
             } else if (intent.getAction().equals(Strings.ACTION_SUCCESS_VEHICLES)) {
+                progress = 80;
                 circularFillableLoaders.setProgress(80);
                 titles.setText("Step 5 of 5: Loading mission data.");
             } else if (intent.getAction().equals(Strings.ACTION_SUCCESS_MISSIONS)) {
+                progress = 100;
                 circularFillableLoaders.setProgress(100);
+                downloading = false;
                 titles.setText("Complete!");
                 progressView.setVisibility(View.GONE);
                 ListPreferences.getInstance(context).setFirstBoot(false);
@@ -176,8 +236,9 @@ public class DownloadActivity extends AppCompatActivity {
                 unregisterReceiver(errorReceiver);
                 progressView.setVisibility(View.GONE);
                 circularFillableLoaders.setProgress(95);
-                button.setVisibility(View.VISIBLE);
+                downloadButton.setVisibility(View.VISIBLE);
             }
+            downloading = false;
         }
     };
 

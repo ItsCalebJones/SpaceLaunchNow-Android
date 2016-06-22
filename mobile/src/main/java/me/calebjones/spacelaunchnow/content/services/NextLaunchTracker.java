@@ -378,7 +378,7 @@ public class NextLaunchTracker extends IntentService implements
             query.equalTo("location.id", 18);
         }
 
-        return  query.endGroup().findFirst();
+        return query.endGroup().findFirst();
     }
 
     private void checkNextLaunches(LaunchRealm launch) {
@@ -392,23 +392,23 @@ public class NextLaunchTracker extends IntentService implements
     }
 
     private void syncCalendar() {
-        //Get the list of launches
-        Launch launch = listPreferences.getNextLaunch();
-        CalendarUtil provider = new CalendarUtil();
-
-        //If CalendarID
-        if (launch.getCalendarID() == null) {
-            Integer id = provider.addEvent(this, launch);
-            launch.setCalendarID(id);
-            listPreferences.setNextLaunch(launch);
-        } else {
-            //Try to update, if it fails create event.
-            if (!provider.updateEvent(this, launch)) {
-                Integer id = provider.addEvent(this, launch);
-                launch.setCalendarID(id);
-                listPreferences.setNextLaunch(launch);
-            }
-        }
+//        //Get the list of launches
+//        Launch launch = listPreferences.getNextLaunch();
+//        CalendarUtil provider = new CalendarUtil();
+//
+//        //If CalendarID
+//        if (launch.getCalendarID() == null) {
+//            Integer id = provider.addEvent(this, launch);
+//            launch.setCalendarID(id);
+//            listPreferences.setNextLaunch(launch);
+//        } else {
+//            //Try to update, if it fails create event.
+//            if (!provider.updateEvent(this, launch)) {
+//                Integer id = provider.addEvent(this, launch);
+//                launch.setCalendarID(id);
+//                listPreferences.setNextLaunch(launch);
+//            }
+//        }
     }
 
     private void checkStatus(LaunchRealm launch) {
@@ -502,7 +502,10 @@ public class NextLaunchTracker extends IntentService implements
     }
 
     private void notifyUserImminent(LaunchRealm launch, int minutes) {
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
+        NotificationCompat.Builder mBuilder = new NotificationCompat
+                .Builder(getApplicationContext());
+        NotificationManager mNotifyManager = (NotificationManager) getApplicationContext()
+                .getSystemService(Context.NOTIFICATION_SERVICE);
 
         String launchDate;
         String expandedText;
@@ -510,11 +513,7 @@ public class NextLaunchTracker extends IntentService implements
         String launchURL = launch.getVidURL();
         String launchPad = launch.getLocation().getName();
 
-        if (launch.getMissions().size() > 0) {
-            expandedText = "Launch attempt in " + minutes + " minutes from " + launchPad + ". \n\n" + launch.getMissions().get(0).getDescription();
-        } else {
-            expandedText = "Launch attempt in " + minutes + " minutes from " + launchPad;
-        }
+        expandedText = "Launch attempt in " + minutes + " minutes from " + launchPad + ".";
 
         //Get launch date
         if (sharedPref.getBoolean("local_time", true)) {
@@ -546,39 +545,60 @@ public class NextLaunchTracker extends IntentService implements
                 .setContentText("Launch attempt in " + minutes + " minutes from " + launchPad)
                 .setSmallIcon(R.drawable.ic_notification)
                 .setAutoCancel(true)
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(expandedText)
-                        .setSummaryText(launchDate))
+                .setContentText(expandedText)
+                .setSubText(launchDate)
                 .extend(wearableExtender)
                 .setContentIntent(appIntent)
                 .setSound(alarmSound);
 
-        if (launch.getVidURL() != null && launch.getVidURL().length() > 0) {
-            // Sets up the Open and Share action buttons that will appear in the
-            // big view of the notification.
-            Intent vidIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(launchURL));
-            PendingIntent vidPendingIntent = PendingIntent.getActivity(this, 0, vidIntent, 0);
 
-            mBuilder.addAction(R.drawable.ic_open_in_browser_white, "Watch Live", vidPendingIntent);
+        //Check if heads up notifications are enabled, set priority to high if so.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
+                sharedPref.getBoolean("notifications_new_message_heads_up", true)) {
+            mBuilder.setPriority(Notification.PRIORITY_HIGH);
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
-            mBuilder.setPriority(Notification.PRIORITY_HIGH)
-                    .setVibrate(new long[]{1000, 1000})
-                    .setLights(Color.GREEN, 3000, 3000);
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN && sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
-            mBuilder.setVibrate(new long[]{1000, 1000})
-                    .setLights(Color.GREEN, 3000, 3000);
+        //Check if vibration is enabled.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN &&
+                sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
+            mBuilder.setVibrate(new long[]{750, 750});
         }
 
-        NotificationManager mNotifyManager = (NotificationManager)
-                getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotifyManager.notify(Strings.NOTIF_ID_HOUR, mBuilder.build());
+        //Check if blinking LED is enabled.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN
+                && sharedPref.getBoolean("notifications_new_message_led", true)) {
+            mBuilder.setLights(Color.GREEN, 3000, 3000);
+        }
+
+
+        if (sharedPref.getBoolean("notifications_new_message_webcast", true)) {
+            if (launch.getVidURL() != null && launch.getVidURL().length() > 0) {
+                // Sets up the Open and Share action buttons that will appear in the
+                // big view of the notification.
+                Intent vidIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(launchURL));
+                PendingIntent vidPendingIntent = PendingIntent.getActivity(this, 0, vidIntent, 0);
+
+                mBuilder.addAction(R.drawable.ic_open_in_browser_white, "Watch Live", vidPendingIntent);
+                mNotifyManager.notify(Strings.NOTIF_ID_HOUR, mBuilder.build());
+            }
+        } else {
+            if (launch.getVidURL() != null && launch.getVidURL().length() > 0) {
+                // Sets up the Open and Share action buttons that will appear in the
+                // big view of the notification.
+                Intent vidIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(launchURL));
+                PendingIntent vidPendingIntent = PendingIntent.getActivity(this, 0, vidIntent, 0);
+
+                mBuilder.addAction(R.drawable.ic_open_in_browser_white, "Watch Live", vidPendingIntent);
+            }
+            mNotifyManager.notify(Strings.NOTIF_ID_HOUR, mBuilder.build());
+        }
     }
 
     private void notifyUser(LaunchRealm launch, int hours) {
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
+        NotificationCompat.Builder mBuilder = new NotificationCompat
+                .Builder(getApplicationContext());
+        NotificationManager mNotifyManager = (NotificationManager) getApplicationContext()
+                .getSystemService(Context.NOTIFICATION_SERVICE);
 
         String launchDate;
         String expandedText;
@@ -591,12 +611,7 @@ public class NextLaunchTracker extends IntentService implements
         mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         PendingIntent appIntent = PendingIntent.getActivity(this, 0, mainActivityIntent, 0);
-
-        if (launch.getMissions().size() > 0) {
-            expandedText = "Launch attempt in " + hours + " hours from " + launchPad + ". \n\n" + launch.getMissions().get(0).getDescription();
-        } else {
-            expandedText = "Launch attempt in " + hours + " hours from " + launchPad;
-        }
+        expandedText = "Launch attempt in " + hours + " hours from " + launchPad;
 
         //Get launch date
         if (sharedPref.getBoolean("local_time", true)) {
@@ -620,27 +635,32 @@ public class NextLaunchTracker extends IntentService implements
                 .setContentText("Launch attempt in " + hours + " hours from " + launchPad)
                 .setSmallIcon(R.drawable.ic_notification)
                 .setContentIntent(appIntent)
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(expandedText)
-                        .setSummaryText(launchDate))
+                .setContentText(expandedText)
+                .setSubText(launchDate)
                 .extend(wearableExtender)
                 .setSound(alarmSound)
                 .setAutoCancel(true);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
-            mBuilder.setPriority(Notification.PRIORITY_HIGH)
-                    .setVibrate(new long[]{1000, 1000})
-                    .setLights(Color.RED, 3000, 3000);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
+                sharedPref.getBoolean("notifications_new_message_heads_up", true)) {
+            mBuilder.setPriority(Notification.PRIORITY_HIGH);
         }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN && sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
-            mBuilder.setVibrate(new long[]{1000, 1000})
-                    .setLights(Color.RED, 3000, 3000);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN &&
+                sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
+            mBuilder.setVibrate(new long[]{750, 750});
+        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN
+                && sharedPref.getBoolean("notifications_new_message_led", true)) {
+            mBuilder.setLights(Color.GREEN, 3000, 3000);
         }
 
-
-        NotificationManager mNotifyManager = (NotificationManager)
-                getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotifyManager.notify(Strings.NOTIF_ID_DAY, mBuilder.build());
+        if (sharedPref.getBoolean("notifications_new_message_webcast", true)) {
+            if (launch.getVidURL() != null && launch.getVidURL().length() > 0) {
+                mNotifyManager.notify(Strings.NOTIF_ID_HOUR, mBuilder.build());
+            }
+        } else {
+            mNotifyManager.notify(Strings.NOTIF_ID_HOUR, mBuilder.build());
+        }
     }
 
     public static Calendar DateToCalendar(Date date) {
