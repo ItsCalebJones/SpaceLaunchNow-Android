@@ -571,7 +571,7 @@ public class NextLaunchTracker extends IntentService implements
         }
 
 
-        if (sharedPref.getBoolean("notifications_new_message_webcast", true)) {
+        if (sharedPref.getBoolean("notifications_new_message_webcast", false)) {
             if (launch.getVidURL() != null && launch.getVidURL().length() > 0) {
                 // Sets up the Open and Share action buttons that will appear in the
                 // big view of the notification.
@@ -654,7 +654,7 @@ public class NextLaunchTracker extends IntentService implements
             mBuilder.setLights(Color.GREEN, 3000, 3000);
         }
 
-        if (sharedPref.getBoolean("notifications_new_message_webcast", true)) {
+        if (sharedPref.getBoolean("notifications_new_message_webcast", false)) {
             if (launch.getVidURL() != null && launch.getVidURL().length() > 0) {
                 mNotifyManager.notify(Strings.NOTIF_ID_HOUR, mBuilder.build());
             }
