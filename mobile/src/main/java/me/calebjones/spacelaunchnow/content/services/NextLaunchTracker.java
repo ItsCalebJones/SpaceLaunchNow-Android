@@ -679,13 +679,26 @@ public class NextLaunchTracker extends IntentService implements
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(nextUpdate);
 
-            String intevalString = String.format("%02d:%02d:%02d",
-                    TimeUnit.MILLISECONDS.toHours(interval),
-                    TimeUnit.MILLISECONDS.toMinutes(interval) -
-                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(interval)), // The change is in this line
-                    TimeUnit.MILLISECONDS.toSeconds(interval) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(interval)));
-            Timber.v("Scheduling Update - Interval: %s - Time: %s - IntervalString - %s", convert, formatter.format(calendar.getTime()), intevalString);
+            String intervalString = String.format("%02d:%02d:%02d",
+                    TimeUnit.MILLISECONDS.toHours(convert),
+                    TimeUnit.MILLISECONDS.toMinutes(convert) -
+                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(convert)), // The change is in this line
+                    TimeUnit.MILLISECONDS.toSeconds(convert) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(convert)));
+
+            NotificationCompat.Builder mBuilder = new NotificationCompat
+                    .Builder(getApplicationContext());
+            NotificationManager mNotifyManager = (NotificationManager) getApplicationContext()
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+
+            String msg = String.format("Interval: %s - Time: %s - IntervalString - %s", convert, formatter.format(calendar.getTime()), intervalString);
+            mBuilder.setContentTitle("Scheduling Update - ")
+                    .setStyle(new NotificationCompat.BigTextStyle()
+                            .bigText(msg))
+                    .setSmallIcon(R.drawable.ic_notification)
+                    .setContentText(msg);
+            mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
+            Timber.v("Scheduling Update - Interval: %s - Time: %s - IntervalString - %s", convert, formatter.format(calendar.getTime()), intervalString);
         }
 
         alarmManager.set(AlarmManager.RTC_WAKEUP, nextUpdate,
