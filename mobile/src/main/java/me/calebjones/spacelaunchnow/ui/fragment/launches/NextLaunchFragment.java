@@ -592,8 +592,10 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             getRealm().commitTransaction();
 
             Timber.v("%s", sharedPreference.isDebugEnabled());
-            Snackbar.make(coordinatorLayout, "Debug: " + sharedPreference.isDebugEnabled(), Snackbar.LENGTH_LONG).show();
-            onRefresh();
+            Snackbar.make(coordinatorLayout, "Debug: " + sharedPreference.isDebugEnabled(),
+                    Snackbar.LENGTH_LONG).show();
+            context.startService(new Intent(context, LaunchDataService.class)
+                    .setAction(Strings.ACTION_GET_ALL_WIFI));
         } else if (id == R.id.debug_next_launch) {
             Intent nextIntent = new Intent(getActivity(), LaunchDataService.class);
             nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
