@@ -34,15 +34,13 @@
                 style="@style/DarkTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="8dp">
+                android:orientation="vertical">
 
                 <LinearLayout
                     style="@style/DarkTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingLeft="8dp">
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/launch_status_title"
@@ -144,14 +142,6 @@
                     android:textAlignment="center"
                     android:textColor="?android:textColorSecondary" />
 
-                <View
-                    style="@style/DarkTheme"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_margin="8dp"
-                    android:background="@color/View_Separator"
-                    android:padding="12dp" />
-
                 <TextView
                     android:id="@+id/launch_window_start"
                     style="@style/DarkTheme"
@@ -160,11 +150,12 @@
                     android:ellipsize="end"
                     android:gravity="left"
                     android:paddingBottom="2dp"
-                    android:paddingLeft="8dp"
+                    android:paddingLeft="16dp"
                     android:paddingTop="8dp"
                     android:singleLine="false"
                     android:text="Launch Window Start: "
-                    android:textColor="?android:textColorSecondary" />
+                    android:textColor="?android:textColorSecondary"
+                    android:paddingRight="16dp" />
 
                 <TextView
                     android:id="@+id/launch_window_end"
@@ -174,11 +165,12 @@
                     android:ellipsize="end"
                     android:gravity="left"
                     android:paddingBottom="8dp"
-                    android:paddingLeft="8dp"
+                    android:paddingLeft="16dp"
                     android:paddingTop="4dp"
                     android:singleLine="false"
                     android:text="Launch Window End: "
-                    android:textColor="?android:textColorSecondary" />
+                    android:textColor="?android:textColorSecondary"
+                    android:paddingRight="16dp" />
 
                 <View
                     style="@style/DarkTheme"

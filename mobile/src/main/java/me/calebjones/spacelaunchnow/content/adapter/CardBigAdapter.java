@@ -126,7 +126,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         //Retrieve missionType
         if (launchItem.getMissions().size() != 0) {
             setCategoryIcon(holder, launchItem.getMissions().get(0).getTypeName());
-        }  else {
+        } else {
             if (night) {
                 holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
             } else {
@@ -174,9 +174,6 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                 }
             });
         }
-
-        SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
-        df.toLocalizedPattern();
 
         switch (launchItem.getStatus()) {
             case 1:
@@ -318,12 +315,22 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
             holder.launch_date.setText("To be determined... " + launchDate);
         } else {
             if (sharedPref.getBoolean("local_time", true)) {
-                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                SimpleDateFormat sdf;
+                if (sharedPref.getBoolean("24_hour_mode", false)) {
+                    sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - kk:mm zzz");
+                } else {
+                    sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                }
                 sdf.toLocalizedPattern();
                 Date date = launchItem.getWindowstart();
                 launchDate = sdf.format(date);
             } else {
-                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                SimpleDateFormat sdf;
+                if (sharedPref.getBoolean("24_hour_mode", false)) {
+                    sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - kk:mm zzz");
+                } else {
+                    sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                }
                 Date date = launchItem.getWindowstart();
                 sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
                 launchDate = sdf.format(date);

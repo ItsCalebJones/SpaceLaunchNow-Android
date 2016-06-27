@@ -148,7 +148,7 @@ public class SummaryDetailFragment extends BaseFragment {
                     .center(dlat, dlon)
                     .scale(4)
                     .type(StaticMap.Type.ROADMAP)
-                    .zoom(8)
+                    .zoom(7)
                     .marker(dlat, dlon)
                     .key(res.getString(R.string.GoogleMapsKey));
 
@@ -161,6 +161,7 @@ public class SummaryDetailFragment extends BaseFragment {
                     Timber.v("onPreDraw: %s", map.toString());
                     Glide.with(context).load(map.toString())
                             .error(R.drawable.placeholder)
+                            .centerCrop()
                             .into(staticMap);
                     staticMap.getViewTreeObserver().removeOnPreDrawListener(this);
                     return true;
@@ -276,7 +277,12 @@ public class SummaryDetailFragment extends BaseFragment {
 
     private void setWindowStamp() {
         // Create a DateFormatter object for displaying date in specified format.
-        SimpleDateFormat formatter = new SimpleDateFormat("hh:mm aaa zzz");
+        SimpleDateFormat formatter;
+        if (sharedPref.getBoolean("24_hour_mode", false)) {
+            formatter = new SimpleDateFormat("kk:mm zzz");
+        } else {
+            formatter = new SimpleDateFormat("hh:mm a zzz");
+        }
 
         // Create a calendar object that will convert the date and time value in milliseconds to date.
         Calendar calendarStart = Calendar.getInstance(TimeZone.getTimeZone("UTC"));

@@ -125,12 +125,22 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
         } else {
             //Get launch date
             if (sharedPref.getBoolean("local_time", true)) {
-                SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                SimpleDateFormat df;
+                if (sharedPref.getBoolean("24_hour_mode", false)) {
+                    df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - kk:mm zzz");
+                } else {
+                    df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                }
                 df.toLocalizedPattern();
                 Date date = launchItem.getNet();
                 launchDate = df.format(date);
             } else {
-                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                SimpleDateFormat sdf;
+                if (sharedPref.getBoolean("24_hour_mode", false)) {
+                    sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - kk:mm zzz");
+                } else {
+                    sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                }
                 sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
                 Date date = launchItem.getNet();
                 launchDate = sdf.format(date);
