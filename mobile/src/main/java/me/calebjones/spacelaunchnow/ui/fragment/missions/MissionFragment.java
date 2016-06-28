@@ -92,7 +92,7 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
     private RealmChangeListener callback = new RealmChangeListener<RealmResults<MissionRealm>>() {
         @Override
         public void onChange(RealmResults<MissionRealm> results) {
-            Timber.v("Data changed - size: %s - element:", results.size(), results.first().getName());
+            Timber.v("Data changed - size: %s", results.size());
             adapter.clear();
 
             if (missionList.size() > 0) {
@@ -100,7 +100,6 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
             } else {
                 showErrorSnackbar("Unable to load missions.");
             }
-
             hideLoading();
         }
     };
