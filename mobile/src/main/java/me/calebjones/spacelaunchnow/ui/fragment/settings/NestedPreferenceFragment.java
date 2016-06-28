@@ -96,6 +96,7 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
         }
 
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            switchPreferences = SwitchPreferences.getInstance(getActivity());
             Timber.d("onSharedPreferenceChanged:  %s ", key);
             try {
                 if (key.equals("notifications")) {
@@ -188,13 +189,13 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
             case NESTED_SCREEN_1_KEY:
                 addPreferencesFromResource(R.xml.nested_notification_preferences);
                 if (this.toolbarTitle != null) {
-                    this.toolbarTitle.setText("Notification");
+                    this.toolbarTitle.setText("Notifications");
                 }
                 break;
             case NESTED_SCREEN_2_KEY:
                 addPreferencesFromResource(R.xml.nested_loader_preferences);
                 if (this.toolbarTitle != null) {
-                    this.toolbarTitle.setText("Launch Tracking Options");
+                    this.toolbarTitle.setText("General");
                 }
                 break;
             case NESTED_SCREEN_3_KEY:

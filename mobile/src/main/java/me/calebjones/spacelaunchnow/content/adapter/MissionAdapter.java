@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +21,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import me.calebjones.spacelaunchnow.MainActivity;
+import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.Mission;
+import me.calebjones.spacelaunchnow.content.models.realm.MissionRealm;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
@@ -35,7 +35,7 @@ import timber.log.Timber;
  */
 public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHolder> implements FastScrollRecyclerView.SectionedAdapter {
     public int position;
-    private List<Mission> missionList;
+    private RealmList<MissionRealm> missionList;
 
     private Context mContext;
     private Context aContext;
@@ -43,18 +43,21 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
     private static ListPreferences sharedPreference;
 
     public MissionAdapter(Context context, Context aContext) {
-        missionList = new ArrayList();
+        missionList = new RealmList<>();
         sharedPreference = ListPreferences.getInstance(context);
         this.mContext = context;
         this.aContext = aContext;
     }
 
-    public void addItems(List<Mission> missionList) {
+    public void addItems(List<MissionRealm> missionList) {
+
         if (this.missionList == null) {
-            this.missionList = missionList;
+            this.missionList.addAll(missionList);
         } else {
+            this.missionList = new RealmList<>();
             this.missionList.addAll(missionList);
         }
+        notifyDataSetChanged();
     }
 
     public void clear() {
@@ -81,7 +84,7 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        final Mission mission = missionList.get(i);
+        final MissionRealm mission = missionList.get(holder.getAdapterPosition());
 
         //Retrieve missionType
 
@@ -92,8 +95,8 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
 
         if (mission.getLaunch() != null && mission.getLaunch().getId() != null) {
 
-            if (mission.getLaunch().getVidURL() != null) {
-                ((MainActivity) aContext).mayLaunchUrl(Uri.parse(mission.getLaunch().getVidURL()));
+            if (mission.getInfoURL() != null) {
+                ((MainActivity) aContext).mayLaunchUrl(Uri.parse(mission.getInfoURL()));
             }
             //If there's no info on the launch hide the button and no need to check for launch date.
             if (mission.getLaunch().getId() == 0) {
@@ -105,15 +108,7 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
 
                     //If we can find the name of the launch add it to the card.
                     if (mission.getLaunch() != null) {
-                        if (mission.getLaunch().getRocket() != null) {
-                            if (mission.getLaunch().getRocket().getName() != null) {
-                                holder.mission_vehicle.setText(mission.getLaunch().getRocket().getName());
-                                holder.mission_vehicle.setVisibility(View.VISIBLE);
-                            } else {
-                                holder.mission_vehicle.setText(mission.getLaunch().getName());
-                                holder.mission_vehicle.setVisibility(View.VISIBLE);
-                            }
-                        } else {
+                        if (mission.getLaunch().getName() != null) {
                             String[] launch = mission.getLaunch().getName().split(Pattern.quote(" |"));
                             holder.mission_vehicle.setText(launch[0]);
                             holder.mission_vehicle.setVisibility(View.VISIBLE);
@@ -124,20 +119,14 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
 
                     //If we can find the date of the launch add it to the card.
                     if (mission.getLaunch().getNet() != null) {
-                        SimpleDateFormat informat = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss zzz");
                         SimpleDateFormat outformat = new SimpleDateFormat("MMM dd, yyyy");
                         outformat.toLocalizedPattern();
 
                         Date date;
                         String str = "";
 
-                        try {
-                            date = informat.parse(mission.getLaunch().getNet());
-                            str = outformat.format(date);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                            holder.mission_date.setVisibility(View.GONE);
-                        }
+                        date = mission.getLaunch().getNet();
+                        str = outformat.format(date);
                         holder.mission_date.setText(str);
                         holder.mission_date.setVisibility(View.VISIBLE);
                     } else {
@@ -152,13 +141,16 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
             holder.mission_date.setVisibility(View.GONE);
             holder.launchButton.setVisibility(View.GONE);
         }
-        if (mission.getInfoURL().length() == 0) {
-            holder.infoButton.setVisibility(View.INVISIBLE);
+        if(mission.getInfoURL() != null) {
+            if (mission.getInfoURL().length() == 0) {
+                holder.infoButton.setVisibility(View.INVISIBLE);
+            } else {
+                ((MainActivity) aContext).mayLaunchUrl(Uri.parse(mission.getInfoURL()));
+                holder.infoButton.setVisibility(View.VISIBLE);
+            }
         } else {
-            ((MainActivity) aContext).mayLaunchUrl(Uri.parse(mission.getInfoURL()));
-            holder.infoButton.setVisibility(View.VISIBLE);
+            holder.infoButton.setVisibility(View.INVISIBLE);
         }
-
     }
 
     @Override
@@ -170,7 +162,7 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
     @Override
     public String getSectionName(int position) {
         String section = missionList.get(position).getName().substring(0, 1);
-        if (section.matches("\\d+(?:\\.\\d+)?")) {
+        if (section.matches("[1-9.?@#$%^&*() ]")) {
             section = "#";
         }
         return section;
@@ -207,27 +199,34 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
                 case R.id.launchButton:
                     Timber.v("Launch: %s", missionList.get(position).getLaunch());
                     Intent exploreIntent = new Intent(aContext, LaunchDetailActivity.class);
-                    exploreIntent.putExtra("TYPE", "LaunchID");
-                    int id = missionList.get(position).getLaunch().getId();
-                    exploreIntent.putExtra("id", id);
+                    exploreIntent.putExtra("TYPE", "launch");
+                    exploreIntent.putExtra("launchID", missionList
+                            .get(position)
+                            .getLaunch()
+                            .getId());
                     aContext.startActivity(exploreIntent);
                     break;
                 case R.id.infoButton:
-                    Timber.v("Info : %s", missionList.get(position).getInfoURL());
+                    Timber.v("Info : %s", missionList
+                            .get(position)
+                            .getInfoURL());
                     Activity activity = (Activity) aContext;
-                    Utils.openCustomTab(activity, aContext, missionList.get(position).getInfoURL());
+
+                    Utils.openCustomTab(activity, aContext, missionList
+                            .get(position)
+                            .getInfoURL());
                     break;
             }
         }
     }
 
-    public void animateTo(List<Mission> models) {
+    public void animateTo(List<MissionRealm> models) {
         applyAndAnimateRemovals(models);
         applyAndAnimateAdditions(models);
         applyAndAnimateMovedItems(models);
     }
 
-    private void applyAndAnimateRemovals(List<Mission> newModels) {
+    private void applyAndAnimateRemovals(List<MissionRealm> newModels) {
         for (int i = missionList.size() - 1; i >= 0; i--) {
             if (!newModels.contains(missionList.get(i))) {
                 removeItem(i);
@@ -235,18 +234,18 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
         }
     }
 
-    private void applyAndAnimateAdditions(List<Mission> newModels) {
+    private void applyAndAnimateAdditions(List<MissionRealm> newModels) {
         for (int i = 0, count = newModels.size(); i < count; i++) {
-            final Mission model = newModels.get(i);
+            final MissionRealm model = newModels.get(i);
             if (!missionList.contains(model)) {
                 addItem(i, model);
             }
         }
     }
 
-    private void applyAndAnimateMovedItems(List<Mission> newModels) {
+    private void applyAndAnimateMovedItems(List<MissionRealm> newModels) {
         for (int toPosition = newModels.size() - 1; toPosition >= 0; toPosition--) {
-            final Mission model = newModels.get(toPosition);
+            final MissionRealm model = newModels.get(toPosition);
             final int fromPosition = missionList.indexOf(model);
             if (fromPosition >= 0 && fromPosition != toPosition) {
                 moveItem(fromPosition, toPosition);
@@ -254,13 +253,13 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
         }
     }
 
-    public Mission removeItem(int position) {
-        Mission model = missionList.remove(position);
+    public MissionRealm removeItem(int position) {
+        MissionRealm model = missionList.remove(position);
         notifyItemRemoved(position);
         return model;
     }
 
-    public void addItem(int position, Mission model) {
+    public void addItem(int position, MissionRealm model) {
         missionList.add(position, model);
         notifyItemInserted(position);
     }
@@ -275,110 +274,86 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
             switch (type) {
                 case "Earth Science":
                     if (night) {
-                        holder.categoryIcon.setImageDrawable(
-                                ContextCompat.getDrawable(mContext, R.drawable.ic_earth_white));
+                        holder.categoryIcon.setImageResource(R.drawable.ic_earth_white);
                     } else {
-                        holder.categoryIcon.setImageDrawable(
-                                ContextCompat.getDrawable(mContext, R.drawable.ic_earth));
+                        holder.categoryIcon.setImageResource(R.drawable.ic_earth);
                     }
                     break;
                 case "Planetary Science":
                     if (night) {
-                        holder.categoryIcon.setImageDrawable(
-                                ContextCompat.getDrawable(mContext, R.drawable.ic_planetary_white));
+                        holder.categoryIcon.setImageResource(R.drawable.ic_planetary_white);
                     } else {
-                        holder.categoryIcon.setImageDrawable(
-                                ContextCompat.getDrawable(mContext, R.drawable.ic_planetary));
+                        holder.categoryIcon.setImageResource(R.drawable.ic_planetary);
                     }
                     break;
                 case "Astrophysics":
                     if (night) {
-                        holder.categoryIcon.setImageDrawable(
-                                ContextCompat.getDrawable(mContext, R.drawable.ic_astrophysics_white));
+                        holder.categoryIcon.setImageResource(R.drawable.ic_astrophysics_white);
                     } else {
-                        holder.categoryIcon.setImageDrawable(
-                                ContextCompat.getDrawable(mContext, R.drawable.ic_astrophysics));
+                        holder.categoryIcon.setImageResource(R.drawable.ic_astrophysics);
                     }
                     break;
                 case "Heliophysics":
                     if (night) {
-                        holder.categoryIcon.setImageDrawable(
-                                ContextCompat.getDrawable(mContext, R.drawable.ic_heliophysics_alt_white));
+                        holder.categoryIcon.setImageResource(R.drawable.ic_heliophysics_alt_white);
                     } else {
-                        holder.categoryIcon.setImageDrawable(
-                                ContextCompat.getDrawable(mContext, R.drawable.ic_heliophysics_alt));
+                        holder.categoryIcon.setImageResource(R.drawable.ic_heliophysics_alt);
                     }
                     break;
                 case "Human Exploration":
                     if (night) {
-                        holder.categoryIcon.setImageDrawable(
-                                ContextCompat.getDrawable(mContext, R.drawable.ic_human_explore_white));
+                        holder.categoryIcon.setImageResource(R.drawable.ic_human_explore_white);
                     } else {
-                        holder.categoryIcon.setImageDrawable(
-                                ContextCompat.getDrawable(mContext, R.drawable.ic_human_explore));
+                        holder.categoryIcon.setImageResource(R.drawable.ic_human_explore);
                     }
                     break;
                 case "Robotic Exploration":
                     if (night) {
-                        holder.categoryIcon.setImageDrawable(
-                                ContextCompat.getDrawable(mContext, R.drawable.ic_robotic_explore_white));
+                        holder.categoryIcon.setImageResource(R.drawable.ic_robotic_explore_white);
                     } else {
-                        holder.categoryIcon.setImageDrawable(
-                                ContextCompat.getDrawable(mContext, R.drawable.ic_robotic_explore));
+                        holder.categoryIcon.setImageResource(R.drawable.ic_robotic_explore);
                     }
                     break;
                 case "Government/Top Secret":
                     if (night) {
-                        holder.categoryIcon.setImageDrawable(
-                                ContextCompat.getDrawable(mContext, R.drawable.ic_top_secret_white));
+                        holder.categoryIcon.setImageResource(R.drawable.ic_top_secret_white);
                     } else {
-                        holder.categoryIcon.setImageDrawable(
-                                ContextCompat.getDrawable(mContext, R.drawable.ic_top_secret));
+                        holder.categoryIcon.setImageResource(R.drawable.ic_top_secret);
                     }
                     break;
                 case "Tourism":
                     if (night) {
-                        holder.categoryIcon.setImageDrawable(
-                                ContextCompat.getDrawable(mContext, R.drawable.ic_tourism_white));
+                        holder.categoryIcon.setImageResource(R.drawable.ic_tourism_white);
                     } else {
-                        holder.categoryIcon.setImageDrawable(
-                                ContextCompat.getDrawable(mContext, R.drawable.ic_tourism));
+                        holder.categoryIcon.setImageResource(R.drawable.ic_tourism);
                     }
                     break;
                 case "Unknown":
                     if (night) {
-                        holder.categoryIcon.setImageDrawable(
-                                ContextCompat.getDrawable(mContext, R.drawable.ic_unknown_white));
+                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
                     } else {
-                        holder.categoryIcon.setImageDrawable(
-                                ContextCompat.getDrawable(mContext, R.drawable.ic_unknown));
+                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown);
                     }
                     break;
                 case "Communications":
                     if (night) {
-                        holder.categoryIcon.setImageDrawable(
-                                ContextCompat.getDrawable(mContext, R.drawable.ic_satellite_white));
+                        holder.categoryIcon.setImageResource(R.drawable.ic_satellite_white);
                     } else {
-                        holder.categoryIcon.setImageDrawable(
-                                ContextCompat.getDrawable(mContext, R.drawable.ic_satellite));
+                        holder.categoryIcon.setImageResource(R.drawable.ic_satellite);
                     }
                     break;
                 case "Resupply":
                     if (night) {
-                        holder.categoryIcon.setImageDrawable(
-                                ContextCompat.getDrawable(mContext, R.drawable.ic_resupply_white));
+                        holder.categoryIcon.setImageResource(R.drawable.ic_resupply_white);
                     } else {
-                        holder.categoryIcon.setImageDrawable(
-                                ContextCompat.getDrawable(mContext, R.drawable.ic_resupply));
+                        holder.categoryIcon.setImageResource(R.drawable.ic_resupply);
                     }
                     break;
                 default:
                     if (night) {
-                        holder.categoryIcon.setImageDrawable(
-                                ContextCompat.getDrawable(mContext, R.drawable.ic_unknown_white));
+                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
                     } else {
-                        holder.categoryIcon.setImageDrawable(
-                                ContextCompat.getDrawable(mContext, R.drawable.ic_unknown));
+                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown);
                     }
                     break;
             }

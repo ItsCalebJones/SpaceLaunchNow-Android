@@ -1,6 +1,7 @@
 package me.calebjones.spacelaunchnow.ui.activity;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -23,11 +24,13 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
+import com.google.gson.Gson;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.models.natives.Orbiter;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;
@@ -61,11 +64,11 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
         customTabActivityHelper = new CustomTabActivityHelper();
 
         if (sharedPreference.getNightMode()) {
-            m_theme = R.style.DarkTheme_Transparent;
+            m_theme = R.style.DarkTheme;
             statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
             layout = R.layout.dark_activity_orbiter_detail;
         } else {
-            m_theme = R.style.LightTheme_Transparent;
+            m_theme = R.style.LightTheme;
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
             layout = R.layout.activity_orbiter_detail;
         }
@@ -162,129 +165,46 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
     }
 
     public void displayOrbiterDetails() {
+        final Activity activity = this;
+        final Context context = this;
+
         Intent intent = getIntent();
-        String orbiter = intent.getStringExtra("family");
-        detail_rocket.setText(String.format("%s Spacecraft", orbiter));
-        detail_vehicle_agency.setText(intent.getStringExtra("agency"));
+        Gson gson = new Gson();
+        final Orbiter orbiter = gson.fromJson(intent.getStringExtra("json"), Orbiter.class);
 
+        detail_rocket.setText(String.format("%s Spacecraft", orbiter.getName()));
+        detail_vehicle_agency.setText(orbiter.getName());
 
-        if (orbiter.equals("Soyuz")) {
-            Glide.with(this)
-                    .load(getString(R.string.soyuz_orbiter_image))
-                    .centerCrop()
-                    .crossFade()
-                    .into(detail_profile_backdrop);
+        Glide.with(this)
+                .load(orbiter.getImageURL())
+                .centerCrop()
+                .crossFade()
+                .into(detail_profile_backdrop);
 
-            Glide.with(this)
-                    .load(getString(R.string.rus_logo))
-                    .centerCrop()
-                    .error(R.drawable.icon_international)
-                    .into(detail_profile_image);
+        Glide.with(this)
+                .load(orbiter.getNationURL())
+                .centerCrop()
+                .error(R.drawable.icon_international)
+                .into(detail_profile_image);
 
-            orbiter_vehicle_card.setVisibility(View.VISIBLE);
+        //Set up history information
+        orbiter_history.setText(String.format("%s Spacecraft History", orbiter.getName()));
+        orbiter_history_description.setText(orbiter.getHistory());
 
-            //Set up history information
-            orbiter_history.setText("Soyuz Spacecraft History");
-            orbiter_history_description.setText(R.string.soyuz_history_description);
-            wikiButton.setVisibility(View.INVISIBLE);
+        if (orbiter.getWikiLink() != null && orbiter.getWikiLink().length() > 0) {
             wikiButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Utils.openCustomTab();
+                    Utils.openCustomTab(activity, context, orbiter.getWikiLink());
                 }
             });
-
-            //Set up vehicle card Information
-            orbiter_title.setText("Soyuz TMA-M Details");
-            orbiter_description.setText(R.string.soyuz_description);
-
-        } else if (orbiter.equals("Shenzhou")) {
-            Glide.with(this)
-                    .load(getString(R.string.shenzhou_orbiter_image))
-                    .centerCrop()
-                    .into(detail_profile_backdrop);
-
-            Glide.with(this)
-                    .load(getString(R.string.chn_logo))
-                    .centerCrop()
-                    .error(R.drawable.icon_international)
-                    .into(detail_profile_image);
-
-            orbiter_vehicle_card.setVisibility(View.VISIBLE);
-
-            //Set up history information
-            orbiter_history.setText("Shenzhou Spacecraft History");
-            orbiter_history_description.setText(R.string.shenzhou_history);
+        } else {
             wikiButton.setVisibility(View.INVISIBLE);
-            wikiButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    Utils.openCustomTab();
-                }
-            });
-
-            //Set up vehicle card Information
-            orbiter_title.setText("Shenzhou Details");
-            orbiter_description.setText(R.string.shenzhou_description);
-
-        } else if (orbiter.equals("Dragon")) {
-            Glide.with(this)
-                    .load(getString(R.string.dragon_orbiter_image))
-                    .centerCrop()
-                    .into(detail_profile_backdrop);
-
-            Glide.with(this)
-                    .load(getString(R.string.spacex_logo))
-                    .centerCrop()
-                    .error(R.drawable.icon_international)
-                    .into(detail_profile_image);
-
-            orbiter_vehicle_card.setVisibility(View.VISIBLE);
-
-            //Set up history information
-            orbiter_history.setText("Dragon Spacecraft History");
-            orbiter_history_description.setText(R.string.dragon_history);
-            wikiButton.setVisibility(View.INVISIBLE);
-            wikiButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    Utils.openCustomTab();
-                }
-            });
-
-            //Set up vehicle card Information
-            orbiter_title.setText("Dragon V2 Details");
-            orbiter_description.setText(R.string.dragon_description);
-
-        } else if (orbiter.equals("Orion")) {
-            Glide.with(this)
-                    .load(getString(R.string.orion_orbiter_image))
-                    .centerCrop()
-                    .into(detail_profile_backdrop);
-
-            Glide.with(this)
-                    .load(getString(R.string.usa_flag))
-                    .centerCrop()
-                    .error(R.drawable.icon_international)
-                    .into(detail_profile_image);
-
-            orbiter_vehicle_card.setVisibility(View.VISIBLE);
-
-            //Set up history information
-            orbiter_history.setText("Orion Spacecraft History");
-            orbiter_history_description.setText(R.string.orion_history);
-            wikiButton.setVisibility(View.INVISIBLE);
-            wikiButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    Utils.openCustomTab();
-                }
-            });
-
-            //Set up vehicle card Information
-            orbiter_title.setText("Orion Details");
-            orbiter_description.setText(R.string.orion_description);
         }
+
+        //Set up vehicle card Information
+        orbiter_title.setText(String.format("%s Spacecraft Details", orbiter.getName()));
+        orbiter_description.setText(orbiter.getDetails());
     }
 
     public void onStart() {

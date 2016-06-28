@@ -6,30 +6,45 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.google.gson.Gson;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.OrbiterAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.GridItem;
+import me.calebjones.spacelaunchnow.content.models.natives.Orbiter;
+import me.calebjones.spacelaunchnow.content.responses.base.OrbiterResponse;
+import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.ui.activity.OrbiterDetailActivity;
-import me.calebjones.spacelaunchnow.utils.CustomFragment;
+import me.calebjones.spacelaunchnow.ui.fragment.CustomFragment;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
+import me.calebjones.spacelaunchnow.content.interfaces.APIRequestInterface;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
-public class OrbiterFragment extends CustomFragment {
+public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private ListPreferences sharedPreference;
     private android.content.SharedPreferences SharedPreferences;
@@ -38,7 +53,9 @@ public class OrbiterFragment extends CustomFragment {
     private OrbiterAdapter adapter;
     private RecyclerView mRecyclerView;
     private GridLayoutManager layoutManager;
-    private List<GridItem> items = new ArrayList<GridItem>();
+    private CoordinatorLayout coordinatorLayout;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private List<Orbiter> items = new ArrayList<Orbiter>();
     public static SparseArray<Bitmap> photoCache = new SparseArray<Bitmap>(1);
 
     public void onCreate(Bundle savedInstanceState) {
@@ -73,34 +90,103 @@ public class OrbiterFragment extends CustomFragment {
         view = lf.inflate(R.layout.fragment_launch_vehicles, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.gridview);
+        coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.vehicle_coordinator);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
+        swipeRefreshLayout.setOnRefreshListener(this);
         if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
             layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 3);
         } else {
             layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 2);
         }
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(adapter);
-        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                int topRowVerticalPosition =
+                        (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
+                swipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
+
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
             }
         });
         adapter.setOnItemClickListener(recyclerRowClickListener);
-
-        items.add(new GridItem("Soyuz", "Russian Federal Space Agency ","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944174/soyuz_snfim6.jpg"));
-        items.add(new GridItem("Shenzhou", "Chinese National Manned Space Program","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944173/shenzhou_vzayjm.jpg"));
-        items.add(new GridItem("Dragon", "SpaceX","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944174/dragon_q9cxq9.jpg"));
-        items.add(new GridItem("Orion", "National Aeronautics and Space Administration (NASA)","http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454944173/orion_sgl9rs.jpg"));
-
-        adapter.addItems(items);
+        mRecyclerView.setAdapter(adapter);
         return view;
+    }
+
+    @Override
+    public void onResume(){
+        loadJSON();
+        super.onResume();
+    }
+
+    private void loadJSON(){
+        Timber.v("Loading orbiters...");
+        showLoading();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Strings.API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        APIRequestInterface request = retrofit.create(APIRequestInterface.class);
+        Call<OrbiterResponse> call = request.getOrbiter();
+        call.enqueue(new Callback<OrbiterResponse>() {
+            @Override
+            public void onResponse(Call<OrbiterResponse> call, Response<OrbiterResponse> response) {
+                if (response.isSuccessful()) {
+                    OrbiterResponse jsonResponse = response.body();
+                    items = new ArrayList<>(Arrays.asList(jsonResponse.getItem()));
+                    adapter.addItems(items);
+                } else {
+                    try {
+                        onFailure(call, new Throwable(response.errorBody().string()));
+                    } catch (IOException e) {
+                        onFailure(call, e);
+                    }
+                }
+                hideLoading();
+            }
+            @Override
+            public void onFailure(Call<OrbiterResponse> call, Throwable t) {
+                Timber.e(t.getMessage());
+                hideLoading();
+                Snackbar.make(coordinatorLayout, t.getLocalizedMessage(),Snackbar.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void hideLoading(){
+        if (swipeRefreshLayout.isRefreshing()){
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }, 10);
+        }
+    }
+
+    private void showLoading(){
+        if (!swipeRefreshLayout.isRefreshing()){
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefreshLayout.setRefreshing(true);
+                }
+            }, 10);
+        }
     }
 
     private OnItemClickListener recyclerRowClickListener = new OnItemClickListener() {
 
         @Override
         public void onClick(View v, int position) {
+
+            Gson gson = new Gson();
+            String jsonItem = gson.toJson(items.get(position));
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                 Timber.d("Starting Activity at %s", position);
@@ -109,6 +195,7 @@ public class OrbiterFragment extends CustomFragment {
                 detailIntent.putExtra("position", position + 1);
                 detailIntent.putExtra("family", items.get(position).getName());
                 detailIntent.putExtra("agency", items.get(position).getAgency());
+                detailIntent.putExtra("json", jsonItem);
 
                 ImageView coverImage = (ImageView) v.findViewById(R.id.picture);
                 ((ViewGroup) coverImage.getParent()).setTransitionGroup(false);
@@ -123,9 +210,15 @@ public class OrbiterFragment extends CustomFragment {
                 Intent intent = new Intent(getActivity(), OrbiterDetailActivity.class);
                 intent.putExtra("family", items.get(position).getName());
                 intent.putExtra("agency", items.get(position).getAgency());
+                intent.putExtra("json", jsonItem);
                 startActivity(intent);
             }
         }
     };
+
+    @Override
+    public void onRefresh() {
+        loadJSON();
+    }
 
 }

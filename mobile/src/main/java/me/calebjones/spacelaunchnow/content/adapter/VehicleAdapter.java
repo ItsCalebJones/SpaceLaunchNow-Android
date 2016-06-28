@@ -2,10 +2,8 @@ package me.calebjones.spacelaunchnow.content.adapter;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
@@ -25,7 +23,7 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.GridItem;
+import me.calebjones.spacelaunchnow.content.models.natives.Launcher;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
@@ -38,29 +36,30 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
     public int position;
     private Context mContext;
     private Calendar rightNow;
-    private SharedPreferences sharedPref;
-    private List<GridItem> items = new ArrayList<GridItem>();
+    private List<Launcher> items = new ArrayList<>();
     private static ListPreferences sharedPreference;
     private OnItemClickListener onItemClickListener;
-    private int defaultBackgroundcolor;
+    private int defaultBackgroundColor;
     private static final int SCALE_DELAY = 30;
-    private int lastPosition = -1;
     private boolean night;
 
     public VehicleAdapter(Context context) {
         rightNow = Calendar.getInstance();
         items = new ArrayList();
         sharedPreference = ListPreferences.getInstance(context);
-        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         this.mContext = context;
     }
 
-    public void addItems(List<GridItem> items) {
+    public void addItems(List<Launcher> items) {
         if (this.items == null) {
             this.items = items;
+        } else if (this.items.size() == 0) {
+            this.items.addAll(items);
         } else {
+            this.items.clear();
             this.items.addAll(items);
         }
+        notifyDataSetChanged();
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -73,17 +72,16 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
 
         int m_theme;
 
-        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
         sharedPreference = ListPreferences.getInstance(mContext);
 
         if (sharedPreference.getNightMode()) {
             night = true;
             m_theme = R.layout.gridview_item;
-            defaultBackgroundcolor = ContextCompat.getColor(mContext, R.color.colorAccent);
+            defaultBackgroundColor = ContextCompat.getColor(mContext, R.color.colorAccent);
         } else {
             night = false;
             m_theme = R.layout.gridview_item;
-            defaultBackgroundcolor = ContextCompat.getColor(mContext, R.color.darkAccent);
+            defaultBackgroundColor = ContextCompat.getColor(mContext, R.color.darkAccent);
         }
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(m_theme, viewGroup, false);
         return new ViewHolder(v, onItemClickListener);
@@ -91,26 +89,28 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        final GridItem item = items.get(i);
+        final Launcher item = items.get(i);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             Glide.with(mContext)
                     .load(item.getImageURL())
                     .asBitmap()
+                    .placeholder(R.drawable.placeholder)
                     .fitCenter()
                     .into(new BitmapImageViewTarget(holder.picture) {
                         @Override
                         public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
                             super.onResourceReady(bitmap, anim);
                             setCellColors(bitmap, holder, position);
-                            amimateCell(holder);
                         }
                     });
+            amimateCell(holder);
         } else {
             holder.grid_root.setScaleY(1);
             holder.grid_root.setScaleX(1);
             Glide.with(mContext)
                     .load(item.getImageURL())
+                    .placeholder(R.drawable.placeholder)
                     .fitCenter()
                     .into(holder.picture);
         }
@@ -156,12 +156,12 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
                         viewHolder.name.setTextColor(swatch.getTitleTextColor());
                         viewHolder.picture.setTransitionName("cover" + position);
 
-                        Utils.animateViewColor(viewHolder.grid_root, defaultBackgroundcolor,
+                        Utils.animateViewColor(viewHolder.name, defaultBackgroundColor,
                                 swatch.getRgb());
 
                     } else {
 
-                        Timber.e("BookAdapter onGenerated - The swatch was null at: %s", position);
+                        Timber.e("onGenerated - The swatch was null at: %s", position);
                     }
                 }
             });

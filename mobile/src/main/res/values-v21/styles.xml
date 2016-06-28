@@ -43,6 +43,9 @@
         <!-- enable overlapping of exiting and entering activities-->
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="DarkTheme.Transparent" parent="DarkTheme">
@@ -113,17 +116,9 @@
         <item name="android:statusBarColor">@color/darkPrimary_dark</item>
     </style>
 
-    <style name="CollapsingTextAppearance" parent="Base.TextAppearance.AppCompat.Widget.ActionBar.Title" />
-
-    <style name="CollapsingTextAppearance.Inverse">
-        <item name="android:textSize">30sp</item>
-    </style>
-
-    <style name="SPL">
-    </style>
+    <style name="SPL"></style>
 
     <style name="SPL.SnackBar">
-        <item name="android:elevation">6dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@android:color/white</item>
@@ -143,8 +138,7 @@
     <style name="SPL.SnackBar.Button">
         <item name="android:padding">10dp</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_margin">5dp</item>
-        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:background">@null</item>
         <item name="android:textStyle">bold</item>
     </style>
 

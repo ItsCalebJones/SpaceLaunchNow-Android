@@ -2,6 +2,7 @@ package me.calebjones.spacelaunchnow.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -10,6 +11,7 @@ import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.transition.Transition;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -36,10 +38,6 @@ public class FullscreenImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_fullscreen_image);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         photoView = (PhotoView) findViewById(R.id.image);
         imageURL = getIntent().getStringExtra("imageURL");
