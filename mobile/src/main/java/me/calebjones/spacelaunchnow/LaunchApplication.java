@@ -72,7 +72,9 @@ public class LaunchApplication extends Application {
         Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
         Crashlytics.setBool("is24", DateFormat.is24HourFormat(getApplicationContext()));
         Crashlytics.setBool("Network State", Utils.isNetworkAvailable(this));
-        Crashlytics.setString("Network Info", Connectivity.getNetworkInfo(this).toString());
+        if (Connectivity.getNetworkInfo(this).toString() != null){
+            Crashlytics.setString("Network Info", Connectivity.getNetworkInfo(this).toString());
+        }
 
         LeakCanary.install(this);
         OneSignal.startInit(this).init();
