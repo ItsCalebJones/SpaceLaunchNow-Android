@@ -146,6 +146,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
             if (holder.map_view != null) {
                 holder.map_view.setVisibility(View.GONE);
                 holder.exploreFab.setVisibility(View.GONE);
+
             }
         } else {
             holder.map_view.setVisibility(View.VISIBLE);
@@ -280,6 +281,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                     } else {
                         holder.content_TMinus_status.setText(String.format("L - %s:%s:%s", hours, minutes, seconds));
                     }
+
                 }
             }.start();
 
@@ -394,7 +396,6 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         if (position >= getItemCount()) {
             position = getItemCount() - 1;
         }
-
         return 0;
     }
 
@@ -436,7 +437,6 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
             map_view = (ImageView) view.findViewById(R.id.map_view);
             map_view.setClickable(false);
-//            initializeMapView();
 
             shareButton.setOnClickListener(this);
             exploreButton.setOnClickListener(this);
