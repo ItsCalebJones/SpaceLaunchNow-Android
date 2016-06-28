@@ -30,6 +30,7 @@ import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.MissionDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
+import me.calebjones.spacelaunchnow.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
@@ -70,7 +71,8 @@ public class LaunchApplication extends Application {
         Crashlytics.setString("Timezone", String.valueOf(TimeZone.getDefault().getDisplayName()));
         Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
         Crashlytics.setBool("is24", DateFormat.is24HourFormat(getApplicationContext()));
-        Crashlytics.setBool("Network", Utils.isNetworkAvailable(this));
+        Crashlytics.setBool("Network State", Utils.isNetworkAvailable(this));
+        Crashlytics.setString("Network Info", Connectivity.getNetworkInfo(this).toString());
 
         LeakCanary.install(this);
         OneSignal.startInit(this).init();
@@ -120,9 +122,16 @@ public class LaunchApplication extends Application {
         DefaultRuleEngine.trackAppStart(this);
 
         if (!sharedPreference.getFirstBoot()) {
-            Intent nextIntent = new Intent(this, LaunchDataService.class);
-            nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
-            this.startService(nextIntent);
+
+            if(Connectivity.isConnectedWifi(this)){
+                Intent nextIntent = new Intent(this, LaunchDataService.class);
+                nextIntent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
+                this.startService(nextIntent);
+            } else {
+                Intent nextIntent = new Intent(this, LaunchDataService.class);
+                nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
+                this.startService(nextIntent);
+            }
 
             if (sharedPreference.getLastVehicleUpdate() > 0) {
                 Timber.d("Time since last VehicleUpdate: %s", (System.currentTimeMillis() - sharedPreference.getLastVehicleUpdate()));
