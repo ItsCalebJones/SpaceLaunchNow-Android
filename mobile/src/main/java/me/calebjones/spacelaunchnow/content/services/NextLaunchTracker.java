@@ -92,8 +92,7 @@ public class NextLaunchTracker extends IntentService implements
         this.switchPreferences = SwitchPreferences.getInstance(getApplicationContext());
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        mGoogleApiClient.connect();
-        Timber.d("mGoogleApiClient - connect");
+
 
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         Calendar calDay = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
@@ -110,13 +109,6 @@ public class NextLaunchTracker extends IntentService implements
             filterLaunchRealm(date, dateDay);
         }
 
-        if (switchPreferences.getAllSwitch()) {
-            sendToWear(realm.where(LaunchRealm.class)
-                    .greaterThan("net", date).findFirst());
-        } else {
-            sendToWear(filterLaunchRealm(date));
-        }
-
         if (launchRealms.size() > 0) {
             for (LaunchRealm realm : launchRealms) {
                 checkNextLaunches(realm);
@@ -131,6 +123,8 @@ public class NextLaunchTracker extends IntentService implements
             }
         }
         realm.close();
+        mGoogleApiClient.connect();
+        Timber.d("mGoogleApiClient - connect");
     }
 
     private void filterLaunchRealm(Date date, Date dateDay) {
@@ -707,32 +701,37 @@ public class NextLaunchTracker extends IntentService implements
 
     // Create a data map and put data in it
     private void sendToWear(LaunchRealm launch) {
-        if (wear) {
-            if (launch != null && launch.getName() != null && launch.getNetstamp() != null) {
-                Timber.v("Sending data to wear...");
-                PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/nextLaunch");
+        if (launch != null && launch.getName() != null && launch.getNetstamp() != null) {
+            Timber.v("Sending data to wear...");
+            PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/nextLaunch");
 
-                String NAME_KEY = "me.calebjones.spacelaunchnow.wear.nextname";
-                putDataMapReq.getDataMap().putString(NAME_KEY, launch.getName());
-                String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
-                putDataMapReq.getDataMap().putInt(TIME_KEY, launch.getNetstamp());
-                putDataMapReq.getDataMap().putLong("time", new Date().getTime());
+            String NAME_KEY = "me.calebjones.spacelaunchnow.wear.nextname";
+            putDataMapReq.getDataMap().putString(NAME_KEY, launch.getName());
+            String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
+            putDataMapReq.getDataMap().putInt(TIME_KEY, launch.getNetstamp());
+            putDataMapReq.getDataMap().putLong("time", new Date().getTime());
 
-                PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
-                Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
-                DataApi.DataItemResult dataItemResult = Wearable.DataApi
-                        .putDataItem(mGoogleApiClient, putDataReq).await();
-                Timber.v("Sent");
-            }
-        } else {
-            Timber.v("Android Wear not connected.");
+            PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
+            Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
+            DataApi.DataItemResult dataItemResult = Wearable.DataApi
+                    .putDataItem(mGoogleApiClient, putDataReq).await();
+
+            Timber.v("Sent: %s", dataItemResult.getDataItem());
         }
     }
 
     @Override
     public void onConnected(Bundle bundle) {
-        wear = true;
         Timber.d("onConnected");
+        Date date = new Date();
+        Realm realm = Realm.getDefaultInstance();
+        if (switchPreferences.getAllSwitch()) {
+            sendToWear(realm.where(LaunchRealm.class)
+                    .greaterThan("net", date).findFirst());
+        } else {
+            sendToWear(filterLaunchRealm(date));
+        }
+        realm.close();
     }
 
     @Override
@@ -755,4 +754,5 @@ public class NextLaunchTracker extends IntentService implements
             mGoogleApiClient.disconnect();
         }
     }
+
 }
