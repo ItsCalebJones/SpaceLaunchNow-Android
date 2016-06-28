@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,7 +16,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -30,13 +30,13 @@ import java.util.List;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.VehicleAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.Launcher;
-import me.calebjones.spacelaunchnow.content.models.LauncherResponse;
+import me.calebjones.spacelaunchnow.content.models.natives.Launcher;
+import me.calebjones.spacelaunchnow.content.responses.base.LauncherResponse;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.ui.activity.LauncherDetailActivity;
-import me.calebjones.spacelaunchnow.utils.CustomFragment;
+import me.calebjones.spacelaunchnow.ui.fragment.CustomFragment;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
-import me.calebjones.spacelaunchnow.utils.RequestInterface;
+import me.calebjones.spacelaunchnow.content.interfaces.APIRequestInterface;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -79,6 +79,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
             m_theme = R.style.DarkTheme_NoActionBar;
         } else {
             m_theme = R.style.LightTheme_NoActionBar;
+            m_theme = R.style.LightTheme_NoActionBar;
         }
         // create ContextThemeWrapper from the original Activity Context with the custom theme
         Context context = new ContextThemeWrapper(getActivity().getApplicationContext(), m_theme);
@@ -100,7 +101,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
             layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 2);
         }
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 int topRowVerticalPosition =
@@ -116,28 +117,31 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
         });
         adapter.setOnItemClickListener(recyclerRowClickListener);
         mRecyclerView.setAdapter(adapter);
-        loadJSON();
+        Timber.v("Returning view.");
         return view;
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
+        Timber.v("onResume");
+        loadJSON();
         super.onResume();
     }
 
-    private void loadJSON(){
+    private void loadJSON() {
         Timber.v("Loading vehicles...");
         showLoading();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Strings.BASE_URL)
+                .baseUrl(Strings.API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        final RequestInterface request = retrofit.create(RequestInterface.class);
+
+        APIRequestInterface request = retrofit.create(APIRequestInterface.class);
         Call<LauncherResponse> call = request.getLaunchers();
         call.enqueue(new Callback<LauncherResponse>() {
             @Override
             public void onResponse(Call<LauncherResponse> call, Response<LauncherResponse> response) {
-                if (response.isSuccess()) {
+                if (response.isSuccessful()) {
                     LauncherResponse jsonResponse = response.body();
                     items = new ArrayList<>(Arrays.asList(jsonResponse.getItem()));
                     adapter.addItems(items);
@@ -150,24 +154,35 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
                 }
                 hideLoading();
             }
+
             @Override
             public void onFailure(Call<LauncherResponse> call, Throwable t) {
                 Timber.e(t.getMessage());
                 hideLoading();
-                Snackbar.make(coordinatorLayout, t.getLocalizedMessage(),Snackbar.LENGTH_LONG).show();
+                Snackbar.make(coordinatorLayout, t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
             }
         });
     }
 
-    private void hideLoading(){
-        if (swipeRefreshLayout.isRefreshing()){
-            swipeRefreshLayout.setRefreshing(false);
+    private void hideLoading() {
+        if (swipeRefreshLayout.isRefreshing()) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }, 10);
         }
     }
 
-    private void showLoading(){
-        if (!swipeRefreshLayout.isRefreshing()){
-            swipeRefreshLayout.setRefreshing(true);
+    private void showLoading() {
+        if (!swipeRefreshLayout.isRefreshing()) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefreshLayout.setRefreshing(true);
+                }
+            }, 10);
         }
     }
 
@@ -179,32 +194,13 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
             Gson gson = new Gson();
             String jsonItem = gson.toJson(items.get(position));
 
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                Timber.d("Starting Activity at %s", position);
-
-                Intent detailIntent = new Intent(getActivity(), LauncherDetailActivity.class);
-                detailIntent.putExtra("position", position);
-                detailIntent.putExtra("family", items.get(position).getName());
-                detailIntent.putExtra("agency", items.get(position).getAgency());
-                detailIntent.putExtra("json", jsonItem);
-
-                ImageView coverImage = (ImageView) v.findViewById(R.id.picture);
-                ((ViewGroup) coverImage.getParent()).setTransitionGroup(false);
-                photoCache.put(position, coverImage.getDrawingCache());
-
-                // Setup the transition to the detail activity
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(),
-                        new Pair<View, String>(coverImage, "cover" + position));
-
-                startActivity(detailIntent, options.toBundle());
-            } else {
-                Intent intent = new Intent(getActivity(), LauncherDetailActivity.class);
-                intent.putExtra("family", items.get(position).getName());
-                intent.putExtra("agency", items.get(position).getAgency());
-                intent.putExtra("json", jsonItem);
-                startActivity(intent);
-            }
+            Intent intent = new Intent(getActivity(), LauncherDetailActivity.class);
+            intent.putExtra("family", items.get(position).getName());
+            intent.putExtra("agency", items.get(position).getAgency());
+            intent.putExtra("json", jsonItem);
+            startActivity(intent);
         }
+
     };
 
     @Override

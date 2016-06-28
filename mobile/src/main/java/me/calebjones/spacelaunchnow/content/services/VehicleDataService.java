@@ -5,37 +5,55 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.crashlytics.android.Crashlytics;
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.List;
 
-import me.calebjones.spacelaunchnow.content.database.DatabaseManager;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmList;
+import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.Family;
-import me.calebjones.spacelaunchnow.content.models.Rocket;
+import me.calebjones.spacelaunchnow.content.interfaces.APIRequestInterface;
+import me.calebjones.spacelaunchnow.content.interfaces.LibraryRequestInterface;
 import me.calebjones.spacelaunchnow.content.models.Strings;
-import me.calebjones.spacelaunchnow.content.models.RocketDetails;
+import me.calebjones.spacelaunchnow.content.models.realm.RealmStr;
+import me.calebjones.spacelaunchnow.content.models.realm.RocketDetailsRealm;
+import me.calebjones.spacelaunchnow.content.models.realm.RocketFamilyRealm;
+import me.calebjones.spacelaunchnow.content.models.realm.RocketRealm;
+import me.calebjones.spacelaunchnow.content.responses.base.VehicleResponse;
+import me.calebjones.spacelaunchnow.content.responses.launchlibrary.RocketFamilyResponse;
+import me.calebjones.spacelaunchnow.content.responses.launchlibrary.RocketResponse;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
 
 /**
  * This grabs details from my own hosted JSON file.
  */
+//TODO delete and point to library data service
 public class VehicleDataService extends IntentService {
 
-    public static List<Rocket> vehicleList;
+
     private SharedPreferences sharedPref;
     private ListPreferences listPreference;
+    private Realm mRealm;
+
+    private Retrofit apiRetrofit;
+    private Retrofit libraryRetrofit;
 
     public VehicleDataService() {
         super("VehicleDataService");
@@ -43,6 +61,55 @@ public class VehicleDataService extends IntentService {
 
     public void onCreate() {
         Timber.d("LaunchDataService - onCreate");
+        // Note there is a bug in GSON 2.5 that can cause it to StackOverflow when working with RealmObjects.
+        // To work around this, use the ExclusionStrategy below or downgrade to 1.7.1
+        // See more here: https://code.google.com/p/google-gson/issues/detail?id=440
+        Type token = new TypeToken<RealmList<RealmStr>>() {
+        }.getType();
+
+        Gson gson = new GsonBuilder()
+                .setDateFormat("MMMM dd, yyyy hh:mm:ss zzz")
+                .setExclusionStrategies(new ExclusionStrategy() {
+                    @Override
+                    public boolean shouldSkipField(FieldAttributes f) {
+                        return f.getDeclaringClass().equals(RealmObject.class);
+                    }
+
+                    @Override
+                    public boolean shouldSkipClass(Class<?> clazz) {
+                        return false;
+                    }
+                })
+                .registerTypeAdapter(token, new TypeAdapter<RealmList<RealmStr>>() {
+
+                    @Override
+                    public void write(JsonWriter out, RealmList<RealmStr> value) throws io.realm.internal.IOException {
+                        // Ignore
+                    }
+
+                    @Override
+                    public RealmList<RealmStr> read(JsonReader in) throws io.realm.internal.IOException, java.io.IOException {
+                        RealmList<RealmStr> list = new RealmList<RealmStr>();
+                        in.beginArray();
+                        while (in.hasNext()) {
+                            list.add(new RealmStr(in.nextString()));
+                        }
+                        in.endArray();
+                        return list;
+                    }
+                })
+                .create();
+
+        libraryRetrofit = new Retrofit.Builder()
+                .baseUrl(Strings.LIBRARY_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        apiRetrofit = new Retrofit.Builder()
+                .baseUrl(Strings.API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
         super.onCreate();
     }
 
@@ -55,207 +122,135 @@ public class VehicleDataService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Timber.d("VehicleDataService - Intent received!");
+
+        // Init Realm
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
+                .deleteRealmIfMigrationNeeded()
+                .build();
+
+        // Create a new empty instance of Realm
+        mRealm = Realm.getInstance(realmConfiguration);
+
         if (intent != null) {
             String action = intent.getAction();
             if (Strings.ACTION_GET_VEHICLES_DETAIL.equals(action)) {
                 listPreference.setLastVehicleUpdate(System.currentTimeMillis());
-                getVehicleDetails();
-                getVehicles();
+                getBaseVehicleDetails();
+                getLibraryRockets();
+                getLibraryRocketsFamily();
             }
             if (Strings.ACTION_GET_VEHICLES.equals(action)) {
-                getVehicles();
+                getLibraryRockets();
+                getLibraryRocketsFamily();
             }
         }
-        onDestroy();
+        mRealm.close();
     }
 
-    private void getVehicleDetails() {
-        InputStream inputStream = null;
-        boolean result;
-        HttpURLConnection urlConnection = null;
+    private void getBaseVehicleDetails() {
+        APIRequestInterface request = apiRetrofit.create(APIRequestInterface.class);
+        Call<VehicleResponse> call;
+        Response<VehicleResponse> launchResponse;
+        RealmList<RocketDetailsRealm> items = new RealmList<>();
+
         try {
-            /* forming th java.net.URL object */
-            String value = this.sharedPref.getString("value", "5");
-            URL url = new URL("http://calebjones.me/app/launchvehicle.json");
+            call = request.getVehicles();
+            launchResponse = call.execute();
+            Collections.addAll(items, launchResponse.body().getVehicles());
 
-            urlConnection = (HttpURLConnection) url.openConnection();
-
-                /* for Get request */
-            urlConnection.setRequestProperty("Accept", "*/*");
-            urlConnection.setConnectTimeout(5000);
-            urlConnection.setRequestMethod("GET");
-
-            int statusCode = urlConnection.getResponseCode();
-
-                /* 200 represents HTTP OK */
-            if (statusCode == 200) {
-
-                BufferedReader r = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                StringBuilder response = new StringBuilder();
-                String line;
-
-                while ((line = r.readLine()) != null) {
-                    response.append(line);
-                }
-
-                result = addToDB(response);
-                if (result) {
-                    Intent broadcastIntent = new Intent();
-                    broadcastIntent.setAction(Strings.ACTION_SUCCESS_VEHICLE_DETAILS);
-                    VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
-                } else {
-                    Intent broadcastIntent = new Intent();
-                    broadcastIntent.setAction(Strings.ACTION_FAILURE_VEHICLE_DETAILS);
-                    VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
-                }
+            for(RocketDetailsRealm item : items){
+                item.setName(item.getLV_Name() + " " +item.getLV_Variant());
             }
 
+            mRealm.beginTransaction();
+            mRealm.copyToRealmOrUpdate(items);
+            mRealm.commitTransaction();
 
-        } catch (Exception e) {
+
+            Intent broadcastIntent = new Intent();
+            broadcastIntent.setAction(Strings.ACTION_SUCCESS_VEHICLE_DETAILS);
+            VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+        } catch (IOException e) {
+
             Timber.e("VehicleDataService - ERROR: %s", e.getLocalizedMessage());
-            Crashlytics.logException(e);
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_FAILURE_VEHICLE_DETAILS);
             VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
         }
     }
 
-    private void getVehicles() {
-        InputStream inputStream = null;
-        Integer result = 0;
-        HttpURLConnection urlConnection = null;
+    private void getLibraryRockets() {
+        LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
+        Call<RocketResponse> call;
+        Response<RocketResponse> launchResponse;
+        RealmList<RocketRealm> items = new RealmList<>();
+
+        int offset = 0;
+        int total = 10;
+        int count;
+
         try {
-            /* forming th java.net.URL object */
-            URL url;
-            //Used for loading debug launches/reproducing bugs
-            if (listPreference.isDebugEnabled()) {
-                url = new URL(Strings.DEBUG_VEHICLE_URL);
-            } else {
-                url = new URL(Strings.VEHICLE_URL);
-            }
-
-            urlConnection = (HttpURLConnection) url.openConnection();
-
-                /* for Get request */
-            urlConnection.setRequestMethod("GET");
-
-            int statusCode = urlConnection.getResponseCode();
-
-                /* 200 represents HTTP OK */
-            if (statusCode == 200) {
-
-                BufferedReader r = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                StringBuilder response = new StringBuilder();
-                String line;
-
-                while ((line = r.readLine()) != null) {
-                    response.append(line);
+            while (total != offset) {
+                if (listPreference.isDebugEnabled()) {
+                    call = request.getDebugAllRockets(offset);
+                } else {
+                    call = request.getAllRockets(offset);
                 }
-
-                parseUpcomingResult(response.toString());
-                Timber.d("Vehicle list:  %s ", vehicleList.size());
-                VehicleDataService.this.cleanVehiclesCache();
-                this.listPreference.setVehiclesList(vehicleList);
-
-                Intent broadcastIntent = new Intent();
-                broadcastIntent.setAction(Strings.ACTION_SUCCESS_VEHICLES);
-                VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+                launchResponse = call.execute();
+                total = launchResponse.body().getTotal();
+                count = launchResponse.body().getCount();
+                offset = offset + count;
+                Collections.addAll(items, launchResponse.body().getRockets());
             }
 
+            mRealm.beginTransaction();
+            mRealm.copyToRealmOrUpdate(items);
+            mRealm.commitTransaction();
 
-        } catch (Exception e) {
+            Intent broadcastIntent = new Intent();
+            broadcastIntent.setAction(Strings.ACTION_SUCCESS_VEHICLES);
+            VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+        } catch (IOException e) {
+            e.printStackTrace();
             Timber.e("VehicleDataService - ERROR: %s", e.getLocalizedMessage());
-            Crashlytics.logException(e);
+
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_FAILURE_VEHICLES);
             VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
         }
     }
 
-    private void parseUpcomingResult(String result) throws JSONException {
+    private void getLibraryRocketsFamily() {
+        LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
+        Call<RocketFamilyResponse> call;
+        Response<RocketFamilyResponse> launchResponse;
+        RealmList<RocketFamilyRealm> items = new RealmList<>();
+
+        int offset = 0;
+        int total = 10;
+        int count;
+
         try {
-            /*Initialize array if null*/
-            vehicleList = new ArrayList<>();
-            JSONObject response = new JSONObject(result);
-            JSONArray rocketsArray = response.optJSONArray("rockets");
-            for (int i = 0; i < rocketsArray.length(); i++) {
-                Rocket rocket = new Rocket();
-                JSONObject rocketObj = rocketsArray.optJSONObject(i);
-                JSONObject familyObj = rocketObj.optJSONObject("family");
-
-                rocket.setId(rocketObj.optInt("id", 0));
-                rocket.setName(rocketObj.optString("name"));
-                rocket.setConfiguration(rocketObj.optString("configuration"));
-                rocket.setInfoURL(rocketObj.optString("infoURL"));
-                rocket.setWikiURL(rocketObj.optString("wikiURL"));
-                rocket.setImageURL(rocketObj.optString("imageURL"));
-
-                if (familyObj != null) {
-                    Family family = new Family();
-                    family.setId(familyObj.optInt("id", 0));
-                    family.setName(familyObj.optString("name"));
-                    family.setAgencies(familyObj.optString("agencies"));
-
-                    rocket.setFamily(family);
+            while (total != offset) {
+                if (listPreference.isDebugEnabled()) {
+                    call = request.getDebugAllRocketFamily(offset);
+                } else {
+                    call = request.getAllRocketFamily(offset);
                 }
-                vehicleList.add(rocket);
+                launchResponse = call.execute();
+                total = launchResponse.body().getTotal();
+                count = launchResponse.body().getCount();
+                offset = offset + count;
+                Collections.addAll(items, launchResponse.body().getRocketFamilies());
             }
-        } catch (JSONException e) {
+
+            mRealm.beginTransaction();
+            mRealm.copyToRealmOrUpdate(items);
+            mRealm.commitTransaction();
+
+        } catch (IOException e) {
             e.printStackTrace();
-            Crashlytics.logException(e);
-        }
-    }
-
-    private void cleanVehiclesCache() {
-        this.listPreference.removeVehicles();
-    }
-
-    private boolean addToDB(StringBuilder response) {
-        DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
-
-        try {
-            JSONArray responseArray = new JSONArray(response.toString());
-            Timber.d("addToDB - Database Size: %s (Expect 0 here)", databaseManager.getCount());
-            if (databaseManager.getCount() > 0){
-                databaseManager.rebuildDB(databaseManager.getWritableDatabase());
-            }
-            Timber.d("addToDB - Adding: %s...", response.toString().substring(0, (response.toString().length() / 2)));
-            for (int i = 0; i < responseArray.length(); i++) {
-                RocketDetails launchVehicle = new RocketDetails();
-
-                JSONObject vehicleObj = responseArray.optJSONObject(i);
-                launchVehicle.setDescription(vehicleObj.optString("Description"));
-                launchVehicle.setWikiURL(vehicleObj.optString("WikiURL"));
-                launchVehicle.setInfoURL(vehicleObj.optString("InfoURL"));
-                launchVehicle.setLVName(vehicleObj.optString("LV_Name"));
-                launchVehicle.setLVFamily(vehicleObj.optString("LV_Family"));
-                launchVehicle.setLVSFamily(vehicleObj.optString("LV_SFamily"));
-                launchVehicle.setLVManufacturer(vehicleObj.optString("LV_Manufacturer"));
-                launchVehicle.setLVVariant(vehicleObj.optString("LV_Variant"));
-                launchVehicle.setLVAlias(vehicleObj.optString("LV_Alias"));
-                launchVehicle.setMinStage(vehicleObj.optInt("Min_Stage"));
-                launchVehicle.setMaxStage(vehicleObj.optInt("Max_Stage"));
-                launchVehicle.setLength(vehicleObj.optString("Length"));
-                launchVehicle.setDiameter(vehicleObj.optString("Diameter"));
-                launchVehicle.setLaunchMass(vehicleObj.optString("Launch_Mass"));
-                launchVehicle.setLEOCapacity(vehicleObj.optString("LEO_Capacity"));
-                launchVehicle.setGTOCapacity(vehicleObj.optString("GTO_Capacity"));
-                launchVehicle.setTOThrust(vehicleObj.optString("TO_Thrust"));
-                launchVehicle.setClass_(vehicleObj.optString("Class"));
-                launchVehicle.setApogee(vehicleObj.optString("Apogee"));
-                launchVehicle.setImageURL(vehicleObj.optString("ImageURL"));
-
-                databaseManager.addPost(launchVehicle);
-                Timber.v("addToDB - adding " + launchVehicle.getLVName() + "...");
-            }
-            //Success
-            Timber.d("addToDB - Success! Database Size:  %s ", databaseManager.getCount());
-            databaseManager.close();
-            return true;
-        } catch (JSONException e) {
-            Crashlytics.logException(e);
-            //Error
-            return false;
+            Timber.e("VehicleDataService - ERROR: %s", e.getLocalizedMessage());
         }
     }
 }

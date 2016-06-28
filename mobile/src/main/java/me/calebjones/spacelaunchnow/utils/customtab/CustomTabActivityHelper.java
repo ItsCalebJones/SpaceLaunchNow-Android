@@ -11,8 +11,6 @@ import android.support.customtabs.CustomTabsSession;
 
 
 import java.util.List;
-
-import me.calebjones.spacelaunchnow.MainActivity;
 import timber.log.Timber;
 
 /**

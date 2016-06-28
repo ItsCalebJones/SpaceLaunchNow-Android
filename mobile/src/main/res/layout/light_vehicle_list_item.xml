@@ -32,7 +32,7 @@
                 <ImageView
                     android:id="@+id/item_icon"
                     android:layout_width="match_parent"
-                    android:layout_height="175dp"
+                    android:layout_height="250dp"
                     android:scaleType="centerCrop"
                     android:transitionName="imageCover"
                     app:srcCompat="@drawable/placeholder" />

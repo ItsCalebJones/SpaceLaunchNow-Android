@@ -30,7 +30,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.Orbiter;
+import me.calebjones.spacelaunchnow.content.models.natives.Orbiter;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;
@@ -64,11 +64,11 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
         customTabActivityHelper = new CustomTabActivityHelper();
 
         if (sharedPreference.getNightMode()) {
-            m_theme = R.style.DarkTheme_Transparent;
+            m_theme = R.style.DarkTheme;
             statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
             layout = R.layout.dark_activity_orbiter_detail;
         } else {
-            m_theme = R.style.LightTheme_Transparent;
+            m_theme = R.style.LightTheme;
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
             layout = R.layout.activity_orbiter_detail;
         }

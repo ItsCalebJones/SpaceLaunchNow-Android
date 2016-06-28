@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,7 +16,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -30,13 +30,13 @@ import java.util.List;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.OrbiterAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.Orbiter;
-import me.calebjones.spacelaunchnow.content.models.OrbiterResponse;
+import me.calebjones.spacelaunchnow.content.models.natives.Orbiter;
+import me.calebjones.spacelaunchnow.content.responses.base.OrbiterResponse;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.ui.activity.OrbiterDetailActivity;
-import me.calebjones.spacelaunchnow.utils.CustomFragment;
+import me.calebjones.spacelaunchnow.ui.fragment.CustomFragment;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
-import me.calebjones.spacelaunchnow.utils.RequestInterface;
+import me.calebjones.spacelaunchnow.content.interfaces.APIRequestInterface;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -115,12 +115,12 @@ public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayou
         });
         adapter.setOnItemClickListener(recyclerRowClickListener);
         mRecyclerView.setAdapter(adapter);
-        loadJSON();
         return view;
     }
 
     @Override
     public void onResume(){
+        loadJSON();
         super.onResume();
     }
 
@@ -128,15 +128,15 @@ public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayou
         Timber.v("Loading orbiters...");
         showLoading();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Strings.BASE_URL)
+                .baseUrl(Strings.API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        RequestInterface request = retrofit.create(RequestInterface.class);
+        APIRequestInterface request = retrofit.create(APIRequestInterface.class);
         Call<OrbiterResponse> call = request.getOrbiter();
         call.enqueue(new Callback<OrbiterResponse>() {
             @Override
             public void onResponse(Call<OrbiterResponse> call, Response<OrbiterResponse> response) {
-                if (response.isSuccess()) {
+                if (response.isSuccessful()) {
                     OrbiterResponse jsonResponse = response.body();
                     items = new ArrayList<>(Arrays.asList(jsonResponse.getItem()));
                     adapter.addItems(items);
@@ -160,13 +160,23 @@ public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayou
 
     private void hideLoading(){
         if (swipeRefreshLayout.isRefreshing()){
-            swipeRefreshLayout.setRefreshing(false);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }, 10);
         }
     }
 
     private void showLoading(){
         if (!swipeRefreshLayout.isRefreshing()){
-            swipeRefreshLayout.setRefreshing(true);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefreshLayout.setRefreshing(true);
+                }
+            }, 10);
         }
     }
 

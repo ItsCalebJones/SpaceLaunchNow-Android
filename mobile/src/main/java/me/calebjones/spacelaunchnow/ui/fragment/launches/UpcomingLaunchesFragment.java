@@ -12,13 +12,10 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,30 +42,36 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
+import io.realm.Sort;
 import me.calebjones.spacelaunchnow.BuildConfig;
-import me.calebjones.spacelaunchnow.MainActivity;
-import me.calebjones.spacelaunchnow.content.adapter.LaunchAdapter;
+import me.calebjones.spacelaunchnow.content.adapter.ListAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.loader.PreviousLoader;
-import me.calebjones.spacelaunchnow.content.loader.UpcomingLoader;
+import me.calebjones.spacelaunchnow.content.interfaces.QueryBuilder;
 import me.calebjones.spacelaunchnow.content.models.Strings;
-import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
+import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
+import me.calebjones.spacelaunchnow.ui.widget.SimpleDividerItemDecoration;
+import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import timber.log.Timber;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UpcomingLaunchesFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Launch>>, SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
+public class UpcomingLaunchesFragment extends BaseFragment implements SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
 
     private View view;
     private RecyclerView mRecyclerView;
-    private LaunchAdapter adapter;
+    private ListAdapter adapter;
     private LinearLayoutManager layoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private List<Launch> rocketLaunches;
+    private RealmResults<LaunchRealm> launchRealms;
     private SwitchPreferences switchPreferences;
     private ListPreferences listPreference;
     private SharedPreferences SharedPreferences;
@@ -101,11 +104,11 @@ public class UpcomingLaunchesFragment extends Fragment implements LoaderManager.
 
         setHasOptionsMenu(true);
 
-        SharedPreferences = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences = android.support.v7.preference.PreferenceManager
+                .getDefaultSharedPreferences(getContext());
         this.listPreference = ListPreferences.getInstance(getContext());
         this.switchPreferences = SwitchPreferences.getInstance(getContext());
-        this.rocketLaunches = new ArrayList();
-        adapter = new LaunchAdapter(getContext());
+        adapter = new ListAdapter(getContext());
 
         LayoutInflater lf = getActivity().getLayoutInflater();
 
@@ -127,10 +130,10 @@ public class UpcomingLaunchesFragment extends Fragment implements LoaderManager.
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
         mRecyclerView.setAdapter(adapter);
 
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
-        {
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 int topRowVerticalPosition =
@@ -144,19 +147,18 @@ public class UpcomingLaunchesFragment extends Fragment implements LoaderManager.
                     }
                 }
             }
+
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
             }
         });
 
-        if (this.listPreference.getUpcomingFirstBoot()) {
-            this.listPreference.setUpcomingFirstBoot(false);
-        }
         CircularProgressView progressView = (CircularProgressView)
                 view.findViewById(R.id.progress_View);
         progressView.setVisibility(View.VISIBLE);
         progressView.startAnimation();
+
         setUpFab();
         return view;
     }
@@ -181,12 +183,12 @@ public class UpcomingLaunchesFragment extends Fragment implements LoaderManager.
             @Override
             public void onClick(View v) {
                 switchPreferences.resetAllUpFilters();
-                if (switchPreferences.getUpFiltered()) {
+                if (switchPreferences.isUpFiltered()) {
                     switchPreferences.setUpFiltered(false);
-                    listPreference.removeFilteredList();
-                    displayLaunches();
+                    listPreference.resetUpTitle();
+                    loadData();
+                    setTitle();
                 }
-                menu.close(true);
             }
         });
 
@@ -227,13 +229,16 @@ public class UpcomingLaunchesFragment extends Fragment implements LoaderManager.
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
                         switchPreferences.setUpCountryFiltered(which);
                         ArrayList<String> keyArray = new ArrayList<>();
-                        for (int i = 0; i < which.length;i ++){
+                        for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
                         if (keyArray.size() > 0) {
-                            adapter.clear();
-                            fetchDataFiltered(2, keyArray);
+                            switchPreferences.setUpCountryFilteredArray(keyArray);
+                            switchPreferences.setUpFiltered(true);
+                        } else {
+                            switchPreferences.resetCountryUpFilters();
                         }
+                        fetchDataFiltered();
                         menu.toggle(false);
                         return true;
                     }
@@ -255,13 +260,16 @@ public class UpcomingLaunchesFragment extends Fragment implements LoaderManager.
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
                         switchPreferences.setUpLocationFiltered(which);
                         ArrayList<String> keyArray = new ArrayList<>();
-                        for (int i = 0; i < which.length;i ++){
+                        for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
                         if (keyArray.size() > 0) {
-                            adapter.clear();
-                            fetchDataFiltered(3, keyArray);
+                            switchPreferences.setUpLocationFilteredArray(keyArray);
+                            switchPreferences.setUpFiltered(true);
+                        } else {
+                            switchPreferences.resetLocationUpFilters();
                         }
+                        fetchDataFiltered();
                         menu.toggle(false);
                         return true;
                     }
@@ -283,13 +291,16 @@ public class UpcomingLaunchesFragment extends Fragment implements LoaderManager.
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
                         switchPreferences.setUpAgencyFiltered(which);
                         ArrayList<String> keyArray = new ArrayList<>();
-                        for (int i = 0; i < which.length;i ++){
+                        for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
                         if (keyArray.size() > 0) {
-                            adapter.clear();
-                            fetchDataFiltered(0, keyArray);
+                            switchPreferences.setUpAgencyFilterArray(keyArray);
+                            switchPreferences.setUpFiltered(true);
+                        } else {
+                            switchPreferences.resetAgencyUpFilters();
                         }
+                        fetchDataFiltered();
                         menu.toggle(false);
                         return true;
                     }
@@ -311,13 +322,16 @@ public class UpcomingLaunchesFragment extends Fragment implements LoaderManager.
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
                         switchPreferences.setUpVehicleFiltered(which);
                         ArrayList<String> keyArray = new ArrayList<>();
-                        for (int i = 0; i < which.length;i ++){
+                        for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
                         if (keyArray.size() > 0) {
-                            adapter.clear();
-                            fetchDataFiltered(1, keyArray);
+                            switchPreferences.setUpVehicleFilteredArray(keyArray);
+                            switchPreferences.setUpFiltered(true);
+                        } else {
+                            switchPreferences.resetVehicleUpFilters();
                         }
+                        fetchDataFiltered();
                         menu.toggle(false);
                         return true;
                     }
@@ -359,57 +373,59 @@ public class UpcomingLaunchesFragment extends Fragment implements LoaderManager.
         menu.setIconToggleAnimatorSet(set);
     }
 
-    public void fetchDataFiltered(int type, ArrayList<String> key) {
-        Timber.d("Filtering by: %s", key);
-        listPreference.setUpFilter(type, key);
-        displayLaunches();
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
-    public void displayLaunches() {
-        long time = System.currentTimeMillis();
-        Timber.v("Getting list!");
-        if (!switchPreferences.getUpFiltered()) {
-            rocketLaunches = listPreference.getLaunchesUpcoming();
-        } else {
-            rocketLaunches = listPreference.getLaunchesUpcomingFiltered();
-        }
-        Timber.v("Getting list took %s", Math.abs(time - System.currentTimeMillis()));
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
 
-        if (rocketLaunches.size() == 0) {
-            Timber.v("Upcoming launches is empty...");
-            Snackbar.make(coordinatorLayout, "Error displaying launch data.", Snackbar.LENGTH_LONG).show();
-        } else {
+    public void fetchDataFiltered() {
+        loadData();
+        rebuildTitle();
+    }
+
+    private RealmChangeListener callback = new RealmChangeListener<RealmResults<LaunchRealm>>() {
+        @Override
+        public void onChange(RealmResults<LaunchRealm> results) {
+            Timber.v("Data changed - size: %s", results.size());
             adapter.clear();
-            List<Launch> goList = new ArrayList<>();
-            List<Launch> noList = new ArrayList<>();
-            for (int i = 0; i < rocketLaunches.size(); i++) {
-                if (rocketLaunches.get(i).getStatus() == 1) {
-                    goList.add(rocketLaunches.get(i));
-                } else {
-                    noList.add(rocketLaunches.get(i));
-                }
+
+            if (results.size() > 0) {
+                results.sort("net", Sort.ASCENDING);
+                adapter.addItems(results);
             }
-            goList.addAll(noList);
-            adapter.addItems(goList);
+            hideLoading();
+            launchRealms.removeChangeListeners();
         }
+    };
+
+
+    public void loadData() {
+        launchRealms = QueryBuilder.buildUpQuery(context, getRealm());
+        launchRealms.addChangeListener(callback);
     }
 
-    public void fetchData() {
+    public void getUpcomingLaunchData() {
         Timber.d("Sending GET_UP_LAUNCHES");
         Intent intent = new Intent(getContext(), LaunchDataService.class);
         intent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
         getContext().startService(intent);
+        getRealm().removeAllChangeListeners();
     }
 
 
     private void showLoading() {
-        if(!mSwipeRefreshLayout.isRefreshing()){
+        if (!mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(true);
         }
     }
 
     private void hideLoading() {
-        if(mSwipeRefreshLayout.isRefreshing()){
+        if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
         CircularProgressView progressView = (CircularProgressView)
@@ -424,12 +440,68 @@ public class UpcomingLaunchesFragment extends Fragment implements LoaderManager.
             Timber.v("Received: %s", intent.getAction());
             hideLoading();
             if (intent.getAction().equals(Strings.ACTION_SUCCESS_UP_LAUNCHES)) {
-                displayLaunches();
+                loadData();
             } else if (intent.getAction().equals(Strings.ACTION_FAILURE_UP_LAUNCHES)) {
-                Snackbar.make(coordinatorLayout, intent.getStringExtra("error"), Snackbar.LENGTH_LONG).show();
+                SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, intent);
             }
         }
     };
+
+    private void rebuildTitle() {
+        String title = "";
+        ArrayList<String> agency = switchPreferences.getUpAgencyFilteredArray();
+        ArrayList<String> country = switchPreferences.getUpCountryFilteredArray();
+        ArrayList<String> location = switchPreferences.getUpLocationFilteredArray();
+        ArrayList<String> vehicle = switchPreferences.getUpVehicleFilteredArray();
+
+        if (agency != null) {
+            for (String key : agency) {
+                if (title.length() == 0) {
+                    title = key;
+                } else {
+                    title = title + " | " + key;
+                }
+            }
+        }
+
+        if (country != null) {
+            for (String key : country) {
+                if (title.length() == 0) {
+                    title = key;
+                } else {
+                    title = title + " | " + key;
+                }
+            }
+        }
+
+
+        if (location != null) {
+            for (String key : location) {
+                if (title.length() == 0) {
+                    title = key;
+                } else {
+                    title = title + " | " + key;
+                }
+            }
+        }
+
+        if (vehicle != null) {
+            for (String key : vehicle) {
+                if (title.length() == 0) {
+                    title = key;
+                } else {
+                    title = title + " | " + key;
+                }
+            }
+        }
+
+        if (title.length() > 0) {
+            listPreference.setUpTitle(title);
+        } else {
+            listPreference.resetUpTitle();
+        }
+        setTitle();
+    }
 
     @Override
     public void onResume() {
@@ -439,7 +511,8 @@ public class UpcomingLaunchesFragment extends Fragment implements LoaderManager.
         intentFilter.addAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
 
         getActivity().registerReceiver(nextLaunchReceiver, intentFilter);
-        getLoaderManager().initLoader(1, null, this).forceLoad();
+        setTitle();
+        loadData();
         super.onResume();
     }
 
@@ -450,9 +523,15 @@ public class UpcomingLaunchesFragment extends Fragment implements LoaderManager.
     }
 
     public void onRefresh() {
-        switchPreferences.setUpFiltered(false);
-        switchPreferences.resetAllUpFilters();
-        fetchData();
+        launchRealms.removeChangeListeners();
+        if (!switchPreferences.isUpFiltered()) {
+            getUpcomingLaunchData();
+        } else {
+            switchPreferences.setUpFiltered(false);
+            switchPreferences.resetAllUpFilters();
+            loadData();
+            setTitle();
+        }
     }
 
     static {
@@ -495,7 +574,7 @@ public class UpcomingLaunchesFragment extends Fragment implements LoaderManager.
     }
 
     private void setTitle() {
-        ((MainActivity) getActivity()).setActionBarTitle("Space Launch Now");
+        ((MainActivity) getActivity()).setActionBarTitle(listPreference.getUpTitle());
     }
 
     @Override
@@ -507,21 +586,24 @@ public class UpcomingLaunchesFragment extends Fragment implements LoaderManager.
 
         if (id == R.id.action_refresh) {
             onRefresh();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onQueryTextChange(String query) {
+        switchPreferences.setPrevFiltered(true);
         // Here is where we are going to implement our filter logic
-        final List<Launch> filteredModelList = filter(rocketLaunches, query);
-        if (query.length() > 3) {
-            if (!BuildConfig.DEBUG) {
-                Answers.getInstance().logSearch(new SearchEvent()
-                        .putQuery(query));
-            }
+        Answers.getInstance().logSearch(new SearchEvent()
+                .putQuery(query));
+        final List<LaunchRealm> filteredModelList = filter(launchRealms, query);
+        if (filteredModelList.size() > 100) {
+            adapter.clear();
+            adapter.addItems(filteredModelList);
+        } else {
+            adapter.animateTo(filteredModelList);
         }
-        adapter.animateTo(filteredModelList);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -536,60 +618,36 @@ public class UpcomingLaunchesFragment extends Fragment implements LoaderManager.
         return false;
     }
 
-    private List<Launch> filter(List<Launch> models, String query) {
+    private List<LaunchRealm> filter(List<LaunchRealm> models, String query) {
         query = query.toLowerCase();
 
-        final List<Launch> filteredModelList = new ArrayList<>();
-        for (Launch model : models) {
+        final List<LaunchRealm> filteredModelList = new ArrayList<>();
+        for (LaunchRealm model : models) {
             final String name = model.getName().toLowerCase();
             final String rocketName = model.getRocket().getName().toLowerCase();
             final String locationName = model.getLocation().getName().toLowerCase();
-            String missionName;
+            String missionName = null;
+            String missionDescription = null;
+            String agencyName = null;
 
-            //If pad and agency exist add it to country, otherwise get whats always available
-            if (model.getLocation().getPads().size() > 0 && model.getLocation().getPads().
-                    get(0).getAgencies().size() > 0) {
-                missionName = model.getLocation().getPads().get(0).getAgencies().get(0).getName() + " " + (model.getRocket().getName());
-            } else {
-                missionName = model.getRocket().getName();
+            if (model.getRocket().getAgencies() != null && model.getRocket().getAgencies().size() > 0){
+                agencyName = model.getRocket().getAgencies().get(0).getName().toLowerCase();
             }
-            missionName = missionName.toLowerCase();
 
-            if (rocketName.contains(query) || locationName.contains(query) || missionName.contains(query) || name.contains(query)) {
+            if (model.getMissions().size() > 0) {
+                missionName = model.getMissions().get(0).getName().toLowerCase();
+                missionDescription = model.getMissions().get(0).getDescription().toLowerCase();
+            }
+
+            if (rocketName.contains(query) || locationName.contains(query) || (agencyName != null && agencyName.contains(query)) || name.contains(query)) {
                 filteredModelList.add(model);
-            }
-        }
-        return filteredModelList;
-    }
-
-    @Override
-    public Loader<List<Launch>> onCreateLoader(int id, Bundle args) {
-        return new UpcomingLoader(getContext());
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<Launch>> loader, List<Launch> data) {
-        if (data.size() == 0) {
-            Timber.v("Upcoming launches is empty...");
-            Snackbar.make(coordinatorLayout, "Error displaying launch data.", Snackbar.LENGTH_LONG).show();
-        } else {
-            adapter.clear();
-            List<Launch> goList = new ArrayList<>();
-            List<Launch> noList = new ArrayList<>();
-            for (int i = 0; i < data.size(); i++) {
-                if (data.get(i).getStatus() == 1) {
-                    goList.add(data.get(i));
-                } else {
-                    noList.add(data.get(i));
+            } else {
+                if (missionName != null && (missionName.contains(query) || missionDescription.contains(query))) {
+                    filteredModelList.add(model);
                 }
             }
-            goList.addAll(noList);
-            adapter.addItems(goList);
-        }
-        hideLoading();
-    }
 
-    @Override
-    public void onLoaderReset(Loader<List<Launch>> loader) {
+        }
+        return filteredModelList;
     }
 }

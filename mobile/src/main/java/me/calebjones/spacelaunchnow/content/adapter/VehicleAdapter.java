@@ -2,10 +2,8 @@ package me.calebjones.spacelaunchnow.content.adapter;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
@@ -25,7 +23,7 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.Launcher;
+import me.calebjones.spacelaunchnow.content.models.natives.Launcher;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;

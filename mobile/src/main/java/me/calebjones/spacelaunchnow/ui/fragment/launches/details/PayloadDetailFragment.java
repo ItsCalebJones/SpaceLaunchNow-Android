@@ -13,10 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import io.realm.Realm;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.Launch;
-import me.calebjones.spacelaunchnow.content.models.Mission;
+import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.content.models.realm.MissionRealm;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
@@ -25,7 +26,7 @@ public class PayloadDetailFragment extends Fragment {
     private SharedPreferences sharedPref;
     private static ListPreferences sharedPreference;
     private Context context;
-    public static Launch detailLaunch;
+    public static LaunchRealm detailLaunch;
     private TextView payload_description,payload_status,payload_infoButton,payload_wikiButton;
 
     @Nullable @Override
@@ -51,7 +52,10 @@ public class PayloadDetailFragment extends Fragment {
 
         if (detailLaunch.getMissions().size() > 0){
 
-            final Mission mission = sharedPreference.getMissionByID(detailLaunch.getMissions().get(0).getId());
+            Realm realm = Realm.getDefaultInstance();
+            final MissionRealm mission = realm.where(MissionRealm.class).equalTo("id", detailLaunch.getMissions().get(0).getId()).findFirst();
+            realm.close();
+//                    sharedPreference.getMissionByID(detailLaunch.getMissions().get(0).getId());
 
             payload_status.setText(mission.getName());
             payload_description.setText(mission.getDescription());

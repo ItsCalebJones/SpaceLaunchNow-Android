@@ -1,37 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
-    android:layout_height="100dp">
- 
-        <LinearLayout
-            android:id="@+id/lnrLayout"
-            android:background="@color/dark_card_background"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:orientation="vertical">
+    android:layout_height="wrap_content">
 
-            <RelativeLayout
-                android:id="@+id/TitleCard"
-                android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/lnrLayout"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/TitleCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/categoryIcon"
+                android:layout_width="64dp"
                 android:layout_height="100dp"
-                android:elevation="4dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_unknown_white"
+                android:padding="8dp"
+                android:layout_marginLeft="4dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/categoryIcon"
-                    android:layout_width="64dp"
-                    android:layout_height="fill_parent"
-                    android:layout_gravity="center|left"
-                    app:srcCompat="@drawable/ic_unknown"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:padding="8dp"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="8dp"/>
 
                 <TextView
                     android:id="@+id/launch_rocket"
@@ -40,13 +41,12 @@
                     android:paddingTop="8dp"
                     android:gravity="left"
                     android:text="Unknown Launch Vehicle"
-                    android:textColor="@color/dark_theme_primary_text_color"
+                    android:textColor="?android:textColorPrimary"
                     android:textSize="18sp"
                     android:textStyle="normal"
-                    android:lines="1"
+                    android:maxLines="2"
                     android:fontFamily="sans-serif-condensed"
-                    android:layout_toRightOf="@+id/categoryIcon"
-                    android:layout_toEndOf="@+id/categoryIcon"
+                    android:layout_marginRight="16dp"
                     />
                 <TextView
                     android:id="@+id/mission"
@@ -55,13 +55,11 @@
                     android:gravity="left"
                     android:singleLine="false"
                     android:ellipsize="end"
-                    android:lines="1"
+                    android:maxLines="2"
                     android:text="Unknown Mission"
-                    android:layout_below="@+id/launch_rocket"
-                    android:layout_toRightOf="@+id/categoryIcon"
-                    android:layout_toEndOf="@+id/categoryIcon"
                     android:paddingTop="4dp"
-                    android:paddingBottom="2dp"/>
+                    android:paddingBottom="2dp"
+                    android:paddingRight="16dp"/>
 
                 <TextView
                     android:id="@+id/location"
@@ -70,12 +68,10 @@
                     android:gravity="left"
                     android:singleLine="false"
                     android:ellipsize="end"
-                    android:lines="1"
+                    android:maxLines="2"
                     android:text="Unknown Launch Location"
-                    android:layout_below="@+id/mission"
-                    android:layout_toRightOf="@+id/categoryIcon"
-                    android:layout_toEndOf="@+id/categoryIcon"
-                    android:paddingBottom="2dp"/>
+                    android:paddingBottom="2dp"
+                    android:paddingRight="16dp"/>
                 <TextView
                     android:id="@+id/launch_date"
                     android:layout_width="match_parent"
@@ -83,18 +79,12 @@
                     android:gravity="left"
                     android:singleLine="false"
                     android:ellipsize="end"
-                    android:lines="1"
+                    android:maxLines="2"
                     android:text="Unknown Launch Date"
-                    android:layout_below="@+id/location"
-                    android:layout_toRightOf="@+id/categoryIcon"
-                    android:layout_toEndOf="@+id/categoryIcon"
-                    android:paddingBottom="4dp"/>
-                <View
-                    android:id="@+id/separator"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/View_Separator"
-                    android:padding="32dp" />
-            </RelativeLayout>
+                    android:paddingBottom="4dp"
+                    android:paddingRight="16dp"/>
+            </LinearLayout>
+
         </LinearLayout>
+    </LinearLayout>
 </LinearLayout>
