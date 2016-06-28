@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -23,32 +22,34 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
-import com.google.android.gms.maps.MapView;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
+import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.MissionAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.Mission;
 import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.content.models.realm.MissionRealm;
 import me.calebjones.spacelaunchnow.content.services.MissionDataService;
-import me.calebjones.spacelaunchnow.utils.Utils;
+import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
 import timber.log.Timber;
 
-public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener {
+public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener {
 
     private View view, empty;
     private RecyclerView mRecyclerView;
     private MissionAdapter adapter;
     private StaggeredGridLayoutManager staggeredLayoutManager;
     private LinearLayoutManager layoutManager;
-    private List<Mission> missionList;
+    private RealmResults<MissionRealm> missionList;
     private ListPreferences sharedPreference;
     private CoordinatorLayout coordinatorLayout;
     private android.content.SharedPreferences SharedPreferences;
@@ -58,7 +59,6 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
         super.onCreate(savedInstanceState);
         SharedPreferences = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getActivity());
         this.sharedPreference = ListPreferences.getInstance(getActivity().getApplicationContext());
-        this.missionList = new ArrayList();
         adapter = new MissionAdapter(getActivity().getApplicationContext(), getActivity());
     }
 
@@ -86,34 +86,29 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
         layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(adapter);
-
-
-                /*Set up Pull to refresh*/
-
-        if (this.sharedPreference.getUpcomingFirstBoot()) {
-            this.sharedPreference.setUpcomingFirstBoot(false);
-            Timber.d("Mission Fragment: First Boot.");
-            displayMissions();
-        } else {
-            Timber.d("Mission Fragment: Not First Boot.");
-            displayMissions();
-        }
         return view;
     }
 
-    private void displayMissions() {
-        this.missionList = this.sharedPreference.getMissionList();
-        if (missionList != null) {
-            if (missionList.size() == 0) {
-                empty.setVisibility(View.VISIBLE);
+    private RealmChangeListener callback = new RealmChangeListener<RealmResults<MissionRealm>>() {
+        @Override
+        public void onChange(RealmResults<MissionRealm> results) {
+            Timber.v("Data changed - size: %s", results.size());
+            adapter.clear();
+
+            if (missionList.size() > 0) {
+                adapter.addItems(results);
             } else {
-                empty.setVisibility(View.GONE);
-                adapter.clear();
-                adapter.addItems(missionList);
+                showErrorSnackbar("Unable to load missions.");
             }
-        } else {
-            empty.setVisibility(View.VISIBLE);
+            hideLoading();
         }
+    };
+    
+    private void displayMissions() {
+        showLoading();
+        missionList = getRealm().where(MissionRealm.class)
+                .findAllSortedAsync("name", Sort.ASCENDING);
+        missionList.addChangeListener(callback);
     }
 
     private final BroadcastReceiver nextLaunchReceiver = new BroadcastReceiver() {
@@ -130,6 +125,16 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
     };
 
     @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
     public void onResume() {
         Timber.d("OnResume!");
         IntentFilter intentFilter = new IntentFilter();
@@ -137,6 +142,7 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
         intentFilter.addAction(Strings.ACTION_FAILURE_MISSIONS);
 
         getActivity().registerReceiver(nextLaunchReceiver, intentFilter);
+        displayMissions();
 
         super.onResume();
     }
@@ -149,13 +155,12 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onRefresh() {
+        missionList.removeChangeListeners();
         fetchData();
     }
 
     public void onFinishedRefreshing() {
-        missionList.clear();
         displayMissions();
-        hideLoading();
     }
 
     public void fetchData() {
@@ -217,7 +222,7 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public boolean onQueryTextChange(String query) {
         // Here is where we are going to implement our filter logic
-        final List<Mission> filteredModelList = filter(missionList, query);
+        final List<MissionRealm> filteredModelList = filter(missionList, query);
         adapter.animateTo(filteredModelList);
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -233,11 +238,11 @@ public class MissionFragment extends Fragment implements SwipeRefreshLayout.OnRe
         return false;
     }
 
-    private List<Mission> filter(List<Mission> models, String query) {
+    private List<MissionRealm> filter(List<MissionRealm> models, String query) {
         query = query.toLowerCase();
 
-        final List<Mission> filteredModelList = new ArrayList<>();
-        for (Mission model : models) {
+        final List<MissionRealm> filteredModelList = new ArrayList<>();
+        for (MissionRealm model : models) {
             final String missionName = model.getName().toLowerCase();
             final String summaryText = model.getDescription().toLowerCase();
 

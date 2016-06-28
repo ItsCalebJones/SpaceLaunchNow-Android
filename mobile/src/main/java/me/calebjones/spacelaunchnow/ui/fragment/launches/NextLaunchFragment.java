@@ -11,11 +11,11 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatCheckBox;
@@ -30,68 +30,70 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
-import com.google.android.gms.maps.MapView;
-import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.Date;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
+import io.realm.Sort;
 import me.calebjones.spacelaunchnow.BuildConfig;
-import me.calebjones.spacelaunchnow.MainActivity;
+import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.adapter.LaunchBigAdapter;
-import me.calebjones.spacelaunchnow.content.adapter.LaunchSmallAdapter;
+import me.calebjones.spacelaunchnow.content.adapter.CardBigAdapter;
+import me.calebjones.spacelaunchnow.content.adapter.CardSmallAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.models.Launch;
+import me.calebjones.spacelaunchnow.content.interfaces.QueryBuilder;
 import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
+import me.calebjones.spacelaunchnow.ui.activity.DownloadActivity;
+import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
+import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
-public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    @Bind(R.id.van_switch)
+    @BindView(R.id.van_switch)
     AppCompatCheckBox vanSwitch;
-    @Bind(R.id.ples_switch)
+    @BindView(R.id.ples_switch)
     AppCompatCheckBox plesSwitch;
-    @Bind(R.id.KSC_switch)
+    @BindView(R.id.KSC_switch)
     AppCompatCheckBox kscSwitch;
-    @Bind(R.id.cape_switch)
+    @BindView(R.id.cape_switch)
     AppCompatCheckBox capeSwitch;
-    @Bind(R.id.nasa_switch)
+    @BindView(R.id.nasa_switch)
     AppCompatCheckBox nasaSwitch;
-    @Bind(R.id.spacex_switch)
+    @BindView(R.id.spacex_switch)
     AppCompatCheckBox spacexSwitch;
-    @Bind(R.id.roscosmos_switch)
+    @BindView(R.id.roscosmos_switch)
     AppCompatCheckBox roscosmosSwitch;
-    @Bind(R.id.ula_switch)
+    @BindView(R.id.ula_switch)
     AppCompatCheckBox ulaSwitch;
-    @Bind(R.id.arianespace_switch)
+    @BindView(R.id.arianespace_switch)
     AppCompatCheckBox arianespaceSwitch;
-    @Bind(R.id.casc_switch)
+    @BindView(R.id.casc_switch)
     AppCompatCheckBox cascSwitch;
-    @Bind(R.id.isro_switch)
+    @BindView(R.id.isro_switch)
     AppCompatCheckBox isroSwitch;
-    @Bind(R.id.all_switch)
+    @BindView(R.id.all_switch)
     AppCompatCheckBox customSwitch;
 
     private View view;
     private RecyclerView mRecyclerView;
-    private LaunchBigAdapter adapter;
-    private LaunchSmallAdapter smallAdapter;
+    private CardBigAdapter adapter;
+    private CardSmallAdapter smallAdapter;
     private StaggeredGridLayoutManager layoutManager;
     private LinearLayoutManager linearLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -99,11 +101,12 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     private View color_reveal;
     private FloatingActionButton FABMenu;
     private Menu mMenu;
-    private List<Launch> rocketLaunches;
+    private RealmResults<LaunchRealm> launchRealms;
     private ListPreferences sharedPreference;
     private SwitchPreferences switchPreferences;
     private SharedPreferences sharedPref;
     private Context context;
+
     private boolean active;
     private boolean switchChanged;
     private boolean cardSizeSmall;
@@ -144,13 +147,12 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         active = false;
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        rocketLaunches = new ArrayList();
         cardSizeSmall = sharedPref.getBoolean("card_size_small", false);
         if (cardSizeSmall) {
-            smallAdapter = new LaunchSmallAdapter(getActivity());
+            smallAdapter = new CardSmallAdapter(getActivity());
         } else {
             if (adapter == null) {
-                adapter = new LaunchBigAdapter(getActivity());
+                adapter = new CardBigAdapter(getActivity());
             }
         }
 
@@ -206,7 +208,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                         color_reveal.setVisibility(View.INVISIBLE);
                     }
                     if (switchChanged) {
-                        refreshView();
+                        displayLaunches();
                     }
                 }
             }
@@ -227,17 +229,25 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                 super.onScrollStateChanged(recyclerView, newState);
             }
         });
-        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
-            layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-            mRecyclerView.setLayoutManager(layoutManager);
-        } else {
-            linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-            mRecyclerView.setLayoutManager(linearLayoutManager);
-        }
 
+
+        //If preference is for small card, landscape tablets get three others get two.
         if (cardSizeSmall) {
+            if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
+                layoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+            } else {
+                layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+            }
+            mRecyclerView.setLayoutManager(layoutManager);
             mRecyclerView.setAdapter(smallAdapter);
         } else {
+            if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
+                layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                mRecyclerView.setLayoutManager(layoutManager);
+            } else {
+                linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+                mRecyclerView.setLayoutManager(linearLayoutManager);
+            }
             mRecyclerView.setAdapter(adapter);
         }
 
@@ -247,38 +257,77 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.activity_main_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        if (this.sharedPreference.getUpcomingFirstBoot()) {
-            this.sharedPreference.setUpcomingFirstBoot(false);
-            Timber.d("Upcoming Launch Fragment: First Boot.");
-            if (this.sharedPreference.getLaunchesUpcoming() != null) {
-                this.rocketLaunches.clear();
-                displayLaunches();
-            }
-        } else {
-            Timber.d("Upcoming Launch Fragment: Not First Boot.");
-            this.rocketLaunches.clear();
-            displayLaunches();
-        }
         return view;
     }
 
-    private void refreshView() {
-        rocketLaunches = sharedPreference.filterLaunches(sharedPreference.getLaunchesUpcoming());
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
 
-        int size = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
-        if (rocketLaunches.size() > size) {
-            rocketLaunches = rocketLaunches.subList(0, size);
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(!getRealm().isClosed()) {
+            launchRealms.removeChangeListener(callback); // remove a particular listener
+            // or
+            launchRealms.removeChangeListeners(); // remove all registered listeners
         }
-        sharedPreference.setNextLaunches(rocketLaunches);
+    }
 
-        if (cardSizeSmall) {
-            smallAdapter.clear();
+    private RealmChangeListener callback = new RealmChangeListener() {
+        @Override
+        public void onChange(Object element) {
+            Timber.v("Data changed - size: %s - element:", launchRealms.size(), element.toString());
+
+            int size = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
+            if (cardSizeSmall) {
+                smallAdapter.clear();
+            } else {
+                adapter.clear();
+            }
+
+            if (launchRealms.size() >= size) {
+                setLayoutManager(size);
+                if (cardSizeSmall) {
+                    smallAdapter.addItems(launchRealms.subList(0, size));
+                } else {
+                    adapter.addItems(launchRealms.subList(0, size));
+                }
+            } else if (launchRealms.size() > 0) {
+                setLayoutManager(size);
+                if (cardSizeSmall) {
+                    smallAdapter.addItems(launchRealms);
+                } else {
+                    adapter.addItems(launchRealms);
+                }
+            }
+            hideLoading();
+            launchRealms.removeChangeListeners();
+        }
+    };
+
+    public void displayLaunches() {
+        Timber.v("loadLaunches - showLoading");
+        showLoading();
+        Date date = new Date();
+
+        if (switchPreferences.getAllSwitch()) {
+            launchRealms = getRealm().where(LaunchRealm.class)
+                    .greaterThanOrEqualTo("net", date)
+                    .findAllSortedAsync("net", Sort.ASCENDING);
+            launchRealms.addChangeListener(callback);
+            Timber.v("loadLaunches - Realm query created.");
         } else {
-            adapter.clear();
+            filterLaunchRealm();
+            Timber.v("loadLaunches - Filtered Realm query created.");
         }
+    }
 
-        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && rocketLaunches.size() == 1) {
-            linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+    private void setLayoutManager(int size) {
+        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && (launchRealms != null && launchRealms.size() == 1 || size == 1 )) {
+            linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(),
+                    LinearLayoutManager.VERTICAL, false);
             mRecyclerView.setLayoutManager(linearLayoutManager);
             if (cardSizeSmall) {
                 mRecyclerView.setAdapter(smallAdapter);
@@ -294,64 +343,11 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                 mRecyclerView.setAdapter(adapter);
             }
         }
-        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                int topRowVerticalPosition =
-                        (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
-                mSwipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
-
-            }
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
-
-        if (cardSizeSmall) {
-            smallAdapter.addItems(rocketLaunches);
-            smallAdapter.notifyDataSetChanged();
-        } else {
-            adapter.addItems(rocketLaunches);
-            adapter.notifyDataSetChanged();
-        }
     }
 
-
-    public void displayLaunches() {
-        rocketLaunches = sharedPreference.getNextLaunches();
-
-        if (rocketLaunches != null) {
-            if (rocketLaunches.size() == 0) {
-                Timber.v("Next launches is empty...");
-            } else {
-                if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && rocketLaunches.size() == 1) {
-                    linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-                    mRecyclerView.setLayoutManager(linearLayoutManager);
-                    if (cardSizeSmall) {
-                        mRecyclerView.setAdapter(smallAdapter);
-                    } else {
-                        mRecyclerView.setAdapter(adapter);
-                    }
-                } else if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
-                    layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-                    mRecyclerView.setLayoutManager(layoutManager);
-                    if (cardSizeSmall) {
-                        mRecyclerView.setAdapter(smallAdapter);
-                    } else {
-                        mRecyclerView.setAdapter(adapter);
-                    }
-                }
-                if (cardSizeSmall) {
-                    smallAdapter.clear();
-                    smallAdapter.addItems(rocketLaunches);
-                } else {
-                    adapter.clear();
-                    adapter.addItems(rocketLaunches);
-                }
-            }
-        }
+    private void filterLaunchRealm() {
+        launchRealms = QueryBuilder.buildSwitchQuery(context, getRealm());
+        launchRealms.addChangeListener(callback);
     }
 
     private void setUpSwitches() {
@@ -415,8 +411,6 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-
-//                showAlertDialog();
             }
         });
 
@@ -425,7 +419,6 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     }
 
     public void fetchData() {
-        this.sharedPreference.removeUpcomingLaunches();
         Timber.v("Sending GET_UP_LAUNCHES");
         Intent intent = new Intent(getContext(), LaunchDataService.class);
         intent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
@@ -443,10 +436,30 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
 
     @Override
     public void onResume() {
-        setTitle();
+        super.onResume();
         Timber.d("OnResume!");
-        if (Utils.getVersionCode(context) != switchPreferences.getVersionCode()) {
-            showChangelogSnackbar();
+        setTitle();
+
+        //First install
+        if (switchPreferences.getVersionCode() == 0){
+            switchPreferences.setVersionCode(Utils.getVersionCode(context));
+
+            //build 87 is where Realm change happened
+        } else if (switchPreferences.getVersionCode() <= 87){
+            Intent intent = new Intent(context, DownloadActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+
+            //Upgrade post Realm change.
+        } else if (Utils.getVersionCode(context) != switchPreferences.getVersionCode()) {
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showChangelogSnackbar();
+                }
+            }, 1000);
+            switchPreferences.setVersionCode(Utils.getVersionCode(context));
         }
 
         IntentFilter intentFilter = new IntentFilter();
@@ -455,57 +468,28 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
 
         getActivity().registerReceiver(nextLaunchReceiver, intentFilter);
 
-        if (adapter != null) {
-            HashSet<MapView> maps = adapter.getMaps();
-            for (MapView map : maps) {
-                map.onResume();
-            }
-        }
-        super.onResume();
+        displayLaunches();
     }
 
     @Override
     public void onPause() {
-        getActivity().unregisterReceiver(nextLaunchReceiver);
-        if (adapter != null) {
-            HashSet<MapView> maps = adapter.getMaps();
-            for (MapView map : maps) {
-                map.onPause();
-            }
-        }
         super.onPause();
+        Timber.v("onPause");
+        getActivity().unregisterReceiver(nextLaunchReceiver);
     }
 
     @Override
-    public void onLowMemory(){
-        if (adapter != null) {
-            HashSet<MapView> maps = adapter.getMaps();
-            for (MapView map : maps) {
-                map.onLowMemory();
-            }
-        }
+    public void onLowMemory() {
         super.onLowMemory();
     }
 
     @Override
-    public void onDestroy(){
-        if (adapter != null) {
-            HashSet<MapView> maps = adapter.getMaps();
-            for (MapView map : maps) {
-                map.onDestroy();
-            }
-        }
+    public void onDestroy() {
         super.onDestroy();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (adapter != null) {
-            HashSet<MapView> maps = adapter.getMaps();
-            for (MapView map : maps) {
-                map.onSaveInstanceState(outState);
-            }
-        }
         super.onSaveInstanceState(outState);
     }
 
@@ -519,9 +503,14 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                         super.onDismissed(snackbar, event);
                         Timber.v("Current Version code: %s", switchPreferences.getVersionCode());
                         if (switchPreferences.getVersionCode() <= 43) {
-                            showCaseView();
+                            final Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showCaseView();
+                                }
+                            }, 1000);
                         }
-                        switchPreferences.setVersionCode(Utils.getVersionCode(context));
                     }
                 })
                 .setAction("Changelog", new View.OnClickListener() {
@@ -537,25 +526,19 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         @Override
         public void onReceive(Context context, Intent intent) {
             Timber.v("Received: %s", intent.getAction());
-            if (intent.getAction().equals(Strings.ACTION_SUCCESS_UP_LAUNCHES)){
+            if (intent.getAction().equals(Strings.ACTION_SUCCESS_UP_LAUNCHES)) {
                 onFinishedRefreshing();
-            } else if (intent.getAction().equals(Strings.ACTION_FAILURE_UP_LAUNCHES)){
+            } else if (intent.getAction().equals(Strings.ACTION_FAILURE_UP_LAUNCHES)) {
                 hideLoading();
-                showErrorSnackbar(intent.getStringExtra("error"));
+                SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, intent);
             }
         }
     };
 
-    private void showErrorSnackbar(String error) {
-        Snackbar
-                .make(coordinatorLayout, "Error - " + error, Snackbar.LENGTH_LONG)
-                .setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
-                .show();
-    }
-
     @Override
     public void onRefresh() {
         fetchData();
+        launchRealms.removeChangeListener(callback);
     }
 
     private void setTitle() {
@@ -563,12 +546,8 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     }
 
     public void onFinishedRefreshing() {
-        if (rocketLaunches != null) {
-            rocketLaunches.clear();
-        }
-        displayLaunches();
-        mSwipeRefreshLayout.setRefreshing(false);
         hideLoading();
+        displayLaunches();
     }
 
     public void hideLoading() {
@@ -582,7 +561,6 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     //Currently only used to debug
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        //
         if (BuildConfig.DEBUG) {
             menu.clear();
             inflater.inflate(R.menu.debug_menu, menu);
@@ -607,9 +585,17 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
             } else {
                 sharedPreference.setDebugLaunch(true);
             }
+            RealmResults<LaunchRealm> results = getRealm().where(LaunchRealm.class).findAll();
+
+            getRealm().beginTransaction();
+            results.deleteAllFromRealm();
+            getRealm().commitTransaction();
+
             Timber.v("%s", sharedPreference.isDebugEnabled());
-            Toast.makeText(context, "Debug: " + sharedPreference.isDebugEnabled(), Toast.LENGTH_LONG).show();
-            onRefresh();
+            Snackbar.make(coordinatorLayout, "Debug: " + sharedPreference.isDebugEnabled(),
+                    Snackbar.LENGTH_LONG).show();
+            context.startService(new Intent(context, LaunchDataService.class)
+                    .setAction(Strings.ACTION_GET_ALL_WIFI));
         } else if (id == R.id.debug_next_launch) {
             Intent nextIntent = new Intent(getActivity(), LaunchDataService.class);
             nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
@@ -635,7 +621,7 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
                     color_reveal.setVisibility(View.INVISIBLE);
                 }
                 if (switchChanged) {
-                    refreshView();
+                    displayLaunches();
                 }
             }
         } else if (id == R.id.debug_vehicle) {
@@ -650,7 +636,6 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     public void onDestroyView() {
         super.onDestroyView();
         Timber.v("onDestroyView");
-        ButterKnife.unbind(this);
     }
 
     private void confirm() {
@@ -660,10 +645,18 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         switchChanged = true;
     }
 
+    private void checkAll() {
+        if (switchPreferences.getAllSwitch()) {
+            switchPreferences.setAllSwitch(false);
+            customSwitch.setChecked(false);
+        }
+    }
+
     @OnClick(R.id.nasa_switch)
     public void nasa_switch() {
         confirm();
         switchPreferences.setSwitchNasa(!switchPreferences.getSwitchNasa());
+        checkAll();
     }
 
 
@@ -671,60 +664,70 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
     public void spacex_switch() {
         confirm();
         switchPreferences.setSwitchSpaceX(!switchPreferences.getSwitchSpaceX());
+        checkAll();
     }
 
     @OnClick(R.id.roscosmos_switch)
     public void roscosmos_switch() {
         confirm();
         switchPreferences.setSwitchRoscosmos(!switchPreferences.getSwitchRoscosmos());
+        checkAll();
     }
 
     @OnClick(R.id.ula_switch)
     public void ula_switch() {
         confirm();
         switchPreferences.setSwitchULA(!switchPreferences.getSwitchULA());
+        checkAll();
     }
 
     @OnClick(R.id.arianespace_switch)
     public void arianespace_switch() {
         confirm();
         switchPreferences.setSwitchArianespace(!switchPreferences.getSwitchArianespace());
+        checkAll();
     }
 
     @OnClick(R.id.casc_switch)
     public void casc_switch() {
         confirm();
         switchPreferences.setSwitchCASC(!switchPreferences.getSwitchCASC());
+        checkAll();
     }
 
     @OnClick(R.id.isro_switch)
     public void isro_switch() {
         confirm();
         switchPreferences.setSwitchISRO(!switchPreferences.getSwitchISRO());
+        checkAll();
     }
 
     @OnClick(R.id.KSC_switch)
     public void KSC_switch() {
         confirm();
         switchPreferences.setSwitchKSC(!switchPreferences.getSwitchKSC());
+        checkAll();
     }
 
     @OnClick(R.id.ples_switch)
     public void ples_switch() {
         confirm();
-        switchPreferences.setSwitchPles(!switchPreferences.getSwitchPles());
+        switchPreferences.setSwitchPles(plesSwitch.isChecked());
+        checkAll();
     }
 
     @OnClick(R.id.van_switch)
     public void van_switch() {
         confirm();
         switchPreferences.setSwitchVan(!switchPreferences.getSwitchVan());
+        checkAll();
     }
 
     @OnClick(R.id.cape_switch)
     public void cape_switch() {
         confirm();
         switchPreferences.setSwitchCape(!switchPreferences.getSwitchCape());
+        checkAll();
     }
 
     @OnClick(R.id.all_switch)
@@ -734,3 +737,5 @@ public class NextLaunchFragment extends Fragment implements SwipeRefreshLayout.O
         setUpSwitches();
     }
 }
+
+

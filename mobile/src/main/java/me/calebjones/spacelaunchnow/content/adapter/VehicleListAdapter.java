@@ -5,7 +5,6 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Paint;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -20,18 +19,17 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.DatabaseManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.RocketDetails;
-import me.calebjones.spacelaunchnow.content.models.Rocket;
+import me.calebjones.spacelaunchnow.content.models.realm.RocketDetailsRealm;
+import me.calebjones.spacelaunchnow.content.models.realm.RocketRealm;
 import me.calebjones.spacelaunchnow.ui.activity.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
-import timber.log.Timber;
 
 public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.ViewHolder> {
 
@@ -40,29 +38,33 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
     private Activity activity;
     private Calendar rightNow;
     private SharedPreferences sharedPref;
-    private DatabaseManager databaseManager;
-    private List<Rocket> items = new ArrayList<Rocket>();
+    private RealmList<RocketRealm> items;
     private static ListPreferences sharedPreference;
-    private RocketDetails launchVehicle;
+    private RocketDetailsRealm launchVehicle;
     private int defaultBackgroundcolor;
     private static final int SCALE_DELAY = 30;
     private int lastPosition = -1;
 
-    public VehicleListAdapter(Context context, Activity activity) {
+    private Realm realm;
+
+    public VehicleListAdapter(Context context, Activity activity, Realm realm) {
         rightNow = Calendar.getInstance();
-        items = new ArrayList();
         sharedPreference = ListPreferences.getInstance(context);
+        items = new RealmList<>();
+        this.realm = realm;
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         this.mContext = context;
         this.activity = activity;
     }
 
-    public void addItems(List<Rocket> items) {
-        if (this.items == null) {
-            this.items = items;
+    public void addItems(List<RocketRealm> items) {
+        if (this.items != null) {
+            this.items.addAll(items);
         } else {
+            this.items = new RealmList<>();
             this.items.addAll(items);
         }
+        notifyDataSetChanged();
     }
 
     public void clear() {
@@ -78,7 +80,6 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
 
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
         sharedPreference = ListPreferences.getInstance(mContext);
-        databaseManager = new DatabaseManager(mContext);
 
         if (sharedPreference.getNightMode()) {
             m_theme = R.layout.dark_vehicle_list_item;
@@ -94,9 +95,9 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        final Rocket item = items.get(i);
+        final RocketRealm item = items.get(holder.getAdapterPosition());
 
-        launchVehicle = new RocketDetails();
+        launchVehicle = new RocketDetailsRealm();
 
         String query;
         if (item.getName().contains("Space Shuttle")){
@@ -104,7 +105,9 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
         } else {
             query = item.getName();
         }
-        launchVehicle = databaseManager.getLaunchVehicle(query);
+
+
+        launchVehicle = realm.where(RocketDetailsRealm.class).contains("name", query).findFirst();
 
         if (launchVehicle != null){
             holder.vehicle_spec_view.setVisibility(View.VISIBLE);
@@ -116,7 +119,7 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
             }
             holder.launch_vehicle_specs_height.setText(String.format("Height: %s Meters", launchVehicle.getLength()));
             holder.launch_vehicle_specs_diameter.setText(String.format("Diameter: %s Meters", launchVehicle.getDiameter()));
-            holder.launch_vehicle_specs_stages.setText(String.format("Stages: %d", launchVehicle.getMaxStage()));
+            holder.launch_vehicle_specs_stages.setText(String.format("Max Stages: %d", launchVehicle.getMax_Stage()));
             holder.launch_vehicle_specs_leo.setText(String.format("Payload to LEO: %s kg", launchVehicle.getLEOCapacity()));
             holder.launch_vehicle_specs_gto.setText(String.format("Payload to GTO: %s kg", launchVehicle.getGTOCapacity()));
             holder.launch_vehicle_specs_launch_mass.setText(String.format("Mass at Launch: %s Tons", launchVehicle.getLaunchMass()));
@@ -136,13 +139,16 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
                 .load(item.getImageURL())
                 .placeholder(R.drawable.placeholder)
                 .error(R.drawable.placeholder)
+                .centerCrop()
                 .into(holder.item_icon);
 
         holder.item_title.setText(item.getName());
 
         if (launchVehicle != null){
             if(launchVehicle.getInfoURL().length() > 0) {
+                realm.beginTransaction();
                 items.get(i).setInfoURL(launchVehicle.getInfoURL());
+                realm.commitTransaction();
                 holder.infoButton.setVisibility(View.VISIBLE);
             } else if (item.getInfoURL() != null && !item.getInfoURL().contains("null")) {
                 if (item.getInfoURL().length() > 0) {
@@ -163,7 +169,9 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
 
         if (launchVehicle != null){
             if(launchVehicle.getWikiURL().length() > 0) {
+                realm.beginTransaction();
                 items.get(i).setWikiURL(launchVehicle.getWikiURL());
+                realm.commitTransaction();
                 holder.wikiButton.setVisibility(View.VISIBLE);
             }   else if (item.getWikiURL() != null && !item.getWikiURL().contains("null")){
                 if(item.getWikiURL().length() > 0){
@@ -243,8 +251,6 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
                     Utils.openCustomTab(activity, mContext, items.get(position).getWikiURL());
                     break;
                 case R.id.vehicle_fab:
-                    Toast.makeText(activity, items.get(position).getName() + " | Work in progress!", Toast.LENGTH_SHORT);
-
                     Intent animateIntent = new Intent(activity, FullscreenImageActivity.class);
                     animateIntent.putExtra("imageURL", items.get(position).getImageURL());
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

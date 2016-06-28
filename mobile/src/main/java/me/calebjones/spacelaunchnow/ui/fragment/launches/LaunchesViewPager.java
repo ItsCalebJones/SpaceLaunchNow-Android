@@ -15,10 +15,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import timber.log.Timber;
 
 public class LaunchesViewPager extends Fragment {
@@ -65,7 +65,7 @@ public class LaunchesViewPager extends Fragment {
                 viewPager.setCurrentItem(tab.getPosition());
                 current_tab = tab.getPosition();
                 if (tab.getPosition() == 0) {
-                    ((MainActivity) getActivity()).setActionBarTitle("Space Launch Now");
+                    ((MainActivity) getActivity()).setActionBarTitle(sharedPreference.getUpTitle());
                 } else {
                     ((MainActivity) getActivity()).setActionBarTitle(sharedPreference.getPreviousTitle());
                 }
@@ -95,7 +95,7 @@ public class LaunchesViewPager extends Fragment {
 
     @Override
     public void onResume() {
-
+        Timber.d("onResume");
         super.onResume();
     }
 

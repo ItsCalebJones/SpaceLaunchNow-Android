@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="me.calebjones.spacelaunchnow" >
+    package="me.calebjones.spacelaunchnow">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -26,12 +26,12 @@
         android:label="${appNameLabel}"
         android:supportsRtl="true"
         android:theme="@style/LightTheme"
-        tools:replace="label" >
+        tools:replace="label">
         <activity
-            android:name=".MainActivity"
-            android:configChanges="orientation|screenSize"
+            android:name=".ui.activity.MainActivity"
+            android:configChanges="screenSize"
             android:theme="@style/LightTheme.Launcher"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,7 +40,7 @@
         </activity>
         <activity
             android:name=".ui.activity.LaunchDetailActivity"
-            android:theme="@style/AppTheme.ActionBar.Transparent" />
+            android:theme="@style/AppTheme" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -66,20 +66,20 @@
             android:name=".content.services.VehicleDataService"
             android:exported="false" />
         <service
-            android:name=".content.services.AgencyDataService"
+            android:name=".content.services.LibraryDataService"
             android:exported="false" />
         <service
             android:name=".content.services.NextLaunchTracker"
             android:exported="false" />
 
-        <receiver android:name=".content.receivers.UpdateUpcomingLaunchesReceiver" >
+        <receiver android:name=".content.receivers.UpdateUpcomingLaunchesReceiver">
             <intent-filter>
                 <action android:name="UPDATE_UP_LAUNCHES" />
                 <action android:name="UPDATE_PREV_LAUNCHES" />
                 <action android:name="CHECK_NEXT_LAUNCH_TIMER" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".content.receivers.BootReceiver" >
+        <receiver android:name=".content.receivers.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -100,15 +100,14 @@
             android:name=".ui.activity.DebugActivity"
             android:label="@string/title_activity_debug"
             android:theme="@style/LightTheme" />
-        <activity android:name=".ui.activity.WebviewActivity" />
         <activity
             android:name=".ui.activity.FullscreenImageActivity"
             android:label="@string/title_activity_fullscreen_image"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/LightTheme.Transparent" >
+            android:parentActivityName=".ui.activity.MainActivity"
+            android:theme="@style/LightTheme.Transparent">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="me.calebjones.spacelaunchnow.MainActivity" />
+                android:value="me.calebjones.spacelaunchnow.ui.activity.MainActivity" />
         </activity>
 
         <service
@@ -118,6 +117,17 @@
         <activity
             android:name=".ui.activity.SupportActivity"
             android:theme="@style/LightTheme" />
+        <activity android:name=".ui.activity.BaseActivity" />
+        <activity
+            android:name=".ui.activity.DownloadActivity"
+            android:label="@string/title_activity_download"
+            android:theme="@style/LightTheme" />
+        <activity
+            android:name=".ui.activity.WebViewFallbackActivity"
+            android:label="@string/title_activity_web_view_fallback"
+            android:parentActivityName=".ui.activity.MainActivity"
+            android:theme="@style/LightTheme">
+        </activity>
     </application>
 
 </manifest>

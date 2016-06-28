@@ -30,18 +30,20 @@ import com.google.gson.Gson;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.realm.RealmChangeListener;
+import io.realm.RealmList;
+import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.VehicleListAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.Launch;
-import me.calebjones.spacelaunchnow.content.models.Launcher;
-import me.calebjones.spacelaunchnow.content.models.Orbiter;
-import me.calebjones.spacelaunchnow.content.models.Rocket;
+import me.calebjones.spacelaunchnow.content.models.natives.Launcher;
+import me.calebjones.spacelaunchnow.content.models.realm.RocketRealm;
+import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
-public class LauncherDetailActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
+public class LauncherDetailActivity extends BaseActivity implements AppBarLayout.OnOffsetChangedListener {
 
     private static final int PERCENTAGE_TO_ANIMATE_AVATAR = 20;
     private boolean mIsAvatarShown = true;
@@ -50,14 +52,13 @@ public class LauncherDetailActivity extends AppCompatActivity implements AppBarL
     private android.content.SharedPreferences SharedPreferences;
 
     private Context context;
-    private View view, title_container, gridview;
     private RecyclerView mRecyclerView;
     private TextView toolbarTitle, detail_rocket, detail_vehicle_agency;
     private ImageView detail_profile_backdrop;
     private CircleImageView detail_profile_image;
     private StaggeredGridLayoutManager linearLayoutManager;
     private VehicleListAdapter adapter;
-    private List<Rocket> rocketLaunches;
+    private RealmResults<RocketRealm> rocketLaunches;
     private AppBarLayout appBarLayout;
     private int mMaxScrollSize;
 
@@ -70,10 +71,10 @@ public class LauncherDetailActivity extends AppCompatActivity implements AppBarL
         sharedPreference = ListPreferences.getInstance(this.context);
 
         if (sharedPreference.getNightMode()) {
-            m_theme = R.style.DarkTheme_Transparent;
+            m_theme = R.style.DarkTheme;
             statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
         } else {
-            m_theme = R.style.LightTheme_Transparent;
+            m_theme = R.style.LightTheme;
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
         }
 
@@ -95,19 +96,12 @@ public class LauncherDetailActivity extends AppCompatActivity implements AppBarL
         detail_profile_image = (CircleImageView) findViewById(R.id.detail_profile_image);
         detail_profile_backdrop = (ImageView) findViewById(R.id.detail_profile_backdrop);
         appBarLayout = (AppBarLayout) findViewById(R.id.detail_appbar);
-        title_container = findViewById(R.id.detail_title_container);
-        gridview = findViewById(R.id.gridview);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
             // Fab button
             detail_profile_image.setScaleX(0);
             detail_profile_image.setScaleY(0);
-//            setupWindowAnimations();
-
-            // Recover items from the intent
-            final int position = getIntent().getIntExtra("position", 0);
-            Timber.d("Position %s", position);
 
             ViewPropertyAnimator showTitleAnimator = Utils.showViewByScale(detail_profile_image);
             showTitleAnimator.setStartDelay(500);
@@ -155,7 +149,7 @@ public class LauncherDetailActivity extends AppCompatActivity implements AppBarL
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
             }
         }
-        adapter = new VehicleListAdapter(context, this);
+        adapter = new VehicleListAdapter(context, this, getRealm());
         mRecyclerView = (RecyclerView) findViewById(R.id.gridview);
         if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
             linearLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
@@ -178,7 +172,7 @@ public class LauncherDetailActivity extends AppCompatActivity implements AppBarL
 
         String name = launcher.getName();
         String agency = launcher.getAgency();
-        this.rocketLaunches = this.sharedPreference.getRocketsByFamily(name);
+        rocketLaunches = getRealm().where(RocketRealm.class).contains("family.name", name).or().contains("familyname", name).findAll();
         detail_rocket.setText(name);
         detail_vehicle_agency.setText(agency);
         adapter.clear();

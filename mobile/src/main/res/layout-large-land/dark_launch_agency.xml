@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/launch_summary"
+    style="@style/DarkTheme"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:tag="launch_summary"
+    android:textAlignment="center"
+    android:transitionGroup="true"
+    tools:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <LinearLayout
+        style="@style/DarkTheme"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.CardView
+            style="@style/DarkTheme"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/card_margin"
+            android:animateLayoutChanges="true"
+            card_view:cardBackgroundColor="@color/dark_theme_background"
+            card_view:cardCornerRadius="0dp"
+            card_view:cardElevation="4dp"
+            card_view:cardPreventCornerOverlap="true"
+            card_view:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:id="@+id/mission_agencies"
+                style="@style/DarkTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/mission_agency_title"
+                    style="@style/DarkTheme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:text="Mission Agencies"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/mission_agency_type"
+                    style="@style/DarkTheme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:singleLine="false"
+                    android:text="Unknown Mission Agencies"
+                    android:textAlignment="center"
+                    android:textColor="?android:textColorSecondary" />
+
+                <LinearLayout
+                    android:id="@+id/mission_one"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <View
+                        style="@style/DarkTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_margin="8dp"
+                        android:background="@color/View_Separator"
+                        android:padding="12dp" />
+
+                    <TextView
+                        android:id="@+id/mission_vehicle_agency_one"
+                        style="@style/DarkTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="left"
+                        android:lines="1"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="4dp"
+                        android:singleLine="false"
+                        android:text="Agency One"
+                        android:textColor="?android:textColorSecondary" />
+
+                    <TextView
+                        android:id="@+id/mission_agency_type_one"
+                        style="@style/DarkTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="left"
+                        android:lines="1"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="4dp"
+                        android:singleLine="false"
+                        android:text="Unknown Agency Type"
+                        android:textColor="?android:textColorSecondary" />
+
+                    <TextView
+                        android:id="@+id/mission_agency_summary_one"
+                        style="@style/LightTheme"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="left"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="4dp"
+                        android:singleLine="false"
+                        android:text=""
+                        android:textColor="?android:textColorSecondary" />
+
+                    <LinearLayout
+                        style="@style/DarkTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <android.support.v7.widget.AppCompatButton
+                            android:id="@+id/mission_infoButton_one"
+                            style="@style/Base.Widget.AppCompat.Button.Colored"
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_alignParentBottom="false"
+                            android:layout_alignParentLeft="false"
+                            android:layout_alignParentTop="false"
+                            android:layout_marginBottom="12dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="2dp"
+                            android:gravity="center"
+                            android:text="INFO"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+
+                        <android.support.v7.widget.AppCompatButton
+                            android:id="@+id/mission_wikiButton_one"
+                            style="@style/Base.Widget.AppCompat.Button.Colored"
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_alignParentBottom="false"
+                            android:layout_alignParentLeft="false"
+                            android:layout_alignParentTop="false"
+                            android:layout_marginBottom="12dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="2dp"
+                            android:gravity="center"
+                            android:text="WIKI"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/mission_two"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <View
+                        style="@style/DarkTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_margin="16dp"
+                        android:background="@color/View_Separator"
+                        android:padding="12dp" />
+
+                    <TextView
+                        android:id="@+id/mission_vehicle_agency_two"
+                        style="@style/DarkTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="left"
+                        android:lines="1"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="4dp"
+                        android:singleLine="false"
+                        android:text="Agency Two"
+                        android:textColor="?android:textColorSecondary" />
+
+                    <TextView
+                        android:id="@+id/mission_agency_type_two"
+                        style="@style/DarkTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="left"
+                        android:lines="1"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="4dp"
+                        android:singleLine="false"
+                        android:text="Unknown Agency Type"
+                        android:textColor="?android:textColorSecondary" />
+
+                    <TextView
+                        android:id="@+id/mission_agency_summary_two"
+                        style="@style/LightTheme"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="left"
+                        android:lines="1"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="4dp"
+                        android:singleLine="false"
+                        android:text=""
+                        android:textColor="?android:textColorSecondary" />
+
+                    <LinearLayout
+                        style="@style/DarkTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <android.support.v7.widget.AppCompatButton
+                            android:id="@+id/mission_infoButton_two"
+                            style="@style/Base.Widget.AppCompat.Button.Colored"
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_alignParentBottom="false"
+                            android:layout_alignParentLeft="false"
+                            android:layout_alignParentTop="false"
+                            android:layout_marginBottom="12dp"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginTop="2dp"
+                            android:gravity="center"
+                            android:text="INFO"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+
+                        <android.support.v7.widget.AppCompatButton
+                            android:id="@+id/mission_wikiButton_two"
+                            style="@style/Base.Widget.AppCompat.Button.Colored"
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_alignParentBottom="false"
+                            android:layout_alignParentLeft="false"
+                            android:layout_alignParentTop="false"
+                            android:layout_marginBottom="12dp"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginTop="2dp"
+                            android:gravity="center"
+                            android:text="WIKI"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            style="@style/DarkTheme"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/card_margin"
+            android:animateLayoutChanges="true"
+            card_view:cardBackgroundColor="@color/dark_theme_background"
+            card_view:cardCornerRadius="0dp"
+            card_view:cardElevation="4dp"
+            card_view:cardPreventCornerOverlap="true"
+            card_view:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:id="@+id/vehicle_agencies"
+                style="@style/DarkTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/launch_agency_title"
+                    style="@style/DarkTheme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:text="Vehicle Agencies"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/launch_agency_type"
+                    style="@style/DarkTheme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:singleLine="false"
+                    android:text="Unknown Vehicle Agencies"
+                    android:textAlignment="center"
+                    android:textColor="?android:textColorSecondary" />
+
+                <LinearLayout
+                    android:id="@+id/agency_one"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <View
+                        style="@style/LightTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_margin="8dp"
+                        android:background="@color/View_Separator"
+                        android:padding="12dp" />
+
+                    <TextView
+                        android:id="@+id/launch_vehicle_agency_one"
+                        style="@style/DarkTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="left"
+                        android:lines="1"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="4dp"
+                        android:singleLine="false"
+                        android:text="Agency One"
+                        android:textColor="?android:textColorSecondary"
+                        android:paddingBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/launch_agency_type_one"
+                        style="@style/DarkTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="left"
+                        android:lines="1"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="4dp"
+                        android:singleLine="false"
+                        android:text="Unknown Agency Type"
+                        android:textColor="?android:textColorSecondary" />
+
+                    <TextView
+                        android:id="@+id/launch_agency_summary_one"
+                        style="@style/LightTheme"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="left"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="4dp"
+                        android:singleLine="false"
+                        android:text=""
+                        android:textColor="?android:textColorSecondary" />
+
+                    <LinearLayout
+                        style="@style/DarkTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <android.support.v7.widget.AppCompatButton
+                            android:id="@+id/infoButton_one"
+                            style="@style/Base.Widget.AppCompat.Button.Colored"
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_alignParentBottom="false"
+                            android:layout_alignParentLeft="false"
+                            android:layout_alignParentTop="false"
+                            android:layout_marginBottom="12dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="2dp"
+                            android:gravity="center"
+                            android:text="INFO"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+
+                        <android.support.v7.widget.AppCompatButton
+                            android:id="@+id/wikiButton_one"
+                            style="@style/Base.Widget.AppCompat.Button.Colored"
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_alignParentBottom="false"
+                            android:layout_alignParentLeft="false"
+                            android:layout_alignParentTop="false"
+                            android:layout_marginBottom="12dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="2dp"
+                            android:gravity="center"
+                            android:text="WIKI"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/agency_two"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <View
+                        style="@style/DarkTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_margin="16dp"
+                        android:background="@color/View_Separator"
+                        android:padding="12dp" />
+
+                    <TextView
+                        android:id="@+id/launch_vehicle_agency_two"
+                        style="@style/DarkTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="left"
+                        android:lines="1"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="4dp"
+                        android:singleLine="false"
+                        android:text="Agency Two"
+                        android:textColor="?android:textColorSecondary"
+                        android:paddingBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/launch_agency_type_two"
+                        style="@style/DarkTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="left"
+                        android:lines="1"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="4dp"
+                        android:singleLine="false"
+                        android:text="Unknown Agency Type"
+                        android:textColor="?android:textColorSecondary" />
+
+                    <TextView
+                        android:id="@+id/launch_agency_summary_two"
+                        style="@style/LightTheme"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="left"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="4dp"
+                        android:singleLine="false"
+                        android:text=""
+                        android:textColor="?android:textColorSecondary" />
+
+                    <LinearLayout
+                        style="@style/DarkTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <android.support.v7.widget.AppCompatButton
+                            android:id="@+id/infoButton_two"
+                            style="@style/Base.Widget.AppCompat.Button.Colored"
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_alignParentBottom="false"
+                            android:layout_alignParentLeft="false"
+                            android:layout_alignParentTop="false"
+                            android:layout_marginBottom="12dp"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginTop="2dp"
+                            android:gravity="center"
+                            android:text="INFO"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+
+                        <android.support.v7.widget.AppCompatButton
+                            android:id="@+id/wikiButton_two"
+                            style="@style/Base.Widget.AppCompat.Button.Colored"
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_alignParentBottom="false"
+                            android:layout_alignParentLeft="false"
+                            android:layout_alignParentTop="false"
+                            android:layout_marginBottom="12dp"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginTop="2dp"
+                            android:gravity="center"
+                            android:text="WIKI"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

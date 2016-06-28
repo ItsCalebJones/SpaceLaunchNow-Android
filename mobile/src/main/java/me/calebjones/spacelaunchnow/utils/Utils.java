@@ -33,9 +33,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
@@ -45,6 +42,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import okhttp3.Interceptor;
 import okhttp3.Response;
 
@@ -58,7 +56,6 @@ import java.util.Date;
 import java.util.Random;
 
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.models.Launch;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.utils.customtab.WebViewFallback;
 
@@ -129,50 +126,6 @@ public class Utils {
     }
 
     /**
-     * Scale and set the pivot when the animation will start from
-     *
-     * @param v the view to set the pivot
-     */
-    public static void configureHideYView(View v) {
-
-        v.setScaleY(0);
-        v.setPivotY(0);
-    }
-
-    /**
-     * Reduces the X & Y from a view
-     *
-     * @param v the view to be scaled
-     * @return the ViewPropertyAnimation to manage the animation
-     */
-    public static ViewPropertyAnimator hideViewByScaleXY(View v) {
-
-        return hideViewByScale(v, DEFAULT_DELAY, 0, 0);
-    }
-
-    /**
-     * Reduces the Y from a view
-     *
-     * @param v the view to be scaled
-     * @return the ViewPropertyAnimation to manage the animation
-     */
-    public static ViewPropertyAnimator hideViewByScaleY(View v) {
-
-        return hideViewByScale(v, DEFAULT_DELAY, 1, 0);
-    }
-
-    /**
-     * Reduces the X from a view
-     *
-     * @param v the view to be scaled
-     * @return the ViewPropertyAnimation to manage the animation
-     */
-    public static ViewPropertyAnimator hideViewByScalyInX(View v) {
-
-        return hideViewByScale(v, DEFAULT_DELAY, 0, 1);
-    }
-
-    /**
      * Reduces the X & Y
      *
      * @param v     the view to be scaled
@@ -203,18 +156,14 @@ public class Utils {
         return propertyAnimator;
     }
 
-    public static String getBaseURL(Context context) {
+    public static String getEndDate(Context context) {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DATE, 1);
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = df.format(c.getTime());
 
-        if (ListPreferences.getInstance(context.getApplicationContext()).isDebugEnabled()) {
-            return "https://launchlibrary.net/dev/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
-        } else {
-            return "https://launchlibrary.net/1.2/launch/1950-01-01/" + String.valueOf(formattedDate) + "?sort=desc&limit=1000";
-        }
+        return String.valueOf(formattedDate);
     }
 
     public static Calendar DateToCalendar(Date date) {
@@ -259,11 +208,11 @@ public class Utils {
         return PendingIntent.getActivity(context, 0, actionIntent, 0);
     }
 
-    public static Intent buildShareIntent(Launch launch) {
+    public static Intent buildShareIntent(LaunchRealm launch) {
         SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy hh:mm a zzz");
         df.toLocalizedPattern();
 
-        Date date = new Date(launch.getWindowstart());
+        Date date = launch.getWindowstart();
         String launchDate = df.format(date);
         String mission;
 
