@@ -22,12 +22,15 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import io.fabric.sdk.android.Fabric;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.MissionDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
+import me.calebjones.spacelaunchnow.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
@@ -54,6 +57,11 @@ public class LaunchApplication extends Application {
     }
 
     @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -63,7 +71,10 @@ public class LaunchApplication extends Application {
         Crashlytics.setString("Timezone", String.valueOf(TimeZone.getDefault().getDisplayName()));
         Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
         Crashlytics.setBool("is24", DateFormat.is24HourFormat(getApplicationContext()));
-        Crashlytics.setBool("Network", Utils.isNetworkAvailable(this));
+        Crashlytics.setBool("Network State", Utils.isNetworkAvailable(this));
+        if (Connectivity.getNetworkInfo(this).toString() != null){
+            Crashlytics.setString("Network Info", Connectivity.getNetworkInfo(this).toString());
+        }
 
         LeakCanary.install(this);
         OneSignal.startInit(this).init();
@@ -71,6 +82,13 @@ public class LaunchApplication extends Application {
         OneSignal.enableInAppAlertNotification(true);
 
         Dexter.initialize(this);
+
+        // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder(this)
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        // Get a Realm instance for this thread
+        Realm.setDefaultConfiguration(realmConfig);
 
 
         if (BuildConfig.DEBUG) {
@@ -100,21 +118,22 @@ public class LaunchApplication extends Application {
 
         sharedPreference = ListPreferences.getInstance(this);
         switchPreferences = SwitchPreferences.getInstance(this);
-        int cacheSize = 10 * 1024 * 1024;
-        Cache cache = new Cache(getCacheDir(), cacheSize);
-
-        client = new OkHttpClient.Builder()
-                .cache(cache)
-                .build();
 
         checkSubscriptions();
 
         DefaultRuleEngine.trackAppStart(this);
 
         if (!sharedPreference.getFirstBoot()) {
-            Intent nextIntent = new Intent(this, LaunchDataService.class);
-            nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
-            this.startService(nextIntent);
+
+            if(Connectivity.isConnectedWifi(this)){
+                Intent nextIntent = new Intent(this, LaunchDataService.class);
+                nextIntent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
+                this.startService(nextIntent);
+            } else {
+                Intent nextIntent = new Intent(this, LaunchDataService.class);
+                nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
+                this.startService(nextIntent);
+            }
 
             if (sharedPreference.getLastVehicleUpdate() > 0) {
                 Timber.d("Time since last VehicleUpdate: %s", (System.currentTimeMillis() - sharedPreference.getLastVehicleUpdate()));
@@ -123,30 +142,13 @@ public class LaunchApplication extends Application {
                     rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
                     this.startService(rocketIntent);
 
-                    Intent launchIntent = new Intent(this, LaunchDataService.class);
-                    launchIntent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
-                    launchIntent.putExtra("URL", Utils.getBaseURL());
-                    this.startService(launchIntent);
-
-                    this.startService(new Intent(this, MissionDataService.class));
                 } else if (Utils.getVersionCode(this) != switchPreferences.getVersionCode()) {
-                    Intent launchIntent = new Intent(this, LaunchDataService.class);
-                    launchIntent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
-                    launchIntent.putExtra("URL", Utils.getBaseURL());
-                    this.startService(launchIntent);
 
                     Intent rocketIntent = new Intent(this, VehicleDataService.class);
                     rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
                     this.startService(rocketIntent);
-
-                    this.startService(new Intent(this, MissionDataService.class));
                 }
             }
-            //Needed for users that will be upgrading
-        } else {
-            Intent rocketIntent = new Intent(this, VehicleDataService.class);
-            rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
-            this.startService(rocketIntent);
         }
     }
 

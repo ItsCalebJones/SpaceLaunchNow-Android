@@ -9,17 +9,33 @@ buildscript {
 }
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
+apply plugin: 'org.moallemi.advanced-build-version'
+apply plugin: 'realm-android'
 
 repositories {
+    jcenter()
     maven { url 'https://maven.fabric.io/public' }
 }
 
+advancedVersioning {
+    nameOptions {
+        versionMajor 1
+        versionMinor 1
+        versionPatch 0
+
+    }
+    codeOptions {
+        versionCodeType org.moallemi.gradle.internal.VersionCodeType.AUTO_INCREMENT_ONE_STEP
+        dependsOnTasks 'release'
+    }
+    outputOptions {
+    }
+}
+
+def appVersionName = advancedVersioning.versionName
+def appVersionCode = advancedVersioning.versionCode
 
 android {
-
-    dexOptions {
-        jumboMode true
-    }
 
     signingConfigs {
         config {
@@ -29,8 +45,8 @@ android {
             storePassword "${password}"
         }
     }
-    compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    compileSdkVersion 24
+    buildToolsVersion '24.0.0-rc3'
     defaultConfig {
         applicationId "me.calebjones.spacelaunchnow"
         manifestPlaceholders = [appNameLabel                   : "@string/application_name",
@@ -39,19 +55,20 @@ android {
                                 onesignal_google_project_number: "${google_project_number}"]
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 40
-        versionName "1.0.0"
+        versionCode appVersionCode
+        versionName appVersionName
         signingConfig signingConfigs.config
+        resConfigs "en"
     }
     buildTypes {
         debug {
             applicationIdSuffix '.debug'
-            versionNameSuffix '-DEBUG'
-            manifestPlaceholders = [appNameLabel: "Space Launch Now - Debug"]
+            manifestPlaceholders = [appNameLabel         : "SLN - Debug",
+                                    manifestApplicationId: "me.calebjones.spacelaunchnow.debug"]
         }
         release {
-            minifyEnabled false
-            proguardFile '/Users/cjones/Documents/Development/SpaceLaunchNow/mobile/proguard-rules.pro'
+//            minifyEnabled true
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     productFlavors {
@@ -60,54 +77,51 @@ android {
 
 dependencies {
     wearApp project(':wear')
-    compile('com.github.afollestad.material-dialogs:commons:0.8.5.7@aar') {
-        transitive = true
-    }
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta1'
-    // or 1.4-beta1
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta1'
-    // or 1.4-beta1
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta1'
-    // or 1.4-beta1
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
     compile('com.mikepenz:aboutlibraries:5.6.5@aar') {
         transitive = true
     }
-    compile 'com.google.android.gms:play-services-location:8.4.0'
-    compile 'com.mikepenz:iconics-core:2.5.10@aar'
+    compile('com.github.afollestad.material-dialogs:core:0.8.5.8@aar') { transitive = true }
+    compile 'com.github.afollestad.material-dialogs:commons:0.8.5.8@aar'
+    compile 'com.mikepenz:iconics-core:2.6.6@aar'
     compile 'com.mikepenz:material-design-iconic-typeface:2.2.0.1@aar'
-    compile 'com.android.support:appcompat-v7:23.3.0'
-    compile 'com.android.support:design:23.3.0'
-    compile 'com.android.support:customtabs:23.3.0'
-    compile 'com.android.support:recyclerview-v7:23.3.0'
-    compile 'com.android.support:cardview-v7:23.3.0'
-    compile 'com.android.support:palette-v7:23.3.0'
-    compile 'com.android.support:support-v4:23.3.0'
-    compile 'com.android.support:preference-v7:23.3.0'
-    compile 'com.google.android.support:wearable:1.4.0'
-    compile 'com.google.android.gms:play-services-wearable:8.4.0'
-    compile 'com.google.android.gms:play-services-ads:8.4.0'
-    compile 'com.google.android.gms:play-services-gcm:8.4.0'
-    compile 'com.google.android.gms:play-services-analytics:8.4.0'
-    compile 'com.onesignal:OneSignal:2.1.3@aar'
-    compile 'com.github.chrisbanes.photoview:library:1.2.3'
-    compile 'com.google.code.gson:gson:2.5'
-    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    compile 'com.android.support:design:24.0.0'
+    compile 'com.android.support:customtabs:24.0.0'
+    compile 'com.android.support:cardview-v7:24.0.0'
+    compile 'com.android.support:palette-v7:24.0.0'
+    compile 'com.android.support:preference-v7:24.0.0'
+    compile 'com.google.android.support:wearable:2.0.0-alpha1'
+    compile 'com.google.android.gms:play-services-location:9.0.2'
+    compile 'com.google.android.gms:play-services-wearable:9.0.2'
+    compile 'com.google.android.gms:play-services-gcm:9.0.2'
+    compile 'com.onesignal:OneSignal:2.4.3@aar'
+    compile 'com.github.chrisbanes.photoview:library:1.2.4'
+    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.squareup.okhttp3:okhttp:3.3.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.github.rahatarmanahmed:circularprogressview:2.4.0'
-    compile 'com.github.clans:fab:1.6.3'
+    compile 'com.github.rahatarmanahmed:circularprogressview:2.5.0'
+    compile 'com.github.clans:fab:1.6.4'
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'com.borax12.materialdaterangepicker:library:1.2'
     compile 'net.mediavrog:integrated-rating-request:1.1.1'
-    compile 'com.jakewharton.timber:timber:4.1.0'
+    compile 'com.jakewharton.timber:timber:4.1.2'
     compile 'za.co.riggaroo:materialhelptutorial:1.1.0'
-    compile 'com.malinskiy:superrecyclerview:1.1.1'
-    compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.simplecityapps:recyclerview-fastscroll:1.0.6'
-    compile 'com.github.javiersantos:MaterialStyledDialogs:1.3'
-    compile 'com.karumi:dexter:2.2.2'
-    compile 'com.anjlab.android.iab.v3:library:1.0.31'
+    compile 'com.jakewharton:butterknife:8.1.0'
+    apt 'com.jakewharton:butterknife-compiler:8.1.0'
+    compile 'com.simplecityapps:recyclerview-fastscroll:1.0.9'
+    compile 'com.github.javiersantos:MaterialStyledDialogs:1.4.1'
+    compile 'com.karumi:dexter:2.3.0'
+    compile 'com.anjlab.android.iab.v3:library:1.0.32'
     compile 'hanks.xyz:smallbang-library:0.1.2'
+    compile 'com.github.amlcurran.showcaseview:library:5.4.3'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.github.renaudcerrato:static-maps-api:1.0.2'
+    compile 'com.android.support:support-v4:24.0.0'
+    compile 'com.mikhaellopez:circularfillableloaders:1.2.0'
 }

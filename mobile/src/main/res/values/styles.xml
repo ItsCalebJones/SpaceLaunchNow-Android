@@ -10,12 +10,6 @@
         <item name="android:windowBackground">@drawable/launcher_drawable</item>
     </style>
 
-    <style name="EditTextTheme">
-        <!-- Used for the bottom line when not selected / focused -->
-        <item name="colorControlNormal">#FFFF</item>
-        <!-- colorControlActivated & colorControlHighlight use the colorAccent color by default -->
-    </style>
-
     <!-- Base application theme. -->
     <style name="LightTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
@@ -54,13 +48,32 @@
 
     </style>
 
-    <style name="PopupMenuDark" parent="@style/Widget.AppCompat.PopupMenu">
-        <item name="android:popupBackground">@android:color/white</item>
+    <style name="CustomTitle2" parent="TextAppearance.ShowcaseView.Title.Light">
+        <item name="android:textColor">#deffffff</item>
     </style>
 
-    <style name="OverFlow">
-        <item name="android:padding">12.0dip</item>
-        <item name="android:src">@drawable/ic_more_vert_white_24dp</item>
+    <style name="CustomText2" parent="TextAppearance.ShowcaseView.Detail.Light">
+        <item name="android:textColor">#8affffff</item>
+    </style>
+
+    <style name="ShowCaseThemeLight" parent="ShowcaseView.Light">
+        <item name="sv_backgroundColor">@color/colorPrimary</item>
+        <item name="sv_showcaseColor">@color/colorAccent</item>
+        <item name="sv_buttonText">Hide</item>
+        <item name="sv_tintButtonColor">true</item>
+        <item name="sv_titleTextAppearance">@style/CustomTitle2</item>
+        <item name="sv_detailTextAppearance">@style/CustomText2</item>
+    </style>
+
+    <style name="ShowCaseThemeDark" parent="ShowcaseView">
+        <item name="sv_backgroundColor">@color/darkPrimary</item>
+        <item name="sv_showcaseColor">@color/darkAccent</item>
+        <item name="sv_buttonText">Hide</item>
+        <item name="sv_tintButtonColor">true</item>
+    </style>
+
+    <style name="PopupMenuDark" parent="@style/Widget.AppCompat.PopupMenu">
+        <item name="android:popupBackground">@android:color/white</item>
     </style>
 
     <style name="DrawerArrowStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
@@ -84,7 +97,11 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="LightTheme.Transparent" parent="LightTheme" />
+    <style name="LightTheme.Transparent" parent="LightTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        </style>
 
     <style name="DarkTheme.Transparent" parent="DarkTheme" />
 
@@ -155,8 +172,12 @@
         <item name="about_libraries_card">@color/dark_card_background</item>
         <item name="about_libraries_title_openSource">@color/dark_theme_primary_text_color</item>
         <item name="about_libraries_text_openSource">@color/dark_theme_secondary_text_color</item>
-        <item name="about_libraries_dividerDark_openSource">@color/about_libraries_dividerDark_openSource</item>
-        <item name="about_libraries_dividerLight_openSource">@color/about_libraries_dividerLight_openSource</item>
+        <item name="about_libraries_dividerDark_openSource">
+            @color/about_libraries_dividerDark_openSource
+        </item>
+        <item name="about_libraries_dividerLight_openSource">
+            @color/about_libraries_dividerLight_openSource
+        </item>
     </style>
 
     <style name="AboutLibrariesLight" parent="Theme.AppCompat.NoActionBar">
@@ -176,6 +197,10 @@
         <item name="about_libraries_dividerLight_openSource">
             @color/about_libraries_dividerLight_openSource
         </item>
+    </style>
+
+    <style name="CircularProgress" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
 </resources>

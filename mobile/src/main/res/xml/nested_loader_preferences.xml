@@ -4,7 +4,7 @@
     android:title="Launch Tracking">
     <PreferenceCategory android:title="Default Launch Count">
         <ListPreference
-            android:defaultValue="10"
+            android:defaultValue="5"
             android:key="upcoming_value"
             android:entries="@array/upcoming_array"
             android:entryValues="@array/upcoming_array_values"
@@ -21,7 +21,7 @@
             android:title="Allow Background Syncs" />
         <ListPreference
             android:dependency="background_sync"
-            android:defaultValue="4"
+            android:defaultValue="24"
             android:entries="@array/sync_timer"
             android:entryValues="@array/sync_timer_values"
             android:key="notification_sync_time"

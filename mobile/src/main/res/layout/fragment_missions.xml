@@ -1,60 +1,67 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/fragment_feed_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:paddingLeft="2dp"
-    android:paddingRight="2dp"
-    tools:context="${relativePackage}.${activityClass}">
+    android:layout_height="fill_parent">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
 
-        <com.github.rahatarmanahmed.cpv.CircularProgressView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/progress_View"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:visibility="gone"
-            app:cpv_indeterminate="true" />
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/fragment_feed_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        tools:context="${relativePackage}.${activityClass}">
 
-        <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/recycler_view"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:columnWidth="320dp"
-            app:fastScrollPopupBgColor="@color/colorAccent"
-            app:fastScrollPopupTextColor="@android:color/primary_text_dark"
-            app:fastScrollThumbColor="@color/colorAccent"
-            />
+            android:layout_height="match_parent">
 
-        <include layout="@layout/empty_launch"/>
 
-        <me.calebjones.spacelaunchnow.utils.AutofitRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/recycler_view_staggered"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:visibility="gone" />
+            <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:columnWidth="320dp"
+                app:fastScrollPopupBgColor="@color/colorAccent"
+                app:fastScrollPopupTextColor="@android:color/primary_text_dark"
+                app:fastScrollThumbColor="@color/colorAccent" />
+
+
+            <include layout="@layout/empty_launch" />
+
+            <com.github.rahatarmanahmed.cpv.CircularProgressView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/progress_View"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:visibility="gone"
+                app:cpv_indeterminate="true" />
+
+            <me.calebjones.spacelaunchnow.utils.AutofitRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/recycler_view_staggered"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="16dp"
+            app:srcCompat="@drawable/ic_add_alert">
+
+        </android.support.design.widget.FloatingActionButton>
 
     </FrameLayout>
-
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="16dp"
-        android:src="@drawable/ic_add_alert"
-        >
-
-    </android.support.design.widget.FloatingActionButton>
-
-</FrameLayout>
+</android.support.design.widget.CoordinatorLayout>

@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -18,7 +17,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
@@ -30,20 +28,20 @@ import com.bumptech.glide.Glide;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Scanner;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.realm.Realm;
 import me.calebjones.spacelaunchnow.BuildConfig;
-import me.calebjones.spacelaunchnow.MainActivity;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.DatabaseManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.Launch;
-import me.calebjones.spacelaunchnow.content.models.RocketDetails;
+import me.calebjones.spacelaunchnow.content.models.natives.RocketDetails;
+import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.content.models.realm.RocketDetailsRealm;
+import me.calebjones.spacelaunchnow.content.models.realm.RocketRealm;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.details.AgencyDetailFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.details.PayloadDetailFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.details.SummaryDetailFragment;
@@ -51,7 +49,7 @@ import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;
 
 
-public class LaunchDetailActivity extends AppCompatActivity
+public class LaunchDetailActivity extends BaseActivity
         implements AppBarLayout.OnOffsetChangedListener {
 
     private static final int PERCENTAGE_TO_ANIMATE_AVATAR = 20;
@@ -72,7 +70,7 @@ public class LaunchDetailActivity extends AppCompatActivity
     private Calendar rightNow = Calendar.getInstance();
 
     public String response;
-    public Launch launch;
+    public LaunchRealm launch;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,10 +84,10 @@ public class LaunchDetailActivity extends AppCompatActivity
         sharedPreference = ListPreferences.getInstance(context);
 
         if (sharedPreference.getNightMode()) {
-            m_theme = R.style.DarkTheme_Transparent;
+            m_theme = R.style.DarkTheme;
             statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
         } else {
-            m_theme = R.style.LightTheme_Transparent;
+            m_theme = R.style.LightTheme;
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
         }
 
@@ -124,24 +122,26 @@ public class LaunchDetailActivity extends AppCompatActivity
         String type = mIntent.getStringExtra("TYPE");
 
 
-        if (type.equals("LaunchID")) {
-            int id = mIntent.getIntExtra("id", 0);
-            launch = sharedPreference.getLaunchByID(id);
-        } else if (type.equals("Launch")) {
-            launch = ((Launch) mIntent.getSerializableExtra("launch"));
+        if (type.equals("launch")) {
+            int id = mIntent.getIntExtra("launchID", 0);
+            launch = getRealm().where(LaunchRealm.class).equalTo("id", id).findFirst();
+            Timber.v("Loading launch %s", launch.getId());
         }
 
-        if (launch.getRocket() != null || launch.getRocket().getName() != null) {
-            if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0) {
-                Glide.with(this)
-                        .load(launch.getRocket().getImageURL())
-                        .centerCrop()
-                        .placeholder(R.drawable.placeholder)
-                        .crossFade()
-                        .into(detail_profile_backdrop);
-                getLaunchVehicle(launch, false);
-            } else {
-                getLaunchVehicle(launch, true);
+        if (launch.getRocket() != null) {
+            findProfileLogo();
+            if (launch.getRocket().getName() != null) {
+                if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0) {
+                    Glide.with(this)
+                            .load(launch.getRocket().getImageURL())
+                            .centerCrop()
+                            .placeholder(R.drawable.placeholder)
+                            .crossFade()
+                            .into(detail_profile_backdrop);
+                    getLaunchVehicle(launch, false);
+                } else {
+                    getLaunchVehicle(launch, true);
+                }
             }
         } else {
             Intent homeIntent = new Intent(this, MainActivity.class);
@@ -151,13 +151,8 @@ public class LaunchDetailActivity extends AppCompatActivity
         SimpleDateFormat df = new SimpleDateFormat("MMMM dd, yyyy HH:mm:ss zzz");
         Date date;
         long future;
-        try {
-            date = df.parse(launch.getNet());
-            future = date.getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
-            future = 0;
-        }
+        date = launch.getNet();
+        future = date.getTime();
 
         Calendar now = rightNow;
         now.setTimeInMillis(System.currentTimeMillis());
@@ -166,19 +161,18 @@ public class LaunchDetailActivity extends AppCompatActivity
         //Assign the title and mission locaiton data
         detail_rocket.setText(launch.getName());
 
-        findProfileLogo();
-
         final Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
-        toolbar.setNavigationOnClickListener(
-                new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v) {
-                        onBackPressed();
+        if (toolbar != null) {
+            toolbar.setNavigationOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onBackPressed();
+                        }
                     }
-                }
 
-        );
+            );
+        }
 
         appBarLayout.addOnOffsetChangedListener(this);
         mMaxScrollSize = appBarLayout.getTotalScrollRange();
@@ -220,6 +214,11 @@ public class LaunchDetailActivity extends AppCompatActivity
                 }
 
         );
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     public int reverseNumber(int num, int min, int max) {
@@ -315,15 +314,16 @@ public class LaunchDetailActivity extends AppCompatActivity
         super.onResume();
     }
 
-    private void getLaunchVehicle(Launch result, boolean setImage) {
+    private void getLaunchVehicle(LaunchRealm result, boolean setImage) {
         String query;
         if (result.getRocket().getName().contains("Space Shuttle")) {
             query = "Space Shuttle";
         } else {
             query = result.getRocket().getName();
         }
-        DatabaseManager databaseManager = new DatabaseManager(this);
-        RocketDetails launchVehicle = databaseManager.getLaunchVehicle(query);
+        RocketDetailsRealm launchVehicle = getRealm().where(RocketDetailsRealm.class)
+                .contains("name", query)
+                .findFirstAsync();
         if (setImage) {
             if (launchVehicle != null && launchVehicle.getImageURL().length() > 0) {
                 Glide.with(this)
@@ -333,7 +333,7 @@ public class LaunchDetailActivity extends AppCompatActivity
                         .placeholder(R.drawable.placeholder)
                         .crossFade()
                         .into(detail_profile_backdrop);
-                Timber.d("Glide Loading: %s %s", launchVehicle.getLVName(), launchVehicle.getImageURL());
+                Timber.d("Glide Loading: %s %s", launchVehicle.getLV_Name(), launchVehicle.getImageURL());
             }
         }
     }
@@ -350,7 +350,7 @@ public class LaunchDetailActivity extends AppCompatActivity
         scanner.close();
     }
 
-    public Launch getLaunch() {
+    public LaunchRealm getLaunch() {
         return launch;
     }
 

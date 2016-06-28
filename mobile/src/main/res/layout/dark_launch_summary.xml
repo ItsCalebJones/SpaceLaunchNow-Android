@@ -2,6 +2,7 @@
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/launch_summary"
     style="@style/DarkTheme"
     android:layout_width="fill_parent"
@@ -33,15 +34,13 @@
                 style="@style/DarkTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="8dp">
+                android:orientation="vertical">
 
                 <LinearLayout
                     style="@style/DarkTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingLeft="8dp">
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/launch_status_title"
@@ -86,7 +85,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="196dp">
 
-                    <com.google.android.gms.maps.MapView xmlns:map="http://schemas.android.com/apk/res-auto"
+                    <ImageView
                         android:id="@+id/map_view_summary"
                         android:layout_width="fill_parent"
                         android:layout_height="160dp"
@@ -104,7 +103,7 @@
                         android:layout_marginRight="20dp"
                         android:clickable="true"
                         android:elevation="16dp"
-                        android:src="@drawable/ic_explore" />
+                        app:srcCompat="@drawable/ic_explore" />
                 </RelativeLayout>
 
                 <View
@@ -143,14 +142,6 @@
                     android:textAlignment="center"
                     android:textColor="?android:textColorSecondary" />
 
-                <View
-                    style="@style/DarkTheme"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_margin="8dp"
-                    android:background="@color/View_Separator"
-                    android:padding="12dp" />
-
                 <TextView
                     android:id="@+id/launch_window_start"
                     style="@style/DarkTheme"
@@ -159,11 +150,12 @@
                     android:ellipsize="end"
                     android:gravity="left"
                     android:paddingBottom="2dp"
-                    android:paddingLeft="8dp"
+                    android:paddingLeft="16dp"
                     android:paddingTop="8dp"
                     android:singleLine="false"
                     android:text="Launch Window Start: "
-                    android:textColor="?android:textColorSecondary" />
+                    android:textColor="?android:textColorSecondary"
+                    android:paddingRight="16dp" />
 
                 <TextView
                     android:id="@+id/launch_window_end"
@@ -173,11 +165,12 @@
                     android:ellipsize="end"
                     android:gravity="left"
                     android:paddingBottom="8dp"
-                    android:paddingLeft="8dp"
+                    android:paddingLeft="16dp"
                     android:paddingTop="4dp"
                     android:singleLine="false"
                     android:text="Launch Window End: "
-                    android:textColor="?android:textColorSecondary" />
+                    android:textColor="?android:textColorSecondary"
+                    android:paddingRight="16dp" />
 
                 <View
                     style="@style/DarkTheme"
