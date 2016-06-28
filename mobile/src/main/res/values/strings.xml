@@ -37,6 +37,7 @@
     <string name="whats_new_content">It\'s been a long wait on getting this version out, expect to find new unexpected bugs. I\'ll be working hard to patch them.\n\n
         Fixes and Features!\n
         \u2022Implement Realm db to enable further development.\n
+        \u2022Added 24 hour mode in Appearance settings.\n
         \u2022Removed buggy Google Maps view for static images.\n
         \u2022Improvements to notifications.\n
         \u2022Data usage reduction.\n
