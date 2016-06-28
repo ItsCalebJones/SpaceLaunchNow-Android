@@ -24,7 +24,6 @@ import java.util.regex.Pattern;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.legacy.Mission;
 import me.calebjones.spacelaunchnow.content.models.realm.MissionRealm;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;

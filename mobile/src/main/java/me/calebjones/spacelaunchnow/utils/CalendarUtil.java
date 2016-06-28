@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.TimeZone;
 
-import me.calebjones.spacelaunchnow.content.models.legacy.Launch;
+import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import timber.log.Timber;
 
 // these imports are used in the following code
@@ -36,7 +36,7 @@ public class CalendarUtil {
             CalendarContract.Calendars.OWNER_ACCOUNT
     };
 
-    public Integer addEvent(Context context, Launch launch) {
+    public Integer addEvent(Context context, LaunchRealm launch) {
         Timber.v("Adding launch event: %s", launch.getName());
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
@@ -108,7 +108,7 @@ public class CalendarUtil {
         }
     }
 
-    public boolean updateEvent(Context context, Launch launch) {
+    public boolean updateEvent(Context context, LaunchRealm launch) {
         Timber.v("Updating launch event: %s", launch.getName());
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
             sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -142,7 +142,7 @@ public class CalendarUtil {
         } return false;
     }
 
-    public int deleteEvent(Context context, Launch launch) {
+    public int deleteEvent(Context context, LaunchRealm launch) {
         Timber.v("Deleting launch event: %s", launch.getName());
         int iNumRowsDeleted = 0;
 

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -15,21 +14,9 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -37,15 +24,10 @@ import io.realm.RealmList;
 import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.interfaces.LibraryRequestInterface;
-import me.calebjones.spacelaunchnow.content.models.legacy.Launch;
-import me.calebjones.spacelaunchnow.content.models.legacy.Mission;
 import me.calebjones.spacelaunchnow.content.models.Strings;
-import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.models.realm.MissionRealm;
 import me.calebjones.spacelaunchnow.content.models.realm.RealmStr;
-import me.calebjones.spacelaunchnow.content.responses.launchlibrary.LaunchResponse;
 import me.calebjones.spacelaunchnow.content.responses.launchlibrary.MissionResponse;
-import me.calebjones.spacelaunchnow.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -60,8 +42,6 @@ import timber.log.Timber;
 
 //TODO point to library data service
 public class MissionDataService extends IntentService {
-
-    public static List<Mission> missionList;
     private SharedPreferences sharedPref;
     private ListPreferences listPreference;
 

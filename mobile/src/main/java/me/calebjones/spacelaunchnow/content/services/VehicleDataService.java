@@ -26,7 +26,6 @@ import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.interfaces.APIRequestInterface;
 import me.calebjones.spacelaunchnow.content.interfaces.LibraryRequestInterface;
-import me.calebjones.spacelaunchnow.content.models.legacy.Rocket;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.content.models.realm.RocketDetailsRealm;
@@ -48,7 +47,7 @@ import timber.log.Timber;
 //TODO delete and point to library data service
 public class VehicleDataService extends IntentService {
 
-    public static List<Rocket> vehicleList;
+
     private SharedPreferences sharedPref;
     private ListPreferences listPreference;
     private Realm mRealm;
