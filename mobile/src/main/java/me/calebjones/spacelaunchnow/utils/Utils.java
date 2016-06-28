@@ -42,6 +42,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import okhttp3.Interceptor;
 import okhttp3.Response;
 
@@ -55,7 +56,6 @@ import java.util.Date;
 import java.util.Random;
 
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.models.legacy.Launch;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.utils.customtab.WebViewFallback;
 
@@ -208,11 +208,11 @@ public class Utils {
         return PendingIntent.getActivity(context, 0, actionIntent, 0);
     }
 
-    public static Intent buildShareIntent(Launch launch) {
+    public static Intent buildShareIntent(LaunchRealm launch) {
         SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy hh:mm a zzz");
         df.toLocalizedPattern();
 
-        Date date = new Date(launch.getWindowstart());
+        Date date = launch.getWindowstart();
         String launchDate = df.format(date);
         String mission;
 

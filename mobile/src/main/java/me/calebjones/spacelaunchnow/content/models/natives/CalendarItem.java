@@ -2,7 +2,6 @@ package me.calebjones.spacelaunchnow.content.models.natives;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import me.calebjones.spacelaunchnow.content.models.legacy.Launch;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 
 public class CalendarItem extends RealmObject {

@@ -4,7 +4,8 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
 
-import me.calebjones.spacelaunchnow.content.models.legacy.Launch;
+import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
+
 
 public class CalendarSyncService extends IntentService {
 
@@ -34,7 +35,7 @@ public class CalendarSyncService extends IntentService {
         context.startService(intent);
     }
 
-    public static void startActionSyncEvent(Context context, Launch launch, long id) {
+    public static void startActionSyncEvent(Context context, LaunchRealm launch, long id) {
         Intent intent = new Intent(context, CalendarSyncService.class);
         intent.setAction(SYNC_EVENT);
         intent.putExtra(LAUNCH_ID, launch.getId());

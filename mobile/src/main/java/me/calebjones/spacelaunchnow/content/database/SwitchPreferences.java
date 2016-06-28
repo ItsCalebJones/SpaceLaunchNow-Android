@@ -15,7 +15,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import me.calebjones.spacelaunchnow.content.models.legacy.Launch;
 import me.calebjones.spacelaunchnow.utils.CalendarUtil;
 
 public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -833,26 +832,9 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (listPreferences != null) {
             if (key.equals(PREFS_CALENDAR_STATUS) && !getCalendarStatus()) {
-                CalendarUtil provider = new CalendarUtil();
-                provider.deleteEvent(appContext, listPreferences.getNextLaunch());
+                //Delete Events
             } else {
-                //Get the list of launches
-                Launch launch = listPreferences.getNextLaunch();
-                CalendarUtil provider = new CalendarUtil();
-
-                if (launch != null) {
-                    if (launch.getCalendarID() == null) {
-                        Integer id = provider.addEvent(appContext, launch);
-                        launch.setCalendarID(id);
-                        listPreferences.setNextLaunch(launch);
-                    } else {
-                        if (!provider.updateEvent(appContext, launch)) {
-                            Integer id = provider.addEvent(appContext, launch);
-                            launch.setCalendarID(id);
-                            listPreferences.setNextLaunch(launch);
-                        }
-                    }
-                }
+                
             }
         }
     }

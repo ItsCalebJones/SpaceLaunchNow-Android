@@ -12,26 +12,14 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import me.calebjones.spacelaunchnow.content.models.legacy.Agency;
-import me.calebjones.spacelaunchnow.content.models.natives.CalendarItem;
-import me.calebjones.spacelaunchnow.content.models.legacy.Launch;
-import me.calebjones.spacelaunchnow.content.models.natives.RocketDetails;
-import me.calebjones.spacelaunchnow.content.models.legacy.Mission;
-import me.calebjones.spacelaunchnow.content.models.legacy.Rocket;
-import timber.log.Timber;
 
 public class ListPreferences {
 
@@ -158,49 +146,6 @@ public class ListPreferences {
             return result;
         }
         return null;
-    }
-
-
-    //Set methods for storing data.
-    public void setNextLaunches(List<Launch> launches) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.serializeSpecialFloatingPointValues();
-        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
-        Gson gson = gsonBuilder.setPrettyPrinting().create();
-
-        this.prefsEditor.putString(PREFS_LAUNCH_LIST_NEXT, gson.toJson(launches));
-        this.prefsEditor.apply();
-    }
-
-    public void setNextLaunch(Launch launch) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.serializeSpecialFloatingPointValues();
-        Gson gson = gsonBuilder.setPrettyPrinting().create();
-        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
-        this.prefsEditor.putString(PREFS_NEXT_LAUNCH, gson.toJson(launch));
-        this.prefsEditor.apply();
-    }
-
-    //Get Methods for various lists of data.
-    public Launch getNextLaunch() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        if (!this.sharedPrefs.contains(PREFS_NEXT_LAUNCH)) {
-            return null;
-        }
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
-        Gson gson = gsonBuilder.setPrettyPrinting().create();
-        SharedPreferences sharedPref = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        String jsonPreferences = sharedPref.getString(PREFS_NEXT_LAUNCH, null);
-
-        Launch launch = gson.fromJson(jsonPreferences, Launch.class);
-
-        return launch;
     }
 
     //Methods for saving and restoring

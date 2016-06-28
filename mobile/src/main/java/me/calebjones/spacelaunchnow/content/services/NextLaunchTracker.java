@@ -16,10 +16,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
@@ -40,12 +42,9 @@ import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.models.legacy.Launch;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
-import me.calebjones.spacelaunchnow.utils.CalendarUtil;
-import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 
@@ -706,17 +705,15 @@ public class NextLaunchTracker extends IntentService implements
             PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/nextLaunch");
 
             String NAME_KEY = "me.calebjones.spacelaunchnow.wear.nextname";
-            putDataMapReq.getDataMap().putString(NAME_KEY, launch.getName());
             String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
+            putDataMapReq.getDataMap().putString(NAME_KEY, launch.getName());
             putDataMapReq.getDataMap().putInt(TIME_KEY, launch.getNetstamp());
             putDataMapReq.getDataMap().putLong("time", new Date().getTime());
 
             PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
             Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
-            DataApi.DataItemResult dataItemResult = Wearable.DataApi
-                    .putDataItem(mGoogleApiClient, putDataReq).await();
 
-            Timber.v("Sent: %s", dataItemResult.getDataItem());
+            Timber.v("Sent");
         }
     }
 
