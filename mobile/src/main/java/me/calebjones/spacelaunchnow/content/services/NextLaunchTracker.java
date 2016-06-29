@@ -105,7 +105,7 @@ public class NextLaunchTracker extends IntentService implements
                     .between("net", date, dateDay)
                     .findAll();
         } else {
-            filterLaunchRealm(date, dateDay);
+            filterLaunchRealm(date, dateDay, realm);
         }
 
         if (launchRealms.size() > 0) {
@@ -126,7 +126,7 @@ public class NextLaunchTracker extends IntentService implements
         Timber.d("mGoogleApiClient - connect");
     }
 
-    private void filterLaunchRealm(Date date, Date dateDay) {
+    private void filterLaunchRealm(Date date, Date dateDay, Realm realm) {
         boolean first = true;
         RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class)
                 .between("net", date, dateDay)
@@ -250,7 +250,7 @@ public class NextLaunchTracker extends IntentService implements
         launchRealms = query.endGroup().findAll();
     }
 
-    private LaunchRealm filterLaunchRealm(Date date) {
+    private LaunchRealm filterLaunchRealm(Date date, Realm realm) {
         boolean first = true;
         RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class)
                 .greaterThan("net", date)
@@ -726,7 +726,7 @@ public class NextLaunchTracker extends IntentService implements
             sendToWear(realm.where(LaunchRealm.class)
                     .greaterThan("net", date).findFirst());
         } else {
-            sendToWear(filterLaunchRealm(date));
+            sendToWear(filterLaunchRealm(date, realm));
         }
         realm.close();
     }
