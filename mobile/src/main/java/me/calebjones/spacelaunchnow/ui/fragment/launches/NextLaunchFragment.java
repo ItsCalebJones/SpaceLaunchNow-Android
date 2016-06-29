@@ -208,6 +208,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                         color_reveal.setVisibility(View.INVISIBLE);
                     }
                     if (switchChanged) {
+                        showLoading();
                         displayLaunches();
                     }
                 }
@@ -275,10 +276,10 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         }
     }
 
-    private RealmChangeListener callback = new RealmChangeListener() {
+    private RealmChangeListener callback = new RealmChangeListener<RealmResults<LaunchRealm>>() {
         @Override
-        public void onChange(Object element) {
-            Timber.v("Data changed - size: %s - element:", launchRealms.size(), element.toString());
+        public void onChange(RealmResults<LaunchRealm> results) {
+            Timber.v("Data changed - size: %s", results.size());
 
             int size = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
             if (cardSizeSmall) {
@@ -287,19 +288,19 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 adapter.clear();
             }
 
-            if (launchRealms.size() >= size) {
+            if (results.size() >= size) {
                 setLayoutManager(size);
                 if (cardSizeSmall) {
-                    smallAdapter.addItems(launchRealms.subList(0, size));
+                    smallAdapter.addItems(results.subList(0, size));
                 } else {
-                    adapter.addItems(launchRealms.subList(0, size));
+                    adapter.addItems(results.subList(0, size));
                 }
-            } else if (launchRealms.size() > 0) {
+            } else if (results.size() > 0) {
                 setLayoutManager(size);
                 if (cardSizeSmall) {
-                    smallAdapter.addItems(launchRealms);
+                    smallAdapter.addItems(results);
                 } else {
-                    adapter.addItems(launchRealms);
+                    adapter.addItems(results);
                 }
             }
             hideLoading();
@@ -309,7 +310,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     public void displayLaunches() {
         Timber.v("loadLaunches - showLoading");
-        showLoading();
         Date date = new Date();
 
         if (switchPreferences.getAllSwitch()) {
@@ -468,6 +468,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
         getActivity().registerReceiver(nextLaunchReceiver, intentFilter);
 
+        showLoading();
         displayLaunches();
     }
 
@@ -621,6 +622,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     color_reveal.setVisibility(View.INVISIBLE);
                 }
                 if (switchChanged) {
+                    showLoading();
                     displayLaunches();
                 }
             }
