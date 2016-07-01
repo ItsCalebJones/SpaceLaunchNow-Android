@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.bumptech.glide.Glide;
@@ -474,7 +475,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                                     .build());
                         }
 
-                        new MaterialDialog.Builder(context)
+                        MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
                                 .title("Select a source:")
                                 .adapter(adapter, new MaterialDialog.ListCallback() {
                                     @Override
@@ -484,8 +485,11 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                                         context.startActivity(i);
                                         dialog.dismiss();
                                     }
-                                })
-                                .show();
+                                });
+                        if (sharedPreference.getNightMode()) {
+                            builder.theme(Theme.DARK);
+                        }
+                        builder.show();
                     }
                     break;
                 case R.id.exploreButton:
@@ -560,6 +564,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                     break;
             }
         }
+
     }
 
     private void setCategoryIcon(ViewHolder holder, String type) {
