@@ -31,6 +31,7 @@
         <item name="colorControlNormal">@color/darkIcons</item>
         <item name="android:textColor">@color/dark_theme_secondary_text_color</item>
         <item name="cardStyle">@style/CardView.Dark</item>
+        <item name="md_background_color">@color/dark_card_background</item>
     </style>
 
     <style name="Theme.WtfPreference" parent="@style/PreferenceThemeOverlay">

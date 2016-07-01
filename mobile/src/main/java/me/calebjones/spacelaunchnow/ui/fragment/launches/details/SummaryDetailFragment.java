@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.bumptech.glide.Glide;
@@ -69,7 +70,8 @@ public class SummaryDetailFragment extends BaseFragment {
     private TextView launch_vehicle_specs_thrust;
     private TextView watchButton;
 
-    @Nullable @Override
+    @Nullable
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view;
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
@@ -118,9 +120,9 @@ public class SummaryDetailFragment extends BaseFragment {
         super.onSaveInstanceState(outState);
     }
 
-    public void setUpViews(){
-        detailLaunch = ((LaunchDetailActivity)getActivity()).getLaunch();
-        if(detailLaunch.getRocket() != null) {
+    public void setUpViews() {
+        detailLaunch = ((LaunchDetailActivity) getActivity()).getLaunch();
+        if (detailLaunch.getRocket() != null) {
             getLaunchVehicle(detailLaunch);
         }
 
@@ -177,7 +179,7 @@ public class SummaryDetailFragment extends BaseFragment {
         Date mDate;
         String dateText = null;
 
-        switch(detailLaunch.getStatus()){
+        switch (detailLaunch.getStatus()) {
             case 1:
                 launch_status.setText("Launch is GO");
                 break;
@@ -192,36 +194,36 @@ public class SummaryDetailFragment extends BaseFragment {
                 break;
         }
 
-        if (detailLaunch.getVidURL() != null && detailLaunch.getVidURL().length() > 0 && detailLaunch.getVidURL().contains("http")){
+        if (detailLaunch.getVidURLs() != null && detailLaunch.getVidURLs().size() > 0) {
             watchButton.setVisibility(View.VISIBLE);
             watchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (detailLaunch.getVidURLs().size() > 1) {
+                    Timber.d("Watch: %s", detailLaunch.getVidURLs().size());
+                    if (detailLaunch.getVidURLs().size() > 0) {
                         final MaterialSimpleListAdapter adapter = new MaterialSimpleListAdapter(context);
                         for (RealmStr s : detailLaunch.getVidURLs()) {
                             //Do your stuff here
                             adapter.add(new MaterialSimpleListItem.Builder(context)
-                                    .content(s.toString())
+                                    .content(s.getVal())
                                     .build());
                         }
 
-                        new MaterialDialog.Builder(context)
+                        MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
                                 .title("Select a source:")
                                 .adapter(adapter, new MaterialDialog.ListCallback() {
                                     @Override
                                     public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                                        Uri watchUri = Uri.parse(detailLaunch.getVidURLs().get(which).toString());
+                                        Uri watchUri = Uri.parse(detailLaunch.getVidURLs().get(which).getVal());
                                         Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
-                                        startActivity(i);
+                                        context.startActivity(i);
                                         dialog.dismiss();
                                     }
-                                })
-                                .show();
-                    } else {
-                        Uri watchUri = Uri.parse(detailLaunch.getVidURL());
-                        Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
-                        startActivity(i);
+                                });
+                        if (sharedPreference.getNightMode()) {
+                            builder.theme(Theme.DARK);
+                        }
+                        builder.show();
                     }
                 }
             });
@@ -232,7 +234,7 @@ public class SummaryDetailFragment extends BaseFragment {
         launch_vehicle.setText(detailLaunch.getRocket().getName());
         launch_configuration.setText(String.format("Configuration: %s", detailLaunch.getRocket().getConfiguration()));
         launch_family.setText(String.format("Family: %s", detailLaunch.getRocket().getFamilyname()));
-        if (launchVehicle != null){
+        if (launchVehicle != null) {
             vehicle_spec_view.setVisibility(View.VISIBLE);
             launch_vehicle_specs_height.setText(String.format("Height: %s Meters", launchVehicle.getLength()));
             launch_vehicle_specs_diameter.setText(String.format("Diameter: %s Meters", launchVehicle.getDiameter()));
@@ -248,14 +250,14 @@ public class SummaryDetailFragment extends BaseFragment {
         //Try to convert to Month day, Year.
         mDate = detailLaunch.getNet();
         dateText = output.format(mDate);
-        if (mDate.before(Calendar.getInstance().getTime())){
+        if (mDate.before(Calendar.getInstance().getTime())) {
             launch_date_title.setText("Launch Date");
         }
 
         date.setText(dateText);
 
         //TODO: Get launch window only if wstamp and westamp is available, hide otherwise.
-        if (detailLaunch.getWsstamp() > 0 && detailLaunch.getWestamp() > 0){
+        if (detailLaunch.getWsstamp() > 0 && detailLaunch.getWestamp() > 0) {
             setWindowStamp();
         } else {
             setWindowStartEnd();
@@ -265,7 +267,7 @@ public class SummaryDetailFragment extends BaseFragment {
 
     private void getLaunchVehicle(LaunchRealm vehicle) {
         String query;
-        if (vehicle.getRocket().getName().contains("Space Shuttle")){
+        if (vehicle.getRocket().getName().contains("Space Shuttle")) {
             query = "Space Shuttle";
         } else {
             query = vehicle.getRocket().getName();
@@ -298,13 +300,13 @@ public class SummaryDetailFragment extends BaseFragment {
         calendarEnd.setTimeInMillis(endDate);
         String end = formatter.format(calendarEnd.getTime());
 
-        if (!start.equals(end)){
-            if(start.length() == 0
-                    || end.length() == 0){
+        if (!start.equals(end)) {
+            if (start.length() == 0
+                    || end.length() == 0) {
                 launch_window_start.setText(String.format("Launch Time: %s",
                         start));
                 launch_window_end.setVisibility(View.GONE);
-            } else{
+            } else {
                 launch_window_start.setText(String.format("Window Start: %s",
                         start));
                 launch_window_end.setVisibility(View.VISIBLE);
@@ -319,12 +321,12 @@ public class SummaryDetailFragment extends BaseFragment {
     }
 
     private void setWindowStartEnd() {
-        if (!detailLaunch.getWindowstart().equals(detailLaunch.getWindowend())){
-            if(detailLaunch.getWindowstart().toString().length() > 0
-                    || detailLaunch.getWindowend().toString().length() > 0){
+        if (!detailLaunch.getWindowstart().equals(detailLaunch.getWindowend())) {
+            if (detailLaunch.getWindowstart().toString().length() > 0
+                    || detailLaunch.getWindowend().toString().length() > 0) {
                 launch_window_start.setText("Launch Window unavailable.");
                 launch_window_end.setVisibility(View.INVISIBLE);
-            } else{
+            } else {
                 launch_window_start.setText(String.format("Window Start: %s",
                         detailLaunch.getWindowstart()));
                 launch_window_end.setVisibility(View.VISIBLE);
@@ -338,7 +340,8 @@ public class SummaryDetailFragment extends BaseFragment {
         }
     }
 
-    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
 
