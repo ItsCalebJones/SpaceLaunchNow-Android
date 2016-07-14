@@ -50,10 +50,25 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="left"
-                android:paddingBottom="4dp"
+                android:paddingBottom="2dp"
                 android:paddingTop="4dp"
                 android:singleLine="false"
                 android:text="Unknown Payload"
+                android:textAlignment="center"
+                android:textColor="?android:textColorSecondary"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/payload_type"
+                style="@style/LightTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="left"
+                android:paddingBottom="2dp"
+                android:paddingTop="4dp"
+                android:singleLine="false"
+                android:text="Unknown Mission Type"
                 android:textAlignment="center"
                 android:textColor="?android:textColorSecondary"
                 android:textSize="15sp" />
