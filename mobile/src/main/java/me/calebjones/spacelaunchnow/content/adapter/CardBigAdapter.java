@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.bumptech.glide.Glide;
@@ -115,263 +116,265 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         LaunchRealm launchItem = launchList.get(i);
 
         String title;
-        if (launchItem.getRocket().getAgencies().size() > 0) {
-            title = launchItem.getRocket().getAgencies().get(0).getName() + " | " + (launchItem.getRocket().getName());
-        } else {
-            title = launchItem.getRocket().getName();
-        }
-
-        holder.title.setText(title);
-
-        //Retrieve missionType
-        if (launchItem.getMissions().size() != 0) {
-            setCategoryIcon(holder, launchItem.getMissions().get(0).getTypeName());
-        } else {
-            if (night) {
-                holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
+        if (launchItem.isValid()) {
+            if (launchItem.getRocket().getAgencies().size() > 0) {
+                title = launchItem.getRocket().getAgencies().get(0).getName() + " | " + (launchItem.getRocket().getName());
             } else {
-                holder.categoryIcon.setImageResource(R.drawable.ic_unknown);
+                title = launchItem.getRocket().getName();
             }
-        }
 
-        double dlat = 0;
-        double dlon = 0;
-        if (launchItem.getLocation() != null && launchItem.getLocation().getPads() != null) {
-            dlat = launchItem.getLocation().getPads().get(0).getLatitude();
-            dlon = launchItem.getLocation().getPads().get(0).getLongitude();
-        }
+            holder.title.setText(title);
 
-        // Getting status
-        if (dlat == 0 && dlon == 0 || Double.isNaN(dlat) || Double.isNaN(dlon) || dlat == Double.NaN || dlon == Double.NaN) {
-            if (holder.map_view != null) {
-                holder.map_view.setVisibility(View.GONE);
-                holder.exploreFab.setVisibility(View.GONE);
-
-            }
-        } else {
-            holder.map_view.setVisibility(View.VISIBLE);
-            holder.exploreFab.setVisibility(View.VISIBLE);
-            final Resources res = context.getResources();
-            final StaticMap map = new StaticMap()
-                    .center(dlat, dlon)
-                    .scale(4)
-                    .type(StaticMap.Type.ROADMAP)
-                    .zoom(5)
-                    .marker(dlat, dlon)
-                    .key(res.getString(R.string.GoogleMapsKey));
-
-            //Strange but necessary to calculate the height/width
-            holder.map_view.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                public boolean onPreDraw() {
-                    map.size(holder.map_view.getWidth() / 2,
-                            holder.map_view.getHeight() / 2);
-
-                    Timber.v("onPreDraw: %s", map.toString());
-                    Glide.with(context).load(map.toString())
-                            .error(R.drawable.placeholder)
-                            .into(holder.map_view);
-                    holder.map_view.getViewTreeObserver().removeOnPreDrawListener(this);
-                    return true;
+            //Retrieve missionType
+            if (launchItem.getMissions().size() != 0) {
+                setCategoryIcon(holder, launchItem.getMissions().get(0).getTypeName());
+            } else {
+                if (night) {
+                    holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
+                } else {
+                    holder.categoryIcon.setImageResource(R.drawable.ic_unknown);
                 }
-            });
-        }
-
-        switch (launchItem.getStatus()) {
-            case 1:
-                String go = context.getResources().getString(R.string.status_go);
-                if (launchItem.getProbability() != null && launchItem.getProbability() > 0) {
-                    go = String.format("%s | Forecast - %s%%", go, launchItem.getProbability());
-                }
-                //GO for launch
-                holder.content_status.setText(go);
-                holder.content_status.setTextColor(ContextCompat.getColor(context, R.color.colorGo));
-                break;
-            case 2:
-                //NO GO for launch
-                holder.content_status.setText(R.string.status_nogo);
-                holder.content_status.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
-                break;
-            case 3:
-                //Success for launch
-                holder.content_status.setText(R.string.status_success);
-                holder.content_status.setTextColor(ContextCompat.getColor(context, R.color.colorGo));
-                break;
-            case 4:
-                //Failure to launch
-                holder.content_status.setText(R.string.status_failure);
-                holder.content_status.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
-                break;
-        }
-
-        //If timestamp is available calculate TMinus and date.
-        if (launchItem.getNetstamp() > 0) {
-            long longdate = launchItem.getNetstamp();
-            longdate = longdate * 1000;
-            final Date date = new Date(longdate);
-
-            Calendar future = DateToCalendar(date);
-            Calendar now = rightNow;
-
-            now.setTimeInMillis(System.currentTimeMillis());
-            if (holder.timer != null) {
-                holder.timer.cancel();
             }
 
-            final int status = launchItem.getStatus();
-            final String hold = launchItem.getHoldreason();
+            double dlat = 0;
+            double dlon = 0;
+            if (launchItem.getLocation() != null && launchItem.getLocation().getPads() != null) {
+                dlat = launchItem.getLocation().getPads().get(0).getLatitude();
+                dlon = launchItem.getLocation().getPads().get(0).getLongitude();
+            }
 
-            holder.timer = new CountDownTimer(future.getTimeInMillis() - now.getTimeInMillis(), 1000) {
-                StringBuilder time = new StringBuilder();
+            // Getting status
+            if (dlat == 0 && dlon == 0 || Double.isNaN(dlat) || Double.isNaN(dlon) || dlat == Double.NaN || dlon == Double.NaN) {
+                if (holder.map_view != null) {
+                    holder.map_view.setVisibility(View.GONE);
+                    holder.exploreFab.setVisibility(View.GONE);
 
-                @Override
-                public void onFinish() {
-                    holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
-                    if (night) {
-                        holder.content_TMinus_status.setTextColor(nightColor);
-                    } else {
-                        holder.content_TMinus_status.setTextColor(color);
+                }
+            } else {
+                holder.map_view.setVisibility(View.VISIBLE);
+                holder.exploreFab.setVisibility(View.VISIBLE);
+                final Resources res = context.getResources();
+                final StaticMap map = new StaticMap()
+                        .center(dlat, dlon)
+                        .scale(4)
+                        .type(StaticMap.Type.ROADMAP)
+                        .zoom(5)
+                        .marker(dlat, dlon)
+                        .key(res.getString(R.string.GoogleMapsKey));
+
+                //Strange but necessary to calculate the height/width
+                holder.map_view.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                    public boolean onPreDraw() {
+                        map.size(holder.map_view.getWidth() / 2,
+                                holder.map_view.getHeight() / 2);
+
+                        Timber.v("onPreDraw: %s", map.toString());
+                        Glide.with(context).load(map.toString())
+                                .error(R.drawable.placeholder)
+                                .into(holder.map_view);
+                        holder.map_view.getViewTreeObserver().removeOnPreDrawListener(this);
+                        return true;
                     }
-                    if (status == 1) {
-                        holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
+                });
+            }
 
-                        //TODO - Get hold reason and show it
-                    } else {
-                        if (hold != null && hold.length() > 1) {
-                            holder.content_TMinus_status.setText(hold);
+            switch (launchItem.getStatus()) {
+                case 1:
+                    String go = context.getResources().getString(R.string.status_go);
+                    if (launchItem.getProbability() != null && launchItem.getProbability() > 0) {
+                        go = String.format("%s | Forecast - %s%%", go, launchItem.getProbability());
+                    }
+                    //GO for launch
+                    holder.content_status.setText(go);
+                    holder.content_status.setTextColor(ContextCompat.getColor(context, R.color.colorGo));
+                    break;
+                case 2:
+                    //NO GO for launch
+                    holder.content_status.setText(R.string.status_nogo);
+                    holder.content_status.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    break;
+                case 3:
+                    //Success for launch
+                    holder.content_status.setText(R.string.status_success);
+                    holder.content_status.setTextColor(ContextCompat.getColor(context, R.color.colorGo));
+                    break;
+                case 4:
+                    //Failure to launch
+                    holder.content_status.setText(R.string.status_failure);
+                    holder.content_status.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    break;
+            }
+
+            //If timestamp is available calculate TMinus and date.
+            if (launchItem.getNetstamp() > 0) {
+                long longdate = launchItem.getNetstamp();
+                longdate = longdate * 1000;
+                final Date date = new Date(longdate);
+
+                Calendar future = DateToCalendar(date);
+                Calendar now = rightNow;
+
+                now.setTimeInMillis(System.currentTimeMillis());
+                if (holder.timer != null) {
+                    holder.timer.cancel();
+                }
+
+                final int status = launchItem.getStatus();
+                final String hold = launchItem.getHoldreason();
+
+                holder.timer = new CountDownTimer(future.getTimeInMillis() - now.getTimeInMillis(), 1000) {
+                    StringBuilder time = new StringBuilder();
+
+                    @Override
+                    public void onFinish() {
+                        holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
+                        if (night) {
+                            holder.content_TMinus_status.setTextColor(nightColor);
                         } else {
+                            holder.content_TMinus_status.setTextColor(color);
+                        }
+                        if (status == 1) {
                             holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
+
+                            //TODO - Get hold reason and show it
+                        } else {
+                            if (hold != null && hold.length() > 1) {
+                                holder.content_TMinus_status.setText(hold);
+                            } else {
+                                holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
+                            }
                         }
                     }
-                }
 
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    time.setLength(0);
-                    // Use days if appropriate
-                    long longDays = millisUntilFinished / 86400000;
-                    long longHours = (millisUntilFinished / 3600000) % 24;
-                    long longMins = (millisUntilFinished / 60000) % 60;
-                    long longSeconds = (millisUntilFinished / 1000) % 60;
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        time.setLength(0);
+                        // Use days if appropriate
+                        long longDays = millisUntilFinished / 86400000;
+                        long longHours = (millisUntilFinished / 3600000) % 24;
+                        long longMins = (millisUntilFinished / 60000) % 60;
+                        long longSeconds = (millisUntilFinished / 1000) % 60;
 
-                    String days = String.valueOf(longDays);
-                    String hours;
-                    String minutes;
-                    String seconds;
-                    if (longHours < 10) {
-                        hours = "0" + String.valueOf(longHours);
-                    } else {
-                        hours = String.valueOf(longHours);
+                        String days = String.valueOf(longDays);
+                        String hours;
+                        String minutes;
+                        String seconds;
+                        if (longHours < 10) {
+                            hours = "0" + String.valueOf(longHours);
+                        } else {
+                            hours = String.valueOf(longHours);
+                        }
+
+                        if (longMins < 10) {
+                            minutes = "0" + String.valueOf(longMins);
+                        } else {
+                            minutes = String.valueOf(longMins);
+                        }
+
+                        if (longSeconds < 10) {
+                            seconds = "0" + String.valueOf(longSeconds);
+                        } else {
+                            seconds = String.valueOf(longSeconds);
+                        }
+                        holder.content_TMinus_status.setTypeface(Typeface.SANS_SERIF);
+                        holder.content_TMinus_status.setTextColor(accentColor);
+                        if (Integer.valueOf(days) > 0) {
+                            holder.content_TMinus_status.setText(String.format("L - %s days - %s:%s:%s", days, hours, minutes, seconds));
+                        } else {
+                            holder.content_TMinus_status.setText(String.format("L - %s:%s:%s", hours, minutes, seconds));
+                        }
+
                     }
+                }.start();
 
-                    if (longMins < 10) {
-                        minutes = "0" + String.valueOf(longMins);
-                    } else {
-                        minutes = String.valueOf(longMins);
-                    }
-
-                    if (longSeconds < 10) {
-                        seconds = "0" + String.valueOf(longSeconds);
-                    } else {
-                        seconds = String.valueOf(longSeconds);
-                    }
-                    holder.content_TMinus_status.setTypeface(Typeface.SANS_SERIF);
-                    holder.content_TMinus_status.setTextColor(accentColor);
-                    if (Integer.valueOf(days) > 0) {
-                        holder.content_TMinus_status.setText(String.format("L - %s days - %s:%s:%s", days, hours, minutes, seconds));
-                    } else {
-                        holder.content_TMinus_status.setText(String.format("L - %s:%s:%s", hours, minutes, seconds));
-                    }
-
-                }
-            }.start();
-
-        } else {
-            holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
-            if (night) {
-                holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color));
             } else {
-                holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary));
-            }
-            if (holder.timer != null) {
-                holder.timer.cancel();
-            }
-            if (launchItem.getStatus() != 1) {
-                if (launchItem.getRocket().getAgencies().size() > 0) {
-                    holder.content_TMinus_status.setText(String.format("Pending confirmed GO from %s", launchItem.getRocket().getAgencies().get(0).getName()));
+                holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
+                if (night) {
+                    holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color));
                 } else {
-                    holder.content_TMinus_status.setText("Pending confirmed GO for Launch from launch agency");
+                    holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary));
                 }
-            } else {
-                holder.content_TMinus_status.setText("Unknown");
+                if (holder.timer != null) {
+                    holder.timer.cancel();
+                }
+                if (launchItem.getStatus() != 1) {
+                    if (launchItem.getRocket().getAgencies().size() > 0) {
+                        holder.content_TMinus_status.setText(String.format("Pending confirmed GO from %s", launchItem.getRocket().getAgencies().get(0).getName()));
+                    } else {
+                        holder.content_TMinus_status.setText("Pending confirmed GO for Launch from launch agency");
+                    }
+                } else {
+                    holder.content_TMinus_status.setText("Unknown");
+                }
             }
-        }
 
-        //Get launch date
-        if (launchItem.getStatus() == 2) {
             //Get launch date
-            SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy.");
-            sdf.toLocalizedPattern();
-            Date date = launchItem.getWindowstart();
-            launchDate = sdf.format(date);
-
-            holder.launch_date.setText("To be determined... " + launchDate);
-        } else {
-            if (sharedPref.getBoolean("local_time", true)) {
-                SimpleDateFormat sdf;
-                if (sharedPref.getBoolean("24_hour_mode", false)) {
-                    sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - kk:mm zzz");
-                } else {
-                    sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
-                }
+            if (launchItem.getStatus() == 2) {
+                //Get launch date
+                SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy.");
                 sdf.toLocalizedPattern();
                 Date date = launchItem.getWindowstart();
                 launchDate = sdf.format(date);
+
+                holder.launch_date.setText("To be determined... " + launchDate);
             } else {
-                SimpleDateFormat sdf;
-                if (sharedPref.getBoolean("24_hour_mode", false)) {
-                    sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - kk:mm zzz");
+                if (sharedPref.getBoolean("local_time", true)) {
+                    SimpleDateFormat sdf;
+                    if (sharedPref.getBoolean("24_hour_mode", false)) {
+                        sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - kk:mm zzz");
+                    } else {
+                        sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                    }
+                    sdf.toLocalizedPattern();
+                    Date date = launchItem.getWindowstart();
+                    launchDate = sdf.format(date);
                 } else {
-                    sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                    SimpleDateFormat sdf;
+                    if (sharedPref.getBoolean("24_hour_mode", false)) {
+                        sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - kk:mm zzz");
+                    } else {
+                        sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                    }
+                    Date date = launchItem.getWindowstart();
+                    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    launchDate = sdf.format(date);
                 }
-                Date date = launchItem.getWindowstart();
-                sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                launchDate = sdf.format(date);
+                holder.launch_date.setText(launchDate);
             }
-            holder.launch_date.setText(launchDate);
-        }
 
-        if (launchItem.getVidURLs() != null) {
-            if (launchItem.getVidURLs().size() == 0) {
+            if (launchItem.getVidURLs() != null) {
+                if (launchItem.getVidURLs().size() == 0) {
+                    holder.watchButton.setVisibility(View.GONE);
+                } else {
+                    holder.watchButton.setVisibility(View.VISIBLE);
+                }
+            } else {
                 holder.watchButton.setVisibility(View.GONE);
+            }
+
+
+            if (launchItem.getMissions().size() > 0) {
+                holder.content_mission.setText(launchItem.getMissions().get(0).getName());
+                String description = launchItem.getMissions().
+                        get(0).getDescription();
+                if (description.length() > 0) {
+                    holder.content_mission_description_view.setVisibility(View.VISIBLE);
+                    holder.content_mission_description.setText(description);
+                }
             } else {
-                holder.watchButton.setVisibility(View.VISIBLE);
+                String[] separated = launchItem.getName().split(" \\| ");
+                if (separated[1].length() > 4) {
+                    holder.content_mission.setText(separated[1].trim());
+                } else {
+                    holder.content_mission.setText("Unknown Mission");
+                }
+                holder.content_mission_description_view.setVisibility(View.GONE);
             }
-        } else {
-            holder.watchButton.setVisibility(View.GONE);
-        }
 
-
-        if (launchItem.getMissions().size() > 0) {
-            holder.content_mission.setText(launchItem.getMissions().get(0).getName());
-            String description = launchItem.getMissions().
-                    get(0).getDescription();
-            if (description.length() > 0) {
-                holder.content_mission_description_view.setVisibility(View.VISIBLE);
-                holder.content_mission_description.setText(description);
+            //If pad and agency exist add it to location, otherwise get whats always available
+            if (launchItem.getLocation() != null) {
+                holder.location.setText(launchItem.getLocation().getName());
             }
-        } else {
-            String[] separated = launchItem.getName().split(" \\| ");
-            if (separated[1].length() > 4) {
-                holder.content_mission.setText(separated[1].trim());
-            } else {
-                holder.content_mission.setText("Unknown Mission");
-            }
-            holder.content_mission_description_view.setVisibility(View.GONE);
-        }
-
-        //If pad and agency exist add it to location, otherwise get whats always available
-        if (launchItem.getLocation() != null) {
-            holder.location.setText(launchItem.getLocation().getName());
         }
     }
 
@@ -472,7 +475,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                                     .build());
                         }
 
-                        new MaterialDialog.Builder(context)
+                        MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
                                 .title("Select a source:")
                                 .adapter(adapter, new MaterialDialog.ListCallback() {
                                     @Override
@@ -482,8 +485,11 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                                         context.startActivity(i);
                                         dialog.dismiss();
                                     }
-                                })
-                                .show();
+                                });
+                        if (sharedPreference.getNightMode()) {
+                            builder.theme(Theme.DARK);
+                        }
+                        builder.show();
                     }
                     break;
                 case R.id.exploreButton:
@@ -558,6 +564,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                     break;
             }
         }
+
     }
 
     private void setCategoryIcon(ViewHolder holder, String type) {

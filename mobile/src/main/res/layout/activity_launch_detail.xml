@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootview"
     android:layout_width="match_parent"
@@ -23,7 +24,7 @@
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
-            app:layout_scrollFlags="scroll">
+            app:layout_scrollFlags="scroll|snap">
             ​
 
             <ImageView
@@ -32,8 +33,9 @@
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
-                app:srcCompat="@drawable/placeholder"
-                app:layout_collapseMode="parallax" />
+                app:layout_collapseMode="parallax"
+                app:srcCompat="@drawable/placeholder" />
+
         </android.support.design.widget.CollapsingToolbarLayout>
 
         ​
@@ -45,10 +47,10 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="-48dp"
             android:elevation="8dp"
-            app:srcCompat="@drawable/icon_international"
             app:civ_border_color="#FFF"
             app:civ_border_width="4dp"
-            app:layout_scrollFlags="scroll" />
+            app:layout_scrollFlags="scroll"
+            app:srcCompat="@drawable/icon_international" />
         ​
 
         <android.support.v7.widget.Toolbar
@@ -57,9 +59,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="-48dp"
-            android:minHeight="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|snap"
             android:fitsSystemWindows="true"
+            android:minHeight="?attr/actionBarSize"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
             app:theme="@style/ThemeOverlay.AppCompat.Dark" />
         ​
 
@@ -68,8 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical"
-            app:layout_scrollFlags="scroll|snap">
+            android:orientation="vertical">
             ​
 
             <TextView
@@ -101,20 +102,19 @@
             android:id="@+id/detail.tabs"
             android:layout_width="fill_parent"
             android:layout_height="?attr/actionBarSize"
+            android:fitsSystemWindows="true"
             app:tabIndicatorColor="@color/colorAccentLight"
             app:tabIndicatorHeight="4dp"
-            android:fitsSystemWindows="true"
             app:tabSelectedTextColor="@color/white"
             app:theme="@style/ThemeOverlay.AppCompat.Dark" />
+
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/detail_viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-    ​
-
+        <android.support.v4.view.ViewPager
+            android:id="@+id/detail_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     ​
 </android.support.design.widget.CoordinatorLayout>
