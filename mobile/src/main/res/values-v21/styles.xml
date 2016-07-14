@@ -31,6 +31,7 @@
         <item name="android:statusBarColor">@color/darkPrimary_dark</item>
         <item name="colorControlNormal">@color/darkIcons</item>
         <item name="android:windowActivityTransitions">true</item>
+        <item name="md_background_color">@color/dark_card_background</item>
 
         <!-- enable overlap of transitions -->
         <item name="android:windowContentTransitions">true</item>
