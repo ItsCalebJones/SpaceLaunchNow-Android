@@ -28,14 +28,15 @@
             android:summary="Select desired time between syncs."
             android:title="Background Sync Interval" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Calender Settings">
+    <PreferenceCategory android:title="Calender Settings - Supporter Feature">
         <SwitchPreference
             android:defaultValue="false"
             android:key="calendar_sync_state"
             android:summary="Allow next launch to sync with default Calendar."
-            android:title="Sync Calendar - (EXPERIMENTAL)" />
+            android:title="Sync Calendar" />
         <MultiSelectListPreference
             android:defaultValue="@array/multi_calendar_reminder_default"
+            android:dependency="calendar_sync_state"
             android:key="calendar_reminder_array"
             android:summary="Set custom reminders for calendar notifications."
             android:entries="@array/multi_calendar_reminder"

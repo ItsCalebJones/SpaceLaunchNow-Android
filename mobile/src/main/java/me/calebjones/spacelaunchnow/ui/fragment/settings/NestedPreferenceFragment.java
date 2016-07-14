@@ -4,22 +4,33 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.preference.SwitchPreference;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
@@ -30,11 +41,16 @@ import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsList
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.onesignal.OneSignal;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.Date;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.content.models.natives.Products;
 import me.calebjones.spacelaunchnow.content.receivers.MultiplePermissionListener;
 import timber.log.Timber;
 
@@ -63,6 +79,10 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
     private GoogleApiClient mGoogleApiClient;
     private MultiplePermissionsListener allPermissionsListener;
     private static final String HOUR_KEY = "me.calebjones.spacelaunchnow.wear.hourmode";
+    private static final String BACKGROUND_KEY = "me.calebjones.spacelaunchnow.wear.background";
+    private static final int BACKGROUND_NORMAL = 0;
+    private static final int BACKGROUND_CUSTOM = 1;
+    private static final int BACKGROUND_DYNAMIC = 2;
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -115,10 +135,10 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
                     themeEditor.apply();
                     NestedPreferenceFragment.this.getActivity().recreate();
                 }
-                if (key.equals("notifications_launch_imminent_updates")){
+                if (key.equals("notifications_launch_imminent_updates")) {
                     OneSignal.setSubscription(this.valprefs.getBoolean(key, false));
                 }
-                if (key.equals("wear_hour_mode")){
+                if (key.equals("wear_hour_mode")) {
                     PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/config");
                     putDataMapReq.getDataMap().putBoolean(HOUR_KEY, this.valprefs.getBoolean(key, false));
                     putDataMapReq.getDataMap().putLong("time", new Date().getTime());
@@ -126,7 +146,14 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
                     PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
                     Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
                 }
-                if (key.equals("calendar_sync_state")){
+                if (key.equals("custom_background")) {
+
+                    PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/config");
+                    putDataMapReq.getDataMap().putInt(BACKGROUND_KEY, BACKGROUND_NORMAL);
+                    PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
+                    Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
+                }
+                if (key.equals("calendar_sync_state")) {
                     Timber.v("Calendar Sync State: %s", this.valprefs.getBoolean(key, true));
                     if (this.valprefs.getBoolean(key, true)) {
                         Timber.v("Calendar Status: %s", switchPreferences.getCalendarStatus());
@@ -146,6 +173,7 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
             }
         }
     }
+
 
     public static NestedPreferenceFragment newInstance(int key) {
         NestedPreferenceFragment fragment = new NestedPreferenceFragment();
@@ -184,6 +212,8 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
     }
 
     private void checkPreferenceResource() {
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<Products> realmResults = realm.where(Products.class).findAll();
         mGoogleApiClient.connect();
         switch (getArguments().getInt(TAG_KEY)) {
             case NESTED_SCREEN_1_KEY:
@@ -194,6 +224,12 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
                 break;
             case NESTED_SCREEN_2_KEY:
                 addPreferencesFromResource(R.xml.nested_loader_preferences);
+                if (realmResults.size() <= 0) {
+                    Preference subs = findPreference("calendar_sync_state");
+                    subs.setEnabled(false);
+                    subs.setSelectable(false);
+                    subs.setTitle(subs.getTitle() + " (Supporter Feature)");
+                }
                 if (this.toolbarTitle != null) {
                     this.toolbarTitle.setText("General");
                 }
@@ -206,13 +242,52 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
                 break;
             case NESTED_SCREEN_4_KEY:
                 addPreferencesFromResource(R.xml.nested_wear_preferences);
-                if (this.toolbarTitle != null) {
-                    this.toolbarTitle.setText("Wear");
+                SwitchPreference customBackground = (SwitchPreference) findPreference("custom_background");
+                Preference dynamicBackground = findPreference("supporter_next_background");
+                if (realmResults.size() <= 0) {
+                    dynamicBackground.setEnabled(false);
+                    dynamicBackground.setSelectable(false);
+                    dynamicBackground.setTitle(dynamicBackground.getTitle() + " (Supporter Feature)");
+                } else {
+                    dynamicBackground.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            Toast.makeText(context, "Clicked: " + preference.getKey(), Toast.LENGTH_LONG).show();
+                            return true;
+                        }
+                    });
                 }
-                break;
-            default:
+                customBackground.setOnPreferenceChangeListener(new SwitchPreference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+                        Timber.d("Filepath: %s", prefs.getString("filepath", null));
+                        boolean checked = Boolean.valueOf(newValue.toString());
+                        if (checked) {
+                            Intent intent = new Intent();
+                            intent.setType("image/*");
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            int PICK_IMAGE = 1;
+                            getActivity().startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+                            return true;
+                        } else {
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putString("filepath", null);
+                            editor.apply();
+                            return true;
+                        }
+                    }
+                });
+
+
+        if (this.toolbarTitle != null) {
+            this.toolbarTitle.setText("Wear");
         }
+        break;
+        default:
     }
+
+}
 
     @Override
     public void onDestroy() {
@@ -243,20 +318,23 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
         new AlertDialog.Builder(context).setTitle("Calendar Permission Needed")
                 .setMessage("This permission is needed to sync launches with your calendar.")
                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface dialog, int which) {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
                         switchPreferences.setCalendarStatus(false);
                         dialog.dismiss();
                         token.cancelPermissionRequest();
                     }
                 })
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface dialog, int which) {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         token.continuePermissionRequest();
                     }
                 })
                 .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override public void onDismiss(DialogInterface dialog) {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
                         switchPreferences.setCalendarStatus(false);
                         token.cancelPermissionRequest();
                     }

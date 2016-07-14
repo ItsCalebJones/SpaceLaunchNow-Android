@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
@@ -28,17 +29,19 @@ import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.natives.Products;
+import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 import xyz.hanks.library.SmallBang;
 
-public class SupportActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
+public class SupportActivity extends BaseActivity implements BillingProcessor.IBillingHandler {
 
     @BindView(R.id.toolbar_support) Toolbar toolbar;
     @BindView(R.id.twoDollar) AppCompatButton two;
     @BindView(R.id.sixDollar) AppCompatButton six;
     @BindView(R.id.twelveDollar) AppCompatButton twelve;
     @BindView(R.id.other) AppCompatButton other;
+    @BindView(R.id.support_coordinator) CoordinatorLayout coordinatorLayout;
 
     // SKU for our subscription (infinite gas)
     static final String SKU_TWO_DOLLAR = "two_dollar_support";
@@ -146,14 +149,14 @@ public class SupportActivity extends AppCompatActivity implements BillingProcess
             // continue
             Products products = getProduct(sku);
             Answers.getInstance().logAddToCart(new AddToCartEvent()
-                    .putItemPrice(products.getPrice())
+                    .putItemPrice(BigDecimal.valueOf(products.getPrice()))
                     .putCurrency(Currency.getInstance("USD"))
                     .putItemName(products.getName())
                     .putItemType(products.getType())
                     .putItemId(sku));
             bp.purchase(this, sku);
         } else {
-            Toast.makeText(this, "Issues connecting to Google Play Billing", Toast.LENGTH_LONG).show();
+            SnackbarHandler.showErrorSnackbar(this,coordinatorLayout, "Issues connecting to Google Play Billing");
         }
     }
 
@@ -161,11 +164,14 @@ public class SupportActivity extends AppCompatActivity implements BillingProcess
     @Override
     public void onProductPurchased(String productId, TransactionDetails details) {
         Timber.v("%s purchased.", productId);
-        Toast.makeText(this, "Thanks for helping keep the gears turning!", Toast.LENGTH_LONG).show();
+        SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Thanks for helping keep the gears turning!");
         animatePurchase(productId);
         Products products = getProduct(productId);
+        getRealm().beginTransaction();
+        getRealm().copyToRealmOrUpdate(products);
+        getRealm().commitTransaction();
         Answers.getInstance().logPurchase(new PurchaseEvent()
-                .putItemPrice(products.getPrice())
+                .putItemPrice(BigDecimal.valueOf(products.getPrice()))
                 .putCurrency(Currency.getInstance("USD"))
                 .putItemName(products.getName())
                 .putItemType(products.getType())
@@ -177,7 +183,7 @@ public class SupportActivity extends AppCompatActivity implements BillingProcess
     @Override
     public void onPurchaseHistoryRestored() {
         Timber.v("Purchase History restored.");
-        Toast.makeText(this, "Restored purchase, thanks for supporting me!", Toast.LENGTH_LONG).show();
+        SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Restored purchase, thanks for supporting me!");
     }
 
     @Override
@@ -191,7 +197,10 @@ public class SupportActivity extends AppCompatActivity implements BillingProcess
         Timber.v("Billing initialized.");
         int count = 500;
         for (final String sku : bp.listOwnedProducts()) {
-
+            Products products = getProduct(sku);
+            getRealm().beginTransaction();
+            getRealm().copyToRealmOrUpdate(products);
+            getRealm().commitTransaction();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -232,17 +241,17 @@ public class SupportActivity extends AppCompatActivity implements BillingProcess
             product.setName("Founder 2016 - Bronze");
             product.setDescription("This ensures you will always have access to every supporter features.");
             product.setType("Supporter");
-            product.setPrice(BigDecimal.valueOf(1.99));
+            product.setPrice(2);
         } else if (productID.equals(SKU_SIX_DOLLAR)){
             product.setName("Founder 2016 - Silver");
             product.setDescription("This ensures you will always have access to every supporter features.");
             product.setType("Supporter");
-            product.setPrice(BigDecimal.valueOf(5.99));
+            product.setPrice(6);
         } else if (productID.equals(SKU_TWELVE_DOLLAR)){
             product.setName("Founder 2016 - Gold");
             product.setDescription("This ensures you will always have access to every supporter features.");
             product.setType("Supporter");
-            product.setPrice(BigDecimal.valueOf(11.99));
+            product.setPrice(12);
         }
         return product;
     }

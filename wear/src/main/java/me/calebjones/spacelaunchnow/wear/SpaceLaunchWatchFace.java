@@ -41,6 +41,7 @@ import android.view.WindowInsets;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
@@ -50,12 +51,15 @@ import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.Wearable;
 
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+
+import timber.log.Timber;
 
 /**
  * Digital watch face with seconds. In ambient mode, the seconds aren't displayed. On devices with
@@ -69,7 +73,12 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
     private static final String NAME_KEY = "me.calebjones.spacelaunchnow.wear.nextname";
     private static final String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
     private static final String HOUR_KEY = "me.calebjones.spacelaunchnow.wear.hourmode";
-    private boolean twentyfourhourmode = true;
+    private static final String BACKGROUND_KEY = "me.calebjones.spacelaunchnow.wear.background";
+    private static final int BACKGROUND_NORMAL = 0;
+    private static final int BACKGROUND_CUSTOM = 1;
+    private static final int BACKGROUND_DYNAMIC = 2;
+    private boolean twentyfourhourmode = false;
+    private boolean custombackground = false;
     private String timeText;
 
     /**
@@ -123,8 +132,10 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
         float timeXoffset;
         float timeYoffset;
         private Bitmap background;
+        private Bitmap customBackgroundBitmap;
         private GoogleApiClient googleApiClient;
         private WatchFaceStyle watchFaceStyle;
+        private Asset asset;
         String launchName;
         int launchTime;
 
@@ -138,6 +149,8 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
         public void onCreate(SurfaceHolder holder) {
             super.onCreate(holder);
 
+            Timber.plant(new Timber.DebugTree());
+
             watchFaceStyle = new WatchFaceStyle.Builder(SpaceLaunchWatchFace.this)
                     .setCardPeekMode(WatchFaceStyle.PEEK_MODE_VARIABLE)
                     .setHotwordIndicatorGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL)
@@ -148,7 +161,11 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             setWatchFaceStyle(watchFaceStyle);
             Resources resources = SpaceLaunchWatchFace.this.getResources();
 
-            background = BitmapFactory.decodeResource(resources, R.drawable.nav_header);
+            if (custombackground && customBackgroundBitmap != null){
+                background = customBackgroundBitmap;
+            } else {
+                background = BitmapFactory.decodeResource(resources, R.drawable.nav_header);
+            }
 
             mBackgroundPaint = new Paint();
             mBackgroundPaint.setColor(resources.getColor(R.color.background));
@@ -271,18 +288,17 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
                 canvas.drawColor(Color.BLACK);
             } else {
                 canvas.drawBitmap(background, 0, 0, null);
-//                canvas.drawRect(0, 0, bounds.width(), bounds.height(), mBackgroundPaint);
             }
 
             Date now = new Date();
             mTime = Calendar.getInstance();
-            if(twentyfourhourmode) {
+            if (twentyfourhourmode) {
                 // Draw H:MM in ambient mode or H:MM:SS in interactive mode.
-                SimpleDateFormat sdf = new SimpleDateFormat("h:mm");
+                SimpleDateFormat sdf = new SimpleDateFormat("kk:mm");
                 timeText = sdf.format(now);
             } else {
                 // Draw H:MM in ambient mode or H:MM:SS in interactive mode.
-                SimpleDateFormat sdf = new SimpleDateFormat("kk:mm");
+                SimpleDateFormat sdf = new SimpleDateFormat("h:mm");
                 timeText = sdf.format(now);
             }
 
@@ -576,9 +592,39 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
                 DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
                 if (dataMap.containsKey(HOUR_KEY)) {
                     twentyfourhourmode = dataMap.getBoolean(HOUR_KEY);
-                    Log.v("Space Launch Wear", "Name = " + launchName);
+                    Timber.v("24 Hour Mode = %s", twentyfourhourmode);
+                }
+
+                if (dataMap.containsKey(BACKGROUND_KEY)) {
+                    custombackground = dataMap.getBoolean(BACKGROUND_KEY);
+                    Timber.v("Background = %s", custombackground);
+                    asset = dataMap.getAsset("background");
+                    customBackgroundBitmap = loadBitmapFromAsset(asset);
+                    background = customBackgroundBitmap;
                 }
             }
+        }
+
+        public Bitmap loadBitmapFromAsset(Asset asset) {
+            if (asset == null) {
+                throw new IllegalArgumentException("Asset must be non-null");
+            }
+            ConnectionResult result =
+                    googleApiClient.blockingConnect(1000, TimeUnit.MILLISECONDS);
+            if (!result.isSuccess()) {
+                return null;
+            }
+            // convert asset into a file descriptor and block until it's ready
+            InputStream assetInputStream = Wearable.DataApi.getFdForAsset(
+                    googleApiClient, asset).await().getInputStream();
+            googleApiClient.disconnect();
+
+            if (assetInputStream == null) {
+                Log.w("Space launch Now", "Requested an unknown Asset.");
+                return null;
+            }
+            // decode the stream into a bitmap
+            return BitmapFactory.decodeStream(assetInputStream);
         }
 
         private final ResultCallback<DataItemBuffer> onConnectedResultCallback = new ResultCallback<DataItemBuffer>() {
@@ -606,4 +652,5 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             return cal;
         }
     }
+
 }

@@ -2,12 +2,16 @@ package me.calebjones.spacelaunchnow.content.models.natives;
 
 import java.math.BigDecimal;
 
-/**
- * Created by cjones on 4/18/16.
- */
-public class Products {
-    String name, type, description;
-    BigDecimal price;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
+public class Products extends RealmObject {
+
+    @PrimaryKey
+    private String name;
+    private String type;
+    private String description;
+    private Integer price;
 
     public String getName() {
         return name;
@@ -33,11 +37,11 @@ public class Products {
         this.description = description;
     }
 
-    public BigDecimal getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 }

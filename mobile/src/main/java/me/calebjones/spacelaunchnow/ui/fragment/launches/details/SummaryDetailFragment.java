@@ -192,7 +192,7 @@ public class SummaryDetailFragment extends BaseFragment {
                 break;
         }
 
-        if (detailLaunch.getVidURL() != null && detailLaunch.getVidURL().length() > 0 && detailLaunch.getVidURL().contains("http")){
+        if (detailLaunch.getVidURLs() != null && detailLaunch.getVidURLs().size() > 0){
             watchButton.setVisibility(View.VISIBLE);
             watchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
