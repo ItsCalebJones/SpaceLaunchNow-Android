@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/card_margin"
             android:animateLayoutChanges="true"
-            card_view:cardBackgroundColor="@color/dark_theme_background"
+            card_view:cardBackgroundColor="@color/cardview_dark_background"
             card_view:cardCornerRadius="0dp"
             card_view:cardElevation="4dp"
             card_view:cardPreventCornerOverlap="true"
@@ -222,12 +222,13 @@
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
+            android:id="@+id/weather_card"
             style="@style/DarkTheme"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/card_margin"
             android:animateLayoutChanges="true"
-            card_view:cardBackgroundColor="@color/dark_theme_background"
+            card_view:cardBackgroundColor="@color/cardview_dark_background"
             card_view:cardCornerRadius="0dp"
             card_view:cardElevation="4dp"
             card_view:cardPreventCornerOverlap="true"
@@ -235,217 +236,155 @@
             android:layout_weight="1">
 
             <LinearLayout
-                style="@style/DarkTheme"
-                     android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="8dp">
-
-                <TextView
-                    android:id="@+id/launch_vehicle_title"
-                    style="@style/DarkTheme"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:lines="1"
-                    android:paddingLeft="8dp"
-                    android:paddingTop="8dp"
-                    android:text="Launch Vehicle Summary"
-                    android:textAlignment="center"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/launch_vehicle"
-                    style="@style/DarkTheme"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:gravity="left"
-                    android:lines="1"
-                    android:paddingBottom="8dp"
-                    android:paddingLeft="8dp"
-                    android:paddingTop="4dp"
-                    android:singleLine="false"
-                    android:text="Unknown Launch Vehicle"
-                    android:textAlignment="center" />
-
-                <View
-                    style="@style/DarkTheme"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_margin="8dp"
-                    android:background="@color/View_Separator"
-                    android:padding="12dp" />
-
-                <TextView
-                    android:id="@+id/launch_configuration"
-                    style="@style/DarkTheme"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:gravity="left"
-                    android:lines="1"
-                    android:paddingBottom="2dp"
-                    android:paddingLeft="8dp"
-                    android:paddingTop="4dp"
-                    android:singleLine="false"
-                    android:text="Configuration: "
-                    android:textColor="?android:textColorSecondary" />
-
-                <TextView
-                    android:id="@+id/launch_family"
-                    style="@style/DarkTheme"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:gravity="left"
-                    android:lines="1"
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="8dp"
-                    android:paddingTop="4dp"
-                    android:singleLine="false"
-                    android:text="Family: "
-                    android:textColor="?android:textColorSecondary" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:id="@+id/vehicle_spec_view">
+                    android:layout_height="120dp"
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/launch_vehicle_specs_title"
-                        style="@style/DarkTheme"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="left"
-                        android:lines="1"
-                        android:paddingBottom="4dp"
-                        android:paddingLeft="8dp"
-                        android:paddingTop="4dp"
-                        android:singleLine="false"
-                        android:text="Vehicle Specifications"
-                        android:textSize="16sp" />
+                    <com.github.pwittchen.weathericonview.WeatherIconView
+                        android:id="@+id/weather_icon"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="left"
+                        android:layout_weight=".3"
+                        android:paddingLeft="30dp"
+                        android:paddingTop="10dp"
+                        android:scaleType="fitStart"
+                        app:weatherIconColor="@android:color/black"
+                        app:weatherIconResource="@string/wi_day_sunny_overcast"
+                        app:weatherIconSize="65" />
 
-                    <View
-                        style="@style/DarkTheme"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginBottom="4dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginTop="4dp"
-                        android:background="@color/View_Separator"
-                        android:padding="12dp" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".2"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/launch_vehicle_specs_height"
-                        style="@style/DarkTheme"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="left"
-                        android:lines="1"
-                        android:paddingBottom="4dp"
-                        android:paddingLeft="8dp"
-                        android:paddingTop="4dp"
-                        android:singleLine="false"
-                        android:text="Height: "
-                        android:textColor="?android:textColorSecondary" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight=".5"
+                            android:orientation="horizontal"
+                            android:paddingTop="20dp">
 
-                    <TextView
-                        android:id="@+id/launch_vehicle_specs_diameter"
-                        style="@style/DarkTheme"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="left"
-                        android:lines="1"
-                        android:paddingBottom="4dp"
-                        android:paddingLeft="8dp"
-                        android:paddingTop="4dp"
-                        android:singleLine="false"
-                        android:text="Diameter: "
-                        android:textColor="?android:textColorSecondary" />
+                            <ImageView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight=".2"
+                                android:gravity="center|left"
+                                android:src="@drawable/ic_umbrella_white"/>
 
-                    <TextView
-                        android:id="@+id/launch_vehicle_specs_stages"
-                        style="@style/DarkTheme"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="left"
-                        android:lines="1"
-                        android:paddingBottom="4dp"
-                        android:paddingLeft="8dp"
-                        android:paddingTop="4dp"
-                        android:singleLine="false"
-                        android:text="Stages: "
-                        android:textColor="?android:textColorSecondary" />
+                            <TextView
+                                android:id="@+id/weather_percip_chance"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight=".8"
+                                android:gravity="center|left"
+                                android:text="5%"
+                                android:textColor="?android:textColorSecondary"
+                                android:textIsSelectable="false"
+                                android:textSize="15dp"
+                                android:textStyle="normal"
+                                android:theme="@style/DarkTheme"
+                                android:paddingLeft="5dp"/>
+                        </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/launch_vehicle_specs_leo"
-                        style="@style/DarkTheme"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="left"
-                        android:lines="1"
-                        android:paddingBottom="4dp"
-                        android:paddingLeft="8dp"
-                        android:paddingTop="4dp"
-                        android:singleLine="false"
-                        android:text="Payload to LEO: "
-                        android:textColor="?android:textColorSecondary" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight=".5"
+                            android:orientation="horizontal"
+                            android:paddingBottom="20dp">
 
-                    <TextView
-                        android:id="@+id/launch_vehicle_specs_gto"
-                        style="@style/DarkTheme"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="left"
-                        android:lines="1"
-                        android:paddingBottom="4dp"
-                        android:paddingLeft="8dp"
-                        android:paddingTop="4dp"
-                        android:singleLine="false"
-                        android:text="Payload to GTO: "
-                        android:textColor="?android:textColorSecondary" />
+                            <ImageView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight=".2"
+                                android:gravity="center|left"
+                                android:src="@drawable/ic_windy_white"/>
 
-                    <TextView
-                        android:id="@+id/launch_vehicle_specs_launch_mass"
-                        style="@style/DarkTheme"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="left"
-                        android:lines="1"
-                        android:paddingBottom="4dp"
-                        android:paddingLeft="8dp"
-                        android:paddingTop="4dp"
-                        android:singleLine="false"
-                        android:text="Mass at Launch: "
-                        android:textColor="?android:textColorSecondary" />
+                            <TextView
+                                android:id="@+id/weather_wind_speed"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight=".8"
+                                android:gravity="center|left"
+                                android:text="5 mph"
+                                android:textColor="?android:textColorSecondary"
+                                android:textIsSelectable="false"
+                                android:textSize="15dp"
+                                android:textStyle="normal"
+                                android:theme="@style/DarkTheme"
+                                android:paddingLeft="5dp"/>
+                        </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/launch_vehicle_specs_thrust"
-                        style="@style/DarkTheme"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="left"
-                        android:lines="1"
-                        android:paddingBottom="16dp"
-                        android:paddingLeft="8dp"
-                        android:paddingTop="4dp"
-                        android:singleLine="false"
-                        android:text="Thrust at Launch: "
-                        android:textColor="?android:textColorSecondary" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".4"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/weather_current_temp"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight=".4"
+                            android:gravity="bottom|center"
+                            android:text="37°F"
+                            android:textColor="?android:textColorPrimary"
+                            android:textIsSelectable="false"
+                            android:textSize="45dp"
+                            android:textStyle="normal"
+                            android:theme="@style/DarkTheme" />
+
+                        <TextView
+                            android:id="@+id/weather_feels_like"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight=".15"
+                            android:gravity="top|center"
+                            android:text="Feels like 40°"
+                            android:textColor="?android:textColorSecondary"
+                            android:textSize="15dp"
+                            android:textStyle="normal"
+                            android:theme="@style/DarkTheme" />
+
+                        <TextView
+                            android:id="@+id/weather_low_high"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight=".2"
+                            android:gravity="center"
+                            android:text="20° | 40°"
+                            android:textColor="?android:textColorSecondary"
+                            android:textSize="20dp"
+                            android:textStyle="normal"
+                            android:theme="@style/DarkTheme" />
+                    </LinearLayout>
+
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/weather_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|left"
+                    android:paddingLeft="30dp"
+                    android:paddingBottom="10dp"
+                    android:text="Cape Canaveral, Florida"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="20dp"
+                    android:textStyle="normal"
+                    android:theme="@style/DarkTheme" />
+
             </LinearLayout>
+
         </android.support.v7.widget.CardView>
 
     </LinearLayout>

@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.format.DateFormat;
+import android.zetterstrom.com.forecast.ForecastClient;
+import android.zetterstrom.com.forecast.ForecastConfiguration;
 
 import com.crashlytics.android.Crashlytics;
 import com.karumi.dexter.Dexter;
@@ -82,6 +84,12 @@ public class LaunchApplication extends Application {
         OneSignal.enableInAppAlertNotification(true);
 
         Dexter.initialize(this);
+
+        ForecastConfiguration configuration =
+                new ForecastConfiguration.Builder(getResources().getString(R.string.forecast_io_key))
+                        .setCacheDirectory(getCacheDir())
+                        .build();
+        ForecastClient.create(configuration);
 
         // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
         RealmConfiguration realmConfig = new RealmConfiguration.Builder(this)
