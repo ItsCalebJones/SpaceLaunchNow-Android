@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
@@ -213,7 +214,11 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
 
     private void checkPreferenceResource() {
         Realm realm = Realm.getDefaultInstance();
+        boolean supporter = false;
         RealmResults<Products> realmResults = realm.where(Products.class).findAll();
+        if (realmResults.size() > 0){
+            supporter = true;
+        }
         mGoogleApiClient.connect();
         switch (getArguments().getInt(TAG_KEY)) {
             case NESTED_SCREEN_1_KEY:
@@ -224,11 +229,12 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
                 break;
             case NESTED_SCREEN_2_KEY:
                 addPreferencesFromResource(R.xml.nested_loader_preferences);
-                if (realmResults.size() <= 0) {
+                if (!supporter) {
                     Preference subs = findPreference("calendar_sync_state");
                     subs.setEnabled(false);
                     subs.setSelectable(false);
-                    subs.setTitle(subs.getTitle() + " (Supporter Feature)");
+                    PreferenceCategory prefCat=(PreferenceCategory)findPreference("calendar_category");
+                    prefCat.setTitle(prefCat.getTitle() + " (Supporter Feature)");
                 }
                 if (this.toolbarTitle != null) {
                     this.toolbarTitle.setText("General");
@@ -236,6 +242,16 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
                 break;
             case NESTED_SCREEN_3_KEY:
                 addPreferencesFromResource(R.xml.nested_appearance_preferences);
+                if(!supporter){
+                    Preference weather = findPreference("weather");
+                    weather.setEnabled(false);
+                    weather.setSelectable(false);
+                    PreferenceCategory prefCat=(PreferenceCategory)findPreference("weather_category");
+                    prefCat.setTitle(prefCat.getTitle() + " (Supporter Feature)");
+                    Preference measurement = findPreference("weather_US_SI");
+                    measurement.setEnabled(false);
+                    measurement.setSelectable(false);
+                }
                 if (this.toolbarTitle != null) {
                     this.toolbarTitle.setText("Appearance");
                 }
@@ -244,11 +260,7 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
                 addPreferencesFromResource(R.xml.nested_wear_preferences);
                 SwitchPreference customBackground = (SwitchPreference) findPreference("custom_background");
                 Preference dynamicBackground = findPreference("supporter_next_background");
-                if (realmResults.size() <= 0) {
-                    dynamicBackground.setEnabled(false);
-                    dynamicBackground.setSelectable(false);
-                    dynamicBackground.setTitle(dynamicBackground.getTitle() + " (Supporter Feature)");
-                } else {
+                if (supporter) {
                     dynamicBackground.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                         @Override
                         public boolean onPreferenceClick(Preference preference) {
@@ -256,6 +268,10 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
                             return true;
                         }
                     });
+                } else {
+                    dynamicBackground.setEnabled(false);
+                    dynamicBackground.setSelectable(false);
+                    dynamicBackground.setTitle(dynamicBackground.getTitle() + " (Supporter Feature)");
                 }
                 customBackground.setOnPreferenceChangeListener(new SwitchPreference.OnPreferenceChangeListener() {
                     @Override

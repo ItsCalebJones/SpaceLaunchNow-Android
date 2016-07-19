@@ -10,19 +10,27 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.zetterstrom.com.forecast.ForecastClient;
+import android.zetterstrom.com.forecast.ForecastConfiguration;
+import android.zetterstrom.com.forecast.models.Forecast;
+import android.zetterstrom.com.forecast.models.Unit;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.bumptech.glide.Glide;
+import com.github.pwittchen.weathericonview.WeatherIconView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mypopsy.maps.StaticMap;
 
 import java.text.SimpleDateFormat;
@@ -30,13 +38,19 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.content.models.realm.PadRealm;
 import me.calebjones.spacelaunchnow.content.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.content.models.realm.RocketDetailsRealm;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import timber.log.Timber;
 
 
@@ -45,30 +59,43 @@ public class SummaryDetailFragment extends BaseFragment {
     private SharedPreferences sharedPref;
     private static ListPreferences sharedPreference;
     private Context context;
-    public ImageView staticMap;
 
     public static LaunchRealm detailLaunch;
     private RocketDetailsRealm launchVehicle;
-    private FloatingActionButton fab;
-    private LinearLayout agency_one;
-    private LinearLayout agency_two;
-    private LinearLayout vehicle_spec_view;
-    private TextView launch_date_title;
-    private TextView date;
-    private TextView launch_window_start;
-    private TextView launch_window_end;
-    private TextView launch_status;
-    private TextView launch_vehicle;
-    private TextView launch_configuration;
-    private TextView launch_family;
-    private TextView launch_vehicle_specs_height;
-    private TextView launch_vehicle_specs_diameter;
-    private TextView launch_vehicle_specs_stages;
-    private TextView launch_vehicle_specs_leo;
-    private TextView launch_vehicle_specs_gto;
-    private TextView launch_vehicle_specs_launch_mass;
-    private TextView launch_vehicle_specs_thrust;
-    private TextView watchButton;
+    private boolean nightmode;
+
+    @BindView(R.id.map_view_summary)
+    ImageView staticMap;
+    @BindView(R.id.fab_explore)
+    FloatingActionButton fab;
+    @BindView(R.id.launch_date_title)
+    TextView launch_date_title;
+    @BindView(R.id.date)
+    TextView date;
+    @BindView(R.id.launch_window_start)
+    TextView launch_window_start;
+    @BindView(R.id.launch_window_end)
+    TextView launch_window_end;
+    @BindView(R.id.launch_status)
+    TextView launch_status;
+    @BindView(R.id.watchButton)
+    AppCompatButton watchButton;
+    @BindView(R.id.weather_card)
+    CardView weatherCard;
+    @BindView(R.id.weather_icon)
+    WeatherIconView weatherIconView;
+    @BindView(R.id.weather_current_temp)
+    TextView weatherCurrentTemp;
+    @BindView(R.id.weather_feels_like)
+    TextView weatherFeelsLike;
+    @BindView(R.id.weather_low_high)
+    TextView weatherLowHigh;
+    @BindView(R.id.weather_location)
+    TextView weatherLocation;
+    @BindView(R.id.weather_percip_chance)
+    TextView weatherPrecip;
+    @BindView(R.id.weather_wind_speed)
+    TextView weatherWindSpeed;
 
     @Nullable
     @Override
@@ -80,40 +107,144 @@ public class SummaryDetailFragment extends BaseFragment {
         sharedPreference = ListPreferences.getInstance(this.context);
 
         if (sharedPreference.getNightMode()) {
+            nightmode = true;
             view = inflater.inflate(R.layout.dark_launch_summary, container, false);
         } else {
+            nightmode = false;
             view = inflater.inflate(R.layout.light_launch_summary, container, false);
         }
 
-        staticMap = (ImageView) view.findViewById(R.id.map_view_summary);
-        launch_date_title = (TextView) view.findViewById(R.id.launch_date_title);
-        date = (TextView) view.findViewById(R.id.date);
-        launch_window_start = (TextView) view.findViewById(R.id.launch_window_start);
-        launch_window_end = (TextView) view.findViewById(R.id.launch_window_end);
-        launch_status = (TextView) view.findViewById(R.id.launch_status);
-        launch_vehicle = (TextView) view.findViewById(R.id.launch_vehicle);
-        launch_configuration = (TextView) view.findViewById(R.id.launch_configuration);
-        launch_family = (TextView) view.findViewById(R.id.launch_family);
-        launch_vehicle_specs_stages = (TextView) view.findViewById(R.id.launch_vehicle_specs_stages);
-        launch_vehicle_specs_height = (TextView) view.findViewById(R.id.launch_vehicle_specs_height);
-        launch_vehicle_specs_diameter = (TextView) view.findViewById(R.id.launch_vehicle_specs_diameter);
-        launch_vehicle_specs_leo = (TextView) view.findViewById(R.id.launch_vehicle_specs_leo);
-        launch_vehicle_specs_gto = (TextView) view.findViewById(R.id.launch_vehicle_specs_gto);
-        launch_vehicle_specs_launch_mass = (TextView) view.findViewById(R.id.launch_vehicle_specs_launch_mass);
-        launch_vehicle_specs_thrust = (TextView) view.findViewById(R.id.launch_vehicle_specs_thrust);
-        watchButton = (TextView) view.findViewById(R.id.watchButton);
-        agency_one = (LinearLayout) view.findViewById(R.id.agency_one);
-        agency_two = (LinearLayout) view.findViewById(R.id.agency_two);
-        vehicle_spec_view = (LinearLayout) view.findViewById(R.id.vehicle_spec_view);
-        fab = (FloatingActionButton) view.findViewById(R.id.fab_explore);
+        ButterKnife.bind(this, view);
         return view;
     }
 
     @Override
     public void onResume() {
+        detailLaunch = ((LaunchDetailActivity) getActivity()).getLaunch();
         setUpViews();
+        if (sharedPref.getBoolean("weather", false)) {
+            fetchCurrentWeather();
+        } else {
+            weatherCard.setVisibility(View.GONE);
+        }
         super.onResume();
     }
+
+
+    private void fetchCurrentWeather() {
+        // Sample WeatherLib client init
+        if (detailLaunch.getLocation().getPads().size() > 0) {
+
+            PadRealm pad = detailLaunch.getLocation().getPads().get(0);
+
+            double latitude = pad.getLatitude();
+            double longitude = pad.getLongitude();
+
+            final String temp;
+            final String speed;
+            String precip;
+            String pressure;
+            String visibility;
+            Unit unit;
+
+            if (sharedPref.getBoolean("weather_US_SI", true)) {
+                temp = "F";
+                speed = "Mph";
+                precip = "in.";
+                pressure = "mb";
+                visibility = "mile";
+                unit = Unit.US;
+            } else {
+                temp = "C";
+                speed = "m/s";
+                precip = "cm";
+                pressure = "hPa";
+                visibility = "km";
+                unit = Unit.SI;
+            }
+
+            ForecastClient.getInstance()
+                    .getForecast(latitude, longitude, null, null, unit, null, false, new Callback<Forecast>() {
+                        @Override
+                        public void onResponse(Call<Forecast> forecastCall, Response<Forecast> response) {
+                            if (response.isSuccessful()) {
+                                Forecast forecast = response.body();
+                                if (forecast.getCurrently() != null) {
+                                    if (forecast.getCurrently().getTemperature() != null) {
+                                        String currentTemp = String.valueOf(Math.round(forecast.getCurrently().getTemperature())) + (char) 0x00B0 + " " + temp;
+                                        weatherCurrentTemp.setText(currentTemp);
+                                    }
+                                    if (forecast.getCurrently().getApparentTemperature() != null) {
+                                        String feelsLikeTemp = "Feels like " + String.valueOf(Math.round(forecast.getCurrently().getApparentTemperature())) + (char) 0x00B0;
+                                        weatherFeelsLike.setText(feelsLikeTemp);
+                                    }
+                                    if (forecast.getCurrently().getPrecipProbability() != null) {
+                                        String precipProb = String.valueOf(Math.round(forecast.getCurrently().getPrecipProbability()) + "%");
+                                        weatherPrecip.setText(precipProb);
+                                    }
+                                    if (forecast.getCurrently().getWindSpeed() != null) {
+                                        String windSpeed = String.valueOf(Math.round(forecast.getCurrently().getWindSpeed())) + " " + speed;
+                                        weatherWindSpeed.setText(windSpeed);
+                                    }
+                                }
+                                if (forecast.getDaily() != null && forecast.getDaily().getDataPoints() != null && forecast.getDaily().getDataPoints().size() > 0) {
+                                    String highTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(0).getTemperatureMax()));
+                                    String lowTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(0).getTemperatureMin()));
+                                    String lowHigh = lowTemp + (char) 0x00B0 + " " + temp + " | " + highTemp + (char) 0x00B0+ " " + temp;
+                                    weatherLowHigh.setText(lowHigh);
+                                }
+
+                                if (forecast.getCurrently().getIcon() != null
+                                        && forecast.getCurrently().getIcon().getText() != null) {
+                                    String icon = forecast.getCurrently().getIcon().getText();
+                                    if (icon.contains("partly-cloudy-day")) {
+                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_partly_cloudy_day));
+                                    } else if (icon.contains("partly-cloudy-night")) {
+                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_partly_cloudy_night));
+                                    } else if (icon.contains("clear-day")) {
+                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_clear_day));
+                                    } else if (icon.contains("clear-night")) {
+                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_clear_night));
+                                    } else if (icon.contains("rain")) {
+                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_rain));
+                                    } else if (icon.contains("snow")) {
+                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_snow));
+                                    } else if (icon.contains("sleet")) {
+                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_sleet));
+                                    } else if (icon.contains("wind")) {
+                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_wind));
+                                    } else if (icon.contains("fog")) {
+                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_fog));
+                                    } else if (icon.contains("cloudy")) {
+                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_cloudy));
+                                    } else if (icon.contains("hail")) {
+                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_hail));
+                                    } else if (icon.contains("thunderstorm")) {
+                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_thunderstorm));
+                                    } else if (icon.contains("tornado")) {
+                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_tornado));
+                                    }
+                                    if (nightmode){
+                                        weatherIconView.setIconColor(R.color.dark_theme_primary_text_color);
+                                    } else {
+                                        weatherIconView.setIconColor(R.color.black);
+                                    }
+                                }
+                                weatherLocation.setText(detailLaunch.getLocation().getName());
+                                weatherCard.setVisibility(View.VISIBLE);
+                            } else {
+                                Timber.e("Error: %s", response.errorBody());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Forecast> forecastCall, Throwable t) {
+                            Timber.e("ERROR: %s", t.getLocalizedMessage());
+                        }
+                    });
+        }
+    }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -121,7 +252,6 @@ public class SummaryDetailFragment extends BaseFragment {
     }
 
     public void setUpViews() {
-        detailLaunch = ((LaunchDetailActivity) getActivity()).getLaunch();
         if (detailLaunch.getRocket() != null) {
             getLaunchVehicle(detailLaunch);
         }
@@ -195,7 +325,7 @@ public class SummaryDetailFragment extends BaseFragment {
         }
 
 
-        if (detailLaunch.getVidURLs() != null && detailLaunch.getVidURLs().size() > 0){
+        if (detailLaunch.getVidURLs() != null && detailLaunch.getVidURLs().size() > 0) {
             watchButton.setVisibility(View.VISIBLE);
             watchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -230,22 +360,6 @@ public class SummaryDetailFragment extends BaseFragment {
             });
         } else {
             watchButton.setVisibility(View.GONE);
-        }
-
-        launch_vehicle.setText(detailLaunch.getRocket().getName());
-        launch_configuration.setText(String.format("Configuration: %s", detailLaunch.getRocket().getConfiguration()));
-        launch_family.setText(String.format("Family: %s", detailLaunch.getRocket().getFamilyname()));
-        if (launchVehicle != null) {
-            vehicle_spec_view.setVisibility(View.VISIBLE);
-            launch_vehicle_specs_height.setText(String.format("Height: %s Meters", launchVehicle.getLength()));
-            launch_vehicle_specs_diameter.setText(String.format("Diameter: %s Meters", launchVehicle.getDiameter()));
-            launch_vehicle_specs_stages.setText(String.format("Stages: %d", launchVehicle.getMax_Stage()));
-            launch_vehicle_specs_leo.setText(String.format("Payload to LEO: %s kg", launchVehicle.getLEOCapacity()));
-            launch_vehicle_specs_gto.setText(String.format("Payload to GTO: %s kg", launchVehicle.getGTOCapacity()));
-            launch_vehicle_specs_launch_mass.setText(String.format("Mass at Launch: %s Tons", launchVehicle.getLaunchMass()));
-            launch_vehicle_specs_thrust.setText(String.format("Thrust at Launch: %s kN", launchVehicle.getTOThrust()));
-        } else {
-            vehicle_spec_view.setVisibility(View.GONE);
         }
 
         //Try to convert to Month day, Year.
