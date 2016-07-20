@@ -32,6 +32,7 @@ import com.github.pwittchen.weathericonview.WeatherIconView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mypopsy.maps.StaticMap;
+import com.robinhood.spark.SparkView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -41,6 +42,7 @@ import java.util.TimeZone;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.content.adapter.DailySparkAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.models.realm.PadRealm;
@@ -96,6 +98,8 @@ public class SummaryDetailFragment extends BaseFragment {
     TextView weatherPrecip;
     @BindView(R.id.weather_wind_speed)
     TextView weatherWindSpeed;
+    @BindView(R.id.sparkview)
+    SparkView sparkView;
 
     @Nullable
     @Override
@@ -230,6 +234,7 @@ public class SummaryDetailFragment extends BaseFragment {
                                         weatherIconView.setIconColor(R.color.black);
                                     }
                                 }
+                                sparkView.setAdapter(new DailySparkAdapter(forecast));
                                 weatherLocation.setText(detailLaunch.getLocation().getName());
                                 weatherCard.setVisibility(View.VISIBLE);
                             } else {
