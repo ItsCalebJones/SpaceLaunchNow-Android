@@ -223,7 +223,7 @@
             style="@style/LightTheme"
             android:id="@+id/weather_card"
             android:layout_width="fill_parent"
-            android:layout_height="170dp"
+            android:layout_height="wrap_content"
             android:layout_margin="@dimen/card_margin"
             android:animateLayoutChanges="true"
             card_view:cardBackgroundColor="@color/cardview_light_background"
@@ -367,17 +367,34 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/weather_summary_day"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|left"
+                    android:paddingLeft="30dp"
+                    android:paddingBottom="10dp"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="20dp"
+                    android:textStyle="normal"
+                    android:theme="@style/LightTheme" />
+
+                <TextView
                     android:id="@+id/weather_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center|left"
                     android:paddingLeft="30dp"
                     android:paddingBottom="10dp"
-                    android:text="Cape Canaveral, Florida"
                     android:textColor="?android:textColorPrimary"
                     android:textSize="20dp"
                     android:textStyle="normal"
                     android:theme="@style/LightTheme" />
+
+                <com.robinhood.spark.SparkView
+                    android:id="@+id/sparkview"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    app:spark_lineColor="@color/colorPrimary"/>
 
             </LinearLayout>
 
