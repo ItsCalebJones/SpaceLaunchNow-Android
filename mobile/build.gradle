@@ -126,5 +126,4 @@ dependencies {
     compile 'com.github.jrejaud:WearSocket:1.0.+'
     compile 'com.github.pwittchen:weathericonview:1.1.0'
     compile 'android.zetterstrom.com.forecast:forecast:1.1.1'
-    compile 'com.robinhood.spark:spark:1.1.2'
 }
