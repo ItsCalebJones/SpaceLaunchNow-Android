@@ -40,6 +40,7 @@
                     style="@style/DarkTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:elevation="4dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -69,15 +70,8 @@
                         android:textAlignment="center"
                         android:textColor="?android:textColorSecondary"
                         android:textSize="15sp"
-                        android:theme="@style/DarkTheme" />
-
-                    <View
-                        style="@style/DarkTheme"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_margin="8dp"
-                        android:background="@color/View_Separator"
-                        android:padding="12dp" />
+                        android:theme="@style/DarkTheme"
+                        android:layout_marginBottom="2dp" />
 
                 </LinearLayout>
 
@@ -155,7 +149,8 @@
                     android:singleLine="false"
                     android:text="Launch Window Start: "
                     android:textColor="?android:textColorSecondary"
-                    android:paddingRight="16dp" />
+                    android:paddingRight="16dp"
+                    android:layout_marginLeft="8dp" />
 
                 <TextView
                     android:id="@+id/launch_window_end"
@@ -170,15 +165,8 @@
                     android:singleLine="false"
                     android:text="Launch Window End: "
                     android:textColor="?android:textColorSecondary"
-                    android:paddingRight="16dp" />
-
-                <View
-                    style="@style/DarkTheme"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_margin="8dp"
-                    android:background="@color/View_Separator"
-                    android:padding="12dp" />
+                    android:paddingRight="16dp"
+                    android:layout_marginLeft="8dp" />
 
                 <LinearLayout
                     style="@style/DarkTheme"
@@ -200,7 +188,7 @@
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentTop="false"
                             android:layout_marginBottom="12dp"
-                            android:layout_marginLeft="8dp"
+                            android:layout_marginLeft="20dp"
                             android:layout_marginTop="2dp"
                             android:gravity="center"
                             android:text="Watch Launch"
@@ -318,7 +306,8 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight=".3"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_marginRight="8dp">
 
                         <TextView
                             style="@style/DarkTheme"
