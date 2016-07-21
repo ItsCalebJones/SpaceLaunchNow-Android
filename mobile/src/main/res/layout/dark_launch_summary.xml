@@ -212,10 +212,10 @@
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
-            style="@style/DarkTheme"
             android:id="@+id/weather_card"
+            style="@style/DarkTheme"
             android:layout_width="fill_parent"
-            android:layout_height="170dp"
+            android:layout_height="wrap_content"
             android:layout_margin="@dimen/card_margin"
             android:animateLayoutChanges="true"
             card_view:cardBackgroundColor="@color/cardview_dark_background"
@@ -238,19 +238,18 @@
                         android:id="@+id/weather_icon"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_gravity="left"
-                        android:layout_weight=".3"
+                        android:layout_weight=".5"
                         android:paddingLeft="30dp"
                         android:paddingTop="10dp"
                         android:scaleType="fitStart"
-                        app:weatherIconColor="@android:color/white"
-                        app:weatherIconResource="@string/wi_day_sunny_overcast"
-                        app:weatherIconSize="65" />
+                        app:weatherIconColor="@android:color/black"
+                        app:weatherIconSize="65"
+                        android:layout_gravity="center" />
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight=".2"
+                        android:layout_weight=".3"
                         android:orientation="vertical">
 
                         <LinearLayout
@@ -263,23 +262,24 @@
                             <ImageView
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight=".2"
+                                android:layout_weight=".4"
                                 android:gravity="center|left"
-                                android:src="@drawable/ic_umbrella_white"/>
+                                android:src="@drawable/ic_umbrella_white" />
 
                             <TextView
+                                style="@style/DarkTheme"
                                 android:id="@+id/weather_percip_chance"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight=".8"
-                                android:gravity="center|left"
-                                android:text="5%"
+                                android:layout_weight=".6"
+                                android:gravity="center"
+                                android:paddingLeft="5dp"
+                                android:text="--"
                                 android:textColor="?android:textColorSecondary"
                                 android:textIsSelectable="false"
                                 android:textSize="15dp"
                                 android:textStyle="normal"
-                                android:theme="@style/DarkTheme"
-                                android:paddingLeft="5dp"/>
+                                android:theme="@style/DarkTheme" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -292,23 +292,24 @@
                             <ImageView
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight=".2"
+                                android:layout_weight=".4"
                                 android:gravity="center|left"
-                                android:src="@drawable/ic_windy_white"/>
+                                android:src="@drawable/ic_windy_white" />
 
                             <TextView
+                                style="@style/DarkTheme"
                                 android:id="@+id/weather_wind_speed"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight=".8"
-                                android:gravity="center|left"
-                                android:text="5 mph"
+                                android:layout_weight=".6"
+                                android:gravity="center"
+                                android:paddingLeft="5dp"
+                                android:text="--"
                                 android:textColor="?android:textColorSecondary"
                                 android:textIsSelectable="false"
                                 android:textSize="15dp"
                                 android:textStyle="normal"
-                                android:theme="@style/DarkTheme"
-                                android:paddingLeft="5dp"/>
+                                android:theme="@style/DarkTheme" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -316,16 +317,17 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight=".4"
+                        android:layout_weight=".3"
                         android:orientation="vertical">
 
                         <TextView
+                            style="@style/DarkTheme"
                             android:id="@+id/weather_current_temp"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight=".4"
                             android:gravity="bottom|center"
-                            android:text="37°F"
+                            android:text="--"
                             android:textColor="?android:textColorPrimary"
                             android:textIsSelectable="false"
                             android:textSize="45dp"
@@ -333,24 +335,26 @@
                             android:theme="@style/DarkTheme" />
 
                         <TextView
+                            style="@style/DarkTheme"
                             android:id="@+id/weather_feels_like"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight=".15"
                             android:gravity="top|center"
-                            android:text="Feels like 40°"
+                            android:text="--"
                             android:textColor="?android:textColorSecondary"
                             android:textSize="15dp"
                             android:textStyle="normal"
                             android:theme="@style/DarkTheme" />
 
                         <TextView
+                            style="@style/DarkTheme"
                             android:id="@+id/weather_low_high"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight=".2"
                             android:gravity="center"
-                            android:text="20° | 40°"
+                            android:text="-- | --"
                             android:textColor="?android:textColorSecondary"
                             android:textSize="20dp"
                             android:textStyle="normal"
@@ -360,17 +364,379 @@
                 </LinearLayout>
 
                 <TextView
+                    style="@style/DarkTheme"
+                    android:id="@+id/weather_summary_day"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|left"
+                    android:paddingTop="10dp"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:textColor="?android:textColorSecondary"
+                    android:textSize="15sp"
+                    android:textStyle="normal"
+                    android:theme="@style/DarkTheme" />
+
+                <TextView
+                    style="@style/DarkTheme"
                     android:id="@+id/weather_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center|left"
                     android:paddingLeft="30dp"
-                    android:paddingBottom="10dp"
-                    android:text="Cape Canaveral, Florida"
+                    android:paddingRight="30dp"
                     android:textColor="?android:textColorPrimary"
-                    android:textSize="20dp"
+                    android:textSize="20sp"
                     android:textStyle="normal"
                     android:theme="@style/DarkTheme" />
+
+
+                <LinearLayout
+                    android:id="@+id/three_day_forcast"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:gravity="center|bottom"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/day_two"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <com.github.pwittchen.weathericonview.WeatherIconView
+                            android:id="@+id/day_two_weather_icon"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center"
+                            android:layout_weight=".5"
+                            android:scaleType="centerCrop"
+                            android:gravity="center"
+                            app:weatherIconSize="40"/>
+
+                        <TextView
+                            style="@style/DarkTheme"
+                            android:id="@+id/day_two_day"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight=".2"
+                            android:gravity="center"
+                            android:text="--"
+                            android:textColor="?android:textColorSecondary"
+                            android:textIsSelectable="false"
+                            android:textSize="15sp"
+                            android:textStyle="normal"
+                            android:theme="@style/DarkTheme" />
+
+                        <TextView
+                            style="@style/DarkTheme"
+                            android:id="@+id/day_two_low_high"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight=".2"
+                            android:gravity="center"
+                            android:text="-- | --"
+                            android:textColor="?android:textColorSecondary"
+                            android:textSize="15sp"
+                            android:textStyle="normal"
+                            android:theme="@style/DarkTheme" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight=".2"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:layout_margin="5dp"
+                                android:src="@drawable/ic_umbrella_white"
+                                android:paddingLeft="20dp" />
+
+                            <TextView
+                                style="@style/DarkTheme"
+                                android:id="@+id/day_two_precip_prob"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="--"
+                                android:textColor="?android:textColorSecondary"
+                                android:textIsSelectable="false"
+                                android:textSize="10sp"
+                                android:textStyle="normal"
+                                android:theme="@style/DarkTheme"
+                                android:paddingRight="20dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight=".2"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:layout_margin="5dp"
+                                android:paddingLeft="20dp"
+                                android:src="@drawable/ic_windy_white" />
+
+                            <TextView
+                                style="@style/DarkTheme"
+                                android:id="@+id/day_two_weather_wind_speed"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="--"
+                                android:textColor="?android:textColorSecondary"
+                                android:textIsSelectable="false"
+                                android:textSize="10sp"
+                                android:textStyle="normal"
+                                android:theme="@style/DarkTheme"
+                                android:paddingRight="20dp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/day_three"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <com.github.pwittchen.weathericonview.WeatherIconView
+                            android:id="@+id/day_three_weather_icon"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center"
+                            android:layout_weight=".5"
+                            android:scaleType="centerCrop"
+                            android:gravity="center"
+                            app:weatherIconColor="@android:color/black"
+                            app:weatherIconSize="40"/>
+
+                        <TextView
+                            style="@style/DarkTheme"
+                            android:id="@+id/day_three_day"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight=".2"
+                            android:gravity="center"
+                            android:text="--"
+                            android:textColor="?android:textColorSecondary"
+                            android:textIsSelectable="false"
+                            android:textSize="15sp"
+                            android:textStyle="normal"
+                            android:theme="@style/DarkTheme" />
+
+                        <TextView
+                            style="@style/DarkTheme"
+                            android:id="@+id/day_three_low_high"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight=".2"
+                            android:gravity="center"
+                            android:text="-- | --"
+                            android:textColor="?android:textColorSecondary"
+                            android:textSize="15sp"
+                            android:textStyle="normal"
+                            android:theme="@style/DarkTheme" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight=".2"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:layout_margin="5dp"
+                                android:src="@drawable/ic_umbrella_white"
+                                android:paddingLeft="20dp" />
+
+                            <TextView
+                                style="@style/DarkTheme"
+                                android:id="@+id/day_three_precip_prob"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="--"
+                                android:textColor="?android:textColorSecondary"
+                                android:textIsSelectable="false"
+                                android:textSize="10sp"
+                                android:textStyle="normal"
+                                android:theme="@style/DarkTheme"
+                                android:paddingRight="20dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight=".2"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:layout_margin="5dp"
+                                android:paddingLeft="20dp"
+                                android:src="@drawable/ic_windy_white" />
+
+                            <TextView
+                                style="@style/DarkTheme"
+                                android:id="@+id/day_three_weather_wind_speed"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="--"
+                                android:textColor="?android:textColorSecondary"
+                                android:textIsSelectable="false"
+                                android:textSize="10sp"
+                                android:textStyle="normal"
+                                android:theme="@style/DarkTheme"
+                                android:paddingRight="20dp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/day_four"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <com.github.pwittchen.weathericonview.WeatherIconView
+                            android:id="@+id/day_four_weather_icon"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center"
+                            android:layout_weight=".5"
+                            android:scaleType="centerCrop"
+                            android:gravity="center"
+                            app:weatherIconColor="@android:color/black"
+                            app:weatherIconSize="40"/>
+
+                        <TextView
+                            style="@style/DarkTheme"
+                            android:id="@+id/day_four_day"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight=".2"
+                            android:gravity="center"
+                            android:text="--"
+                            android:textColor="?android:textColorSecondary"
+                            android:textIsSelectable="false"
+                            android:textSize="15sp"
+                            android:textStyle="normal"
+                            android:theme="@style/DarkTheme" />
+
+                        <TextView
+                            style="@style/DarkTheme"
+                            android:id="@+id/day_four_low_high"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight=".2"
+                            android:gravity="center"
+                            android:text="-- | --"
+                            android:textColor="?android:textColorSecondary"
+                            android:textSize="15sp"
+                            android:textStyle="normal"
+                            android:theme="@style/DarkTheme" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight=".2"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:layout_margin="5dp"
+                                android:src="@drawable/ic_umbrella_white"
+                                android:paddingLeft="20dp" />
+
+                            <TextView
+                                style="@style/DarkTheme"
+                                android:id="@+id/day_four_precip_prob"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="--"
+                                android:textColor="?android:textColorSecondary"
+                                android:textIsSelectable="false"
+                                android:textSize="10sp"
+                                android:textStyle="normal"
+                                android:theme="@style/DarkTheme"
+                                android:paddingRight="20dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight=".2"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:layout_margin="5dp"
+                                android:paddingLeft="20dp"
+                                android:src="@drawable/ic_windy_white" />
+
+                            <TextView
+                                style="@style/DarkTheme"
+                                android:id="@+id/day_four_weather_wind_speed"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="--"
+                                android:textColor="?android:textColorSecondary"
+                                android:textIsSelectable="false"
+                                android:textSize="10sp"
+                                android:textStyle="normal"
+                                android:theme="@style/DarkTheme"
+                                android:paddingRight="20dp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
 
             </LinearLayout>
 
