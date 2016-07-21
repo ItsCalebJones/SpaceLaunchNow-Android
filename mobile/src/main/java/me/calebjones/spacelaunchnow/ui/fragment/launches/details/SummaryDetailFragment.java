@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -19,7 +20,6 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.zetterstrom.com.forecast.ForecastClient;
-import android.zetterstrom.com.forecast.ForecastConfiguration;
 import android.zetterstrom.com.forecast.models.Forecast;
 import android.zetterstrom.com.forecast.models.Unit;
 
@@ -29,10 +29,7 @@ import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.bumptech.glide.Glide;
 import com.github.pwittchen.weathericonview.WeatherIconView;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.mypopsy.maps.StaticMap;
-import com.robinhood.spark.SparkView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -42,7 +39,6 @@ import java.util.TimeZone;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.adapter.DailySparkAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.models.realm.PadRealm;
@@ -98,8 +94,39 @@ public class SummaryDetailFragment extends BaseFragment {
     TextView weatherPrecip;
     @BindView(R.id.weather_wind_speed)
     TextView weatherWindSpeed;
-    @BindView(R.id.sparkview)
-    SparkView sparkView;
+    @BindView(R.id.weather_summary_day)
+    TextView weatherSummaryDay;
+    @BindView(R.id.day_two_weather_icon)
+    WeatherIconView dayTwoWeatherIconView;
+    @BindView(R.id.day_two_low_high)
+    TextView dayTwoWeatherLowHigh;
+    @BindView(R.id.day_two_precip_prob)
+    TextView dayTwoWeatherPrecip;
+    @BindView(R.id.day_two_weather_wind_speed)
+    TextView dayTwoWeatherWindSpeed;
+    @BindView(R.id.day_two_day)
+    TextView dayTwoDay;
+    @BindView(R.id.day_three_weather_icon)
+    WeatherIconView dayThreeWeatherIconView;
+    @BindView(R.id.day_three_low_high)
+    TextView dayThreeWeatherLowHigh;
+    @BindView(R.id.day_three_precip_prob)
+    TextView dayThreeWeatherPrecip;
+    @BindView(R.id.day_three_weather_wind_speed)
+    TextView dayThreeWeatherWindSpeed;
+    @BindView(R.id.day_three_day)
+    TextView dayThreeDay;
+    @BindView(R.id.day_four_weather_icon)
+    WeatherIconView dayFourWeatherIconView;
+    @BindView(R.id.day_four_low_high)
+    TextView dayFourWeatherLowHigh;
+    @BindView(R.id.day_four_precip_prob)
+    TextView dayFourWeatherPrecip;
+    @BindView(R.id.day_four_weather_wind_speed)
+    TextView dayFourWeatherWindSpeed;
+    @BindView(R.id.day_four_day)
+    TextView dayFourDay;
+
 
     @Nullable
     @Override
@@ -126,11 +153,12 @@ public class SummaryDetailFragment extends BaseFragment {
     public void onResume() {
         detailLaunch = ((LaunchDetailActivity) getActivity()).getLaunch();
         setUpViews();
-        if (sharedPref.getBoolean("weather", false)) {
-            fetchCurrentWeather();
-        } else {
-            weatherCard.setVisibility(View.GONE);
-        }
+        fetchCurrentWeather();
+        //TODO enforce paywall
+//        if (sharedPref.getBoolean("weather", false)) {
+//        } else {
+//            weatherCard.setVisibility(View.GONE);
+//        }
         super.onResume();
     }
 
@@ -144,26 +172,11 @@ public class SummaryDetailFragment extends BaseFragment {
             double latitude = pad.getLatitude();
             double longitude = pad.getLongitude();
 
-            final String temp;
-            final String speed;
-            String precip;
-            String pressure;
-            String visibility;
             Unit unit;
 
             if (sharedPref.getBoolean("weather_US_SI", true)) {
-                temp = "F";
-                speed = "Mph";
-                precip = "in.";
-                pressure = "mb";
-                visibility = "mile";
                 unit = Unit.US;
             } else {
-                temp = "C";
-                speed = "m/s";
-                precip = "cm";
-                pressure = "hPa";
-                visibility = "km";
                 unit = Unit.SI;
             }
 
@@ -173,70 +186,7 @@ public class SummaryDetailFragment extends BaseFragment {
                         public void onResponse(Call<Forecast> forecastCall, Response<Forecast> response) {
                             if (response.isSuccessful()) {
                                 Forecast forecast = response.body();
-                                if (forecast.getCurrently() != null) {
-                                    if (forecast.getCurrently().getTemperature() != null) {
-                                        String currentTemp = String.valueOf(Math.round(forecast.getCurrently().getTemperature())) + (char) 0x00B0 + " " + temp;
-                                        weatherCurrentTemp.setText(currentTemp);
-                                    }
-                                    if (forecast.getCurrently().getApparentTemperature() != null) {
-                                        String feelsLikeTemp = "Feels like " + String.valueOf(Math.round(forecast.getCurrently().getApparentTemperature())) + (char) 0x00B0;
-                                        weatherFeelsLike.setText(feelsLikeTemp);
-                                    }
-                                    if (forecast.getCurrently().getPrecipProbability() != null) {
-                                        String precipProb = String.valueOf(Math.round(forecast.getCurrently().getPrecipProbability()) + "%");
-                                        weatherPrecip.setText(precipProb);
-                                    }
-                                    if (forecast.getCurrently().getWindSpeed() != null) {
-                                        String windSpeed = String.valueOf(Math.round(forecast.getCurrently().getWindSpeed())) + " " + speed;
-                                        weatherWindSpeed.setText(windSpeed);
-                                    }
-                                }
-                                if (forecast.getDaily() != null && forecast.getDaily().getDataPoints() != null && forecast.getDaily().getDataPoints().size() > 0) {
-                                    String highTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(0).getTemperatureMax()));
-                                    String lowTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(0).getTemperatureMin()));
-                                    String lowHigh = lowTemp + (char) 0x00B0 + " " + temp + " | " + highTemp + (char) 0x00B0+ " " + temp;
-                                    weatherLowHigh.setText(lowHigh);
-                                }
-
-                                if (forecast.getCurrently().getIcon() != null
-                                        && forecast.getCurrently().getIcon().getText() != null) {
-                                    String icon = forecast.getCurrently().getIcon().getText();
-                                    if (icon.contains("partly-cloudy-day")) {
-                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_partly_cloudy_day));
-                                    } else if (icon.contains("partly-cloudy-night")) {
-                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_partly_cloudy_night));
-                                    } else if (icon.contains("clear-day")) {
-                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_clear_day));
-                                    } else if (icon.contains("clear-night")) {
-                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_clear_night));
-                                    } else if (icon.contains("rain")) {
-                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_rain));
-                                    } else if (icon.contains("snow")) {
-                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_snow));
-                                    } else if (icon.contains("sleet")) {
-                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_sleet));
-                                    } else if (icon.contains("wind")) {
-                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_wind));
-                                    } else if (icon.contains("fog")) {
-                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_fog));
-                                    } else if (icon.contains("cloudy")) {
-                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_cloudy));
-                                    } else if (icon.contains("hail")) {
-                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_hail));
-                                    } else if (icon.contains("thunderstorm")) {
-                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_thunderstorm));
-                                    } else if (icon.contains("tornado")) {
-                                        weatherIconView.setIconResource(getString(R.string.wi_forecast_io_tornado));
-                                    }
-                                    if (nightmode){
-                                        weatherIconView.setIconColor(R.color.dark_theme_primary_text_color);
-                                    } else {
-                                        weatherIconView.setIconColor(R.color.black);
-                                    }
-                                }
-                                sparkView.setAdapter(new DailySparkAdapter(forecast));
-                                weatherLocation.setText(detailLaunch.getLocation().getName());
-                                weatherCard.setVisibility(View.VISIBLE);
+                                updateWeatherView(forecast);
                             } else {
                                 Timber.e("Error: %s", response.errorBody());
                             }
@@ -247,6 +197,166 @@ public class SummaryDetailFragment extends BaseFragment {
                             Timber.e("ERROR: %s", t.getLocalizedMessage());
                         }
                     });
+        }
+    }
+
+    private void updateWeatherView(Forecast forecast) {
+        final String temp;
+        final String speed;
+        String precip;
+        String pressure;
+        String visibility;
+
+        if (sharedPref.getBoolean("weather_US_SI", true)) {
+            temp = "F";
+            speed = "Mph";
+            precip = "in.";
+            pressure = "mb";
+            visibility = "mile";
+        } else {
+            temp = "C";
+            speed = "m/s";
+            precip = "cm";
+            pressure = "hPa";
+            visibility = "km";
+        }
+        if (forecast.getCurrently() != null) {
+            if (forecast.getCurrently().getTemperature() != null) {
+                String currentTemp = String.valueOf(Math.round(forecast.getCurrently().getTemperature())) + (char) 0x00B0 + " " + temp;
+                weatherCurrentTemp.setText(currentTemp);
+            }
+            if (forecast.getCurrently().getApparentTemperature() != null) {
+                String feelsLikeTemp = "Feels like " + String.valueOf(Math.round(forecast.getCurrently().getApparentTemperature())) + (char) 0x00B0;
+                weatherFeelsLike.setText(feelsLikeTemp);
+            }
+
+            if (forecast.getCurrently().getWindSpeed() != null) {
+                String windSpeed = String.valueOf(Math.round(forecast.getCurrently().getWindSpeed())) + " " + speed;
+                weatherWindSpeed.setText(windSpeed);
+            }
+        }
+        if (forecast.getDaily() != null && forecast.getDaily().getDataPoints() != null && forecast.getDaily().getDataPoints().size() > 0) {
+            String highTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(0).getTemperatureMax()));
+            String lowTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(0).getTemperatureMin()));
+            String lowHigh = lowTemp + (char) 0x00B0 + " " + temp + " | " + highTemp + (char) 0x00B0+ " " + temp;
+            weatherLowHigh.setText(lowHigh);
+
+            if (forecast.getDaily().getDataPoints().get(0).getPrecipProbability() != null) {
+                double testPrecip = forecast.getDaily().getDataPoints().get(0).getPrecipProbability();
+                String precipProb = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(0).getPrecipProbability() * 100) + "%");
+                weatherPrecip.setText(precipProb);
+            }
+
+            if (forecast.getDaily().getDataPoints().size() >= 3){
+                //Day One!
+                setIconView(dayTwoWeatherIconView, forecast.getDaily().getDataPoints().get(1).getIcon().getText());
+
+                //Get Low - High temp
+                String dayTwoHighTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(1).getTemperatureMax()));
+                String dayTwoLowTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(1).getTemperatureMin()));
+                String dayTwoLowHigh = lowTemp + (char) 0x00B0 + " " + temp + " | " + highTemp + (char) 0x00B0+ " " + temp;
+
+                //Get rain prop
+                String dayTwoPrecipProb = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(1).getPrecipProbability() * 100) + "%");
+
+                //Get Wind speed
+                String dayTwoWindSpeed = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(1).getWindSpeed())) + " " + speed;
+
+                //Get day date
+                String dayTwoDate = new SimpleDateFormat("EE").format(forecast.getDaily().getDataPoints().get(1).getTime());
+
+                dayTwoWeatherLowHigh.setText(dayTwoLowHigh);
+                dayTwoWeatherPrecip.setText(dayTwoPrecipProb);
+                dayTwoWeatherWindSpeed.setText(dayTwoWindSpeed);
+                dayTwoDay.setText(dayTwoDate);
+
+                //Day Two!
+                setIconView(dayThreeWeatherIconView, forecast.getDaily().getDataPoints().get(2).getIcon().getText());
+
+                //Get Low - High temp
+                String dayThreeHighTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(2).getTemperatureMax()));
+                String dayThreeLowTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(2).getTemperatureMin()));
+                String dayThreeLowHigh = lowTemp + (char) 0x00B0 + " " + temp + " | " + highTemp + (char) 0x00B0+ " " + temp;
+
+                //Get rain prop
+                String dayThreePrecipProb = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(2).getPrecipProbability() * 100) + "%");
+
+                //Get Wind speed
+                String dayThreeWindSpeed = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(2).getWindSpeed())) + " " + speed;
+
+                //Get day date
+                String dayThreeDate = new SimpleDateFormat("EE").format(forecast.getDaily().getDataPoints().get(2).getTime());
+
+                dayThreeWeatherLowHigh.setText(dayThreeLowHigh);
+                dayThreeWeatherPrecip.setText(dayThreePrecipProb);
+                dayThreeWeatherWindSpeed.setText(dayThreeWindSpeed);
+                dayThreeDay.setText(dayThreeDate);
+
+                //Day Three!
+                setIconView(dayFourWeatherIconView, forecast.getDaily().getDataPoints().get(3).getIcon().getText());
+
+                //Get Low - High temp
+                String dayFourHighTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(3).getTemperatureMax()));
+                String dayFourLowTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(3).getTemperatureMin()));
+                String dayFourLowHigh = lowTemp + (char) 0x00B0 + " " + temp + " | " + highTemp + (char) 0x00B0+ " " + temp;
+
+                String dayFourPrecipProb = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(3).getPrecipProbability() * 100) + "%");
+
+                //Get Wind speed
+                String dayFourWindSpeed = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(3).getWindSpeed())) + " " + speed;
+
+                //Get day date
+                String dayFourDate = new SimpleDateFormat("EE").format(forecast.getDaily().getDataPoints().get(3).getTime());
+
+                dayFourWeatherLowHigh.setText(dayFourLowHigh);
+                dayFourWeatherPrecip.setText(dayFourPrecipProb);
+                dayFourWeatherWindSpeed.setText(dayFourWindSpeed);
+                dayFourDay.setText(dayFourDate);
+            }
+        }
+
+        if (forecast.getCurrently().getIcon() != null && forecast.getCurrently().getIcon().getText() != null) {
+            setIconView(weatherIconView, forecast.getCurrently().getIcon().getText());
+        }
+
+
+        weatherSummaryDay.setText(forecast.getDaily().getSummary());
+        weatherLocation.setText(detailLaunch.getLocation().getName());
+        weatherCard.setVisibility(View.VISIBLE);
+    }
+
+    private void setIconView(WeatherIconView view, String icon) {
+        if (icon.contains("partly-cloudy-day")) {
+            view.setIconResource(getString(R.string.wi_forecast_io_partly_cloudy_day));
+        } else if (icon.contains("partly-cloudy-night")) {
+            view.setIconResource(getString(R.string.wi_forecast_io_partly_cloudy_night));
+        } else if (icon.contains("clear-day")) {
+            view.setIconResource(getString(R.string.wi_forecast_io_clear_day));
+        } else if (icon.contains("clear-night")) {
+            view.setIconResource(getString(R.string.wi_forecast_io_clear_night));
+        } else if (icon.contains("rain")) {
+            view.setIconResource(getString(R.string.wi_forecast_io_rain));
+        } else if (icon.contains("snow")) {
+            view.setIconResource(getString(R.string.wi_forecast_io_snow));
+        } else if (icon.contains("sleet")) {
+            view.setIconResource(getString(R.string.wi_forecast_io_sleet));
+        } else if (icon.contains("wind")) {
+            view.setIconResource(getString(R.string.wi_forecast_io_wind));
+        } else if (icon.contains("fog")) {
+            view.setIconResource(getString(R.string.wi_forecast_io_fog));
+        } else if (icon.contains("cloudy")) {
+            view.setIconResource(getString(R.string.wi_forecast_io_cloudy));
+        } else if (icon.contains("hail")) {
+            view.setIconResource(getString(R.string.wi_forecast_io_hail));
+        } else if (icon.contains("thunderstorm")) {
+            view.setIconResource(getString(R.string.wi_forecast_io_thunderstorm));
+        } else if (icon.contains("tornado")) {
+            view.setIconResource(getString(R.string.wi_forecast_io_tornado));
+        }
+        if (nightmode){
+            view.setIconColor(R.color.dark_theme_primary_text_color);
+        } else {
+            view.setIconColor(Color.BLACK);
         }
     }
 
@@ -395,7 +505,6 @@ public class SummaryDetailFragment extends BaseFragment {
 
         launchVehicle = getRealm().where(RocketDetailsRealm.class).contains("name", query).findFirst();
     }
-
 
     private void setWindowStamp() {
         // Create a DateFormatter object for displaying date in specified format.
