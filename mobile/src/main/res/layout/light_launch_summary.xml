@@ -40,7 +40,9 @@
                     style="@style/LightTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:focusable="false"
+                    android:elevation="4dp">
 
                     <TextView
                         android:id="@+id/launch_status_title"
@@ -70,14 +72,6 @@
                         android:textColor="?android:textColorSecondary"
                         android:textSize="16sp"
                         android:theme="@style/LightTheme" />
-
-                    <View
-                        style="@style/LightTheme"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_margin="8dp"
-                        android:background="@color/View_Separator"
-                        android:padding="12dp" />
 
                 </LinearLayout>
 
@@ -152,12 +146,12 @@
                     android:ellipsize="end"
                     android:gravity="left"
                     android:paddingBottom="2dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
+                    android:paddingLeft="8dp"
                     android:paddingTop="8dp"
                     android:singleLine="false"
                     android:text="Launch Window Start: "
-                    android:textColor="?android:textColorSecondary" />
+                    android:textColor="?android:textColorSecondary"
+                    android:layout_marginLeft="8dp" />
 
                 <TextView
                     android:id="@+id/launch_window_end"
@@ -166,25 +160,14 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:gravity="left"
-                    android:paddingBottom="8dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingTop="4dp"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="8dp"
                     android:singleLine="false"
                     android:text="Launch Window End: "
-                    android:textColor="?android:textColorSecondary" />
+                    android:textColor="?android:textColorSecondary"
+                    android:layout_marginLeft="8dp" />
 
-
-                <View
-                    style="@style/LightTheme"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_margin="8dp"
-                    android:background="@color/View_Separator"
-                    android:paddingBottom="12dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingTop="12dp" />
 
                 <LinearLayout
                     style="@style/LightTheme"
@@ -245,18 +228,18 @@
                         android:id="@+id/weather_icon"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_gravity="left"
-                        android:layout_weight=".3"
+                        android:layout_weight=".5"
                         android:paddingLeft="30dp"
                         android:paddingTop="10dp"
                         android:scaleType="fitStart"
                         app:weatherIconColor="@android:color/black"
-                        app:weatherIconSize="65" />
+                        app:weatherIconSize="65"
+                        android:layout_gravity="center" />
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight=".2"
+                        android:layout_weight=".3"
                         android:orientation="vertical">
 
                         <LinearLayout
@@ -278,7 +261,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight=".6"
-                                android:gravity="center|left"
+                                android:gravity="center"
                                 android:paddingLeft="5dp"
                                 android:text="--"
                                 android:textColor="?android:textColorSecondary"
@@ -298,16 +281,16 @@
                             <ImageView
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight=".3"
-                                android:gravity="center|left"
+                                android:layout_weight=".4"
+                                android:gravity="center"
                                 android:src="@drawable/ic_windy" />
 
                             <TextView
                                 android:id="@+id/weather_wind_speed"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight=".7"
-                                android:gravity="center|left"
+                                android:layout_weight=".6"
+                                android:gravity="center"
                                 android:paddingLeft="5dp"
                                 android:text="--"
                                 android:textColor="?android:textColorSecondary"
@@ -322,8 +305,9 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight=".4"
-                        android:orientation="vertical">
+                        android:layout_weight=".3"
+                        android:orientation="vertical"
+                        android:layout_marginRight="8dp">
 
                         <TextView
                             android:id="@+id/weather_current_temp"

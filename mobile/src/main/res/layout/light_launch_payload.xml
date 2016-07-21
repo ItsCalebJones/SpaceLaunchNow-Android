@@ -41,7 +41,7 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="left"
                 android:paddingTop="8dp"
-                android:text="Payload Details"
+                android:text="Mission Details"
                 android:textAlignment="center"
                 android:textSize="20sp"
                 android:textStyle="bold" />

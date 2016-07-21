@@ -354,12 +354,11 @@ public class SummaryDetailFragment extends BaseFragment {
             view.setIconResource(getString(R.string.wi_forecast_io_tornado));
         }
         if (nightmode){
-            view.setIconColor(R.color.dark_theme_primary_text_color);
+            view.setIconColor(Color.WHITE);
         } else {
             view.setIconColor(Color.BLACK);
         }
     }
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -490,7 +489,8 @@ public class SummaryDetailFragment extends BaseFragment {
         if (detailLaunch.getWsstamp() > 0 && detailLaunch.getWestamp() > 0) {
             setWindowStamp();
         } else {
-            setWindowStartEnd();
+            launch_window_start.setVisibility(View.GONE);
+            launch_window_end.setVisibility(View.GONE);
         }
 
     }

@@ -36,17 +36,18 @@
 
                 <ImageView
                     android:id="@+id/categoryIcon"
-                    android:layout_width="64dp"
-                    android:layout_height="100dp"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="4dp"
-                    android:padding="8dp"
-                    app:srcCompat="@drawable/ic_unknown" />
+                    app:srcCompat="@drawable/ic_unknown"
+                    android:scaleType="centerCrop"
+                    android:padding="16dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_marginLeft="4dp">
 
                     <TextView
                         android:id="@+id/launch_rocket"
@@ -72,7 +73,8 @@
                         android:maxLines="2"
                         android:padding="2dp"
                         android:singleLine="false"
-                        android:text="Unknown Launch Location" />
+                        android:text="Unknown Launch Location"
+                        android:layout_marginTop="2dp" />
 
                     <TextView
                         android:id="@+id/launch_date"
@@ -235,16 +237,6 @@
                     android:paddingRight="28dp"
                     android:textSize="14sp" />
             </LinearLayout>
-
-            <View
-                android:id="@+id/separator_buttons"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
-                android:layout_marginTop="8dp"
-                android:background="@color/View_Separator"
-                android:padding="12dp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"

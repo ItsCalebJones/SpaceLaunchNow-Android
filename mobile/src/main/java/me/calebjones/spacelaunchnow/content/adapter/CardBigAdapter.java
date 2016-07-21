@@ -277,7 +277,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                             seconds = String.valueOf(longSeconds);
                         }
                         holder.content_TMinus_status.setTypeface(Typeface.SANS_SERIF);
-                        holder.content_TMinus_status.setTextColor(accentColor);
+//                        holder.content_TMinus_status.setTextColor(accentColor);
                         if (Integer.valueOf(days) > 0) {
                             holder.content_TMinus_status.setText(String.format("L - %s days - %s:%s:%s", days, hours, minutes, seconds));
                         } else {

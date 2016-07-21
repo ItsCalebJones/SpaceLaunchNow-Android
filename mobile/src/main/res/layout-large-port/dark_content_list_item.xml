@@ -160,7 +160,8 @@
                     android:text="Unknown Mission"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:layout_marginRight="52dp"/>
+                    android:layout_marginRight="52dp"
+                    android:textColor="?android:textColorPrimary" />
             </RelativeLayout>
 
             <View
@@ -199,7 +200,7 @@
                         android:singleLine="true"
                         android:text="Unknown Status"
                         android:textAlignment="center"
-                        android:textColor="?android:textColorSecondary"
+                        android:textColor="?android:textColorPrimary"
                         android:textSize="20dp"
                         android:theme="@style/DarkTheme"
                         android:textStyle="bold" />
@@ -258,16 +259,6 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <View
-                android:id="@+id/separator_buttons"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
-                android:background="@color/View_Separator"
-                android:padding="12dp" />
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
@@ -301,7 +292,7 @@
                     android:layout_marginRight="10dp"
                     android:padding="10dp"
                     android:text="Share"
-                    android:textColor="@color/colorPrimaryLight" />
+                    android:textColor="@color/material_grey_300" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/exploreButton"
@@ -312,7 +303,7 @@
                     android:layout_gravity="right"
                     android:layout_toLeftOf="@id/shareButton"
                     android:text="Explore"
-                    android:textColor="@color/colorPrimaryLight" />
+                    android:textColor="@color/material_grey_300" />
             </RelativeLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>
