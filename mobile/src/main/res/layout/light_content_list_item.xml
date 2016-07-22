@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:textAlignment="center"
@@ -39,21 +38,22 @@
                     android:layout_width="96dp"
                     android:layout_height="96dp"
                     android:layout_gravity="center"
-                    app:srcCompat="@drawable/ic_unknown"
+                    android:padding="16dp"
                     android:scaleType="centerCrop"
-                    android:padding="16dp" />
+                    app:srcCompat="@drawable/ic_unknown" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginLeft="4dp">
+                    android:layout_marginLeft="4dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/launch_rocket"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="16dp"
+                        android:layout_marginTop="8dp"
                         android:fontFamily="sans-serif-condensed"
                         android:gravity="left"
                         android:maxLines="2"
@@ -61,20 +61,19 @@
                         android:text="Unknown Launch Vehicle"
                         android:textColor="?android:textColorPrimary"
                         android:textSize="18sp"
-                        android:textStyle="normal"
-                        android:layout_marginTop="8dp" />
+                        android:textStyle="normal" />
 
                     <TextView
                         android:id="@+id/location"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
                         android:ellipsize="end"
                         android:gravity="left"
                         android:maxLines="2"
                         android:padding="2dp"
                         android:singleLine="false"
-                        android:text="Unknown Launch Location"
-                        android:layout_marginTop="2dp" />
+                        android:text="Unknown Launch Location" />
 
                     <TextView
                         android:id="@+id/launch_date"
@@ -106,13 +105,11 @@
                     android:id="@+id/map_view"
                     android:layout_width="fill_parent"
                     android:layout_height="160dp"
-                    android:scaleType="centerCrop"
-                    android:contentDescription="A map view of launch location." />
+                    android:contentDescription="A map view of launch location."
+                    android:scaleType="centerCrop" />
 
 
-
-                <android.support.design.widget.FloatingActionButton
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/fab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -122,22 +119,22 @@
                     android:layout_marginRight="20dp"
                     android:clickable="true"
                     android:elevation="8dp"
-                    app:srcCompat="@drawable/ic_explore"
-                    app:backgroundTint="@color/colorAccentLight" />
+                    app:backgroundTint="@color/colorAccentLight"
+                    app:srcCompat="@drawable/ic_explore" />
 
                 <TextView
                     android:id="@+id/content_mission"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/map_view"
+                    android:layout_marginRight="52dp"
                     android:elevation="0dp"
                     android:paddingLeft="28dp"
                     android:paddingRight="28dp"
                     android:paddingTop="16dp"
                     android:text="Unknown Mission"
                     android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_marginRight="52dp" />
+                    android:textStyle="bold" />
             </RelativeLayout>
 
             <View
@@ -178,10 +175,10 @@
                         android:text="Unknown Launch Status"
                         android:textAlignment="center"
                         android:textColor="?android:textColorSecondary"
+                        android:textIsSelectable="false"
                         android:textSize="20dp"
-                        android:theme="@style/LightTheme"
                         android:textStyle="bold"
-                        android:textIsSelectable="false" />
+                        android:theme="@style/LightTheme" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -204,6 +201,147 @@
                         android:textSize="16sp"
                         android:theme="@style/LightTheme" />
 
+                    <LinearLayout
+                        android:id="@+id/countdown_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="90dp"
+                        android:orientation="horizontal"
+                        android:weightSum="4.0"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="90dp"
+                            android:layout_weight="1.0"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="0dp"
+                                android:scaleX="1.0"
+                                android:scaleY="1.0"
+                                android:text="- -"
+                                android:textSize="45dp"
+                                android:id="@+id/countdown_days" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="-5dp"
+                                android:padding="0dp"
+                                android:text="DAYS"
+                                android:textSize="12dp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:padding="0dp"
+                            android:scaleX="1.0"
+                            android:scaleY="1.0"
+                            android:text=":"
+                            android:gravity="center"
+                            android:layout_marginBottom="15dp"
+                            android:textSize="45dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="90dp"
+                            android:layout_weight="1.0"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="0dp"
+                                android:text="- -"
+                                android:textSize="45dp"
+                                android:id="@+id/countdown_hours" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="-5dp"
+                                android:padding="0dp"
+                                android:text="HOURS"
+                                android:textSize="12dp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:padding="0dp"
+                            android:scaleX="1.0"
+                            android:scaleY="1.0"
+                            android:text=":"
+                            android:gravity="center"
+                            android:layout_marginBottom="15dp"
+                            android:textSize="45dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="90dp"
+                            android:layout_weight="1.0"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="0dp"
+                                android:text="- -"
+                                android:textSize="45dp"
+                                android:id="@+id/countdown_minutes" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="-5dp"
+                                android:padding="0dp"
+                                android:text="MINUTES"
+                                android:textSize="12dp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:padding="0dp"
+                            android:scaleX="1.0"
+                            android:scaleY="1.0"
+                            android:text=":"
+                            android:gravity="center"
+                            android:layout_marginBottom="15dp"
+                            android:textSize="45dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="90dp"
+                            android:layout_weight="1.0"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="0dp"
+                                android:text="- -"
+                                android:textSize="45dp"
+                                android:id="@+id/countdown_seconds" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="-5dp"
+                                android:padding="0dp"
+                                android:text="SECONDS"
+                                android:textSize="12dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -218,23 +356,23 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
                     android:layout_marginLeft="24dp"
                     android:layout_marginRight="24dp"
-                    android:paddingBottom="8dp"
+                    android:layout_marginTop="8dp"
                     android:background="@color/View_Separator"
-                    android:padding="12dp" />
+                    android:padding="12dp"
+                    android:paddingBottom="8dp" />
 
 
                 <TextView
                     android:id="@+id/content_mission_description"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingTop="8dp"
                     android:paddingBottom="8dp"
                     android:paddingLeft="28dp"
                     android:paddingRight="28dp"
+                    android:paddingTop="8dp"
                     android:textSize="14sp" />
             </LinearLayout>
 

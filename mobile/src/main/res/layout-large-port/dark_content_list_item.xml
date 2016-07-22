@@ -182,8 +182,8 @@
                 android:paddingLeft="28dp"
                 android:paddingRight="28dp"
                 android:paddingTop="8dp">
+
                 <LinearLayout
-                    style="@style/LightTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -205,6 +205,7 @@
                         android:theme="@style/DarkTheme"
                         android:textStyle="bold" />
                 </LinearLayout>
+
                 <LinearLayout
                     style="@style/DarkTheme"
                     android:layout_width="match_parent"
@@ -225,6 +226,147 @@
                         android:textSize="16sp"
                         android:theme="@style/DarkTheme"
                         android:textIsSelectable="false" />
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="90dp"
+                        android:orientation="horizontal"
+                        android:weightSum="4.0"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp" >
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="90dp"
+                            android:layout_weight="1.0"
+                            android:gravity="center"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="0dp"
+                                android:scaleX="1.0"
+                                android:scaleY="1.0"
+                                android:text="- -"
+                                android:textSize="45dp"
+                                android:id="@+id/textView3" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="-5dp"
+                                android:padding="0dp"
+                                android:text="DAYS"
+                                android:textSize="12dp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:padding="0dp"
+                            android:scaleX="1.0"
+                            android:scaleY="1.0"
+                            android:text=":"
+                            android:gravity="center"
+                            android:layout_marginBottom="15dp"
+                            android:textSize="45dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="90dp"
+                            android:layout_weight="1.0"
+                            android:gravity="center"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="0dp"
+                                android:text="- -"
+                                android:textSize="45dp"
+                                android:id="@+id/textView4" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="-5dp"
+                                android:padding="0dp"
+                                android:text="HOURS"
+                                android:textSize="12dp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:padding="0dp"
+                            android:scaleX="1.0"
+                            android:scaleY="1.0"
+                            android:text=":"
+                            android:gravity="center"
+                            android:layout_marginBottom="15dp"
+                            android:textSize="45dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="90dp"
+                            android:layout_weight="1.0"
+                            android:gravity="center"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="0dp"
+                                android:text="- -"
+                                android:textSize="45dp"
+                                android:id="@+id/textView5" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="-5dp"
+                                android:padding="0dp"
+                                android:text="MINUTES"
+                                android:textSize="12dp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:padding="0dp"
+                            android:scaleX="1.0"
+                            android:scaleY="1.0"
+                            android:text=":"
+                            android:gravity="center"
+                            android:layout_marginBottom="15dp"
+                            android:textSize="45dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="90dp"
+                            android:layout_weight="1.0"
+                            android:gravity="center"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="0dp"
+                                android:text="- -"
+                                android:textSize="45dp"
+                                android:id="@+id/textView6" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="-5dp"
+                                android:padding="0dp"
+                                android:text="SECONDS"
+                                android:textSize="12dp" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
 
             </LinearLayout>
