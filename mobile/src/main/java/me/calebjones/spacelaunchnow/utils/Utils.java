@@ -37,6 +37,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.PathInterpolator;
+import android.webkit.URLUtil;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -197,8 +199,11 @@ public class Utils {
         intentBuilder.setExitAnimations(activity,
                 android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 
-        CustomTabActivityHelper.openCustomTab(
-                activity, intentBuilder.build(), Uri.parse(url), new WebViewFallback());
+        if(URLUtil.isValidUrl(url) ) {
+            CustomTabActivityHelper.openCustomTab(activity, intentBuilder.build(), Uri.parse(url), new WebViewFallback());
+        } else {
+            Toast.makeText(activity, "ERROR: URL is malformed - sorry! " + url, Toast.LENGTH_SHORT);
+        }
     }
 
     private static PendingIntent createPendingShareIntent(Context context, String url) {

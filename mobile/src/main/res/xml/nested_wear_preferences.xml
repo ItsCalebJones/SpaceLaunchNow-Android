@@ -13,13 +13,7 @@
 
     <SwitchPreference
         android:defaultValue="false"
-        android:key="custom_background"
-        android:summary="Use your own image for a watchface background."
-        android:title="Custom Background" />
-
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="supporter_next_background"
+        android:key="supporter_dynamic_background"
         android:summary="Use image of the next launch vehicle if available."
         android:title="Dynamic Background" />
 

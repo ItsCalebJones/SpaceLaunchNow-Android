@@ -228,12 +228,12 @@
                         android:id="@+id/weather_icon"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight=".5"
+                        android:layout_weight=".4"
                         android:paddingLeft="30dp"
                         android:paddingTop="10dp"
-                        android:scaleType="fitStart"
+                        android:scaleType="centerCrop"
                         app:weatherIconColor="@android:color/black"
-                        app:weatherIconSize="65"
+                        app:weatherIconSize="70"
                         android:layout_gravity="center" />
 
                     <LinearLayout
@@ -307,7 +307,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight=".3"
                         android:orientation="vertical"
-                        android:layout_marginRight="8dp">
+                        android:layout_marginRight="12dp">
 
                         <TextView
                             android:id="@+id/weather_current_temp"
@@ -318,7 +318,7 @@
                             android:text="--"
                             android:textColor="?android:textColorPrimary"
                             android:textIsSelectable="false"
-                            android:textSize="45dp"
+                            android:textSize="40dp"
                             android:textStyle="normal"
                             android:theme="@style/LightTheme" />
 
@@ -342,7 +342,7 @@
                             android:gravity="center"
                             android:text="-- | --"
                             android:textColor="?android:textColorSecondary"
-                            android:textSize="20dp"
+                            android:textSize="15dp"
                             android:textStyle="normal"
                             android:theme="@style/LightTheme" />
                     </LinearLayout>

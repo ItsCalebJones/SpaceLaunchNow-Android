@@ -127,8 +127,6 @@ public class SummaryDetailFragment extends BaseFragment {
     @BindView(R.id.day_four_day)
     TextView dayFourDay;
 
-
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view;
@@ -153,15 +151,14 @@ public class SummaryDetailFragment extends BaseFragment {
     public void onResume() {
         detailLaunch = ((LaunchDetailActivity) getActivity()).getLaunch();
         setUpViews();
-        fetchCurrentWeather();
-        //TODO enforce paywall
-//        if (sharedPref.getBoolean("weather", false)) {
-//        } else {
-//            weatherCard.setVisibility(View.GONE);
-//        }
+
+        if (sharedPref.getBoolean("weather", false) && detailLaunch.getNet().after(Calendar.getInstance().getTime())) {
+            fetchCurrentWeather();
+        } else {
+            weatherCard.setVisibility(View.GONE);
+        }
         super.onResume();
     }
-
 
     private void fetchCurrentWeather() {
         // Sample WeatherLib client init
@@ -238,7 +235,7 @@ public class SummaryDetailFragment extends BaseFragment {
         if (forecast.getDaily() != null && forecast.getDaily().getDataPoints() != null && forecast.getDaily().getDataPoints().size() > 0) {
             String highTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(0).getTemperatureMax()));
             String lowTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(0).getTemperatureMin()));
-            String lowHigh = lowTemp + (char) 0x00B0 + " " + temp + " | " + highTemp + (char) 0x00B0+ " " + temp;
+            String lowHigh = lowTemp + (char) 0x00B0 + " " + temp + " | " + highTemp + (char) 0x00B0 + " " + temp;
             weatherLowHigh.setText(lowHigh);
 
             if (forecast.getDaily().getDataPoints().get(0).getPrecipProbability() != null) {
@@ -247,14 +244,14 @@ public class SummaryDetailFragment extends BaseFragment {
                 weatherPrecip.setText(precipProb);
             }
 
-            if (forecast.getDaily().getDataPoints().size() >= 3){
+            if (forecast.getDaily().getDataPoints().size() >= 3) {
                 //Day One!
                 setIconView(dayTwoWeatherIconView, forecast.getDaily().getDataPoints().get(1).getIcon().getText());
 
                 //Get Low - High temp
                 String dayTwoHighTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(1).getTemperatureMax()));
                 String dayTwoLowTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(1).getTemperatureMin()));
-                String dayTwoLowHigh = lowTemp + (char) 0x00B0 + " " + temp + " | " + highTemp + (char) 0x00B0+ " " + temp;
+                String dayTwoLowHigh = lowTemp + (char) 0x00B0 + " " + temp + " | " + highTemp + (char) 0x00B0 + " " + temp;
 
                 //Get rain prop
                 String dayTwoPrecipProb = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(1).getPrecipProbability() * 100) + "%");
@@ -276,7 +273,7 @@ public class SummaryDetailFragment extends BaseFragment {
                 //Get Low - High temp
                 String dayThreeHighTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(2).getTemperatureMax()));
                 String dayThreeLowTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(2).getTemperatureMin()));
-                String dayThreeLowHigh = lowTemp + (char) 0x00B0 + " " + temp + " | " + highTemp + (char) 0x00B0+ " " + temp;
+                String dayThreeLowHigh = lowTemp + (char) 0x00B0 + " " + temp + " | " + highTemp + (char) 0x00B0 + " " + temp;
 
                 //Get rain prop
                 String dayThreePrecipProb = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(2).getPrecipProbability() * 100) + "%");
@@ -298,7 +295,7 @@ public class SummaryDetailFragment extends BaseFragment {
                 //Get Low - High temp
                 String dayFourHighTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(3).getTemperatureMax()));
                 String dayFourLowTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(3).getTemperatureMin()));
-                String dayFourLowHigh = lowTemp + (char) 0x00B0 + " " + temp + " | " + highTemp + (char) 0x00B0+ " " + temp;
+                String dayFourLowHigh = lowTemp + (char) 0x00B0 + " " + temp + " | " + highTemp + (char) 0x00B0 + " " + temp;
 
                 String dayFourPrecipProb = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(3).getPrecipProbability() * 100) + "%");
 
@@ -353,7 +350,7 @@ public class SummaryDetailFragment extends BaseFragment {
         } else if (icon.contains("tornado")) {
             view.setIconResource(getString(R.string.wi_forecast_io_tornado));
         }
-        if (nightmode){
+        if (nightmode) {
             view.setIconColor(Color.WHITE);
         } else {
             view.setIconColor(Color.BLACK);

@@ -147,13 +147,13 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
                     PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
                     Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
                 }
-                if (key.equals("custom_background")) {
-
-                    PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/config");
-                    putDataMapReq.getDataMap().putInt(BACKGROUND_KEY, BACKGROUND_NORMAL);
-                    PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
-                    Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
-                }
+//                if (key.equals("custom_background")) {
+//
+//                    PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/config");
+//                    putDataMapReq.getDataMap().putInt(BACKGROUND_KEY, BACKGROUND_NORMAL);
+//                    PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
+//                    Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
+//                }
                 if (key.equals("calendar_sync_state")) {
                     Timber.v("Calendar Sync State: %s", this.valprefs.getBoolean(key, true));
                     if (this.valprefs.getBoolean(key, true)) {
@@ -216,7 +216,7 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
         Realm realm = Realm.getDefaultInstance();
         boolean supporter = false;
         RealmResults<Products> realmResults = realm.where(Products.class).findAll();
-        if (realmResults.size() > 0){
+        if (realmResults.size() > 0) {
             supporter = true;
         }
         mGoogleApiClient.connect();
@@ -229,25 +229,32 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
                 break;
             case NESTED_SCREEN_2_KEY:
                 addPreferencesFromResource(R.xml.nested_loader_preferences);
-                if (!supporter) {
-                    Preference subs = findPreference("calendar_sync_state");
-                    subs.setEnabled(false);
-                    subs.setSelectable(false);
-                    PreferenceCategory prefCat=(PreferenceCategory)findPreference("calendar_category");
-                    prefCat.setTitle(prefCat.getTitle() + " (Supporter Feature)");
-                }
+                Preference subs = findPreference("calendar_sync_state");
+                subs.setEnabled(false);
+                subs.setSelectable(false);
+                PreferenceCategory prefCatCalendar = (PreferenceCategory) findPreference("calendar_category");
+                prefCatCalendar.setTitle(prefCatCalendar.getTitle() + " (Coming Soon)");
+
+                //TODO implement calendar feature
+//                if (!supporter) {
+//                    Preference subs = findPreference("calendar_sync_state");
+//                    subs.setEnabled(false);
+//                    subs.setSelectable(false);
+//                    PreferenceCategory prefCat = (PreferenceCategory) findPreference("calendar_category");
+//                    prefCat.setTitle(prefCat.getTitle() + " (Supporter Feature)");
+//                }
                 if (this.toolbarTitle != null) {
                     this.toolbarTitle.setText("General");
                 }
                 break;
             case NESTED_SCREEN_3_KEY:
                 addPreferencesFromResource(R.xml.nested_appearance_preferences);
-                if(!supporter){
+                if (!supporter) {
                     Preference weather = findPreference("weather");
                     weather.setEnabled(false);
                     weather.setSelectable(false);
-                    PreferenceCategory prefCat=(PreferenceCategory)findPreference("weather_category");
-                    prefCat.setTitle(prefCat.getTitle() + " (Supporter Feature)");
+                    PreferenceCategory prefCatWeather = (PreferenceCategory) findPreference("weather_category");
+                    prefCatWeather.setTitle(prefCatWeather.getTitle() + " (Supporter Feature)");
                     Preference measurement = findPreference("weather_US_SI");
                     measurement.setEnabled(false);
                     measurement.setSelectable(false);
@@ -258,52 +265,34 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
                 break;
             case NESTED_SCREEN_4_KEY:
                 addPreferencesFromResource(R.xml.nested_wear_preferences);
-                SwitchPreference customBackground = (SwitchPreference) findPreference("custom_background");
-                Preference dynamicBackground = findPreference("supporter_next_background");
-                if (supporter) {
-                    dynamicBackground.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                        @Override
-                        public boolean onPreferenceClick(Preference preference) {
-                            Toast.makeText(context, "Clicked: " + preference.getKey(), Toast.LENGTH_LONG).show();
-                            return true;
-                        }
-                    });
-                } else {
-                    dynamicBackground.setEnabled(false);
-                    dynamicBackground.setSelectable(false);
-                    dynamicBackground.setTitle(dynamicBackground.getTitle() + " (Supporter Feature)");
+                Preference dynamicBackground = findPreference("supporter_dynamic_background");
+                dynamicBackground.setEnabled(false);
+                dynamicBackground.setSelectable(false);
+                dynamicBackground.setTitle(dynamicBackground.getTitle() + " (Coming Soon)");
+
+                //TODO implement dynamic background
+//                if (supporter) {
+//                    dynamicBackground.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+//                        @Override
+//                        public boolean onPreferenceClick(Preference preference) {
+//                            Toast.makeText(context, "Clicked: " + preference.getKey(), Toast.LENGTH_LONG).show();
+//                            return true;
+//                        }
+//                    });
+//                } else {
+//                    dynamicBackground.setEnabled(false);
+//                    dynamicBackground.setSelectable(false);
+//                    dynamicBackground.setTitle(dynamicBackground.getTitle() + " (Supporter Feature)");
+//                }
+
+                if (this.toolbarTitle != null) {
+                    this.toolbarTitle.setText("Wear");
                 }
-                customBackground.setOnPreferenceChangeListener(new SwitchPreference.OnPreferenceChangeListener() {
-                    @Override
-                    public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-                        Timber.d("Filepath: %s", prefs.getString("filepath", null));
-                        boolean checked = Boolean.valueOf(newValue.toString());
-                        if (checked) {
-                            Intent intent = new Intent();
-                            intent.setType("image/*");
-                            intent.setAction(Intent.ACTION_GET_CONTENT);
-                            int PICK_IMAGE = 1;
-                            getActivity().startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
-                            return true;
-                        } else {
-                            SharedPreferences.Editor editor = prefs.edit();
-                            editor.putString("filepath", null);
-                            editor.apply();
-                            return true;
-                        }
-                    }
-                });
-
-
-        if (this.toolbarTitle != null) {
-            this.toolbarTitle.setText("Wear");
+                break;
+            default:
         }
-        break;
-        default:
-    }
 
-}
+    }
 
     @Override
     public void onDestroy() {

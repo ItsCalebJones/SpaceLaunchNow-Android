@@ -16,6 +16,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
+import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
+import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,6 +32,7 @@ import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.content.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 import timber.log.Timber;
 
@@ -328,7 +334,7 @@ public class CardSmallAdapter extends RecyclerView.Adapter<CardSmallAdapter.View
             final int position = getAdapterPosition();
             Timber.d("onClick at %s", position);
 
-            LaunchRealm launch = launchList.get(position);
+            final LaunchRealm launch = launchList.get(position);
 
             SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
             df.toLocalizedPattern();
@@ -336,10 +342,32 @@ public class CardSmallAdapter extends RecyclerView.Adapter<CardSmallAdapter.View
 
             switch (v.getId()) {
                 case R.id.watchButton:
-                    Timber.d("Watch: %s", launchList.get(position).getVidURL());
-                    Uri watchUri = Uri.parse(launchList.get(position).getVidURL());
-                    Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
-                    mContext.startActivity(i);
+                    Timber.d("Watch: %s", launch.getVidURLs().size());
+                    if (launch.getVidURLs().size() > 0) {
+                        final MaterialSimpleListAdapter adapter = new MaterialSimpleListAdapter(mContext);
+                        for (RealmStr s : launch.getVidURLs()) {
+                            //Do your stuff here
+                            adapter.add(new MaterialSimpleListItem.Builder(mContext)
+                                    .content(s.getVal())
+                                    .build());
+                        }
+
+                        MaterialDialog.Builder builder = new MaterialDialog.Builder(mContext)
+                                .title("Select a source:")
+                                .adapter(adapter, new MaterialDialog.ListCallback() {
+                                    @Override
+                                    public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                                        Uri watchUri = Uri.parse(launch.getVidURLs().get(which).getVal());
+                                        Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
+                                        mContext.startActivity(i);
+                                        dialog.dismiss();
+                                    }
+                                });
+                        if (sharedPreference.getNightMode()) {
+                            builder.theme(Theme.DARK);
+                        }
+                        builder.show();
+                    }
                     break;
                 case R.id.exploreButton:
                     Timber.d("Explore: %s", launchList.get(position).getId());

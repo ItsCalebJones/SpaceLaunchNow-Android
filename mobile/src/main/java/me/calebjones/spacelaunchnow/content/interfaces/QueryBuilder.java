@@ -2,6 +2,8 @@ package me.calebjones.spacelaunchnow.content.interfaces;
 
 import android.content.Context;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import io.realm.Sort;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.content.models.realm.PadRealm;
 import timber.log.Timber;
 
 public class QueryBuilder {
@@ -75,7 +78,12 @@ public class QueryBuilder {
         Integer[] vehicleFilter = switchPreferences.getUpVehicleFiltered();
 
         if (countryFilter != null && countryFilter.length > 0) {
-            query = filterCountry(query, switchPreferences.getUpCountryFilteredArray()).findAll().where();
+            ArrayList<String> array = switchPreferences.getUpCountryFilteredArray();
+            if (array != null && array.size() > 0) {
+                query = filterCountry(query, array).findAll().where();
+            } else {
+                Crashlytics.logException(new Throwable("Error - array is null."));
+            }
         }
 
         if (agencyFilter != null && agencyFilter.length > 0) {
