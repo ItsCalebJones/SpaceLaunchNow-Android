@@ -161,11 +161,13 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             setWatchFaceStyle(watchFaceStyle);
             Resources resources = SpaceLaunchWatchFace.this.getResources();
 
-            if (custombackground && customBackgroundBitmap != null){
-                background = customBackgroundBitmap;
-            } else {
-                background = BitmapFactory.decodeResource(resources, R.drawable.nav_header);
-            }
+            background = BitmapFactory.decodeResource(resources, R.drawable.nav_header);
+
+//            if (custombackground && customBackgroundBitmap != null){
+//                background = customBackgroundBitmap;
+//            } else {
+//                background = BitmapFactory.decodeResource(resources, R.drawable.nav_header);
+//            }
 
             mBackgroundPaint = new Paint();
             mBackgroundPaint.setColor(resources.getColor(R.color.background));
@@ -595,13 +597,13 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
                     Timber.v("24 Hour Mode = %s", twentyfourhourmode);
                 }
 
-                if (dataMap.containsKey(BACKGROUND_KEY)) {
-                    custombackground = dataMap.getBoolean(BACKGROUND_KEY);
-                    Timber.v("Background = %s", custombackground);
-                    asset = dataMap.getAsset("background");
-                    customBackgroundBitmap = loadBitmapFromAsset(asset);
-                    background = customBackgroundBitmap;
-                }
+//                if (dataMap.containsKey(BACKGROUND_KEY)) {
+//                    custombackground = dataMap.getBoolean(BACKGROUND_KEY);
+//                    Timber.v("Background = %s", custombackground);
+//                    asset = dataMap.getAsset("background");
+//                    customBackgroundBitmap = loadBitmapFromAsset(asset);
+//                    background = customBackgroundBitmap;
+//                }
             }
         }
 

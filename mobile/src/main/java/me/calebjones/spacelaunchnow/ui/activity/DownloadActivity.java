@@ -54,6 +54,8 @@ public class DownloadActivity extends AppCompatActivity {
     private boolean isErrorReceiverRegistered = false;
     private boolean downloading = false;
     private int progress = 5;
+    private LaunchReceiver launchReceiver = new LaunchReceiver();
+    private ErrorReceiver errorReceiver = new ErrorReceiver();
 
     @OnClick(R.id.download_background) void finishBackground() {
         ListPreferences.getInstance(this).setFirstBoot(false);
@@ -84,8 +86,8 @@ public class DownloadActivity extends AppCompatActivity {
         errorFilter.addAction(Strings.ACTION_FAILURE_VEHICLES);
         errorFilter.addAction(Strings.ACTION_FAILURE_MISSIONS);
 
-        registerReceiver(launchReceiver, launchFilter);
-        registerReceiver(errorReceiver, errorFilter);
+        launchReceiver.register(this, launchFilter);
+        errorReceiver.register(this, errorFilter);
         isLaunchReceiverRegistered = true;
         isErrorReceiverRegistered = true;
 
@@ -133,14 +135,12 @@ public class DownloadActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-        if (isLaunchReceiverRegistered) {
-            unregisterReceiver(launchReceiver);
-            isLaunchReceiverRegistered = false;
-        }
-        if (isErrorReceiverRegistered) {
-            unregisterReceiver(errorReceiver);
-            isErrorReceiverRegistered = false;
-        }
+        unregisterReceivers();
+    }
+
+    private void unregisterReceivers() {
+        launchReceiver.unregister(this);
+        errorReceiver.unregister(this);
     }
 
     @Override
@@ -186,7 +186,34 @@ public class DownloadActivity extends AppCompatActivity {
         }
     }
 
-    private final BroadcastReceiver launchReceiver = new BroadcastReceiver() {
+    public class LaunchReceiver extends BroadcastReceiver {
+        public boolean isRegistered;
+
+        /**
+         * register receiver
+         * @param context - Context
+         * @param filter - Intent Filter
+         * @return see Context.registerReceiver(BroadcastReceiver,IntentFilter)
+         */
+        public Intent register(Context context, IntentFilter filter) {
+            isRegistered = true;
+            return context.registerReceiver(this, filter);
+        }
+
+        /**
+         * unregister received
+         * @param context - context
+         * @return true if was registered else false
+         */
+        public boolean unregister(Context context) {
+            if (isRegistered) {
+                context.unregisterReceiver(this);  // edited
+                isRegistered = false;
+                return true;
+            }
+            return false;
+        }
+
         @Override
         public void onReceive(final Context context, Intent intent) {
             Timber.v("Received: %s", intent.getAction());
@@ -223,23 +250,48 @@ public class DownloadActivity extends AppCompatActivity {
                 }, 2000);
             }
         }
-    };
+    }
 
-    private final BroadcastReceiver errorReceiver = new BroadcastReceiver() {
+    public class ErrorReceiver extends BroadcastReceiver {
+        public boolean isRegistered;
+
+        /**
+         * register receiver
+         * @param context - Context
+         * @param filter - Intent Filter
+         * @return see Context.registerReceiver(BroadcastReceiver,IntentFilter)
+         */
+        public Intent register(Context context, IntentFilter filter) {
+            isRegistered = true;
+            return context.registerReceiver(this, filter);
+        }
+
+        /**
+         * unregister received
+         * @param context - context
+         * @return true if was registered else false
+         */
+        public boolean unregister(Context context) {
+            if (isRegistered) {
+                context.unregisterReceiver(this);  // edited
+                isRegistered = false;
+                return true;
+            }
+            return false;
+        }
         @Override
         public void onReceive(Context context, Intent intent) {
             Timber.v("Received: %s", intent.getAction());
             if (intent.getAction().contains("FAILURE")){
                 SnackbarHandler.showErrorSnackbar(context, view, intent);
                 titles.setText("Try again?");
-                unregisterReceiver(launchReceiver);
-                unregisterReceiver(errorReceiver);
                 progressView.setVisibility(View.GONE);
                 circularFillableLoaders.setProgress(95);
                 downloadButton.setVisibility(View.VISIBLE);
+                unregisterReceivers();
             }
             downloading = false;
         }
-    };
+    }
 
 }

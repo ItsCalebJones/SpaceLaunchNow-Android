@@ -156,20 +156,22 @@ public class VehicleDataService extends IntentService {
         try {
             call = request.getVehicles();
             launchResponse = call.execute();
-            Collections.addAll(items, launchResponse.body().getVehicles());
+            if (launchResponse.isSuccessful()) {
+                Collections.addAll(items, launchResponse.body().getVehicles());
 
-            for(RocketDetailsRealm item : items){
-                item.setName(item.getLV_Name() + " " +item.getLV_Variant());
+                for (RocketDetailsRealm item : items) {
+                    item.setName(item.getLV_Name() + " " + item.getLV_Variant());
+                }
+
+                mRealm.beginTransaction();
+                mRealm.copyToRealmOrUpdate(items);
+                mRealm.commitTransaction();
+
+
+                Intent broadcastIntent = new Intent();
+                broadcastIntent.setAction(Strings.ACTION_SUCCESS_VEHICLE_DETAILS);
+                VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
             }
-
-            mRealm.beginTransaction();
-            mRealm.copyToRealmOrUpdate(items);
-            mRealm.commitTransaction();
-
-
-            Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Strings.ACTION_SUCCESS_VEHICLE_DETAILS);
-            VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
         } catch (IOException e) {
 
             Timber.e("VehicleDataService - ERROR: %s", e.getLocalizedMessage());
