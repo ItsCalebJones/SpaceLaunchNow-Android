@@ -41,14 +41,14 @@
                     style="@style/DarkTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="left"
                     android:lines="1"
                     android:paddingLeft="16dp"
                     android:paddingTop="8dp"
                     android:text="Mission Agencies"
                     android:textAlignment="center"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:gravity="center" />
 
                 <TextView
                     android:id="@+id/mission_agency_type"
@@ -56,7 +56,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:gravity="left"
                     android:lines="1"
                     android:paddingBottom="16dp"
                     android:paddingLeft="16dp"
@@ -64,7 +63,8 @@
                     android:singleLine="false"
                     android:text="Unknown Mission Agencies"
                     android:textAlignment="center"
-                    android:textColor="?android:textColorSecondary" />
+                    android:textColor="?android:textColorSecondary"
+                    android:gravity="center" />
 
                 <LinearLayout
                     android:id="@+id/mission_one"
@@ -291,14 +291,14 @@
                     style="@style/DarkTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="left"
                     android:lines="1"
                     android:paddingLeft="16dp"
                     android:paddingTop="8dp"
                     android:text="Vehicle Agencies"
                     android:textAlignment="center"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:gravity="center" />
 
                 <TextView
                     android:id="@+id/launch_agency_type"
@@ -306,7 +306,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:gravity="left"
                     android:lines="1"
                     android:paddingBottom="32dp"
                     android:paddingLeft="16dp"
@@ -314,7 +313,8 @@
                     android:singleLine="false"
                     android:text="Unknown Vehicle Agencies"
                     android:textAlignment="center"
-                    android:textColor="?android:textColorSecondary" />
+                    android:textColor="?android:textColorSecondary"
+                    android:gravity="center" />
 
                 <LinearLayout
                     android:id="@+id/agency_one"

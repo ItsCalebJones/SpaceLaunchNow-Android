@@ -7,20 +7,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.github.pwittchen.weathericonview.WeatherIconView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Realm;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
@@ -38,35 +32,37 @@ public class MissionDetailFragment extends BaseFragment {
     public static LaunchRealm detailLaunch;
     private RocketDetailsRealm launchVehicle;
     @BindView(R.id.vehicle_spec_view)
-    View vehicle_spec_view;
+    View vehicleSpecView;
+    @BindView(R.id.payload_type)
+    TextView payloadType;
     @BindView(R.id.payload_description)
-    TextView payload_description;
+    TextView payloadDescription;
     @BindView(R.id.payload_status)
-    TextView payload_status;
+    TextView payloadStatus;
     @BindView(R.id.payload_infoButton)
-    TextView payload_infoButton;
+    TextView payloadInfoButton;
     @BindView(R.id.payload_wikiButton)
-    TextView payload_wikiButton;
+    TextView payloadWikiButton;
     @BindView(R.id.launch_vehicle)
-    TextView launch_vehicle;
+    TextView launchVehicleView;
     @BindView(R.id.launch_configuration)
-    TextView launch_configuration;
+    TextView launchConfiguration;
     @BindView(R.id.launch_family)
-    TextView launch_family;
+    TextView launchFamily;
     @BindView(R.id.launch_vehicle_specs_height)
-    TextView launch_vehicle_specs_height;
+    TextView launchVehicleSpecsHeight;
     @BindView(R.id.launch_vehicle_specs_diameter)
-    TextView launch_vehicle_specs_diameter;
+    TextView launchVehicleSpecsDiameter;
     @BindView(R.id.launch_vehicle_specs_stages)
-    TextView launch_vehicle_specs_stages;
+    TextView launchVehicleSpecsStages;
     @BindView(R.id.launch_vehicle_specs_leo)
-    TextView launch_vehicle_specs_leo;
+    TextView launchVehicleSpecsLeo;
     @BindView(R.id.launch_vehicle_specs_gto)
-    TextView launch_vehicle_specs_gto;
+    TextView launchVehicleSpecsGto;
     @BindView(R.id.launch_vehicle_specs_launch_mass)
-    TextView launch_vehicle_specs_launch_mass;
+    TextView launchVehicleSpecsLaunchMass;
     @BindView(R.id.launch_vehicle_specs_thrust)
-    TextView launch_vehicle_specs_thrust;
+    TextView launchVehicleSpecsThrust;
 
     @Nullable
     @Override
@@ -107,14 +103,15 @@ public class MissionDetailFragment extends BaseFragment {
                     .equalTo("id", detailLaunch.getMissions().get(0).getId())
                     .findFirst();
 
-            payload_status.setText(mission.getName());
-            payload_description.setText(mission.getDescription());
+            payloadStatus.setText(mission.getName());
+            payloadDescription.setText(mission.getDescription());
+            payloadType.setText(mission.getTypeName());
 
             if (mission.getInfoURL() != null && mission.getInfoURL().length() > 0) {
 
                 ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(mission.getInfoURL()));
 
-                payload_infoButton.setOnClickListener(new View.OnClickListener() {
+                payloadInfoButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Activity activity = (Activity) context;
@@ -122,13 +119,13 @@ public class MissionDetailFragment extends BaseFragment {
                     }
                 });
             } else {
-                payload_infoButton.setVisibility(View.GONE);
+                payloadInfoButton.setVisibility(View.GONE);
             }
             if (mission.getWikiURL() != null && mission.getWikiURL().length() > 0) {
 
                 ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(mission.getWikiURL()));
 
-                payload_wikiButton.setOnClickListener(new View.OnClickListener() {
+                payloadWikiButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Activity activity = (Activity) context;
@@ -136,29 +133,29 @@ public class MissionDetailFragment extends BaseFragment {
                     }
                 });
             } else {
-                payload_wikiButton.setVisibility(View.GONE);
+                payloadWikiButton.setVisibility(View.GONE);
             }
         } else {
-            payload_status.setText("Unknown Mission and Payload");
+            payloadStatus.setText("Unknown Mission or Payload");
 
-            payload_infoButton.setVisibility(View.GONE);
-            payload_wikiButton.setVisibility(View.GONE);
+            payloadInfoButton.setVisibility(View.GONE);
+            payloadWikiButton.setVisibility(View.GONE);
         }
 
-        launch_vehicle.setText(detailLaunch.getRocket().getName());
-        launch_configuration.setText(String.format("Configuration: %s", detailLaunch.getRocket().getConfiguration()));
-        launch_family.setText(String.format("Family: %s", detailLaunch.getRocket().getFamilyname()));
+        launchVehicleView.setText(detailLaunch.getRocket().getName());
+        launchConfiguration.setText(String.format("Configuration: %s", detailLaunch.getRocket().getConfiguration()));
+        launchFamily.setText(String.format("Family: %s", detailLaunch.getRocket().getFamilyname()));
         if (launchVehicle != null) {
-            vehicle_spec_view.setVisibility(View.VISIBLE);
-            launch_vehicle_specs_height.setText(String.format("Height: %s Meters", launchVehicle.getLength()));
-            launch_vehicle_specs_diameter.setText(String.format("Diameter: %s Meters", launchVehicle.getDiameter()));
-            launch_vehicle_specs_stages.setText(String.format("Stages: %d", launchVehicle.getMax_Stage()));
-            launch_vehicle_specs_leo.setText(String.format("Payload to LEO: %s kg", launchVehicle.getLEOCapacity()));
-            launch_vehicle_specs_gto.setText(String.format("Payload to GTO: %s kg", launchVehicle.getGTOCapacity()));
-            launch_vehicle_specs_launch_mass.setText(String.format("Mass at Launch: %s Tons", launchVehicle.getLaunchMass()));
-            launch_vehicle_specs_thrust.setText(String.format("Thrust at Launch: %s kN", launchVehicle.getTOThrust()));
+            vehicleSpecView.setVisibility(View.VISIBLE);
+            launchVehicleSpecsHeight.setText(String.format("Height: %s Meters", launchVehicle.getLength()));
+            launchVehicleSpecsDiameter.setText(String.format("Diameter: %s Meters", launchVehicle.getDiameter()));
+            launchVehicleSpecsStages.setText(String.format("Stages: %d", launchVehicle.getMax_Stage()));
+            launchVehicleSpecsLeo.setText(String.format("Payload to LEO: %s kg", launchVehicle.getLEOCapacity()));
+            launchVehicleSpecsGto.setText(String.format("Payload to GTO: %s kg", launchVehicle.getGTOCapacity()));
+            launchVehicleSpecsLaunchMass.setText(String.format("Mass at Launch: %s Tons", launchVehicle.getLaunchMass()));
+            launchVehicleSpecsThrust.setText(String.format("Thrust at Launch: %s kN", launchVehicle.getTOThrust()));
         } else {
-            vehicle_spec_view.setVisibility(View.GONE);
+            vehicleSpecView.setVisibility(View.GONE);
         }
     }
 

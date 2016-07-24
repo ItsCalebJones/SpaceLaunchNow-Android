@@ -2,7 +2,6 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:textAlignment="center"
@@ -123,7 +122,8 @@
                     app:srcCompat="@drawable/ic_explore" />
 
                 <TextView
-                    android:id="@+id/content_mission"
+                    android:id="@+id/content_status"
+                    style="@style/LightTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/map_view"
@@ -132,9 +132,12 @@
                     android:paddingLeft="28dp"
                     android:paddingRight="28dp"
                     android:paddingTop="16dp"
-                    android:text="Unknown Mission"
-                    android:textSize="18sp"
+                    android:text="Unknown Launch Status"
+                    android:textColor="?android:textColorSecondary"
+                    android:textIsSelectable="false"
+                    android:textSize="20dp"
                     android:textStyle="bold" />
+
             </RelativeLayout>
 
             <View
@@ -162,23 +165,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/content_status"
-                        style="@style/LightTheme"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="left"
-                        android:paddingBottom="4dp"
-                        android:paddingTop="4dp"
-                        android:singleLine="false"
-                        android:text="Unknown Launch Status"
-                        android:textAlignment="center"
-                        android:textColor="?android:textColorSecondary"
-                        android:textIsSelectable="false"
-                        android:textSize="20dp"
-                        android:textStyle="bold"
-                        android:theme="@style/LightTheme" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -204,7 +190,7 @@
                     <LinearLayout
                         android:id="@+id/countdown_layout"
                         android:layout_width="match_parent"
-                        android:layout_height="90dp"
+                        android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:weightSum="4.0"
                         android:layout_marginLeft="20dp"
@@ -212,9 +198,9 @@
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_height="90dp"
+                            android:layout_height="match_parent"
                             android:layout_weight="1.0"
-                            android:gravity="center"
+                            android:gravity="center|top"
                             android:orientation="vertical">
 
                             <TextView
@@ -233,7 +219,8 @@
                                 android:layout_marginTop="-5dp"
                                 android:padding="0dp"
                                 android:text="DAYS"
-                                android:textSize="12dp" />
+                                android:textSize="12dp"
+                                android:lines="1" />
                         </LinearLayout>
 
                         <TextView
@@ -243,15 +230,15 @@
                             android:scaleX="1.0"
                             android:scaleY="1.0"
                             android:text=":"
-                            android:gravity="center"
+                            android:gravity="center|top"
                             android:layout_marginBottom="15dp"
                             android:textSize="45dp" />
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_height="90dp"
+                            android:layout_height="match_parent"
                             android:layout_weight="1.0"
-                            android:gravity="center"
+                            android:gravity="center|top"
                             android:orientation="vertical">
 
                             <TextView
@@ -268,7 +255,8 @@
                                 android:layout_marginTop="-5dp"
                                 android:padding="0dp"
                                 android:text="HOURS"
-                                android:textSize="12dp" />
+                                android:textSize="12dp"
+                                android:lines="1" />
                         </LinearLayout>
 
                         <TextView
@@ -278,15 +266,15 @@
                             android:scaleX="1.0"
                             android:scaleY="1.0"
                             android:text=":"
-                            android:gravity="center"
+                            android:gravity="center|top"
                             android:layout_marginBottom="15dp"
                             android:textSize="45dp" />
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_height="90dp"
+                            android:layout_height="match_parent"
                             android:layout_weight="1.0"
-                            android:gravity="center"
+                            android:gravity="center|top"
                             android:orientation="vertical">
 
                             <TextView
@@ -303,7 +291,8 @@
                                 android:layout_marginTop="-5dp"
                                 android:padding="0dp"
                                 android:text="MINUTES"
-                                android:textSize="12dp" />
+                                android:textSize="12dp"
+                                android:lines="1" />
                         </LinearLayout>
 
                         <TextView
@@ -313,13 +302,13 @@
                             android:scaleX="1.0"
                             android:scaleY="1.0"
                             android:text=":"
-                            android:gravity="center"
+                            android:gravity="center|top"
                             android:layout_marginBottom="15dp"
                             android:textSize="45dp" />
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_height="90dp"
+                            android:layout_height="match_parent"
                             android:layout_weight="1.0"
                             android:gravity="center"
                             android:orientation="vertical">
@@ -338,7 +327,8 @@
                                 android:layout_marginTop="-5dp"
                                 android:padding="0dp"
                                 android:text="SECONDS"
-                                android:textSize="12dp" />
+                                android:textSize="12dp"
+                                android:lines="1" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -364,6 +354,16 @@
                     android:padding="12dp"
                     android:paddingBottom="8dp" />
 
+                <TextView
+                    android:id="@+id/content_mission"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:elevation="0dp"
+                    android:paddingLeft="28dp"
+                    android:paddingRight="28dp"
+                    android:text="Unknown Mission"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/content_mission_description"
