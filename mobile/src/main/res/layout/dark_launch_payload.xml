@@ -40,12 +40,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:gravity="left"
                     android:paddingTop="8dp"
                     android:text="Mission Details"
                     android:textAlignment="center"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:gravity="center" />
 
                 <TextView
                     android:id="@+id/payload_status"
@@ -53,7 +53,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:gravity="left"
                     android:paddingBottom="2dp"
                     android:paddingTop="4dp"
                     android:singleLine="false"
@@ -61,7 +60,8 @@
                     android:textAlignment="center"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="15sp"
-                    android:theme="@style/DarkTheme" />
+                    android:theme="@style/DarkTheme"
+                    android:gravity="center" />
 
                 <TextView
                     android:id="@+id/payload_type"
@@ -69,14 +69,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:gravity="left"
                     android:paddingBottom="2dp"
                     android:paddingTop="4dp"
                     android:singleLine="false"
                     android:text="Unknown Mission Type"
                     android:textAlignment="center"
                     android:textColor="?android:textColorSecondary"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:gravity="center" />
 
                 <TextView
                     android:id="@+id/payload_description"
@@ -158,14 +158,14 @@
                     style="@style/DarkTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="left"
                     android:lines="1"
                     android:paddingLeft="8dp"
                     android:paddingTop="8dp"
                     android:text="Launch Vehicle Summary"
                     android:textAlignment="center"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:gravity="center" />
 
                 <TextView
                     android:id="@+id/launch_vehicle"
@@ -173,14 +173,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:gravity="left"
                     android:lines="1"
                     android:paddingBottom="8dp"
                     android:paddingLeft="8dp"
                     android:paddingTop="4dp"
                     android:singleLine="false"
                     android:text="Unknown Launch Vehicle"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:gravity="center" />
 
                 <View
                     style="@style/DarkTheme"
