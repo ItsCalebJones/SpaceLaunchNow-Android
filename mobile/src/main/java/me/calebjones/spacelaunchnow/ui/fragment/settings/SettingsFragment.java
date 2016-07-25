@@ -6,8 +6,11 @@ import android.os.Bundle;
 
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.support.v4.app.Fragment;
 
 import com.crashlytics.android.Crashlytics;
+
+import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
@@ -87,4 +90,5 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
     public void onResume() {
         super.onResume();
     }
+
 }
