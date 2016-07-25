@@ -222,6 +222,10 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                 final int status = launchItem.getStatus();
                 final String hold = launchItem.getHoldreason();
 
+                holder.content_TMinus_status.setTypeface(Typeface.SANS_SERIF);
+                holder.content_TMinus_status.setTextColor(accentColor);
+
+                holder.countdownView.setVisibility(View.VISIBLE);
                 holder.timer = new CountDownTimer(future.getTimeInMillis() - now.getTimeInMillis(), 1000) {
                     StringBuilder time = new StringBuilder();
 
@@ -276,18 +280,37 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                         } else {
                             seconds = String.valueOf(longSeconds);
                         }
-                        holder.content_TMinus_status.setTypeface(Typeface.SANS_SERIF);
-                        holder.content_TMinus_status.setTextColor(accentColor);
                         if (Integer.valueOf(days) > 0) {
-                            holder.content_TMinus_status.setText(String.format("L - %s days - %s:%s:%s", days, hours, minutes, seconds));
+                            holder.countdownDays.setText(days);
                         } else {
-                            holder.content_TMinus_status.setText(String.format("L - %s:%s:%s", hours, minutes, seconds));
+                            holder.countdownDays.setText("- -");
                         }
 
+                        if (Integer.valueOf(hours) > 0) {
+                            holder.countdownHours.setText(hours);
+                        } else {
+                            holder.countdownHours.setText("- -");
+                        }
+
+                        if (Integer.valueOf(minutes) > 0) {
+                            holder.countdownMinutes.setText(minutes);
+                        } else {
+                            holder.countdownMinutes.setText("- -");
+                        }
+
+                        if (Integer.valueOf(seconds) > 0) {
+                            holder.countdownSeconds.setText(seconds);
+                        } else if (Integer.valueOf(minutes) > 0) {
+                            holder.countdownSeconds.setText("60");
+                        } else {
+                            holder.countdownSeconds.setText("- -");
+                        }
+                        holder.content_TMinus_status.setVisibility(View.GONE);
                     }
                 }.start();
 
             } else {
+                holder.countdownView.setVisibility(View.GONE);
                 holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
                 if (night) {
                     holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color));
@@ -409,13 +432,26 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView title, content, location, content_mission, content_mission_description,
-                launch_date, content_status, content_TMinus_status,
-                watchButton, shareButton, exploreButton;
+        public TextView title;
+        public TextView content;
+        public TextView location;
+        public TextView content_mission;
+        public TextView content_mission_description;
+        public TextView launch_date;
+        public TextView content_status;
+        public TextView content_TMinus_status;
+        public TextView watchButton;
+        public TextView shareButton;
+        public TextView exploreButton;
+        public TextView countdownDays;
+        public TextView countdownHours;
+        public TextView countdownMinutes;
+        public TextView countdownSeconds;
         public LinearLayout content_mission_description_view;
         public ImageView categoryIcon;
         public FloatingActionButton exploreFab;
         public CountDownTimer timer;
+        public View countdownView;
 
         public ImageView map_view;
 
@@ -438,6 +474,12 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
             content_TMinus_status = (TextView) view.findViewById(R.id.content_TMinus_status);
             content_mission_description_view = (LinearLayout) view.findViewById(R.id.content_mission_description_view);
 
+            countdownDays = (TextView) view.findViewById(R.id.countdown_days);
+            countdownHours = (TextView) view.findViewById(R.id.countdown_hours);
+            countdownMinutes = (TextView) view.findViewById(R.id.countdown_minutes);
+            countdownSeconds = (TextView) view.findViewById(R.id.countdown_seconds);
+            countdownView = view.findViewById(R.id.countdown_layout);
+
             map_view = (ImageView) view.findViewById(R.id.map_view);
             map_view.setClickable(false);
 
@@ -453,8 +495,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
             final int position = getAdapterPosition();
             Timber.d("onClick at %s", position);
 
-            LaunchRealm launch = new LaunchRealm();
-            launch = launchList.get(position);
+            final LaunchRealm launch = launchList.get(position);
             Intent sendIntent = new Intent();
 
             SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
@@ -465,10 +506,10 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
             switch (v.getId()) {
                 case R.id.watchButton:
-                    Timber.d("Watch: %s", launchList.get(position).getVidURLs().size());
-                    if (launchList.get(position).getVidURLs().size() > 0) {
+                    Timber.d("Watch: %s", launch.getVidURLs().size());
+                    if (launch.getVidURLs().size() > 0) {
                         final MaterialSimpleListAdapter adapter = new MaterialSimpleListAdapter(context);
-                        for (RealmStr s : launchList.get(position).getVidURLs()) {
+                        for (RealmStr s : launch.getVidURLs()) {
                             //Do your stuff here
                             adapter.add(new MaterialSimpleListItem.Builder(context)
                                     .content(s.getVal())
@@ -480,7 +521,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                                 .adapter(adapter, new MaterialDialog.ListCallback() {
                                     @Override
                                     public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                                        Uri watchUri = Uri.parse(launchList.get(position).getVidURLs().get(which).getVal());
+                                        Uri watchUri = Uri.parse(launch.getVidURLs().get(which).getVal());
                                         Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
                                         context.startActivity(i);
                                         dialog.dismiss();
@@ -502,7 +543,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                 case R.id.shareButton:
                     sendIntent.setAction(Intent.ACTION_SEND);
                     sendIntent.putExtra(Intent.EXTRA_SUBJECT, launch.getName());
-                    if (launch.getVidURL() != null) {
+                    if (launch.getVidURLs().size() > 0) {
                         if (launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
                                 get(0).getAgencies().size() > 0) {
                             //Get the first CountryCode
@@ -513,14 +554,12 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                             sendIntent.putExtra(Intent.EXTRA_TEXT, launch.getName() + " launching from "
                                     + launch.getLocation().getName() + " " + country + "\n \n"
                                     + launchDate
-                                    + "\n\nWatch: " + launch.getVidURL() + "\n"
-                                    + " \n\nvia Space Launch Now and Launch Library");
+                                    + "\n\nWatch: " + launch.getVidURLs().get(0) + "\n");
                         } else {
                             sendIntent.putExtra(Intent.EXTRA_TEXT, launch.getName() + " launching from "
                                     + launch.getLocation().getName() + "\n \n"
                                     + launchDate
-                                    + "\n\nWatch: " + launch.getVidURL() + "\n"
-                                    + " \n\nvia Space Launch Now and Launch Library");
+                                    + "\n\nWatch: " + launch.getVidURLs().get(0) + "\n");
                         }
                     } else {
                         if (launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
@@ -532,13 +571,11 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
                             sendIntent.putExtra(Intent.EXTRA_TEXT, launch.getName() + " launching from "
                                     + launch.getLocation().getName() + " " + country + "\n \n"
-                                    + launchDate
-                                    + " \n\nvia Space Launch Now and Launch Library");
+                                    + launchDate);
                         } else {
                             sendIntent.putExtra(Intent.EXTRA_TEXT, launch.getName() + " launching from "
                                     + launch.getLocation().getName() + "\n \n"
-                                    + launchDate
-                                    + " \n\nvia Space Launch Now and Launch Library");
+                                    + launchDate);
                         }
                     }
                     sendIntent.setType("text/plain");

@@ -16,7 +16,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
@@ -34,16 +33,13 @@ import java.util.Date;
 import java.util.Scanner;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import io.realm.Realm;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.natives.RocketDetails;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.models.realm.RocketDetailsRealm;
-import me.calebjones.spacelaunchnow.content.models.realm.RocketRealm;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.details.AgencyDetailFragment;
-import me.calebjones.spacelaunchnow.ui.fragment.launches.details.PayloadDetailFragment;
+import me.calebjones.spacelaunchnow.ui.fragment.launches.details.MissionDetailFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.details.SummaryDetailFragment;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;
@@ -416,7 +412,7 @@ public class LaunchDetailActivity extends BaseActivity
                 case 0:
                     return SummaryDetailFragment.newInstance();
                 case 1:
-                    return PayloadDetailFragment.newInstance();
+                    return MissionDetailFragment.newInstance();
                 case 2:
                     return AgencyDetailFragment.newInstance();
             }

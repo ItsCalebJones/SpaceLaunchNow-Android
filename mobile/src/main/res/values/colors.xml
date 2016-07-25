@@ -9,17 +9,20 @@
     <color name="colorPrimary">#448AFF</color>
     <color name="colorPrimaryDark">#1565c0</color>
     <color name="colorPrimaryLight">#2962ff</color>
-    <color name="colorPrimaryAlt">#BBDEFB</color>
+    <color name="colorPrimaryAlt">#bbdefb</color>
     <color name="colorAccent">#f44336</color>
     <color name="colorAccentLight">#f44336</color>
     <color name="colorTextPrimary">#212121</color>
     <color name="colorTextSecondary">#727272</color>
     <color name="materialGrey">#607D8B</color>
 
-    <color name="colorGo">#4CAF50</color>
+    <color name="colorGo">#81c784</color>
     <color name="View_Separator">#B6B6B6</color>
     <color name="white">#FFFFFF</color>
     <color name="transparent">#a0000000</color>
+
+    <color name="light_theme_primary_text_color">#80000000</color>
+    <color name="light_theme_secondary_text_color">#424242</color>
 
     <color name="dark_theme_primary_text_color">#ffffffff</color>
     <color name="dark_theme_secondary_text_color">#b3ffffff</color>

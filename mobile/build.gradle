@@ -20,7 +20,7 @@ repositories {
 advancedVersioning {
     nameOptions {
         versionMajor 1
-        versionMinor 1
+        versionMinor 2
         versionPatch 0
 
     }
@@ -46,15 +46,15 @@ android {
         }
     }
     compileSdkVersion 24
-    buildToolsVersion '24.0.0-rc3'
+    buildToolsVersion '24.0.1'
     defaultConfig {
         applicationId "me.calebjones.spacelaunchnow"
         manifestPlaceholders = [appNameLabel                   : "@string/application_name",
                                 manifestApplicationId          : "${applicationId}",
                                 onesignal_app_id               : "${app_id}",
                                 onesignal_google_project_number: "${google_project_number}"]
-        minSdkVersion 15
-        targetSdkVersion 23
+        minSdkVersion 16
+        targetSdkVersion 24
         versionCode appVersionCode
         versionName appVersionName
         signingConfig signingConfigs.config
@@ -88,31 +88,31 @@ dependencies {
     }
     compile('com.github.afollestad.material-dialogs:core:0.8.5.8@aar') { transitive = true }
     compile 'com.github.afollestad.material-dialogs:commons:0.8.5.8@aar'
-    compile 'com.mikepenz:iconics-core:2.6.6@aar'
+    compile 'com.mikepenz:iconics-core:2.6.7@aar'
     compile 'com.mikepenz:material-design-iconic-typeface:2.2.0.1@aar'
-    compile 'com.android.support:design:24.0.0'
-    compile 'com.android.support:customtabs:24.0.0'
-    compile 'com.android.support:cardview-v7:24.0.0'
-    compile 'com.android.support:palette-v7:24.0.0'
-    compile 'com.android.support:preference-v7:24.0.0'
-    compile 'com.google.android.support:wearable:2.0.0-alpha1'
-    compile 'com.google.android.gms:play-services-location:9.0.2'
-    compile 'com.google.android.gms:play-services-wearable:9.0.2'
-    compile 'com.google.android.gms:play-services-gcm:9.0.2'
-    compile 'com.onesignal:OneSignal:2.4.3@aar'
+    compile 'com.android.support:design:24.1.1'
+    compile 'com.android.support:customtabs:24.1.1'
+    compile 'com.android.support:cardview-v7:24.1.1'
+    compile 'com.android.support:palette-v7:24.1.1'
+    compile 'com.android.support:preference-v7:24.1.1'
+    compile 'com.android.support:support-v4:24.1.1'
+    compile 'com.google.android.gms:play-services-location:9.2.1'
+    compile 'com.google.android.gms:play-services-wearable:9.2.1'
+    compile 'com.google.android.gms:play-services-gcm:9.2.1'
+    compile 'com.onesignal:OneSignal:2.6.0@aar'
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
     compile 'com.google.code.gson:gson:2.7'
-    compile 'com.squareup.okhttp3:okhttp:3.3.1'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.github.rahatarmanahmed:circularprogressview:2.5.0'
     compile 'com.github.clans:fab:1.6.4'
-    compile 'de.hdodenhof:circleimageview:2.0.0'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.borax12.materialdaterangepicker:library:1.2'
     compile 'net.mediavrog:integrated-rating-request:1.1.1'
     compile 'com.jakewharton.timber:timber:4.1.2'
     compile 'za.co.riggaroo:materialhelptutorial:1.1.0'
-    compile 'com.jakewharton:butterknife:8.1.0'
-    apt 'com.jakewharton:butterknife-compiler:8.1.0'
+    compile 'com.jakewharton:butterknife:8.2.1'
+    apt 'com.jakewharton:butterknife-compiler:8.2.1'
     compile 'com.simplecityapps:recyclerview-fastscroll:1.0.9'
     compile 'com.github.javiersantos:MaterialStyledDialogs:1.4.1'
     compile 'com.karumi:dexter:2.3.0'
@@ -122,6 +122,8 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.github.renaudcerrato:static-maps-api:1.0.2'
-    compile 'com.android.support:support-v4:24.0.0'
     compile 'com.mikhaellopez:circularfillableloaders:1.2.0'
+    compile 'com.github.jrejaud:WearSocket:1.0.+'
+    compile 'com.github.pwittchen:weathericonview:1.1.0'
+    compile 'android.zetterstrom.com.forecast:forecast:1.1.1'
 }

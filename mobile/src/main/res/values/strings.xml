@@ -34,14 +34,12 @@
     <string name="title_activity_debug">DebugActivity</string>
     <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
 
-    <string name="whats_new_content">It\'s been a long wait on getting this version out, expect to find new unexpected bugs. I\'ll be working hard to patch them.\n\n
-        Fixes and Features!\n
-        \u2022Implement Realm db to enable further development.\n
-        \u2022Added 24 hour mode in Appearance settings.\n
-        \u2022Removed buggy Google Maps view for static images.\n
-        \u2022Improvements to notifications.\n
-        \u2022Data usage reduction.\n
-        \u2022Improved layouts on tablets.\n
+    <string name="whats_new_content">Fixes and Features!\n
+        \u2022Add weather card for launch sites - Supporter Feature.\n
+        \u2022Updated UI for various cards.\n
+        \u2022Updated countdown timer - Work in progress.\n
+        \u2022Update 3rd party libs.\n
+        \u2022Bug fixes and crashes.\n
     </string>
     <string name="link_feedback">https://www.reddit.com/r/spacelaunchnow</string>
     <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>
