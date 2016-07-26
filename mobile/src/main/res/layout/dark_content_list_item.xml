@@ -214,7 +214,8 @@
                                 android:layout_marginTop="-5dp"
                                 android:padding="0dp"
                                 android:text="DAYS"
-                                android:textSize="12dp" />
+                                android:textSize="12dp"
+                                android:lines="1" />
                         </LinearLayout>
 
                         <TextView
@@ -249,7 +250,8 @@
                                 android:layout_marginTop="-5dp"
                                 android:padding="0dp"
                                 android:text="HOURS"
-                                android:textSize="12dp" />
+                                android:textSize="12dp"
+                                android:lines="1" />
                         </LinearLayout>
 
                         <TextView
@@ -284,7 +286,8 @@
                                 android:layout_marginTop="-5dp"
                                 android:padding="0dp"
                                 android:text="MINUTES"
-                                android:textSize="12dp" />
+                                android:textSize="12dp"
+                                android:lines="1" />
                         </LinearLayout>
 
                         <TextView
@@ -319,7 +322,8 @@
                                 android:layout_marginTop="-5dp"
                                 android:padding="0dp"
                                 android:text="SECONDS"
-                                android:textSize="12dp" />
+                                android:textSize="12dp"
+                                android:lines="1" />
                         </LinearLayout>
                     </LinearLayout>
 
