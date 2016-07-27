@@ -183,7 +183,7 @@ public class SupportActivity extends BaseActivity implements BillingProcessor.IB
     @Override
     public void onPurchaseHistoryRestored() {
         Timber.v("Purchase History restored.");
-        SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Restored purchase, thanks for supporting me!");
+        SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Restored purchases.");
     }
 
     @Override
@@ -197,9 +197,9 @@ public class SupportActivity extends BaseActivity implements BillingProcessor.IB
         Timber.v("Billing initialized.");
         int count = 500;
         for (final String sku : bp.listOwnedProducts()) {
-            Products products = getProduct(sku);
+            Products product = getProduct(sku);
             getRealm().beginTransaction();
-            getRealm().copyToRealmOrUpdate(products);
+            getRealm().copyToRealmOrUpdate(product);
             getRealm().commitTransaction();
             new Handler().postDelayed(new Runnable() {
                 @Override

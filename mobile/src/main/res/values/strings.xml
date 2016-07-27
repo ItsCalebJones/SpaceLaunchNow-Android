@@ -34,7 +34,11 @@
     <string name="title_activity_debug">DebugActivity</string>
     <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
 
-    <string name="whats_new_content">Fixes and Features!\n
+    <string name="whats_new_content">1.2.1 Hotfix!\n
+        \u2022Fixed issues with Countdown timer.\n
+        \u2022Fixed an issue with reading dates properly from Launch Library.\n
+        \u2022Added a few code optimizations.\n\n
+        1.2.0 - Fixes and Features!\n
         \u2022Add weather card for launch sites - Supporter Feature.\n
         \u2022Updated UI for various cards.\n
         \u2022Updated countdown timer - Work in progress.\n

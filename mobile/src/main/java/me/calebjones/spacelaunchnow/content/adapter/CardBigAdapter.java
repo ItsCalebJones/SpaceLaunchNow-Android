@@ -253,7 +253,8 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                     @Override
                     public void onTick(long millisUntilFinished) {
                         time.setLength(0);
-                        // Use days if appropriate
+
+                        // Calculate the Days/Hours/Mins/Seconds numerically.
                         long longDays = millisUntilFinished / 86400000;
                         long longHours = (millisUntilFinished / 3600000) % 24;
                         long longMins = (millisUntilFinished / 60000) % 60;
@@ -263,6 +264,8 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                         String hours;
                         String minutes;
                         String seconds;
+
+                        // Translate those numerical values to string values.
                         if (longHours < 10) {
                             hours = "0" + String.valueOf(longHours);
                         } else {
@@ -280,6 +283,9 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                         } else {
                             seconds = String.valueOf(longSeconds);
                         }
+
+
+                        // Update the views
                         if (Integer.valueOf(days) > 0) {
                             holder.countdownDays.setText(days);
                         } else {
@@ -288,23 +294,29 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
                         if (Integer.valueOf(hours) > 0) {
                             holder.countdownHours.setText(hours);
-                        } else {
+                        } else if (Integer.valueOf(days) > 0) {
+                            holder.countdownMinutes.setText("00");
+                        }  else {
                             holder.countdownHours.setText("- -");
                         }
 
                         if (Integer.valueOf(minutes) > 0) {
                             holder.countdownMinutes.setText(minutes);
+                        } else if (Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
+                            holder.countdownMinutes.setText("00");
                         } else {
                             holder.countdownMinutes.setText("- -");
                         }
 
                         if (Integer.valueOf(seconds) > 0) {
                             holder.countdownSeconds.setText(seconds);
-                        } else if (Integer.valueOf(minutes) > 0) {
+                        } else if (Integer.valueOf(minutes) > 0 || Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
                             holder.countdownSeconds.setText("60");
                         } else {
                             holder.countdownSeconds.setText("- -");
                         }
+
+                        // Hide status if countdown is active.
                         holder.content_TMinus_status.setVisibility(View.GONE);
                     }
                 }.start();
