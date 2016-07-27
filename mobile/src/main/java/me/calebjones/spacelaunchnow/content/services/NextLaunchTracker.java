@@ -460,6 +460,12 @@ public class NextLaunchTracker extends IntentService implements
                         //Check settings to see if user should be notified.
                         if (this.sharedPref.getBoolean("notifications_launch_day", true)) {
                             if (!launch.getIsNotifiedDay()) {
+
+                                //Round up for standard notification.
+                                if (hours == 23){
+                                    hours = 24;
+                                }
+
                                 notifyUser(launch, hours);
                                 realm.beginTransaction();
                                 launch.setIsNotifiedDay(true);

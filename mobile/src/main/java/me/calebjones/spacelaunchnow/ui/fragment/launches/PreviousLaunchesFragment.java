@@ -35,6 +35,7 @@ import android.view.animation.OvershootInterpolator;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.borax12.materialdaterangepicker.date.DatePickerDialog;
+import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.SearchEvent;
@@ -399,12 +400,14 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     };
 
     public void loadLaunches() {
-        try {
-            launchRealms = QueryBuilder.buildPrevQuery(context, getRealm());
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (!getRealm().isClosed()) {
+            try {
+                launchRealms = QueryBuilder.buildPrevQuery(context, getRealm());
+            } catch (ParseException e) {
+                Crashlytics.logException(e);
+            }
+            launchRealms.addChangeListener(callback);
         }
-        launchRealms.addChangeListener(callback);
     }
 
     public void getPrevLaunchData() {
