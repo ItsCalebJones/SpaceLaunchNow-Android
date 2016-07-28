@@ -509,7 +509,7 @@ public class NextLaunchTracker extends IntentService implements
         String launchDate;
         String expandedText;
         String launchName = launch.getName();
-        String launchURL = launch.getVidURL();
+        String launchURL;
         String launchPad = launch.getLocation().getName();
 
         expandedText = "Launch attempt in " + minutes + " minutes from " + launchPad + ".";
@@ -571,20 +571,20 @@ public class NextLaunchTracker extends IntentService implements
 
 
         if (sharedPref.getBoolean("notifications_new_message_webcast", false)) {
-            if (launch.getVidURL() != null && launch.getVidURL().length() > 0) {
+            if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
                 // Sets up the Open and Share action buttons that will appear in the
                 // big view of the notification.
-                Intent vidIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(launchURL));
+                Intent vidIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(launch.getVidURLs().get(0).getVal()));
                 PendingIntent vidPendingIntent = PendingIntent.getActivity(this, 0, vidIntent, 0);
 
                 mBuilder.addAction(R.drawable.ic_open_in_browser_white, "Watch Live", vidPendingIntent);
                 mNotifyManager.notify(Strings.NOTIF_ID_HOUR, mBuilder.build());
             }
         } else {
-            if (launch.getVidURL() != null && launch.getVidURL().length() > 0) {
+            if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
                 // Sets up the Open and Share action buttons that will appear in the
                 // big view of the notification.
-                Intent vidIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(launchURL));
+                Intent vidIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(launch.getVidURLs().get(0).getVal()));
                 PendingIntent vidPendingIntent = PendingIntent.getActivity(this, 0, vidIntent, 0);
 
                 mBuilder.addAction(R.drawable.ic_open_in_browser_white, "Watch Live", vidPendingIntent);
@@ -654,7 +654,7 @@ public class NextLaunchTracker extends IntentService implements
         }
 
         if (sharedPref.getBoolean("notifications_new_message_webcast", false)) {
-            if (launch.getVidURL() != null && launch.getVidURL().length() > 0) {
+            if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
                 mNotifyManager.notify(Strings.NOTIF_ID_HOUR, mBuilder.build());
             }
         } else {
