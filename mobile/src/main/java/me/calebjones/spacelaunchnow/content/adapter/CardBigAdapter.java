@@ -295,7 +295,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                         if (Integer.valueOf(hours) > 0) {
                             holder.countdownHours.setText(hours);
                         } else if (Integer.valueOf(days) > 0) {
-                            holder.countdownMinutes.setText("00");
+                            holder.countdownHours.setText("00");
                         }  else {
                             holder.countdownHours.setText("- -");
                         }
