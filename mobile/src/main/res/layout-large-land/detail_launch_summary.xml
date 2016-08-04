@@ -4,7 +4,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/launch_summary"
-    style="@style/LightTheme"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:tag="launch_summary"
@@ -13,65 +13,62 @@
     tools:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <LinearLayout
-        style="@style/LightTheme"
+
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:orientation="vertical">
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:orientation="horizontal">
 
         <android.support.v7.widget.CardView
-            style="@style/LightTheme"
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/card_margin"
+            android:layout_weight="1"
             android:animateLayoutChanges="true"
-            card_view:cardBackgroundColor="@color/cardview_light_background"
             card_view:cardCornerRadius="0dp"
             card_view:cardElevation="4dp"
             card_view:cardPreventCornerOverlap="true"
             card_view:cardUseCompatPadding="true">
 
             <LinearLayout
-                style="@style/LightTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <LinearLayout
-                    style="@style/LightTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:focusable="false"
-                    android:elevation="4dp">
+                    android:elevation="4dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/launch_status_title"
-                        style="@style/LightTheme"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:gravity="center"
                         android:paddingTop="8dp"
                         android:text="Status"
                         android:textAlignment="center"
-                        android:gravity="center"
+                        android:textColor="?android:textColorPrimary"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/launch_status"
-                        style="@style/LightTheme"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
+                        android:gravity="center"
                         android:paddingBottom="16dp"
                         android:paddingTop="8dp"
                         android:singleLine="false"
                         android:text="Unknown Launch Status"
-                        android:gravity="center"
                         android:textAlignment="center"
                         android:textColor="?android:textColorSecondary"
                         android:textSize="16sp"
-                        android:theme="@style/LightTheme" />
+                         />
 
                 </LinearLayout>
 
@@ -101,7 +98,6 @@
                 </RelativeLayout>
 
                 <View
-                    style="@style/LightTheme"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_margin="8dp"
@@ -110,39 +106,36 @@
 
                 <TextView
                     android:id="@+id/launch_date_title"
-                    style="@style/LightTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
                     android:paddingTop="8dp"
                     android:text="Estimated Launch Date"
-                    android:gravity="center"
                     android:textAlignment="center"
+                    android:textColor="?android:textColorPrimary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/date"
-                    style="@style/LightTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
+                    android:gravity="center"
                     android:paddingBottom="8dp"
                     android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
                     android:paddingTop="4dp"
                     android:singleLine="false"
                     android:text="Unknown Launch Date"
-                    android:gravity="center"
                     android:textAlignment="center"
                     android:textColor="?android:textColorSecondary" />
 
                 <TextView
                     android:id="@+id/launch_window_start"
-                    style="@style/LightTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
                     android:ellipsize="end"
                     android:gravity="left"
                     android:paddingBottom="2dp"
@@ -150,32 +143,30 @@
                     android:paddingTop="8dp"
                     android:singleLine="false"
                     android:text="Launch Window Start: "
-                    android:textColor="?android:textColorSecondary"
-                    android:layout_marginLeft="8dp" />
+                    android:textColor="?android:textColorSecondary" />
 
                 <TextView
                     android:id="@+id/launch_window_end"
-                    style="@style/LightTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
                     android:ellipsize="end"
                     android:gravity="left"
-                    android:paddingBottom="2dp"
+                    android:paddingBottom="8dp"
                     android:paddingLeft="8dp"
-                    android:paddingTop="8dp"
+                    android:paddingTop="4dp"
                     android:singleLine="false"
                     android:text="Launch Window End: "
-                    android:textColor="?android:textColorSecondary"
-                    android:layout_marginLeft="8dp" />
+                    android:textColor="?android:textColorSecondary" />
 
 
                 <LinearLayout
-                    style="@style/LightTheme"
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <RelativeLayout
-                        style="@style/LightTheme"
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -203,10 +194,11 @@
 
         <android.support.v7.widget.CardView
             android:id="@+id/weather_card"
-            style="@style/LightTheme"
-            android:layout_width="fill_parent"
+
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/card_margin"
+            android:layout_weight="1"
             android:animateLayoutChanges="true"
             card_view:cardBackgroundColor="@color/cardview_light_background"
             card_view:cardCornerRadius="0dp"
@@ -228,18 +220,18 @@
                         android:id="@+id/weather_icon"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight=".4"
+                        android:layout_gravity="center"
+                        android:layout_weight=".5"
                         android:paddingLeft="30dp"
                         android:paddingTop="10dp"
                         android:scaleType="centerCrop"
                         app:weatherIconColor="@android:color/black"
-                        app:weatherIconSize="70"
-                        android:layout_gravity="center" />
+                        app:weatherIconSize="70" />
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight=".3"
+                        android:layout_weight=".2"
                         android:orientation="vertical">
 
                         <LinearLayout
@@ -268,7 +260,7 @@
                                 android:textIsSelectable="false"
                                 android:textSize="15dp"
                                 android:textStyle="normal"
-                                android:theme="@style/LightTheme" />
+                                 />
                         </LinearLayout>
 
                         <LinearLayout
@@ -282,7 +274,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight=".4"
-                                android:gravity="center"
+                                android:gravity="center|left"
                                 android:src="@drawable/ic_windy" />
 
                             <TextView
@@ -297,7 +289,7 @@
                                 android:textIsSelectable="false"
                                 android:textSize="15dp"
                                 android:textStyle="normal"
-                                android:theme="@style/LightTheme" />
+                                 />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -305,9 +297,9 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight=".3"
-                        android:orientation="vertical"
-                        android:layout_marginRight="12dp">
+                        android:layout_marginRight="12dp"
+                        android:layout_weight=".4"
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/weather_current_temp"
@@ -320,7 +312,7 @@
                             android:textIsSelectable="false"
                             android:textSize="40dp"
                             android:textStyle="normal"
-                            android:theme="@style/LightTheme" />
+                             />
 
                         <TextView
                             android:id="@+id/weather_feels_like"
@@ -332,7 +324,7 @@
                             android:textColor="?android:textColorSecondary"
                             android:textSize="15dp"
                             android:textStyle="normal"
-                            android:theme="@style/LightTheme" />
+                             />
 
                         <TextView
                             android:id="@+id/weather_low_high"
@@ -344,7 +336,7 @@
                             android:textColor="?android:textColorSecondary"
                             android:textSize="15dp"
                             android:textStyle="normal"
-                            android:theme="@style/LightTheme" />
+                             />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -354,13 +346,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center|left"
-                    android:paddingTop="10dp"
                     android:paddingLeft="30dp"
                     android:paddingRight="30dp"
+                    android:paddingTop="10dp"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="15sp"
                     android:textStyle="normal"
-                    android:theme="@style/LightTheme" />
+                     />
 
                 <TextView
                     android:id="@+id/weather_location"
@@ -372,7 +364,7 @@
                     android:textColor="?android:textColorPrimary"
                     android:textSize="20sp"
                     android:textStyle="normal"
-                    android:theme="@style/LightTheme" />
+                     />
 
 
                 <LinearLayout
@@ -389,7 +381,7 @@
                         android:layout_marginBottom="10dp"
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="10dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
@@ -399,10 +391,10 @@
                             android:layout_height="0dp"
                             android:layout_gravity="center"
                             android:layout_weight=".5"
-                            android:scaleType="centerCrop"
                             android:gravity="center"
+                            android:scaleType="centerCrop"
                             app:weatherIconColor="@android:color/black"
-                            app:weatherIconSize="40"/>
+                            app:weatherIconSize="40" />
 
                         <TextView
                             android:id="@+id/day_two_day"
@@ -415,7 +407,7 @@
                             android:textIsSelectable="false"
                             android:textSize="15sp"
                             android:textStyle="normal"
-                            android:theme="@style/LightTheme" />
+                             />
 
                         <TextView
                             android:id="@+id/day_two_low_high"
@@ -427,7 +419,7 @@
                             android:textColor="?android:textColorSecondary"
                             android:textSize="15sp"
                             android:textStyle="normal"
-                            android:theme="@style/LightTheme" />
+                             />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -438,11 +430,11 @@
                             <ImageView
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
+                                android:layout_margin="5dp"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:layout_margin="5dp"
-                                android:src="@drawable/ic_umbrella"
-                                android:paddingLeft="20dp" />
+                                android:paddingLeft="20dp"
+                                android:src="@drawable/ic_umbrella" />
 
                             <TextView
                                 android:id="@+id/day_two_precip_prob"
@@ -450,13 +442,13 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="center"
+                                android:paddingRight="20dp"
                                 android:text="--"
                                 android:textColor="?android:textColorSecondary"
                                 android:textIsSelectable="false"
                                 android:textSize="10sp"
                                 android:textStyle="normal"
-                                android:theme="@style/LightTheme"
-                                android:paddingRight="20dp" />
+                                 />
                         </LinearLayout>
 
                         <LinearLayout
@@ -468,11 +460,11 @@
                             <ImageView
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
+                                android:layout_margin="5dp"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:layout_margin="5dp"
-                                android:src="@drawable/ic_windy"
-                                android:paddingLeft="20dp" />
+                                android:paddingLeft="20dp"
+                                android:src="@drawable/ic_windy" />
 
                             <TextView
                                 android:id="@+id/day_two_weather_wind_speed"
@@ -480,13 +472,13 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="center"
+                                android:paddingRight="20dp"
                                 android:text="--"
                                 android:textColor="?android:textColorSecondary"
                                 android:textIsSelectable="false"
                                 android:textSize="10sp"
                                 android:textStyle="normal"
-                                android:theme="@style/LightTheme"
-                                android:paddingRight="20dp" />
+                                 />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -498,7 +490,7 @@
                         android:layout_marginBottom="10dp"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
@@ -508,10 +500,10 @@
                             android:layout_height="0dp"
                             android:layout_gravity="center"
                             android:layout_weight=".5"
-                            android:scaleType="centerCrop"
                             android:gravity="center"
+                            android:scaleType="centerCrop"
                             app:weatherIconColor="@android:color/black"
-                            app:weatherIconSize="40"/>
+                            app:weatherIconSize="40" />
 
                         <TextView
                             android:id="@+id/day_three_day"
@@ -524,7 +516,7 @@
                             android:textIsSelectable="false"
                             android:textSize="15sp"
                             android:textStyle="normal"
-                            android:theme="@style/LightTheme" />
+                             />
 
                         <TextView
                             android:id="@+id/day_three_low_high"
@@ -536,7 +528,7 @@
                             android:textColor="?android:textColorSecondary"
                             android:textSize="15sp"
                             android:textStyle="normal"
-                            android:theme="@style/LightTheme" />
+                             />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -547,11 +539,11 @@
                             <ImageView
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
+                                android:layout_margin="5dp"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:layout_margin="5dp"
-                                android:src="@drawable/ic_umbrella"
-                                android:paddingLeft="20dp" />
+                                android:paddingLeft="20dp"
+                                android:src="@drawable/ic_umbrella" />
 
                             <TextView
                                 android:id="@+id/day_three_precip_prob"
@@ -559,13 +551,13 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="center"
+                                android:paddingRight="20dp"
                                 android:text="--"
                                 android:textColor="?android:textColorSecondary"
                                 android:textIsSelectable="false"
                                 android:textSize="10sp"
                                 android:textStyle="normal"
-                                android:theme="@style/LightTheme"
-                                android:paddingRight="20dp" />
+                                 />
                         </LinearLayout>
 
                         <LinearLayout
@@ -577,11 +569,11 @@
                             <ImageView
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
+                                android:layout_margin="5dp"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:layout_margin="5dp"
-                                android:src="@drawable/ic_windy"
-                                android:paddingLeft="20dp" />
+                                android:paddingLeft="20dp"
+                                android:src="@drawable/ic_windy" />
 
                             <TextView
                                 android:id="@+id/day_three_weather_wind_speed"
@@ -589,13 +581,13 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="center"
+                                android:paddingRight="20dp"
                                 android:text="--"
                                 android:textColor="?android:textColorSecondary"
                                 android:textIsSelectable="false"
                                 android:textSize="10sp"
                                 android:textStyle="normal"
-                                android:theme="@style/LightTheme"
-                                android:paddingRight="20dp" />
+                                 />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -607,7 +599,7 @@
                         android:layout_marginBottom="10dp"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="20dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
@@ -617,10 +609,10 @@
                             android:layout_height="0dp"
                             android:layout_gravity="center"
                             android:layout_weight=".5"
-                            android:scaleType="centerCrop"
                             android:gravity="center"
+                            android:scaleType="centerCrop"
                             app:weatherIconColor="@android:color/black"
-                            app:weatherIconSize="40"/>
+                            app:weatherIconSize="40" />
 
                         <TextView
                             android:id="@+id/day_four_day"
@@ -633,7 +625,7 @@
                             android:textIsSelectable="false"
                             android:textSize="15sp"
                             android:textStyle="normal"
-                            android:theme="@style/LightTheme" />
+                             />
 
                         <TextView
                             android:id="@+id/day_four_low_high"
@@ -645,7 +637,7 @@
                             android:textColor="?android:textColorSecondary"
                             android:textSize="15sp"
                             android:textStyle="normal"
-                            android:theme="@style/LightTheme" />
+                             />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -656,11 +648,11 @@
                             <ImageView
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
+                                android:layout_margin="5dp"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:layout_margin="5dp"
-                                android:src="@drawable/ic_umbrella"
-                                android:paddingLeft="20dp" />
+                                android:paddingLeft="20dp"
+                                android:src="@drawable/ic_umbrella" />
 
                             <TextView
                                 android:id="@+id/day_four_precip_prob"
@@ -668,13 +660,13 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="center"
+                                android:paddingRight="20dp"
                                 android:text="--"
                                 android:textColor="?android:textColorSecondary"
                                 android:textIsSelectable="false"
                                 android:textSize="10sp"
                                 android:textStyle="normal"
-                                android:theme="@style/LightTheme"
-                                android:paddingRight="20dp" />
+                                 />
                         </LinearLayout>
 
                         <LinearLayout
@@ -686,11 +678,11 @@
                             <ImageView
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
+                                android:layout_margin="5dp"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:layout_margin="5dp"
-                                android:src="@drawable/ic_windy"
-                                android:paddingLeft="20dp" />
+                                android:paddingLeft="20dp"
+                                android:src="@drawable/ic_windy" />
 
                             <TextView
                                 android:id="@+id/day_four_weather_wind_speed"
@@ -698,13 +690,13 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="center"
+                                android:paddingRight="20dp"
                                 android:text="--"
                                 android:textColor="?android:textColorSecondary"
                                 android:textIsSelectable="false"
                                 android:textSize="10sp"
                                 android:textStyle="normal"
-                                android:theme="@style/LightTheme"
-                                android:paddingRight="20dp" />
+                                 />
                         </LinearLayout>
 
                     </LinearLayout>

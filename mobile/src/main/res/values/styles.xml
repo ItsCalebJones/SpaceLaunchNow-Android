@@ -2,36 +2,24 @@
 
     <attr name="cardStyle" format="reference" />
 
-    <style name="LightTheme.Launcher">
-        <item name="android:windowBackground">@drawable/launcher_drawable</item>
-    </style>
-
-    <style name="DarkTheme.Launcher">
+    <style name="BaseAppTheme.Launcher">
         <item name="android:windowBackground">@drawable/launcher_drawable</item>
     </style>
 
     <!-- Base application theme. -->
-    <style name="LightTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="BaseAppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="preferenceTheme">@style/Theme.WtfPreference</item>
+
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
         <item name="android:textColorPrimary">@color/primary_text_color_selector</item>
         <item name="android:textColorSecondary">@color/secondary_text_color_selector</item>
-        <item name="cardStyle">@style/CardView.Light</item>
-    </style>
 
-    <style name="DarkTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="preferenceTheme">@style/Theme.WtfPreference</item>
-        <item name="popupMenuStyle">@style/PopupMenuDark</item>
-        <item name="colorPrimary">@color/darkPrimary</item>
-        <item name="colorPrimaryDark">@color/darkPrimary_dark</item>
-        <item name="colorAccent">@color/darkAccent</item>
-        <item name="colorControlNormal">@color/darkIcons</item>
-        <item name="android:textColor">@color/dark_theme_secondary_text_color</item>
-        <item name="cardStyle">@style/CardView.Dark</item>
-        <item name="md_background_color">@color/dark_card_background</item>
+        <item name="cardStyle">@style/CardView.Light</item>
+        <item name="android:textColorHighlight">@color/colorPrimaryLight</item>
     </style>
 
     <style name="Theme.WtfPreference" parent="@style/PreferenceThemeOverlay">
@@ -46,8 +34,8 @@
         <item name="editTextPreferenceStyle">@style/Preference.DialogPreference.EditTextPreference
         </item>
         <item name="preferenceFragmentListStyle">@style/PreferenceFragmentList</item>
-
     </style>
+
 
     <style name="CustomTitle2" parent="TextAppearance.ShowcaseView.Title.Light">
         <item name="android:textColor">#deffffff</item>
@@ -66,13 +54,6 @@
         <item name="sv_detailTextAppearance">@style/CustomText2</item>
     </style>
 
-    <style name="ShowCaseThemeDark" parent="ShowcaseView">
-        <item name="sv_backgroundColor">@color/darkPrimary</item>
-        <item name="sv_showcaseColor">@color/darkAccent</item>
-        <item name="sv_buttonText">Hide</item>
-        <item name="sv_tintButtonColor">true</item>
-    </style>
-
     <style name="PopupMenuDark" parent="@style/Widget.AppCompat.PopupMenu">
         <item name="android:popupBackground">@android:color/white</item>
     </style>
@@ -82,29 +63,23 @@
         <item name="spinBars">true</item>
     </style>
 
-    <style name="AppTheme.ActionBar.Transparent" parent="LightTheme" />
+    <style name="AppTheme.ActionBar.Transparent" parent="BaseAppTheme" />
 
     <style name="ToolBarWithNavigationBack">
         <item name="navigationIcon">@drawable/ic_arrow_back</item>
     </style>
 
-    <style name="LightTheme.NoActionBar" parent="LightTheme">
+    <style name="LightTheme.NoActionBar" parent="BaseAppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="DarkTheme.NoActionBar" parent="DarkTheme">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="LightTheme.Transparent" parent="LightTheme">
+    <style name="LightTheme.Transparent" parent="BaseAppTheme">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
-        </style>
+    </style>
 
-    <style name="DarkTheme.Transparent" parent="DarkTheme" />
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
@@ -155,7 +130,7 @@
         <item name="android:layout_width">40dp</item>
     </style>
 
-    <style name="FullscreenTheme" parent="LightTheme">
+    <style name="FullscreenTheme" parent="BaseAppTheme">
         <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowBackground">@null</item>
@@ -167,21 +142,7 @@
         <item name="android:background">@color/black_overlay</item>
     </style>
 
-    <style name="AboutLibrariesDark" parent="DarkTheme">
-        <!-- AboutLibraries specific values -->
-        <item name="about_libraries_window_background">@color/dark_card_background</item>
-        <item name="about_libraries_card">@color/dark_card_background</item>
-        <item name="about_libraries_title_openSource">@color/dark_theme_primary_text_color</item>
-        <item name="about_libraries_text_openSource">@color/dark_theme_secondary_text_color</item>
-        <item name="about_libraries_dividerDark_openSource">
-            @color/about_libraries_dividerDark_openSource
-        </item>
-        <item name="about_libraries_dividerLight_openSource">
-            @color/about_libraries_dividerLight_openSource
-        </item>
-    </style>
-
-    <style name="AboutLibrariesLight" parent="Theme.AppCompat.NoActionBar">
+    <style name="AboutLibraries" parent="BaseAppTheme">
         <item name="colorPrimary">@color/colorPrimary</item>
         <!-- Here we setting appcompat’s actionBarStyle -->
         <item name="drawerArrowStyle">@style/AboutLibrariesTheme.DrawerArrowStyle</item>

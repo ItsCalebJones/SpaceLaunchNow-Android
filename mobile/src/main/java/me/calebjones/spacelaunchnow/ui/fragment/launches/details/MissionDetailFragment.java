@@ -73,15 +73,12 @@ public class MissionDetailFragment extends BaseFragment {
 
         sharedPreference = ListPreferences.getInstance(this.context);
 
-        if (sharedPreference.getNightMode()) {
-            view = inflater.inflate(R.layout.dark_launch_payload, container, false);
-        } else {
-            view = inflater.inflate(R.layout.light_launch_payload, container, false);
-        }
+        view = inflater.inflate(R.layout.detail_launch_payload, container, false);
 
         detailLaunch = ((LaunchDetailActivity) getActivity()).getLaunch();
 
         ButterKnife.bind(this, view);
+
         return view;
     }
 

@@ -17,8 +17,8 @@
         card_view:cardElevation="4dp"
         card_view:cardPreventCornerOverlap="true"
         card_view:cardUseCompatPadding="true"
-        android:layout_marginLeft="75dp"
-        android:layout_marginRight="75dp">
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -59,7 +59,7 @@
 
             <TextView
                 android:id="@+id/launch_vehicle_description"
-                style="@style/LightTheme"
+                
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -84,7 +84,7 @@
 
                 <TextView
                     android:id="@+id/launch_vehicle_specs_title"
-                    style="@style/LightTheme"
+                    
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -98,7 +98,7 @@
                     android:textSize="16sp" />
 
                 <View
-                    style="@style/LightTheme"
+                    
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginBottom="4dp"
@@ -120,7 +120,7 @@
 
                     <TextView
                         android:id="@+id/launch_vehicle_specs_height"
-                        style="@style/LightTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -134,7 +134,7 @@
 
                     <TextView
                         android:id="@+id/launch_vehicle_specs_diameter"
-                        style="@style/LightTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -149,7 +149,7 @@
 
                     <TextView
                         android:id="@+id/launch_vehicle_specs_stages"
-                        style="@style/LightTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -164,7 +164,7 @@
 
                     <TextView
                         android:id="@+id/launch_vehicle_specs_leo"
-                        style="@style/LightTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -179,7 +179,7 @@
 
                     <TextView
                         android:id="@+id/launch_vehicle_specs_gto"
-                        style="@style/LightTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -194,7 +194,7 @@
 
                     <TextView
                         android:id="@+id/launch_vehicle_specs_launch_mass"
-                        style="@style/LightTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -209,7 +209,7 @@
 
                     <TextView
                         android:id="@+id/launch_vehicle_specs_thrust"
-                        style="@style/LightTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -225,7 +225,7 @@
 
             <!-- title -->
             <LinearLayout
-                style="@style/LightTheme"
+                
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="bottom"

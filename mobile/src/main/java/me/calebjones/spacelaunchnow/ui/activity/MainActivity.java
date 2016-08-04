@@ -3,6 +3,7 @@ package me.calebjones.spacelaunchnow.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -16,7 +17,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
 import android.view.LayoutInflater;
@@ -31,8 +31,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
-import com.mikepenz.iconics.IconicsDrawable;
-import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 
 import java.util.ArrayList;
 
@@ -53,7 +51,7 @@ import timber.log.Timber;
 import za.co.riggaroo.materialhelptutorial.TutorialItem;
 import za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String NAV_ITEM_ID = "navItemId";
@@ -103,17 +101,14 @@ public class MainActivity extends AppCompatActivity
         listPreferences = ListPreferences.getInstance(this.context);
         switchPreferences = SwitchPreferences.getInstance(this.context);
 
-        if (listPreferences.getNightMode()) {
+        if (listPreferences.isNightModeActive(this)) {
             switchPreferences.setNightModeStatus(true);
             statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
-            m_theme = R.style.DarkTheme_NoActionBar;
-            m_layout = R.layout.dark_activity_main;
         } else {
             switchPreferences.setNightModeStatus(false);
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
-            m_theme = R.style.LightTheme_NoActionBar;
-            m_layout = R.layout.activity_main;
         }
+        m_theme = R.style.LightTheme_NoActionBar;
 
         if (getSharedPreferences("theme_changed", 0).getBoolean("recreate", false)) {
             SharedPreferences.Editor editor = getSharedPreferences("theme_changed", 0).edit();
@@ -124,7 +119,7 @@ public class MainActivity extends AppCompatActivity
 
         setTheme(m_theme);
         super.onCreate(savedInstanceState);
-        setContentView(m_layout);
+        setContentView(R.layout.activity_main);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setupWindowAnimations();
         }
@@ -243,7 +238,7 @@ public class MainActivity extends AppCompatActivity
                 .withIconAnimation(false)
                 .withDialogAnimation(true)
                 .withDivider(true)
-                .setIcon(new IconicsDrawable(context).icon(MaterialDesignIconic.Icon.gmi_info).color(Color.WHITE))
+                .setIcon(R.drawable.ic_about)
                 .setTitle("Whats New? " + Utils.getVersionName(this))
                 .setScrollable(true)
                 .setNegative("Feedback", new MaterialDialog.SingleButtonCallback() {
@@ -262,7 +257,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        if (listPreferences.getNightMode()) {
+        if (listPreferences.isNightModeActive(this)) {
             dialog.setHeaderColor(R.color.darkPrimary);
             dialog.setCustomView(nightView);
         } else {
@@ -285,6 +280,18 @@ public class MainActivity extends AppCompatActivity
             editor.putBoolean("recreate", false);
             editor.apply();
             recreate();
+        }
+
+        int currentNightMode = getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK;
+        switch (currentNightMode) {
+            case Configuration.UI_MODE_NIGHT_NO:
+                // Night mode is not active, we're in day time
+            case Configuration.UI_MODE_NIGHT_YES:
+                // Night mode is active, we're at night!
+                navigationView.getItemTextColor();
+            case Configuration.UI_MODE_NIGHT_UNDEFINED:
+                // We don't know what mode we're in, assume notnight
         }
     }
 
@@ -451,7 +458,7 @@ public class MainActivity extends AppCompatActivity
                 .autoDismiss(true)
                 .content("Feel free to submit bugs or feature requests.")
                 .negativeText("Reddit")
-                .positiveColor(R.color.colorPrimary)
+                .positiveColor(ContextCompat.getColor(this, R.color.colorPrimary))
                 .positiveText("Email")
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override

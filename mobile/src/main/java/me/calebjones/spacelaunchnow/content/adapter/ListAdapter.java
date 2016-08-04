@@ -23,13 +23,13 @@ import java.util.List;
 import java.util.TimeZone;
 
 import io.realm.RealmList;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
-import timber.log.Timber;
+import me.calebjones.spacelaunchnow.utils.Utils;
 
 /**
  * This adapter takes data from ListPreferences/LoaderService and applies it to RecyclerView
@@ -74,14 +74,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
         sharedPreference = ListPreferences.getInstance(mContext);
 
-        if (sharedPreference.getNightMode()) {
+        if (sharedPreference.isNightModeActive(mContext)) {
             night = true;
-            m_theme = R.layout.dark_historical_list_item;
         } else {
             night = false;
-            m_theme = R.layout.light_historical_list_item;
         }
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(m_theme, viewGroup, false);
+
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.launch_list_item, viewGroup, false);
         return new ViewHolder(v);
     }
 
@@ -98,8 +97,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 
         //Retrieve missionType
         if (launchItem.getMissions().size() != 0) {
-            Timber.v("Position: %s | %s - %s",position ,launchItem.getName() ,launchItem.getMissions().get(0).getTypeName());
-            setCategoryIcon(holder, launchItem.getMissions().get(0).getTypeName());
+            Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMissions().get(0).getTypeName(), night);
         } else {
             if (night) {
                 holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);

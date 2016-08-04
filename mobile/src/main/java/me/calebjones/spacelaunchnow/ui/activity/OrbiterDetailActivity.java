@@ -56,22 +56,19 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         int m_theme;
-        int layout;
         final int statusColor;
         this.context = getApplicationContext();
 
         sharedPreference = ListPreferences.getInstance(this.context);
         customTabActivityHelper = new CustomTabActivityHelper();
 
-        if (sharedPreference.getNightMode()) {
-            m_theme = R.style.DarkTheme;
+        if (sharedPreference.isNightModeActive(this)) {
             statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
-            layout = R.layout.dark_activity_orbiter_detail;
         } else {
-            m_theme = R.style.LightTheme;
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
-            layout = R.layout.activity_orbiter_detail;
         }
+
+        m_theme = R.style.BaseAppTheme;
 
         if (!BuildConfig.DEBUG) {
             Answers.getInstance().logContentView(new ContentViewEvent()
@@ -82,7 +79,7 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
         setTheme(m_theme);
 
         super.onCreate(savedInstanceState);
-        setContentView(layout);
+        setContentView(R.layout.activity_orbiter_detail);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         toolbarTitle = (TextView) findViewById(R.id.title_text);

@@ -36,8 +36,7 @@
                     android:layout_width="64dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center|top"
-                    android:padding="12dp"
-                    app:srcCompat="@drawable/ic_satellite" />
+                    android:padding="12dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -52,7 +51,7 @@
                         android:lines="1"
                         android:paddingTop="8dp"
                         android:text="Unknown Launch Vehicle"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:textColor="?android:textColorHighlight"
                         android:textSize="18sp"
                         android:textStyle="normal" />
 
@@ -98,7 +97,6 @@
                         android:text="Unknown Mission" />
 
                     <LinearLayout
-                        style="@style/LightTheme"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">

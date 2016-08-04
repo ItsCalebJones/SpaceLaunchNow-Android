@@ -6,11 +6,10 @@
     android:layout_height="fill_parent"
     android:textAlignment="center"
     android:transitionGroup="true"
-
     tools:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <LinearLayout
-        style="@style/DarkTheme"
+        
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_marginLeft="50dp"
@@ -18,12 +17,11 @@
         android:orientation="horizontal">
 
         <android.support.v7.widget.CardView
-            style="@style/DarkTheme"
+            
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/card_margin"
             android:animateLayoutChanges="true"
-            card_view:cardBackgroundColor="@color/cardview_dark_background"
             card_view:cardCornerRadius="0dp"
             card_view:cardElevation="4dp"
             card_view:cardPreventCornerOverlap="true"
@@ -31,7 +29,7 @@
             android:layout_weight="1">
 
             <LinearLayout
-                style="@style/DarkTheme"
+                
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -39,7 +37,6 @@
 
                 <TextView
                     android:id="@+id/payload_status_title"
-                    style="@style/DarkTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -47,12 +44,13 @@
                     android:paddingTop="8dp"
                     android:text="Mission Details"
                     android:textAlignment="center"
+                    android:textColor="?android:textColorPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/payload_status"
-                    style="@style/DarkTheme"
+                    
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -63,12 +61,11 @@
                     android:text="Unknown Payload"
                     android:textAlignment="center"
                     android:textColor="?android:textColorSecondary"
-                    android:textSize="15sp"
-                    android:theme="@style/DarkTheme" />
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/payload_type"
-                    style="@style/DarkTheme"
+                    
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -83,23 +80,23 @@
 
                 <TextView
                     android:id="@+id/payload_description"
-                    style="@style/DarkTheme"
+                    
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:gravity="center"
-                    android:paddingBottom="4dp"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
                     android:paddingTop="4dp"
                     android:singleLine="false"
                     android:text=""
                     android:textAlignment="center"
                     android:textColor="?android:textColorSecondary"
-                    android:textSize="15sp"
-                    android:theme="@style/DarkTheme"
-                    android:layout_marginBottom="16dp" />
+                    android:textSize="15sp" />
 
                 <LinearLayout
-                    style="@style/DarkTheme"
+                    
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -138,21 +135,20 @@
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
-            style="@style/DarkTheme"
+            
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/card_margin"
-            android:layout_weight="1"
             android:animateLayoutChanges="true"
-            card_view:cardBackgroundColor="@color/cardview_dark_background"
+            
             card_view:cardCornerRadius="0dp"
             card_view:cardElevation="4dp"
             card_view:cardPreventCornerOverlap="true"
             card_view:cardUseCompatPadding="true"
-            android:visibility="visible">
+            android:layout_weight="1">
 
             <LinearLayout
-                style="@style/DarkTheme"
+                
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -160,7 +156,7 @@
 
                 <TextView
                     android:id="@+id/launch_vehicle_title"
-                    style="@style/DarkTheme"
+                    
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -169,12 +165,13 @@
                     android:paddingTop="8dp"
                     android:text="Launch Vehicle Summary"
                     android:textAlignment="center"
+                    android:textColor="?android:textColorPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/launch_vehicle"
-                    style="@style/DarkTheme"
+                    
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -188,7 +185,7 @@
                     android:textAlignment="center" />
 
                 <View
-                    style="@style/DarkTheme"
+                    
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_margin="8dp"
@@ -197,7 +194,7 @@
 
                 <TextView
                     android:id="@+id/launch_configuration"
-                    style="@style/DarkTheme"
+                    
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -212,7 +209,7 @@
 
                 <TextView
                     android:id="@+id/launch_family"
-                    style="@style/DarkTheme"
+                    
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -233,7 +230,7 @@
 
                     <TextView
                         android:id="@+id/launch_vehicle_specs_title"
-                        style="@style/DarkTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -247,7 +244,7 @@
                         android:textSize="16sp" />
 
                     <View
-                        style="@style/DarkTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginBottom="4dp"
@@ -259,7 +256,7 @@
 
                     <TextView
                         android:id="@+id/launch_vehicle_specs_height"
-                        style="@style/DarkTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -274,7 +271,7 @@
 
                     <TextView
                         android:id="@+id/launch_vehicle_specs_diameter"
-                        style="@style/DarkTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -289,7 +286,7 @@
 
                     <TextView
                         android:id="@+id/launch_vehicle_specs_stages"
-                        style="@style/DarkTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -304,7 +301,7 @@
 
                     <TextView
                         android:id="@+id/launch_vehicle_specs_leo"
-                        style="@style/DarkTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -319,7 +316,7 @@
 
                     <TextView
                         android:id="@+id/launch_vehicle_specs_gto"
-                        style="@style/DarkTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -334,7 +331,7 @@
 
                     <TextView
                         android:id="@+id/launch_vehicle_specs_launch_mass"
-                        style="@style/DarkTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -349,7 +346,7 @@
 
                     <TextView
                         android:id="@+id/launch_vehicle_specs_thrust"
-                        style="@style/DarkTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"

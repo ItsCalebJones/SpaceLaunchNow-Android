@@ -81,16 +81,15 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
         sharedPreference = ListPreferences.getInstance(mContext);
 
-        if (sharedPreference.getNightMode()) {
+        if (sharedPreference.isNightModeActive(mContext)) {
             night = true;
-            m_theme = R.layout.gridview_item;
             defaultBackgroundcolor = ContextCompat.getColor(mContext, R.color.colorAccent);
 
         } else {
             night = false;
-            m_theme = R.layout.gridview_item;
             defaultBackgroundcolor = ContextCompat.getColor(mContext, R.color.darkAccent);
         }
+        m_theme = R.layout.gridview_item;
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(m_theme, viewGroup, false);
         return new ViewHolder(v, onItemClickListener);
     }
