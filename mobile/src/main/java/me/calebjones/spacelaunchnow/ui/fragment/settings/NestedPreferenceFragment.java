@@ -121,15 +121,17 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
                     if(switchPreferences.getNightMode()){
                         if(switchPreferences.getDayNightAutoMode()){
                             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
-                            Toast.makeText(context, "Auto DayNight enabled, restart app to take effect.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Auto DayNight enabled, might need to restart app to take effect.", Toast.LENGTH_SHORT).show();
                         } else {
                             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                            Toast.makeText(context, "Night mode will change on restart.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Night mode might need to restart app to take effect.", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(context, "Day mode will change on restart.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Day mode might need to restart app to take effect.", Toast.LENGTH_SHORT).show();
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                     }
+
+                    NestedPreferenceFragment.this.getActivity().recreate();
                 }
                 if (key.equals("theme_auto") && NestedPreferenceFragment.this.getActivity() != null) {
                     Editor themeEditor = NestedPreferenceFragment.this.getActivity().getSharedPreferences("theme_changed", 0).edit();
@@ -139,14 +141,16 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
                     if(switchPreferences.getNightMode()){
                         if(switchPreferences.getDayNightAutoMode()){
                             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
-                            Toast.makeText(context, "Auto DayNight enabled, restart app to take effect.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Auto DayNight enabled, might need to restart app to take effect.", Toast.LENGTH_SHORT).show();
                         } else {
                             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                            Toast.makeText(context, "Auto DayNight disabled, restart app to take effect.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Auto DayNight disabled, might need to restart app to take effect.", Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                     }
+
+                    NestedPreferenceFragment.this.getActivity().recreate();
                 }
                 if (key.equals("notifications_launch_imminent_updates")) {
                     OneSignal.setSubscription(this.valprefs.getBoolean(key, false));

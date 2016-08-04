@@ -4,31 +4,31 @@
     <Preference
         android:persistent="false"
         android:key="launch_tracking_options"
-        android:layout="@layout/settings_light_launch_options_layout"
+        android:layout="@layout/settings_general"
         android:title="General" />
     <Preference
         android:persistent="false"
         android:key="notifications"
-        android:layout="@layout/settings_light_notifications_layout"
+        android:layout="@layout/settings_notifications"
         android:title="Notifications" />
     <Preference
         android:persistent="false"
         android:key="appearance"
-        android:layout="@layout/settings_light_appearance_layout"
+        android:layout="@layout/settings_appearance"
         android:title="Appearance" />
     <Preference
         android:persistent="false"
         android:key="wear"
-        android:layout="@layout/settings_light_wear_layout"
+        android:layout="@layout/settings_wear"
         android:title="Wear" />
     <Preference
         android:persistent="false"
         android:key="about"
-        android:layout="@layout/settings_light_about_layout"
+        android:layout="@layout/settings_about"
         android:title="About" />
     <Preference
         android:persistent="false"
         android:key="support"
-        android:layout="@layout/settings_light_support_layout"
+        android:layout="@layout/settings_support"
         android:title="Support" />
 </PreferenceScreen>
