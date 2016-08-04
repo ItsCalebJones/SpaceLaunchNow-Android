@@ -3,7 +3,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/launch_summary"
-    style="@style/DarkTheme"
+    
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:tag="launch_summary"
@@ -12,21 +12,17 @@
     tools:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <LinearLayout
-        style="@style/DarkTheme"
+        
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <android.support.v7.widget.CardView
-            style="@style/DarkTheme"
-            android:layout_weight="1"
-            android:layout_width="0dp"
+            
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/card_margin"
             android:animateLayoutChanges="true"
-            card_view:cardBackgroundColor="@color/cardview_dark_background"
             card_view:cardCornerRadius="0dp"
             card_view:cardElevation="4dp"
             card_view:cardPreventCornerOverlap="true"
@@ -34,33 +30,33 @@
 
             <LinearLayout
                 android:id="@+id/mission_agencies"
-                style="@style/DarkTheme"
+                
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/mission_agency_title"
-                    style="@style/DarkTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:lines="1"
                     android:paddingLeft="16dp"
                     android:paddingTop="8dp"
-                    android:text="Mission Agencies"
+                    android:text="Launch Location Agencies"
+                    android:textColor="?android:textColorPrimary"
                     android:textAlignment="center"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/mission_agency_type"
-                    style="@style/DarkTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:gravity="center"
                     android:lines="1"
+                    android:paddingBottom="16dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="8dp"
                     android:singleLine="false"
@@ -75,7 +71,7 @@
                     android:orientation="vertical">
 
                     <View
-                        style="@style/DarkTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_margin="8dp"
@@ -84,13 +80,12 @@
 
                     <TextView
                         android:id="@+id/mission_vehicle_agency_one"
-                        style="@style/DarkTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:gravity="left"
                         android:lines="1"
-                        android:paddingBottom="8dp"
                         android:paddingLeft="16dp"
                         android:paddingTop="4dp"
                         android:singleLine="false"
@@ -99,7 +94,7 @@
 
                     <TextView
                         android:id="@+id/mission_agency_type_one"
-                        style="@style/DarkTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -114,7 +109,7 @@
 
                     <TextView
                         android:id="@+id/mission_agency_summary_one"
-                        style="@style/LightTheme"
+                        
                         android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -128,7 +123,7 @@
                         android:textColor="?android:textColorSecondary" />
 
                     <LinearLayout
-                        style="@style/DarkTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -174,7 +169,7 @@
                     android:orientation="vertical">
 
                     <View
-                        style="@style/DarkTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_margin="16dp"
@@ -183,13 +178,11 @@
 
                     <TextView
                         android:id="@+id/mission_vehicle_agency_two"
-                        style="@style/DarkTheme"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:gravity="left"
                         android:lines="1"
-                        android:paddingBottom="8dp"
                         android:paddingLeft="16dp"
                         android:paddingTop="4dp"
                         android:singleLine="false"
@@ -198,7 +191,7 @@
 
                     <TextView
                         android:id="@+id/mission_agency_type_two"
-                        style="@style/DarkTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -213,13 +206,12 @@
 
                     <TextView
                         android:id="@+id/mission_agency_summary_two"
-                        style="@style/LightTheme"
+                        
                         android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:gravity="left"
-                        android:lines="1"
                         android:paddingBottom="8dp"
                         android:paddingLeft="16dp"
                         android:paddingTop="4dp"
@@ -228,7 +220,7 @@
                         android:textColor="?android:textColorSecondary" />
 
                     <LinearLayout
-                        style="@style/DarkTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -270,13 +262,11 @@
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
-            style="@style/DarkTheme"
-            android:layout_weight="1"
-            android:layout_width="0dp"
+            
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/card_margin"
             android:animateLayoutChanges="true"
-            card_view:cardBackgroundColor="@color/cardview_dark_background"
             card_view:cardCornerRadius="0dp"
             card_view:cardElevation="4dp"
             card_view:cardPreventCornerOverlap="true"
@@ -284,14 +274,13 @@
 
             <LinearLayout
                 android:id="@+id/vehicle_agencies"
-                style="@style/DarkTheme"
+                
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/launch_agency_title"
-                    style="@style/DarkTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -300,17 +289,19 @@
                     android:paddingTop="8dp"
                     android:text="Vehicle Agencies"
                     android:textAlignment="center"
+                    android:textColor="?android:textColorPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/launch_agency_type"
-                    style="@style/DarkTheme"
+                    
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:gravity="center"
                     android:lines="1"
+                    android:paddingBottom="32dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="8dp"
                     android:singleLine="false"
@@ -325,7 +316,7 @@
                     android:orientation="vertical">
 
                     <View
-                        style="@style/LightTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_margin="8dp"
@@ -334,7 +325,7 @@
 
                     <TextView
                         android:id="@+id/launch_vehicle_agency_one"
-                        style="@style/DarkTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -344,12 +335,11 @@
                         android:paddingTop="4dp"
                         android:singleLine="false"
                         android:text="Agency One"
-                        android:textColor="?android:textColorSecondary"
-                        android:paddingBottom="8dp" />
+                        android:textColor="?android:textColorSecondary" />
 
                     <TextView
                         android:id="@+id/launch_agency_type_one"
-                        style="@style/DarkTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -364,7 +354,7 @@
 
                     <TextView
                         android:id="@+id/launch_agency_summary_one"
-                        style="@style/LightTheme"
+                        
                         android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -378,7 +368,7 @@
                         android:textColor="?android:textColorSecondary" />
 
                     <LinearLayout
-                        style="@style/DarkTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -424,7 +414,7 @@
                     android:orientation="vertical">
 
                     <View
-                        style="@style/DarkTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_margin="16dp"
@@ -433,7 +423,7 @@
 
                     <TextView
                         android:id="@+id/launch_vehicle_agency_two"
-                        style="@style/DarkTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -443,12 +433,11 @@
                         android:paddingTop="4dp"
                         android:singleLine="false"
                         android:text="Agency Two"
-                        android:textColor="?android:textColorSecondary"
-                        android:paddingBottom="8dp" />
+                        android:textColor="?android:textColorSecondary" />
 
                     <TextView
                         android:id="@+id/launch_agency_type_two"
-                        style="@style/DarkTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -463,7 +452,7 @@
 
                     <TextView
                         android:id="@+id/launch_agency_summary_two"
-                        style="@style/LightTheme"
+                        
                         android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -477,7 +466,7 @@
                         android:textColor="?android:textColorSecondary" />
 
                     <LinearLayout
-                        style="@style/DarkTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">

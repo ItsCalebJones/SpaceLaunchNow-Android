@@ -100,14 +100,14 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         sharedPreference = ListPreferences.getInstance(context);
 
-        if (sharedPreference.getNightMode()) {
+        if (sharedPreference.isNightModeActive(context)) {
             night = true;
-            m_theme = R.layout.dark_content_list_item;
         } else {
             night = false;
-            m_theme = R.layout.light_content_list_item;
         }
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(m_theme, viewGroup, false);
+
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.content_card_item, viewGroup, false);
+
         return new ViewHolder(v);
     }
 
@@ -127,7 +127,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
             //Retrieve missionType
             if (launchItem.getMissions().size() != 0) {
-                setCategoryIcon(holder, launchItem.getMissions().get(0).getTypeName());
+                Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMissions().get(0).getTypeName(), night);
             } else {
                 if (night) {
                     holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
@@ -539,7 +539,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                                         dialog.dismiss();
                                     }
                                 });
-                        if (sharedPreference.getNightMode()) {
+                        if (sharedPreference.isNightModeActive(context)) {
                             builder.theme(Theme.DARK);
                         }
                         builder.show();

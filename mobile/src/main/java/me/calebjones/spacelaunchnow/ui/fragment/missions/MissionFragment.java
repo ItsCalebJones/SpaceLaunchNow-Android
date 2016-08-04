@@ -28,7 +28,6 @@ import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -36,7 +35,6 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.MissionAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
-import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.models.realm.MissionRealm;
 import me.calebjones.spacelaunchnow.content.services.MissionDataService;
 import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
@@ -79,10 +77,12 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         RecyclerView hideView = (RecyclerView) view.findViewById(R.id.recycler_view_staggered);
+
         if (mRecyclerView.getVisibility() != View.VISIBLE) {
             hideView.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.VISIBLE);
         }
+
         layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(adapter);

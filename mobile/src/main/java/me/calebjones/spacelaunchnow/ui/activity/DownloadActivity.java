@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
@@ -17,15 +16,11 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
-import com.mikepenz.iconics.IconicsDrawable;
-import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.mikhaellopez.circularfillableloaders.CircularFillableLoaders;
-import timber.log.Timber;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
@@ -33,6 +28,7 @@ import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import me.calebjones.spacelaunchnow.utils.Utils;
+import timber.log.Timber;
 
 
 public class DownloadActivity extends AppCompatActivity {
@@ -118,7 +114,7 @@ public class DownloadActivity extends AppCompatActivity {
         new MaterialStyledDialog(this)
                 .withIconAnimation(false)
                 .withDialogAnimation(true)
-                .setIcon(new IconicsDrawable(this).icon(MaterialDesignIconic.Icon.gmi_info).color(Color.WHITE))
+                .setIcon(R.drawable.ic_about)
                 .setTitle("Whats New? " + Utils.getVersionName(this))
                 .setDescription("This update brought a huge overhaul to the data storage of launches." +
                         " The easiest way to migrate is essentially a wipe and install, that being said welcome to the new version!")

@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -60,7 +61,7 @@ public class SummaryDetailFragment extends BaseFragment {
 
     public static LaunchRealm detailLaunch;
     private RocketDetailsRealm launchVehicle;
-    private boolean nightmode;
+    private boolean nightMode;
 
     @BindView(R.id.map_view_summary)
     ImageView staticMap;
@@ -129,21 +130,24 @@ public class SummaryDetailFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view;
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         this.context = getContext();
 
         sharedPreference = ListPreferences.getInstance(this.context);
 
-        if (sharedPreference.getNightMode()) {
-            nightmode = true;
-            view = inflater.inflate(R.layout.dark_launch_summary, container, false);
+        Context themeContext;
+        if (sharedPreference.isNightModeActive(context)) {
+            nightMode = true;
         } else {
-            nightmode = false;
-            view = inflater.inflate(R.layout.light_launch_summary, container, false);
+            nightMode = false;
         }
 
+        themeContext = new ContextThemeWrapper(getActivity(), R.style.BaseAppTheme);
+        inflater.cloneInContext(themeContext);
+        View view = inflater.inflate(R.layout.detail_launch_summary, container, false);
+
         ButterKnife.bind(this, view);
+
         return view;
     }
 
@@ -350,7 +354,7 @@ public class SummaryDetailFragment extends BaseFragment {
         } else if (icon.contains("tornado")) {
             view.setIconResource(getString(R.string.wi_forecast_io_tornado));
         }
-        if (nightmode) {
+        if (nightMode) {
             view.setIconColor(Color.WHITE);
         } else {
             view.setIconColor(Color.BLACK);
@@ -462,7 +466,7 @@ public class SummaryDetailFragment extends BaseFragment {
                                         dialog.dismiss();
                                     }
                                 });
-                        if (sharedPreference.getNightMode()) {
+                        if (sharedPreference.isNightModeActive(context)) {
                             builder.theme(Theme.DARK);
                         }
                         builder.show();

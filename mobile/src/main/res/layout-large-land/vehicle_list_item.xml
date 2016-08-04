@@ -13,11 +13,12 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardBackgroundColor="@color/dark_card_background"
         card_view:cardCornerRadius="2dp"
         card_view:cardElevation="4dp"
         card_view:cardPreventCornerOverlap="true"
-        card_view:cardUseCompatPadding="true">
+        card_view:cardUseCompatPadding="true"
+        android:layout_marginLeft="75dp"
+        android:layout_marginRight="75dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,11 +34,10 @@
                 <ImageView
                     android:id="@+id/item_icon"
                     android:layout_width="match_parent"
-                    android:layout_height="175dp"
+                    android:layout_height="wrap_content"
                     android:scaleType="centerCrop"
                     android:transitionName="imageCover"
-                    app:srcCompat="@drawable/placeholder"
-                    android:elevation="2dp" />
+                    app:srcCompat="@drawable/placeholder" />
 
             </FrameLayout>
 
@@ -46,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_gravity="bottom"
-                android:background="@color/darkPrimary_dark"
+                android:background="@color/colorAccent"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:text="Unknown Rocket Name"
@@ -59,7 +59,7 @@
 
             <TextView
                 android:id="@+id/launch_vehicle_description"
-                style="@style/LightTheme"
+                
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -73,7 +73,6 @@
                 android:visibility="gone" />
 
 
-
             <LinearLayout
                 android:id="@+id/vehicle_spec_view"
                 android:layout_width="match_parent"
@@ -85,7 +84,7 @@
 
                 <TextView
                     android:id="@+id/launch_vehicle_specs_title"
-                    style="@style/LightTheme"
+                    
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -99,7 +98,7 @@
                     android:textSize="16sp" />
 
                 <View
-                    style="@style/LightTheme"
+                    
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginBottom="4dp"
@@ -112,16 +111,16 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
                     android:orientation="vertical"
-                    android:paddingLeft="32dp"
-                    android:paddingRight="16dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
                     android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp">
+                    android:layout_marginRight="8dp"
+                    android:paddingTop="8dp">
 
                     <TextView
                         android:id="@+id/launch_vehicle_specs_height"
-                        style="@style/LightTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -135,7 +134,7 @@
 
                     <TextView
                         android:id="@+id/launch_vehicle_specs_diameter"
-                        style="@style/LightTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -150,7 +149,7 @@
 
                     <TextView
                         android:id="@+id/launch_vehicle_specs_stages"
-                        style="@style/LightTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -165,7 +164,7 @@
 
                     <TextView
                         android:id="@+id/launch_vehicle_specs_leo"
-                        style="@style/LightTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -180,7 +179,7 @@
 
                     <TextView
                         android:id="@+id/launch_vehicle_specs_gto"
-                        style="@style/LightTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -195,7 +194,7 @@
 
                     <TextView
                         android:id="@+id/launch_vehicle_specs_launch_mass"
-                        style="@style/LightTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -210,7 +209,7 @@
 
                     <TextView
                         android:id="@+id/launch_vehicle_specs_thrust"
-                        style="@style/LightTheme"
+                        
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -226,7 +225,7 @@
 
             <!-- title -->
             <LinearLayout
-                style="@style/LightTheme"
+                
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="bottom"
@@ -274,7 +273,8 @@
         android:clickable="true"
         android:elevation="8dp"
         app:srcCompat="@drawable/ic_fullscreen"
-        app:backgroundTint="@color/darkAccent"
+        app:backgroundTint="@color/colorPrimary"
         app:layout_anchor="@id/item_icon"
         app:layout_anchorGravity="bottom|right|end"/>
+
 </android.support.design.widget.CoordinatorLayout>

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatDelegate;
 import android.text.format.DateFormat;
 import android.zetterstrom.com.forecast.ForecastClient;
 import android.zetterstrom.com.forecast.ForecastConfiguration;
@@ -30,21 +31,18 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
-import me.calebjones.spacelaunchnow.content.services.MissionDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
-import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import timber.log.Timber;
 
 
 public class LaunchApplication extends Application {
 
-    private static LaunchApplication mInstance;
     public static final String TAG = "Space Launch Now";
-
     public OkHttpClient client;
+    private static LaunchApplication mInstance;
     private static ListPreferences sharedPreference;
     private SwitchPreferences switchPreferences;
     private SharedPreferences sharedPref;
@@ -126,6 +124,16 @@ public class LaunchApplication extends Application {
 
         sharedPreference = ListPreferences.getInstance(this);
         switchPreferences = SwitchPreferences.getInstance(this);
+
+        if(sharedPreference.isDayNightEnabled()){
+            if(sharedPreference.isDayNightAutoEnabled()){
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            }
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
 
         checkSubscriptions();
 

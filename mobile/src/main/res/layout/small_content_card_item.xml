@@ -102,14 +102,14 @@
                     android:padding="8dp">
 
                     <LinearLayout
-                        style="@style/LightTheme"
+                        style="@style/BaseAppTheme"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/content_status"
-                            style="@style/LightTheme"
+                            style="@style/BaseAppTheme"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
@@ -122,19 +122,18 @@
                             android:textColor="?android:textColorSecondary"
                             android:textIsSelectable="false"
                             android:textSize="20dp"
-                            android:textStyle="bold"
-                            android:theme="@style/LightTheme" />
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <LinearLayout
-                        style="@style/LightTheme"
+                        style="@style/BaseAppTheme"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/content_TMinus_status"
-                            style="@style/LightTheme"
+                            style="@style/BaseAppTheme"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
@@ -143,8 +142,7 @@
                             android:text="Unknown CountDown Status"
                             android:textAlignment="center"
                             android:textColor="?android:textColorSecondary"
-                            android:textSize="14sp"
-                            android:theme="@style/LightTheme" />
+                            android:textSize="14sp" />
 
                     </LinearLayout>
 

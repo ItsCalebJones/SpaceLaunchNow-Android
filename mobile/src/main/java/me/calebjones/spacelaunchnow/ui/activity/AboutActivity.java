@@ -22,12 +22,7 @@ public class AboutActivity extends LibsActivity {
 
         ListPreferences sharedPreference = ListPreferences.getInstance(this);
 
-        if (sharedPreference.getNightMode()) {
-            m_theme = R.style.AboutLibrariesDark;
-        } else {
-            m_theme = R.style.AboutLibrariesLight;
-        }
-
+        m_theme = R.style.AboutLibrariesLight;
 
         LibsConfiguration.LibsListener libsListener = new LibsConfiguration.LibsListener() {
             @Override

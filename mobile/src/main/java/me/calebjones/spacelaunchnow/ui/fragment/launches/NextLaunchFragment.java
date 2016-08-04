@@ -130,7 +130,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     .setTarget(pinMenuItem)
                     .setContentTitle("Launch Filtering")
                     .setContentText("Only receive notifications for launches that you care about.");
-            if (sharedPreference.getNightMode()) {
+            if (sharedPreference.isNightModeActive(context)) {
                 builder.setStyle(R.style.ShowCaseThemeDark).replaceEndButton(customButton).hideOnTouchOutside().build();
             } else {
                 builder.setStyle(R.style.ShowCaseThemeLight).replaceEndButton(customButton).hideOnTouchOutside().build();
@@ -156,11 +156,12 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             }
         }
 
-        if (sharedPreference.getNightMode()) {
+        if (sharedPreference.isNightModeActive(context)) {
             color = R.color.darkPrimary;
         } else {
             color = R.color.colorPrimary;
         }
+
 
         sharedPreference = ListPreferences.getInstance(context);
 

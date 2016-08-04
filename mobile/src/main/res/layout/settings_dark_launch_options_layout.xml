@@ -13,7 +13,8 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:layout_width="wrap_content"
-        app:srcCompat="@drawable/ic_settings_applications_white" />
+        app:srcCompat="@drawable/ic_settings_white" />
+
     <TextView android:id="@+id/tvTitle"
         android:layout_height="wrap_content"
         android:layout_marginLeft="32dp"

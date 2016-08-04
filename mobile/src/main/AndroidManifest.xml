@@ -25,12 +25,12 @@
         android:icon="@mipmap/ic_launcher"
         android:label="${appNameLabel}"
         android:supportsRtl="true"
-        android:theme="@style/LightTheme"
+        android:theme="@style/BaseAppTheme"
         tools:replace="label">
         <activity
             android:name=".ui.activity.MainActivity"
             android:configChanges="screenSize"
-            android:theme="@style/LightTheme.Launcher"
+            android:theme="@style/BaseAppTheme.Launcher"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -52,7 +52,7 @@
         <activity
             android:name=".ui.activity.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/LightTheme" />
+            android:theme="@style/BaseAppTheme" />
         <activity android:name=".ui.activity.OrbiterDetailActivity" />
         <activity android:name=".ui.activity.LauncherDetailActivity" />
 
@@ -90,7 +90,7 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.activity.AboutActivity"
-            android:theme="@style/LightTheme" />
+            android:theme="@style/BaseAppTheme" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -99,7 +99,7 @@
         <activity
             android:name=".ui.activity.DebugActivity"
             android:label="@string/title_activity_debug"
-            android:theme="@style/LightTheme" />
+            android:theme="@style/BaseAppTheme" />
         <activity
             android:name=".ui.activity.FullscreenImageActivity"
             android:label="@string/title_activity_fullscreen_image"
@@ -116,17 +116,17 @@
 
         <activity
             android:name=".ui.activity.SupportActivity"
-            android:theme="@style/LightTheme" />
+            android:theme="@style/BaseAppTheme" />
         <activity android:name=".ui.activity.BaseActivity" />
         <activity
             android:name=".ui.activity.DownloadActivity"
             android:label="@string/title_activity_download"
-            android:theme="@style/LightTheme" />
+            android:theme="@style/BaseAppTheme" />
         <activity
             android:name=".ui.activity.WebViewFallbackActivity"
             android:label="@string/title_activity_web_view_fallback"
             android:parentActivityName=".ui.activity.MainActivity"
-            android:theme="@style/LightTheme">
+            android:theme="@style/BaseAppTheme">
         </activity>
     </application>
 

@@ -79,13 +79,12 @@ public class LaunchDetailActivity extends BaseActivity
         customTabActivityHelper = new CustomTabActivityHelper();
         sharedPreference = ListPreferences.getInstance(context);
 
-        if (sharedPreference.getNightMode()) {
-            m_theme = R.style.DarkTheme;
+        if (sharedPreference.isNightModeActive(this)) {
             statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
         } else {
-            m_theme = R.style.LightTheme;
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
         }
+        m_theme = R.style.BaseAppTheme;
 
         if (getSharedPreferences("theme_changed", 0).getBoolean("recreate", false)) {
             SharedPreferences.Editor editor = getSharedPreferences("theme_changed", 0).edit();

@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="LightTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="BaseAppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="preferenceTheme">@style/PreferenceTheme</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -18,28 +18,10 @@
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:textColorHighlight">@color/colorPrimaryLight</item>
     </style>
 
-    <style name="DarkTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="preferenceTheme">@style/PreferenceTheme</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="popupMenuStyle">@style/PopupMenuDark</item>
-        <item name="colorPrimary">@color/darkPrimary</item>
-        <item name="colorPrimaryDark">@color/darkPrimary_dark</item>
-        <item name="colorAccent">@color/darkAccent</item>
-        <item name="android:colorControlActivated">@color/materialGrey</item>
-        <item name="android:statusBarColor">@color/darkPrimary_dark</item>
-        <item name="colorControlNormal">@color/darkIcons</item>
-        <item name="android:windowActivityTransitions">true</item>
-        <item name="md_background_color">@color/dark_card_background</item>
-
-        <!-- enable overlap of transitions -->
-        <item name="android:windowContentTransitions">true</item>
-        <item name="android:windowAllowEnterTransitionOverlap">true</item>
-        <item name="android:windowAllowReturnTransitionOverlap">true</item>
-    </style>
-
-    <style name="LightTheme.Transparent" parent="LightTheme">
+    <style name="BaseAppTheme.Transparent" parent="BaseAppTheme">
         <item name="android:windowTranslucentStatus">true</item>
         <!-- enable overlapping of exiting and entering activities-->
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
@@ -49,12 +31,6 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="DarkTheme.Transparent" parent="DarkTheme">
-        <item name="android:windowTranslucentStatus">true</item>
-        <!-- enable overlapping of exiting and entering activities-->
-        <item name="android:windowAllowEnterTransitionOverlap">true</item>
-        <item name="android:windowAllowReturnTransitionOverlap">true</item>
-    </style>
 
     <style name="PreferenceTheme" parent="@style/PreferenceThemeOverlay">
         <item name="preferenceScreenStyle">@style/Preference.PreferenceScreen</item>
@@ -104,7 +80,7 @@
         <item name="dialogLayout">@layout/preference_dialog_edittext_material_custom</item>
     </style>
 
-    <style name="LightTheme.SimpleCoordinatorTheme">
+    <style name="BaseAppTheme.SimpleCoordinatorTheme">
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>

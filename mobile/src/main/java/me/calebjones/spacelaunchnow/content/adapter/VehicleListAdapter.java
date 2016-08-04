@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -81,15 +80,13 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
         sharedPreference = ListPreferences.getInstance(mContext);
 
-        if (sharedPreference.getNightMode()) {
-            m_theme = R.layout.dark_vehicle_list_item;
+        if (sharedPreference.isNightModeActive(mContext)) {
             defaultBackgroundcolor = ContextCompat.getColor(mContext, R.color.colorAccent);
         } else {
-            m_theme = R.layout.light_vehicle_list_item;
             defaultBackgroundcolor = ContextCompat.getColor(mContext, R.color.darkAccent);
         }
 
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(m_theme, viewGroup, false);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.vehicle_list_item, viewGroup, false);
         return new ViewHolder(v);
     }
 

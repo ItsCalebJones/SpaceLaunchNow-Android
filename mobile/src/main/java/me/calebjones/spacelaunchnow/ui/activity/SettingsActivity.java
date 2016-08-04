@@ -9,10 +9,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
@@ -22,19 +20,14 @@ import android.widget.Toast;
 
 import com.github.jrejaud.wear_socket.WearSocket;
 import com.google.android.gms.wearable.Asset;
-import com.google.android.gms.wearable.PutDataMapRequest;
-import com.google.android.gms.wearable.PutDataRequest;
-import com.google.android.gms.wearable.Wearable;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.ui.fragment.settings.NestedPreferenceFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.settings.SettingsFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.settings.SettingsFragment.Callback;
-import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import timber.log.Timber;
 
 public class SettingsActivity extends AppCompatActivity implements Callback {
@@ -56,11 +49,11 @@ public class SettingsActivity extends AppCompatActivity implements Callback {
 
         sharedPreference = ListPreferences.getInstance(this.context);
 
-        if (sharedPreference.getNightMode()) {
-            m_theme = R.style.DarkTheme_NoActionBar;
-        } else {
-            m_theme = R.style.LightTheme_NoActionBar;
-        }
+//        if (sharedPreference.isDayNightEnabled()) {
+//        } else {
+//        }
+
+        m_theme = R.style.LightTheme_NoActionBar;
         setTheme(m_theme);
 
         super.onCreate(savedInstanceState);
@@ -148,8 +141,6 @@ public class SettingsActivity extends AppCompatActivity implements Callback {
         bitmap.compress(Bitmap.CompressFormat.PNG, 50, byteStream);
         return Asset.createFromBytes(byteStream.toByteArray());
     }
-
-
 
     // Convert the image URI to the direct file system path
     public String getRealPathFromURI(Uri contentUri) {

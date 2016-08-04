@@ -30,39 +30,39 @@ import java.util.List;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.OrbiterAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.interfaces.APIRequestInterface;
 import me.calebjones.spacelaunchnow.content.models.natives.Orbiter;
 import me.calebjones.spacelaunchnow.content.responses.base.OrbiterResponse;
-import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.ui.activity.OrbiterDetailActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.CustomFragment;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
-import me.calebjones.spacelaunchnow.content.interfaces.APIRequestInterface;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
 public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private ListPreferences sharedPreference;
     private android.content.SharedPreferences SharedPreferences;
-    private Context context;
+    private static Context context;
     private View view;
     private OrbiterAdapter adapter;
     private RecyclerView mRecyclerView;
     private GridLayoutManager layoutManager;
     private CoordinatorLayout coordinatorLayout;
     private SwipeRefreshLayout swipeRefreshLayout;
+
     private List<Orbiter> items = new ArrayList<Orbiter>();
     public static SparseArray<Bitmap> photoCache = new SparseArray<Bitmap>(1);
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getActivity());
         this.sharedPreference = ListPreferences.getInstance(getContext());
         adapter = new OrbiterAdapter(getActivity().getApplicationContext());
+        context = getActivity().getApplicationContext();
     }
 
     @Override
@@ -70,15 +70,10 @@ public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayou
                              Bundle savedInstanceState) {
         int m_theme;
 
-        this.context = getActivity().getApplicationContext();
+        sharedPreference = ListPreferences.getInstance(context);
 
-        sharedPreference = ListPreferences.getInstance(this.context);
+        m_theme = R.style.LightTheme_NoActionBar;
 
-        if (sharedPreference.getNightMode()) {
-            m_theme = R.style.DarkTheme_NoActionBar;
-        } else {
-            m_theme = R.style.LightTheme_NoActionBar;
-        }
         // create ContextThemeWrapper from the original Activity Context with the custom theme
         Context context = new ContextThemeWrapper(getActivity().getApplicationContext(), m_theme);
         // clone the inflater using the ContextThemeWrapper
@@ -120,18 +115,17 @@ public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayou
 
     @Override
     public void onResume(){
-        loadJSON();
+        if(adapter.getItemCount() == 0) {
+            loadJSON();
+        }
         super.onResume();
     }
 
-    private void loadJSON(){
-        Timber.v("Loading orbiters...");
+    private void loadJSON() {
+        Timber.v("Loading vehicles...");
         showLoading();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Strings.API_BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        APIRequestInterface request = retrofit.create(APIRequestInterface.class);
+
+        APIRequestInterface request = getRetrofit().create(APIRequestInterface.class);
         Call<OrbiterResponse> call = request.getOrbiter();
         call.enqueue(new Callback<OrbiterResponse>() {
             @Override

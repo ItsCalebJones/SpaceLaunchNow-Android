@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -59,11 +58,11 @@ public class SupportActivity extends BaseActivity implements BillingProcessor.IB
 
         ListPreferences sharedPreference = ListPreferences.getInstance(context);
 
-        if (sharedPreference.getNightMode()) {
-            m_theme = R.style.DarkTheme;
-        } else {
-            m_theme = R.style.LightTheme;
-        }
+//        if (sharedPreference.isDayNightEnabled()) {
+//        } else {
+//        }
+
+        m_theme = R.style.BaseAppTheme;
         setTheme(m_theme);
 
         setContentView(R.layout.activity_support);

@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:transitionGroup="true"
     android:textAlignment="center"
-    style="@style/TextAppearance.AppCompat.Headline">
+    android:transitionGroup="true">
 
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
+        android:layout_marginLeft="@dimen/card_margin"
+        android:layout_marginRight="@dimen/card_margin"
         android:animateLayoutChanges="true"
-        card_view:cardBackgroundColor="@color/dark_card_background"
         card_view:cardCornerRadius="0dp"
         card_view:cardElevation="4dp"
         card_view:cardPreventCornerOverlap="true"
@@ -41,21 +37,22 @@
                     android:layout_width="96dp"
                     android:layout_height="96dp"
                     android:layout_gravity="center"
-                    app:srcCompat="@drawable/ic_unknown_white"
+                    android:padding="16dp"
                     android:scaleType="centerCrop"
-                    android:padding="16dp" />
+                    app:srcCompat="@drawable/ic_unknown" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginLeft="4dp">
+                    android:layout_marginLeft="4dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/launch_rocket"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="16dp"
+                        android:layout_marginTop="8dp"
                         android:fontFamily="sans-serif-condensed"
                         android:gravity="left"
                         android:maxLines="2"
@@ -63,13 +60,13 @@
                         android:text="Unknown Launch Vehicle"
                         android:textColor="?android:textColorPrimary"
                         android:textSize="18sp"
-                        android:textStyle="normal"
-                        android:layout_marginTop="8dp" />
+                        android:textStyle="normal" />
 
                     <TextView
                         android:id="@+id/location"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
                         android:ellipsize="end"
                         android:gravity="left"
                         android:maxLines="2"
@@ -93,7 +90,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:elevation="0dp">
 
                 <View
                     android:id="@+id/separator"
@@ -102,15 +100,15 @@
                     android:background="@color/View_Separator"
                     android:padding="32dp" />
 
-                <me.calebjones.spacelaunchnow.ui.widget.StaticMapView
+                <ImageView
                     android:id="@+id/map_view"
                     android:layout_width="fill_parent"
                     android:layout_height="160dp"
-                    android:scaleType="centerCrop"
-                    app:aspectRatio="2" />
+                    android:contentDescription="A map view of launch location."
+                    android:scaleType="centerCrop" />
 
 
-                <android.support.design.widget.FloatingActionButton
+                <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/fab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -120,11 +118,11 @@
                     android:layout_marginRight="20dp"
                     android:clickable="true"
                     android:elevation="8dp"
+                    app:backgroundTint="@color/colorAccentLight"
                     app:srcCompat="@drawable/ic_explore" />
 
                 <TextView
                     android:id="@+id/content_status"
-                    style="@style/DarkTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/map_view"
@@ -145,9 +143,9 @@
                 android:id="@+id/separator_mission"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginLeft="24dp"
                 android:layout_marginRight="24dp"
+                android:layout_marginTop="8dp"
                 android:background="@color/View_Separator"
                 android:padding="12dp" />
 
@@ -161,14 +159,19 @@
                 android:paddingTop="8dp">
 
                 <LinearLayout
-                    style="@style/DarkTheme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/content_TMinus_status"
-                        style="@style/DarkTheme"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -177,25 +180,23 @@
                         android:text="Unknown CountDown Status"
                         android:textAlignment="center"
                         android:textColor="?android:textColorSecondary"
-                        android:textSize="16sp"
-                        android:theme="@style/DarkTheme"
-                        android:textIsSelectable="false" />
+                        android:textSize="16sp" />
 
                     <LinearLayout
                         android:id="@+id/countdown_layout"
                         android:layout_width="match_parent"
-                        android:layout_height="90dp"
+                        android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:weightSum="4.0"
-                        android:layout_marginLeft="30dp"
-                        android:layout_marginRight="30dp" >
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp">
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_height="90dp"
+                            android:layout_height="match_parent"
                             android:layout_weight="1.0"
-                            android:gravity="center"
-                            android:orientation="vertical" >
+                            android:gravity="center|top"
+                            android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -224,16 +225,16 @@
                             android:scaleX="1.0"
                             android:scaleY="1.0"
                             android:text=":"
-                            android:gravity="center"
+                            android:gravity="center|top"
                             android:layout_marginBottom="15dp"
                             android:textSize="45dp" />
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_height="90dp"
+                            android:layout_height="match_parent"
                             android:layout_weight="1.0"
-                            android:gravity="center"
-                            android:orientation="vertical" >
+                            android:gravity="center|top"
+                            android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -260,16 +261,16 @@
                             android:scaleX="1.0"
                             android:scaleY="1.0"
                             android:text=":"
-                            android:gravity="center"
+                            android:gravity="center|top"
                             android:layout_marginBottom="15dp"
                             android:textSize="45dp" />
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_height="90dp"
+                            android:layout_height="match_parent"
                             android:layout_weight="1.0"
-                            android:gravity="center"
-                            android:orientation="vertical" >
+                            android:gravity="center|top"
+                            android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -296,16 +297,16 @@
                             android:scaleX="1.0"
                             android:scaleY="1.0"
                             android:text=":"
-                            android:gravity="center"
+                            android:gravity="center|top"
                             android:layout_marginBottom="15dp"
                             android:textSize="45dp" />
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_height="90dp"
+                            android:layout_height="match_parent"
                             android:layout_weight="1.0"
                             android:gravity="center"
-                            android:orientation="vertical" >
+                            android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -325,6 +326,7 @@
                                 android:lines="1" />
                         </LinearLayout>
                     </LinearLayout>
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -339,13 +341,13 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
                     android:layout_marginLeft="24dp"
                     android:layout_marginRight="24dp"
-                    android:paddingBottom="8dp"
+                    android:layout_marginTop="8dp"
                     android:background="@color/View_Separator"
-                    android:padding="12dp" />
+                    android:padding="12dp"
+                    android:paddingBottom="8dp" />
 
                 <TextView
                     android:id="@+id/content_mission"
@@ -362,10 +364,10 @@
                     android:id="@+id/content_mission_description"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingTop="8dp"
                     android:paddingBottom="8dp"
                     android:paddingLeft="28dp"
                     android:paddingRight="28dp"
+                    android:paddingTop="8dp"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -382,12 +384,12 @@
                     android:layout_alignParentBottom="false"
                     android:layout_alignParentLeft="false"
                     android:layout_alignParentTop="false"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="2dp"
                     android:gravity="center"
                     android:text="Watch Live"
                     android:textColor="@color/white"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="2dp"
                     android:textSize="12sp" />
 
                 <android.support.v7.widget.AppCompatButton
@@ -402,7 +404,7 @@
                     android:layout_marginRight="10dp"
                     android:padding="10dp"
                     android:text="Share"
-                    android:textColor="@color/material_grey_300" />
+                    android:textColor="?android:textColorHighlight" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/exploreButton"
@@ -413,7 +415,7 @@
                     android:layout_gravity="right"
                     android:layout_toLeftOf="@id/shareButton"
                     android:text="Explore"
-                    android:textColor="@color/material_grey_300" />
+                    android:textColor="?android:textColorHighlight" />
             </RelativeLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>

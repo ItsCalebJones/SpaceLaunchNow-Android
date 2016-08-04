@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.natives.RocketDetails;
@@ -29,14 +31,59 @@ public class AgencyDetailFragment extends Fragment {
 
     public static LaunchRealm detailLaunch;
     private RocketDetails launchVehicle;
-    private LinearLayout mission_one, mission_two, launch_one, launch_two;
-    private TextView mission_agency_type, mission_agency_one, mission_agency_type_one,
-            mission_infoButton_one, mission_wikiButton_one, mission_agency_two,
-            mission_agency_type_two, mission_infoButton_two, mission_wikiButton_two,
-            launch_agency_type, launch_vehicle_agency_one, launch_agency_type_one, infoButton_one,
-            wikiButton_one, launch_vehicle_agency_two, launch_agency_type_two, infoButton_two,
-            wikiButton_two, launch_agency_summary_one,launch_agency_summary_two,
-            mission_agency_summary_one, mission_agency_summary_two;
+
+    @BindView(R.id.mission_one)
+    LinearLayout mission_one;
+    @BindView(R.id.mission_two)
+    LinearLayout mission_two;
+    @BindView(R.id.agency_one)
+    LinearLayout launch_one;
+    @BindView(R.id.agency_two)
+    LinearLayout launch_two;
+    @BindView(R.id.mission_agency_type)
+    TextView mission_agency_type;
+    @BindView(R.id.mission_vehicle_agency_one)
+    TextView mission_agency_one;
+    @BindView(R.id.mission_agency_type_one)
+    TextView mission_agency_type_one;
+    @BindView(R.id.mission_infoButton_one)
+    TextView mission_infoButton_one;
+    @BindView(R.id.mission_wikiButton_one)
+    TextView mission_wikiButton_one;
+    @BindView(R.id.mission_vehicle_agency_two)
+    TextView mission_agency_two;
+    @BindView(R.id.mission_agency_type_two)
+    TextView mission_agency_type_two;
+    @BindView(R.id.mission_infoButton_two)
+    TextView mission_infoButton_two;
+    @BindView(R.id.mission_wikiButton_two)
+    TextView mission_wikiButton_two;
+    @BindView(R.id.launch_agency_type)
+    TextView launch_agency_type;
+    @BindView(R.id.launch_vehicle_agency_one)
+    TextView launch_vehicle_agency_one;
+    @BindView(R.id.launch_agency_type_one)
+    TextView launch_agency_type_one;
+    @BindView(R.id.infoButton_one)
+    TextView infoButton_one;
+    @BindView(R.id.wikiButton_one)
+    TextView wikiButton_one;
+    @BindView(R.id.launch_vehicle_agency_two)
+    TextView launch_vehicle_agency_two;
+    @BindView(R.id.launch_agency_type_two)
+    TextView launch_agency_type_two;
+    @BindView(R.id.infoButton_two)
+    TextView infoButton_two;
+    @BindView(R.id.wikiButton_two)
+    TextView wikiButton_two;
+    @BindView(R.id.launch_agency_summary_one)
+    TextView launch_agency_summary_one;
+    @BindView(R.id.launch_agency_summary_two)
+    TextView launch_agency_summary_two;
+    @BindView(R.id.mission_agency_summary_one)
+    TextView mission_agency_summary_one;
+    @BindView(R.id.mission_agency_summary_two)
+    TextView mission_agency_summary_two;
 
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,47 +93,9 @@ public class AgencyDetailFragment extends Fragment {
 
         sharedPreference = ListPreferences.getInstance(this.context);
 
+        view = inflater.inflate(R.layout.detail_launch_agency, container, false);
 
-        if (sharedPreference.getNightMode()) {
-            view = inflater.inflate(R.layout.dark_launch_agency, container, false);
-        } else {
-            view = inflater.inflate(R.layout.light_launch_agency, container, false);
-        }
-
-        mission_one = (LinearLayout) view.findViewById(R.id.mission_one);
-        mission_two = (LinearLayout) view.findViewById(R.id.mission_two);
-
-        mission_agency_type = (TextView) view.findViewById(R.id.mission_agency_type);
-
-        mission_agency_one = (TextView) view.findViewById(R.id.mission_vehicle_agency_one);
-        mission_agency_type_one = (TextView) view.findViewById(R.id.mission_agency_type_one);
-        mission_agency_summary_one = (TextView) view.findViewById(R.id.mission_agency_summary_one);
-        mission_infoButton_one = (TextView) view.findViewById(R.id.mission_infoButton_one);
-        mission_wikiButton_one  = (TextView) view.findViewById(R.id.mission_wikiButton_one);
-
-        mission_agency_two = (TextView) view.findViewById(R.id.mission_vehicle_agency_two);
-        mission_agency_type_two = (TextView) view.findViewById(R.id.mission_agency_type_two);
-        mission_agency_summary_two = (TextView) view.findViewById(R.id.mission_agency_summary_two);
-        mission_infoButton_two = (TextView) view.findViewById(R.id.mission_infoButton_two);
-        mission_wikiButton_two  = (TextView) view.findViewById(R.id.mission_wikiButton_two);
-
-        launch_one = (LinearLayout) view.findViewById(R.id.agency_one);
-        launch_two = (LinearLayout) view.findViewById(R.id.agency_two);
-
-        launch_agency_type = (TextView) view.findViewById(R.id.launch_agency_type);
-
-        launch_vehicle_agency_one = (TextView) view.findViewById(R.id.launch_vehicle_agency_one);
-        launch_agency_type_one = (TextView) view.findViewById(R.id.launch_agency_type_one);
-        launch_agency_summary_one = (TextView) view.findViewById(R.id.launch_agency_summary_one);
-        launch_agency_type_one = (TextView) view.findViewById(R.id.launch_agency_type_one);
-        infoButton_one = (TextView) view.findViewById(R.id.infoButton_one);
-        wikiButton_one  = (TextView) view.findViewById(R.id.wikiButton_one);
-
-        launch_vehicle_agency_two = (TextView) view.findViewById(R.id.launch_vehicle_agency_two);
-        launch_agency_type_two = (TextView) view.findViewById(R.id.launch_agency_type_two);
-        launch_agency_summary_two = (TextView) view.findViewById(R.id.launch_agency_summary_two);
-        infoButton_two = (TextView) view.findViewById(R.id.infoButton_two);
-        wikiButton_two  = (TextView) view.findViewById(R.id.wikiButton_two);
+        ButterKnife.bind(this, view);
 
         setUpViews();
         return view;
