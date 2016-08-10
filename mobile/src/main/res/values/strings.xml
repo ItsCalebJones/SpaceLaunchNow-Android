@@ -34,16 +34,9 @@
     <string name="title_activity_debug">DebugActivity</string>
     <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
 
-    <string name="whats_new_content">1.2.1 Hotfix!\n
-        \u2022Fixed issues with Countdown timer.\n
-        \u2022Fixed an issue with reading dates properly from Launch Library.\n
-        \u2022Added a few code optimizations.\n\n
-        1.2.0 - Fixes and Features!\n
-        \u2022Add weather card for launch sites - Supporter Feature.\n
-        \u2022Updated UI for various cards.\n
-        \u2022Updated countdown timer - Work in progress.\n
-        \u2022Update 3rd party libs.\n
-        \u2022Bug fixes and crashes.\n
+    <string name="whats_new_content">1.3.0 - The Widget Update
+        \u2022Add Auto Day/Night Theme - seems to work best on Android N. (Thanks Google!)\n
+        \u2022Add a basic Countdown widget, more to come!\n
     </string>
     <string name="link_feedback">https://www.reddit.com/r/spacelaunchnow</string>
     <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>
