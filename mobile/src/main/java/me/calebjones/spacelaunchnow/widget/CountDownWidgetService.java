@@ -31,6 +31,7 @@ public class CountDownWidgetService extends Service {
         Timber.v("updateWidget - called");
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, CountDownWidgetProvider.class));
+
         if (appWidgetIds.length > 0) {
             Context baseContext = getBaseContext();
 
