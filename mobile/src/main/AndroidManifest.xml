@@ -114,6 +114,8 @@
             android:name=".content.services.CalendarSyncService"
             android:exported="false" />
 
+        <service android:name=".widget.CountDownWidgetService" android:exported="true"/>
+
         <activity
             android:name=".ui.activity.SupportActivity"
             android:theme="@style/BaseAppTheme" />
@@ -128,6 +130,14 @@
             android:parentActivityName=".ui.activity.MainActivity"
             android:theme="@style/BaseAppTheme">
         </activity>
+
+        <receiver android:name=".widget.CountDownWidgetProvider" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/countdown_widget_info" />
+        </receiver>
     </application>
 
 </manifest>

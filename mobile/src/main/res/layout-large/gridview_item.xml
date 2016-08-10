@@ -14,7 +14,7 @@
     app:cardCornerRadius="2dp"
     app:cardElevation="4dp">
 
-    <me.calebjones.spacelaunchnow.ui.widget.SquareImageView
+    <me.calebjones.spacelaunchnow.ui.customviews.SquareImageView
         android:id="@+id/picture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
