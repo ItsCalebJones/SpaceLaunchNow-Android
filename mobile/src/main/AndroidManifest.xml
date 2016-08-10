@@ -131,7 +131,8 @@
             android:theme="@style/BaseAppTheme">
         </activity>
 
-        <receiver android:name=".widget.CountDownWidgetProvider" >
+        <receiver android:name=".widget.CountDownWidgetProvider"
+            android:label="Countdown Timer">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

@@ -2,9 +2,9 @@ package me.calebjones.spacelaunchnow.widget;
 
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.widget.RemoteViews;
 
 import java.util.Calendar;
@@ -24,45 +24,53 @@ import timber.log.Timber;
 public class CountDownWidgetProvider extends AppWidgetProvider {
 
     private Realm mRealm;
-    private RealmResults<LaunchRealm> launchRealms;
+    private LaunchRealm launchRealm;
     public RemoteViews remoteViews;
     public SwitchPreferences switchPreferences;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        Timber.v("onUpdate");
         final int count = appWidgetIds.length;
 
+        launchRealm = getLaunch(context);
+
         for (int widgetId : appWidgetIds) {
+            Bundle options = appWidgetManager.getAppWidgetOptions(widgetId);
+
             // Update The clock label using a shared method
-            updateAppWidget(context, appWidgetManager, widgetId);
+            updateAppWidget(context, appWidgetManager, widgetId, options, launchRealm);
+        }
+        if (!mRealm.isClosed()) {
+            mRealm.close();
         }
     }
 
     @Override
     public void onEnabled(Context context) {
+        Timber.v("Widget placed, starting service...");
         // Enter relevant functionality for when the first widget is created
-        context.startService(new Intent(context,  CountDownWidgetService.class));
+        context.startService(new Intent(context, CountDownWidgetService.class));
     }
 
     @Override
     public void onDisabled(Context context) {
+        Timber.v("Widget(s) removed, stopping service...");
         // Enter relevant functionality for when the last widget is disabled
         context.stopService(new Intent(context, CountDownWidgetService.class));
     }
 
-    public void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int widgetId) {
-        //Get Switch config
-        switchPreferences = SwitchPreferences.getInstance(context);
-
-        // Create a new empty instance of Realm
-        mRealm = Realm.getDefaultInstance();
-
+    private LaunchRealm getLaunch(Context context) {
         Date date = new Date();
 
-        //TODO get widget settings and apply correct layout
-        remoteViews = new RemoteViews(context.getPackageName(),
-                R.layout.countdown_widget_dark);
+        switchPreferences = SwitchPreferences.getInstance(context);
 
+        if (mRealm == null || mRealm.isClosed()) {
+            // Create a new empty instance of Realm
+            mRealm = Realm.getDefaultInstance();
+        }
+
+        RealmResults<LaunchRealm> launchRealms;
         if (switchPreferences.getAllSwitch()) {
             launchRealms = mRealm.where(LaunchRealm.class)
                     .greaterThanOrEqualTo("net", date)
@@ -75,19 +83,49 @@ public class CountDownWidgetProvider extends AppWidgetProvider {
 
         for (LaunchRealm launch : launchRealms) {
             if (launch.getNetstamp() != 0) {
-                setLaunchName(context, launch, remoteViews);
-                setMissionName(context, launch, remoteViews);
-                setLaunchTimer(context, launch, remoteViews, appWidgetManager, widgetId);
-                break;
+                return launch;
             }
         }
+        return null;
+    }
+
+    public void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int widgetId, Bundle options, LaunchRealm launch) {
+        int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
+        int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
+        int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
+        int maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
+
+        Timber.v("Size: [%s-%s] x [%s-%s]", minWidth, maxWidth, minHeight, maxHeight);
+
+        if (maxWidth <= 200 || maxHeight <= 100) {
+            remoteViews = new RemoteViews(context.getPackageName(),
+                    R.layout.countdown_widget_compact_dark);
+        } else if (maxWidth <= 420 || maxHeight <= 175) {
+            remoteViews = new RemoteViews(context.getPackageName(),
+                    R.layout.countdown_widget_small_dark);
+        } else if (maxWidth <= 320 || maxHeight <= 175) {
+
+        } else {
+            remoteViews = new RemoteViews(context.getPackageName(),
+                    R.layout.countdown_widget_large_dark);
+        }
+
+        setLaunchName(context, launch, remoteViews, options);
+        setMissionName(context, launch, remoteViews, options);
+        setLaunchTimer(context, launch, remoteViews, appWidgetManager, widgetId);
 
         setWidgetStyle(context, remoteViews);
         setUpdateIntent(context, remoteViews, widgetId);
 
         appWidgetManager.updateAppWidget(widgetId, remoteViews);
+    }
 
-        mRealm.close();
+    @Override
+    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle options) {
+        if (launchRealm == null) {
+            launchRealm = getLaunch(context);
+        }
+        updateAppWidget(context, appWidgetManager, appWidgetId, options, launchRealm);
     }
 
     private void setUpdateIntent(Context context, RemoteViews remoteViews, int widgetId) {
@@ -193,25 +231,11 @@ public class CountDownWidgetProvider extends AppWidgetProvider {
         appWidgetManager.updateAppWidget(widgetId, remoteViews);
     }
 
-    public void setMissionName(Context context, LaunchRealm launchRealm, RemoteViews remoteViews) {
+    public void setMissionName(Context context, LaunchRealm launchRealm, RemoteViews remoteViews, Bundle options) {
         remoteViews.setTextViewText(R.id.widget_mission_name, getMissionName(launchRealm));
     }
 
-    public void setLaunchName(Context context, LaunchRealm launchRealm, RemoteViews remoteViews) {
+    public void setLaunchName(Context context, LaunchRealm launchRealm, RemoteViews remoteViews, Bundle options) {
         remoteViews.setTextViewText(R.id.widget_launch_name, getLaunchName(launchRealm));
-    }
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        super.onReceive(context, intent);
-        Timber.d("Clock update: %s", intent.getAction());
-        // Get the widget manager and ids for this widget provider, then call the shared
-        // clock update method.
-        ComponentName thisAppWidget = new ComponentName(context.getPackageName(), getClass().getName());
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        int ids[] = appWidgetManager.getAppWidgetIds(thisAppWidget);
-        for (int appWidgetID : ids) {
-            updateAppWidget(context, appWidgetManager, appWidgetID);
-        }
     }
 }

@@ -20,7 +20,7 @@
             android:fontFamily="sans-serif-condensed"
             android:gravity="center"
             android:textColor="@color/primary_text_dark"
-            android:textSize="24sp"
+            android:textSize="28sp"
             android:maxLines="1"/>
 
         <TextView
@@ -30,12 +30,12 @@
             android:fontFamily="sans-serif-condensed"
             android:gravity="center"
             android:textColor="@color/dark_theme_secondary_text_color"
-            android:textSize="16sp"
+            android:textSize="20sp"
             android:maxLines="1"/>
     </LinearLayout>
 
     <include
-        layout="@layout/countdown_layout_widget_small_dark"
+        layout="@layout/countdown_layout_widget_dark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

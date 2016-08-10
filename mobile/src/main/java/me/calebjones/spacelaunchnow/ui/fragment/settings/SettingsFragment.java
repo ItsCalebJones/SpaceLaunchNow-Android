@@ -63,11 +63,6 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
         sharedPreference = ListPreferences.getInstance(context);
 
         try {
-//            if (sharedPreference.isNightModeActive(context)) {
-//                addPreferencesFromResource(R.xml.dark_settings_fragment);
-//            } else {
-//                addPreferencesFromResource(R.xml.settings_fragment);
-//            }
             addPreferencesFromResource(R.xml.settings_fragment);
         } catch (NullPointerException e) {
             Crashlytics.logException(e);
@@ -86,6 +81,12 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
     }
 
     public void onResume() {
+        findPreference(NOTIFICATIONS).setOnPreferenceClickListener(this);
+        findPreference(LAUNCH_TRACKING_OPTIONS).setOnPreferenceClickListener(this);
+        findPreference(APPEARANCE).setOnPreferenceClickListener(this);
+        findPreference(WEAR).setOnPreferenceClickListener(this);
+        findPreference(ABOUT).setOnPreferenceClickListener(this);
+        findPreference(SUPPORT).setOnPreferenceClickListener(this);
         super.onResume();
     }
 }

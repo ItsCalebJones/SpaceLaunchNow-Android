@@ -5,7 +5,8 @@
     android:minWidth="320dp"
     android:minHeight="110dp"
     android:updatePeriodMillis="1800000"
-    android:initialLayout="@layout/countdown_widget_dark"
+    android:initialLayout="@layout/countdown_widget_large_dark"
     android:resizeMode="horizontal|vertical"
-    android:previewImage="@drawable/nav_header">
+    android:previewImage="@drawable/countdown_timer_preview"
+    >
 </appwidget-provider>
