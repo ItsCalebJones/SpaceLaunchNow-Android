@@ -13,8 +13,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -65,7 +63,7 @@ import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
-import me.calebjones.spacelaunchnow.ui.widget.SimpleDividerItemDecoration;
+import me.calebjones.spacelaunchnow.ui.customviews.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import timber.log.Timber;
 

@@ -347,7 +347,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
     private void filterLaunchRealm() {
-        launchRealms = QueryBuilder.buildSwitchQuery(context, getRealm());
+        launchRealms = QueryBuilder.buildSwitchQueryAsync(context, getRealm());
         launchRealms.addChangeListener(callback);
     }
 

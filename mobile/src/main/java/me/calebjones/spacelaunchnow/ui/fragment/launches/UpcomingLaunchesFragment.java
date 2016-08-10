@@ -13,7 +13,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -42,7 +41,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -57,7 +55,7 @@ import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
-import me.calebjones.spacelaunchnow.ui.widget.SimpleDividerItemDecoration;
+import me.calebjones.spacelaunchnow.ui.customviews.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import timber.log.Timber;
 
@@ -405,7 +403,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
 
 
     public void loadData() {
-        launchRealms = QueryBuilder.buildUpQuery(context, getRealm());
+        launchRealms = QueryBuilder.buildUpQueryAsync(context, getRealm());
         launchRealms.addChangeListener(callback);
     }
 

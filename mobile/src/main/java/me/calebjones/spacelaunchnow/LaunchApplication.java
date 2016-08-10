@@ -34,6 +34,7 @@ import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
+import me.calebjones.spacelaunchnow.widget.CountDownWidgetService;
 import okhttp3.OkHttpClient;
 import timber.log.Timber;
 
@@ -65,6 +66,8 @@ public class LaunchApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        startService(new Intent(this, CountDownWidgetService.class));
 
         //Init Crashlytics and gather device information.
         Fabric.with(this, new Crashlytics());
