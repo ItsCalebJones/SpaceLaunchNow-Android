@@ -8,7 +8,6 @@ import android.preference.PreferenceManager;
 
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
-import me.calebjones.spacelaunchnow.widget.CountDownWidgetService;
 
 
 public class BootReceiver extends BroadcastReceiver{
@@ -22,6 +21,5 @@ public class BootReceiver extends BroadcastReceiver{
             launchIntent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
             context.startService(launchIntent);
         }
-        context.startService(new Intent(context, CountDownWidgetService.class));
     }
 }

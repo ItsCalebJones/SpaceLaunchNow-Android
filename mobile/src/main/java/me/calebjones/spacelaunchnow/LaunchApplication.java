@@ -34,7 +34,6 @@ import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
-import me.calebjones.spacelaunchnow.widget.CountDownWidgetService;
 import okhttp3.OkHttpClient;
 import timber.log.Timber;
 
@@ -65,11 +64,12 @@ public class LaunchApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        startService(new Intent(this, CountDownWidgetService.class));
-
-        //Init Crashlytics and gather device information.
+        /*
+        * Init Crashlytics and gather additional device information.
+        * Always leave this at the top so it catches any init failures.
+        * Version 1.3.0-Beta had a bug where starting a service crashed before Crashlytics picked it up.
+        */
         Fabric.with(this, new Crashlytics());
         Crashlytics.setString("Timezone", String.valueOf(TimeZone.getDefault().getDisplayName()));
         Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
@@ -78,6 +78,8 @@ public class LaunchApplication extends Application {
         if (Connectivity.getNetworkInfo(this) != null){
             Crashlytics.setString("Network Info", Connectivity.getNetworkInfo(this).toString());
         }
+
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         LeakCanary.install(this);
         OneSignal.startInit(this).init();
@@ -96,6 +98,7 @@ public class LaunchApplication extends Application {
         RealmConfiguration realmConfig = new RealmConfiguration.Builder(this)
                 .deleteRealmIfMigrationNeeded()
                 .build();
+
         // Get a Realm instance for this thread
         Realm.setDefaultConfiguration(realmConfig);
 

@@ -39,6 +39,7 @@ import android.view.ViewPropertyAnimator;
 import android.view.animation.PathInterpolator;
 import android.webkit.URLUtil;
 import android.widget.ImageView;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -435,6 +436,103 @@ public class Utils {
                 imageView.setImageResource(R.drawable.ic_unknown_white);
             } else {
                 imageView.setImageResource(R.drawable.ic_unknown);
+            }
+        }
+    }
+
+    public static void setCategoryIcon(RemoteViews remoteViews, String type, Boolean night, Integer id) {
+        if (type != null) {
+            switch (type) {
+                case "Earth Science":
+                    if (night) {
+                        remoteViews.setImageViewResource(id, R.drawable.ic_earth_white);
+                    } else {
+                        remoteViews.setImageViewResource(id, R.drawable.ic_earth);
+                    }
+                    break;
+                case "Planetary Science":
+                    if (night) {
+                        remoteViews.setImageViewResource(id, R.drawable.ic_planetary_white);
+                    } else {
+                        remoteViews.setImageViewResource(id, R.drawable.ic_planetary);
+                    }
+                    break;
+                case "Astrophysics":
+                    if (night) {
+                        remoteViews.setImageViewResource(id, R.drawable.ic_astrophysics_white);
+                    } else {
+                        remoteViews.setImageViewResource(id, R.drawable.ic_astrophysics);
+                    }
+                    break;
+                case "Heliophysics":
+                    if (night) {
+                        remoteViews.setImageViewResource(id, R.drawable.ic_heliophysics_alt_white);
+                    } else {
+                        remoteViews.setImageViewResource(id, R.drawable.ic_heliophysics_alt);
+                    }
+                    break;
+                case "Human Exploration":
+                    if (night) {
+                        remoteViews.setImageViewResource(id, R.drawable.ic_human_explore_white);
+                    } else {
+                        remoteViews.setImageViewResource(id, R.drawable.ic_human_explore);
+                    }
+                    break;
+                case "Robotic Exploration":
+                    if (night) {
+                        remoteViews.setImageViewResource(id, R.drawable.ic_robotic_explore_white);
+                    } else {
+                        remoteViews.setImageViewResource(id, R.drawable.ic_robotic_explore);
+                    }
+                    break;
+                case "Government/Top Secret":
+                    if (night) {
+                        remoteViews.setImageViewResource(id, R.drawable.ic_top_secret_white);
+                    } else {
+                        remoteViews.setImageViewResource(id, R.drawable.ic_top_secret);
+                    }
+                    break;
+                case "Tourism":
+                    if (night) {
+                        remoteViews.setImageViewResource(id, R.drawable.ic_tourism_white);
+                    } else {
+                        remoteViews.setImageViewResource(id, R.drawable.ic_tourism);
+                    }
+                    break;
+                case "Unknown":
+                    if (night) {
+                        remoteViews.setImageViewResource(id, R.drawable.ic_unknown_white);
+                    } else {
+                        remoteViews.setImageViewResource(id, R.drawable.ic_unknown);
+                    }
+                    break;
+                case "Communications":
+                    if (night) {
+                        remoteViews.setImageViewResource(id, R.drawable.ic_satellite_white);
+                    } else {
+                        remoteViews.setImageViewResource(id, R.drawable.ic_satellite);
+                    }
+                    break;
+                case "Resupply":
+                    if (night) {
+                        remoteViews.setImageViewResource(id, R.drawable.ic_resupply_white);
+                    } else {
+                        remoteViews.setImageViewResource(id, R.drawable.ic_resupply);
+                    }
+                    break;
+                default:
+                    if (night) {
+                        remoteViews.setImageViewResource(id, R.drawable.ic_unknown_white);
+                    } else {
+                        remoteViews.setImageViewResource(id, R.drawable.ic_unknown);
+                    }
+                    break;
+            }
+        } else {
+            if (night) {
+                remoteViews.setImageViewResource(id, R.drawable.ic_unknown_white);
+            } else {
+                remoteViews.setImageViewResource(id, R.drawable.ic_unknown);
             }
         }
     }

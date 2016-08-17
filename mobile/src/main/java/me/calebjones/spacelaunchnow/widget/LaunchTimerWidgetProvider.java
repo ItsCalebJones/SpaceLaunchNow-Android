@@ -2,9 +2,10 @@ package me.calebjones.spacelaunchnow.widget;
 
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.widget.RemoteViews;
 
 import java.util.Calendar;
@@ -21,10 +22,11 @@ import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 
-public class CountDownWidgetProvider extends AppWidgetProvider {
+public class LaunchTimerWidgetProvider extends AppWidgetProvider {
 
     private Realm mRealm;
     private LaunchRealm launchRealm;
+    private int last_refresh_counter = 0;
     public RemoteViews remoteViews;
     public SwitchPreferences switchPreferences;
 
@@ -33,7 +35,18 @@ public class CountDownWidgetProvider extends AppWidgetProvider {
         Timber.v("onUpdate");
         final int count = appWidgetIds.length;
 
-        launchRealm = getLaunch(context);
+        // If Launch is Null then go ahead and load the next launch. Otherwise check conditions before refreshing.
+        if (launchRealm != null){
+            if (launchRealm.getNet().before(new Date()) || last_refresh_counter > 3600) {
+                launchRealm = getLaunch(context);
+                last_refresh_counter = 0;
+            } else {
+                last_refresh_counter = last_refresh_counter ++;
+            }
+        } else {
+            Timber.v("launchRealm is null - getting launch.");
+            launchRealm = getLaunch(context);
+        }
 
         for (int widgetId : appWidgetIds) {
             Bundle options = appWidgetManager.getAppWidgetOptions(widgetId);
@@ -49,15 +62,12 @@ public class CountDownWidgetProvider extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         Timber.v("Widget placed, starting service...");
-        // Enter relevant functionality for when the first widget is created
-        context.startService(new Intent(context, CountDownWidgetService.class));
     }
+
 
     @Override
     public void onDisabled(Context context) {
         Timber.v("Widget(s) removed, stopping service...");
-        // Enter relevant functionality for when the last widget is disabled
-        context.stopService(new Intent(context, CountDownWidgetService.class));
     }
 
     private LaunchRealm getLaunch(Context context) {
@@ -99,15 +109,15 @@ public class CountDownWidgetProvider extends AppWidgetProvider {
 
         if (maxWidth <= 200 || maxHeight <= 100) {
             remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.countdown_widget_compact_dark);
+                    R.layout.widget_launch_timer_compact_dark);
         } else if (maxWidth <= 420 || maxHeight <= 175) {
             remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.countdown_widget_small_dark);
+                    R.layout.widget_launch_timer_small_dark);
         } else if (maxWidth <= 320 || maxHeight <= 175) {
 
         } else {
             remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.countdown_widget_large_dark);
+                    R.layout.widget_launch_timer_large_dark);
         }
 
         setLaunchName(context, launch, remoteViews, options);
@@ -115,20 +125,8 @@ public class CountDownWidgetProvider extends AppWidgetProvider {
         setLaunchTimer(context, launch, remoteViews, appWidgetManager, widgetId);
 
         setWidgetStyle(context, remoteViews);
-        setUpdateIntent(context, remoteViews, widgetId);
 
-        appWidgetManager.updateAppWidget(widgetId, remoteViews);
-    }
-
-    @Override
-    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle options) {
-        if (launchRealm == null) {
-            launchRealm = getLaunch(context);
-        }
-        updateAppWidget(context, appWidgetManager, appWidgetId, options, launchRealm);
-    }
-
-    private void setUpdateIntent(Context context, RemoteViews remoteViews, int widgetId) {
+        pushWidgetUpdate(context, remoteViews);
     }
 
     public String getLaunchName(LaunchRealm launchRealm) {
@@ -163,72 +161,86 @@ public class CountDownWidgetProvider extends AppWidgetProvider {
     }
 
     public void setLaunchTimer(Context context, LaunchRealm launchRealm, final RemoteViews remoteViews, final AppWidgetManager appWidgetManager, final int widgetId) {
-        long millisUntilFinished = getFutureMilli(launchRealm) - System.currentTimeMillis();
 
-        // Calculate the Days/Hours/Mins/Seconds numerically.
-        long longDays = millisUntilFinished / 86400000;
-        long longHours = (millisUntilFinished / 3600000) % 24;
-        long longMinutes = (millisUntilFinished / 60000) % 60;
-        long longSeconds = (millisUntilFinished / 1000) % 60;
+        new CountDownTimer(getFutureMilli(launchRealm) - System.currentTimeMillis(), 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                // Calculate the Days/Hours/Mins/Seconds numerically.
+                long longDays = millisUntilFinished / 86400000;
+                long longHours = (millisUntilFinished / 3600000) % 24;
+                long longMinutes = (millisUntilFinished / 60000) % 60;
+                long longSeconds = (millisUntilFinished / 1000) % 60;
+                Timber.v("onTick - %s", millisUntilFinished);
 
-        String days = String.valueOf(longDays);
-        String hours;
-        String minutes;
-        String seconds;
+                String days = String.valueOf(longDays);
+                String hours;
+                String minutes;
+                String seconds;
 
-        // Translate those numerical values to string values.
-        if (longHours < 10) {
-            hours = "0" + String.valueOf(longHours);
-        } else {
-            hours = String.valueOf(longHours);
-        }
+                // Translate those numerical values to string values.
+                if (longHours < 10) {
+                    hours = "0" + String.valueOf(longHours);
+                } else {
+                    hours = String.valueOf(longHours);
+                }
 
-        if (longMinutes < 10) {
-            minutes = "0" + String.valueOf(longMinutes);
-        } else {
-            minutes = String.valueOf(longMinutes);
-        }
+                if (longMinutes < 10) {
+                    minutes = "0" + String.valueOf(longMinutes);
+                } else {
+                    minutes = String.valueOf(longMinutes);
+                }
 
-        if (longSeconds < 10) {
-            seconds = "0" + String.valueOf(longSeconds);
-        } else {
-            seconds = String.valueOf(longSeconds);
-        }
+                if (longSeconds < 10) {
+                    seconds = "0" + String.valueOf(longSeconds);
+                } else {
+                    seconds = String.valueOf(longSeconds);
+                }
 
 
-        // Update the views
-        if (Integer.valueOf(days) > 99) {
-            remoteViews.setTextViewText(R.id.countdown_days, "99+");
-        } else if (Integer.valueOf(days) > 0) {
-            remoteViews.setTextViewText(R.id.countdown_days, days);
-        } else {
-            remoteViews.setTextViewText(R.id.countdown_days, "- -");
-        }
+                // Update the views
+                if (Integer.valueOf(days) > 99) {
+                    remoteViews.setTextViewText(R.id.countdown_days, "99+");
+                } else if (Integer.valueOf(days) > 0) {
+                    remoteViews.setTextViewText(R.id.countdown_days, days);
+                } else {
+                    remoteViews.setTextViewText(R.id.countdown_days, "- -");
+                }
 
-        if (Integer.valueOf(hours) > 0) {
-            remoteViews.setTextViewText(R.id.countdown_hours, hours);
-        } else if (Integer.valueOf(days) > 0) {
-            remoteViews.setTextViewText(R.id.countdown_hours, "00");
-        } else {
-            remoteViews.setTextViewText(R.id.countdown_hours, "- -");
-        }
+                if (Integer.valueOf(hours) > 0) {
+                    remoteViews.setTextViewText(R.id.countdown_hours, hours);
+                } else if (Integer.valueOf(days) > 0) {
+                    remoteViews.setTextViewText(R.id.countdown_hours, "00");
+                } else {
+                    remoteViews.setTextViewText(R.id.countdown_hours, "- -");
+                }
 
-        if (Integer.valueOf(minutes) > 0) {
-            remoteViews.setTextViewText(R.id.countdown_minutes, minutes);
-        } else if (Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
-            remoteViews.setTextViewText(R.id.countdown_minutes, "00");
-        } else {
-            remoteViews.setTextViewText(R.id.countdown_minutes, "- -");
-        }
+                if (Integer.valueOf(minutes) > 0) {
+                    remoteViews.setTextViewText(R.id.countdown_minutes, minutes);
+                } else if (Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
+                    remoteViews.setTextViewText(R.id.countdown_minutes, "00");
+                } else {
+                    remoteViews.setTextViewText(R.id.countdown_minutes, "- -");
+                }
 
-        if (Integer.valueOf(seconds) > 0) {
-            remoteViews.setTextViewText(R.id.countdown_seconds, seconds);
-        } else if (Integer.valueOf(minutes) > 0 || Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
-            remoteViews.setTextViewText(R.id.countdown_seconds, "60");
-        } else {
-            remoteViews.setTextViewText(R.id.countdown_seconds, "- -");
-        }
-        appWidgetManager.updateAppWidget(widgetId, remoteViews);
+                if (Integer.valueOf(seconds) > 0) {
+                    remoteViews.setTextViewText(R.id.countdown_seconds, seconds);
+                } else if (Integer.valueOf(minutes) > 0 || Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
+                    remoteViews.setTextViewText(R.id.countdown_seconds, "60");
+                } else {
+                    remoteViews.setTextViewText(R.id.countdown_seconds, "- -");
+                }
+                appWidgetManager.updateAppWidget(widgetId, remoteViews);
+            }
+
+            @Override
+            public void onFinish() {
+                remoteViews.setTextViewText(R.id.countdown_days, "- -");
+                remoteViews.setTextViewText(R.id.countdown_hours, "- -");
+                remoteViews.setTextViewText(R.id.countdown_seconds, "- -");
+                appWidgetManager.updateAppWidget(widgetId, remoteViews);
+                this.cancel();
+            }
+        }.start();
     }
 
     public void setMissionName(Context context, LaunchRealm launchRealm, RemoteViews remoteViews, Bundle options) {
@@ -237,5 +249,11 @@ public class CountDownWidgetProvider extends AppWidgetProvider {
 
     public void setLaunchName(Context context, LaunchRealm launchRealm, RemoteViews remoteViews, Bundle options) {
         remoteViews.setTextViewText(R.id.widget_launch_name, getLaunchName(launchRealm));
+    }
+
+    public static void pushWidgetUpdate(Context context, RemoteViews remoteViews){
+        ComponentName myWidget = new ComponentName(context, LaunchTimerWidgetProvider.class);
+        AppWidgetManager manager = AppWidgetManager.getInstance(context);
+        manager.updateAppWidget(myWidget, remoteViews);
     }
 }
