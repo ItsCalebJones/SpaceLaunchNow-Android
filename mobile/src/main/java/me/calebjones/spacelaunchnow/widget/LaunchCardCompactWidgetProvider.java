@@ -19,7 +19,6 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.interfaces.QueryBuilder;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
-import me.calebjones.spacelaunchnow.utils.Stopwatch;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
@@ -29,14 +28,12 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
     private Realm mRealm;
     private LaunchRealm launchRealm;
     private int last_refresh_counter = 0;
-    private Stopwatch stopwatch;
     public RemoteViews remoteViews;
     public SwitchPreferences switchPreferences;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         Timber.v("onUpdate");
-        stopwatch = new Stopwatch();
         final int count = appWidgetIds.length;
 
 
@@ -52,7 +49,6 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
             Timber.v("launchRealm is null - getting launch.");
             launchRealm = getLaunch(context);
         }
-        Timber.v("Got launch %s", stopwatch.getElapsedTimeString());
 
         for (int widgetId : appWidgetIds) {
             Bundle options = appWidgetManager.getAppWidgetOptions(widgetId);
@@ -60,18 +56,13 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
             // Update The clock label using a shared method
             updateAppWidget(context, appWidgetManager, widgetId, options, launchRealm);
         }
-        Timber.v("Finishing up %s", stopwatch.getElapsedTimeString());
         if (!mRealm.isClosed()) {
             mRealm.close();
         }
-        Timber.v("Realm Closed %s", stopwatch.getElapsedTimeString());
-        stopwatch.reset();
     }
 
     private LaunchRealm getLaunch(Context context) {
         Date date = new Date();
-
-        Timber.v("getLaunch %s", stopwatch.getElapsedTimeString());
 
         switchPreferences = SwitchPreferences.getInstance(context);
 
@@ -90,7 +81,6 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
             launchRealms = QueryBuilder.buildSwitchQuery(context, mRealm);
             Timber.v("loadLaunches - Filtered Realm query created.");
         }
-        Timber.v("realm returned %s", stopwatch.getElapsedTimeString());
 
         for (LaunchRealm launch : launchRealms) {
             if (launch.getNetstamp() != 0) {
@@ -103,22 +93,16 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
     public void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int widgetId, Bundle options, LaunchRealm launch) {
         remoteViews = new RemoteViews(context.getPackageName(),
                 R.layout.widget_launch_card_compact_dark);
-        Timber.v("layout %s", stopwatch.getElapsedTimeString());
 
         setLaunchName(context, launch, remoteViews, options);
-        Timber.v("setLaunchName %s", stopwatch.getElapsedTimeString());
 
         setLocationName(context, launch, remoteViews, options);
-        Timber.v("setLocationName %s", stopwatch.getElapsedTimeString());
 
         setLaunchDate(context, launch, remoteViews);
-        Timber.v("setLaunchDate %s", stopwatch.getElapsedTimeString());
 
         setCategoryIcon(context, launch, remoteViews);
-        Timber.v("setCategoryIcon %s", stopwatch.getElapsedTimeString());
 
         setWidgetStyle(context, remoteViews);
-        Timber.v("setWidgetStyle %s", stopwatch.getElapsedTimeString());
 
         pushWidgetUpdate(context, remoteViews);
     }
