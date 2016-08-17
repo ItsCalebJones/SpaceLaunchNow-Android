@@ -28,6 +28,8 @@ public class LaunchRealm extends RealmObject {
     private Integer netstamp;
     private Integer launchTimeStamp;
 
+    private long widgetRefresh;
+
     private Integer status;
 
     private Integer inhold;
@@ -45,8 +47,25 @@ public class LaunchRealm extends RealmObject {
     private boolean isNotifiedHour = false;
     private boolean isNotifiedTenMinute = false;
     private boolean favorite = false;
+    private boolean isNextLaunch = false;
 
     private RealmList<MissionRealm> missions;
+
+    public long getWidgetRefresh() {
+        return widgetRefresh;
+    }
+
+    public void setWidgetRefresh(long widgetRefresh) {
+        this.widgetRefresh = widgetRefresh;
+    }
+
+    public boolean isNextLaunch() {
+        return isNextLaunch;
+    }
+
+    public void setNextLaunch(boolean nextLaunch) {
+        isNextLaunch = nextLaunch;
+    }
 
     public boolean isNotifiedDay() {
         return isNotifiedDay;

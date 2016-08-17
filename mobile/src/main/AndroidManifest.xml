@@ -114,8 +114,6 @@
             android:name=".content.services.CalendarSyncService"
             android:exported="false" />
 
-        <service android:name=".widget.CountDownWidgetService" android:exported="true"/>
-
         <activity
             android:name=".ui.activity.SupportActivity"
             android:theme="@style/BaseAppTheme" />
@@ -128,16 +126,30 @@
             android:name=".ui.activity.WebViewFallbackActivity"
             android:label="@string/title_activity_web_view_fallback"
             android:parentActivityName=".ui.activity.MainActivity"
-            android:theme="@style/BaseAppTheme">
-        </activity>
+            android:theme="@style/BaseAppTheme"/>
 
-        <receiver android:name=".widget.CountDownWidgetProvider"
-            android:label="Countdown Timer">
+        <receiver
+            android:name=".widget.LaunchTimerWidgetProvider"
+            android:label="Launch Timer">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-            <meta-data android:name="android.appwidget.provider"
-                android:resource="@xml/countdown_widget_info" />
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_launch_timer_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.LaunchCardCompactWidgetProvider"
+            android:label="Compact Card">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_launch_card_compact_info" />
         </receiver>
     </application>
 
