@@ -400,7 +400,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     public void loadLaunches() {
         if (!getRealm().isClosed()) {
             try {
-                launchRealms = QueryBuilder.buildPrevQuery(context, getRealm());
+                launchRealms = QueryBuilder.buildPrevQueryAsync(context, getRealm());
             } catch (ParseException e) {
                 Crashlytics.logException(e);
             }
