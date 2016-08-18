@@ -82,9 +82,9 @@ public class LaunchApplication extends Application {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         LeakCanary.install(this);
-        OneSignal.startInit(this).init();
-        OneSignal.enableNotificationsWhenActive(true);
-        OneSignal.enableInAppAlertNotification(true);
+        OneSignal.startInit(this)
+                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+                .init();
 
         Dexter.initialize(this);
 
@@ -131,7 +131,7 @@ public class LaunchApplication extends Application {
         sharedPreference = ListPreferences.getInstance(this);
         switchPreferences = SwitchPreferences.getInstance(this);
 
-        if(sharedPreference.isDayNightEnabled()){
+        if(sharedPreference.isNightThemeEnabled()){
             if(sharedPreference.isDayNightAutoEnabled()){
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
             } else {

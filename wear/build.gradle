@@ -48,5 +48,5 @@ dependencies {
     compile 'com.google.android.support:wearable:1.+'
     provided 'com.google.android.wearable:wearable:1.+'
     compile 'com.google.android.gms:play-services-wearable:9.0.2'
-    compile 'com.jakewharton.timber:timber:4.1.2'
+    compile 'com.jakewharton.timber:timber:4.2.0'
 }

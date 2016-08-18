@@ -58,7 +58,7 @@ public class SupportActivity extends BaseActivity implements BillingProcessor.IB
 
         ListPreferences sharedPreference = ListPreferences.getInstance(context);
 
-//        if (sharedPreference.isDayNightEnabled()) {
+//        if (sharedPreference.isNightThemeEnabled()) {
 //        } else {
 //        }
 

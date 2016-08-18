@@ -98,6 +98,15 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
         }
     }
 
+    public void checkLocationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            if (Dexter.isRequestOngoing()) {
+                return;
+            }
+            Dexter.checkPermissions(allPermissionsListener, Manifest.permission.ACCESS_COARSE_LOCATION);
+        }
+    }
+
     class SharedPreferenceListener implements SharedPreferences.OnSharedPreferenceChangeListener {
         final /* synthetic */ SharedPreferences valprefs;
 
@@ -121,7 +130,7 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
                     if(switchPreferences.getNightMode()){
                         if(switchPreferences.getDayNightAutoMode()){
                             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
-                            Toast.makeText(context, "Auto DayNight enabled, might need to restart app to take effect.", Toast.LENGTH_SHORT).show();
+                            checkLocationPermission();
                         } else {
                             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                             Toast.makeText(context, "Night mode might need to restart app to take effect.", Toast.LENGTH_SHORT).show();
@@ -141,7 +150,7 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
                     if(switchPreferences.getNightMode()){
                         if(switchPreferences.getDayNightAutoMode()){
                             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
-                            Toast.makeText(context, "Auto DayNight enabled, might need to restart app to take effect.", Toast.LENGTH_SHORT).show();
+                            checkLocationPermission();
                         } else {
                             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                             Toast.makeText(context, "Auto DayNight disabled, might need to restart app to take effect.", Toast.LENGTH_SHORT).show();

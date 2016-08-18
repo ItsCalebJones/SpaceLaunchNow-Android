@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -155,23 +154,13 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
 
     private void hideLoading() {
         if (swipeRefreshLayout.isRefreshing()) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-            }, 10);
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
     private void showLoading() {
         if (!swipeRefreshLayout.isRefreshing()) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    swipeRefreshLayout.setRefreshing(true);
-                }
-            }, 10);
+            swipeRefreshLayout.setRefreshing(true);
         }
     }
 

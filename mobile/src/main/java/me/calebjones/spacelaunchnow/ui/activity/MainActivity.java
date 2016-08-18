@@ -3,7 +3,6 @@ package me.calebjones.spacelaunchnow.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -282,16 +281,12 @@ public class MainActivity extends BaseActivity
             recreate();
         }
 
-        int currentNightMode = getResources().getConfiguration().uiMode
-                & Configuration.UI_MODE_NIGHT_MASK;
-        switch (currentNightMode) {
-            case Configuration.UI_MODE_NIGHT_NO:
-                // Night mode is not active, we're in day time
-            case Configuration.UI_MODE_NIGHT_YES:
-                // Night mode is active, we're at night!
-                navigationView.getItemTextColor();
-            case Configuration.UI_MODE_NIGHT_UNDEFINED:
-                // We don't know what mode we're in, assume notnight
+        if (listPreferences.isNightModeActive(this)) {
+            switchPreferences.setNightModeStatus(true);
+            statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
+        } else {
+            switchPreferences.setNightModeStatus(false);
+            statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
         }
     }
 
