@@ -64,6 +64,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 
     public void clear() {
         launchList.clear();
+        notifyDataSetChanged();
     }
 
     @Override
