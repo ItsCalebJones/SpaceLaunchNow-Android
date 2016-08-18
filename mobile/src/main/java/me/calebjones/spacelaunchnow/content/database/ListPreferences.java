@@ -106,25 +106,32 @@ public class ListPreferences {
     }
 
     public boolean isNightModeActive(Context context) {
-        int currentNightMode = context.getResources().getConfiguration().uiMode
-                & Configuration.UI_MODE_NIGHT_MASK;
 
-        switch (currentNightMode) {
-            case Configuration.UI_MODE_NIGHT_NO:
-                // Night mode is not active, we're in day time
-                return false;
-            case Configuration.UI_MODE_NIGHT_YES:
-                // Night mode is active, we're at night!
-                return true;
-            case Configuration.UI_MODE_NIGHT_UNDEFINED:
-                // We don't know what mode we're in, assume notnight
-                return false;
-            default:
-                return false;
+        if (isDayNightAutoEnabled()) {
+            int currentNightMode = context.getResources().getConfiguration().uiMode
+                    & Configuration.UI_MODE_NIGHT_MASK;
+
+            switch (currentNightMode) {
+                case Configuration.UI_MODE_NIGHT_NO:
+                    // Night mode is not active, we're in day time
+                    return false;
+                case Configuration.UI_MODE_NIGHT_YES:
+                    // Night mode is active, we're at night!
+                    return true;
+                case Configuration.UI_MODE_NIGHT_UNDEFINED:
+                    // We don't know what mode we're in, assume notnight
+                    return false;
+                default:
+                    return false;
+            }
+        } else if (isNightThemeEnabled()){
+            return true;
+        } else {
+            return false;
         }
     }
 
-    public boolean isDayNightEnabled() {
+    public boolean isNightThemeEnabled() {
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this.appContext);
         return this.sharedPrefs.getBoolean("theme", false);
     }

@@ -49,7 +49,7 @@ public class SettingsActivity extends AppCompatActivity implements Callback {
 
         sharedPreference = ListPreferences.getInstance(this.context);
 
-//        if (sharedPreference.isDayNightEnabled()) {
+//        if (sharedPreference.isNightThemeEnabled()) {
 //        } else {
 //        }
 

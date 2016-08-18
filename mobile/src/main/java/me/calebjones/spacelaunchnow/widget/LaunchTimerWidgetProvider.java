@@ -25,7 +25,7 @@ import timber.log.Timber;
 public class LaunchTimerWidgetProvider extends AppWidgetProvider {
 
     private Realm mRealm;
-    private LaunchRealm launchRealm;
+    private CountDownTimer countDownTimer;
     private int last_refresh_counter = 0;
     public RemoteViews remoteViews;
     public SwitchPreferences switchPreferences;
@@ -36,23 +36,11 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
         final int count = appWidgetIds.length;
 
         // If Launch is Null then go ahead and load the next launch. Otherwise check conditions before refreshing.
-        if (launchRealm != null){
-            if (launchRealm.getNet().before(new Date()) || last_refresh_counter > 3600) {
-                launchRealm = getLaunch(context);
-                last_refresh_counter = 0;
-            } else {
-                last_refresh_counter = last_refresh_counter ++;
-            }
-        } else {
-            Timber.v("launchRealm is null - getting launch.");
-            launchRealm = getLaunch(context);
-        }
-
         for (int widgetId : appWidgetIds) {
             Bundle options = appWidgetManager.getAppWidgetOptions(widgetId);
 
             // Update The clock label using a shared method
-            updateAppWidget(context, appWidgetManager, widgetId, options, launchRealm);
+            updateAppWidget(context, appWidgetManager, widgetId, options);
         }
         if (!mRealm.isClosed()) {
             mRealm.close();
@@ -99,11 +87,13 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
         return null;
     }
 
-    public void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int widgetId, Bundle options, LaunchRealm launch) {
+    public void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int widgetId, Bundle options) {
         int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
         int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
         int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
         int maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
+
+        LaunchRealm launch = getLaunch(context);
 
         Timber.v("Size: [%s-%s] x [%s-%s]", minWidth, maxWidth, minHeight, maxHeight);
 
@@ -122,11 +112,20 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
 
         setLaunchName(context, launch, remoteViews, options);
         setMissionName(context, launch, remoteViews, options);
-        setLaunchTimer(context, launch, remoteViews, appWidgetManager, widgetId);
+        setLaunchTimer(context, launch, remoteViews, appWidgetManager, widgetId, options);
 
         setWidgetStyle(context, remoteViews);
 
         pushWidgetUpdate(context, remoteViews);
+    }
+
+    @Override
+    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+        updateAppWidget(context,appWidgetManager, appWidgetId, newOptions);
+        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
     }
 
     public String getLaunchName(LaunchRealm launchRealm) {
@@ -160,17 +159,33 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
     public void setWidgetStyle(Context context, RemoteViews remoteViews) {
     }
 
-    public void setLaunchTimer(Context context, LaunchRealm launchRealm, final RemoteViews remoteViews, final AppWidgetManager appWidgetManager, final int widgetId) {
+    public void setLaunchTimer(Context context, LaunchRealm launchRealm, final RemoteViews remoteViews, final AppWidgetManager appWidgetManager, final int widgetId, final Bundle options) {
 
-        new CountDownTimer(getFutureMilli(launchRealm) - System.currentTimeMillis(), 1000) {
+        countDownTimer = new CountDownTimer(getFutureMilli(launchRealm) - System.currentTimeMillis(), 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
+
+                int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
+                int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
+                int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
+                int maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
+
+                Bundle newOptions = appWidgetManager.getAppWidgetOptions(widgetId);
+
+                int newMinWidth = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
+                int newMaxWidth = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
+                int newMinHeight = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
+                int newMaxHeight = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
+
+                if (minWidth != newMinWidth || maxWidth != newMaxWidth || minHeight != newMinHeight || maxHeight != newMaxHeight) {
+                    this.cancel();
+                }
+
                 // Calculate the Days/Hours/Mins/Seconds numerically.
                 long longDays = millisUntilFinished / 86400000;
                 long longHours = (millisUntilFinished / 3600000) % 24;
                 long longMinutes = (millisUntilFinished / 60000) % 60;
                 long longSeconds = (millisUntilFinished / 1000) % 60;
-                Timber.v("onTick - %s", millisUntilFinished);
 
                 String days = String.valueOf(longDays);
                 String hours;
@@ -251,7 +266,7 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
         remoteViews.setTextViewText(R.id.widget_launch_name, getLaunchName(launchRealm));
     }
 
-    public static void pushWidgetUpdate(Context context, RemoteViews remoteViews){
+    public static void pushWidgetUpdate(Context context, RemoteViews remoteViews) {
         ComponentName myWidget = new ComponentName(context, LaunchTimerWidgetProvider.class);
         AppWidgetManager manager = AppWidgetManager.getInstance(context);
         manager.updateAppWidget(myWidget, remoteViews);
