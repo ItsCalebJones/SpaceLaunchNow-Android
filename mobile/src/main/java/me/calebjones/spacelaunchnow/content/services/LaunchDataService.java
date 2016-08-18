@@ -141,6 +141,9 @@ public class LaunchDataService extends BaseService {
                     throw new IOException(launchResponse.errorBody().string());
                 }
             }
+            for (LaunchRealm item : items) {
+                item.getLocation().setPrimaryID();
+            }
             Timber.v("Starting list - elapsed time: %s", stopwatch.getElapsedTimeString());
             mRealm.beginTransaction();
             mRealm.copyToRealmOrUpdate(items);
