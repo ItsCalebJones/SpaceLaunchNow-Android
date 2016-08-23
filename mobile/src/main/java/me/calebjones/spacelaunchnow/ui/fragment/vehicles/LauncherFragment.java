@@ -83,7 +83,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
         LayoutInflater lf = getActivity().getLayoutInflater();
         view = lf.inflate(R.layout.fragment_launch_vehicles, container, false);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.gridview);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.vehicle_detail_list);
         coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.vehicle_coordinator);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setOnRefreshListener(this);

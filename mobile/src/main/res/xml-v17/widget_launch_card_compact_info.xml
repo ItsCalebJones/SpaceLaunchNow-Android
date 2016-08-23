@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:minResizeWidth="110dp"
-    android:minResizeHeight="110dp"
+    android:minResizeWidth="180dp"
+    android:minResizeHeight="40dp"
     android:minWidth="250dp"
     android:minHeight="110dp"
     android:updatePeriodMillis="1800000"
-    android:initialLayout="@layout/widget_launch_card_compact"
+    android:initialLayout="@layout/widget_launch_card_compact_dark"
     android:resizeMode="vertical|horizontal"
     android:widgetCategory="home_screen"
     android:previewImage="@drawable/countdown_timer_preview">

@@ -72,7 +72,6 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
     }
 
 
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         int m_theme;
@@ -97,7 +96,7 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
         launchVehicle = new RocketDetailsRealm();
 
         String query;
-        if (item.getName().contains("Space Shuttle")){
+        if (item.getName().contains("Space Shuttle")) {
             query = "Space Shuttle";
         } else {
             query = item.getName();
@@ -106,7 +105,7 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
 
         launchVehicle = realm.where(RocketDetailsRealm.class).contains("name", query).findFirst();
 
-        if (launchVehicle != null){
+        if (launchVehicle != null) {
             holder.vehicle_spec_view.setVisibility(View.VISIBLE);
             if (launchVehicle.getDescription() != null && launchVehicle.getDescription().length() > 0) {
                 holder.launch_vehicle_description.setVisibility(View.VISIBLE);
@@ -126,7 +125,7 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
             holder.vehicle_spec_view.setVisibility(View.GONE);
         }
 
-        if (item.getImageURL().length() == 0){
+        if (item.getImageURL().length() == 0) {
             holder.fab.setVisibility(View.INVISIBLE);
         } else {
             holder.fab.setVisibility(View.VISIBLE);
@@ -141,8 +140,8 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
 
         holder.item_title.setText(item.getName());
 
-        if (launchVehicle != null){
-            if(launchVehicle.getInfoURL().length() > 0) {
+        if (launchVehicle != null) {
+            if (launchVehicle.getInfoURL().length() > 0) {
                 realm.beginTransaction();
                 items.get(i).setInfoURL(launchVehicle.getInfoURL());
                 realm.commitTransaction();
@@ -154,40 +153,40 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
                     holder.infoButton.setVisibility(View.GONE);
                 }
             }
-        }  else if (item.getInfoURL() != null && !item.getInfoURL().contains("null")){
-            if(item.getInfoURL().length() > 0){
+        } else if (item.getInfoURL() != null && !item.getInfoURL().contains("null")) {
+            if (item.getInfoURL().length() > 0) {
                 holder.infoButton.setVisibility(View.VISIBLE);
-            }  else {
+            } else {
                 holder.infoButton.setVisibility(View.GONE);
             }
         } else {
             holder.infoButton.setVisibility(View.GONE);
         }
 
-        if (launchVehicle != null){
-            if(launchVehicle.getWikiURL().length() > 0) {
+        if (launchVehicle != null) {
+            if (launchVehicle.getWikiURL().length() > 0) {
                 realm.beginTransaction();
                 items.get(i).setWikiURL(launchVehicle.getWikiURL());
                 realm.commitTransaction();
                 holder.wikiButton.setVisibility(View.VISIBLE);
-            }   else if (item.getWikiURL() != null && !item.getWikiURL().contains("null")){
-                if(item.getWikiURL().length() > 0){
+            } else if (item.getWikiURL() != null && !item.getWikiURL().contains("null")) {
+                if (item.getWikiURL().length() > 0) {
                     holder.wikiButton.setVisibility(View.VISIBLE);
-                }  else {
+                } else {
                     holder.wikiButton.setVisibility(View.GONE);
                 }
             }
-        }  else if (item.getWikiURL() != null && !item.getWikiURL().contains("null")){
-            if(item.getWikiURL().length() > 0){
+        } else if (item.getWikiURL() != null && !item.getWikiURL().contains("null")) {
+            if (item.getWikiURL().length() > 0) {
                 holder.wikiButton.setVisibility(View.VISIBLE);
-            }  else {
+            } else {
                 holder.wikiButton.setVisibility(View.GONE);
             }
         } else {
             holder.infoButton.setVisibility(View.GONE);
         }
 
-        if (holder.infoButton.getVisibility() == View.GONE && holder.wikiButton.getVisibility() == View.GONE){
+        if (holder.infoButton.getVisibility() == View.GONE && holder.wikiButton.getVisibility() == View.GONE) {
             holder.button_layout.setVisibility(View.GONE);
         } else {
             holder.button_layout.setVisibility(View.VISIBLE);
@@ -204,10 +203,17 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
         public ImageView item_icon;
         public View vehicle_spec_view, vehicle_container, button_layout;
         public FloatingActionButton fab;
-        public TextView item_title,launch_vehicle_specs_height,
-                launch_vehicle_specs_diameter,launch_vehicle_specs_stages,launch_vehicle_specs_leo,
-                launch_vehicle_specs_gto,launch_vehicle_specs_launch_mass, launch_vehicle_specs_thrust
-                ,infoButton, wikiButton,launch_vehicle_description;
+        public TextView item_title;
+        public TextView launch_vehicle_specs_height;
+        public TextView launch_vehicle_specs_diameter;
+        public TextView launch_vehicle_specs_stages;
+        public TextView launch_vehicle_specs_leo;
+        public TextView launch_vehicle_specs_gto;
+        public TextView launch_vehicle_specs_launch_mass;
+        public TextView launch_vehicle_specs_thrust;
+        public TextView infoButton;
+        public TextView wikiButton;
+        public TextView launch_vehicle_description;
 
         //Add content to the card
         public ViewHolder(View view) {

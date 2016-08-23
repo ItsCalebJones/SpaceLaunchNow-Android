@@ -8,8 +8,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
 import android.view.Menu;
@@ -49,7 +49,6 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
     private TextView toolbarTitle, detail_rocket, detail_vehicle_agency;
     private ImageView detail_profile_backdrop;
     private CircleImageView detail_profile_image;
-    private StaggeredGridLayoutManager linearLayoutManager;
     private VehicleListAdapter adapter;
     private RealmResults<RocketRealm> rocketLaunches;
     private AppBarLayout appBarLayout;
@@ -143,12 +142,8 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
             }
         }
         adapter = new VehicleListAdapter(context, this, getRealm());
-        mRecyclerView = (RecyclerView) findViewById(R.id.gridview);
-        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
-            linearLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        } else {
-            linearLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-        }
+        mRecyclerView = (RecyclerView) findViewById(R.id.vehicle_detail_list);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(adapter);
         displayRockets();

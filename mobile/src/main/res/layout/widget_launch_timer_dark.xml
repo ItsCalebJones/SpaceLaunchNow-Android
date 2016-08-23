@@ -17,33 +17,31 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/widget_launch_name"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginRight="4dp"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="center"
                 android:maxLines="1"
                 android:textColor="@color/primary_text_dark"
-                android:textSize="12sp" />
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/widget_mission_name"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="4dp"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="center"
                 android:maxLines="1"
                 android:textColor="@color/dark_theme_secondary_text_color"
-                android:textSize="12sp" />
+                android:textSize="16sp" />
         </LinearLayout>
 
         <include
-            layout="@layout/countdown_layout_widget_compact_dark"
+            layout="@layout/countdown_layout_widget_small_dark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -55,13 +53,13 @@
     </LinearLayout>
 
     <ImageView
-        android:layout_width="18dp"
-        android:layout_height="18dp"
+        android:id="@+id/widget_refresh_button"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:src="@drawable/ic_refresh_white"
-        android:layout_marginTop="6dp"
-        android:layout_marginRight="6dp"
-        android:id="@+id/widget_refresh_button" />
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="4dp"
+        android:src="@drawable/ic_refresh_white" />
 
 </RelativeLayout>

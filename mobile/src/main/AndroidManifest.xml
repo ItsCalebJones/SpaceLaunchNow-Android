@@ -134,6 +134,8 @@
             android:label="Launch Timer">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_REFRESH"/>
+                <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_CLICK"/>
             </intent-filter>
 
             <meta-data
@@ -146,8 +148,8 @@
             android:label="Compact Card">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="me.calebjones.spacelaunchnow.widget.LaunchCardCompactWidgetProvider.ACTION_WIDGET_REFRESH"/>
             </intent-filter>
-
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_launch_card_compact_info" />

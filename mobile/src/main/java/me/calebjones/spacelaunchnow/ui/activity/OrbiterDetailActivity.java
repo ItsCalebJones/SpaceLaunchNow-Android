@@ -95,7 +95,7 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
         orbiter_history_description = (TextView) findViewById(R.id.orbiter_history_description);
         orbiter_vehicle_card = findViewById(R.id.orbiter_vehicle_card);
         title_container = findViewById(R.id.detail_title_container);
-        gridview = findViewById(R.id.gridview);
+        gridview = findViewById(R.id.vehicle_detail_list);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 

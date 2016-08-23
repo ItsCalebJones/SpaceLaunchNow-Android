@@ -1,9 +1,11 @@
 package me.calebjones.spacelaunchnow.widget;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.widget.RemoteViews;
@@ -18,6 +20,7 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.interfaces.QueryBuilder;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
@@ -25,10 +28,13 @@ import timber.log.Timber;
 public class LaunchTimerWidgetProvider extends AppWidgetProvider {
 
     private Realm mRealm;
-    private CountDownTimer countDownTimer;
     private int last_refresh_counter = 0;
+    private static CountDownTimer countDownTimer;
+    private static boolean invalid = false;
     public RemoteViews remoteViews;
     public SwitchPreferences switchPreferences;
+    public static String ACTION_WIDGET_REFRESH = "ActionReceiverRefresh";
+    public static String ACTION_WIDGET_CLICK = "ActionReceiverClick";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -87,7 +93,9 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
         return null;
     }
 
-    public void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int widgetId, Bundle options) {
+    public void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int widgetId,
+                                Bundle options) {
+        invalid = true;
         int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
         int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
         int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
@@ -97,14 +105,12 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
 
         Timber.v("Size: [%s-%s] x [%s-%s]", minWidth, maxWidth, minHeight, maxHeight);
 
-        if (maxWidth <= 200 || maxHeight <= 100) {
+        if (minWidth <= 200 || minHeight <= 100) {
             remoteViews = new RemoteViews(context.getPackageName(),
                     R.layout.widget_launch_timer_compact_dark);
-        } else if (maxWidth <= 420 || maxHeight <= 175) {
+        } else if (minWidth <= 320) {
             remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.widget_launch_timer_small_dark);
-        } else if (maxWidth <= 320 || maxHeight <= 175) {
-
+                    R.layout.widget_launch_timer_dark);
         } else {
             remoteViews = new RemoteViews(context.getPackageName(),
                     R.layout.widget_launch_timer_large_dark);
@@ -113,19 +119,47 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
         setLaunchName(context, launch, remoteViews, options);
         setMissionName(context, launch, remoteViews, options);
         setLaunchTimer(context, launch, remoteViews, appWidgetManager, widgetId, options);
-
+        setRefreshIntent(context, launch, remoteViews);
         setWidgetStyle(context, remoteViews);
 
         pushWidgetUpdate(context, remoteViews);
     }
 
+    private void setRefreshIntent(Context context, LaunchRealm launch, RemoteViews remoteViews) {
+        Intent refresh = new Intent(context, LaunchTimerWidgetProvider.class);
+        refresh.setAction(ACTION_WIDGET_REFRESH);
+        PendingIntent refreshPending = PendingIntent.getBroadcast(context, 0, refresh, 0);
+
+        remoteViews.setOnClickPendingIntent(R.id.widget_refresh_button, refreshPending);
+
+        Intent exploreIntent = new Intent(context, LaunchDetailActivity.class);
+        exploreIntent.putExtra("TYPE", "launch");
+        exploreIntent.putExtra("launchID", launch.getId());
+        exploreIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent actionPendingIntent = PendingIntent.getActivity(context, 0, exploreIntent, 0);
+
+        remoteViews.setOnClickPendingIntent(R.id.widget_countdown_timer_frame, actionPendingIntent);
+    }
+
     @Override
-    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
-        if (countDownTimer != null) {
-            countDownTimer.cancel();
-        }
+    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager,
+                                          int appWidgetId, Bundle newOptions) {
         updateAppWidget(context,appWidgetManager, appWidgetId, newOptions);
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        if (intent.getAction().equals(ACTION_WIDGET_REFRESH)) {
+            Timber.v("onReceive", ACTION_WIDGET_REFRESH);
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, this.getClass()));
+            onUpdate(context,appWidgetManager,appWidgetIds);
+        } else if (intent.getAction().equals(ACTION_WIDGET_CLICK)) {
+            Timber.v("onReceive", ACTION_WIDGET_CLICK);
+        } else {
+            super.onReceive(context, intent);
+        }
     }
 
     public String getLaunchName(LaunchRealm launchRealm) {
@@ -161,7 +195,14 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
 
     public void setLaunchTimer(Context context, LaunchRealm launchRealm, final RemoteViews remoteViews, final AppWidgetManager appWidgetManager, final int widgetId, final Bundle options) {
 
-        countDownTimer = new CountDownTimer(getFutureMilli(launchRealm) - System.currentTimeMillis(), 1000) {
+        long millisUntilFinished = getFutureMilli(launchRealm) - System.currentTimeMillis();
+
+        if(countDownTimer != null){
+            Timber.v("Cancelling countdown timer.");
+            countDownTimer.cancel();
+        }
+        invalid = false;
+        countDownTimer = new CountDownTimer(millisUntilFinished, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -177,8 +218,11 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
                 int newMinHeight = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
                 int newMaxHeight = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
 
-                if (minWidth != newMinWidth || maxWidth != newMaxWidth || minHeight != newMinHeight || maxHeight != newMaxHeight) {
+                if (minWidth != newMinWidth || maxWidth != newMaxWidth || minHeight != newMinHeight || maxHeight != newMaxHeight || invalid) {
+                    Timber.v("Cancelling countdown timer - onClick - invalid = %s", invalid);
                     this.cancel();
+                } else {
+                    Timber.v("Countdown Timer onTick - ID: %s", widgetId);
                 }
 
                 // Calculate the Days/Hours/Mins/Seconds numerically.
@@ -256,6 +300,7 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
                 this.cancel();
             }
         }.start();
+
     }
 
     public void setMissionName(Context context, LaunchRealm launchRealm, RemoteViews remoteViews, Bundle options) {

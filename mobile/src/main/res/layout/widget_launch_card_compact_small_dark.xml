@@ -7,18 +7,18 @@
         android:id="@+id/TitleCard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="8dp"
+        android:padding="4dp"
         android:orientation="horizontal"
         android:background="@drawable/layout_rounded_background_dark_transparent">
 
         <ImageView
             android:id="@+id/widget_categoryIcon"
-            android:layout_width="88dp"
-            android:layout_height="88dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_unknown_white"
             android:scaleType="centerCrop"
-            android:padding="10dp"
+            android:padding="5dp"
             android:layout_marginLeft="8dp" />
 
         <LinearLayout
@@ -36,11 +36,11 @@
                 android:layout_marginTop="2dp"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="left"
-                android:maxLines="2"
-                android:padding="2dp"
+                android:maxLines="1"
+                android:paddingBottom="2dp"
                 android:text="Unknown Launch Vehicle"
                 android:textColor="@color/dark_theme_primary_text_color"
-                android:textSize="18sp"
+                android:textSize="12sp"
                 android:textStyle="normal" />
 
             <TextView
@@ -49,9 +49,10 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="left"
-                android:maxLines="2"
-                android:padding="2dp"
+                android:maxLines="1"
+                android:paddingBottom="2dp"
                 android:singleLine="false"
+                android:textSize="12sp"
                 android:textColor="@color/dark_theme_secondary_text_color"
                 android:text="Unknown Launch Location" />
 
@@ -61,9 +62,9 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="left"
-                android:maxLines="2"
-                android:padding="2dp"
+                android:maxLines="1"
                 android:singleLine="false"
+                android:textSize="12sp"
                 android:textColor="@color/dark_theme_secondary_text_color"
                 android:text="Unknown Launch Date" />
 
@@ -71,8 +72,8 @@
     </LinearLayout>
 
     <ImageView
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:src="@drawable/ic_refresh_white"

@@ -1,9 +1,11 @@
 package me.calebjones.spacelaunchnow.widget;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
@@ -19,42 +21,30 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.interfaces.QueryBuilder;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 
 public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
 
-    private Realm mRealm;
-    private LaunchRealm launchRealm;
     private int last_refresh_counter = 0;
+    private Realm mRealm;
     public RemoteViews remoteViews;
     public SwitchPreferences switchPreferences;
+    public static String ACTION_WIDGET_REFRESH = "ActionReceiverRefresh";
+    public static String ACTION_WIDGET_CLICK = "ActionReceiverClick";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         Timber.v("onUpdate");
         final int count = appWidgetIds.length;
 
-
-        // If Launch is Null then go ahead and load the next launch. Otherwise check conditions before refreshing.
-        if (launchRealm != null){
-            if (launchRealm.getNet().before(new Date()) || last_refresh_counter > 3600) {
-                launchRealm = getLaunch(context);
-                last_refresh_counter = 0;
-            } else {
-                last_refresh_counter = last_refresh_counter ++;
-            }
-        } else {
-            Timber.v("launchRealm is null - getting launch.");
-            launchRealm = getLaunch(context);
-        }
-
         for (int widgetId : appWidgetIds) {
             Bundle options = appWidgetManager.getAppWidgetOptions(widgetId);
 
             // Update The clock label using a shared method
-            updateAppWidget(context, appWidgetManager, widgetId, options, launchRealm);
+            updateAppWidget(context, appWidgetManager, widgetId, options);
         }
         if (!mRealm.isClosed()) {
             mRealm.close();
@@ -90,21 +80,57 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
         return null;
     }
 
-    public void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int widgetId, Bundle options, LaunchRealm launch) {
-        remoteViews = new RemoteViews(context.getPackageName(),
-                R.layout.widget_launch_card_compact_dark);
+    public void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int widgetId, Bundle options) {
+        int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
+        int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
+        int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
+        int maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
+
+        Timber.v("Size: [%s-%s] x [%s-%s]", minWidth, maxWidth, minHeight, maxHeight);
+
+        LaunchRealm launch = getLaunch(context);
+
+        if (minWidth <= 200 || minHeight <= 100) {
+            remoteViews = new RemoteViews(context.getPackageName(),
+                    R.layout.widget_launch_card_compact_small_dark);
+        } else if (minWidth <= 320) {
+            remoteViews = new RemoteViews(context.getPackageName(),
+                    R.layout.widget_launch_card_compact_dark);
+        } else {
+            remoteViews = new RemoteViews(context.getPackageName(),
+                    R.layout.widget_launch_card_compact_large_dark);
+        }
 
         setLaunchName(context, launch, remoteViews, options);
-
         setLocationName(context, launch, remoteViews, options);
-
         setLaunchDate(context, launch, remoteViews);
-
         setCategoryIcon(context, launch, remoteViews);
-
+        setRefreshIntent(context, launch, remoteViews);
         setWidgetStyle(context, remoteViews);
 
         pushWidgetUpdate(context, remoteViews);
+    }
+
+    private void setRefreshIntent(Context context, LaunchRealm launch, RemoteViews remoteViews) {
+        Intent refresh = new Intent(context, LaunchCardCompactWidgetProvider.class);
+        refresh.setAction(ACTION_WIDGET_REFRESH);
+        PendingIntent refreshPending = PendingIntent.getBroadcast(context, 0, refresh, 0);
+
+        remoteViews.setOnClickPendingIntent(R.id.widget_compact_card_refresh_button, refreshPending);
+
+        Intent exploreIntent = new Intent(context, LaunchDetailActivity.class);
+        exploreIntent.putExtra("TYPE", "launch");
+        exploreIntent.putExtra("launchID", launch.getId());
+        exploreIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent actionPendingIntent = PendingIntent.getActivity(context, 0, exploreIntent, 0);
+
+        remoteViews.setOnClickPendingIntent(R.id.widget_compact_card_frame, actionPendingIntent);
+    }
+
+    @Override
+    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
+        updateAppWidget(context,appWidgetManager, appWidgetId, newOptions);
+        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
     }
 
     public void setWidgetStyle(Context context, RemoteViews remoteViews) {
@@ -165,5 +191,19 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
         ComponentName myWidget = new ComponentName(context, LaunchCardCompactWidgetProvider.class);
         AppWidgetManager manager = AppWidgetManager.getInstance(context);
         manager.updateAppWidget(myWidget, remoteViews);
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        if (intent.getAction().equals(ACTION_WIDGET_REFRESH)) {
+            Timber.v("onReceive", ACTION_WIDGET_REFRESH);
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, this.getClass()));
+            onUpdate(context,appWidgetManager,appWidgetIds);
+        } else if (intent.getAction().equals(ACTION_WIDGET_CLICK)) {
+            Timber.v("onReceive", ACTION_WIDGET_CLICK);
+        } else {
+            super.onReceive(context, intent);
+        }
     }
 }
