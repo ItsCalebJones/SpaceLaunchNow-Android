@@ -13,8 +13,8 @@
 
         <ImageView
             android:id="@+id/widget_categoryIcon"
-            android:layout_width="88dp"
-            android:layout_height="88dp"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_unknown_white"
             android:scaleType="centerCrop"
@@ -40,7 +40,7 @@
                 android:padding="2dp"
                 android:text="Unknown Launch Vehicle"
                 android:textColor="@color/dark_theme_primary_text_color"
-                android:textSize="18sp"
+                android:textSize="24sp"
                 android:textStyle="normal" />
 
             <TextView
@@ -52,6 +52,7 @@
                 android:maxLines="2"
                 android:padding="2dp"
                 android:singleLine="false"
+                android:textSize="18sp"
                 android:textColor="@color/dark_theme_secondary_text_color"
                 android:text="Unknown Launch Location" />
 
@@ -63,6 +64,7 @@
                 android:gravity="left"
                 android:maxLines="2"
                 android:padding="2dp"
+                android:textSize="18sp"
                 android:singleLine="false"
                 android:textColor="@color/dark_theme_secondary_text_color"
                 android:text="Unknown Launch Date" />

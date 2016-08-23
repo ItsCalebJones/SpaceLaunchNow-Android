@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_countdown_timer_frame"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/layout_rounded_background_dark_transparent"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/layout_rounded_background_dark_transparent"
+        android:gravity="center"
+        android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,9 +25,9 @@
             android:layout_height="match_parent"
             android:fontFamily="sans-serif-condensed"
             android:gravity="center"
+            android:maxLines="1"
             android:textColor="@color/primary_text_dark"
-            android:textSize="28sp"
-            android:maxLines="1"/>
+            android:textSize="28sp" />
 
         <TextView
             android:id="@+id/widget_mission_name"
@@ -29,9 +35,9 @@
             android:layout_height="match_parent"
             android:fontFamily="sans-serif-condensed"
             android:gravity="center"
+            android:maxLines="1"
             android:textColor="@color/dark_theme_secondary_text_color"
-            android:textSize="20sp"
-            android:maxLines="1"/>
+            android:textSize="20sp" />
     </LinearLayout>
 
     <include
@@ -45,3 +51,15 @@
         android:fontFamily="sans-serif-condensed" />
 
 </LinearLayout>
+
+<ImageView
+android:layout_width="24dp"
+android:layout_height="24dp"
+android:layout_alignParentRight="true"
+android:layout_alignParentTop="true"
+android:src="@drawable/ic_refresh_white"
+android:layout_marginTop="4dp"
+android:layout_marginRight="4dp"
+android:id="@+id/widget_refresh_button" />
+
+    </RelativeLayout>

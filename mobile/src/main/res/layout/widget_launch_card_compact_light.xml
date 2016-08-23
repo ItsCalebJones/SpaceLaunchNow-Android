@@ -9,9 +9,7 @@
         android:layout_height="match_parent"
         android:padding="8dp"
         android:orientation="horizontal"
-        android:background="@drawable/layout_rounded_background_white"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp">
+        android:background="@drawable/layout_rounded_background_white">
 
         <ImageView
             android:id="@+id/widget_categoryIcon"
@@ -41,7 +39,7 @@
                 android:maxLines="2"
                 android:padding="2dp"
                 android:text="Unknown Launch Vehicle"
-                android:textColor="?android:textColorPrimary"
+                android:textColor="@color/primary_text_light"
                 android:textSize="18sp"
                 android:textStyle="normal" />
 
@@ -54,6 +52,7 @@
                 android:maxLines="2"
                 android:padding="2dp"
                 android:singleLine="false"
+                android:textColor="@color/secondary_text_light"
                 android:text="Unknown Launch Location" />
 
             <TextView
@@ -65,18 +64,19 @@
                 android:maxLines="2"
                 android:padding="2dp"
                 android:singleLine="false"
+                android:textColor="@color/secondary_text_light"
                 android:text="Unknown Launch Date" />
 
         </LinearLayout>
     </LinearLayout>
 
     <ImageView
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:src="@drawable/ic_refresh_black"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="4dp"
         android:layout_marginRight="4dp"
         android:id="@+id/widget_refresh_button" />
 
