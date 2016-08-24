@@ -131,7 +131,7 @@
 
         <receiver
             android:name=".widget.LaunchTimerWidgetProvider"
-            android:label="Launch Timer">
+            android:label="Countdown">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_REFRESH"/>
@@ -145,7 +145,7 @@
 
         <receiver
             android:name=".widget.LaunchCardCompactWidgetProvider"
-            android:label="Compact Card">
+            android:label="Launch Card">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="me.calebjones.spacelaunchnow.widget.LaunchCardCompactWidgetProvider.ACTION_WIDGET_REFRESH"/>
@@ -153,6 +153,19 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_launch_card_compact_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.LaunchWordTimerWidgetProvider"
+            android:label="Next Launch">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_REFRESH"/>
+                <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_CLICK"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_launch_word_timer_info" />
         </receiver>
     </application>
 

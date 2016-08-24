@@ -7,7 +7,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.widget.RemoteViews;
 
 import java.util.Calendar;
@@ -21,16 +20,14 @@ import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.interfaces.QueryBuilder;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.utils.NumberToWords;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 
-public class LaunchTimerWidgetProvider extends AppWidgetProvider {
+public class LaunchWordTimerWidgetProvider extends AppWidgetProvider {
 
     private Realm mRealm;
-    private int last_refresh_counter = 0;
-    private static CountDownTimer countDownTimer;
-    private static boolean invalid = false;
     public RemoteViews remoteViews;
     public SwitchPreferences switchPreferences;
     public static String ACTION_WIDGET_REFRESH = "ActionReceiverRefresh";
@@ -95,7 +92,6 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
 
     public void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int widgetId,
                                 Bundle options) {
-        invalid = true;
         int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
         int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
         int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
@@ -107,16 +103,14 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
 
         if (minWidth <= 200 || minHeight <= 100) {
             remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.widget_launch_timer_small_dark);
+                    R.layout.widget_launch_word_timer_small_dark);
         } else if (minWidth <= 320) {
             remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.widget_launch_timer_dark);
+                    R.layout.widget_launch_word_timer_dark);
         } else {
             remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.widget_launch_timer_large_dark);
+                    R.layout.widget_launch_word_timer_large_dark);
         }
-
-
 
         setLaunchName(context, launch, remoteViews, options);
         setMissionName(context, launch, remoteViews, options);
@@ -128,7 +122,7 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
     }
 
     private void setRefreshIntent(Context context, LaunchRealm launch, RemoteViews remoteViews) {
-        Intent refresh = new Intent(context, LaunchTimerWidgetProvider.class);
+        Intent refresh = new Intent(context, LaunchWordTimerWidgetProvider.class);
         refresh.setAction(ACTION_WIDGET_REFRESH);
         PendingIntent refreshPending = PendingIntent.getBroadcast(context, 0, refresh, 0);
 
@@ -146,7 +140,7 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager,
                                           int appWidgetId, Bundle newOptions) {
-        updateAppWidget(context,appWidgetManager, appWidgetId, newOptions);
+        updateAppWidget(context, appWidgetManager, appWidgetId, newOptions);
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
     }
 
@@ -156,7 +150,7 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
             Timber.v("onReceive", ACTION_WIDGET_REFRESH);
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, this.getClass()));
-            onUpdate(context,appWidgetManager,appWidgetIds);
+            onUpdate(context, appWidgetManager, appWidgetIds);
         } else if (intent.getAction().equals(ACTION_WIDGET_CLICK)) {
             Timber.v("onReceive", ACTION_WIDGET_CLICK);
         } else {
@@ -199,110 +193,20 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
 
         long millisUntilFinished = getFutureMilli(launchRealm) - System.currentTimeMillis();
 
-        if(countDownTimer != null){
-            Timber.v("Cancelling countdown timer.");
-            countDownTimer.cancel();
-        }
-        invalid = false;
-        countDownTimer = new CountDownTimer(millisUntilFinished, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
+        // Calculate the Days/Hours/Mins/Seconds numerically.
+        long longDays = millisUntilFinished / 86400000;
+        long longHours = (millisUntilFinished / 3600000) % 24;
 
-                int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
-                int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
-                int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
-                int maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
+        NumberToWords.DefaultProcessor processor = new NumberToWords.DefaultProcessor();
 
-                Bundle newOptions = appWidgetManager.getAppWidgetOptions(widgetId);
+        // Update the views
+        String days = processor.getName(longDays);
+        remoteViews.setTextViewText(R.id.countdown_days, String.valueOf(longDays));
 
-                int newMinWidth = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
-                int newMaxWidth = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
-                int newMinHeight = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
-                int newMaxHeight = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
+        String hours = processor.getName(longHours);
+        remoteViews.setTextViewText(R.id.countdown_hours, String.valueOf(longHours));
 
-                if (minWidth != newMinWidth || maxWidth != newMaxWidth || minHeight != newMinHeight || maxHeight != newMaxHeight || invalid) {
-                    Timber.v("Cancelling countdown timer - onClick - invalid = %s", invalid);
-                    this.cancel();
-                } else {
-                    Timber.v("Countdown Timer onTick - ID: %s", widgetId);
-                }
-
-                // Calculate the Days/Hours/Mins/Seconds numerically.
-                long longDays = millisUntilFinished / 86400000;
-                long longHours = (millisUntilFinished / 3600000) % 24;
-                long longMinutes = (millisUntilFinished / 60000) % 60;
-                long longSeconds = (millisUntilFinished / 1000) % 60;
-
-                String days = String.valueOf(longDays);
-                String hours;
-                String minutes;
-                String seconds;
-
-                // Translate those numerical values to string values.
-                if (longHours < 10) {
-                    hours = "0" + String.valueOf(longHours);
-                } else {
-                    hours = String.valueOf(longHours);
-                }
-
-                if (longMinutes < 10) {
-                    minutes = "0" + String.valueOf(longMinutes);
-                } else {
-                    minutes = String.valueOf(longMinutes);
-                }
-
-                if (longSeconds < 10) {
-                    seconds = "0" + String.valueOf(longSeconds);
-                } else {
-                    seconds = String.valueOf(longSeconds);
-                }
-
-
-                // Update the views
-                if (Integer.valueOf(days) > 99) {
-                    remoteViews.setTextViewText(R.id.countdown_days, "99+");
-                } else if (Integer.valueOf(days) > 0) {
-                    remoteViews.setTextViewText(R.id.countdown_days, days);
-                } else {
-                    remoteViews.setTextViewText(R.id.countdown_days, "- -");
-                }
-
-                if (Integer.valueOf(hours) > 0) {
-                    remoteViews.setTextViewText(R.id.countdown_hours, hours);
-                } else if (Integer.valueOf(days) > 0) {
-                    remoteViews.setTextViewText(R.id.countdown_hours, "00");
-                } else {
-                    remoteViews.setTextViewText(R.id.countdown_hours, "- -");
-                }
-
-                if (Integer.valueOf(minutes) > 0) {
-                    remoteViews.setTextViewText(R.id.countdown_minutes, minutes);
-                } else if (Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
-                    remoteViews.setTextViewText(R.id.countdown_minutes, "00");
-                } else {
-                    remoteViews.setTextViewText(R.id.countdown_minutes, "- -");
-                }
-
-                if (Integer.valueOf(seconds) > 0) {
-                    remoteViews.setTextViewText(R.id.countdown_seconds, seconds);
-                } else if (Integer.valueOf(minutes) > 0 || Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
-                    remoteViews.setTextViewText(R.id.countdown_seconds, "60");
-                } else {
-                    remoteViews.setTextViewText(R.id.countdown_seconds, "- -");
-                }
-                appWidgetManager.updateAppWidget(widgetId, remoteViews);
-            }
-
-            @Override
-            public void onFinish() {
-                remoteViews.setTextViewText(R.id.countdown_days, "- -");
-                remoteViews.setTextViewText(R.id.countdown_hours, "- -");
-                remoteViews.setTextViewText(R.id.countdown_seconds, "- -");
-                appWidgetManager.updateAppWidget(widgetId, remoteViews);
-                this.cancel();
-            }
-        }.start();
-
+        appWidgetManager.updateAppWidget(widgetId, remoteViews);
     }
 
     public void setMissionName(Context context, LaunchRealm launchRealm, RemoteViews remoteViews, Bundle options) {
@@ -314,7 +218,7 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
     }
 
     public static void pushWidgetUpdate(Context context, RemoteViews remoteViews) {
-        ComponentName myWidget = new ComponentName(context, LaunchTimerWidgetProvider.class);
+        ComponentName myWidget = new ComponentName(context, LaunchWordTimerWidgetProvider.class);
         AppWidgetManager manager = AppWidgetManager.getInstance(context);
         manager.updateAppWidget(myWidget, remoteViews);
     }
