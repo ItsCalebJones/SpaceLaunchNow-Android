@@ -8,6 +8,6 @@
     android:updatePeriodMillis="1800000"
     android:initialLayout="@layout/widget_launch_card_compact_dark"
     android:resizeMode="horizontal|vertical"
-    android:previewImage="@drawable/countdown_timer_preview"
+    android:previewImage="@drawable/launch_card_compact_preview"
     >
 </appwidget-provider>
