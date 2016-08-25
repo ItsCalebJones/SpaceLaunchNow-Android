@@ -150,11 +150,27 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
     }
 
     public void setLocationName(Context context, LaunchRealm launchRealm, RemoteViews remoteViews, Bundle options) {
-        remoteViews.setTextViewText(R.id.widget_location, launchRealm.getLocation().getName());
+        String locationName = null;
+
+        if (launchRealm.getLocation() != null && launchRealm.getLocation().getName() != null){
+            locationName = launchRealm.getLocation().getName();
+        }
+
+        if (locationName != null) {
+            remoteViews.setTextViewText(R.id.widget_location, locationName);
+        } else {
+            remoteViews.setTextViewText(R.id.widget_location, "Unknown Launch Location");
+        }
     }
 
     public void setLaunchName(Context context, LaunchRealm launchRealm, RemoteViews remoteViews, Bundle options) {
-        remoteViews.setTextViewText(R.id.widget_launch_rocket, getLaunchName(launchRealm));
+        String launchName = getLaunchName(launchRealm);
+
+        if (launchName != null) {
+            remoteViews.setTextViewText(R.id.widget_launch_rocket, launchName);
+        } else {
+            remoteViews.setTextViewText(R.id.widget_launch_rocket, "Unknown Launch");
+        }
     }
 
     private void setLaunchDate(Context context, LaunchRealm launch, RemoteViews remoteViews) {
@@ -165,7 +181,11 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
             sdf = new SimpleDateFormat("MMMM dd, yyyy - hh:mm a");
         }
         sdf.toLocalizedPattern();
-        remoteViews.setTextViewText(R.id.widget_launch_date, sdf.format(launch.getNet()));
+        if (launch.getNet() != null) {
+            remoteViews.setTextViewText(R.id.widget_launch_date, sdf.format(launch.getNet()));
+        } else {
+            remoteViews.setTextViewText(R.id.widget_launch_date, "Unknown Launch Date");
+        }
     }
 
     //TODO Light/Dark
@@ -179,7 +199,12 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
 
     public String getLaunchName(LaunchRealm launchRealm) {
         //Replace with launch
-        return launchRealm.getRocket().getName();
+        if (launchRealm.getRocket() != null && launchRealm.getRocket().getName() != null) {
+            //Replace with mission name
+            return launchRealm.getRocket().getName();
+        } else {
+            return null;
+        }
     }
 
     public String getMissionName(LaunchRealm launchRealm) {
@@ -188,7 +213,7 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
             //Replace with mission name
             return launchRealm.getMissions().get(0).getName();
         } else {
-            return "";
+            return null;
         }
     }
 
