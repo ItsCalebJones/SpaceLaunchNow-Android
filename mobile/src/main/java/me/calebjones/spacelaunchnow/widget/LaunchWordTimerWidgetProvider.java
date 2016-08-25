@@ -171,17 +171,18 @@ public class LaunchWordTimerWidgetProvider extends AppWidgetProvider {
     }
 
     public String getLaunchName(LaunchRealm launchRealm) {
-        //Replace with launch
-        return launchRealm.getRocket().getName();
+        if (launchRealm.getRocket() != null && launchRealm.getRocket().getName() != null) {
+            return launchRealm.getRocket().getName();
+        } else {
+            return null;
+        }
     }
 
     public String getMissionName(LaunchRealm launchRealm) {
-
         if (launchRealm.getMissions().size() > 0) {
-            //Replace with mission name
             return launchRealm.getMissions().get(0).getName();
         } else {
-            return "";
+            return null;
         }
     }
 
@@ -222,11 +223,23 @@ public class LaunchWordTimerWidgetProvider extends AppWidgetProvider {
     }
 
     public void setMissionName(Context context, LaunchRealm launchRealm, RemoteViews remoteViews, Bundle options) {
-        remoteViews.setTextViewText(R.id.widget_mission_name, getMissionName(launchRealm));
+        String missionName = getMissionName(launchRealm);
+
+        if (missionName != null) {
+            remoteViews.setTextViewText(R.id.widget_mission_name, missionName);
+        } else {
+            remoteViews.setTextViewText(R.id.widget_mission_name, "Unknown Mission");
+        }
     }
 
     public void setLaunchName(Context context, LaunchRealm launchRealm, RemoteViews remoteViews, Bundle options) {
-        remoteViews.setTextViewText(R.id.widget_launch_name, getLaunchName(launchRealm));
+        String launchName = getLaunchName(launchRealm);
+
+        if (launchName != null) {
+            remoteViews.setTextViewText(R.id.widget_launch_name, launchName);
+        } else {
+            remoteViews.setTextViewText(R.id.widget_launch_name, "Unknown Launch");
+        }
     }
 
     public static void pushWidgetUpdate(Context context, RemoteViews remoteViews) {
