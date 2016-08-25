@@ -253,24 +253,40 @@ public class CardSmallAdapter extends RecyclerView.Adapter<CardSmallAdapter.View
 
         //Get launch date
         if (launchItem.getStatus() == 2) {
-            //Get launch date
-            SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy.");
-            sdf.toLocalizedPattern();
-            Date date = launchItem.getWindowstart();
-            launchDate = sdf.format(date);
 
-            holder.launch_date.setText("To be determined... " + launchDate);
-        } else {
-            if (sharedPref.getBoolean("local_time", true)) {
-                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+            if (launchItem.getNet() !=null) {
+                //Get launch date
+                SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy.");
                 sdf.toLocalizedPattern();
-                Date date = launchItem.getWindowstart();
+                Date date = launchItem.getNet();
                 launchDate = sdf.format(date);
+                holder.launch_date.setText("To be determined... " + launchDate);
+            }
+        } else {
+            if (launchItem.getNet() !=null) {
+                if (sharedPref.getBoolean("local_time", true)) {
+                    SimpleDateFormat sdf;
+                    if (sharedPref.getBoolean("24_hour_mode", false)) {
+                        sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - kk:mm zzz");
+                    } else {
+                        sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                    }
+                    sdf.toLocalizedPattern();
+                    Date date = launchItem.getNet();
+                    launchDate = sdf.format(date);
+                } else {
+                    SimpleDateFormat sdf;
+                    if (sharedPref.getBoolean("24_hour_mode", false)) {
+                        sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - kk:mm zzz");
+                    } else {
+                        sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                    }
+                    Date date = launchItem.getNet();
+                    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    launchDate = sdf.format(date);
+                }
             } else {
-                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
-                Date date = launchItem.getWindowstart();
-                sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                launchDate = sdf.format(date);
+                launchDate = "To be determined... ";
             }
             holder.launch_date.setText(launchDate);
         }
