@@ -23,7 +23,7 @@
             android:scaleX="1.0"
             android:scaleY="1.0"
             android:text="- -"
-            android:textSize="45dp"
+            android:textSize="40sp"
             android:maxLines="1"
             android:textColor="@color/dark_theme_primary_text_color" />
 
@@ -34,7 +34,7 @@
             android:lines="1"
             android:padding="0dp"
             android:text="DAYS"
-            android:textSize="12dp"
+            android:textSize="12sp"
             android:textColor="@color/dark_theme_primary_text_color" />
     </LinearLayout>
 
@@ -47,7 +47,7 @@
         android:scaleX="1.0"
         android:scaleY="1.0"
         android:text=":"
-        android:textSize="45dp"
+        android:textSize="40sp"
         android:textColor="@color/dark_theme_primary_text_color" />
 
     <LinearLayout
@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:padding="0dp"
             android:text="- -"
-            android:textSize="45dp"
+            android:textSize="40sp"
             android:maxLines="1"
             android:textColor="@color/dark_theme_primary_text_color" />
 
@@ -74,7 +74,7 @@
             android:lines="1"
             android:padding="0dp"
             android:text="HOURS"
-            android:textSize="12dp"
+            android:textSize="12sp"
             android:textColor="@color/dark_theme_primary_text_color" />
     </LinearLayout>
 
@@ -87,7 +87,7 @@
         android:scaleX="1.0"
         android:scaleY="1.0"
         android:text=":"
-        android:textSize="45dp"
+        android:textSize="40sp"
         android:textColor="@color/dark_theme_primary_text_color" />
 
     <LinearLayout
@@ -103,7 +103,7 @@
             android:layout_height="wrap_content"
             android:padding="0dp"
             android:text="- -"
-            android:textSize="45dp"
+            android:textSize="40sp"
             android:maxLines="1"
             android:textColor="@color/dark_theme_primary_text_color" />
 
@@ -114,7 +114,7 @@
             android:lines="1"
             android:padding="0dp"
             android:text="MINUTES"
-            android:textSize="12dp"
+            android:textSize="12sp"
             android:textColor="@color/dark_theme_primary_text_color" />
     </LinearLayout>
 
@@ -127,7 +127,7 @@
         android:scaleX="1.0"
         android:scaleY="1.0"
         android:text=":"
-        android:textSize="45dp"
+        android:textSize="40sp"
         android:textColor="@color/dark_theme_primary_text_color" />
 
     <LinearLayout
@@ -143,7 +143,7 @@
             android:layout_height="wrap_content"
             android:padding="0dp"
             android:text="- -"
-            android:textSize="45dp"
+            android:textSize="40sp"
             android:maxLines="1"
             android:textColor="@color/dark_theme_primary_text_color" />
 
@@ -154,7 +154,7 @@
             android:lines="1"
             android:padding="0dp"
             android:text="SECONDS"
-            android:textSize="12dp"
+            android:textSize="12sp"
             android:textColor="@color/dark_theme_primary_text_color" />
     </LinearLayout>
 </LinearLayout>
