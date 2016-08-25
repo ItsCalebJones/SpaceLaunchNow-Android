@@ -1,6 +1,7 @@
 package me.calebjones.spacelaunchnow.widget;
 
 import android.app.PendingIntent;
+import android.appwidget.AppWidgetHost;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
@@ -42,6 +43,16 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
 
         for (int widgetId : appWidgetIds) {
             Bundle options = appWidgetManager.getAppWidgetOptions(widgetId);
+
+            int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
+            int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
+            int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
+            int maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
+
+            if (minWidth == 0 && maxWidth == 0 && minHeight == 0 && maxHeight == 0) {
+                AppWidgetHost host = new AppWidgetHost(context, 0);
+                host.deleteAppWidgetId(widgetId);
+            }
 
             // Update The clock label using a shared method
             updateAppWidget(context, appWidgetManager, widgetId, options);
@@ -101,14 +112,16 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
                     R.layout.widget_launch_card_compact_large_dark);
         }
 
-        setLaunchName(context, launch, remoteViews, options);
-        setLocationName(context, launch, remoteViews, options);
-        setLaunchDate(context, launch, remoteViews);
-        setCategoryIcon(context, launch, remoteViews);
-        setRefreshIntent(context, launch, remoteViews);
-        setWidgetStyle(context, remoteViews);
+        if (minWidth > 0 && maxWidth > 0 && minHeight > 0 && maxHeight > 0) {
+            setLaunchName(context, launch, remoteViews, options);
+            setLocationName(context, launch, remoteViews, options);
+            setLaunchDate(context, launch, remoteViews);
+            setCategoryIcon(context, launch, remoteViews);
+            setRefreshIntent(context, launch, remoteViews);
+            setWidgetStyle(context, remoteViews);
 
-        pushWidgetUpdate(context, remoteViews);
+            pushWidgetUpdate(context, remoteViews);
+        }
     }
 
     private void setRefreshIntent(Context context, LaunchRealm launch, RemoteViews remoteViews) {

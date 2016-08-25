@@ -1,6 +1,7 @@
 package me.calebjones.spacelaunchnow.widget;
 
 import android.app.PendingIntent;
+import android.appwidget.AppWidgetHost;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
@@ -44,6 +45,16 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
         // If Launch is Null then go ahead and load the next launch. Otherwise check conditions before refreshing.
         for (int widgetId : appWidgetIds) {
             Bundle options = appWidgetManager.getAppWidgetOptions(widgetId);
+
+            int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
+            int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
+            int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
+            int maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
+
+            if (minWidth == 0 && maxWidth == 0 && minHeight == 0 && maxHeight == 0) {
+                AppWidgetHost host = new AppWidgetHost(context, 0);
+                host.deleteAppWidgetId(widgetId);
+            }
 
             // Update The clock label using a shared method
             updateAppWidget(context, appWidgetManager, widgetId, options);
@@ -117,7 +128,7 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
         }
 
 
-
+        if (minWidth > 0 && maxWidth > 0 && minHeight > 0 && maxHeight > 0) {
         setLaunchName(context, launch, remoteViews, options);
         setMissionName(context, launch, remoteViews, options);
         setLaunchTimer(context, launch, remoteViews, appWidgetManager, widgetId, options);
@@ -125,6 +136,7 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
         setWidgetStyle(context, remoteViews);
 
         pushWidgetUpdate(context, remoteViews);
+        }
     }
 
     private void setRefreshIntent(Context context, LaunchRealm launch, RemoteViews remoteViews) {
