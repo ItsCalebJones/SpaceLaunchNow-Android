@@ -16,13 +16,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
@@ -514,16 +511,19 @@ public class NextLaunchTracker extends IntentService implements
 
         expandedText = "Launch attempt in " + minutes + " minutes from " + launchPad + ".";
 
-        //Get launch date
-        if (sharedPref.getBoolean("local_time", true)) {
-            SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
-            df.toLocalizedPattern();
-            Date date = launch.getWindowstart();
-            launchDate = df.format(date);
-        } else {
-            SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy hh:mm a zzz");
-            Date date = launch.getWindowstart();
-            launchDate = sdf.format(date);
+        if (launch.getNet() != null) {
+            //Get launch date
+            if (sharedPref.getBoolean("local_time", true)) {
+                SimpleDateFormat df = new SimpleDateFormat("NET: hh:mm a zzz");
+                df.toLocalizedPattern();
+                Date date = launch.getNet();
+                launchDate = df.format(date);
+            } else {
+                SimpleDateFormat sdf = new SimpleDateFormat("NET: hh:mm a zzz");
+                Date date = launch.getNet();
+                launchDate = sdf.format(date);
+            }
+            mBuilder.setSubText(launchDate);
         }
 
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
@@ -545,7 +545,6 @@ public class NextLaunchTracker extends IntentService implements
                 .setSmallIcon(R.drawable.ic_notification)
                 .setAutoCancel(true)
                 .setContentText(expandedText)
-                .setSubText(launchDate)
                 .extend(wearableExtender)
                 .setContentIntent(appIntent)
                 .setSound(alarmSound);
@@ -612,16 +611,19 @@ public class NextLaunchTracker extends IntentService implements
         PendingIntent appIntent = PendingIntent.getActivity(this, 0, mainActivityIntent, 0);
         expandedText = "Launch attempt in " + hours + " hours from " + launchPad;
 
-        //Get launch date
-        if (sharedPref.getBoolean("local_time", true)) {
-            SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
-            df.toLocalizedPattern();
-            Date date = launch.getWindowstart();
-            launchDate = df.format(date);
-        } else {
-            SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy hh:mm a zzz");
-            Date date = launch.getWindowstart();
-            launchDate = sdf.format(date);
+        if (launch.getNet() != null) {
+            //Get launch date
+            if (sharedPref.getBoolean("local_time", true)) {
+                SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd - hh:mm a zzz");
+                df.toLocalizedPattern();
+                Date date = launch.getNet();
+                launchDate = df.format(date);
+            } else {
+                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd - hh:mm a zzz");
+                Date date = launch.getNet();
+                launchDate = sdf.format(date);
+            }
+            mBuilder.setSubText(launchDate);
         }
 
         NotificationCompat.WearableExtender wearableExtender =
@@ -635,7 +637,6 @@ public class NextLaunchTracker extends IntentService implements
                 .setSmallIcon(R.drawable.ic_notification)
                 .setContentIntent(appIntent)
                 .setContentText(expandedText)
-                .setSubText(launchDate)
                 .extend(wearableExtender)
                 .setSound(alarmSound)
                 .setAutoCancel(true);
