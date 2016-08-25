@@ -155,8 +155,13 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
         remoteViews.setTextViewText(R.id.widget_launch_date, sdf.format(launch.getNet()));
     }
 
+    //TODO Light/Dark
     private void setCategoryIcon(Context context, LaunchRealm launch, RemoteViews remoteViews) {
-        Utils.setCategoryIcon(remoteViews, launch.getMissions().get(0).getTypeName(), true, R.id.widget_categoryIcon);
+        if (launch.getMissions() != null && launch.getMissions().size() > 0) {
+            Utils.setCategoryIcon(remoteViews, launch.getMissions().get(0).getTypeName(), true, R.id.widget_categoryIcon);
+        } else {
+            remoteViews.setImageViewResource(R.id.widget_categoryIcon, R.drawable.ic_unknown_white);
+        }
     }
 
     public String getLaunchName(LaunchRealm launchRealm) {
