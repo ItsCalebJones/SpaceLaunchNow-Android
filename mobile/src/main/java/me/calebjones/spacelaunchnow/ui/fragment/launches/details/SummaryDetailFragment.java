@@ -21,6 +21,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.zetterstrom.com.forecast.ForecastClient;
+import android.zetterstrom.com.forecast.models.DataPoint;
 import android.zetterstrom.com.forecast.models.Forecast;
 import android.zetterstrom.com.forecast.models.Unit;
 
@@ -156,12 +157,50 @@ public class SummaryDetailFragment extends BaseFragment {
         detailLaunch = ((LaunchDetailActivity) getActivity()).getLaunch();
         setUpViews();
 
-        if (sharedPref.getBoolean("weather", false) && detailLaunch.getNet().after(Calendar.getInstance().getTime())) {
-            fetchCurrentWeather();
-        } else {
-            weatherCard.setVisibility(View.GONE);
-        }
+//        if (sharedPref.getBoolean("weather", false)){
+            if (detailLaunch.getNet().after(Calendar.getInstance().getTime())) {
+                fetchCurrentWeather();
+            } else {
+                fetchPastWeather();
+            }
+//        }
         super.onResume();
+    }
+
+    private void fetchPastWeather() {
+        if (detailLaunch.getLocation().getPads().size() > 0) {
+
+            PadRealm pad = detailLaunch.getLocation().getPads().get(0);
+
+            double latitude = pad.getLatitude();
+            double longitude = pad.getLongitude();
+
+            Unit unit;
+
+            if (sharedPref.getBoolean("weather_US_SI", true)) {
+                unit = Unit.US;
+            } else {
+                unit = Unit.SI;
+            }
+
+            ForecastClient.getInstance()
+                    .getForecast(latitude, longitude, Double.valueOf(detailLaunch.getNetstamp()), null, unit, null, false, new Callback<Forecast>() {
+                        @Override
+                        public void onResponse(Call<Forecast> forecastCall, Response<Forecast> response) {
+                            if (response.isSuccessful()) {
+                                Forecast forecast = response.body();
+                                updateWeatherView(forecast);
+                            } else {
+                                Timber.e("Error: %s", response.errorBody());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Forecast> forecastCall, Throwable t) {
+                            Timber.e("ERROR: %s", t.getLocalizedMessage());
+                        }
+                    });
+        }
     }
 
     private void fetchCurrentWeather() {
@@ -249,13 +288,21 @@ public class SummaryDetailFragment extends BaseFragment {
             }
 
             if (forecast.getDaily().getDataPoints().size() >= 3) {
-                //Day One!
-                setIconView(dayTwoWeatherIconView, forecast.getDaily().getDataPoints().get(1).getIcon().getText());
 
-                //Get Low - High temp
-                String dayTwoHighTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(1).getTemperatureMax()));
-                String dayTwoLowTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(1).getTemperatureMin()));
-                String dayTwoLowHigh = lowTemp + (char) 0x00B0 + " " + temp + " | " + highTemp + (char) 0x00B0 + " " + temp;
+                DataPoint dayOne = forecast.getDaily().getDataPoints().get(1);
+
+                if (dayOne.getIcon()!= null && dayOne.getIcon().getText() != null) {
+                    //Day One!
+                    setIconView(dayTwoWeatherIconView, dayOne.getIcon().getText());
+                }
+
+                String dayTwoLowHigh = "";
+                if (dayOne.getTemperatureMax() != null && dayOne.getTemperatureMin() != null) {
+                    //Get Low - High temp
+                    String dayTwoHighTemp = String.valueOf(Math.round(dayOne.getTemperatureMax()));
+                    String dayTwoLowTemp = String.valueOf(Math.round(dayOne.getTemperatureMin()));
+                    dayTwoLowHigh = dayTwoLowTemp + (char) 0x00B0 + " " + temp + " | " + dayTwoHighTemp + (char) 0x00B0 + " " + temp;
+                }
 
                 //Get rain prop
                 String dayTwoPrecipProb = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(1).getPrecipProbability() * 100) + "%");
@@ -264,7 +311,7 @@ public class SummaryDetailFragment extends BaseFragment {
                 String dayTwoWindSpeed = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(1).getWindSpeed())) + " " + speed;
 
                 //Get day date
-                String dayTwoDate = new SimpleDateFormat("EE").format(forecast.getDaily().getDataPoints().get(1).getTime());
+                String dayTwoDate = new SimpleDateFormat("EE ").format(forecast.getDaily().getDataPoints().get(1).getTime());
 
                 dayTwoWeatherLowHigh.setText(dayTwoLowHigh);
                 dayTwoWeatherPrecip.setText(dayTwoPrecipProb);

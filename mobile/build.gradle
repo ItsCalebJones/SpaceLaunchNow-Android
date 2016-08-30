@@ -46,7 +46,7 @@ android {
         }
     }
     compileSdkVersion 24
-    buildToolsVersion '24.0.1'
+    buildToolsVersion '24.0.2'
     defaultConfig {
         applicationId "me.calebjones.spacelaunchnow"
         manifestPlaceholders = [appNameLabel                   : "@string/application_name",
@@ -124,8 +124,8 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.github.renaudcerrato:static-maps-api:1.0.2'
     compile 'com.mikhaellopez:circularfillableloaders:1.2.0'
-    compile 'com.github.jrejaud:WearSocket:1.0.+'
+    compile 'com.github.jrejaud:WearSocket:1.0.8'
     compile 'com.github.pwittchen:weathericonview:1.1.0'
+    compile 'me.grantland:autofittextview:0.2.1'
     compile 'android.zetterstrom.com.forecast:forecast:1.1.1'
-    compile 'me.grantland:autofittextview:0.2.+'
 }
