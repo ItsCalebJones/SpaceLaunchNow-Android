@@ -34,3 +34,4 @@ mobile/src/main/res/values/api_keys.xml
 mobile/fabric.properties
 
 .idea/misc.xml
+.idea/modules.xml

@@ -19,14 +19,14 @@ def appVersionName = advancedVersioning.versionName
 def appVersionCode = advancedVersioning.versionCode
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 24
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         manifestPlaceholders = [ applicationLabel:"@string/app_name"]
         applicationId "me.calebjones.spacelaunchnow"
         minSdkVersion 21
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode appVersionCode
         versionName appVersionName
     }
@@ -45,8 +45,8 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.google.android.support:wearable:1.+'
-    provided 'com.google.android.wearable:wearable:1.+'
-    compile 'com.google.android.gms:play-services-wearable:9.0.2'
+    compile 'com.google.android.support:wearable:1.4.0'
+    provided 'com.google.android.wearable:wearable:1.0.0'
+    compile 'com.google.android.gms:play-services-wearable:9.4.0'
     compile 'com.jakewharton.timber:timber:4.3.0'
 }
