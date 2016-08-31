@@ -5,14 +5,17 @@ advancedVersioning {
     nameOptions {
         versionMajor 1
         versionMinor 1
-        versionPatch 1
+        versionPatch 2
 
     }
     codeOptions {
         versionCodeType org.moallemi.gradle.internal.VersionCodeType.AUTO_INCREMENT_ONE_STEP
         dependsOnTasks 'release'
     }
-    outputOptions { }
+    outputOptions {
+        renameOutput true
+        nameFormat '${projectName}-${appName}-${buildType}-${versionName}.${versionCode}'
+    }
 }
 
 def appVersionName = advancedVersioning.versionName
