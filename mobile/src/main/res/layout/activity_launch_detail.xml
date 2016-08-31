@@ -79,6 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="32dp"
                 android:layout_marginRight="32dp"
+                android:paddingTop="8dp"
                 android:singleLine="true"
                 android:text="Unknown Rocket"
                 android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />

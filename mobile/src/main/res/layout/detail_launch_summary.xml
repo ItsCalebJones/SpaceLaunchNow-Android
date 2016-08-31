@@ -32,14 +32,12 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="8dp"
                 android:orientation="vertical">
 
                 <LinearLayout
 
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:elevation="4dp"
                     android:focusable="false"
                     android:orientation="vertical">
 
@@ -62,8 +60,8 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:gravity="center"
-                        android:paddingBottom="16dp"
-                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:paddingTop="4dp"
                         android:singleLine="false"
                         android:text="Unknown Launch Status"
                         android:textAlignment="center"
@@ -80,7 +78,6 @@
                         android:id="@+id/map_view_summary"
                         android:layout_width="fill_parent"
                         android:layout_height="160dp"
-                        android:layout_below="@+id/separator"
                         android:clickable="false"
                         tools:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
@@ -98,7 +95,6 @@
                 </RelativeLayout>
 
                 <View
-
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_margin="8dp"
@@ -155,7 +151,7 @@
                     android:layout_marginLeft="8dp"
                     android:ellipsize="end"
                     android:gravity="left"
-                    android:paddingBottom="2dp"
+                    android:paddingBottom="12dp"
                     android:paddingLeft="8dp"
                     android:paddingTop="8dp"
                     android:singleLine="false"
@@ -164,7 +160,6 @@
 
 
                 <LinearLayout
-
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -201,7 +196,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/card_margin"
             android:animateLayoutChanges="true"
-            card_view:cardBackgroundColor="@color/cardview_light_background"
             card_view:cardCornerRadius="0dp"
             card_view:cardElevation="4dp"
             card_view:cardPreventCornerOverlap="true"
@@ -227,7 +221,7 @@
                         android:paddingTop="10dp"
                         android:scaleType="centerCrop"
                         app:weatherIconColor="@android:color/black"
-                        app:weatherIconSize="70" />
+                        app:weatherIconSize="80" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -242,20 +236,23 @@
                             android:orientation="horizontal"
                             android:paddingTop="20dp">
 
-                            <ImageView
+                            <com.github.pwittchen.weathericonview.WeatherIconView
+                                android:id="@+id/weather_percip_chance_icon"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight=".4"
                                 android:gravity="center|left"
-                                android:src="@drawable/ic_umbrella" />
+                                android:scaleType="centerCrop"
+                                app:weatherIconSize="30"
+                                app:weatherIconResource="@string/wi_umbrella" />
 
                             <TextView
                                 android:id="@+id/weather_percip_chance"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight=".6"
-                                android:gravity="center"
-                                android:paddingLeft="5dp"
+                                android:gravity="left|center"
+                                android:paddingLeft="4dp"
                                 android:text="--"
                                 android:textColor="?android:textColorSecondary"
                                 android:textIsSelectable="false"
@@ -270,25 +267,28 @@
                             android:orientation="horizontal"
                             android:paddingBottom="20dp">
 
-                            <ImageView
+                            <com.github.pwittchen.weathericonview.WeatherIconView
+                                android:id="@+id/weather_wind_speed_icon"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight=".4"
-                                android:gravity="center"
-                                android:src="@drawable/ic_windy" />
+                                android:gravity="center|left"
+                                android:scaleType="centerCrop"
+                                app:weatherIconSize="30"
+                                app:weatherIconResource="@string/wi_windy" />
 
                             <TextView
                                 android:id="@+id/weather_wind_speed"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight=".6"
-                                android:gravity="center"
-                                android:paddingLeft="5dp"
+                                android:paddingLeft="4dp"
                                 android:text="--"
                                 android:textColor="?android:textColorSecondary"
                                 android:textIsSelectable="false"
                                 android:textSize="15dp"
-                                android:textStyle="normal" />
+                                android:textStyle="normal"
+                                android:gravity="left|center" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -303,9 +303,9 @@
                         <TextView
                             android:id="@+id/weather_current_temp"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight=".4"
-                            android:gravity="bottom|center"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:paddingTop="8dp"
                             android:text="--"
                             android:textColor="?android:textColorPrimary"
                             android:textIsSelectable="false"
@@ -315,9 +315,9 @@
                         <TextView
                             android:id="@+id/weather_feels_like"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight=".15"
-                            android:gravity="top|center"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="8dp"
+                            android:gravity="center"
                             android:text="--"
                             android:textColor="?android:textColorSecondary"
                             android:textSize="15dp"
@@ -326,8 +326,7 @@
                         <TextView
                             android:id="@+id/weather_low_high"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight=".2"
+                            android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="-- | --"
                             android:textColor="?android:textColorSecondary"
@@ -357,6 +356,7 @@
                     android:gravity="center|left"
                     android:paddingLeft="30dp"
                     android:paddingRight="30dp"
+                    android:paddingBottom="8dp"
                     android:textColor="?android:textColorPrimary"
                     android:textSize="20sp"
                     android:textStyle="normal"
@@ -364,29 +364,27 @@
 
 
                 <LinearLayout
-                    android:id="@+id/three_day_forcast"
+                    android:id="@+id/three_day_forecast"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:gravity="center|bottom"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <LinearLayout
                         android:id="@+id/day_two"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginBottom="10dp"
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="10dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_weight="1"
                         android:orientation="vertical">
 
                         <com.github.pwittchen.weathericonview.WeatherIconView
                             android:id="@+id/day_two_weather_icon"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_weight=".5"
+
                             android:gravity="center"
                             android:scaleType="centerCrop"
                             app:weatherIconColor="@android:color/black"
@@ -395,8 +393,7 @@
                         <TextView
                             android:id="@+id/day_two_day"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight=".2"
+                            android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="--"
                             android:textColor="?android:textColorSecondary"
@@ -408,8 +405,7 @@
                         <TextView
                             android:id="@+id/day_two_low_high"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight=".2"
+                            android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="-- | --"
                             android:textColor="?android:textColorSecondary"
@@ -419,60 +415,60 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight=".2"
+                            android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <ImageView
-                                android:layout_width="0dp"
+                            <com.github.pwittchen.weathericonview.WeatherIconView
+                                android:id="@+id/day_two_precip_prob_icon"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_margin="5dp"
-                                android:layout_weight="1"
                                 android:gravity="center"
                                 android:paddingLeft="20dp"
-                                android:src="@drawable/ic_umbrella" />
+                                android:scaleType="centerCrop"
+                                app:weatherIconSize="20"
+                                app:weatherIconResource="@string/wi_umbrella"/>
 
                             <TextView
                                 android:id="@+id/day_two_precip_prob"
-                                android:layout_width="0dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
                                 android:gravity="center"
                                 android:paddingRight="20dp"
                                 android:text="--"
                                 android:textColor="?android:textColorSecondary"
                                 android:textIsSelectable="false"
-                                android:textSize="10sp"
+                                android:textSize="12sp"
                                 android:textStyle="normal"
                                  />
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight=".2"
+                            android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <ImageView
-                                android:layout_width="0dp"
+                            <com.github.pwittchen.weathericonview.WeatherIconView
+                                android:id="@+id/day_two_weather_wind_speed_icon"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_margin="5dp"
-                                android:layout_weight="1"
                                 android:gravity="center"
                                 android:paddingLeft="20dp"
-                                android:src="@drawable/ic_windy" />
+                                android:scaleType="centerCrop"
+                                app:weatherIconSize="20"
+                                app:weatherIconResource="@string/wi_windy"/>
 
                             <TextView
                                 android:id="@+id/day_two_weather_wind_speed"
-                                android:layout_width="0dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
                                 android:gravity="center"
-                                android:paddingRight="20dp"
+                                android:paddingRight="10dp"
                                 android:text="--"
                                 android:textColor="?android:textColorSecondary"
                                 android:textIsSelectable="false"
-                                android:textSize="10sp"
+                                android:textSize="12sp"
                                 android:textStyle="normal"
                                  />
                         </LinearLayout>
@@ -481,21 +477,18 @@
 
                     <LinearLayout
                         android:id="@+id/day_three"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginBottom="10dp"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_weight="1"
                         android:orientation="vertical">
 
                         <com.github.pwittchen.weathericonview.WeatherIconView
                             android:id="@+id/day_three_weather_icon"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_weight=".5"
                             android:gravity="center"
                             android:scaleType="centerCrop"
                             app:weatherIconColor="@android:color/black"
@@ -504,8 +497,7 @@
                         <TextView
                             android:id="@+id/day_three_day"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight=".2"
+                            android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="--"
                             android:textColor="?android:textColorSecondary"
@@ -517,8 +509,7 @@
                         <TextView
                             android:id="@+id/day_three_low_high"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight=".2"
+                            android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="-- | --"
                             android:textColor="?android:textColorSecondary"
@@ -528,60 +519,60 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight=".2"
+                            android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <ImageView
-                                android:layout_width="0dp"
+                            <com.github.pwittchen.weathericonview.WeatherIconView
+                                android:id="@+id/day_three_precip_prob_icon"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_margin="5dp"
-                                android:layout_weight="1"
                                 android:gravity="center"
                                 android:paddingLeft="20dp"
-                                android:src="@drawable/ic_umbrella" />
+                                android:scaleType="centerCrop"
+                                app:weatherIconSize="20"
+                                app:weatherIconResource="@string/wi_umbrella"/>
 
                             <TextView
                                 android:id="@+id/day_three_precip_prob"
-                                android:layout_width="0dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
                                 android:gravity="center"
                                 android:paddingRight="20dp"
                                 android:text="--"
                                 android:textColor="?android:textColorSecondary"
                                 android:textIsSelectable="false"
-                                android:textSize="10sp"
+                                android:textSize="12sp"
                                 android:textStyle="normal"
                                  />
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight=".2"
+                            android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <ImageView
-                                android:layout_width="0dp"
+                            <com.github.pwittchen.weathericonview.WeatherIconView
+                                android:id="@+id/day_three_weather_wind_speed_icon"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_margin="5dp"
-                                android:layout_weight="1"
                                 android:gravity="center"
                                 android:paddingLeft="20dp"
-                                android:src="@drawable/ic_windy" />
+                                android:scaleType="centerCrop"
+                                app:weatherIconSize="20"
+                                app:weatherIconResource="@string/wi_windy"/>
 
                             <TextView
                                 android:id="@+id/day_three_weather_wind_speed"
-                                android:layout_width="0dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
                                 android:gravity="center"
-                                android:paddingRight="20dp"
+                                android:paddingRight="10dp"
                                 android:text="--"
                                 android:textColor="?android:textColorSecondary"
                                 android:textIsSelectable="false"
-                                android:textSize="10sp"
+                                android:textSize="12sp"
                                 android:textStyle="normal"
                                  />
                         </LinearLayout>
@@ -590,21 +581,18 @@
 
                     <LinearLayout
                         android:id="@+id/day_four"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginBottom="10dp"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="20dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_weight="1"
                         android:orientation="vertical">
 
                         <com.github.pwittchen.weathericonview.WeatherIconView
                             android:id="@+id/day_four_weather_icon"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_weight=".5"
                             android:gravity="center"
                             android:scaleType="centerCrop"
                             app:weatherIconColor="@android:color/black"
@@ -613,8 +601,7 @@
                         <TextView
                             android:id="@+id/day_four_day"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight=".2"
+                            android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="--"
                             android:textColor="?android:textColorSecondary"
@@ -626,8 +613,7 @@
                         <TextView
                             android:id="@+id/day_four_low_high"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight=".2"
+                            android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="-- | --"
                             android:textColor="?android:textColorSecondary"
@@ -637,60 +623,60 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight=".2"
+                            android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <ImageView
-                                android:layout_width="0dp"
+                            <com.github.pwittchen.weathericonview.WeatherIconView
+                                android:id="@+id/day_four_precip_prob_icon"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_margin="5dp"
-                                android:layout_weight="1"
                                 android:gravity="center"
                                 android:paddingLeft="20dp"
-                                android:src="@drawable/ic_umbrella" />
+                                android:scaleType="centerCrop"
+                                app:weatherIconSize="20"
+                                app:weatherIconResource="@string/wi_umbrella"/>
 
                             <TextView
                                 android:id="@+id/day_four_precip_prob"
-                                android:layout_width="0dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
                                 android:gravity="center"
-                                android:paddingRight="20dp"
+                                android:paddingRight="10dp"
                                 android:text="--"
                                 android:textColor="?android:textColorSecondary"
                                 android:textIsSelectable="false"
-                                android:textSize="10sp"
+                                android:textSize="12sp"
                                 android:textStyle="normal"
                                  />
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight=".2"
+                            android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <ImageView
-                                android:layout_width="0dp"
+                            <com.github.pwittchen.weathericonview.WeatherIconView
+                                android:id="@+id/day_four_weather_wind_speed_icon"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_margin="5dp"
-                                android:layout_weight="1"
                                 android:gravity="center"
                                 android:paddingLeft="20dp"
-                                android:src="@drawable/ic_windy" />
+                                android:scaleType="centerCrop"
+                                app:weatherIconSize="20"
+                                app:weatherIconResource="@string/wi_windy"/>
 
                             <TextView
                                 android:id="@+id/day_four_weather_wind_speed"
-                                android:layout_width="0dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
                                 android:gravity="center"
-                                android:paddingRight="20dp"
+                                android:paddingRight="10dp"
                                 android:text="--"
                                 android:textColor="?android:textColorSecondary"
                                 android:textIsSelectable="false"
-                                android:textSize="10sp"
+                                android:textSize="12sp"
                                 android:textStyle="normal"
                                  />
                         </LinearLayout>
