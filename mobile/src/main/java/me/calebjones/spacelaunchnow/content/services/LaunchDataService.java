@@ -240,7 +240,11 @@ public class LaunchDataService extends BaseService {
                 call = request.getMiniNextLaunch();
             }
             launchResponse = call.execute();
-            Collections.addAll(items, launchResponse.body().getLaunches());
+            if (launchResponse.isSuccessful()) {
+                Collections.addAll(items, launchResponse.body().getLaunches());
+            } else {
+                throw new IOException();
+            }
             for (LaunchRealm item : items) {
                 LaunchRealm previous = mRealm.where(LaunchRealm.class)
                         .equalTo("id", item.getId())
