@@ -29,6 +29,8 @@ advancedVersioning {
         dependsOnTasks 'release'
     }
     outputOptions {
+        renameOutput true
+        nameFormat '${projectName}-${appName}-${buildType}-${versionName}.${versionCode}'
     }
 }
 
@@ -69,7 +71,8 @@ android {
         }
         release {
 //            minifyEnabled true
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            shrinkResources true
+//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     productFlavors {

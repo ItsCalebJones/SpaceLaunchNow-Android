@@ -34,10 +34,12 @@
     <string name="title_activity_debug">DebugActivity</string>
     <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
 
-    <string name="whats_new_content">1.3.0 - The Widget Update - Part 2
+    <string name="whats_new_content">1.3.0 - The Widget Update - Beta 3
         \u2022Add Auto Day/Night Theme - seems to work best on Android 7.0. (Thanks Google!)\n
         \u2022Added Countdown, Launch Card, and Next Launch widgets.\n
         \u2022Bug fixes for some Beta builds.\n
+        \u2022Add nightmode for weather card.\n
+        \u2022Update SDK to support Android N.\n
     </string>
     <string name="link_feedback">https://www.reddit.com/r/spacelaunchnow</string>
     <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>
