@@ -130,5 +130,5 @@ dependencies {
     compile 'com.github.jrejaud:WearSocket:1.0.8'
     compile 'com.github.pwittchen:weathericonview:1.1.0'
     compile 'me.grantland:autofittextview:0.2.1'
-    compile project(':forecast')
+    compile 'android.zetterstrom.com.forecast:forecast:1.2.0'
 }

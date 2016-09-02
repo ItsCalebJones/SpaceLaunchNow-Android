@@ -1,3 +1,1 @@
 include ':mobile', ':wear'
-include 'forecast'
-project(':forecast').projectDir = new File('../forecast-android/forecast')
