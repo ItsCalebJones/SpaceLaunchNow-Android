@@ -103,6 +103,7 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
                     .load(item.getImageURL())
                     .asBitmap()
                     .placeholder(R.drawable.placeholder)
+                    .centerCrop()
                     .into(new BitmapImageViewTarget(holder.picture) {
                         @Override
                         public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {

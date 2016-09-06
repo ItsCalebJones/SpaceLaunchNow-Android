@@ -95,6 +95,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
                     .load(item.getImageURL())
                     .asBitmap()
                     .placeholder(R.drawable.placeholder)
+                    .centerCrop()
                     .into(new BitmapImageViewTarget(holder.picture) {
                         @Override
                         public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {

@@ -21,7 +21,7 @@
         android:adjustViewBounds="true"
         android:contentDescription="Image of Launch Vechicle's"
         android:transitionName="image"
-        app:srcCompat="@drawable/placeholder" />
+        android:scaleType="centerCrop"/>
 
     <TextView
         android:id="@+id/text"
