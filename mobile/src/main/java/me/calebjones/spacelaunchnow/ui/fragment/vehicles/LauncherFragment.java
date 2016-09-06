@@ -87,11 +87,15 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
         coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.vehicle_coordinator);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setOnRefreshListener(this);
+
         if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
             layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 3);
-        } else {
+        } else if (getResources().getBoolean(R.bool.landscape)  || getResources().getBoolean(R.bool.isTablet)) {
             layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 2);
+        } else {
+            layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 1);
         }
+
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
