@@ -29,7 +29,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.adapter.VehicleListAdapter;
+import me.calebjones.spacelaunchnow.content.adapter.VehicleDetailAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.natives.Launcher;
 import me.calebjones.spacelaunchnow.content.models.realm.RocketRealm;
@@ -49,7 +49,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
     private TextView toolbarTitle, detail_rocket, detail_vehicle_agency;
     private ImageView detail_profile_backdrop;
     private CircleImageView detail_profile_image;
-    private VehicleListAdapter adapter;
+    private VehicleDetailAdapter adapter;
     private RealmResults<RocketRealm> rocketLaunches;
     private AppBarLayout appBarLayout;
     private int mMaxScrollSize;
@@ -141,7 +141,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
             }
         }
-        adapter = new VehicleListAdapter(context, this, getRealm());
+        adapter = new VehicleDetailAdapter(context, this, getRealm());
         mRecyclerView = (RecyclerView) findViewById(R.id.vehicle_detail_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(linearLayoutManager);

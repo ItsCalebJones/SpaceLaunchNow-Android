@@ -30,7 +30,7 @@ import me.calebjones.spacelaunchnow.content.models.realm.RocketRealm;
 import me.calebjones.spacelaunchnow.ui.activity.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
-public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.ViewHolder> {
+public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdapter.ViewHolder> {
 
     public int position;
     private Context mContext;
@@ -46,7 +46,7 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
 
     private Realm realm;
 
-    public VehicleListAdapter(Context context, Activity activity, Realm realm) {
+    public VehicleDetailAdapter(Context context, Activity activity, Realm realm) {
         rightNow = Calendar.getInstance();
         sharedPreference = ListPreferences.getInstance(context);
         items = new RealmList<>();
@@ -133,9 +133,9 @@ public class VehicleListAdapter extends RecyclerView.Adapter<VehicleListAdapter.
 
         Glide.with(mContext)
                 .load(item.getImageURL())
+                .centerCrop()
                 .placeholder(R.drawable.placeholder)
                 .error(R.drawable.placeholder)
-                .centerCrop()
                 .into(holder.item_icon);
 
         holder.item_title.setText(item.getName());
