@@ -86,14 +86,19 @@ public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayou
         mRecyclerView = (RecyclerView) view.findViewById(R.id.vehicle_detail_list);
         coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.vehicle_coordinator);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
+
         swipeRefreshLayout.setOnRefreshListener(this);
+
         if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
             layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 3);
-        } else {
+        } else if (getResources().getBoolean(R.bool.landscape)  || getResources().getBoolean(R.bool.isTablet)) {
             layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 2);
+        } else {
+            layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 1);
         }
+
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 int topRowVerticalPosition =
@@ -113,8 +118,8 @@ public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayou
     }
 
     @Override
-    public void onResume(){
-        if(adapter.getItemCount() == 0) {
+    public void onResume() {
+        if (adapter.getItemCount() == 0) {
             loadJSON();
         }
         super.onResume();
@@ -142,23 +147,24 @@ public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayou
                 }
                 hideLoading();
             }
+
             @Override
             public void onFailure(Call<OrbiterResponse> call, Throwable t) {
                 Timber.e(t.getMessage());
                 hideLoading();
-                Snackbar.make(coordinatorLayout, t.getLocalizedMessage(),Snackbar.LENGTH_LONG).show();
+                Snackbar.make(coordinatorLayout, t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
             }
         });
     }
 
-    private void hideLoading(){
-        if (swipeRefreshLayout.isRefreshing()){
+    private void hideLoading() {
+        if (swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(false);
         }
     }
 
-    private void showLoading(){
-        if (!swipeRefreshLayout.isRefreshing()){
+    private void showLoading() {
+        if (!swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(true);
         }
     }
