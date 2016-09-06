@@ -176,13 +176,14 @@ public class SummaryDetailFragment extends BaseFragment {
         detailLaunch = ((LaunchDetailActivity) getActivity()).getLaunch();
         setUpViews();
 
-//        if (sharedPref.getBoolean("weather", false)){
+        // Check if Weather card is enabled, defaults to false if null.
+        if (sharedPref.getBoolean("weather", false)){
             if (detailLaunch.getNet().after(Calendar.getInstance().getTime())) {
                 fetchCurrentWeather();
             } else {
                 fetchPastWeather();
             }
-//        }
+        }
 
         if (sharedPreference.isNightModeActive(context)) {
             nightMode = true;
