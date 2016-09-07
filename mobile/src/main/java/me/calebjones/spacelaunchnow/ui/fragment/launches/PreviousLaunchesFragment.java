@@ -13,8 +13,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -35,6 +33,7 @@ import android.view.animation.OvershootInterpolator;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.borax12.materialdaterangepicker.date.DatePickerDialog;
+import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.SearchEvent;
@@ -64,7 +63,7 @@ import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
-import me.calebjones.spacelaunchnow.ui.widget.SimpleDividerItemDecoration;
+import me.calebjones.spacelaunchnow.ui.customviews.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import timber.log.Timber;
 
@@ -399,12 +398,14 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     };
 
     public void loadLaunches() {
-        try {
-            launchRealms = QueryBuilder.buildPrevQuery(context, getRealm());
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (!getRealm().isClosed()) {
+            try {
+                launchRealms = QueryBuilder.buildPrevQueryAsync(context, getRealm());
+            } catch (ParseException e) {
+                Crashlytics.logException(e);
+            }
+            launchRealms.addChangeListener(callback);
         }
-        launchRealms.addChangeListener(callback);
     }
 
     public void getPrevLaunchData() {

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/countdown_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp"
+    android:orientation="horizontal"
+    android:weightSum="4.2">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1.2"
+        android:gravity="center|top"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/countdown_days"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="0dp"
+            android:scaleX="1.0"
+            android:scaleY="1.0"
+            android:text="- -"
+            android:maxLines="1"
+            android:textColor="@color/dark_theme_primary_text_color"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-5dp"
+            android:lines="1"
+            android:padding="0dp"
+            android:text="DAYS"
+            android:textColor="@color/dark_theme_primary_text_color"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="2dp"
+        android:gravity="center|top"
+        android:padding="0dp"
+        android:scaleX="1.0"
+        android:scaleY="1.0"
+        android:text=":"
+        android:textColor="@color/dark_theme_primary_text_color"
+        android:textSize="12sp" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1.0"
+        android:gravity="center|top"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/countdown_hours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="0dp"
+            android:text="- -"
+            android:maxLines="1"
+            android:textColor="@color/dark_theme_primary_text_color"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-5dp"
+            android:lines="1"
+            android:padding="0dp"
+            android:text="HOURS"
+            android:textColor="@color/dark_theme_primary_text_color"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="2dp"
+        android:gravity="center|top"
+        android:padding="0dp"
+        android:scaleX="1.0"
+        android:scaleY="1.0"
+        android:text=":"
+        android:textColor="@color/dark_theme_primary_text_color"
+        android:textSize="12sp" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1.0"
+        android:gravity="center|top"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/countdown_minutes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="0dp"
+            android:text="- -"
+            android:maxLines="1"
+            android:textColor="@color/dark_theme_primary_text_color"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-5dp"
+            android:lines="1"
+            android:padding="0dp"
+            android:text="MIN"
+            android:textColor="@color/dark_theme_primary_text_color"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="2dp"
+        android:gravity="center|top"
+        android:padding="0dp"
+        android:scaleX="1.0"
+        android:scaleY="1.0"
+        android:text=":"
+        android:textColor="@color/dark_theme_primary_text_color"
+        android:textSize="12sp" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/countdown_seconds"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="0dp"
+            android:text="- -"
+            android:maxLines="1"
+            android:textColor="@color/dark_theme_primary_text_color"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-5dp"
+            android:lines="1"
+            android:padding="0dp"
+            android:text="SEC"
+            android:textColor="@color/dark_theme_primary_text_color"
+            android:textSize="12sp" />
+    </LinearLayout>
+</LinearLayout>

@@ -81,16 +81,15 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
         sharedPreference = ListPreferences.getInstance(mContext);
 
-        if (sharedPreference.getNightMode()) {
+        if (sharedPreference.isNightModeActive(mContext)) {
             night = true;
-            m_theme = R.layout.gridview_item;
             defaultBackgroundcolor = ContextCompat.getColor(mContext, R.color.colorAccent);
 
         } else {
             night = false;
-            m_theme = R.layout.gridview_item;
             defaultBackgroundcolor = ContextCompat.getColor(mContext, R.color.darkAccent);
         }
+        m_theme = R.layout.gridview_item;
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(m_theme, viewGroup, false);
         return new ViewHolder(v, onItemClickListener);
     }
@@ -103,7 +102,8 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
             Glide.with(mContext)
                     .load(item.getImageURL())
                     .asBitmap()
-                    .fitCenter()
+                    .placeholder(R.drawable.placeholder)
+                    .centerCrop()
                     .into(new BitmapImageViewTarget(holder.picture) {
                         @Override
                         public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
@@ -115,9 +115,11 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
         } else {
             holder.grid_root.setScaleY(1);
             holder.grid_root.setScaleX(1);
+
             Glide.with(mContext)
                     .load(item.getImageURL())
-                    .fitCenter()
+                    .placeholder(R.drawable.placeholder)
+                    .crossFade()
                     .into(holder.picture);
         }
 
@@ -142,10 +144,10 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
 
     }
 
-    public void setCellColors(Bitmap b, final ViewHolder viewHolder, final int position) {
+    public void setCellColors(Bitmap bitmap, final ViewHolder viewHolder, final int position) {
 
-        if (b != null) {
-            Palette.generateAsync(b, new Palette.PaletteAsyncListener() {
+        if (bitmap != null) {
+            Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
 
                 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
                 @Override

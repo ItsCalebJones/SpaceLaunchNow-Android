@@ -1,15 +1,13 @@
 package me.calebjones.spacelaunchnow.ui.fragment.launches;
 
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +15,6 @@ import android.view.ViewGroup;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import timber.log.Timber;
 
@@ -36,18 +33,11 @@ public class LaunchesViewPager extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        int mlayout;
         this.context = getActivity().getApplicationContext();
 
         sharedPreference = ListPreferences.getInstance(this.context);
 
-        if (sharedPreference.getNightMode()) {
-            mlayout = R.layout.dark_fragment_launches_view_pager;
-        } else {
-            mlayout = R.layout.fragment_launches_view_pager;
-        }
-
-        View inflatedView = inflater.inflate(mlayout, container, false);
+        View inflatedView = inflater.inflate(R.layout.fragment_launches_view_pager, container, false);
 
         TabLayout tabLayout = (TabLayout) inflatedView.findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText("Upcoming"));
@@ -81,6 +71,16 @@ public class LaunchesViewPager extends Fragment {
 
             }
         });
+
+        if (sharedPreference.isNightModeActive(context)){
+            tabLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.darkPrimary));
+            tabLayout.setTabTextColors(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color),
+                    ContextCompat.getColor(context, R.color.dark_theme_primary_text_color));
+        } else {
+            tabLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
+            tabLayout.setTabTextColors(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color),
+                    ContextCompat.getColor(context, R.color.dark_theme_primary_text_color));
+        }
 
         return inflatedView;
     }

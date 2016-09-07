@@ -100,14 +100,14 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         sharedPreference = ListPreferences.getInstance(context);
 
-        if (sharedPreference.getNightMode()) {
+        if (sharedPreference.isNightModeActive(context)) {
             night = true;
-            m_theme = R.layout.dark_content_list_item;
         } else {
             night = false;
-            m_theme = R.layout.light_content_list_item;
         }
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(m_theme, viewGroup, false);
+
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.content_card_item, viewGroup, false);
+
         return new ViewHolder(v);
     }
 
@@ -127,7 +127,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
             //Retrieve missionType
             if (launchItem.getMissions().size() != 0) {
-                setCategoryIcon(holder, launchItem.getMissions().get(0).getTypeName());
+                Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMissions().get(0).getTypeName(), night);
             } else {
                 if (night) {
                     holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
@@ -253,7 +253,8 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                     @Override
                     public void onTick(long millisUntilFinished) {
                         time.setLength(0);
-                        // Use days if appropriate
+
+                        // Calculate the Days/Hours/Mins/Seconds numerically.
                         long longDays = millisUntilFinished / 86400000;
                         long longHours = (millisUntilFinished / 3600000) % 24;
                         long longMins = (millisUntilFinished / 60000) % 60;
@@ -263,6 +264,8 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                         String hours;
                         String minutes;
                         String seconds;
+
+                        // Translate those numerical values to string values.
                         if (longHours < 10) {
                             hours = "0" + String.valueOf(longHours);
                         } else {
@@ -280,6 +283,9 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                         } else {
                             seconds = String.valueOf(longSeconds);
                         }
+
+
+                        // Update the views
                         if (Integer.valueOf(days) > 0) {
                             holder.countdownDays.setText(days);
                         } else {
@@ -288,23 +294,29 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
                         if (Integer.valueOf(hours) > 0) {
                             holder.countdownHours.setText(hours);
-                        } else {
+                        } else if (Integer.valueOf(days) > 0) {
+                            holder.countdownHours.setText("00");
+                        }  else {
                             holder.countdownHours.setText("- -");
                         }
 
                         if (Integer.valueOf(minutes) > 0) {
                             holder.countdownMinutes.setText(minutes);
+                        } else if (Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
+                            holder.countdownMinutes.setText("00");
                         } else {
                             holder.countdownMinutes.setText("- -");
                         }
 
                         if (Integer.valueOf(seconds) > 0) {
                             holder.countdownSeconds.setText(seconds);
-                        } else if (Integer.valueOf(minutes) > 0) {
+                        } else if (Integer.valueOf(minutes) > 0 || Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
                             holder.countdownSeconds.setText("60");
                         } else {
                             holder.countdownSeconds.setText("- -");
                         }
+
+                        // Hide status if countdown is active.
                         holder.content_TMinus_status.setVisibility(View.GONE);
                     }
                 }.start();
@@ -333,34 +345,40 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
             //Get launch date
             if (launchItem.getStatus() == 2) {
-                //Get launch date
-                SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy.");
-                sdf.toLocalizedPattern();
-                Date date = launchItem.getWindowstart();
-                launchDate = sdf.format(date);
 
-                holder.launch_date.setText("To be determined... " + launchDate);
-            } else {
-                if (sharedPref.getBoolean("local_time", true)) {
-                    SimpleDateFormat sdf;
-                    if (sharedPref.getBoolean("24_hour_mode", false)) {
-                        sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - kk:mm zzz");
-                    } else {
-                        sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
-                    }
+                if (launchItem.getNet() !=null) {
+                    //Get launch date
+                    SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy.");
                     sdf.toLocalizedPattern();
-                    Date date = launchItem.getWindowstart();
+                    Date date = launchItem.getNet();
                     launchDate = sdf.format(date);
-                } else {
-                    SimpleDateFormat sdf;
-                    if (sharedPref.getBoolean("24_hour_mode", false)) {
-                        sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - kk:mm zzz");
+                    holder.launch_date.setText("To be determined... " + launchDate);
+                }
+            } else {
+                if (launchItem.getNet() !=null) {
+                    if (sharedPref.getBoolean("local_time", true)) {
+                        SimpleDateFormat sdf;
+                        if (sharedPref.getBoolean("24_hour_mode", false)) {
+                            sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - kk:mm zzz");
+                        } else {
+                            sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                        }
+                        sdf.toLocalizedPattern();
+                        Date date = launchItem.getNet();
+                        launchDate = sdf.format(date);
                     } else {
-                        sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                        SimpleDateFormat sdf;
+                        if (sharedPref.getBoolean("24_hour_mode", false)) {
+                            sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - kk:mm zzz");
+                        } else {
+                            sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                        }
+                        Date date = launchItem.getNet();
+                        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                        launchDate = sdf.format(date);
                     }
-                    Date date = launchItem.getWindowstart();
-                    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                    launchDate = sdf.format(date);
+                } else {
+                    launchDate = "To be determined... ";
                 }
                 holder.launch_date.setText(launchDate);
             }
@@ -501,7 +519,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
             SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
             df.toLocalizedPattern();
 
-            Date date = launch.getWindowstart();
+            Date date = launch.getNet();
             String launchDate = df.format(date);
 
             switch (v.getId()) {
@@ -527,7 +545,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                                         dialog.dismiss();
                                     }
                                 });
-                        if (sharedPreference.getNightMode()) {
+                        if (sharedPreference.isNightModeActive(context)) {
                             builder.theme(Theme.DARK);
                         }
                         builder.show();

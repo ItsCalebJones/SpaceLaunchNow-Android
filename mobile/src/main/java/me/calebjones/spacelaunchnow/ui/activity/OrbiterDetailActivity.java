@@ -56,22 +56,19 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         int m_theme;
-        int layout;
         final int statusColor;
         this.context = getApplicationContext();
 
         sharedPreference = ListPreferences.getInstance(this.context);
         customTabActivityHelper = new CustomTabActivityHelper();
 
-        if (sharedPreference.getNightMode()) {
-            m_theme = R.style.DarkTheme;
+        if (sharedPreference.isNightModeActive(this)) {
             statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
-            layout = R.layout.dark_activity_orbiter_detail;
         } else {
-            m_theme = R.style.LightTheme;
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
-            layout = R.layout.activity_orbiter_detail;
         }
+
+        m_theme = R.style.BaseAppTheme;
 
         if (!BuildConfig.DEBUG) {
             Answers.getInstance().logContentView(new ContentViewEvent()
@@ -82,7 +79,7 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
         setTheme(m_theme);
 
         super.onCreate(savedInstanceState);
-        setContentView(layout);
+        setContentView(R.layout.activity_orbiter_detail);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         toolbarTitle = (TextView) findViewById(R.id.title_text);
@@ -98,7 +95,7 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
         orbiter_history_description = (TextView) findViewById(R.id.orbiter_history_description);
         orbiter_vehicle_card = findViewById(R.id.orbiter_vehicle_card);
         title_container = findViewById(R.id.detail_title_container);
-        gridview = findViewById(R.id.gridview);
+        gridview = findViewById(R.id.vehicle_detail_list);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 

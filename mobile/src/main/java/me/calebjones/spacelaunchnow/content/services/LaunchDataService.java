@@ -1,36 +1,19 @@
 package me.calebjones.spacelaunchnow.content.services;
 
 import android.app.AlarmManager;
-import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
-
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.text.DateFormat;
-import java.text.FieldPosition;
-import java.text.ParsePosition;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmList;
-import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.interfaces.LibraryRequestInterface;
@@ -39,79 +22,19 @@ import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.responses.launchlibrary.LaunchResponse;
 import me.calebjones.spacelaunchnow.utils.Stopwatch;
 import me.calebjones.spacelaunchnow.utils.Utils;
-import me.calebjones.spacelaunchnow.content.models.realm.RealmStr;
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
-public class LaunchDataService extends IntentService {
-
-    private AlarmManager alarmManager;
-    private SharedPreferences sharedPref;
-    private ListPreferences listPreference;
-    private SwitchPreferences switchPreferences;
-    private Realm mRealm;
-    private Retrofit retrofit;
+public class LaunchDataService extends BaseService {
 
     public LaunchDataService() {
         super("LaunchDataService");
     }
 
-    public void onCreate() {
-        Timber.d("LaunchDataService - UpComingLaunchService onCreate");
-
-        // Note there is a bug in GSON 2.5 that can cause it to StackOverflow when working with RealmObjects.
-        // To work around this, use the ExclusionStrategy below or downgrade to 1.7.1
-        // See more here: https://code.google.com/p/google-gson/issues/detail?id=440
-        Type token = new TypeToken<RealmList<RealmStr>>() {
-        }.getType();
-
-        Gson gson = new GsonBuilder()
-                .setDateFormat("MMMM dd, yyyy hh:mm:ss zzz")
-                .setExclusionStrategies(new ExclusionStrategy() {
-                    @Override
-                    public boolean shouldSkipField(FieldAttributes f) {
-                        return f.getDeclaringClass().equals(RealmObject.class);
-                    }
-
-                    @Override
-                    public boolean shouldSkipClass(Class<?> clazz) {
-                        return false;
-                    }
-                })
-                .registerTypeAdapter(token, new TypeAdapter<RealmList<RealmStr>>() {
-
-                    @Override
-                    public void write(JsonWriter out, RealmList<RealmStr> value) throws io.realm.internal.IOException {
-                        // Ignore
-                    }
-
-                    @Override
-                    public RealmList<RealmStr> read(JsonReader in) throws io.realm.internal.IOException, java.io.IOException {
-                        RealmList<RealmStr> list = new RealmList<RealmStr>();
-                        in.beginArray();
-                        while (in.hasNext()) {
-                            list.add(new RealmStr(in.nextString()));
-                        }
-                        in.endArray();
-                        return list;
-                    }
-                })
-                .create();
-
-        retrofit = new Retrofit.Builder()
-                .baseUrl(Strings.LIBRARY_BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-
-        super.onCreate();
-    }
-
     public int onStartCommand(Intent intent, int flags, int startId) {
-        this.listPreference = ListPreferences.getInstance(getApplicationContext());
-        this.switchPreferences = SwitchPreferences.getInstance(getApplicationContext());
+        listPreference = ListPreferences.getInstance(getApplicationContext());
+        switchPreferences = SwitchPreferences.getInstance(getApplicationContext());
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         return super.onStartCommand(intent, flags, startId);
     }
@@ -218,6 +141,9 @@ public class LaunchDataService extends IntentService {
                     throw new IOException(launchResponse.errorBody().string());
                 }
             }
+            for (LaunchRealm item : items) {
+                item.getLocation().setPrimaryID();
+            }
             Timber.v("Starting list - elapsed time: %s", stopwatch.getElapsedTimeString());
             mRealm.beginTransaction();
             mRealm.copyToRealmOrUpdate(items);
@@ -314,7 +240,11 @@ public class LaunchDataService extends IntentService {
                 call = request.getMiniNextLaunch();
             }
             launchResponse = call.execute();
-            Collections.addAll(items, launchResponse.body().getLaunches());
+            if (launchResponse.isSuccessful()) {
+                Collections.addAll(items, launchResponse.body().getLaunches());
+            } else {
+                throw new IOException();
+            }
             for (LaunchRealm item : items) {
                 LaunchRealm previous = mRealm.where(LaunchRealm.class)
                         .equalTo("id", item.getId())

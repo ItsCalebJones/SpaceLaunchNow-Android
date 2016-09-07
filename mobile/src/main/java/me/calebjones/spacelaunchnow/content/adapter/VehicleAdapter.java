@@ -74,16 +74,15 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
 
         sharedPreference = ListPreferences.getInstance(mContext);
 
-        if (sharedPreference.getNightMode()) {
+        if (sharedPreference.isNightModeActive(mContext)) {
             night = true;
-            m_theme = R.layout.gridview_item;
             defaultBackgroundColor = ContextCompat.getColor(mContext, R.color.colorAccent);
         } else {
             night = false;
-            m_theme = R.layout.gridview_item;
             defaultBackgroundColor = ContextCompat.getColor(mContext, R.color.darkAccent);
         }
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(m_theme, viewGroup, false);
+
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.gridview_item, viewGroup, false);
         return new ViewHolder(v, onItemClickListener);
     }
 
@@ -96,7 +95,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
                     .load(item.getImageURL())
                     .asBitmap()
                     .placeholder(R.drawable.placeholder)
-                    .fitCenter()
+                    .centerCrop()
                     .into(new BitmapImageViewTarget(holder.picture) {
                         @Override
                         public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
@@ -108,10 +107,11 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
         } else {
             holder.grid_root.setScaleY(1);
             holder.grid_root.setScaleX(1);
+
             Glide.with(mContext)
                     .load(item.getImageURL())
                     .placeholder(R.drawable.placeholder)
-                    .fitCenter()
+                    .crossFade()
                     .into(holder.picture);
         }
 

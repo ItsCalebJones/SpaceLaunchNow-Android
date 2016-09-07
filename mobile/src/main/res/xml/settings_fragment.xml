@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:persistent="false"
+        android:key="launch_tracking_options"
+        android:layout="@layout/settings_general"
+        android:title="General" />
+    <Preference
+        android:persistent="false"
+        android:key="notifications"
+        android:layout="@layout/settings_notifications"
+        android:title="Notifications" />
+    <Preference
+        android:persistent="false"
+        android:key="appearance"
+        android:layout="@layout/settings_appearance"
+        android:title="Appearance" />
+    <Preference
+        android:persistent="false"
+        android:key="wear"
+        android:layout="@layout/settings_wear"
+        android:title="Wear" />
+    <Preference
+        android:persistent="false"
+        android:key="about"
+        android:layout="@layout/settings_about"
+        android:title="About" />
+    <Preference
+        android:persistent="false"
+        android:key="support"
+        android:layout="@layout/settings_support"
+        android:title="Support" />
+</PreferenceScreen>

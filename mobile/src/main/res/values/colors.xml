@@ -24,7 +24,7 @@
     <color name="light_theme_primary_text_color">#80000000</color>
     <color name="light_theme_secondary_text_color">#424242</color>
 
-    <color name="dark_theme_primary_text_color">#ffffffff</color>
+    <color name="dark_theme_primary_text_color">#ffffff</color>
     <color name="dark_theme_secondary_text_color">#b3ffffff</color>
     <color name="dark_theme_background">#ff303030</color>
     <color name="dark_card_background">#424242</color>

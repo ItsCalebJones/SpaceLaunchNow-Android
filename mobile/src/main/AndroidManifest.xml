@@ -4,10 +4,11 @@
     package="me.calebjones.spacelaunchnow">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <!-- Required to act as a calendar service. -->
     <uses-permission android:name="android.permission.READ_CALENDAR" />
@@ -21,16 +22,16 @@
 
     <application
         android:name=".LaunchApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="${appNameLabel}"
         android:supportsRtl="true"
-        android:theme="@style/LightTheme"
-        tools:replace="label">
+        android:theme="@style/BaseAppTheme"
+        tools:replace="label,android:allowBackup">
         <activity
             android:name=".ui.activity.MainActivity"
             android:configChanges="screenSize"
-            android:theme="@style/LightTheme.Launcher"
+            android:theme="@style/BaseAppTheme.Launcher"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -52,7 +53,7 @@
         <activity
             android:name=".ui.activity.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/LightTheme" />
+            android:theme="@style/BaseAppTheme" />
         <activity android:name=".ui.activity.OrbiterDetailActivity" />
         <activity android:name=".ui.activity.LauncherDetailActivity" />
 
@@ -90,7 +91,7 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.activity.AboutActivity"
-            android:theme="@style/LightTheme" />
+            android:theme="@style/BaseAppTheme" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -99,7 +100,7 @@
         <activity
             android:name=".ui.activity.DebugActivity"
             android:label="@string/title_activity_debug"
-            android:theme="@style/LightTheme" />
+            android:theme="@style/BaseAppTheme" />
         <activity
             android:name=".ui.activity.FullscreenImageActivity"
             android:label="@string/title_activity_fullscreen_image"
@@ -116,18 +117,56 @@
 
         <activity
             android:name=".ui.activity.SupportActivity"
-            android:theme="@style/LightTheme" />
+            android:theme="@style/BaseAppTheme" />
         <activity android:name=".ui.activity.BaseActivity" />
         <activity
             android:name=".ui.activity.DownloadActivity"
             android:label="@string/title_activity_download"
-            android:theme="@style/LightTheme" />
+            android:theme="@style/BaseAppTheme" />
         <activity
             android:name=".ui.activity.WebViewFallbackActivity"
             android:label="@string/title_activity_web_view_fallback"
             android:parentActivityName=".ui.activity.MainActivity"
-            android:theme="@style/LightTheme">
-        </activity>
+            android:theme="@style/BaseAppTheme"/>
+
+        <receiver
+            android:name=".widget.LaunchTimerWidgetProvider"
+            android:label="Countdown">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_REFRESH"/>
+                <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_CLICK"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_launch_timer_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.LaunchCardCompactWidgetProvider"
+            android:label="Launch Card">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="me.calebjones.spacelaunchnow.widget.LaunchCardCompactWidgetProvider.ACTION_WIDGET_REFRESH"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_launch_card_compact_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.LaunchWordTimerWidgetProvider"
+            android:label="Next Launch">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_REFRESH"/>
+                <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_CLICK"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_launch_word_timer_info" />
+        </receiver>
     </application>
 
 </manifest>

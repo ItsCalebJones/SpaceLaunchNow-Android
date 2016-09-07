@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minResizeWidth="180dp"
+    android:minResizeHeight="40dp"
+    android:minWidth="250dp"
+    android:minHeight="110dp"
+    android:updatePeriodMillis="1800000"
+    android:initialLayout="@layout/widget_launch_card_compact_dark"
+    android:resizeMode="horizontal|vertical"
+    android:previewImage="@drawable/launch_card_compact_preview"
+    >
+</appwidget-provider>

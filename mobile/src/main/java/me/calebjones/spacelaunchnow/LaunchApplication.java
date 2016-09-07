@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatDelegate;
 import android.text.format.DateFormat;
 import android.zetterstrom.com.forecast.ForecastClient;
 import android.zetterstrom.com.forecast.ForecastConfiguration;
@@ -30,21 +31,18 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
-import me.calebjones.spacelaunchnow.content.services.MissionDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
-import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import timber.log.Timber;
 
 
 public class LaunchApplication extends Application {
 
-    private static LaunchApplication mInstance;
     public static final String TAG = "Space Launch Now";
-
     public OkHttpClient client;
+    private static LaunchApplication mInstance;
     private static ListPreferences sharedPreference;
     private SwitchPreferences switchPreferences;
     private SharedPreferences sharedPref;
@@ -66,9 +64,12 @@ public class LaunchApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        //Init Crashlytics and gather device information.
+        /*
+        * Init Crashlytics and gather additional device information.
+        * Always leave this at the top so it catches any init failures.
+        * Version 1.3.0-Beta had a bug where starting a service crashed before Crashlytics picked it up.
+        */
         Fabric.with(this, new Crashlytics());
         Crashlytics.setString("Timezone", String.valueOf(TimeZone.getDefault().getDisplayName()));
         Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
@@ -78,10 +79,12 @@ public class LaunchApplication extends Application {
             Crashlytics.setString("Network Info", Connectivity.getNetworkInfo(this).toString());
         }
 
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
         LeakCanary.install(this);
-        OneSignal.startInit(this).init();
-        OneSignal.enableNotificationsWhenActive(true);
-        OneSignal.enableInAppAlertNotification(true);
+        OneSignal.startInit(this)
+                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+                .init();
 
         Dexter.initialize(this);
 
@@ -95,6 +98,7 @@ public class LaunchApplication extends Application {
         RealmConfiguration realmConfig = new RealmConfiguration.Builder(this)
                 .deleteRealmIfMigrationNeeded()
                 .build();
+
         // Get a Realm instance for this thread
         Realm.setDefaultConfiguration(realmConfig);
 
@@ -126,6 +130,16 @@ public class LaunchApplication extends Application {
 
         sharedPreference = ListPreferences.getInstance(this);
         switchPreferences = SwitchPreferences.getInstance(this);
+
+        if(sharedPreference.isNightThemeEnabled()){
+            if(sharedPreference.isDayNightAutoEnabled()){
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            }
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
 
         checkSubscriptions();
 

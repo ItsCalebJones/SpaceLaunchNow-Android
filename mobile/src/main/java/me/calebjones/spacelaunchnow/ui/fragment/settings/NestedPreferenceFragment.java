@@ -4,34 +4,26 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.preference.SwitchPreference;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatDelegate;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
@@ -42,8 +34,6 @@ import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsList
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.onesignal.OneSignal;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.Date;
 
 import io.realm.Realm;
@@ -58,7 +48,6 @@ import timber.log.Timber;
 
 public class NestedPreferenceFragment extends PreferenceFragment implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
-
 
     // Give your color picker dialog unique IDs if you
     // have multiple dialog. This will make it possible
@@ -109,6 +98,15 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
         }
     }
 
+    public void checkLocationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            if (Dexter.isRequestOngoing()) {
+                return;
+            }
+            Dexter.checkPermissions(allPermissionsListener, Manifest.permission.ACCESS_COARSE_LOCATION);
+        }
+    }
+
     class SharedPreferenceListener implements SharedPreferences.OnSharedPreferenceChangeListener {
         final /* synthetic */ SharedPreferences valprefs;
 
@@ -128,12 +126,39 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
                     Editor themeEditor = NestedPreferenceFragment.this.getActivity().getSharedPreferences("theme_changed", 0).edit();
                     themeEditor.putBoolean("recreate", true);
                     themeEditor.apply();
+
+                    if(switchPreferences.getNightMode()){
+                        if(switchPreferences.getDayNightAutoMode()){
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
+                            checkLocationPermission();
+                        } else {
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                            Toast.makeText(context, "Night mode might need to restart app to take effect.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(context, "Day mode might need to restart app to take effect.", Toast.LENGTH_SHORT).show();
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    }
+
                     NestedPreferenceFragment.this.getActivity().recreate();
                 }
-                if (key.equals("auto_theme") && NestedPreferenceFragment.this.getActivity() != null) {
+                if (key.equals("theme_auto") && NestedPreferenceFragment.this.getActivity() != null) {
                     Editor themeEditor = NestedPreferenceFragment.this.getActivity().getSharedPreferences("theme_changed", 0).edit();
                     themeEditor.putBoolean("recreate", true);
                     themeEditor.apply();
+
+                    if(switchPreferences.getNightMode()){
+                        if(switchPreferences.getDayNightAutoMode()){
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
+                            checkLocationPermission();
+                        } else {
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                            Toast.makeText(context, "Auto DayNight disabled, might need to restart app to take effect.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    }
+
                     NestedPreferenceFragment.this.getActivity().recreate();
                 }
                 if (key.equals("notifications_launch_imminent_updates")) {
@@ -175,7 +200,6 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
         }
     }
 
-
     public static NestedPreferenceFragment newInstance(int key) {
         NestedPreferenceFragment fragment = new NestedPreferenceFragment();
         Bundle args = new Bundle();
@@ -208,7 +232,7 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
     public void onResume() {
         listPreferences = ListPreferences.getInstance(this.context);
         switchPreferences = SwitchPreferences.getInstance(this.context);
-        listPreferences.getNightMode();
+        listPreferences.isNightModeActive(context);
         super.onResume();
     }
 
