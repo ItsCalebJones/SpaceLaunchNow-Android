@@ -18,17 +18,26 @@ import com.crashlytics.android.Crashlytics;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
 
+import me.calebjones.spacelaunchnow.calendar.model.Calendar;
+import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
+import me.calebjones.spacelaunchnow.calendar.model.Event;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import timber.log.Timber;
 
 // these imports are used in the following code
 
-public class CalendarUtil {
+public class CalendarUtility {
 
     private SharedPreferences sharedPrefs;
+    private CalendarItem calendarItem;
+
+    public CalendarUtility(CalendarItem calendarItem) {
+        this.calendarItem = calendarItem;
+    }
 
     final static String[] CALENDAR_QUERY_COLUMNS = {
             CalendarContract.Calendars._ID,
@@ -45,7 +54,6 @@ public class CalendarUtil {
         }
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         int selection = Integer.parseInt(sharedPrefs.getString("calendar_reminder", "5"));
-        Timber.v("Reminder time: %s", String.valueOf(selection));
 
 
         Set<String> prefSelections = sharedPrefs.getStringSet("calendar_reminder_array", new HashSet<>(Arrays.asList("5", "1440")));
@@ -54,27 +62,6 @@ public class CalendarUtil {
         for (int i = 0; i < prefSelected.length ; i++){
             prefSelected[i] = Integer.parseInt(strings[i]);
         }
-
-        // Get list of Calendars (after Jim Blackler, http://jimblackler.net/blog/?p=151)
-        ContentResolver contentResolver = context.getContentResolver();
-
-        final Cursor cursor = contentResolver.query(CalendarContract.Calendars.CONTENT_URI,
-                CALENDAR_QUERY_COLUMNS, null, null, null);
-
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                final String _id = cursor.getString(0);
-                final String displayName = cursor.getString(1);
-                final Boolean selected = !cursor.getString(2).equals("0");
-                final String accountName = cursor.getString(3);
-
-                Timber.v("Calendar: Id: %s Display Name: %s Selected: %s Name %s", _id, displayName, selected, accountName);
-            }
-        }
-
-        ContentValues calEvent = new ContentValues();
-        calEvent.put(CalendarContract.Events.CALENDAR_ID, 1);
-        calEvent.put(CalendarContract.Events.TITLE, launch.getName());
 
         //Build Description String and assign it.
         String description = "";
@@ -91,29 +78,20 @@ public class CalendarUtil {
         Date startDate = launch.getWindowstart();
         Date endDate = launch.getWindowend();
 
-        calEvent.put(CalendarContract.Events.DESCRIPTION, description);
-        calEvent.put(CalendarContract.Events.EVENT_LOCATION, launch.getLocation().getName());
+        Event event = new Event();
+        event.calendarId = calendarItem.getId();
+        event.title = launch.getName();
+        event.description = description;
+        event.location = launch.getLocation().getName();
         if(startDate != null && endDate != null) {
-            calEvent.put(CalendarContract.Events.DTSTART, startDate.getTime());
-            calEvent.put(CalendarContract.Events.DTEND, endDate.getTime());
+            event.startDate = startDate.getTime();
+            event.endDate = endDate.getTime();
         } else if (launch.getNet() != null) {
-            calEvent.put(CalendarContract.Events.DTSTART, launch.getNet().getTime());
+            event.startDate = launch.getNet().getTime();
         }
-        calEvent.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getDisplayName());
-        Uri uri = contentResolver.insert(CalendarContract.Events.CONTENT_URI, calEvent);
+        event.timezone = TimeZone.getDefault().getDisplayName();
 
-        // The returned Uri contains the content-retriever URI for the newly-inserted event, including its id
-        if (cursor != null) {
-            cursor.close();
-        }
-        if (uri != null) {
-            for (int i = 0; i < prefSelected.length; i++){
-                setReminder(context, Long.parseLong(uri.getLastPathSegment()), prefSelected[i]);
-            }
-            return Integer.parseInt(uri.getLastPathSegment());
-        } else {
-            return null;
-        }
+        return event.create(context.getContentResolver());
     }
 
     public boolean updateEvent(Context context, LaunchRealm launch) {
@@ -193,6 +171,10 @@ public class CalendarUtil {
             Crashlytics.logException(e);
             e.printStackTrace();
         }
+    }
+
+    private List<Calendar> getCalendars(Context context){
+        return Calendar.getCalendarsForQuery(null, null, null, context.getContentResolver());
     }
 
 }
