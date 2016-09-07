@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -59,11 +58,11 @@ public class SupportActivity extends BaseActivity implements BillingProcessor.IB
 
         ListPreferences sharedPreference = ListPreferences.getInstance(context);
 
-        if (sharedPreference.getNightMode()) {
-            m_theme = R.style.DarkTheme;
-        } else {
-            m_theme = R.style.LightTheme;
-        }
+//        if (sharedPreference.isNightThemeEnabled()) {
+//        } else {
+//        }
+
+        m_theme = R.style.BaseAppTheme;
         setTheme(m_theme);
 
         setContentView(R.layout.activity_support);
@@ -183,7 +182,7 @@ public class SupportActivity extends BaseActivity implements BillingProcessor.IB
     @Override
     public void onPurchaseHistoryRestored() {
         Timber.v("Purchase History restored.");
-        SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Restored purchase, thanks for supporting me!");
+        SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Restored purchases.");
     }
 
     @Override
@@ -197,9 +196,9 @@ public class SupportActivity extends BaseActivity implements BillingProcessor.IB
         Timber.v("Billing initialized.");
         int count = 500;
         for (final String sku : bp.listOwnedProducts()) {
-            Products products = getProduct(sku);
+            Products product = getProduct(sku);
             getRealm().beginTransaction();
-            getRealm().copyToRealmOrUpdate(products);
+            getRealm().copyToRealmOrUpdate(product);
             getRealm().commitTransaction();
             new Handler().postDelayed(new Runnable() {
                 @Override

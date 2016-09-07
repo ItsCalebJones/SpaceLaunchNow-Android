@@ -15,8 +15,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import me.calebjones.spacelaunchnow.utils.CalendarUtil;
-
 public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static SwitchPreferences INSTANCE;
@@ -174,6 +172,10 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         return this.sharedPrefs.getBoolean("theme", false);
     }
 
+    public boolean getDayNightAutoMode() {
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this.appContext);
+        return this.sharedPrefs.getBoolean("theme_auto", false);
+    }
 
     public void setNightModeStatus(boolean value) {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);

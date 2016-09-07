@@ -14,9 +14,7 @@ import android.widget.TextView;
 
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -68,17 +66,16 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 
-        int m_theme;
         sharedPreference = ListPreferences.getInstance(mContext);
 
-        if (sharedPreference.getNightMode()) {
+        if (sharedPreference.isNightModeActive(mContext)) {
             night = true;
-            m_theme = R.layout.dark_mission_list_item;
         } else {
             night = false;
-            m_theme = R.layout.light_mission_list_item;
         }
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(m_theme, viewGroup, false);
+
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.mission_list_item, viewGroup, false);
+
         return new ViewHolder(v);
     }
 
@@ -87,8 +84,8 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
         final MissionRealm mission = missionList.get(holder.getAdapterPosition());
 
         //Retrieve missionType
-
-        setCategoryIcon(holder, mission.getTypeName());
+        Timber.v("Position: %s - Type - %s", holder.getAdapterPosition(), mission.getTypeName());
+        Utils.setCategoryIcon(holder.categoryIcon, mission.getTypeName(), night);
 
         holder.mission_name.setText(mission.getName());
         holder.mission_summary.setText(mission.getDescription());
@@ -267,96 +264,5 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
     public void moveItem(int fromPosition, int toPosition) {
         missionList.add(toPosition, missionList.remove(fromPosition));
         notifyItemMoved(fromPosition, toPosition);
-    }
-
-    private void setCategoryIcon(ViewHolder holder, String type) {
-        if (type != null) {
-            switch (type) {
-                case "Earth Science":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_earth_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_earth);
-                    }
-                    break;
-                case "Planetary Science":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_planetary_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_planetary);
-                    }
-                    break;
-                case "Astrophysics":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_astrophysics_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_astrophysics);
-                    }
-                    break;
-                case "Heliophysics":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_heliophysics_alt_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_heliophysics_alt);
-                    }
-                    break;
-                case "Human Exploration":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_human_explore_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_human_explore);
-                    }
-                    break;
-                case "Robotic Exploration":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_robotic_explore_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_robotic_explore);
-                    }
-                    break;
-                case "Government/Top Secret":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_top_secret_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_top_secret);
-                    }
-                    break;
-                case "Tourism":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_tourism_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_tourism);
-                    }
-                    break;
-                case "Unknown":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown);
-                    }
-                    break;
-                case "Communications":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_satellite_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_satellite);
-                    }
-                    break;
-                case "Resupply":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_resupply_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_resupply);
-                    }
-                    break;
-                default:
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown);
-                    }
-                    break;
-            }
-        }
     }
 }

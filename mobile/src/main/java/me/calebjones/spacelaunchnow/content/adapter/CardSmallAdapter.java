@@ -22,7 +22,6 @@ import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -34,6 +33,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 /**
@@ -97,14 +97,12 @@ public class CardSmallAdapter extends RecyclerView.Adapter<CardSmallAdapter.View
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
         sharedPreference = ListPreferences.getInstance(mContext);
 
-        if (sharedPreference.getNightMode()) {
+        if (sharedPreference.isNightModeActive(mContext)) {
             night = true;
-            m_theme = R.layout.light_small_content_list_item;
         } else {
             night = false;
-            m_theme = R.layout.light_small_content_list_item;
         }
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(m_theme, viewGroup, false);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.small_content_card_item, viewGroup, false);
         return new ViewHolder(v);
     }
 
@@ -116,7 +114,7 @@ public class CardSmallAdapter extends RecyclerView.Adapter<CardSmallAdapter.View
 
         //Retrieve missionType
         if (launchItem.getMissions().size() != 0) {
-            setCategoryIcon(holder, launchItem.getMissions().get(0).getTypeName());
+            Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMissions().get(0).getTypeName(), night);
         }  else {
             if (night) {
                 holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
@@ -255,24 +253,40 @@ public class CardSmallAdapter extends RecyclerView.Adapter<CardSmallAdapter.View
 
         //Get launch date
         if (launchItem.getStatus() == 2) {
-            //Get launch date
-            SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy.");
-            sdf.toLocalizedPattern();
-            Date date = launchItem.getWindowstart();
-            launchDate = sdf.format(date);
 
-            holder.launch_date.setText("To be determined... " + launchDate);
-        } else {
-            if (sharedPref.getBoolean("local_time", true)) {
-                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+            if (launchItem.getNet() !=null) {
+                //Get launch date
+                SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy.");
                 sdf.toLocalizedPattern();
-                Date date = launchItem.getWindowstart();
+                Date date = launchItem.getNet();
                 launchDate = sdf.format(date);
+                holder.launch_date.setText("To be determined... " + launchDate);
+            }
+        } else {
+            if (launchItem.getNet() !=null) {
+                if (sharedPref.getBoolean("local_time", true)) {
+                    SimpleDateFormat sdf;
+                    if (sharedPref.getBoolean("24_hour_mode", false)) {
+                        sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - kk:mm zzz");
+                    } else {
+                        sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                    }
+                    sdf.toLocalizedPattern();
+                    Date date = launchItem.getNet();
+                    launchDate = sdf.format(date);
+                } else {
+                    SimpleDateFormat sdf;
+                    if (sharedPref.getBoolean("24_hour_mode", false)) {
+                        sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - kk:mm zzz");
+                    } else {
+                        sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                    }
+                    Date date = launchItem.getNet();
+                    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    launchDate = sdf.format(date);
+                }
             } else {
-                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
-                Date date = launchItem.getWindowstart();
-                sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                launchDate = sdf.format(date);
+                launchDate = "To be determined... ";
             }
             holder.launch_date.setText(launchDate);
         }
@@ -363,7 +377,7 @@ public class CardSmallAdapter extends RecyclerView.Adapter<CardSmallAdapter.View
                                         dialog.dismiss();
                                     }
                                 });
-                        if (sharedPreference.getNightMode()) {
+                        if (sharedPreference.isNightModeActive(mContext)) {
                             builder.theme(Theme.DARK);
                         }
                         builder.show();

@@ -8,14 +8,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.Window;
 import android.view.WindowManager;
@@ -27,19 +25,14 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.google.gson.Gson;
 
-import java.util.List;
-
 import de.hdodenhof.circleimageview.CircleImageView;
-import io.realm.RealmChangeListener;
-import io.realm.RealmList;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.adapter.VehicleListAdapter;
+import me.calebjones.spacelaunchnow.content.adapter.VehicleDetailAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.natives.Launcher;
 import me.calebjones.spacelaunchnow.content.models.realm.RocketRealm;
-import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
@@ -56,8 +49,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
     private TextView toolbarTitle, detail_rocket, detail_vehicle_agency;
     private ImageView detail_profile_backdrop;
     private CircleImageView detail_profile_image;
-    private StaggeredGridLayoutManager linearLayoutManager;
-    private VehicleListAdapter adapter;
+    private VehicleDetailAdapter adapter;
     private RealmResults<RocketRealm> rocketLaunches;
     private AppBarLayout appBarLayout;
     private int mMaxScrollSize;
@@ -70,13 +62,13 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
 
         sharedPreference = ListPreferences.getInstance(this.context);
 
-        if (sharedPreference.getNightMode()) {
-            m_theme = R.style.DarkTheme;
+        if (sharedPreference.isNightModeActive(this)) {
             statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
         } else {
-            m_theme = R.style.LightTheme;
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
         }
+
+        m_theme = R.style.BaseAppTheme;
 
         if (!BuildConfig.DEBUG) {
             Answers.getInstance().logContentView(new ContentViewEvent()
@@ -149,13 +141,9 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
             }
         }
-        adapter = new VehicleListAdapter(context, this, getRealm());
-        mRecyclerView = (RecyclerView) findViewById(R.id.gridview);
-        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
-            linearLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        } else {
-            linearLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-        }
+        adapter = new VehicleDetailAdapter(context, this, getRealm());
+        mRecyclerView = (RecyclerView) findViewById(R.id.vehicle_detail_list);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(adapter);
         displayRockets();

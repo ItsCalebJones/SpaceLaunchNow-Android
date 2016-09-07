@@ -2,12 +2,11 @@ package me.calebjones.spacelaunchnow.content.database;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -106,9 +105,40 @@ public class ListPreferences {
         this.prefsEditor.apply();
     }
 
-    public boolean getNightMode() {
+    public boolean isNightModeActive(Context context) {
+
+        if (isDayNightAutoEnabled()) {
+            int currentNightMode = context.getResources().getConfiguration().uiMode
+                    & Configuration.UI_MODE_NIGHT_MASK;
+
+            switch (currentNightMode) {
+                case Configuration.UI_MODE_NIGHT_NO:
+                    // Night mode is not active, we're in day time
+                    return false;
+                case Configuration.UI_MODE_NIGHT_YES:
+                    // Night mode is active, we're at night!
+                    return true;
+                case Configuration.UI_MODE_NIGHT_UNDEFINED:
+                    // We don't know what mode we're in, assume notnight
+                    return false;
+                default:
+                    return false;
+            }
+        } else if (isNightThemeEnabled()){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isNightThemeEnabled() {
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this.appContext);
         return this.sharedPrefs.getBoolean("theme", false);
+    }
+
+    public boolean isDayNightAutoEnabled() {
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this.appContext);
+        return this.sharedPrefs.getBoolean("theme_auto", false);
     }
 
     public void setDebugLaunch(boolean value) {

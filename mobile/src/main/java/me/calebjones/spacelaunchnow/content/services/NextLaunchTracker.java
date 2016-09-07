@@ -16,13 +16,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
@@ -460,6 +457,12 @@ public class NextLaunchTracker extends IntentService implements
                         //Check settings to see if user should be notified.
                         if (this.sharedPref.getBoolean("notifications_launch_day", true)) {
                             if (!launch.getIsNotifiedDay()) {
+
+                                //Round up for standard notification.
+                                if (hours == 23){
+                                    hours = 24;
+                                }
+
                                 notifyUser(launch, hours);
                                 realm.beginTransaction();
                                 launch.setIsNotifiedDay(true);
@@ -503,21 +506,24 @@ public class NextLaunchTracker extends IntentService implements
         String launchDate;
         String expandedText;
         String launchName = launch.getName();
-        String launchURL = launch.getVidURL();
+        String launchURL;
         String launchPad = launch.getLocation().getName();
 
         expandedText = "Launch attempt in " + minutes + " minutes from " + launchPad + ".";
 
-        //Get launch date
-        if (sharedPref.getBoolean("local_time", true)) {
-            SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
-            df.toLocalizedPattern();
-            Date date = launch.getWindowstart();
-            launchDate = df.format(date);
-        } else {
-            SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy hh:mm a zzz");
-            Date date = launch.getWindowstart();
-            launchDate = sdf.format(date);
+        if (launch.getNet() != null) {
+            //Get launch date
+            if (sharedPref.getBoolean("local_time", true)) {
+                SimpleDateFormat df = new SimpleDateFormat("hh:mm a zzz");
+                df.toLocalizedPattern();
+                Date date = launch.getNet();
+                launchDate = "NET: " + df.format(date);
+            } else {
+                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a zzz");
+                Date date = launch.getNet();
+                launchDate = "NET: " + sdf.format(date);
+            }
+            mBuilder.setSubText(launchDate);
         }
 
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
@@ -539,7 +545,6 @@ public class NextLaunchTracker extends IntentService implements
                 .setSmallIcon(R.drawable.ic_notification)
                 .setAutoCancel(true)
                 .setContentText(expandedText)
-                .setSubText(launchDate)
                 .extend(wearableExtender)
                 .setContentIntent(appIntent)
                 .setSound(alarmSound);
@@ -565,20 +570,20 @@ public class NextLaunchTracker extends IntentService implements
 
 
         if (sharedPref.getBoolean("notifications_new_message_webcast", false)) {
-            if (launch.getVidURL() != null && launch.getVidURL().length() > 0) {
+            if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
                 // Sets up the Open and Share action buttons that will appear in the
                 // big view of the notification.
-                Intent vidIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(launchURL));
+                Intent vidIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(launch.getVidURLs().get(0).getVal()));
                 PendingIntent vidPendingIntent = PendingIntent.getActivity(this, 0, vidIntent, 0);
 
                 mBuilder.addAction(R.drawable.ic_open_in_browser_white, "Watch Live", vidPendingIntent);
                 mNotifyManager.notify(Strings.NOTIF_ID_HOUR, mBuilder.build());
             }
         } else {
-            if (launch.getVidURL() != null && launch.getVidURL().length() > 0) {
+            if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
                 // Sets up the Open and Share action buttons that will appear in the
                 // big view of the notification.
-                Intent vidIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(launchURL));
+                Intent vidIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(launch.getVidURLs().get(0).getVal()));
                 PendingIntent vidPendingIntent = PendingIntent.getActivity(this, 0, vidIntent, 0);
 
                 mBuilder.addAction(R.drawable.ic_open_in_browser_white, "Watch Live", vidPendingIntent);
@@ -606,16 +611,19 @@ public class NextLaunchTracker extends IntentService implements
         PendingIntent appIntent = PendingIntent.getActivity(this, 0, mainActivityIntent, 0);
         expandedText = "Launch attempt in " + hours + " hours from " + launchPad;
 
-        //Get launch date
-        if (sharedPref.getBoolean("local_time", true)) {
-            SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
-            df.toLocalizedPattern();
-            Date date = launch.getWindowstart();
-            launchDate = df.format(date);
-        } else {
-            SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy hh:mm a zzz");
-            Date date = launch.getWindowstart();
-            launchDate = sdf.format(date);
+        if (launch.getNet() != null) {
+            //Get launch date
+            if (sharedPref.getBoolean("local_time", true)) {
+                SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd - hh:mm a zzz");
+                df.toLocalizedPattern();
+                Date date = launch.getNet();
+                launchDate = df.format(date);
+            } else {
+                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd - hh:mm a zzz");
+                Date date = launch.getNet();
+                launchDate = sdf.format(date);
+            }
+            mBuilder.setSubText(launchDate);
         }
 
         NotificationCompat.WearableExtender wearableExtender =
@@ -629,7 +637,6 @@ public class NextLaunchTracker extends IntentService implements
                 .setSmallIcon(R.drawable.ic_notification)
                 .setContentIntent(appIntent)
                 .setContentText(expandedText)
-                .setSubText(launchDate)
                 .extend(wearableExtender)
                 .setSound(alarmSound)
                 .setAutoCancel(true);
@@ -648,7 +655,7 @@ public class NextLaunchTracker extends IntentService implements
         }
 
         if (sharedPref.getBoolean("notifications_new_message_webcast", false)) {
-            if (launch.getVidURL() != null && launch.getVidURL().length() > 0) {
+            if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
                 mNotifyManager.notify(Strings.NOTIF_ID_HOUR, mBuilder.build());
             }
         } else {

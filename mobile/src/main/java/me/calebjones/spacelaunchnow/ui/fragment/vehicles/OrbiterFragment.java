@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -30,39 +29,39 @@ import java.util.List;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.OrbiterAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.interfaces.APIRequestInterface;
 import me.calebjones.spacelaunchnow.content.models.natives.Orbiter;
 import me.calebjones.spacelaunchnow.content.responses.base.OrbiterResponse;
-import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.ui.activity.OrbiterDetailActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.CustomFragment;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
-import me.calebjones.spacelaunchnow.content.interfaces.APIRequestInterface;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
 public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private ListPreferences sharedPreference;
     private android.content.SharedPreferences SharedPreferences;
-    private Context context;
+    private static Context context;
     private View view;
     private OrbiterAdapter adapter;
     private RecyclerView mRecyclerView;
     private GridLayoutManager layoutManager;
     private CoordinatorLayout coordinatorLayout;
     private SwipeRefreshLayout swipeRefreshLayout;
+
     private List<Orbiter> items = new ArrayList<Orbiter>();
     public static SparseArray<Bitmap> photoCache = new SparseArray<Bitmap>(1);
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getActivity());
         this.sharedPreference = ListPreferences.getInstance(getContext());
         adapter = new OrbiterAdapter(getActivity().getApplicationContext());
+        context = getActivity().getApplicationContext();
     }
 
     @Override
@@ -70,15 +69,10 @@ public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayou
                              Bundle savedInstanceState) {
         int m_theme;
 
-        this.context = getActivity().getApplicationContext();
+        sharedPreference = ListPreferences.getInstance(context);
 
-        sharedPreference = ListPreferences.getInstance(this.context);
+        m_theme = R.style.LightTheme_NoActionBar;
 
-        if (sharedPreference.getNightMode()) {
-            m_theme = R.style.DarkTheme_NoActionBar;
-        } else {
-            m_theme = R.style.LightTheme_NoActionBar;
-        }
         // create ContextThemeWrapper from the original Activity Context with the custom theme
         Context context = new ContextThemeWrapper(getActivity().getApplicationContext(), m_theme);
         // clone the inflater using the ContextThemeWrapper
@@ -89,17 +83,22 @@ public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayou
         LayoutInflater lf = getActivity().getLayoutInflater();
         view = lf.inflate(R.layout.fragment_launch_vehicles, container, false);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.gridview);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.vehicle_detail_list);
         coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.vehicle_coordinator);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
+
         swipeRefreshLayout.setOnRefreshListener(this);
+
         if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
             layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 3);
-        } else {
+        } else if (getResources().getBoolean(R.bool.landscape)  || getResources().getBoolean(R.bool.isTablet)) {
             layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 2);
+        } else {
+            layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 1);
         }
+
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 int topRowVerticalPosition =
@@ -119,19 +118,18 @@ public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayou
     }
 
     @Override
-    public void onResume(){
-        loadJSON();
+    public void onResume() {
+        if (adapter.getItemCount() == 0) {
+            loadJSON();
+        }
         super.onResume();
     }
 
-    private void loadJSON(){
-        Timber.v("Loading orbiters...");
+    private void loadJSON() {
+        Timber.v("Loading vehicles...");
         showLoading();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Strings.API_BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        APIRequestInterface request = retrofit.create(APIRequestInterface.class);
+
+        APIRequestInterface request = getRetrofit().create(APIRequestInterface.class);
         Call<OrbiterResponse> call = request.getOrbiter();
         call.enqueue(new Callback<OrbiterResponse>() {
             @Override
@@ -149,34 +147,25 @@ public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayou
                 }
                 hideLoading();
             }
+
             @Override
             public void onFailure(Call<OrbiterResponse> call, Throwable t) {
                 Timber.e(t.getMessage());
                 hideLoading();
-                Snackbar.make(coordinatorLayout, t.getLocalizedMessage(),Snackbar.LENGTH_LONG).show();
+                Snackbar.make(coordinatorLayout, t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
             }
         });
     }
 
-    private void hideLoading(){
-        if (swipeRefreshLayout.isRefreshing()){
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-            }, 10);
+    private void hideLoading() {
+        if (swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
-    private void showLoading(){
-        if (!swipeRefreshLayout.isRefreshing()){
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    swipeRefreshLayout.setRefreshing(true);
-                }
-            }, 10);
+    private void showLoading() {
+        if (!swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(true);
         }
     }
 

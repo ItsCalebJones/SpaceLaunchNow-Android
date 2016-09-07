@@ -6,12 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
-import me.calebjones.spacelaunchnow.utils.Utils;
 
 
 public class BootReceiver extends BroadcastReceiver{
