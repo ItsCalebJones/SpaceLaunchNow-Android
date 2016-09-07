@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.Collections;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.interfaces.LibraryRequestInterface;
@@ -38,13 +37,8 @@ public class MissionDataService extends BaseService {
     protected void onHandleIntent(Intent intent) {
         Timber.d("MissionDataService - Intent received:  %s ", intent.getAction());
 
-        // Init Realm
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
-                .deleteRealmIfMigrationNeeded()
-                .build();
-
         // Create a new empty instance of Realm
-        mRealm = Realm.getInstance(realmConfiguration);
+        mRealm = Realm.getDefaultInstance();
         getMissionLaunches();
         mRealm.close();
     }

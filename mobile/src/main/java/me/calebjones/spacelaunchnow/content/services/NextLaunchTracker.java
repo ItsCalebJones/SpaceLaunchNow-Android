@@ -37,6 +37,7 @@ import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
@@ -375,30 +376,14 @@ public class NextLaunchTracker extends IntentService implements
         if (launch != null) {
             checkStatus(launch);
         }
-        //If Calendar Sync is enabled sync it up
+
         if (switchPreferences.getCalendarStatus()) {
             syncCalendar();
         }
     }
 
     private void syncCalendar() {
-//        //Get the list of launches
-//        Launch launch = listPreferences.getNextLaunch();
-//        CalendarUtil provider = new CalendarUtil();
-//
-//        //If CalendarID
-//        if (launch.getCalendarID() == null) {
-//            Integer id = provider.addEvent(this, launch);
-//            launch.setCalendarID(id);
-//            listPreferences.setNextLaunch(launch);
-//        } else {
-//            //Try to update, if it fails create event.
-//            if (!provider.updateEvent(this, launch)) {
-//                Integer id = provider.addEvent(this, launch);
-//                launch.setCalendarID(id);
-//                listPreferences.setNextLaunch(launch);
-//            }
-//        }
+        CalendarSyncService.startActionSync(this);
     }
 
     private void checkStatus(LaunchRealm launch) {

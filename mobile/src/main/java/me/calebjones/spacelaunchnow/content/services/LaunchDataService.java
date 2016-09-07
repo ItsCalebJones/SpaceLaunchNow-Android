@@ -12,7 +12,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
@@ -44,13 +43,8 @@ public class LaunchDataService extends BaseService {
         Timber.d("LaunchDataService - Intent received:  %s ", intent.getAction());
         String action = intent.getAction();
 
-        // Init Realm
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
-                .deleteRealmIfMigrationNeeded()
-                .build();
-
         // Create a new empty instance of Realm
-        mRealm = Realm.getInstance(realmConfiguration);
+        mRealm = Realm.getDefaultInstance();
 
         //Usually called on first launch
         if (Strings.ACTION_GET_ALL_WIFI.equals(action)) {
@@ -200,6 +194,7 @@ public class LaunchDataService extends BaseService {
                         .findFirst();
                 if (previous != null) {
                     Timber.v("UpcomingLaunches updating items: %s", previous.getName());
+                    item.setCalendarID(previous.getCalendarID());
                     item.setFavorite(previous.isFavorite());
                     item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
                     item.setIsNotifiedDay(previous.getIsNotifiedDay());
@@ -291,6 +286,7 @@ public class LaunchDataService extends BaseService {
                             .equalTo("id", item.getId())
                             .findFirst();
                     if (previous != null) {
+                        item.setCalendarID(previous.getCalendarID());
                         item.setFavorite(previous.isFavorite());
                         item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
                         item.setIsNotifiedDay(previous.getIsNotifiedDay());

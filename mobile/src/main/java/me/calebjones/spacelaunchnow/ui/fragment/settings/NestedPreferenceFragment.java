@@ -253,11 +253,11 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
                 break;
             case NESTED_SCREEN_2_KEY:
                 addPreferencesFromResource(R.xml.nested_loader_preferences);
-                Preference subs = findPreference("calendar_sync_state");
-                subs.setEnabled(false);
-                subs.setSelectable(false);
-                PreferenceCategory prefCatCalendar = (PreferenceCategory) findPreference("calendar_category");
-                prefCatCalendar.setTitle(prefCatCalendar.getTitle() + " (Coming Soon)");
+//                Preference subs = findPreference("calendar_sync_state");
+//                subs.setEnabled(false);
+//                subs.setSelectable(false);
+//                PreferenceCategory prefCatCalendar = (PreferenceCategory) findPreference("calendar_category");
+//                prefCatCalendar.setTitle(prefCatCalendar.getTitle() + " (Coming Soon)");
 
                 //TODO implement calendar feature
 //                if (!supporter) {
