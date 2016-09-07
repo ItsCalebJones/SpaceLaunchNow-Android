@@ -115,9 +115,9 @@ dependencies {
     compile 'net.mediavrog:integrated-rating-request:1.1.1'
     compile 'com.jakewharton.timber:timber:4.3.0'
     compile 'za.co.riggaroo:materialhelptutorial:1.1.0'
-    compile 'com.jakewharton:butterknife:8.2.1'
-    apt 'com.jakewharton:butterknife-compiler:8.2.1'
-    compile 'com.simplecityapps:recyclerview-fastscroll:1.0.9'
+    compile 'com.jakewharton:butterknife:8.4.0'
+    apt 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile 'com.simplecityapps:recyclerview-fastscroll:1.0.10'
     compile 'com.github.javiersantos:MaterialStyledDialogs:1.4.1'
     compile 'com.karumi:dexter:2.3.0'
     compile 'com.anjlab.android.iab.v3:library:1.0.32'
@@ -130,5 +130,5 @@ dependencies {
     compile 'com.github.jrejaud:WearSocket:1.0.8'
     compile 'com.github.pwittchen:weathericonview:1.1.0'
     compile 'me.grantland:autofittextview:0.2.1'
-    compile project(':forecast')
+    compile 'android.zetterstrom.com.forecast:forecast:1.2.0'
 }

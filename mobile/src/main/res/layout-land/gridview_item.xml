@@ -14,14 +14,14 @@
     app:cardCornerRadius="4dp"
     app:cardElevation="2dp">
 
-    <me.calebjones.spacelaunchnow.ui.customviews.SquareImageView
+    <ImageView
         android:id="@+id/picture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:adjustViewBounds="true"
         android:contentDescription="Image of Launch Vechicle's"
-        android:scaleType="centerCrop"
         android:transitionName="image"
-        app:srcCompat="@drawable/placeholder" />
+        android:scaleType="centerCrop"/>
 
     <TextView
         android:id="@+id/text"

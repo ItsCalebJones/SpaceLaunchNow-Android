@@ -35,7 +35,7 @@
                 <ImageView
                     android:id="@+id/item_icon"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="350dp"
                     android:scaleType="centerCrop"
                     android:transitionName="imageCover"
                     app:srcCompat="@drawable/placeholder" />
@@ -270,13 +270,14 @@
         android:id="@+id/vehicle_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="90dp"
+        android:layout_marginTop="340dp"
         android:clickable="true"
         android:elevation="8dp"
         app:srcCompat="@drawable/ic_fullscreen"
         app:backgroundTint="@color/colorPrimary"
-        app:layout_anchor="@id/item_title"
-        app:layout_anchorGravity="right"
+        app:layout_anchor="@id/card_view"
+        app:layout_anchorGravity="center|right"
         />
 
 </android.support.design.widget.CoordinatorLayout>

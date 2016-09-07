@@ -22,12 +22,12 @@
 
     <application
         android:name=".LaunchApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="${appNameLabel}"
         android:supportsRtl="true"
         android:theme="@style/BaseAppTheme"
-        tools:replace="label">
+        tools:replace="label,android:allowBackup">
         <activity
             android:name=".ui.activity.MainActivity"
             android:configChanges="screenSize"

@@ -499,14 +499,14 @@ public class NextLaunchTracker extends IntentService implements
         if (launch.getNet() != null) {
             //Get launch date
             if (sharedPref.getBoolean("local_time", true)) {
-                SimpleDateFormat df = new SimpleDateFormat("NET: hh:mm a zzz");
+                SimpleDateFormat df = new SimpleDateFormat("hh:mm a zzz");
                 df.toLocalizedPattern();
                 Date date = launch.getNet();
-                launchDate = df.format(date);
+                launchDate = "NET: " + df.format(date);
             } else {
-                SimpleDateFormat sdf = new SimpleDateFormat("NET: hh:mm a zzz");
+                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a zzz");
                 Date date = launch.getNet();
-                launchDate = sdf.format(date);
+                launchDate = "NET: " + sdf.format(date);
             }
             mBuilder.setSubText(launchDate);
         }

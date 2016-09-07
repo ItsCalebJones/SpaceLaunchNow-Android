@@ -269,11 +269,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
+        android:layout_marginTop="240dp"
         android:clickable="true"
         android:elevation="8dp"
         app:srcCompat="@drawable/ic_fullscreen"
         app:backgroundTint="@color/colorPrimary"
-        app:layout_anchor="@id/item_title"
+        app:layout_anchor="@id/card_view"
         app:layout_anchorGravity="right"
         />
 

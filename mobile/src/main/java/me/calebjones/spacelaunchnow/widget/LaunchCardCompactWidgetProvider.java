@@ -113,13 +113,17 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
         }
 
         if (minWidth > 0 && maxWidth > 0 && minHeight > 0 && maxHeight > 0) {
-            setLaunchName(context, launch, remoteViews, options);
-            setLocationName(context, launch, remoteViews, options);
-            setLaunchDate(context, launch, remoteViews);
-            setCategoryIcon(context, launch, remoteViews);
-            setRefreshIntent(context, launch, remoteViews);
-            setWidgetStyle(context, remoteViews);
-
+            if (launch != null) {
+                setLaunchName(context, launch, remoteViews, options);
+                setLocationName(context, launch, remoteViews, options);
+                setLaunchDate(context, launch, remoteViews);
+                setCategoryIcon(context, launch, remoteViews);
+                setRefreshIntent(context, launch, remoteViews);
+                setWidgetStyle(context, remoteViews);
+            } else {
+                remoteViews.setTextViewText(R.id.widget_launch_name, "Unknown Launch");
+                remoteViews.setTextViewText(R.id.widget_mission_name, "Unknown Mission");
+            }
             pushWidgetUpdate(context, remoteViews);
         }
     }

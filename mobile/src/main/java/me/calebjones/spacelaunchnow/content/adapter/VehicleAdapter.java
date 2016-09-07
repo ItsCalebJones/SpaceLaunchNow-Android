@@ -95,7 +95,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
                     .load(item.getImageURL())
                     .asBitmap()
                     .placeholder(R.drawable.placeholder)
-                    .fitCenter()
+                    .centerCrop()
                     .into(new BitmapImageViewTarget(holder.picture) {
                         @Override
                         public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
@@ -107,10 +107,11 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
         } else {
             holder.grid_root.setScaleY(1);
             holder.grid_root.setScaleX(1);
+
             Glide.with(mContext)
                     .load(item.getImageURL())
                     .placeholder(R.drawable.placeholder)
-                    .fitCenter()
+                    .crossFade()
                     .into(holder.picture);
         }
 
