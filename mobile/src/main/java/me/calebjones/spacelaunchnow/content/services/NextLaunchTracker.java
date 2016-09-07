@@ -383,7 +383,7 @@ public class NextLaunchTracker extends IntentService implements
     }
 
     private void syncCalendar() {
-        CalendarSyncService.startActionSync(this);
+        CalendarSyncService.startActionSyncAll(this);
     }
 
     private void checkStatus(LaunchRealm launch) {
