@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.utils;
+package me.calebjones.spacelaunchnow.calendar;
 
 import android.Manifest;
 import android.content.ContentResolver;
@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import com.crashlytics.android.Crashlytics;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TimeZone;
@@ -80,17 +81,24 @@ public class CalendarUtil {
         if (launch.getVidURLs() != null && launch.getVidURLs().size() >= 1) {
             description = "Video URLs: \n";
             for (int i = 0; i < launch.getVidURLs().size(); i++) {
-                description = description + launch.getVidURLs().get(i) + "\n\n";
+                description = description + launch.getVidURLs().get(i).getVal() + "\n\n";
             }
         }
         if (launch.getMissions() != null && launch.getMissions().size() > 0) {
             description = description + launch.getMissions().get(0).getDescription();
         }
 
+        Date startDate = launch.getWindowstart();
+        Date endDate = launch.getWindowend();
+
         calEvent.put(CalendarContract.Events.DESCRIPTION, description);
         calEvent.put(CalendarContract.Events.EVENT_LOCATION, launch.getLocation().getName());
-        calEvent.put(CalendarContract.Events.DTSTART, launch.getStartDate().getTime());
-        calEvent.put(CalendarContract.Events.DTEND, launch.getEndDate().getTime());
+        if(startDate != null && endDate != null) {
+            calEvent.put(CalendarContract.Events.DTSTART, startDate.getTime());
+            calEvent.put(CalendarContract.Events.DTEND, endDate.getTime());
+        } else if (launch.getNet() != null) {
+            calEvent.put(CalendarContract.Events.DTSTART, launch.getNet().getTime());
+        }
         calEvent.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getDisplayName());
         Uri uri = contentResolver.insert(CalendarContract.Events.CONTENT_URI, calEvent);
 
@@ -123,17 +131,24 @@ public class CalendarUtil {
             if (launch.getVidURLs() != null && launch.getVidURLs().size() >= 1) {
                 description = "Video URLs: \n";
                 for (int i = 0; i < launch.getVidURLs().size(); i++) {
-                    description = description + launch.getVidURLs().get(i) + "\n\n";
+                    description = description + launch.getVidURLs().get(i).getVal() + "\n\n";
                 }
             }
             if (launch.getMissions() != null && launch.getMissions().size() > 0) {
                 description = description + launch.getMissions().get(0).getDescription();
             }
 
+            Date startDate = launch.getWindowstart();
+            Date endDate = launch.getWindowend();
+
             calEvent.put(CalendarContract.Events.DESCRIPTION, description);
             calEvent.put(CalendarContract.Events.EVENT_LOCATION, launch.getLocation().getName());
-            calEvent.put(CalendarContract.Events.DTSTART, launch.getStartDate().getTime());
-            calEvent.put(CalendarContract.Events.DTEND, launch.getEndDate().getTime());
+            if(startDate != null && endDate != null) {
+                calEvent.put(CalendarContract.Events.DTSTART, startDate.getTime());
+                calEvent.put(CalendarContract.Events.DTEND, endDate.getTime());
+            } else if (launch.getNet() != null) {
+                calEvent.put(CalendarContract.Events.DTSTART, launch.getNet().getTime());
+            }
             calEvent.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getDisplayName());
 
             Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, launch.getCalendarID());
@@ -150,7 +165,6 @@ public class CalendarUtil {
             Uri eventUri = ContentUris
                     .withAppendedId(CalendarContract.Events.CONTENT_URI, launch.getCalendarID());
             iNumRowsDeleted = context.getContentResolver().delete(eventUri, null, null);
-
         }
         return iNumRowsDeleted;
     }

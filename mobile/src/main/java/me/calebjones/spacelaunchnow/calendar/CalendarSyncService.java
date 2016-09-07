@@ -1,23 +1,29 @@
-package me.calebjones.spacelaunchnow.content.services;
+package me.calebjones.spacelaunchnow.calendar;
 
-import android.app.IntentService;
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
 
+import java.util.Date;
+
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmResults;
+import io.realm.Sort;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.content.services.BaseService;
 
 
-public class CalendarSyncService extends IntentService {
+public class CalendarSyncService extends BaseService {
 
     private static final String SYNC_EVENTS_ALL = "me.calebjones.spacelaunchnow.content.services.action.SYNC_EVENTS_ALL";
     private static final String DELETE_EVENTS_ALL = "me.calebjones.spacelaunchnow.content.services.action.DELETE_EVENTS_ALL";
     private static final String SYNC_EVENT = "me.calebjones.spacelaunchnow.content.services.action.SYNC_EVENT";
     private static final String DELETE_EVENT = "me.calebjones.spacelaunchnow.content.services.action.DELETE_EVENT";
-
     private static final String EVENT_ID = "me.calebjones.spacelaunchnow.content.services.extra.EVENT_ID";
     private static final String LAUNCH_ID = "me.calebjones.spacelaunchnow.content.services.extra.LAUNCH_ID";
 
-
+    private RealmResults<LaunchRealm> launchRealms;
+    private CalendarUtil calendarUtil;
 
     public CalendarSyncService() {
         super("CalendarSyncService");
@@ -25,7 +31,7 @@ public class CalendarSyncService extends IntentService {
 
     public static void startActionSync(Context context) {
         Intent intent = new Intent(context, CalendarSyncService.class);
-        intent.setAction(SYNC_EVENT);
+        intent.setAction(SYNC_EVENTS_ALL);
         context.startService(intent);
     }
 
@@ -45,12 +51,14 @@ public class CalendarSyncService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        mRealm = Realm.getDefaultInstance();
+        calendarUtil = new CalendarUtil();
         if (intent != null) {
             final String action = intent.getAction();
             if (SYNC_EVENTS_ALL.equals(action)) {
                 handleActionSyncAll();
+                handleActionDeleteAll();
             } else if (DELETE_EVENTS_ALL.equals(action)) {
-
                 handleActionDeleteAll();
             } else if (SYNC_EVENT.equals(action)) {
                 final int param1 = intent.getIntExtra(LAUNCH_ID, 0);
@@ -58,15 +66,58 @@ public class CalendarSyncService extends IntentService {
                 handleActionDeleteEvent(param1, param2);
             }
         }
+        mRealm.close();
         onDestroy();
     }
 
     private void handleActionSyncAll() {
-        throw new UnsupportedOperationException("Not yet implemented");
+        launchRealms = mRealm.where(LaunchRealm.class)
+                .greaterThanOrEqualTo("net", new Date())
+                .findAllSorted("net", Sort.ASCENDING);
+
+        RealmList<LaunchRealm> launchResults = new RealmList<>();
+
+        if (launchRealms.size() > 5) {
+            launchResults.addAll(launchRealms.subList(0, 5));
+        } else {
+            launchResults.addAll(launchRealms);
+        }
+
+        for (LaunchRealm launchRealm: launchResults){
+            if (launchRealm.getCalendarID() != null){
+                boolean success = calendarUtil.updateEvent(this, launchRealm);
+                if (!success) {
+                    Integer id = calendarUtil.addEvent(this, launchRealm);
+                    if (id != null) {
+                        mRealm.beginTransaction();
+                        launchRealm.setCalendarID(id);
+                        mRealm.commitTransaction();
+                    }
+                }
+            } else {
+                Integer id = calendarUtil.addEvent(this, launchRealm);
+                if (id != null) {
+                    mRealm.beginTransaction();
+                    launchRealm.setCalendarID(id);
+                    mRealm.commitTransaction();
+                }
+            }
+        }
     }
 
     private void handleActionDeleteAll() {
-        throw new UnsupportedOperationException("Not yet implemented");
+        launchRealms = mRealm.where(LaunchRealm.class)
+                .greaterThan("calendarID", 0)
+                .findAll();
+
+        for (LaunchRealm launchRealm: launchRealms) {
+            int success = calendarUtil.deleteEvent(this, launchRealm);
+            if (success > 0){
+                mRealm.beginTransaction();
+                launchRealm.setCalendarID(null);
+                mRealm.commitTransaction();
+            }
+        }
     }
 
     private void handleActionDeleteEvent(int launchId, long eventId) {
