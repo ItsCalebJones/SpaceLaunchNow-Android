@@ -129,13 +129,17 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
 
 
         if (minWidth > 0 && maxWidth > 0 && minHeight > 0 && maxHeight > 0) {
-        setLaunchName(context, launch, remoteViews, options);
-        setMissionName(context, launch, remoteViews, options);
-        setLaunchTimer(context, launch, remoteViews, appWidgetManager, widgetId, options);
-        setRefreshIntent(context, launch, remoteViews);
-        setWidgetStyle(context, remoteViews);
-
-        pushWidgetUpdate(context, remoteViews);
+            if (launch != null) {
+                setLaunchName(context, launch, remoteViews, options);
+                setMissionName(context, launch, remoteViews, options);
+                setLaunchTimer(context, launch, remoteViews, appWidgetManager, widgetId, options);
+                setRefreshIntent(context, launch, remoteViews);
+                setWidgetStyle(context, remoteViews);
+            } else {
+                remoteViews.setTextViewText(R.id.widget_launch_name, "Unknown Launch");
+                remoteViews.setTextViewText(R.id.widget_mission_name, "Unknown Mission");
+            }
+            pushWidgetUpdate(context, remoteViews);
         }
     }
 
@@ -158,7 +162,7 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager,
                                           int appWidgetId, Bundle newOptions) {
-        updateAppWidget(context,appWidgetManager, appWidgetId, newOptions);
+        updateAppWidget(context, appWidgetManager, appWidgetId, newOptions);
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
     }
 
@@ -168,7 +172,7 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
             Timber.v("onReceive", ACTION_WIDGET_REFRESH);
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, this.getClass()));
-            onUpdate(context,appWidgetManager,appWidgetIds);
+            onUpdate(context, appWidgetManager, appWidgetIds);
         } else if (intent.getAction().equals(ACTION_WIDGET_CLICK)) {
             Timber.v("onReceive", ACTION_WIDGET_CLICK);
         } else {
@@ -216,7 +220,7 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
 
         long millisUntilFinished = getFutureMilli(launchRealm) - System.currentTimeMillis();
 
-        if(countDownTimer != null){
+        if (countDownTimer != null) {
             Timber.v("Cancelling countdown timer.");
             countDownTimer.cancel();
         }

@@ -123,12 +123,16 @@ public class LaunchWordTimerWidgetProvider extends AppWidgetProvider {
         }
 
         if (minWidth > 0 && maxWidth > 0 && minHeight > 0 && maxHeight > 0) {
-            setLaunchName(context, launch, remoteViews, options);
-            setMissionName(context, launch, remoteViews, options);
-            setLaunchTimer(context, launch, remoteViews, appWidgetManager, widgetId, options);
-            setRefreshIntent(context, launch, remoteViews);
-            setWidgetStyle(context, remoteViews);
-
+            if (launch != null) {
+                setLaunchName(context, launch, remoteViews, options);
+                setMissionName(context, launch, remoteViews, options);
+                setLaunchTimer(context, launch, remoteViews, appWidgetManager, widgetId, options);
+                setRefreshIntent(context, launch, remoteViews);
+                setWidgetStyle(context, remoteViews);
+            } else {
+                remoteViews.setTextViewText(R.id.widget_launch_name, "Unknown Launch");
+                remoteViews.setTextViewText(R.id.widget_mission_name, "Unknown Mission");
+            }
             pushWidgetUpdate(context, remoteViews);
         }
     }

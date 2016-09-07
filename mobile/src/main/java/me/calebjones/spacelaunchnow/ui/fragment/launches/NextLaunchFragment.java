@@ -444,6 +444,14 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         //First install
         if (switchPreferences.getVersionCode() == 0){
             switchPreferences.setVersionCode(Utils.getVersionCode(context));
+            showCaseView();
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showCaseView();
+                }
+            }, 1000);
 
             //build 87 is where Realm change happened
         } else if (switchPreferences.getVersionCode() <= 87){
