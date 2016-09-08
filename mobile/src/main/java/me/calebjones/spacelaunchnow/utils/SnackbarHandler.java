@@ -45,7 +45,6 @@ public class SnackbarHandler {
                 .show();
     }
 
-
     //
     public static String parseErrorMessage(Context context, String msg){
         String error;
