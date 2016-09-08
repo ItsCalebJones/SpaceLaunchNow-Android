@@ -10,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
@@ -182,12 +181,12 @@ public class SupportActivity extends BaseActivity implements BillingProcessor.IB
     @Override
     public void onPurchaseHistoryRestored() {
         Timber.v("Purchase History restored.");
-        SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Restored purchases.");
+        SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Purchase history restored.");
     }
 
     @Override
     public void onBillingError(int errorCode, Throwable error) {
-        Toast.makeText(this, "Error processing billing request.", Toast.LENGTH_LONG).show();
+        SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, error.getLocalizedMessage());
         Crashlytics.logException(error);
     }
 
