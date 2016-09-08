@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
-import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.AddToCartEvent;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.PurchaseEvent;
@@ -194,8 +193,11 @@ public class SupportActivity extends BaseActivity implements BillingProcessor.IB
 
     @Override
     public void onBillingError(int errorCode, Throwable error) {
-        SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, error.getLocalizedMessage());
-        Crashlytics.logException(error);
+        if (error != null) {
+            SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, error.getLocalizedMessage());
+        } else if (errorCode != 0){
+            SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, "billing error code - " + errorCode);
+        }
     }
 
     @Override
