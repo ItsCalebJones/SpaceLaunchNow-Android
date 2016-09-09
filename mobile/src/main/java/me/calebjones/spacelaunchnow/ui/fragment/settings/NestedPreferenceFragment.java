@@ -162,7 +162,7 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
                     NestedPreferenceFragment.this.getActivity().recreate();
                 }
                 if (key.equals("notifications_launch_imminent_updates")) {
-                    OneSignal.setSubscription(this.valprefs.getBoolean(key, false));
+                    OneSignal.setSubscription(this.valprefs.getBoolean(key, true));
                 }
                 if (key.equals("wear_hour_mode")) {
                     PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/config");
