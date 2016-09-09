@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
-import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.AddToCartEvent;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.PurchaseEvent;
@@ -46,6 +45,7 @@ public class SupportActivity extends BaseActivity implements BillingProcessor.IB
     static final String SKU_TWO_DOLLAR = "two_dollar_support";
     static final String SKU_SIX_DOLLAR = "six_dollar_support";
     static final String SKU_TWELVE_DOLLAR = "twelve_dollar_support";
+    static final String SKU_OTHER = "beta_supporter";
 
     BillingProcessor bp;
     SmallBang mSmallBang;
@@ -57,10 +57,6 @@ public class SupportActivity extends BaseActivity implements BillingProcessor.IB
         final Context context = this;
 
         ListPreferences sharedPreference = ListPreferences.getInstance(context);
-
-//        if (sharedPreference.isNightThemeEnabled()) {
-//        } else {
-//        }
 
         m_theme = R.style.BaseAppTheme;
         setTheme(m_theme);
@@ -83,8 +79,16 @@ public class SupportActivity extends BaseActivity implements BillingProcessor.IB
 
         mSmallBang = SmallBang.attach2Window(this);
 
-        bp = new BillingProcessor(this, getResources().getString(R.string.rsa_key), this);
-        bp.loadOwnedPurchasesFromGoogle();
+        boolean isAvailable = BillingProcessor.isIabServiceAvailable(context);
+        if(isAvailable) {
+            // continue
+            bp = new BillingProcessor(this, getResources().getString(R.string.rsa_key), this);
+        } else {
+            two.setVisibility(View.GONE);
+            six.setVisibility(View.GONE);
+            twelve.setVisibility(View.GONE);
+            other.setText("PayPal");
+        }
     }
 
 
@@ -120,9 +124,10 @@ public class SupportActivity extends BaseActivity implements BillingProcessor.IB
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
-        if (bp != null)
+        if (bp != null) {
             bp.release();
+        }
+        super.onDestroy();
     }
 
     @OnClick({ R.id.twoDollar, R.id.sixDollar, R.id.twelveDollar, R.id.other })
@@ -138,6 +143,7 @@ public class SupportActivity extends BaseActivity implements BillingProcessor.IB
                 makePurchase(SKU_TWELVE_DOLLAR);
                 break;
             case R.id.other:
+                Toast.makeText(this, "Supporter features will be unlocked via promotion code after purchase confirmation", Toast.LENGTH_LONG);
                 Utils.openCustomTab(this, getApplicationContext(), "https://www.paypal.me/cejones");
                 break;
         }
@@ -162,7 +168,7 @@ public class SupportActivity extends BaseActivity implements BillingProcessor.IB
 
     @Override
     public void onProductPurchased(String productId, TransactionDetails details) {
-        Timber.v("%s purchased.", productId);
+        Timber.v("%s purchased", productId);
         SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Thanks for helping keep the gears turning!");
         animatePurchase(productId);
         Products products = getProduct(productId);
@@ -182,19 +188,23 @@ public class SupportActivity extends BaseActivity implements BillingProcessor.IB
     @Override
     public void onPurchaseHistoryRestored() {
         Timber.v("Purchase History restored.");
-        SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Restored purchases.");
+        SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Purchase history restored.");
     }
 
     @Override
     public void onBillingError(int errorCode, Throwable error) {
-        Toast.makeText(this, "Error processing billing request.", Toast.LENGTH_LONG).show();
-        Crashlytics.logException(error);
+        if (error != null) {
+            SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, error.getLocalizedMessage());
+        } else if (errorCode != 0){
+            SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, "billing error code - " + errorCode);
+        }
     }
 
     @Override
     public void onBillingInitialized() {
         Timber.v("Billing initialized.");
         int count = 500;
+        bp.loadOwnedPurchasesFromGoogle();
         for (final String sku : bp.listOwnedProducts()) {
             Products product = getProduct(sku);
             getRealm().beginTransaction();
@@ -230,6 +240,10 @@ public class SupportActivity extends BaseActivity implements BillingProcessor.IB
             case SKU_TWELVE_DOLLAR:
                 mSmallBang.bang(twelve);
                 twelve.setText("PURCHASED");
+                break;
+            case SKU_OTHER:
+                mSmallBang.bang(other);
+                other.setText("Thanks!");
                 break;
         }
     }

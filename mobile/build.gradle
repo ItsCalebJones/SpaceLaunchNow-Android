@@ -21,7 +21,7 @@ advancedVersioning {
     nameOptions {
         versionMajor 1
         versionMinor 3
-        versionPatch 0
+        versionPatch 1
 
     }
     codeOptions {
@@ -76,6 +76,9 @@ android {
         }
     }
     productFlavors {
+    }
+    lintOptions {
+        abortOnError false
     }
 }
 
