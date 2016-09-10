@@ -6,6 +6,7 @@ public class Constants {
     public static final String SKU_TWO_DOLLAR = "two_dollar_support";
     public static final String SKU_SIX_DOLLAR = "six_dollar_support";
     public static final String SKU_TWELVE_DOLLAR = "twelve_dollar_support";
+    public static final String SKU_OTHER = "beta_supporter";
 
     public static Products getProduct(String productID){
         Products product = new Products();
