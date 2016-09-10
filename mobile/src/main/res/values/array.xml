@@ -90,7 +90,7 @@
         <item>Five</item>
         <item>Ten</item>
         <item>Twenty</item>
-        <item>All</item>
+        <item>All (Not Recommended)</item>
     </string-array>
 
     <string-array name="upcoming_array_values">
