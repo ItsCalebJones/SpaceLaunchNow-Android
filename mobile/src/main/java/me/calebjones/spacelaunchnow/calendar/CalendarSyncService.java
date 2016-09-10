@@ -2,6 +2,7 @@ package me.calebjones.spacelaunchnow.calendar;
 
 import android.content.Context;
 import android.content.Intent;
+import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 
 import java.util.Date;
@@ -101,8 +102,11 @@ public class CalendarSyncService extends BaseService {
 
         RealmList<LaunchRealm> launchResults = new RealmList<>();
 
-        if (launchRealms.size() > 5) {
-            launchResults.addAll(launchRealms.subList(0, 5));
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        int size = Integer.parseInt(sharedPref.getString("calendar_count", "5"));
+
+        if (launchRealms.size() > size) {
+            launchResults.addAll(launchRealms.subList(0, size));
         } else {
             launchResults.addAll(launchRealms);
         }

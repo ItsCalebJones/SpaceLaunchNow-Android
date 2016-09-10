@@ -182,8 +182,12 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
                     Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
                 }
 
-                if (key.equals("calendar_reminder_array")) {
+                if (key.equals("calendar_reminder_array") ) {
                     CalendarSyncService.startActionSyncAll(context);
+                }
+
+                if (key.equals("calendar_count")){
+                    CalendarSyncService.startActionResync(context);
                 }
 
                 if (key.equals("calendar_sync_state")) {
