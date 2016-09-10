@@ -42,11 +42,11 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.BuildConfig;
-import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.CardBigAdapter;
 import me.calebjones.spacelaunchnow.content.adapter.CardSmallAdapter;
@@ -57,7 +57,10 @@ import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
+import me.calebjones.spacelaunchnow.supporter.Constants;
+import me.calebjones.spacelaunchnow.supporter.Products;
 import me.calebjones.spacelaunchnow.ui.activity.DownloadActivity;
+import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
 import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -606,6 +609,19 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     Snackbar.LENGTH_LONG).show();
             context.startService(new Intent(context, LaunchDataService.class)
                     .setAction(Strings.ACTION_GET_ALL_WIFI));
+        } else if (id == R.id.debug_supporter) {
+            Realm realm = Realm.getDefaultInstance();
+            if (sharedPreference.isDebugSupporterEnabled()) {
+                sharedPreference.setDebugSupporter(false);
+                realm.beginTransaction();
+                realm.delete(Products.class);
+                realm.commitTransaction();
+            } else {
+                sharedPreference.setDebugSupporter(true);
+                realm.beginTransaction();
+                realm.copyToRealm(Constants.getProduct(Constants.SKU_TWO_DOLLAR));
+                realm.commitTransaction();
+            }
         } else if (id == R.id.debug_next_launch) {
             Intent nextIntent = new Intent(getActivity(), LaunchDataService.class);
             nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);

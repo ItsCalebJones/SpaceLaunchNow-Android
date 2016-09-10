@@ -208,8 +208,7 @@ public class Event {
 
     public int update(final ContentResolver contentResolver) {
         final ContentValues contentValues = mapToContentValues();
-        selfAttendeeStatus = null;
-        contentResolver.update(ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, id), contentValues, null, null);
-        return id;
+        int code = contentResolver.update(ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, id), contentValues, null, null);
+        return code;
     }
 }

@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
 
+import io.realm.Realm;
+import it.macisamuele.calendarprovider.EventInfo;
 import me.calebjones.spacelaunchnow.calendar.model.Calendar;
 import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
 import me.calebjones.spacelaunchnow.calendar.model.Event;
@@ -59,7 +61,7 @@ public class CalendarUtility {
         Set<String> prefSelections = sharedPrefs.getStringSet("calendar_reminder_array", new HashSet<>(Arrays.asList("5", "1440")));
         String[] strings = prefSelections.toArray(new String[prefSelections.size()]);
         int[] prefSelected = new int[prefSelections.size()];
-        for (int i = 0; i < prefSelected.length ; i++){
+        for (int i = 0; i < prefSelected.length; i++) {
             prefSelected[i] = Integer.parseInt(strings[i]);
         }
 
@@ -75,6 +77,7 @@ public class CalendarUtility {
             description = description + launch.getMissions().get(0).getDescription();
         }
 
+
         Date startDate = launch.getWindowstart();
         Date endDate = launch.getWindowend();
 
@@ -83,7 +86,7 @@ public class CalendarUtility {
         event.title = launch.getName();
         event.description = description;
         event.location = launch.getLocation().getName();
-        if(startDate != null && endDate != null) {
+        if (startDate != null && endDate != null) {
             event.startDate = startDate.getTime();
             event.endDate = endDate.getTime();
         } else if (launch.getNet() != null) {
@@ -97,7 +100,6 @@ public class CalendarUtility {
     public boolean updateEvent(Context context, LaunchRealm launch) {
         Timber.v("Updating launch event: %s", launch.getName());
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
-            sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
             ContentResolver cr = context.getContentResolver();
             ContentValues calEvent = new ContentValues();
 
@@ -129,7 +131,6 @@ public class CalendarUtility {
             }
             calEvent.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getDisplayName());
 
-            Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, launch.getCalendarID());
 
             return cr.update(updateUri, calEvent, null, null) > 0;
         } return false;
@@ -139,9 +140,7 @@ public class CalendarUtility {
         Timber.v("Deleting launch event: %s", launch.getName());
         int iNumRowsDeleted = 0;
 
-        if (launch.getCalendarID() > 0) {
             Uri eventUri = ContentUris
-                    .withAppendedId(CalendarContract.Events.CONTENT_URI, launch.getCalendarID());
             iNumRowsDeleted = context.getContentResolver().delete(eventUri, null, null);
         }
         return iNumRowsDeleted;
@@ -173,7 +172,6 @@ public class CalendarUtility {
         }
     }
 
-    private List<Calendar> getCalendars(Context context){
         return Calendar.getCalendarsForQuery(null, null, null, context.getContentResolver());
     }
 

@@ -12,7 +12,7 @@ import com.crashlytics.android.Crashlytics;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.ui.activity.AboutActivity;
-import me.calebjones.spacelaunchnow.ui.activity.SupportActivity;
+import me.calebjones.spacelaunchnow.supporter.SupporterActivity;
 
 public class SettingsFragment extends PreferenceFragment implements android.preference.Preference.OnPreferenceClickListener {
     
@@ -46,7 +46,7 @@ public class SettingsFragment extends PreferenceFragment implements android.pref
             startActivity(intent);
         }
         if (preference.getKey().equals(SUPPORT)) {
-            Intent intent = new Intent(getActivity().getApplicationContext(), SupportActivity.class);
+            Intent intent = new Intent(getActivity().getApplicationContext(), SupporterActivity.class);
             startActivity(intent);
         }
         return false;

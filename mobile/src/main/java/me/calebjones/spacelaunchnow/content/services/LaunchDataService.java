@@ -194,7 +194,7 @@ public class LaunchDataService extends BaseService {
                         .findFirst();
                 if (previous != null) {
                     Timber.v("UpcomingLaunches updating items: %s", previous.getName());
-                    item.setCalendarID(previous.getCalendarID());
+                    item.setEventID(previous.getEventID());
                     item.setFavorite(previous.isFavorite());
                     item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
                     item.setIsNotifiedDay(previous.getIsNotifiedDay());
@@ -290,7 +290,7 @@ public class LaunchDataService extends BaseService {
                             .equalTo("id", item.getId())
                             .findFirst();
                     if (previous != null) {
-                        item.setCalendarID(previous.getCalendarID());
+                        item.setEventID(previous.getEventID());
                         item.setFavorite(previous.isFavorite());
                         item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
                         item.setIsNotifiedDay(previous.getIsNotifiedDay());
