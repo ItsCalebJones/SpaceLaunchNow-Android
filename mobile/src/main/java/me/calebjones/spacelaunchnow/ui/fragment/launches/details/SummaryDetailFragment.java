@@ -183,6 +183,8 @@ public class SummaryDetailFragment extends BaseFragment {
             } else {
                 fetchPastWeather();
             }
+        } else {
+            weatherCard.setVisibility(View.GONE);
         }
 
         if (sharedPreference.isNightModeActive(context)) {

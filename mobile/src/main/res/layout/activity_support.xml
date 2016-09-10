@@ -62,7 +62,7 @@
                     android:id="@+id/supporter_feature_title"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="Supporter Features:"
+                    android:text="Supporter Perks:"
                     android:paddingLeft="25dp"
                     android:paddingRight="20dp"
                     android:textStyle="bold" />
@@ -124,7 +124,7 @@
             </RelativeLayout>
 
             <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
 
@@ -167,5 +167,12 @@
 
                 </LinearLayout>
             </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Note: There is currently a bug in Google's In-App Billing library that sometimes doesn't properly return successful purchases. If you make a purchase but don't immediately unlock features try to click the button again or re-install the application."
+                android:gravity="bottom|center"
+                android:layout_margin="16dp" />
         </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
