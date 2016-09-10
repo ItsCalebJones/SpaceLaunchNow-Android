@@ -55,8 +55,6 @@ public class CalendarUtility {
             return null;
         }
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        int selection = Integer.parseInt(sharedPrefs.getString("calendar_reminder", "5"));
-
 
         Set<String> prefSelections = sharedPrefs.getStringSet("calendar_reminder_array", new HashSet<>(Arrays.asList("5", "1440")));
         String[] strings = prefSelections.toArray(new String[prefSelections.size()]);
@@ -108,6 +106,8 @@ public class CalendarUtility {
 
             ContentResolver cr = context.getContentResolver();
             ContentValues calEvent = new ContentValues();
+
+            sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 
             Set<String> prefSelections = sharedPrefs.getStringSet("calendar_reminder_array", new HashSet<>(Arrays.asList("5", "1440")));
             String[] strings = prefSelections.toArray(new String[prefSelections.size()]);
@@ -214,11 +214,13 @@ public class CalendarUtility {
     }
 
     public void deleteDuplicates(Context context, Realm realm, String queryStr, String type) {
-        for (EventInfo eventInfo : EventInfo.getAllEvents(context)) {
-            if (eventInfo.getDescription().contains(queryStr)) {
-                LaunchRealm launchRealm = realm.where(LaunchRealm.class).equalTo("eventID", eventInfo.getId()).findFirst();
-                if (launchRealm == null) {
-                    deleteEvent(context, eventInfo.getId());
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+            for (EventInfo eventInfo : EventInfo.getAllEvents(context)) {
+                if (eventInfo.getDescription().contains(queryStr)) {
+                    LaunchRealm launchRealm = realm.where(LaunchRealm.class).equalTo("eventID", eventInfo.getId()).findFirst();
+                    if (launchRealm == null) {
+                        deleteEvent(context, eventInfo.getId());
+                    }
                 }
             }
         }
