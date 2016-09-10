@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.ui.activity;
+package me.calebjones.spacelaunchnow.supporter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -27,13 +27,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.natives.Products;
+import me.calebjones.spacelaunchnow.ui.activity.BaseActivity;
 import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 import xyz.hanks.library.SmallBang;
 
-public class SupportActivity extends BaseActivity implements BillingProcessor.IBillingHandler {
+public class SupporterActivity extends BaseActivity implements BillingProcessor.IBillingHandler {
 
     @BindView(R.id.toolbar_support) Toolbar toolbar;
     @BindView(R.id.twoDollar) AppCompatButton two;
@@ -41,11 +41,6 @@ public class SupportActivity extends BaseActivity implements BillingProcessor.IB
     @BindView(R.id.twelveDollar) AppCompatButton twelve;
     @BindView(R.id.other) AppCompatButton other;
     @BindView(R.id.support_coordinator) CoordinatorLayout coordinatorLayout;
-
-    // SKU for our subscription (infinite gas)
-    static final String SKU_TWO_DOLLAR = "two_dollar_support";
-    static final String SKU_SIX_DOLLAR = "six_dollar_support";
-    static final String SKU_TWELVE_DOLLAR = "twelve_dollar_support";
 
     BillingProcessor bp;
     SmallBang mSmallBang;
@@ -129,13 +124,13 @@ public class SupportActivity extends BaseActivity implements BillingProcessor.IB
     public void checkClick(View v) {
         switch (v.getId()) {
             case R.id.twoDollar:
-                makePurchase(SKU_TWO_DOLLAR);
+                makePurchase(Constants.SKU_TWO_DOLLAR);
                 break;
             case R.id.sixDollar:
-                makePurchase(SKU_SIX_DOLLAR);
+                makePurchase(Constants.SKU_SIX_DOLLAR);
                 break;
             case R.id.twelveDollar:
-                makePurchase(SKU_TWELVE_DOLLAR);
+                makePurchase(Constants.SKU_TWELVE_DOLLAR);
                 break;
             case R.id.other:
                 Utils.openCustomTab(this, getApplicationContext(), "https://www.paypal.me/cejones");
@@ -146,7 +141,7 @@ public class SupportActivity extends BaseActivity implements BillingProcessor.IB
     private void makePurchase(String sku) {
         if(BillingProcessor.isIabServiceAvailable(this)) {
             // continue
-            Products products = getProduct(sku);
+            Products products = Constants.getProduct(sku);
             Answers.getInstance().logAddToCart(new AddToCartEvent()
                     .putItemPrice(BigDecimal.valueOf(products.getPrice()))
                     .putCurrency(Currency.getInstance("USD"))
@@ -165,7 +160,7 @@ public class SupportActivity extends BaseActivity implements BillingProcessor.IB
         Timber.v("%s purchased.", productId);
         SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Thanks for helping keep the gears turning!");
         animatePurchase(productId);
-        Products products = getProduct(productId);
+        Products products = Constants.getProduct(productId);
         getRealm().beginTransaction();
         getRealm().copyToRealmOrUpdate(products);
         getRealm().commitTransaction();
@@ -196,7 +191,7 @@ public class SupportActivity extends BaseActivity implements BillingProcessor.IB
         Timber.v("Billing initialized.");
         int count = 500;
         for (final String sku : bp.listOwnedProducts()) {
-            Products product = getProduct(sku);
+            Products product = Constants.getProduct(sku);
             getRealm().beginTransaction();
             getRealm().copyToRealmOrUpdate(product);
             getRealm().commitTransaction();
@@ -219,39 +214,18 @@ public class SupportActivity extends BaseActivity implements BillingProcessor.IB
 
     private void animatePurchase(String productId) {
         switch (productId) {
-            case SKU_TWO_DOLLAR:
+            case Constants.SKU_TWO_DOLLAR:
                 mSmallBang.bang(two);
                 two.setText("PURCHASED");
                 break;
-            case SKU_SIX_DOLLAR:
+            case Constants.SKU_SIX_DOLLAR:
                 mSmallBang.bang(six);
                 six.setText("PURCHASED");
                 break;
-            case SKU_TWELVE_DOLLAR:
+            case Constants.SKU_TWELVE_DOLLAR:
                 mSmallBang.bang(twelve);
                 twelve.setText("PURCHASED");
                 break;
         }
-    }
-
-    private Products getProduct(String productID){
-        Products product = new Products();
-        if (productID.equals(SKU_TWO_DOLLAR)) {
-            product.setName("Founder 2016 - Bronze");
-            product.setDescription("This ensures you will always have access to every supporter features.");
-            product.setType("Supporter");
-            product.setPrice(2);
-        } else if (productID.equals(SKU_SIX_DOLLAR)){
-            product.setName("Founder 2016 - Silver");
-            product.setDescription("This ensures you will always have access to every supporter features.");
-            product.setType("Supporter");
-            product.setPrice(6);
-        } else if (productID.equals(SKU_TWELVE_DOLLAR)){
-            product.setName("Founder 2016 - Gold");
-            product.setDescription("This ensures you will always have access to every supporter features.");
-            product.setType("Supporter");
-            product.setPrice(12);
-        }
-        return product;
     }
 }

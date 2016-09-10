@@ -2,6 +2,7 @@ package me.calebjones.spacelaunchnow.calendar;
 
 import android.content.Context;
 import android.content.Intent;
+import android.provider.CalendarContract;
 
 import java.util.Date;
 
@@ -107,13 +108,14 @@ public class CalendarSyncService extends BaseService {
         }
 
         for (LaunchRealm launchRealm: launchResults){
-            if (launchRealm.getCalendarID() != null){
+            if (launchRealm.getEventID() != null){
                 boolean success = calendarUtil.updateEvent(this, launchRealm);
                 if (!success) {
+                    Timber.v("Unable to update event %s, assuming deleted.", launchRealm.getName());
                     Integer id = calendarUtil.addEvent(this, launchRealm);
                     if (id != null) {
                         mRealm.beginTransaction();
-                        launchRealm.setCalendarID(id);
+                        launchRealm.setEventID(id);
                         mRealm.commitTransaction();
                     }
                 }
@@ -121,23 +123,24 @@ public class CalendarSyncService extends BaseService {
                 Integer id = calendarUtil.addEvent(this, launchRealm);
                 if (id != null) {
                     mRealm.beginTransaction();
-                    launchRealm.setCalendarID(id);
+                    launchRealm.setEventID(id);
                     mRealm.commitTransaction();
                 }
             }
         }
+        calendarUtil.deleteDuplicates(this, mRealm, "Space Launch Now", CalendarContract.Events.DESCRIPTION);
     }
 
     private void handleActionDeleteAll() {
         launchRealms = mRealm.where(LaunchRealm.class)
-                .greaterThan("calendarID", 0)
+                .greaterThan("eventID", 0)
                 .findAll();
 
         for (LaunchRealm launchRealm: launchRealms) {
             int success = calendarUtil.deleteEvent(this, launchRealm);
             if (success > 0){
                 mRealm.beginTransaction();
-                launchRealm.setCalendarID(null);
+                launchRealm.setEventID(null);
                 mRealm.commitTransaction();
             }
         }

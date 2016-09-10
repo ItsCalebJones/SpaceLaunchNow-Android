@@ -40,6 +40,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.NextLaunchFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.missions.MissionFragment;
@@ -435,7 +436,7 @@ public class MainActivity extends BaseActivity
                 showWhatsNew();
                 break;
             case R.id.menu_support:
-                Intent supportIntent = new Intent(this, SupportActivity.class);
+                Intent supportIntent = new Intent(this, SupporterActivity.class);
                 startActivity(supportIntent);
                 break;
             case R.id.menu_feedback:

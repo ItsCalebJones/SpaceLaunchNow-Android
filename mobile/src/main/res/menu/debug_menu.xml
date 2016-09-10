@@ -27,4 +27,10 @@
         android:title="Debug Launch"
         app:showAsAction="never"
         android:icon="@drawable/fab_add"/>
+
+    <item
+        android:id="@+id/debug_supporter"
+        android:title="Supporter"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_support"/>
 </menu>

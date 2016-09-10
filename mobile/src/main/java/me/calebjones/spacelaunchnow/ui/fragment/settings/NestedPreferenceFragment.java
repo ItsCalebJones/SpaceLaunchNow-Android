@@ -49,7 +49,7 @@ import me.calebjones.spacelaunchnow.calendar.model.Calendar;
 import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.models.natives.Products;
+import me.calebjones.spacelaunchnow.supporter.Products;
 import me.calebjones.spacelaunchnow.content.receivers.MultiplePermissionListener;
 import timber.log.Timber;
 
@@ -68,10 +68,10 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
     public static final int NESTED_SCREEN_2_KEY = 2;
     public static final int NESTED_SCREEN_3_KEY = 3;
     public static final int NESTED_SCREEN_4_KEY = 4;
-    private static final String TAG_KEY = "NESTED_KEY";
     public static final String TIMERANGEPICKER_TAG = "timerangepicker";
-    private TextView toolbarTitle;
+    private static final String TAG_KEY = "NESTED_KEY";
     private static ListPreferences listPreferences;
+    private TextView toolbarTitle;
     private SwitchPreferences switchPreferences;
     private Context context;
     private GoogleApiClient mGoogleApiClient;
@@ -117,10 +117,10 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
     }
 
     class SharedPreferenceListener implements SharedPreferences.OnSharedPreferenceChangeListener {
-        final /* synthetic */ SharedPreferences valprefs;
+        final SharedPreferences valPrefs;
 
         SharedPreferenceListener(SharedPreferences sharedPreferences) {
-            this.valprefs = sharedPreferences;
+            this.valPrefs = sharedPreferences;
         }
 
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -128,7 +128,7 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
             Timber.d("onSharedPreferenceChanged:  %s ", key);
             try {
                 if (key.equals("notifications")) {
-                    if (this.valprefs.getBoolean(key, false)) {
+                    if (this.valPrefs.getBoolean(key, false)) {
                     }
                 }
                 if (key.equals("theme") && NestedPreferenceFragment.this.getActivity() != null) {
@@ -171,26 +171,24 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
                     NestedPreferenceFragment.this.getActivity().recreate();
                 }
                 if (key.equals("notifications_launch_imminent_updates")) {
-                    OneSignal.setSubscription(this.valprefs.getBoolean(key, false));
+                    OneSignal.setSubscription(this.valPrefs.getBoolean(key, false));
                 }
                 if (key.equals("wear_hour_mode")) {
                     PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/config");
-                    putDataMapReq.getDataMap().putBoolean(HOUR_KEY, this.valprefs.getBoolean(key, false));
+                    putDataMapReq.getDataMap().putBoolean(HOUR_KEY, this.valPrefs.getBoolean(key, false));
                     putDataMapReq.getDataMap().putLong("time", new Date().getTime());
 
                     PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
                     Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
                 }
-//                if (key.equals("custom_background")) {
-//
-//                    PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/config");
-//                    putDataMapReq.getDataMap().putInt(BACKGROUND_KEY, BACKGROUND_NORMAL);
-//                    PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
-//                    Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
-//                }
+
+                if (key.equals("calendar_reminder_array")) {
+                    CalendarSyncService.startActionSyncAll(context);
+                }
+
                 if (key.equals("calendar_sync_state")) {
-                    Timber.v("Calendar Sync State: %s", this.valprefs.getBoolean(key, true));
-                    if (this.valprefs.getBoolean(key, true)) {
+                    Timber.v("Calendar Sync State: %s", this.valPrefs.getBoolean(key, true));
+                    if (this.valPrefs.getBoolean(key, true)) {
                         Timber.v("Calendar Status: %s", switchPreferences.getCalendarStatus());
                         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
                             Timber.v("Calendar Permission - Granted");
@@ -198,12 +196,15 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
                             setCalendarPreference();
                             if (mRealm.where(CalendarItem.class).findFirst() == null){
                                 setDefaultCalendar();
+                            } else {
+                                CalendarSyncService.startActionSyncAll(context);
                             }
                         } else {
                             Timber.v("Calendar Permission - Denied/Pending");
                             checkCalendarPermission();
                         }
                     } else {
+                        CalendarSyncService.startActionDeleteAll(context);
                         switchPreferences.setCalendarStatus(false);
                     }
                 }
@@ -237,17 +238,17 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
                 .addOnConnectionFailedListener(this)
                 .addApi(Wearable.API)
                 .build();
+    }
+
+    public void onResume() {
+        Timber.v("onResume");
+        listPreferences = ListPreferences.getInstance(this.context);
+        switchPreferences = SwitchPreferences.getInstance(this.context);
+        listPreferences.isNightModeActive(context);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         prefs.registerOnSharedPreferenceChangeListener(new SharedPreferenceListener(prefs));
         checkPreferenceResource();
-
-    }
-
-    public void onResume() {
-        listPreferences = ListPreferences.getInstance(this.context);
-        switchPreferences = SwitchPreferences.getInstance(this.context);
-        listPreferences.isNightModeActive(context);
         super.onResume();
     }
 
@@ -270,10 +271,17 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
                 addPreferencesFromResource(R.xml.nested_loader_preferences);
 
                 SwitchPreference calendarSyncState = (SwitchPreference) findPreference("calendar_sync_state");
-                if (calendarSyncState.isChecked() && ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
-                    setCalendarPreference();
-                } else if (calendarSyncState.isChecked() && ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(context, "Calendar permission denied, try re-selecting or go to Android Settings -> Apps to enable.", Toast.LENGTH_LONG).show();
+                PreferenceCategory calendarCategory = (PreferenceCategory) findPreference("calendar_category");
+                if (!supporter) {
+                    calendarSyncState.setChecked(false);
+                    calendarSyncState.setEnabled(false);
+                    calendarCategory.setTitle(calendarCategory.getTitle() + " (Supporter Feature)");
+                } else {
+                    if (calendarSyncState.isChecked() && ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+                        setCalendarPreference();
+                    } else if (calendarSyncState.isChecked() && ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+                        Toast.makeText(context, "Calendar permission denied, try re-selecting or go to Android Settings -> Apps to enable.", Toast.LENGTH_LONG).show();
+                    }
                 }
 
                 if (this.toolbarTitle != null) {
@@ -346,7 +354,7 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
         calendarPrefernce.setEntryValues(countSequences);
 
         String summary;
-        CalendarItem calendarItem = mRealm.where(CalendarItem.class).findFirst();
+        final CalendarItem calendarItem = mRealm.where(CalendarItem.class).findFirst();
 
         if (calendarItem != null){
             summary = "Current calendar: " + calendarItem.getAccountName();
@@ -358,6 +366,7 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
             @Override
             public boolean onPreferenceChange(Preference preference, Object obj) {
                 final Calendar calendar = calendarList.get(Integer.valueOf(obj.toString()));
+                Timber.v("Updating selected calendar to %s", calendar.accountName);
                 final CalendarItem calendarItem = new CalendarItem();
                 calendarItem.setId(calendar.id);
                 calendarItem.setAccountName(calendar.accountName);
@@ -375,6 +384,7 @@ public class NestedPreferenceFragment extends PreferenceFragment implements Goog
                 }, new Realm.Transaction.OnSuccess() {
                     @Override
                     public void onSuccess() {
+                        Timber.v("Successfully updated active Calendar, sending resync.");
                         setCalendarPreference();
                         CalendarSyncService.startActionResync(context);
                     }

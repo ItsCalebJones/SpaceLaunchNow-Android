@@ -116,7 +116,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".ui.activity.SupportActivity"
+            android:name=".supporter.SupporterActivity"
             android:theme="@style/BaseAppTheme" />
         <activity android:name=".ui.activity.BaseActivity" />
         <activity
