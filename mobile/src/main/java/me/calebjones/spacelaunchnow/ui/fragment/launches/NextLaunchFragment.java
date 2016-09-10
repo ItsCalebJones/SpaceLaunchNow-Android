@@ -616,11 +616,15 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 realm.beginTransaction();
                 realm.delete(Products.class);
                 realm.commitTransaction();
+                Snackbar.make(coordinatorLayout, "Supporter: " + sharedPreference.isDebugSupporterEnabled(),
+                        Snackbar.LENGTH_SHORT).show();
             } else {
                 sharedPreference.setDebugSupporter(true);
                 realm.beginTransaction();
                 realm.copyToRealm(Constants.getProduct(Constants.SKU_TWO_DOLLAR));
                 realm.commitTransaction();
+                Snackbar.make(coordinatorLayout, "Supporter: " + sharedPreference.isDebugSupporterEnabled(),
+                        Snackbar.LENGTH_SHORT).show();
             }
         } else if (id == R.id.debug_next_launch) {
             Intent nextIntent = new Intent(getActivity(), LaunchDataService.class);
