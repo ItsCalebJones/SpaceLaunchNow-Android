@@ -43,14 +43,14 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
     @Override
     public void onResume() {
         Timber.v("onResume - setting OnSharedPreferenceChangeListener");
-//        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
         super.onResume();
     }
 
     @Override
     public void onPause() {
         Timber.v("onPause - removing OnSharedPreferenceChangeListener");
-//        getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         super.onPause();
     }
 

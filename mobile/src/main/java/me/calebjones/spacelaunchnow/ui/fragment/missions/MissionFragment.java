@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -55,7 +56,7 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         this.sharedPreference = ListPreferences.getInstance(getActivity().getApplicationContext());
         adapter = new MissionAdapter(getActivity().getApplicationContext(), getActivity());
     }

@@ -51,11 +51,6 @@
             android:value="@string/GoogleMapsKey" />
 
         <activity
-            android:name=".ui.activity.SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:theme="@style/BaseAppTheme" />
-
-        <activity
             android:name=".settings.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:theme="@style/CustomPreferenceTheme"
