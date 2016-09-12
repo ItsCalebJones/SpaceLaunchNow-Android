@@ -131,13 +131,13 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     public void checkClick(View v) {
         switch (v.getId()) {
             case R.id.twoDollar:
-                makePurchase(Constants.SKU_TWO_DOLLAR);
+                makePurchase(SupporterHelper.SKU_TWO_DOLLAR);
                 break;
             case R.id.sixDollar:
-                makePurchase(Constants.SKU_SIX_DOLLAR);
+                makePurchase(SupporterHelper.SKU_SIX_DOLLAR);
                 break;
             case R.id.twelveDollar:
-                makePurchase(Constants.SKU_TWELVE_DOLLAR);
+                makePurchase(SupporterHelper.SKU_TWELVE_DOLLAR);
                 break;
             case R.id.other:
                 Toast.makeText(this, "Supporter features will be unlocked via promotion code after purchase confirmation", Toast.LENGTH_LONG);
@@ -149,7 +149,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     private void makePurchase(String sku) {
         if(BillingProcessor.isIabServiceAvailable(this)) {
             // continue
-            Products products = Constants.getProduct(sku);
+            Products products = SupporterHelper.getProduct(sku);
             Answers.getInstance().logAddToCart(new AddToCartEvent()
                     .putItemPrice(BigDecimal.valueOf(products.getPrice()))
                     .putCurrency(Currency.getInstance("USD"))
@@ -168,7 +168,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         Timber.v("%s purchased.", productId);
         SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Thanks for helping keep the gears turning!");
         animatePurchase(productId);
-        Products products = Constants.getProduct(productId);
+        Products products = SupporterHelper.getProduct(productId);
         getRealm().beginTransaction();
         getRealm().copyToRealmOrUpdate(products);
         getRealm().commitTransaction();
@@ -203,7 +203,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         int count = 500;
         bp.loadOwnedPurchasesFromGoogle();
         for (final String sku : bp.listOwnedProducts()) {
-            Products product = Constants.getProduct(sku);
+            Products product = SupporterHelper.getProduct(sku);
             getRealm().beginTransaction();
             getRealm().copyToRealmOrUpdate(product);
             getRealm().commitTransaction();
@@ -226,19 +226,19 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
 
     private void animatePurchase(String productId) {
         switch (productId) {
-            case Constants.SKU_TWO_DOLLAR:
+            case SupporterHelper.SKU_TWO_DOLLAR:
                 mSmallBang.bang(two);
                 two.setText("PURCHASED");
                 break;
-            case Constants.SKU_SIX_DOLLAR:
+            case SupporterHelper.SKU_SIX_DOLLAR:
                 mSmallBang.bang(six);
                 six.setText("PURCHASED");
                 break;
-            case Constants.SKU_TWELVE_DOLLAR:
+            case SupporterHelper.SKU_TWELVE_DOLLAR:
                 mSmallBang.bang(twelve);
                 twelve.setText("PURCHASED");
                 break;
-            case Constants.SKU_OTHER:
+            case SupporterHelper.SKU_OTHER:
                 mSmallBang.bang(other);
                 other.setText("Thanks!");
                 break;

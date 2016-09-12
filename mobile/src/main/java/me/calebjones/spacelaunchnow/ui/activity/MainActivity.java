@@ -40,6 +40,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.NextLaunchFragment;
@@ -428,7 +429,7 @@ public class MainActivity extends BaseActivity
                 Utils.openCustomTab(this, getApplicationContext(), "https://launchlibrary.net/");
                 break;
             case R.id.menu_settings:
-                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                Intent settingsIntent = new Intent(this, me.calebjones.spacelaunchnow.settings.SettingsActivity.class);
                 settingsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(settingsIntent);
                 break;

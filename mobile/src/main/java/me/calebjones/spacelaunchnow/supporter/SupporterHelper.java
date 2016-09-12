@@ -1,7 +1,9 @@
 package me.calebjones.spacelaunchnow.supporter;
 
 
-public class Constants {
+import io.realm.Realm;
+
+public class SupporterHelper {
     // SKU for our subscription (infinite gas)
     public static final String SKU_TWO_DOLLAR = "two_dollar_support";
     public static final String SKU_SIX_DOLLAR = "six_dollar_support";
@@ -27,5 +29,13 @@ public class Constants {
             product.setPrice(12);
         }
         return product;
+    }
+
+    public static boolean isSupporter(){
+        Realm realm = Realm.getDefaultInstance();
+        boolean supporter = false;
+        Products realmResults = realm.where(Products.class).findFirst();
+
+        return realm.where(Products.class).findFirst() != null;
     }
 }

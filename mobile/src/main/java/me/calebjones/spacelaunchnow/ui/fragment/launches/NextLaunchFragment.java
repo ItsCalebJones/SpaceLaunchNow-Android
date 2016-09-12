@@ -57,7 +57,7 @@ import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
-import me.calebjones.spacelaunchnow.supporter.Constants;
+import me.calebjones.spacelaunchnow.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.supporter.Products;
 import me.calebjones.spacelaunchnow.ui.activity.DownloadActivity;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
@@ -621,7 +621,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             } else {
                 sharedPreference.setDebugSupporter(true);
                 realm.beginTransaction();
-                realm.copyToRealm(Constants.getProduct(Constants.SKU_TWO_DOLLAR));
+                realm.copyToRealm(SupporterHelper.getProduct(SupporterHelper.SKU_TWO_DOLLAR));
                 realm.commitTransaction();
                 Snackbar.make(coordinatorLayout, "Supporter: " + sharedPreference.isDebugSupporterEnabled(),
                         Snackbar.LENGTH_SHORT).show();

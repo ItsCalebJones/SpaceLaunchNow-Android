@@ -7,7 +7,7 @@
     <string name="status_nogo">"Launch is NO GO"</string>
     <string name="status_success">"Successful Launch"</string>
     <string name="status_failure">"Launch Failure"</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_settings">Settings</string>
     <string name="settings">Settings</string>
     <string name="spacex_summary">SpaceX designs, manufactures and launches advanced rockets and spacecraft. The company was founded in 2002 to revolutionize space technology, with the ultimate goal of enabling people to live on other planets.</string>
     <string name="usaf_summary">The United States Air Force is the aerial warfare service branch of the United States Armed Forces and one of the seven American uniformed services.</string>
