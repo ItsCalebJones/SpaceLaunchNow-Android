@@ -33,6 +33,7 @@ import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 
 import java.util.ArrayList;
 
+import de.mrapp.android.preference.activity.PreferenceActivity;
 import io.fabric.sdk.android.Fabric;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
@@ -41,6 +42,7 @@ import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.settings.SettingsActivity;
+import me.calebjones.spacelaunchnow.settings.fragments.AppearanceFragment;
 import me.calebjones.spacelaunchnow.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.NextLaunchFragment;
@@ -93,6 +95,18 @@ public class MainActivity extends BaseActivity
             Fabric.with(this, new Crashlytics());
         }
         Timber.d("onCreate");
+
+        // Get intent, action and MIME type
+        Intent intent = getIntent();
+        String action = intent.getAction();
+
+        if ("me.calebjones.spacelaunchnow.NIGHTMODE".equals(action)) {
+            Intent sendIntent = new Intent(this, SettingsActivity.class);
+            sendIntent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT,
+                    AppearanceFragment.class.getName());
+            startActivity(sendIntent);
+        }
+
         int m_theme;
         int m_layout;
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);

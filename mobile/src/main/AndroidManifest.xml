@@ -38,6 +38,9 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="me.calebjones.spacelaunchnow.NIGHTMODE" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ui.activity.LaunchDetailActivity"

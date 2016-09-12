@@ -19,11 +19,11 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
-import de.mrapp.android.preference.activity.PreferenceActivity;
 import de.mrapp.android.preference.activity.PreferenceFragment;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import timber.log.Timber;
 
 public class AppearanceFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -74,13 +74,9 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
                 Toast.makeText(context, "Day mode might need to restart app to take effect.", Toast.LENGTH_SHORT).show();
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             }
-            getActivity().recreate();
-            Intent intent = getActivity().getIntent();
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                    IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT,
-                    AppearanceFragment.class.getName());
-            getActivity().finish();
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setAction("me.calebjones.spacelaunchnow.NIGHTMODE");
             startActivity(intent);
         }
         if (key.equals("theme_auto")) {
@@ -99,13 +95,9 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
             } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             }
-            getActivity().recreate();
-            Intent intent = getActivity().getIntent();
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                    IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT,
-                    AppearanceFragment.class.getName());
-            getActivity().finish();
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setAction("me.calebjones.spacelaunchnow.NIGHTMODE");
             startActivity(intent);
         }
     }
