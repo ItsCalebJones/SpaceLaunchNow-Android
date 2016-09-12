@@ -28,6 +28,12 @@
         <item name="sv_tintButtonColor">true</item>
     </style>
 
+    <style name="CustomPreferenceTheme" parent="@style/PreferenceActivity">
+        <item name="colorPrimary">@color/darkPrimary</item>
+        <item name="colorPrimaryDark">@color/darkPrimary_dark</item>
+        <item name="colorAccent">@color/darkAccent</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.ActionBar" />
 
     <style name="AppTheme.AppBarOverlay.Dark" parent="ThemeOverlay.AppCompat.ActionBar" />

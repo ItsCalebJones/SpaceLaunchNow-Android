@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="Launch Tracking">
     <PreferenceCategory android:title="Default Launch Count">
-        <com.afollestad.materialdialogs.prefs.MaterialListPreference
+        <ListPreference
             android:defaultValue="5"
             android:entries="@array/upcoming_array"
             android:entryValues="@array/upcoming_array_values"
@@ -19,7 +18,7 @@
             android:summaryOff="Allow Launch Data to sync in the background, required for launch notifications."
             android:summaryOn="Launch Data will be synced in the background."
             android:title="Allow Background Syncs" />
-        <com.afollestad.materialdialogs.prefs.MaterialListPreference
+        <ListPreference
             android:defaultValue="24"
             android:dependency="background_sync"
             android:entries="@array/sync_timer"
@@ -38,36 +37,35 @@
             android:summary="Allow next launch to sync with default Calendar."
             android:title="Enable Launch Sync" />
 
-        <com.afollestad.materialdialogs.prefs.MaterialListPreference
-            android:key="calendar_count"
+        <ListPreference
             android:defaultValue="5"
             android:dependency="calendar_sync_state"
+            android:dialogMessage="Select the number of events to sync."
             android:entries="@array/upcoming_array"
             android:entryValues="@array/upcoming_array_values"
-            android:title="Event Count"
+            android:key="calendar_count"
             android:summary="Configure the number of events to sync."
-            android:dialogMessage="Select the number of events to sync."
-            />
+            android:title="Event Count" />
 
-        <com.afollestad.materialdialogs.prefs.MaterialListPreference
-            android:key="default_calendar_state"
+        <ListPreference
             android:defaultValue="0"
             android:dependency="calendar_sync_state"
+            android:dialogMessage="Select a Calendar for launch events."
             android:entries="@array/empty"
             android:entryValues="@array/empty"
-            android:title="Calendar Account"
+            android:key="default_calendar_state"
             android:summary="Configure Calendar for launch events."
-            android:dialogMessage="Select a Calendar for launch events."/>
+            android:title="Calendar Account" />
 
-        <com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference
+        <MultiSelectListPreference
             android:defaultValue="@array/multi_calendar_reminder_default"
             android:dependency="calendar_sync_state"
+            android:dialogMessage="Set custom reminders for calendar notifications."
             android:entries="@array/multi_calendar_reminder"
             android:entryValues="@array/multi_calendar_reminder_values"
             android:key="calendar_reminder_array"
             android:persistent="true"
             android:summary="Set custom reminders for calendar notifications."
-            android:dialogMessage="Set custom reminders for calendar notifications."
             android:title="Event Reminders" />
     </PreferenceCategory>
     <PreferenceCategory android:title="Other Settings">
