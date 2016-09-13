@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
-import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AppCompatDelegate;
 import android.widget.Toast;
 
@@ -75,7 +74,7 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             }
             Intent intent = new Intent(getActivity(), MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.setAction("me.calebjones.spacelaunchnow.NIGHTMODE");
             startActivity(intent);
         }
@@ -96,7 +95,7 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             }
             Intent intent = new Intent(getActivity(), MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.setAction("me.calebjones.spacelaunchnow.NIGHTMODE");
             startActivity(intent);
         }
