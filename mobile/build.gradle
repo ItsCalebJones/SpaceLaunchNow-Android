@@ -91,19 +91,20 @@ dependencies {
     compile('com.mikepenz:aboutlibraries:5.6.5@aar') {
         transitive = true
     }
-    compile('com.github.afollestad.material-dialogs:core:0.8.5.8@aar') { transitive = true }
+
+    compile('com.github.afollestad.material-dialogs:core:0.9.0.1@aar') { transitive = true }
+    compile 'com.github.afollestad.material-dialogs:commons:0.9.0.1@aar'
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
     compile "com.android.support:customtabs:$rootProject.supportLibraryVersion"
     compile "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:palette-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
-    compile 'com.github.afollestad.material-dialogs:commons:0.8.5.8@aar'
-    compile 'com.mikepenz:iconics-core:2.8.0@aar'
+    compile 'com.mikepenz:iconics-core:2.8.1@aar'
     compile 'com.google.android.gms:play-services-location:9.4.0'
     compile 'com.google.android.gms:play-services-wearable:9.4.0'
     compile 'com.google.android.gms:play-services-gcm:9.4.0'
-    compile 'com.onesignal:OneSignal:3.0.3@aar'
+    compile 'com.onesignal:OneSignal:3.1.1@aar'
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
@@ -118,7 +119,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.4.0'
     compile 'com.simplecityapps:recyclerview-fastscroll:1.0.10'
     compile 'com.github.javiersantos:MaterialStyledDialogs:1.4.1'
-    compile 'com.karumi:dexter:2.3.0'
+    compile 'com.karumi:dexter:2.3.1'
     compile 'com.anjlab.android.iab.v3:library:1.0.32'
     compile 'hanks.xyz:smallbang-library:0.1.2'
     compile 'com.github.amlcurran.showcaseview:library:5.4.3'
