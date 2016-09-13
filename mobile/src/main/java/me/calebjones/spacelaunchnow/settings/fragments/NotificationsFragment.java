@@ -39,7 +39,7 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Timber.i("Notifications preference %s changed.", key);
         if (key.equals("notifications_launch_imminent_updates")) {
-            OneSignal.setSubscription(sharedPreferences.getBoolean(key, false));
+            OneSignal.setSubscription(sharedPreferences.getBoolean(key, true));
         }
     }
 }
