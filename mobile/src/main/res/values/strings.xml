@@ -43,13 +43,12 @@
     <string name="link_feedback">https://www.reddit.com/r/spacelaunchnow</string>
     <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>
 
-    <string name="title_activity_fullscreen_image">FullscreenImageActivity</string>
+    <string name="title_activity_fullscreen_image">Image Viewer</string>
 
     <string name="supporter_title">Be a Supporter</string>
     <string name="supporter_description">By becoming a supporter you ensure continued updates and timely bug fixes, as well as access to supporter only features. Pay what you want, you\'ll get the same value.</string>
-    <string name="supporter_features">Nothing yet! All features are enabled for all users.</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="supporter_features">\u2022Current weather forecast for launch pads.\n\u2022Historical weather forecast for past launches.\n\u2022Automatically sync upcoming launches.\n</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_download">DownloadActivity</string>
+    <string name="title_activity_download">Download</string>
     <string name="title_activity_web_view_fallback">Space Launch Now</string>
 </resources>
