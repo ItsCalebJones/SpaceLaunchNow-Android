@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.utils;
+package me.calebjones.spacelaunchnow.calendar;
 
 import android.Manifest;
 import android.content.ContentResolver;
@@ -16,18 +16,30 @@ import android.support.v4.app.ActivityCompat;
 import com.crashlytics.android.Crashlytics;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
 
+import io.realm.Realm;
+import it.macisamuele.calendarprovider.EventInfo;
+import me.calebjones.spacelaunchnow.calendar.model.Calendar;
+import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
+import me.calebjones.spacelaunchnow.calendar.model.Event;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import timber.log.Timber;
 
 // these imports are used in the following code
 
-public class CalendarUtil {
+public class CalendarUtility {
 
     private SharedPreferences sharedPrefs;
+    private CalendarItem calendarItem;
+
+    public CalendarUtility(CalendarItem calendarItem) {
+        this.calendarItem = calendarItem;
+    }
 
     final static String[] CALENDAR_QUERY_COLUMNS = {
             CalendarContract.Calendars._ID,
@@ -43,77 +55,66 @@ public class CalendarUtil {
             return null;
         }
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        int selection = Integer.parseInt(sharedPrefs.getString("calendar_reminder", "5"));
-        Timber.v("Reminder time: %s", String.valueOf(selection));
-
 
         Set<String> prefSelections = sharedPrefs.getStringSet("calendar_reminder_array", new HashSet<>(Arrays.asList("5", "1440")));
         String[] strings = prefSelections.toArray(new String[prefSelections.size()]);
         int[] prefSelected = new int[prefSelections.size()];
-        for (int i = 0; i < prefSelected.length ; i++){
+        for (int i = 0; i < prefSelected.length; i++) {
             prefSelected[i] = Integer.parseInt(strings[i]);
         }
-
-        // Get list of Calendars (after Jim Blackler, http://jimblackler.net/blog/?p=151)
-        ContentResolver contentResolver = context.getContentResolver();
-
-        final Cursor cursor = contentResolver.query(CalendarContract.Calendars.CONTENT_URI,
-                CALENDAR_QUERY_COLUMNS, null, null, null);
-
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                final String _id = cursor.getString(0);
-                final String displayName = cursor.getString(1);
-                final Boolean selected = !cursor.getString(2).equals("0");
-                final String accountName = cursor.getString(3);
-
-                Timber.v("Calendar: Id: %s Display Name: %s Selected: %s Name %s", _id, displayName, selected, accountName);
-            }
-        }
-
-        ContentValues calEvent = new ContentValues();
-        calEvent.put(CalendarContract.Events.CALENDAR_ID, 1);
-        calEvent.put(CalendarContract.Events.TITLE, launch.getName());
 
         //Build Description String and assign it.
         String description = "";
         if (launch.getVidURLs() != null && launch.getVidURLs().size() >= 1) {
             description = "Video URLs: \n";
             for (int i = 0; i < launch.getVidURLs().size(); i++) {
-                description = description + launch.getVidURLs().get(i) + "\n\n";
+                description = description + launch.getVidURLs().get(i).getVal() + "\n\n";
             }
         }
         if (launch.getMissions() != null && launch.getMissions().size() > 0) {
             description = description + launch.getMissions().get(0).getDescription();
         }
 
-        calEvent.put(CalendarContract.Events.DESCRIPTION, description);
-        calEvent.put(CalendarContract.Events.EVENT_LOCATION, launch.getLocation().getName());
-        calEvent.put(CalendarContract.Events.DTSTART, launch.getStartDate().getTime());
-        calEvent.put(CalendarContract.Events.DTEND, launch.getEndDate().getTime());
-        calEvent.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getDisplayName());
-        Uri uri = contentResolver.insert(CalendarContract.Events.CONTENT_URI, calEvent);
+        description = description + "\n\n via Space Launch Now";
 
-        // The returned Uri contains the content-retriever URI for the newly-inserted event, including its id
-        if (cursor != null) {
-            cursor.close();
+        Date startDate = launch.getWindowstart();
+        Date endDate = launch.getWindowend();
+
+        Event event = new Event();
+        event.calendarId = calendarItem.getId();
+        event.title = launch.getName();
+        event.description = description;
+        event.location = launch.getLocation().getName();
+        if (startDate != null && endDate != null) {
+            event.startDate = startDate.getTime();
+            event.endDate = endDate.getTime();
+        } else if (launch.getNet() != null) {
+            event.startDate = launch.getNet().getTime();
         }
-        if (uri != null) {
-            for (int i = 0; i < prefSelected.length; i++){
-                setReminder(context, Long.parseLong(uri.getLastPathSegment()), prefSelected[i]);
-            }
-            return Integer.parseInt(uri.getLastPathSegment());
-        } else {
-            return null;
+        event.timezone = TimeZone.getDefault().getDisplayName();
+
+        int id =  event.create(context.getContentResolver());
+        for (int time: prefSelected) {
+            setReminder(context, id, time);
         }
+        return id;
     }
 
     public boolean updateEvent(Context context, LaunchRealm launch) {
         Timber.v("Updating launch event: %s", launch.getName());
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
-            sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+
             ContentResolver cr = context.getContentResolver();
             ContentValues calEvent = new ContentValues();
+
+            sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+            Set<String> prefSelections = sharedPrefs.getStringSet("calendar_reminder_array", new HashSet<>(Arrays.asList("5", "1440")));
+            String[] strings = prefSelections.toArray(new String[prefSelections.size()]);
+            int[] prefSelected = new int[prefSelections.size()];
+            for (int i = 0; i < prefSelected.length; i++) {
+                prefSelected[i] = Integer.parseInt(strings[i]);
+            }
 
             // The new title for the event
             calEvent.put(CalendarContract.Events.TITLE, launch.getName());
@@ -123,21 +124,34 @@ public class CalendarUtil {
             if (launch.getVidURLs() != null && launch.getVidURLs().size() >= 1) {
                 description = "Video URLs: \n";
                 for (int i = 0; i < launch.getVidURLs().size(); i++) {
-                    description = description + launch.getVidURLs().get(i) + "\n\n";
+                    description = description + launch.getVidURLs().get(i).getVal() + "\n\n";
                 }
             }
             if (launch.getMissions() != null && launch.getMissions().size() > 0) {
                 description = description + launch.getMissions().get(0).getDescription();
             }
 
+            description = description + "\n\n via Space Launch Now";
+
+            Date startDate = launch.getWindowstart();
+            Date endDate = launch.getWindowend();
+
             calEvent.put(CalendarContract.Events.DESCRIPTION, description);
             calEvent.put(CalendarContract.Events.EVENT_LOCATION, launch.getLocation().getName());
-            calEvent.put(CalendarContract.Events.DTSTART, launch.getStartDate().getTime());
-            calEvent.put(CalendarContract.Events.DTEND, launch.getEndDate().getTime());
+            if(startDate != null && endDate != null) {
+                calEvent.put(CalendarContract.Events.DTSTART, startDate.getTime());
+                calEvent.put(CalendarContract.Events.DTEND, endDate.getTime());
+
+            } else if (launch.getNet() != null) {
+                calEvent.put(CalendarContract.Events.DTSTART, launch.getNet().getTime());
+            }
             calEvent.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getDisplayName());
 
-            Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, launch.getCalendarID());
+            Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, launch.getEventID());
 
+            for (int time: prefSelected) {
+                setReminder(context, Long.parseLong(updateUri.getLastPathSegment()), time);
+            }
             return cr.update(updateUri, calEvent, null, null) > 0;
         } return false;
     }
@@ -146,12 +160,31 @@ public class CalendarUtil {
         Timber.v("Deleting launch event: %s", launch.getName());
         int iNumRowsDeleted = 0;
 
-        if (launch.getCalendarID() > 0) {
+        if (launch.getEventID() > 0) {
             Uri eventUri = ContentUris
-                    .withAppendedId(CalendarContract.Events.CONTENT_URI, launch.getCalendarID());
+                    .withAppendedId(CalendarContract.Events.CONTENT_URI, launch.getEventID());
             iNumRowsDeleted = context.getContentResolver().delete(eventUri, null, null);
-
         }
+        return iNumRowsDeleted;
+    }
+
+    public int deleteEvent(Context context, Integer id) {
+        Timber.v("Deleting launch event: %s", id);
+        int iNumRowsDeleted;
+
+        Uri eventUri = ContentUris
+                .withAppendedId(CalendarContract.Events.CONTENT_URI, id);
+        iNumRowsDeleted = context.getContentResolver().delete(eventUri, null, null);
+        return iNumRowsDeleted;
+    }
+
+    private int deleteEvent(Context context, Long id) {
+        Timber.v("Deleting launch event: %s", id);
+        int iNumRowsDeleted;
+
+        Uri eventUri = ContentUris
+                .withAppendedId(CalendarContract.Events.CONTENT_URI, id);
+        iNumRowsDeleted = context.getContentResolver().delete(eventUri, null, null);
         return iNumRowsDeleted;
     }
 
@@ -168,12 +201,7 @@ public class CalendarUtil {
             values.put(CalendarContract.Reminders.EVENT_ID, eventID);
             values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
             Uri uri = contentResolver.insert(CalendarContract.Reminders.CONTENT_URI, values);
-            Cursor c = CalendarContract.Reminders.query(contentResolver, eventID,
-                    new String[]{CalendarContract.Reminders.MINUTES});
-            if (c.moveToFirst()) {
-                System.out.println("calendar"
-                        + c.getInt(c.getColumnIndex(CalendarContract.Reminders.MINUTES)));
-            }
+            Cursor c = CalendarContract.Reminders.query(contentResolver, eventID, new String[]{CalendarContract.Reminders.MINUTES});
             c.close();
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -181,4 +209,20 @@ public class CalendarUtil {
         }
     }
 
+    private List<Calendar> getCalendars(Context context) {
+        return Calendar.getCalendarsForQuery(null, null, null, context.getContentResolver());
+    }
+
+    public void deleteDuplicates(Context context, Realm realm, String queryStr, String type) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+            for (EventInfo eventInfo : EventInfo.getAllEvents(context)) {
+                if (eventInfo.getDescription().contains(queryStr)) {
+                    LaunchRealm launchRealm = realm.where(LaunchRealm.class).equalTo("eventID", eventInfo.getId()).findFirst();
+                    if (launchRealm == null) {
+                        deleteEvent(context, eventInfo.getId());
+                    }
+                }
+            }
+        }
+    }
 }

@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.content.receivers;
+package me.calebjones.spacelaunchnow.settings.util;
 
 
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -10,13 +10,13 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.util.List;
 
-import me.calebjones.spacelaunchnow.ui.fragment.settings.NestedPreferenceFragment;
+import me.calebjones.spacelaunchnow.settings.fragments.GeneralFragment;
 
-public class MultiplePermissionListener implements MultiplePermissionsListener {
+public class CalendarPermissionListener implements MultiplePermissionsListener {
 
-    private final NestedPreferenceFragment activity;
+    private final GeneralFragment activity;
 
-    public MultiplePermissionListener(NestedPreferenceFragment activity) {
+    public CalendarPermissionListener(GeneralFragment activity) {
         this.activity = activity;
     }
 

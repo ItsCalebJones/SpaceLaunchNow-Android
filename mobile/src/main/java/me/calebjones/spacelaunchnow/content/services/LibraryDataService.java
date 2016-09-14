@@ -20,7 +20,6 @@ import java.lang.reflect.Type;
 import java.util.Collections;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
@@ -131,13 +130,8 @@ public class LibraryDataService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Timber.d("LibraryDataService - Intent received!");
 
-        // Init Realm
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
-                .deleteRealmIfMigrationNeeded()
-                .build();
-
         // Create a new empty instance of Realm
-        mRealm = Realm.getInstance(realmConfiguration);
+        mRealm = Realm.getDefaultInstance();
 
         if (intent != null) {
             String action = intent.getAction();

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="Launch Tracking">
     <PreferenceCategory android:title="Default Launch Count">
-        <ListPreference
+        <com.afollestad.materialdialogs.prefs.MaterialListPreference
             android:defaultValue="5"
-            android:key="upcoming_value"
             android:entries="@array/upcoming_array"
             android:entryValues="@array/upcoming_array_values"
+            android:key="upcoming_value"
             android:summary="Specify how many upcoming launches to load."
             android:title="Upcoming Launches" />
     </PreferenceCategory>
@@ -19,31 +19,55 @@
             android:summaryOff="Allow Launch Data to sync in the background, required for launch notifications."
             android:summaryOn="Launch Data will be synced in the background."
             android:title="Allow Background Syncs" />
-        <ListPreference
-            android:dependency="background_sync"
+        <com.afollestad.materialdialogs.prefs.MaterialListPreference
             android:defaultValue="24"
+            android:dependency="background_sync"
             android:entries="@array/sync_timer"
             android:entryValues="@array/sync_timer_values"
             android:key="notification_sync_time"
             android:summary="Select desired time between syncs."
             android:title="Background Sync Interval" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Calender Settings"
-        android:key="calendar_category" >
+    <PreferenceCategory
+        android:key="calendar_category"
+        android:title="Calender Settings">
+
         <SwitchPreference
             android:defaultValue="false"
             android:key="calendar_sync_state"
             android:summary="Allow next launch to sync with default Calendar."
-            android:title="Sync Calendar" />
-        <MultiSelectListPreference
+            android:title="Enable Launch Sync" />
+
+        <com.afollestad.materialdialogs.prefs.MaterialListPreference
+            android:defaultValue="5"
+            android:dependency="calendar_sync_state"
+            android:dialogMessage="Select the number of events to sync."
+            android:entries="@array/upcoming_array"
+            android:entryValues="@array/upcoming_array_values"
+            android:key="calendar_count"
+            android:summary="Configure the number of events to sync."
+            android:title="Event Count" />
+
+        <com.afollestad.materialdialogs.prefs.MaterialListPreference
+            android:defaultValue="0"
+            android:dependency="calendar_sync_state"
+            android:dialogMessage="Select a Calendar for launch events."
+            android:entries="@array/empty"
+            android:entryValues="@array/empty"
+            android:key="default_calendar_state"
+            android:summary="Configure Calendar for launch events."
+            android:title="Calendar Account" />
+
+        <com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference
             android:defaultValue="@array/multi_calendar_reminder_default"
             android:dependency="calendar_sync_state"
-            android:key="calendar_reminder_array"
-            android:summary="Set custom reminders for calendar notifications."
+            android:dialogMessage="Set custom reminders for calendar notifications."
             android:entries="@array/multi_calendar_reminder"
             android:entryValues="@array/multi_calendar_reminder_values"
+            android:key="calendar_reminder_array"
             android:persistent="true"
-            android:title="Default Calendar Reminder"/>
+            android:summary="Set custom reminders for calendar notifications."
+            android:title="Event Reminders" />
     </PreferenceCategory>
     <PreferenceCategory android:title="Other Settings">
         <SwitchPreference

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <header
+        android:fragment="me.calebjones.spacelaunchnow.settings.fragments.GeneralFragment"
+        android:icon="@drawable/ic_settings_black"
+        android:title="General"
+        android:summary="@string/general_settings_for_launch_tracking_and_application_behavior"
+        android:breadCrumbTitle="General" />
+    <header
+        android:fragment="me.calebjones.spacelaunchnow.settings.fragments.NotificationsFragment"
+        android:icon="@drawable/ic_notifications"
+        android:title="Notifications"
+        android:summary="Set up launch notifications and scheduling."
+        android:breadCrumbTitle="Notifications"/>
+    <header
+        android:fragment="me.calebjones.spacelaunchnow.settings.fragments.AppearanceFragment"
+        android:icon="@drawable/ic_color_picker"
+        android:title="Appearance"
+        android:summary="Customize app theme and colors."
+        android:breadCrumbTitle="Appearance"/>
+    <header
+        android:fragment="me.calebjones.spacelaunchnow.settings.fragments.WearFragment"
+        android:icon="@drawable/ic_wear"
+        android:title="Wear"
+        android:summary="Change Android Wear watch face settings."
+        android:breadCrumbTitle="Wear"/>
+    <header
+        android:icon="@drawable/ic_about_black"
+        android:summary="Application information about license, libraries, changelog, etc"
+        android:title="About">
+        <intent
+            android:targetClass="me.calebjones.spacelaunchnow.ui.activity.AboutActivity"
+            android:targetPackage="me.calebjones.spacelaunchnow.debug"/>
+    </header>
+    <header
+        android:icon="@drawable/ic_support_black"
+        android:summary="Follow my projects and contribute to future development."
+        android:title="Support">
+        <intent
+            android:targetClass="me.calebjones.spacelaunchnow.supporter.SupporterActivity"
+            android:targetPackage="me.calebjones.spacelaunchnow.debug"/>
+    </header>
+
+</preference-headers>

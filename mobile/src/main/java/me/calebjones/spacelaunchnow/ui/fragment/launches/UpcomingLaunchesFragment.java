@@ -12,6 +12,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -45,17 +46,17 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.BuildConfig;
+import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.ListAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.interfaces.QueryBuilder;
 import me.calebjones.spacelaunchnow.content.models.Strings;
-import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
-import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
 import me.calebjones.spacelaunchnow.ui.customviews.SimpleDividerItemDecoration;
+import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
 import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import timber.log.Timber;
 
@@ -102,8 +103,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
 
         setHasOptionsMenu(true);
 
-        SharedPreferences = android.support.v7.preference.PreferenceManager
-                .getDefaultSharedPreferences(getContext());
+        SharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         this.listPreference = ListPreferences.getInstance(getContext());
         this.switchPreferences = SwitchPreferences.getInstance(getContext());
         adapter = new ListAdapter(getContext());

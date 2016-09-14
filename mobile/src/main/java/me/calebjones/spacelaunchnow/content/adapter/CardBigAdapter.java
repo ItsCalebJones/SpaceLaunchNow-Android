@@ -526,7 +526,14 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                 case R.id.watchButton:
                     Timber.d("Watch: %s", launch.getVidURLs().size());
                     if (launch.getVidURLs().size() > 0) {
-                        final MaterialSimpleListAdapter adapter = new MaterialSimpleListAdapter(context);
+                        final MaterialSimpleListAdapter adapter = new MaterialSimpleListAdapter(new MaterialSimpleListAdapter.Callback() {
+                            @Override
+                            public void onMaterialListItemSelected(int index, MaterialSimpleListItem item) {
+                                Uri watchUri = Uri.parse(launch.getVidURLs().get(index).getVal());
+                                Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
+                                context.startActivity(i);
+                            }
+                        });
                         for (RealmStr s : launch.getVidURLs()) {
                             //Do your stuff here
                             adapter.add(new MaterialSimpleListItem.Builder(context)
@@ -536,15 +543,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
                         MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
                                 .title("Select a source:")
-                                .adapter(adapter, new MaterialDialog.ListCallback() {
-                                    @Override
-                                    public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                                        Uri watchUri = Uri.parse(launch.getVidURLs().get(which).getVal());
-                                        Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
-                                        context.startActivity(i);
-                                        dialog.dismiss();
-                                    }
-                                });
+                                .adapter(adapter, null);
                         if (sharedPreference.isNightModeActive(context)) {
                             builder.theme(Theme.DARK);
                         }

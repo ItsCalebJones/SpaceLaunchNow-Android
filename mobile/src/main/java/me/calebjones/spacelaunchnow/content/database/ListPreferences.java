@@ -42,6 +42,7 @@ public class ListPreferences {
     public static String PREFS_NEXT_LAUNCH;
     public static String PREFS_PREV_LAUNCH;
     public static String PREFS_DEBUG;
+    public static String PREFS_DEBUG_SUPPORT;
 
     public static String PREFS_LAST_VEHICLE_UPDATE;
 
@@ -60,6 +61,7 @@ public class ListPreferences {
         PREFS_NEXT_LAUNCH_TIMESTAMP = "NEXT_LAUNCH_TIMESTAMP";
         PREFS_PREVIOUS_FIRST_BOOT = "IS_PREVIOUS_FIRST_BOOT";
         PREFS_DEBUG = "DEBUG";
+        PREFS_DEBUG_SUPPORT = "DEBUG_SUPPORT";
         INSTANCE = null;
     }
 
@@ -139,6 +141,18 @@ public class ListPreferences {
     public boolean isDayNightAutoEnabled() {
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this.appContext);
         return this.sharedPrefs.getBoolean("theme_auto", false);
+    }
+
+    public void setDebugSupporter(boolean value) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean(PREFS_DEBUG_SUPPORT, value);
+        this.prefsEditor.apply();
+    }
+
+    public boolean isDebugSupporterEnabled() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getBoolean(PREFS_DEBUG_SUPPORT, false);
     }
 
     public void setDebugLaunch(boolean value) {

@@ -2,10 +2,6 @@
 <resources>
 
     <style name="BaseAppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="preferenceTheme">@style/Theme.WtfPreference</item>
-
-
-
         <item name="colorPrimary">@color/darkPrimary</item>
         <item name="colorPrimaryDark">@color/darkPrimary_dark</item>
         <item name="colorAccent">@color/darkAccent</item>
@@ -26,6 +22,12 @@
         <item name="sv_showcaseColor">@color/darkAccent</item>
         <item name="sv_buttonText">Hide</item>
         <item name="sv_tintButtonColor">true</item>
+    </style>
+
+    <style name="CustomPreferenceTheme" parent="@style/PreferenceActivity">
+        <item name="colorPrimary">@color/darkPrimary</item>
+        <item name="colorPrimaryDark">@color/darkPrimary_dark</item>
+        <item name="colorAccent">@color/darkAccent</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.ActionBar" />
