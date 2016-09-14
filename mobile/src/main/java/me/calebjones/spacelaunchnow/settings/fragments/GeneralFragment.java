@@ -146,9 +146,9 @@ public class GeneralFragment extends PreferenceFragment implements SharedPrefere
 
         final CharSequence[] nameSequences = listName.toArray(new CharSequence[listName.size()]);
         final CharSequence[] countSequences = listCount.toArray(new CharSequence[listCount.size()]);
-        ListPreference calendarPreference = (ListPreference) findPreference("default_calendar_state");
-        calendarPreference.setEntries(nameSequences);
-        calendarPreference.setEntryValues(countSequences);
+        ListPreference calendarPrefList = (ListPreference) findPreference("default_calendar_state");
+        calendarPrefList.setEntries(nameSequences);
+        calendarPrefList.setEntryValues(countSequences);
 
         String summary;
         final CalendarItem calendarItem = mRealm.where(CalendarItem.class).findFirst();
@@ -158,8 +158,8 @@ public class GeneralFragment extends PreferenceFragment implements SharedPrefere
         } else {
             summary = "Select a Calendar to add launch events.";
         }
-        calendarPreference.setSummary(summary);
-        calendarPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        calendarPrefList.setSummary(summary);
+        calendarPrefList.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object obj) {
                 final Calendar calendar = calendarList.get(Integer.valueOf(obj.toString()));
@@ -220,6 +220,11 @@ public class GeneralFragment extends PreferenceFragment implements SharedPrefere
                     CalendarSyncService.startActionSyncAll(context);
                 }
             });
+        } else {
+            Toast.makeText(context, "No Calendars available to sync launch events with.", Toast.LENGTH_LONG).show();
+            SwitchPreference calendarSyncState = (SwitchPreference) findPreference("calendar_sync_state");
+            calendarSyncState.setChecked(false);
+            switchPreferences.setCalendarStatus(false);
         }
     }
 

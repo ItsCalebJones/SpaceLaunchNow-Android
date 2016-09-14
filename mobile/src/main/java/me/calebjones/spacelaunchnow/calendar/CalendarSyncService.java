@@ -2,6 +2,7 @@ package me.calebjones.spacelaunchnow.calendar;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 
@@ -12,6 +13,7 @@ import io.realm.RealmList;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
+import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.BaseService;
 import timber.log.Timber;
@@ -30,6 +32,8 @@ public class CalendarSyncService extends BaseService {
     private RealmResults<LaunchRealm> launchRealms;
     private CalendarUtility calendarUtil;
     private CalendarItem calendarItem;
+    private SharedPreferences sharedPreferences;
+    private SwitchPreferences switchPreferences;
 
     public CalendarSyncService() {
         super("CalendarSyncService");
@@ -76,23 +80,34 @@ public class CalendarSyncService extends BaseService {
     protected void onHandleIntent(Intent intent) {
         Timber.v("onHandleIntent received: ", intent.getAction());
         mRealm = Realm.getDefaultInstance();
-        calendarUtil = new CalendarUtility(mRealm.where(CalendarItem.class).findFirst());
-        if (intent != null) {
-            final String action = intent.getAction();
-            if (SYNC_EVENTS_ALL.equals(action)) {
-                handleActionSyncAll();
-            } else if (DELETE_EVENTS_ALL.equals(action)) {
-                handleActionDeleteAll();
-            } else if (SYNC_EVENT.equals(action)) {
-                final int param1 = intent.getIntExtra(LAUNCH_ID, 0);
-                final long param2 = intent.getLongExtra(EVENT_ID, 0);
-                handleActionDeleteEvent(param1, param2);
-            } else if (RESYNC_ALL.equals(action)){
-                handleActionDeleteAll();
-                handleActionSyncAll();
+        CalendarItem calendarItem = mRealm.where(CalendarItem.class).findFirst();
+        if (calendarItem != null) {
+            calendarUtil = new CalendarUtility(calendarItem);
+            if (intent != null) {
+                final String action = intent.getAction();
+                if (SYNC_EVENTS_ALL.equals(action)) {
+                    handleActionSyncAll();
+                } else if (DELETE_EVENTS_ALL.equals(action)) {
+                    handleActionDeleteAll();
+                } else if (SYNC_EVENT.equals(action)) {
+                    final int param1 = intent.getIntExtra(LAUNCH_ID, 0);
+                    final long param2 = intent.getLongExtra(EVENT_ID, 0);
+                    handleActionDeleteEvent(param1, param2);
+                } else if (RESYNC_ALL.equals(action)) {
+                    handleActionDeleteAll();
+                    handleActionSyncAll();
+                }
             }
+            mRealm.close();
+        } else {
+            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("calendar_sync_state", false);
+            editor.apply();
+
+            switchPreferences = SwitchPreferences.getInstance(this);
+            switchPreferences.setCalendarStatus(false);
         }
-        mRealm.close();
     }
 
     private void handleActionSyncAll() {
