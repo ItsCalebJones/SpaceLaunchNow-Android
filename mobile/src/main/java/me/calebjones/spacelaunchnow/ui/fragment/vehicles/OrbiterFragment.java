@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -58,7 +59,8 @@ public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayou
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        SharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         this.sharedPreference = ListPreferences.getInstance(getContext());
         adapter = new OrbiterAdapter(getActivity().getApplicationContext());
         context = getActivity().getApplicationContext();

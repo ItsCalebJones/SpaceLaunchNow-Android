@@ -1,6 +1,4 @@
-package me.calebjones.spacelaunchnow.content.models.natives;
-
-import java.math.BigDecimal;
+package me.calebjones.spacelaunchnow.supporter;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;

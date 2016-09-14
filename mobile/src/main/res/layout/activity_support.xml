@@ -7,7 +7,8 @@
     android:id="@+id/support_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="me.calebjones.spacelaunchnow.ui.activity.SupportActivity">
+
+    tools:context=".supporter.SupporterActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

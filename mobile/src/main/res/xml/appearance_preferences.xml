@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen android:title="Appearance"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="local_time"
+        android:summaryOff="Launch times to be represented in UTC."
+        android:summaryOn="Launch times locally translated times to fit your current timezone."
+        android:title="Local Timezone" />
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="24_hour_mode"
+        android:summaryOff="Launch times in AM/PM."
+        android:summaryOn="Launch times in 24 hour."
+        android:title="Time Format" />
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="card_size_small"
+        android:summaryOff="Use full-size content card."
+        android:summaryOn="Use compact content card. (EXPERIMENTAL)"
+        android:title="Compact Launch Card" />
+    <PreferenceCategory android:title="NightMode"
+        android:key="night_category">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="theme"
+            android:summaryOff="Night mode is disabled."
+            android:summaryOn="Night Mode is enabled."
+            android:title="Night mode" />
+        <SwitchPreference
+            android:dependency="theme"
+            android:defaultValue="false"
+            android:key="theme_auto"
+            android:summary="Automatically switch between Day and Night themes based on location."
+            android:title="Automatic Day/Night" />
+        </PreferenceCategory>
+    <PreferenceCategory android:title="Weather"
+        android:key="weather_category">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="weather"
+            android:summary="Show weather card for upcoming launches in launch details."
+            android:title="Enable Weather" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="weather_US_SI"
+            android:summaryOn="Use US based Imperial Units for temperature, wind speed and precipitation."
+            android:summaryOff="Use metric based International System of Units for temperature, wind speed and precipitation."
+            android:title="Measurement Type" />
+    </PreferenceCategory>
+</PreferenceScreen>

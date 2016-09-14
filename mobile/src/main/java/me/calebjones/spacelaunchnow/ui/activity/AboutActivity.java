@@ -12,6 +12,7 @@ import com.mikepenz.aboutlibraries.ui.LibsActivity;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
 public class AboutActivity extends LibsActivity {
@@ -90,7 +91,7 @@ public class AboutActivity extends LibsActivity {
     }
 
     private void specialButtonOne() {
-        Intent intent = new Intent(this, SupportActivity.class);
+        Intent intent = new Intent(this, SupporterActivity.class);
         startActivity(intent);
     }
 

@@ -38,6 +38,9 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="me.calebjones.spacelaunchnow.NIGHTMODE" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ui.activity.LaunchDetailActivity"
@@ -51,9 +54,10 @@
             android:value="@string/GoogleMapsKey" />
 
         <activity
-            android:name=".ui.activity.SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/BaseAppTheme" />
+            android:theme="@style/CustomPreferenceTheme"
+            android:parentActivityName=".ui.activity.MainActivity"/>
         <activity android:name=".ui.activity.OrbiterDetailActivity" />
         <activity android:name=".ui.activity.LauncherDetailActivity" />
 
@@ -112,11 +116,11 @@
         </activity>
 
         <service
-            android:name=".content.services.CalendarSyncService"
+            android:name=".calendar.CalendarSyncService"
             android:exported="false" />
 
         <activity
-            android:name=".ui.activity.SupportActivity"
+            android:name=".supporter.SupporterActivity"
             android:theme="@style/BaseAppTheme" />
         <activity android:name=".ui.activity.BaseActivity" />
         <activity
@@ -168,5 +172,4 @@
                 android:resource="@xml/widget_launch_word_timer_info" />
         </receiver>
     </application>
-
 </manifest>
