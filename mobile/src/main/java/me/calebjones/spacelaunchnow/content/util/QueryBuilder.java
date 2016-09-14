@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.content.interfaces;
+package me.calebjones.spacelaunchnow.content.util;
 
 import android.content.Context;
 
@@ -419,9 +419,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.agencies.id", 17)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 17);
+            query.equalTo("location.id", 17);
         }
 
         if (switchPreferences.getSwitchCape()) {
@@ -452,6 +450,7 @@ public class QueryBuilder {
         return query.endGroup().findAllSortedAsync("net", Sort.ASCENDING);
     }
 
+    //TODO redo this
     public static RealmResults<LaunchRealm> buildSwitchQuery(Context context, Realm realm) {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
         boolean first = true;
