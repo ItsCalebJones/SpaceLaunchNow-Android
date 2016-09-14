@@ -61,7 +61,7 @@
             android:defaultValue="true"
             android:key="notifications_launch_imminent_updates"
             android:summaryOff="Do not update when a launch status changes."
-            android:summaryOn="Receive update notification for launch status changes. (EXPERIMENTAL)"
+            android:summaryOn="Receive update notification for launch status changes."
             android:title="Launch Status Updates" />
     </PreferenceCategory>
 </PreferenceScreen>
