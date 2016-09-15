@@ -216,10 +216,12 @@ public class CalendarUtility {
     public void deleteDuplicates(Context context, Realm realm, String queryStr, String type) {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
             for (EventInfo eventInfo : EventInfo.getAllEvents(context)) {
-                if (eventInfo.getDescription().contains(queryStr)) {
-                    LaunchRealm launchRealm = realm.where(LaunchRealm.class).equalTo("eventID", eventInfo.getId()).findFirst();
-                    if (launchRealm == null) {
-                        deleteEvent(context, eventInfo.getId());
+                if (eventInfo != null & eventInfo.getDescription() !=null && eventInfo.getDescription().contains(queryStr)) {
+                    if (eventInfo.getId() != null) {
+                        LaunchRealm launchRealm = realm.where(LaunchRealm.class).equalTo("eventID", eventInfo.getId()).findFirst();
+                        if (launchRealm == null) {
+                            deleteEvent(context, eventInfo.getId());
+                        }
                     }
                 }
             }
