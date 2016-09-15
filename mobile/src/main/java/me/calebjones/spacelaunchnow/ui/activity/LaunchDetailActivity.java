@@ -120,10 +120,10 @@ public class LaunchDetailActivity extends BaseActivity
         if (type.equals("launch")) {
             int id = mIntent.getIntExtra("launchID", 0);
             launch = getRealm().where(LaunchRealm.class).equalTo("id", id).findFirst();
-            Timber.v("Loading launch %s", launch.getId());
         }
 
         if (launch.getRocket() != null) {
+            Timber.v("Loading launch %s", launch.getId());
             findProfileLogo();
             if (launch.getRocket().getName() != null) {
                 if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0) {
@@ -141,6 +141,7 @@ public class LaunchDetailActivity extends BaseActivity
         } else {
             Intent homeIntent = new Intent(this, MainActivity.class);
             startActivity(homeIntent);
+            Timber.e("Error - Unable to load launch details.");
         }
 
         SimpleDateFormat df = new SimpleDateFormat("MMMM dd, yyyy HH:mm:ss zzz");
@@ -349,9 +350,6 @@ public class LaunchDetailActivity extends BaseActivity
         return launch;
     }
 
-    public static void start(Context c) {
-        c.startActivity(new Intent(c, LaunchDetailActivity.class));
-    }
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
