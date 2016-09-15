@@ -126,7 +126,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
             if (sharedPref.getBoolean("local_time", true)) {
                 SimpleDateFormat df;
                 if (sharedPref.getBoolean("24_hour_mode", false)) {
-                    df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - kk:mm zzz");
+                    df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - HH:mm zzz");
                 } else {
                     df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
                 }
@@ -136,7 +136,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
             } else {
                 SimpleDateFormat sdf;
                 if (sharedPref.getBoolean("24_hour_mode", false)) {
-                    sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - kk:mm zzz");
+                    sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - HH:mm zzz");
                 } else {
                     sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
                 }

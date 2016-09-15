@@ -180,7 +180,7 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
     private void setLaunchDate(Context context, LaunchRealm launch, RemoteViews remoteViews) {
         SimpleDateFormat sdf;
         if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("24_hour_mode", false)) {
-            sdf = new SimpleDateFormat("MMMM dd, yyyy - kk:mm zzz");
+            sdf = new SimpleDateFormat("MMMM dd, yyyy - HH:mm zzz");
         } else {
             sdf = new SimpleDateFormat("MMMM dd, yyyy - hh:mm a");
         }

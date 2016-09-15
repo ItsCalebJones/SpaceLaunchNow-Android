@@ -359,7 +359,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                     if (sharedPref.getBoolean("local_time", true)) {
                         SimpleDateFormat sdf;
                         if (sharedPref.getBoolean("24_hour_mode", false)) {
-                            sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - kk:mm zzz");
+                            sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - HH:mm zzz");
                         } else {
                             sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
                         }
@@ -369,7 +369,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                     } else {
                         SimpleDateFormat sdf;
                         if (sharedPref.getBoolean("24_hour_mode", false)) {
-                            sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - kk:mm zzz");
+                            sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - HH:mm zzz");
                         } else {
                             sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
                         }

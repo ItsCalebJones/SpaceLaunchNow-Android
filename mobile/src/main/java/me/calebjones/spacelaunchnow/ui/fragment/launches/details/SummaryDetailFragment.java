@@ -611,7 +611,7 @@ public class SummaryDetailFragment extends BaseFragment {
         // Create a DateFormatter object for displaying date in specified format.
         SimpleDateFormat formatter;
         if (sharedPref.getBoolean("24_hour_mode", false)) {
-            formatter = new SimpleDateFormat("kk:mm zzz");
+            formatter = new SimpleDateFormat("HH:mm zzz");
         } else {
             formatter = new SimpleDateFormat("hh:mm a zzz");
         }
