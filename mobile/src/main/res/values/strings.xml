@@ -34,11 +34,13 @@
     <string name="title_activity_debug">DebugActivity</string>
     <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
 
-    <string name="whats_new_content">1.4.0 - Calendar Support\n\n
+    <string name="whats_new_content">1.4.1 - Calendar Support\n\n
         \u2022Add on demand calendar events.\n
         \u2022Add automatic calendar sync with upcoming launches for Supporters.\n
+        \u2022Change 24-hour mode to 0-23 instead of 1-24.\n
         \u2022Fix a bug with incorrectly filtering out launches.\n
         \u2022Fix a bug with unlocking supporter features.\n
+        \u2022Fix a few small crashes.\n
     </string>
     <string name="link_feedback">https://www.reddit.com/r/spacelaunchnow</string>
     <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>

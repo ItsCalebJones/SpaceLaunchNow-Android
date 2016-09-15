@@ -21,7 +21,7 @@ advancedVersioning {
     nameOptions {
         versionMajor 1
         versionMinor 4
-        versionPatch 0
+        versionPatch 1
 
     }
     codeOptions {
@@ -29,8 +29,6 @@ advancedVersioning {
         dependsOnTasks 'release'
     }
     outputOptions {
-        renameOutput true
-        nameFormat '${projectName}-${appName}-${buildType}-${versionName}.${versionCode}'
     }
 }
 

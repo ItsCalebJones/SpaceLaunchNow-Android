@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
-import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 
 import java.text.SimpleDateFormat;
@@ -32,6 +31,7 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.models.realm.RealmStr;
+import me.calebjones.spacelaunchnow.content.util.LaunchListAdapter;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
@@ -358,12 +358,21 @@ public class CardSmallAdapter extends RecyclerView.Adapter<CardSmallAdapter.View
                 case R.id.watchButton:
                     Timber.d("Watch: %s", launch.getVidURLs().size());
                     if (launch.getVidURLs().size() > 0) {
-                        final MaterialSimpleListAdapter adapter = new MaterialSimpleListAdapter(new MaterialSimpleListAdapter.Callback() {
+                        final LaunchListAdapter adapter = new LaunchListAdapter(new LaunchListAdapter.Callback() {
+
                             @Override
-                            public void onMaterialListItemSelected(int index, MaterialSimpleListItem item) {
-                                Uri watchUri = Uri.parse(launch.getVidURLs().get(index).getVal());
-                                Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
-                                mContext.startActivity(i);
+                            public void onListItemSelected(int index, MaterialSimpleListItem item, boolean longClick) {
+                                if (longClick) {
+                                    Intent sendIntent = new Intent();
+                                    sendIntent.setAction(Intent.ACTION_SEND);
+                                    sendIntent.putExtra(Intent.EXTRA_TEXT, launch.getVidURLs().get(index).getVal()); // Simple text and URL to share
+                                    sendIntent.setType("text/plain");
+                                    mContext.startActivity(sendIntent);
+                                } else {
+                                    Uri watchUri = Uri.parse(launch.getVidURLs().get(index).getVal());
+                                    Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
+                                    mContext.startActivity(i);
+                                }
                             }
                         });
                         for (RealmStr s : launch.getVidURLs()) {
@@ -374,7 +383,8 @@ public class CardSmallAdapter extends RecyclerView.Adapter<CardSmallAdapter.View
                         }
 
                         MaterialDialog.Builder builder = new MaterialDialog.Builder(mContext)
-                                .title("Select a source:")
+                                .title("Select a Source")
+                                .content("Long press for additional options.")
                                 .adapter(adapter, null);
                         if (sharedPreference.isNightModeActive(mContext)) {
                             builder.theme(Theme.DARK);
