@@ -122,7 +122,7 @@ public class LaunchDetailActivity extends BaseActivity
             launch = getRealm().where(LaunchRealm.class).equalTo("id", id).findFirst();
         }
 
-        if (launch.getRocket() != null) {
+        if (launch != null && launch.getRocket() != null) {
             Timber.v("Loading launch %s", launch.getId());
             findProfileLogo();
             if (launch.getRocket().getName() != null) {
