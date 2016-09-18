@@ -247,16 +247,19 @@ public class VehicleDataService extends IntentService {
                     call = request.getAllRocketFamily(offset);
                 }
                 launchResponse = call.execute();
-                total = launchResponse.body().getTotal();
-                count = launchResponse.body().getCount();
-                offset = offset + count;
-                Collections.addAll(items, launchResponse.body().getRocketFamilies());
+                if (launchResponse.isSuccessful()) {
+                    total = launchResponse.body().getTotal();
+                    count = launchResponse.body().getCount();
+                    offset = offset + count;
+                    Collections.addAll(items, launchResponse.body().getRocketFamilies());
+                }
             }
 
-            mRealm.beginTransaction();
-            mRealm.copyToRealmOrUpdate(items);
-            mRealm.commitTransaction();
-
+            if (items.size() > 0) {
+                mRealm.beginTransaction();
+                mRealm.copyToRealmOrUpdate(items);
+                mRealm.commitTransaction();
+            }
         } catch (IOException e) {
             e.printStackTrace();
             Timber.e("VehicleDataService - ERROR: %s", e.getLocalizedMessage());
