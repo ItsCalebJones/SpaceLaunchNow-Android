@@ -185,7 +185,9 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     @Override
     public void onPurchaseHistoryRestored() {
         Timber.v("Purchase History restored.");
-        SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Restored purchases.");
+        if (bp != null && bp.listOwnedProducts().size() > 0) {
+            SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Purchase history restored.");
+        }
     }
 
     @Override
