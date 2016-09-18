@@ -65,14 +65,15 @@ public class CalendarUtility {
 
         //Build Description String and assign it.
         String description = "";
+        String urls = "";
         if (launch.getVidURLs() != null && launch.getVidURLs().size() >= 1) {
-            description = "Video URLs: \n";
+            urls = "\n\nWatch Live: \n";
             for (int i = 0; i < launch.getVidURLs().size(); i++) {
-                description = description + launch.getVidURLs().get(i).getVal() + "\n\n";
+                urls = urls + "\n" + launch.getVidURLs().get(i).getVal();
             }
         }
         if (launch.getMissions() != null && launch.getMissions().size() > 0) {
-            description = description + launch.getMissions().get(0).getDescription();
+            description = launch.getMissions().get(0).getDescription() + urls;
         }
 
         description = description + "\n\n via Space Launch Now";
@@ -121,14 +122,15 @@ public class CalendarUtility {
 
             //Build Description String and assign it.
             String description = "";
+            String urls = "";
             if (launch.getVidURLs() != null && launch.getVidURLs().size() >= 1) {
-                description = "Video URLs: \n";
+                urls = "\n\nWatch Live:";
                 for (int i = 0; i < launch.getVidURLs().size(); i++) {
-                    description = description + launch.getVidURLs().get(i).getVal() + "\n\n";
+                    urls = urls + "\n" + launch.getVidURLs().get(i).getVal();
                 }
             }
             if (launch.getMissions() != null && launch.getMissions().size() > 0) {
-                description = description + launch.getMissions().get(0).getDescription();
+                description = launch.getMissions().get(0).getDescription() + urls;
             }
 
             description = description + "\n\n via Space Launch Now";

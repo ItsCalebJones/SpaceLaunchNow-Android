@@ -49,6 +49,7 @@ import io.realm.Sort;
 import me.calebjones.spacelaunchnow.BuildConfig;
 
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
 import me.calebjones.spacelaunchnow.content.adapter.CardBigAdapter;
 import me.calebjones.spacelaunchnow.content.adapter.CardSmallAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
@@ -215,6 +216,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     if (switchChanged) {
                         showLoading();
                         displayLaunches();
+                        if(switchPreferences.getCalendarStatus()){
+                            CalendarSyncService.startActionResync(context);
+                        }
                     }
                 }
             }
@@ -654,6 +658,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 if (switchChanged) {
                     showLoading();
                     displayLaunches();
+                    if(switchPreferences.getCalendarStatus()){
+                        CalendarSyncService.startActionResync(context);
+                    }
                 }
             }
         } else if (id == R.id.debug_vehicle) {

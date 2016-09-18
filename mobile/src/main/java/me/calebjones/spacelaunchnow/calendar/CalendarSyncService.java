@@ -6,16 +6,14 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 
-import java.util.Date;
-
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
-import io.realm.Sort;
 import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.BaseService;
+import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import timber.log.Timber;
 
 
@@ -111,9 +109,7 @@ public class CalendarSyncService extends BaseService {
     }
 
     private void handleActionSyncAll() {
-        launchRealms = mRealm.where(LaunchRealm.class)
-                .greaterThanOrEqualTo("net", new Date())
-                .findAllSorted("net", Sort.ASCENDING);
+        launchRealms = QueryBuilder.buildSwitchQuery(this, mRealm);
 
         RealmList<LaunchRealm> launchResults = new RealmList<>();
 
