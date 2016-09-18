@@ -21,7 +21,7 @@ advancedVersioning {
     nameOptions {
         versionMajor 1
         versionMinor 4
-        versionPatch 1
+        versionPatch 2
 
     }
     codeOptions {
