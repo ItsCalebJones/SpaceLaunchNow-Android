@@ -52,10 +52,6 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
 
         ListPreferences sharedPreference = ListPreferences.getInstance(context);
 
-//        if (sharedPreference.isNightThemeEnabled()) {
-//        } else {
-//        }
-
         m_theme = R.style.BaseAppTheme;
         setTheme(m_theme);
 

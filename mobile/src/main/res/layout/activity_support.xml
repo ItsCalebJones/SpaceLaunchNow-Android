@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:apps="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/support_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,6 +24,11 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -43,13 +47,13 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/title"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="@string/supporter_title"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                    android:textSize="30dp"
-                    android:id="@+id/title" />
+                    android:textSize="30dp" />
 
                 <TextView
                     android:id="@+id/description"
@@ -63,19 +67,19 @@
                     android:id="@+id/supporter_feature_title"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="Supporter Perks:"
                     android:paddingLeft="25dp"
                     android:paddingRight="20dp"
+                    android:text="Supporter Perks:"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/supporter_features"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/supporter_features"
-                    android:paddingLeft="25dp"
                     android:paddingBottom="10dp"
-                    android:paddingRight="20dp" />
+                    android:paddingLeft="25dp"
+                    android:paddingRight="20dp"
+                    android:text="@string/supporter_features" />
 
             </LinearLayout>
 
@@ -102,11 +106,11 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
+                        android:layout_weight="1.0"
                         android:gravity="center"
                         android:text="$1.99 - Beer"
                         android:textColor="@color/white"
-                        android:textSize="12sp"
-                        android:layout_weight="1.0"/>
+                        android:textSize="12sp" />
 
                     <android.support.v7.widget.AppCompatButton
                         android:id="@+id/sixDollar"
@@ -116,11 +120,11 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
+                        android:layout_weight="1.0"
                         android:gravity="center"
                         android:text="$5.99 - Lunch"
                         android:textColor="@color/white"
-                        android:textSize="12sp"
-                        android:layout_weight="1.0"/>
+                        android:textSize="12sp" />
                 </LinearLayout>
             </RelativeLayout>
 
@@ -144,9 +148,9 @@
                         android:layout_width="0.0dip"
                         android:layout_height="50dp"
                         android:layout_gravity="center_horizontal"
-                        android:layout_weight="1.0"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
+                        android:layout_weight="1.0"
                         android:gravity="center"
                         android:text="$11.99 - Dinner"
                         android:textColor="@color/white"
@@ -158,9 +162,9 @@
                         android:layout_width="0.0dip"
                         android:layout_height="50dp"
                         android:layout_gravity="center_horizontal"
-                        android:layout_weight="1.0"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
+                        android:layout_weight="1.0"
                         android:gravity="center"
                         android:text="Other"
                         android:textColor="@color/white"
@@ -172,8 +176,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Note: There is currently a bug in Google's In-App Billing library that sometimes doesn't properly return successful purchases. If you make a purchase but don't immediately unlock features try to click the button again or re-install the application."
+                android:layout_margin="16dp"
                 android:gravity="bottom|center"
-                android:layout_margin="16dp" />
+                android:text="Note: There is currently a bug in Google's In-App Billing library that sometimes doesn't properly return successful purchases. If you make a purchase but don't immediately unlock features try to click the button again or re-install the application." />
         </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>
