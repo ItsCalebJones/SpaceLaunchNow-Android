@@ -34,7 +34,7 @@ public class LaunchRealm extends RealmObject {
 
     private Integer inhold;
     private Integer tbdtime;
-    private Integer calendarID;
+    private Integer eventID;
 
     private LocationRealm location;
 
@@ -107,12 +107,12 @@ public class LaunchRealm extends RealmObject {
         this.probability = probability;
     }
 
-    public Integer getCalendarID() {
-        return calendarID;
+    public Integer getEventID() {
+        return eventID;
     }
 
-    public void setCalendarID(Integer calendarID) {
-        this.calendarID = calendarID;
+    public void setEventID(Integer calendarID) {
+        this.eventID = calendarID;
     }
 
     public Integer getId() {

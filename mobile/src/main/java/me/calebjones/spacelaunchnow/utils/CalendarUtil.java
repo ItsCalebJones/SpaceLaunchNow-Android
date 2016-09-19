@@ -136,7 +136,7 @@ public class CalendarUtil {
             calEvent.put(CalendarContract.Events.DTEND, launch.getEndDate().getTime());
             calEvent.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getDisplayName());
 
-            Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, launch.getCalendarID());
+            Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, launch.getEventID());
 
             return cr.update(updateUri, calEvent, null, null) > 0;
         } return false;
@@ -146,9 +146,9 @@ public class CalendarUtil {
         Timber.v("Deleting launch event: %s", launch.getName());
         int iNumRowsDeleted = 0;
 
-        if (launch.getCalendarID() > 0) {
+        if (launch.getEventID() > 0) {
             Uri eventUri = ContentUris
-                    .withAppendedId(CalendarContract.Events.CONTENT_URI, launch.getCalendarID());
+                    .withAppendedId(CalendarContract.Events.CONTENT_URI, launch.getEventID());
             iNumRowsDeleted = context.getContentResolver().delete(eventUri, null, null);
 
         }

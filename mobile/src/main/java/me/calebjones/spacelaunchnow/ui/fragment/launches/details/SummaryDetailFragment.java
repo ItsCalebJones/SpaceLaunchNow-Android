@@ -28,7 +28,6 @@ import android.zetterstrom.com.forecast.models.Unit;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
-import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.bumptech.glide.Glide;
 import com.github.pwittchen.weathericonview.WeatherIconView;
@@ -47,6 +46,7 @@ import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.models.realm.PadRealm;
 import me.calebjones.spacelaunchnow.content.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.content.models.realm.RocketDetailsRealm;
+import me.calebjones.spacelaunchnow.content.util.LaunchListAdapter;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
 import retrofit2.Call;
@@ -61,7 +61,7 @@ public class SummaryDetailFragment extends BaseFragment {
     private static ListPreferences sharedPreference;
     private Context context;
 
-    public static LaunchRealm detailLaunch;
+    public static LaunchRealm launch;
     private RocketDetailsRealm launchVehicle;
     private boolean nightMode;
 
@@ -173,12 +173,12 @@ public class SummaryDetailFragment extends BaseFragment {
 
     @Override
     public void onResume() {
-        detailLaunch = ((LaunchDetailActivity) getActivity()).getLaunch();
+        launch = ((LaunchDetailActivity) getActivity()).getLaunch();
         setUpViews();
 
         // Check if Weather card is enabled, defaults to false if null.
         if (sharedPref.getBoolean("weather", false)){
-            if (detailLaunch.getNet().after(Calendar.getInstance().getTime())) {
+            if (launch.getNet().after(Calendar.getInstance().getTime())) {
                 fetchCurrentWeather();
             } else {
                 fetchPastWeather();
@@ -196,9 +196,9 @@ public class SummaryDetailFragment extends BaseFragment {
     }
 
     private void fetchPastWeather() {
-        if (detailLaunch.getLocation().getPads().size() > 0) {
+        if (launch.getLocation().getPads().size() > 0) {
 
-            PadRealm pad = detailLaunch.getLocation().getPads().get(0);
+            PadRealm pad = launch.getLocation().getPads().get(0);
 
             double latitude = pad.getLatitude();
             double longitude = pad.getLongitude();
@@ -212,7 +212,7 @@ public class SummaryDetailFragment extends BaseFragment {
             }
 
             ForecastClient.getInstance()
-                    .getForecast(latitude, longitude, detailLaunch.getNetstamp(), null, unit, null, false, new Callback<Forecast>() {
+                    .getForecast(latitude, longitude, launch.getNetstamp(), null, unit, null, false, new Callback<Forecast>() {
                         @Override
                         public void onResponse(Call<Forecast> forecastCall, Response<Forecast> response) {
                             if (response.isSuccessful()) {
@@ -233,9 +233,9 @@ public class SummaryDetailFragment extends BaseFragment {
 
     private void fetchCurrentWeather() {
         // Sample WeatherLib client init
-        if (detailLaunch.getLocation().getPads().size() > 0) {
+        if (launch.getLocation().getPads().size() > 0) {
 
-            PadRealm pad = detailLaunch.getLocation().getPads().get(0);
+            PadRealm pad = launch.getLocation().getPads().get(0);
 
             double latitude = pad.getLatitude();
             double longitude = pad.getLongitude();
@@ -295,7 +295,7 @@ public class SummaryDetailFragment extends BaseFragment {
             }
             if (forecast.getCurrently().getApparentTemperature() != null) {
                 String feelsLikeTemp;
-                if (detailLaunch.getNet().after(Calendar.getInstance().getTime())) {
+                if (launch.getNet().after(Calendar.getInstance().getTime())) {
                     feelsLikeTemp = "Feels like ";
                 } else {
                     feelsLikeTemp = "Felt like ";
@@ -411,7 +411,7 @@ public class SummaryDetailFragment extends BaseFragment {
             weatherSummaryDay.setVisibility(View.GONE);
         }
 
-        weatherLocation.setText(detailLaunch.getLocation().getName());
+        weatherLocation.setText(launch.getLocation().getName());
         weatherCard.setVisibility(View.VISIBLE);
 
         if (nightMode){
@@ -467,15 +467,15 @@ public class SummaryDetailFragment extends BaseFragment {
     }
 
     public void setUpViews() {
-        if (detailLaunch.getRocket() != null) {
-            getLaunchVehicle(detailLaunch);
+        if (launch.getRocket() != null) {
+            getLaunchVehicle(launch);
         }
 
         double dlat = 0;
         double dlon = 0;
-        if (detailLaunch.getLocation() != null && detailLaunch.getLocation().getPads() != null) {
-            dlat = detailLaunch.getLocation().getPads().get(0).getLatitude();
-            dlon = detailLaunch.getLocation().getPads().get(0).getLongitude();
+        if (launch.getLocation() != null && launch.getLocation().getPads() != null) {
+            dlat = launch.getLocation().getPads().get(0).getLatitude();
+            dlon = launch.getLocation().getPads().get(0).getLongitude();
         }
 
         // Getting status
@@ -524,7 +524,7 @@ public class SummaryDetailFragment extends BaseFragment {
         Date mDate;
         String dateText = null;
 
-        switch (detailLaunch.getStatus()) {
+        switch (launch.getStatus()) {
             case 1:
                 launch_status.setText("Launch is GO");
                 break;
@@ -540,15 +540,31 @@ public class SummaryDetailFragment extends BaseFragment {
         }
 
 
-        if (detailLaunch.getVidURLs() != null && detailLaunch.getVidURLs().size() > 0) {
+        if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
             watchButton.setVisibility(View.VISIBLE);
             watchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Timber.d("Watch: %s", detailLaunch.getVidURLs().size());
-                    if (detailLaunch.getVidURLs().size() > 0) {
-                        final MaterialSimpleListAdapter adapter = new MaterialSimpleListAdapter(context);
-                        for (RealmStr s : detailLaunch.getVidURLs()) {
+                    Timber.d("Watch: %s", launch.getVidURLs().size());
+                    if (launch.getVidURLs().size() > 0) {
+                        final LaunchListAdapter adapter = new LaunchListAdapter(new LaunchListAdapter.Callback() {
+
+                            @Override
+                            public void onListItemSelected(int index, MaterialSimpleListItem item, boolean longClick) {
+                                if (longClick) {
+                                    Intent sendIntent = new Intent();
+                                    sendIntent.setAction(Intent.ACTION_SEND);
+                                    sendIntent.putExtra(Intent.EXTRA_TEXT, launch.getVidURLs().get(index).getVal()); // Simple text and URL to share
+                                    sendIntent.setType("text/plain");
+                                    context.startActivity(sendIntent);
+                                } else {
+                                    Uri watchUri = Uri.parse(launch.getVidURLs().get(index).getVal());
+                                    Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
+                                    context.startActivity(i);
+                                }
+                            }
+                        });
+                        for (RealmStr s : launch.getVidURLs()) {
                             //Do your stuff here
                             adapter.add(new MaterialSimpleListItem.Builder(context)
                                     .content(s.getVal())
@@ -556,16 +572,9 @@ public class SummaryDetailFragment extends BaseFragment {
                         }
 
                         MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
-                                .title("Select a source:")
-                                .adapter(adapter, new MaterialDialog.ListCallback() {
-                                    @Override
-                                    public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                                        Uri watchUri = Uri.parse(detailLaunch.getVidURLs().get(which).getVal());
-                                        Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
-                                        context.startActivity(i);
-                                        dialog.dismiss();
-                                    }
-                                });
+                                .title("Select a Source")
+                                .content("Long press for additional options.")
+                                .adapter(adapter, null);
                         if (sharedPreference.isNightModeActive(context)) {
                             builder.theme(Theme.DARK);
                         }
@@ -578,7 +587,7 @@ public class SummaryDetailFragment extends BaseFragment {
         }
 
         //Try to convert to Month day, Year.
-        mDate = detailLaunch.getNet();
+        mDate = launch.getNet();
         dateText = output.format(mDate);
         if (mDate.before(Calendar.getInstance().getTime())) {
             launch_date_title.setText("Launch Date");
@@ -587,7 +596,7 @@ public class SummaryDetailFragment extends BaseFragment {
         date.setText(dateText);
 
         //TODO: Get launch window only if wstamp and westamp is available, hide otherwise.
-        if (detailLaunch.getWsstamp() > 0 && detailLaunch.getWestamp() > 0) {
+        if (launch.getWsstamp() > 0 && launch.getWestamp() > 0) {
             setWindowStamp();
         } else {
             launch_window_start.setVisibility(View.GONE);
@@ -611,21 +620,21 @@ public class SummaryDetailFragment extends BaseFragment {
         // Create a DateFormatter object for displaying date in specified format.
         SimpleDateFormat formatter;
         if (sharedPref.getBoolean("24_hour_mode", false)) {
-            formatter = new SimpleDateFormat("kk:mm zzz");
+            formatter = new SimpleDateFormat("HH:mm zzz");
         } else {
             formatter = new SimpleDateFormat("hh:mm a zzz");
         }
 
         // Create a calendar object that will convert the date and time value in milliseconds to date.
         Calendar calendarStart = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        long startDate = detailLaunch.getWsstamp();
+        long startDate = launch.getWsstamp();
         startDate = startDate * 1000;
         calendarStart.setTimeInMillis(startDate);
         String start = formatter.format(calendarStart.getTime());
 
         // Create a calendar object that will convert the date and time value in milliseconds to date.
         Calendar calendarEnd = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        long endDate = detailLaunch.getWestamp();
+        long endDate = launch.getWestamp();
         endDate = endDate * 1000;
         calendarEnd.setTimeInMillis(endDate);
         String end = formatter.format(calendarEnd.getTime());
@@ -651,21 +660,21 @@ public class SummaryDetailFragment extends BaseFragment {
     }
 
     private void setWindowStartEnd() {
-        if (!detailLaunch.getWindowstart().equals(detailLaunch.getWindowend())) {
-            if (detailLaunch.getWindowstart().toString().length() > 0
-                    || detailLaunch.getWindowend().toString().length() > 0) {
+        if (!launch.getWindowstart().equals(launch.getWindowend())) {
+            if (launch.getWindowstart().toString().length() > 0
+                    || launch.getWindowend().toString().length() > 0) {
                 launch_window_start.setText("Launch Window unavailable.");
                 launch_window_end.setVisibility(View.INVISIBLE);
             } else {
                 launch_window_start.setText(String.format("Window Start: %s",
-                        detailLaunch.getWindowstart()));
+                        launch.getWindowstart()));
                 launch_window_end.setVisibility(View.VISIBLE);
                 launch_window_end.setText(String.format("Window End: %s",
-                        detailLaunch.getWindowend()));
+                        launch.getWindowend()));
             }
         } else {
             launch_window_start.setText(String.format("Launch Time: %s",
-                    detailLaunch.getWindowstart()));
+                    launch.getWindowstart()));
             launch_window_end.setVisibility(View.INVISIBLE);
         }
     }

@@ -42,22 +42,27 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.BuildConfig;
-import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
+
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
 import me.calebjones.spacelaunchnow.content.adapter.CardBigAdapter;
 import me.calebjones.spacelaunchnow.content.adapter.CardSmallAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.interfaces.QueryBuilder;
+import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
+import me.calebjones.spacelaunchnow.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.supporter.Products;
 import me.calebjones.spacelaunchnow.ui.activity.DownloadActivity;
+import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
 import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -211,6 +216,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     if (switchChanged) {
                         showLoading();
                         displayLaunches();
+                        if(switchPreferences.getCalendarStatus()){
+                            CalendarSyncService.startActionResync(context);
+                        }
                     }
                 }
             }
@@ -606,6 +614,23 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     Snackbar.LENGTH_LONG).show();
             context.startService(new Intent(context, LaunchDataService.class)
                     .setAction(Strings.ACTION_GET_ALL_WIFI));
+        } else if (id == R.id.debug_supporter) {
+            Realm realm = Realm.getDefaultInstance();
+            if (sharedPreference.isDebugSupporterEnabled()) {
+                sharedPreference.setDebugSupporter(false);
+                realm.beginTransaction();
+                realm.delete(Products.class);
+                realm.commitTransaction();
+                Snackbar.make(coordinatorLayout, "Supporter: " + sharedPreference.isDebugSupporterEnabled(),
+                        Snackbar.LENGTH_SHORT).show();
+            } else {
+                sharedPreference.setDebugSupporter(true);
+                realm.beginTransaction();
+                realm.copyToRealm(SupporterHelper.getProduct(SupporterHelper.SKU_TWO_DOLLAR));
+                realm.commitTransaction();
+                Snackbar.make(coordinatorLayout, "Supporter: " + sharedPreference.isDebugSupporterEnabled(),
+                        Snackbar.LENGTH_SHORT).show();
+            }
         } else if (id == R.id.debug_next_launch) {
             Intent nextIntent = new Intent(getActivity(), LaunchDataService.class);
             nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
@@ -633,6 +658,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 if (switchChanged) {
                     showLoading();
                     displayLaunches();
+                    if(switchPreferences.getCalendarStatus()){
+                        CalendarSyncService.startActionResync(context);
+                    }
                 }
             }
         } else if (id == R.id.debug_vehicle) {

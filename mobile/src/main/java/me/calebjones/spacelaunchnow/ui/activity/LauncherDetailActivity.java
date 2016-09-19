@@ -33,6 +33,7 @@ import me.calebjones.spacelaunchnow.content.adapter.VehicleDetailAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.natives.Launcher;
 import me.calebjones.spacelaunchnow.content.models.realm.RocketRealm;
+import me.calebjones.spacelaunchnow.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 

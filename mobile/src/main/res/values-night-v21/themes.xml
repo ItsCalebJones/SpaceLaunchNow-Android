@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="BaseAppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="preferenceTheme">@style/PreferenceTheme</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-
-
 
         <item name="colorPrimary">@color/darkPrimary</item>
         <item name="colorPrimaryDark">@color/darkPrimary_dark</item>
@@ -27,6 +24,11 @@
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
     </style>
 
+    <style name="CustomPreferenceTheme" parent="@style/PreferenceActivity">
+        <item name="colorPrimary">@color/darkPrimary</item>
+        <item name="colorPrimaryDark">@color/darkPrimary_dark</item>
+        <item name="colorAccent">@color/darkAccent</item>
+    </style>
 
     <style name="ShowCaseThemeDark" parent="ShowcaseView">
         <item name="sv_backgroundColor">@color/darkPrimary</item>

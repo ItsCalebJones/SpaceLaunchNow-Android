@@ -18,8 +18,9 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.interfaces.QueryBuilder;
+import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -40,27 +41,32 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         Timber.v("onUpdate");
-        final int count = appWidgetIds.length;
+        if (!ListPreferences.getInstance(context).getFirstBoot()) {
+            final int count = appWidgetIds.length;
 
-        // If Launch is Null then go ahead and load the next launch. Otherwise check conditions before refreshing.
-        for (int widgetId : appWidgetIds) {
-            Bundle options = appWidgetManager.getAppWidgetOptions(widgetId);
+            // If Launch is Null then go ahead and load the next launch. Otherwise check conditions before refreshing.
+            for (int widgetId : appWidgetIds) {
+                Bundle options = appWidgetManager.getAppWidgetOptions(widgetId);
 
-            int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
-            int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
-            int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
-            int maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
+                int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
+                int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
+                int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
+                int maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
 
-            if (minWidth == 0 && maxWidth == 0 && minHeight == 0 && maxHeight == 0) {
-                AppWidgetHost host = new AppWidgetHost(context, 0);
-                host.deleteAppWidgetId(widgetId);
+                if (minWidth == 0 && maxWidth == 0 && minHeight == 0 && maxHeight == 0) {
+                    AppWidgetHost host = new AppWidgetHost(context, 0);
+                    host.deleteAppWidgetId(widgetId);
+                }
+
+                // Update The clock label using a shared method
+                updateAppWidget(context, appWidgetManager, widgetId, options);
             }
-
-            // Update The clock label using a shared method
-            updateAppWidget(context, appWidgetManager, widgetId, options);
-        }
-        if (!mRealm.isClosed()) {
-            mRealm.close();
+            if (!mRealm.isClosed()) {
+                mRealm.close();
+            }
+        } else {
+            setRefreshIntentInitial(context, new RemoteViews(context.getPackageName(),
+                    R.layout.widget_launch_timer_dark));
         }
     }
 
@@ -159,24 +165,42 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
         remoteViews.setOnClickPendingIntent(R.id.widget_countdown_timer_frame, actionPendingIntent);
     }
 
+    private void setRefreshIntentInitial(Context context, RemoteViews remoteViews) {
+        Intent refresh = new Intent(context, LaunchTimerWidgetProvider.class);
+        refresh.setAction(ACTION_WIDGET_REFRESH);
+        PendingIntent refreshPending = PendingIntent.getBroadcast(context, 0, refresh, 0);
+
+        remoteViews.setOnClickPendingIntent(R.id.widget_compact_card_refresh_button, refreshPending);
+    }
+
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager,
                                           int appWidgetId, Bundle newOptions) {
-        updateAppWidget(context, appWidgetManager, appWidgetId, newOptions);
+        if (!ListPreferences.getInstance(context).getFirstBoot()) {
+            updateAppWidget(context, appWidgetManager, appWidgetId, newOptions);
+        } else {
+            setRefreshIntentInitial(context, new RemoteViews(context.getPackageName(),
+                    R.layout.widget_launch_timer_dark));
+        }
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent.getAction().equals(ACTION_WIDGET_REFRESH)) {
-            Timber.v("onReceive", ACTION_WIDGET_REFRESH);
-            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, this.getClass()));
-            onUpdate(context, appWidgetManager, appWidgetIds);
-        } else if (intent.getAction().equals(ACTION_WIDGET_CLICK)) {
-            Timber.v("onReceive", ACTION_WIDGET_CLICK);
+        if (!ListPreferences.getInstance(context).getFirstBoot()) {
+            if (intent.getAction().equals(ACTION_WIDGET_REFRESH)) {
+                Timber.v("onReceive", ACTION_WIDGET_REFRESH);
+                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+                int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, this.getClass()));
+                onUpdate(context, appWidgetManager, appWidgetIds);
+            } else if (intent.getAction().equals(ACTION_WIDGET_CLICK)) {
+                Timber.v("onReceive", ACTION_WIDGET_CLICK);
+            } else {
+                super.onReceive(context, intent);
+            }
         } else {
-            super.onReceive(context, intent);
+            setRefreshIntentInitial(context, new RemoteViews(context.getPackageName(),
+                    R.layout.widget_launch_word_timer_dark));
         }
     }
 

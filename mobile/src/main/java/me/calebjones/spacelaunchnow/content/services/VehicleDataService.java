@@ -17,7 +17,6 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collections;
-import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -199,19 +198,27 @@ public class VehicleDataService extends IntentService {
                     call = request.getAllRockets(offset);
                 }
                 launchResponse = call.execute();
-                total = launchResponse.body().getTotal();
-                count = launchResponse.body().getCount();
-                offset = offset + count;
-                Collections.addAll(items, launchResponse.body().getRockets());
+                if (launchResponse.isSuccessful()) {
+                    total = launchResponse.body().getTotal();
+                    count = launchResponse.body().getCount();
+                    offset = offset + count;
+                    Collections.addAll(items, launchResponse.body().getRockets());
+                }
             }
 
-            mRealm.beginTransaction();
-            mRealm.copyToRealmOrUpdate(items);
-            mRealm.commitTransaction();
+            if (items.size() > 0) {
+                mRealm.beginTransaction();
+                mRealm.copyToRealmOrUpdate(items);
+                mRealm.commitTransaction();
 
-            Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Strings.ACTION_SUCCESS_VEHICLES);
-            VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+                Intent broadcastIntent = new Intent();
+                broadcastIntent.setAction(Strings.ACTION_SUCCESS_VEHICLES);
+                VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+            } else {
+                Intent broadcastIntent = new Intent();
+                broadcastIntent.setAction(Strings.ACTION_FAILURE_VEHICLES);
+                VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+            }
         } catch (IOException e) {
             e.printStackTrace();
             Timber.e("VehicleDataService - ERROR: %s", e.getLocalizedMessage());
@@ -240,16 +247,19 @@ public class VehicleDataService extends IntentService {
                     call = request.getAllRocketFamily(offset);
                 }
                 launchResponse = call.execute();
-                total = launchResponse.body().getTotal();
-                count = launchResponse.body().getCount();
-                offset = offset + count;
-                Collections.addAll(items, launchResponse.body().getRocketFamilies());
+                if (launchResponse.isSuccessful()) {
+                    total = launchResponse.body().getTotal();
+                    count = launchResponse.body().getCount();
+                    offset = offset + count;
+                    Collections.addAll(items, launchResponse.body().getRocketFamilies());
+                }
             }
 
-            mRealm.beginTransaction();
-            mRealm.copyToRealmOrUpdate(items);
-            mRealm.commitTransaction();
-
+            if (items.size() > 0) {
+                mRealm.beginTransaction();
+                mRealm.copyToRealmOrUpdate(items);
+                mRealm.commitTransaction();
+            }
         } catch (IOException e) {
             e.printStackTrace();
             Timber.e("VehicleDataService - ERROR: %s", e.getLocalizedMessage());

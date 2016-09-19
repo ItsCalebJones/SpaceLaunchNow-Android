@@ -34,14 +34,7 @@ public class SnackbarHandler {
     // Display Info snackbar from a message.
     public static void showInfoSnackbar(Context context,  View view, String msg){
         Snackbar
-                .make(view, parseErrorMessage(context, msg), Snackbar.LENGTH_SHORT)
-                .show();
-    }
-
-    // Display Info snackbar from a intent.
-    public static void showInfoSnackbar(Context context,  View view, Intent intent){
-        Snackbar
-                .make(view, "Error - " + parseErrorMessage(context, intent), Snackbar.LENGTH_SHORT)
+                .make(view, msg, Snackbar.LENGTH_SHORT)
                 .show();
     }
 

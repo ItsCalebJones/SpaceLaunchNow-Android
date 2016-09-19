@@ -19,8 +19,9 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.interfaces.QueryBuilder;
+import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -39,26 +40,31 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         Timber.v("onUpdate");
-        final int count = appWidgetIds.length;
+        if (!ListPreferences.getInstance(context).getFirstBoot()){
+            final int count = appWidgetIds.length;
 
-        for (int widgetId : appWidgetIds) {
-            Bundle options = appWidgetManager.getAppWidgetOptions(widgetId);
+            for (int widgetId : appWidgetIds) {
+                Bundle options = appWidgetManager.getAppWidgetOptions(widgetId);
 
-            int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
-            int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
-            int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
-            int maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
+                int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
+                int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
+                int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
+                int maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
 
-            if (minWidth == 0 && maxWidth == 0 && minHeight == 0 && maxHeight == 0) {
-                AppWidgetHost host = new AppWidgetHost(context, 0);
-                host.deleteAppWidgetId(widgetId);
+                if (minWidth == 0 && maxWidth == 0 && minHeight == 0 && maxHeight == 0) {
+                    AppWidgetHost host = new AppWidgetHost(context, 0);
+                    host.deleteAppWidgetId(widgetId);
+                }
+
+                // Update The clock label using a shared method
+                updateAppWidget(context, appWidgetManager, widgetId, options);
             }
-
-            // Update The clock label using a shared method
-            updateAppWidget(context, appWidgetManager, widgetId, options);
-        }
-        if (!mRealm.isClosed()) {
-            mRealm.close();
+            if (!mRealm.isClosed()) {
+                mRealm.close();
+            }
+        } else {
+            setRefreshIntentInitial(context, new RemoteViews(context.getPackageName(),
+                    R.layout.widget_launch_card_compact_dark));
         }
     }
 
@@ -92,39 +98,44 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
     }
 
     public void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int widgetId, Bundle options) {
-        int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
-        int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
-        int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
-        int maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
+        if (!ListPreferences.getInstance(context).getFirstBoot()) {
+            int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
+            int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
+            int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
+            int maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
 
-        Timber.v("Size: [%s-%s] x [%s-%s]", minWidth, maxWidth, minHeight, maxHeight);
+            Timber.v("Size: [%s-%s] x [%s-%s]", minWidth, maxWidth, minHeight, maxHeight);
 
-        LaunchRealm launch = getLaunch(context);
+            LaunchRealm launch = getLaunch(context);
 
-        if (minWidth <= 200 || minHeight <= 100) {
-            remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.widget_launch_card_compact_small_dark);
-        } else if (minWidth <= 320) {
-            remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.widget_launch_card_compact_dark);
-        } else {
-            remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.widget_launch_card_compact_large_dark);
-        }
-
-        if (minWidth > 0 && maxWidth > 0 && minHeight > 0 && maxHeight > 0) {
-            if (launch != null) {
-                setLaunchName(context, launch, remoteViews, options);
-                setLocationName(context, launch, remoteViews, options);
-                setLaunchDate(context, launch, remoteViews);
-                setCategoryIcon(context, launch, remoteViews);
-                setRefreshIntent(context, launch, remoteViews);
-                setWidgetStyle(context, remoteViews);
+            if (minWidth <= 200 || minHeight <= 100) {
+                remoteViews = new RemoteViews(context.getPackageName(),
+                        R.layout.widget_launch_card_compact_small_dark);
+            } else if (minWidth <= 320) {
+                remoteViews = new RemoteViews(context.getPackageName(),
+                        R.layout.widget_launch_card_compact_dark);
             } else {
-                remoteViews.setTextViewText(R.id.widget_launch_name, "Unknown Launch");
-                remoteViews.setTextViewText(R.id.widget_mission_name, "Unknown Mission");
+                remoteViews = new RemoteViews(context.getPackageName(),
+                        R.layout.widget_launch_card_compact_large_dark);
             }
-            pushWidgetUpdate(context, remoteViews);
+
+            if (minWidth > 0 && maxWidth > 0 && minHeight > 0 && maxHeight > 0) {
+                if (launch != null) {
+                    setLaunchName(context, launch, remoteViews, options);
+                    setLocationName(context, launch, remoteViews, options);
+                    setLaunchDate(context, launch, remoteViews);
+                    setCategoryIcon(context, launch, remoteViews);
+                    setRefreshIntent(context, launch, remoteViews);
+                    setWidgetStyle(context, remoteViews);
+                } else {
+                    remoteViews.setTextViewText(R.id.widget_launch_name, "Unknown Launch");
+                    remoteViews.setTextViewText(R.id.widget_mission_name, "Unknown Mission");
+                }
+                pushWidgetUpdate(context, remoteViews);
+            }
+        } else {
+            setRefreshIntentInitial(context, new RemoteViews(context.getPackageName(),
+                    R.layout.widget_launch_card_compact_dark));
         }
     }
 
@@ -142,6 +153,14 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
         PendingIntent actionPendingIntent = PendingIntent.getActivity(context, 0, exploreIntent, 0);
 
         remoteViews.setOnClickPendingIntent(R.id.widget_compact_card_frame, actionPendingIntent);
+    }
+
+    private void setRefreshIntentInitial(Context context,RemoteViews remoteViews) {
+        Intent refresh = new Intent(context, LaunchCardCompactWidgetProvider.class);
+        refresh.setAction(ACTION_WIDGET_REFRESH);
+        PendingIntent refreshPending = PendingIntent.getBroadcast(context, 0, refresh, 0);
+
+        remoteViews.setOnClickPendingIntent(R.id.widget_compact_card_refresh_button, refreshPending);
     }
 
     @Override
@@ -180,7 +199,7 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
     private void setLaunchDate(Context context, LaunchRealm launch, RemoteViews remoteViews) {
         SimpleDateFormat sdf;
         if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("24_hour_mode", false)) {
-            sdf = new SimpleDateFormat("MMMM dd, yyyy - kk:mm zzz");
+            sdf = new SimpleDateFormat("MMMM dd, yyyy - HH:mm zzz");
         } else {
             sdf = new SimpleDateFormat("MMMM dd, yyyy - hh:mm a");
         }
@@ -242,15 +261,20 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent.getAction().equals(ACTION_WIDGET_REFRESH)) {
-            Timber.v("onReceive", ACTION_WIDGET_REFRESH);
-            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, this.getClass()));
-            onUpdate(context,appWidgetManager,appWidgetIds);
-        } else if (intent.getAction().equals(ACTION_WIDGET_CLICK)) {
-            Timber.v("onReceive", ACTION_WIDGET_CLICK);
+        if (!ListPreferences.getInstance(context).getFirstBoot()) {
+            if (intent.getAction().equals(ACTION_WIDGET_REFRESH)) {
+                Timber.v("onReceive", ACTION_WIDGET_REFRESH);
+                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+                int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, this.getClass()));
+                onUpdate(context, appWidgetManager, appWidgetIds);
+            } else if (intent.getAction().equals(ACTION_WIDGET_CLICK)) {
+                Timber.v("onReceive", ACTION_WIDGET_CLICK);
+            } else {
+                super.onReceive(context, intent);
+            }
         } else {
-            super.onReceive(context, intent);
+            setRefreshIntentInitial(context, new RemoteViews(context.getPackageName(),
+                    R.layout.widget_launch_card_compact_dark));
         }
     }
 }

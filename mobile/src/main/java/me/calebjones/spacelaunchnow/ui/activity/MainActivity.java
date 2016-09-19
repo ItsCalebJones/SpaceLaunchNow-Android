@@ -32,7 +32,7 @@ import com.crashlytics.android.Crashlytics;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 
 import java.util.ArrayList;
-
+import de.mrapp.android.preference.activity.PreferenceActivity;
 import io.fabric.sdk.android.Fabric;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
@@ -40,6 +40,9 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.settings.SettingsActivity;
+import me.calebjones.spacelaunchnow.settings.fragments.AppearanceFragment;
+import me.calebjones.spacelaunchnow.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.NextLaunchFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.missions.MissionFragment;
@@ -91,6 +94,17 @@ public class MainActivity extends BaseActivity
             Fabric.with(this, new Crashlytics());
         }
         Timber.d("onCreate");
+
+        // Get intent, action and MIME type
+        Intent intent = getIntent();
+        String action = intent.getAction();
+
+        if ("me.calebjones.spacelaunchnow.NIGHTMODE".equals(action)) {
+            Intent sendIntent = new Intent(this, SettingsActivity.class);
+            sendIntent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT,
+                    AppearanceFragment.class.getName());
+            startActivity(sendIntent);
+        }
         int m_theme;
         int m_layout;
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -427,7 +441,7 @@ public class MainActivity extends BaseActivity
                 Utils.openCustomTab(this, getApplicationContext(), "https://launchlibrary.net/");
                 break;
             case R.id.menu_settings:
-                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                Intent settingsIntent = new Intent(this, me.calebjones.spacelaunchnow.settings.SettingsActivity.class);
                 settingsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(settingsIntent);
                 break;
@@ -435,7 +449,7 @@ public class MainActivity extends BaseActivity
                 showWhatsNew();
                 break;
             case R.id.menu_support:
-                Intent supportIntent = new Intent(this, SupportActivity.class);
+                Intent supportIntent = new Intent(this, SupporterActivity.class);
                 startActivity(supportIntent);
                 break;
             case R.id.menu_feedback:
