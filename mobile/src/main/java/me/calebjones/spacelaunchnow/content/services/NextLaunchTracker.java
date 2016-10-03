@@ -398,7 +398,7 @@ public class NextLaunchTracker extends IntentService implements
 
             now.setTimeInMillis(System.currentTimeMillis());
             long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
-            boolean notify = this.sharedPref.getBoolean("notifications_new_message", true);
+            boolean notify = (this.sharedPref.getBoolean("notifications_new_message", true) && launch.isNotifiable());
 
             //nextLaunch is in less then one hour
             if (timeToFinish > 0) {
@@ -527,7 +527,7 @@ public class NextLaunchTracker extends IntentService implements
 
         mBuilder.setContentTitle(launchName)
                 .setContentText("Launch attempt in " + minutes + " minutes from " + launchPad)
-                .setSmallIcon(R.drawable.ic_notification)
+                .setSmallIcon(R.drawable.ic_rocket_white)
                 .setAutoCancel(true)
                 .setContentText(expandedText)
                 .extend(wearableExtender)
@@ -619,7 +619,7 @@ public class NextLaunchTracker extends IntentService implements
 
         mBuilder.setContentTitle(launchName)
                 .setContentText("Launch attempt in " + hours + " hours from " + launchPad)
-                .setSmallIcon(R.drawable.ic_notification)
+                .setSmallIcon(R.drawable.ic_rocket_white)
                 .setContentIntent(appIntent)
                 .setContentText(expandedText)
                 .extend(wearableExtender)
@@ -680,7 +680,7 @@ public class NextLaunchTracker extends IntentService implements
             mBuilder.setContentTitle("Scheduling Update - ")
                     .setStyle(new NotificationCompat.BigTextStyle()
                             .bigText(msg))
-                    .setSmallIcon(R.drawable.ic_notification)
+                    .setSmallIcon(R.drawable.ic_rocket_white)
                     .setContentText(msg);
             mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
             Timber.v("Scheduling Update - Interval: %s - Time: %s - IntervalString - %s", convert, formatter.format(calendar.getTime()), intervalString);

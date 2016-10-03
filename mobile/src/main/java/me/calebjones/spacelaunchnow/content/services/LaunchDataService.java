@@ -2,23 +2,28 @@ package me.calebjones.spacelaunchnow.content.services;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.preference.PreferenceManager;
 
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.RealmResults;
+import io.realm.Sort;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.interfaces.LibraryRequestInterface;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.responses.launchlibrary.LaunchResponse;
+import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.utils.Stopwatch;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import retrofit2.Call;
@@ -38,67 +43,105 @@ public class LaunchDataService extends BaseService {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    public static void startActionSyncNotifiers(Context context) {
+        Intent intent = new Intent(context, LaunchDataService.class);
+        intent.setAction(Strings.SYNC_NOTIFIERS);
+        context.startService(intent);
+        Timber.v("Sending Delete intent.");
+    }
+
     @Override
     protected void onHandleIntent(Intent intent) {
-        Timber.d("LaunchDataService - Intent received:  %s ", intent.getAction());
-        String action = intent.getAction();
+        if (intent != null) {
+            Timber.d("LaunchDataService - Intent received:  %s ", intent.getAction());
+            String action = intent.getAction();
 
-        // Create a new empty instance of Realm
-        mRealm = Realm.getDefaultInstance();
+            // Create a new empty instance of Realm
+            mRealm = Realm.getDefaultInstance();
 
-        //Usually called on first launch
-        if (Strings.ACTION_GET_ALL_WIFI.equals(action)) {
-            Timber.v("Intent action received: %s", action);
-            if (this.sharedPref.getBoolean("background", true)) {
-                scheduleLaunchUpdates();
-            }
-
-            if (getUpcomingLaunches()) {
-                if (getLaunchesByDate("1950-01-01", Utils.getEndDate(this))) {
-                    Intent rocketIntent = new Intent(getApplicationContext(), VehicleDataService.class);
-                    rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
-                    startService(rocketIntent);
-
-                    startService(new Intent(this, MissionDataService.class));
-                    this.startService(new Intent(this, NextLaunchTracker.class));
+            //Usually called on first launch
+            if (Strings.ACTION_GET_ALL_WIFI.equals(action)) {
+                Timber.v("Intent action received: %s", action);
+                if (this.sharedPref.getBoolean("background", true)) {
+                    scheduleLaunchUpdates();
                 }
-            }
-        } else if (Strings.ACTION_UPDATE_LAUNCH.equals(action)) {
-            int id = intent.getIntExtra("launchID", 0);
-            if (id > 0) {
-                Timber.v("Updating launch id: %s", id);
-                getLaunchById(id);
-            }
-            // Called from NextLaunchFragment
-        } else if (Strings.ACTION_GET_UP_LAUNCHES.equals(action)) {
 
-            Timber.v("Intent action received: %s", action);
-            if (this.sharedPref.getBoolean("background", true)) {
-                scheduleLaunchUpdates();
-            }
-            getUpcomingLaunches();
-            this.startService(new Intent(this, NextLaunchTracker.class));
-            // Called from PrevLaunchFragment
-        } else if (Strings.ACTION_GET_PREV_LAUNCHES.equals(action)) {
+                if (getUpcomingLaunches()) {
+                    if (getLaunchesByDate("1950-01-01", Utils.getEndDate(this))) {
+                        Intent rocketIntent = new Intent(getApplicationContext(), VehicleDataService.class);
+                        rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
+                        startService(rocketIntent);
 
-            Timber.v("Intent action received: %s", action);
-            if (intent.getStringExtra("startDate") != null && intent.getStringExtra("endDate") != null) {
-                getLaunchesByDate(intent.getStringExtra("startDate"), intent.getStringExtra("endDate"));
+                        startService(new Intent(this, MissionDataService.class));
+                        this.startService(new Intent(this, NextLaunchTracker.class));
+                    }
+                }
+            } else if (Strings.ACTION_UPDATE_LAUNCH.equals(action)) {
+                int id = intent.getIntExtra("launchID", 0);
+                if (id > 0) {
+                    Timber.v("Updating launch id: %s", id);
+                    getLaunchById(id);
+                }
+                syncNotifiers();
+                // Called from NextLaunchFragment
+            } else if (Strings.ACTION_GET_UP_LAUNCHES.equals(action)) {
+
+                Timber.v("Intent action received: %s", action);
+                if (this.sharedPref.getBoolean("background", true)) {
+                    scheduleLaunchUpdates();
+                }
+                getUpcomingLaunches();
+                syncNotifiers();
+                this.startService(new Intent(this, NextLaunchTracker.class));
+                // Called from PrevLaunchFragment
+            } else if (Strings.ACTION_GET_PREV_LAUNCHES.equals(action)) {
+
+                Timber.v("Intent action received: %s", action);
+                if (intent.getStringExtra("startDate") != null && intent.getStringExtra("endDate") != null) {
+                    getLaunchesByDate(intent.getStringExtra("startDate"), intent.getStringExtra("endDate"));
+                } else {
+                    getLaunchesByDate("1950-01-01", Utils.getEndDate(this));
+                }
+
+            } else if (Strings.ACTION_UPDATE_NEXT_LAUNCH.equals(action)) {
+
+                Timber.v("Intent action received: %s", action);
+                getNextLaunches();
+
+                syncNotifiers();
+                this.startService(new Intent(this, NextLaunchTracker.class));
+            } else if (Strings.SYNC_NOTIFIERS.equals(action)) {
+                syncNotifiers();
             } else {
-                getLaunchesByDate("1950-01-01", Utils.getEndDate(this));
+                Timber.e("LaunchDataService - onHandleIntent: ERROR - Unknown Intent %s", action);
             }
-
-        } else if (Strings.ACTION_UPDATE_NEXT_LAUNCH.equals(action)) {
-
-            Timber.v("Intent action received: %s", action);
-            getNextLaunches();
-
-            this.startService(new Intent(this, NextLaunchTracker.class));
-        } else {
-            Timber.e("LaunchDataService - onHandleIntent: ERROR - Unknown Intent %s", action);
+            Timber.v("Finished!");
+            mRealm.close();
         }
-        Timber.v("Finished!");
-        mRealm.close();
+    }
+
+    private void syncNotifiers() {
+        RealmResults<LaunchRealm> launchRealms;
+        Date date = new Date();
+
+        if(switchPreferences.getAllSwitch()){
+            launchRealms = mRealm.where(LaunchRealm.class)
+                    .greaterThanOrEqualTo("net", date)
+                    .findAllSorted("net", Sort.ASCENDING);
+        } else {
+           launchRealms = QueryBuilder.buildSwitchQuery(this, mRealm);
+        }
+
+        for (final LaunchRealm launchrealm: launchRealms){
+            if (!launchrealm.isUserToggledNotifiable() && !launchrealm.isNotifiable()){
+                mRealm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        launchrealm.setNotifiable(true);
+                    }
+                });
+            }
+        }
     }
 
     private boolean getLaunchesByDate(String startDate, String endDate) {
@@ -195,7 +238,7 @@ public class LaunchDataService extends BaseService {
                 if (previous != null) {
                     Timber.v("UpcomingLaunches updating items: %s", previous.getName());
                     item.setEventID(previous.getEventID());
-                    item.setFavorite(previous.isFavorite());
+                    item.setSyncCalendar(previous.syncCalendar());
                     item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
                     item.setIsNotifiedDay(previous.getIsNotifiedDay());
                     item.setIsNotifiedHour(previous.getIsNotifiedHour());
@@ -291,7 +334,7 @@ public class LaunchDataService extends BaseService {
                             .findFirst();
                     if (previous != null) {
                         item.setEventID(previous.getEventID());
-                        item.setFavorite(previous.isFavorite());
+                        item.setSyncCalendar(previous.syncCalendar());
                         item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
                         item.setIsNotifiedDay(previous.getIsNotifiedDay());
                         item.setIsNotifiedHour(previous.getIsNotifiedHour());

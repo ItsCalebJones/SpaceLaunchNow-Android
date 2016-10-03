@@ -43,11 +43,40 @@ public class LaunchRealm extends RealmObject {
     private Date startDate;
     private Date endDate;
 
+    private boolean notifiable = false;
+    private boolean userToggledNotifiable = false;
+
     private boolean isNotifiedDay = false;
     private boolean isNotifiedHour = false;
     private boolean isNotifiedTenMinute = false;
-    private boolean favorite = false;
     private boolean isNextLaunch = false;
+
+    private boolean syncCalendar = false;
+    private boolean userToggledCalendar = false;
+
+    public boolean isUserToggledNotifiable() {
+        return userToggledNotifiable;
+    }
+
+    public void setUserToggledNotifiable(boolean userToggledNotifiable) {
+        this.userToggledNotifiable = userToggledNotifiable;
+    }
+
+    public boolean isNotifiable() {
+        return notifiable;
+    }
+
+    public void setNotifiable(boolean notifiable) {
+        this.notifiable = notifiable;
+    }
+
+    public boolean isUserToggledCalendar() {
+        return userToggledCalendar;
+    }
+
+    public void setUserToggledCalendar(boolean userToggledCalendar) {
+        this.userToggledCalendar = userToggledCalendar;
+    }
 
     private RealmList<MissionRealm> missions;
 
@@ -275,12 +304,12 @@ public class LaunchRealm extends RealmObject {
         this.infoURLs = infoURLs;
     }
 
-    public boolean isFavorite() {
-        return favorite;
+    public boolean syncCalendar() {
+        return syncCalendar;
     }
 
-    public void setFavorite(boolean favorite) {
-        this.favorite = favorite;
+    public void setSyncCalendar(boolean syncCalendar) {
+        this.syncCalendar = syncCalendar;
     }
 
     public Date getStartDate() {

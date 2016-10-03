@@ -136,9 +136,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     .setContentTitle("Launch Filtering")
                     .setContentText("Only receive notifications for launches that you care about.");
             if (sharedPreference.isNightModeActive(context)) {
-                builder.setStyle(R.style.ShowCaseThemeDark).replaceEndButton(customButton).hideOnTouchOutside().build();
+                builder.setStyle(R.style.ShowCaseThemeDark).replaceEndButton(customButton).build();
             } else {
-                builder.setStyle(R.style.ShowCaseThemeLight).replaceEndButton(customButton).hideOnTouchOutside().build();
+                builder.setStyle(R.style.ShowCaseThemeLight).replaceEndButton(customButton).build();
             }
         }
     }
@@ -311,6 +311,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 } else {
                     adapter.addItems(results);
                 }
+            } else {
+                adapter.clear();
             }
             hideLoading();
             launchRealms.removeChangeListeners();

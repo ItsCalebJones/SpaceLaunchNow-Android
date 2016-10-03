@@ -29,6 +29,7 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.content.models.Migration;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
@@ -86,23 +87,6 @@ public class LaunchApplication extends Application {
                 .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
                 .init();
 
-        Dexter.initialize(this);
-
-        ForecastConfiguration configuration =
-                new ForecastConfiguration.Builder(getResources().getString(R.string.forecast_io_key))
-                        .setCacheDirectory(getCacheDir())
-                        .build();
-        ForecastClient.create(configuration);
-
-        // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder(this)
-                .deleteRealmIfMigrationNeeded()
-                .build();
-
-        // Get a Realm instance for this thread
-        Realm.setDefaultConfiguration(realmConfig);
-
-
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
             OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.ERROR);
@@ -123,6 +107,23 @@ public class LaunchApplication extends Application {
             }
             OneSignal.sendTags(tags);
         }
+
+        Dexter.initialize(this);
+
+        ForecastConfiguration configuration =
+                new ForecastConfiguration.Builder(getResources().getString(R.string.forecast_io_key))
+                        .setCacheDirectory(getCacheDir())
+                        .build();
+        ForecastClient.create(configuration);
+
+        // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder(this)
+                .schemaVersion(3)
+                .migration(new Migration())
+                .build();
+
+        // Get a Realm instance for this thread
+        Realm.setDefaultConfiguration(realmConfig);
 
         mInstance = this;
 
