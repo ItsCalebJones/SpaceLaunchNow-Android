@@ -81,20 +81,8 @@
                         android:layout_width="fill_parent"
                         android:layout_height="160dp"
                         android:layout_below="@+id/separator"
-                        android:clickable="false"
-                        tools:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-                    <android.support.design.widget.FloatingActionButton
-                        android:id="@+id/fab_explore"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@id/map_view_summary"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginBottom="-32dp"
-                        android:layout_marginRight="20dp"
                         android:clickable="true"
-                        android:elevation="16dp"
-                        app:srcCompat="@drawable/ic_explore" />
+                        tools:layout_behavior="@string/appbar_scrolling_view_behavior" />
                 </RelativeLayout>
 
                 <View
@@ -159,6 +147,24 @@
                     android:text="Launch Window End: "
                     android:textColor="?android:textColorSecondary" />
 
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/calendar_switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:gravity="center|left"
+                    android:text="Sync to Calendar" />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/notification_switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:gravity="center|left"
+                    android:text="Launch Notifications" />
+
 
                 <LinearLayout
 
@@ -179,7 +185,6 @@
                             android:layout_alignParentBottom="false"
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentTop="false"
-                            android:layout_marginBottom="12dp"
                             android:layout_marginLeft="8dp"
                             android:layout_marginTop="2dp"
                             android:gravity="center"

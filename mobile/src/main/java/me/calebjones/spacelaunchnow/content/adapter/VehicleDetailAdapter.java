@@ -141,7 +141,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
         holder.item_title.setText(item.getName());
 
         if (launchVehicle != null) {
-            if (launchVehicle.getInfoURL().length() > 0) {
+            if (launchVehicle.getInfoURL() != null && launchVehicle.getInfoURL().length() > 0) {
                 realm.beginTransaction();
                 items.get(i).setInfoURL(launchVehicle.getInfoURL());
                 realm.commitTransaction();
@@ -164,7 +164,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
         }
 
         if (launchVehicle != null) {
-            if (launchVehicle.getWikiURL().length() > 0) {
+            if (launchVehicle.getWikiURL() != null && launchVehicle.getWikiURL().length() > 0) {
                 realm.beginTransaction();
                 items.get(i).setWikiURL(launchVehicle.getWikiURL());
                 realm.commitTransaction();

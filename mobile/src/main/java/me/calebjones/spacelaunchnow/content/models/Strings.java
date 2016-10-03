@@ -43,6 +43,7 @@ public final class Strings {
     public static final String ACTION_UPDATE_VEHICLES = "UPDATE_GET_VEHICLES";
     public static final String ACTION_CHECK_NEXT_LAUNCH_TIMER = "CHECK_NEXT_LAUNCH_TIMER";
     public static final String ACTION_PROGRESS = "ACTION_PROGRESS_COUNTER";
+    public static final String SYNC_NOTIFIERS = "SYNC_LAUNCH_NOTIFIERS";
 
 
     public static int NOTIF_ID = 568975;
