@@ -65,4 +65,33 @@
         <item name="android:background">@null</item>
         <item name="android:layout_width">40dp</item>
     </style>
+
+    <style name="AboutLibraries" parent="BaseAppTheme">
+        <item name="colorPrimary">@color/darkPrimary</item>
+        <!-- Here we setting appcompat’s actionBarStyle -->
+        <item name="drawerArrowStyle">@style/AboutLibrariesTheme.DrawerArrowStyle</item>
+
+        <!-- AboutLibraries specific values -->
+        <item name="about_libraries_window_background">
+            @color/about_libraries_window_background_dark
+        </item>
+        <item name="about_libraries_card">
+            @color/about_libraries_card_dark
+        </item>
+        <item name="about_libraries_title_openSource">
+            @color/about_libraries_title_openSource_dark
+        </item>
+        <item name="about_libraries_text_openSource">
+            @color/about_libraries_text_openSource_dark
+        </item>
+        <item name="about_libraries_special_button_openSource">
+            @color/about_libraries_special_button_openSource_dark
+        </item>
+        <item name="about_libraries_dividerDark_openSource">
+            @color/about_libraries_dividerDark_openSource_dark
+        </item>
+        <item name="about_libraries_dividerLight_openSource">
+        @color/about_libraries_dividerLight_openSource_dark
+        </item>
+    </style>
 </resources>

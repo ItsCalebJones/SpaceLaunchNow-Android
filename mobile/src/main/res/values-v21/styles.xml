@@ -80,7 +80,7 @@
         <item name="android:layout_width">40dp</item>
     </style>
 
-    <style name="AboutLibrariesLight" parent="Theme.AppCompat.NoActionBar">
+    <style name="AboutLibraries" parent="BaseAppTheme">
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <!-- Here we setting appcompat’s actionBarStyle -->
