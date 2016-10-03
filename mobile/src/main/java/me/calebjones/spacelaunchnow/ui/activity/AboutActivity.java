@@ -23,7 +23,7 @@ public class AboutActivity extends LibsActivity {
 
         ListPreferences sharedPreference = ListPreferences.getInstance(this);
 
-        m_theme = R.style.AboutLibrariesLight;
+        m_theme = R.style.AboutLibraries;
 
         LibsConfiguration.LibsListener libsListener = new LibsConfiguration.LibsListener() {
             @Override
