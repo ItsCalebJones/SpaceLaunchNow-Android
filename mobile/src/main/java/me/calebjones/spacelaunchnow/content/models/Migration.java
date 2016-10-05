@@ -21,11 +21,7 @@ public class Migration implements RealmMigration {
             schema.get("LaunchRealm")
                     .renameField("favorite", "syncCalendar")
                     .addField("eventID", Integer.class);
-            oldVersion++;
-        }
 
-        if (oldVersion == 1){
-            Timber.v("Running migration from Schema version 1 to 2.");
             schema.get("LaunchRealm")
                     .addField("userToggledCalendar", boolean.class)
                     .transform(new RealmObjectSchema.Function() {
@@ -34,11 +30,7 @@ public class Migration implements RealmMigration {
                             obj.setBoolean("userToggledCalendar", false);
                         }
                     });
-            oldVersion++;
-        }
 
-        if (oldVersion == 2){
-            Timber.v("Running migration from Schema version 2 to 3.");
             schema.get("LaunchRealm")
                     .addField("notifiable", boolean.class)
                     .transform(new RealmObjectSchema.Function() {
@@ -54,12 +46,7 @@ public class Migration implements RealmMigration {
                             obj.setBoolean("userToggledNotifiable", false);
                         }
                     });
-            oldVersion++;
-        }
 
-        if (oldVersion == 3){
-            Timber.v("Running migration from Schema version 3 to 4.");
-            // Create a new class
             RealmObjectSchema petSchema = schema.create("LaunchNotification")
                     .addField("id", Integer.class, FieldAttribute.PRIMARY_KEY)
                     .addField("isNotifiedDay", boolean.class)
@@ -83,18 +70,12 @@ public class Migration implements RealmMigration {
                             obj.setBoolean("isNotifiedTenMinute", false);
                         }
                     });
-            oldVersion++;
-        }
 
-        if (oldVersion == 4){
-            Timber.v("Running migration from Schema version 4 to 5.");
-            schema.get("LaunchRealm")
-                    .addField("eventID", Integer.class);
-            oldVersion++;
-        }
+            if(!schema.get("LaunchRealm").getFieldNames().contains("eventID")){
+                schema.get("LaunchRealm")
+                        .addField("eventID", Integer.class);
+            }
 
-        if (oldVersion == 5){
-            Timber.v("Running migration from Schema version 5 to 6.");
             schema.get("CalendarItem")
                     .removeField("name")
                     .removeField("location")
@@ -104,18 +85,10 @@ public class Migration implements RealmMigration {
                     .removeField("id")
                     .renameField("launchID", "id")
                     .addField("accountName", String.class);
-            oldVersion++;
-        }
 
-        if (oldVersion == 6){
-            Timber.v("Running migration from Schema version 6 to 7.");
             schema.get("LaunchRealm")
                     .addField("eventID", Integer.class);
-            oldVersion++;
-        }
 
-        if (oldVersion == 7){
-            Timber.v("Running migration from Schema version 7 to 8.");
             schema.get("CalendarItem")
             .transform(new RealmObjectSchema.Function() {
                 @Override
@@ -123,11 +96,6 @@ public class Migration implements RealmMigration {
                     obj.deleteFromRealm();
                 }
             });
-            oldVersion++;
-        }
-
-        if (oldVersion == 8){
-            Timber.v("Running migration from Schema version 8 to 9.");
             schema.get("CalendarItem")
                     .setRequired("id", true);
             oldVersion++;

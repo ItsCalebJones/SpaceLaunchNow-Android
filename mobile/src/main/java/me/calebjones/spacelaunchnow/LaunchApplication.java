@@ -118,8 +118,9 @@ public class LaunchApplication extends Application {
 
         // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
         RealmConfiguration realmConfig = new RealmConfiguration.Builder(this)
-                .schemaVersion(9)
+                .schemaVersion(1)
                 .migration(new Migration())
+                .deleteRealmIfMigrationNeeded()
                 .build();
 
         // Get a Realm instance for this thread
