@@ -16,8 +16,6 @@
 
 package me.calebjones.spacelaunchnow.wear;
 
-import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -322,7 +320,6 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             long timeToFinish = future.getTimeInMillis() - mTime.getTimeInMillis();
             if (timeToFinish <= 0){
                 launchName = "Syncing Next Launch...";
-                launchTime = 0;
             }
 
             //Parse time into day, hour, minute, and second
@@ -557,6 +554,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
 
         @Override
         public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+            Timber.e("onConnectionFailed - %s %s", connectionResult.getErrorCode(), connectionResult.getErrorMessage());
             Log.e("Space Launch Wear", "onConnectionFailed " + connectionResult.getErrorMessage());
         }
 

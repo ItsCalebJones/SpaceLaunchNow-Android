@@ -37,4 +37,5 @@ ext {
 
     // App dependencies
     supportLibraryVersion = '24.2.1'
+    playServicesVersion = '8.4.+'
 }

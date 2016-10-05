@@ -101,17 +101,11 @@
         <item>1000</item>
     </string-array>
     <string-array name="sync_timer">
-        <item>One Hour</item>
-        <item>Four Hours</item>
-        <item>Eight Hours</item>
         <item>One Day</item>
         <item>Three Days</item>
         <item>One Week</item>
     </string-array>
     <string-array name="sync_timer_values">
-        <item>1</item>
-        <item>4</item>
-        <item>8</item>
         <item>24</item>
         <item>72</item>
         <item>168</item>

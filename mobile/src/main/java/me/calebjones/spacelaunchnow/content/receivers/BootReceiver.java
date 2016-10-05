@@ -18,7 +18,7 @@ public class BootReceiver extends BroadcastReceiver{
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         if (sharedPref.getBoolean("background_sync", true)) {
             Intent launchIntent = new Intent(context, LaunchDataService.class);
-            launchIntent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
+            launchIntent.setAction(Strings.ACTION_UPDATE_BACKGROUND);
             context.startService(launchIntent);
         }
     }

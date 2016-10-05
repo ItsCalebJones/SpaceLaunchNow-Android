@@ -20,6 +20,9 @@ import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.gcm.GcmNetworkManager;
+import com.google.android.gms.gcm.OneoffTask;
+import com.google.android.gms.gcm.Task;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
@@ -41,7 +44,9 @@ import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.realm.LaunchNotification;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.content.receivers.ConnectivityReceiver;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import timber.log.Timber;
 
@@ -50,6 +55,7 @@ public class NextLaunchTracker extends IntentService implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
+    private GcmNetworkManager mGcmNetworkManager;
     private LaunchRealm nextLaunch;
     private boolean wear = false;
     private SharedPreferences sharedPref;
@@ -79,6 +85,8 @@ public class NextLaunchTracker extends IntentService implements
                 .addOnConnectionFailedListener(this)
                 .addApi(Wearable.API)
                 .build();
+
+        mGcmNetworkManager = GcmNetworkManager.getInstance(this);
     }
 
     @Override
@@ -386,8 +394,20 @@ public class NextLaunchTracker extends IntentService implements
         CalendarSyncService.startActionSyncAll(this);
     }
 
-    private void checkStatus(LaunchRealm launch) {
+    private void checkStatus(final LaunchRealm launch) {
         if (launch != null && launch.getNetstamp() > 0) {
+
+            LaunchNotification notification = realm.where(LaunchNotification.class).equalTo("id", launch.getId()).findFirst();
+            if (notification == null){
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        LaunchNotification notification = realm.createObject(LaunchNotification.class);
+                        notification.setId(launch.getId());
+                    }
+                });
+                notification = realm.where(LaunchNotification.class).equalTo("id", launch.getId()).findFirst();
+            }
 
             long longdate = launch.getNetstamp();
             longdate = longdate * 1000;
@@ -406,15 +426,15 @@ public class NextLaunchTracker extends IntentService implements
                     if (notify) {
                         int minutes = (int) ((timeToFinish / (1000 * 60)) % 60);
                         //Check settings to see if user should be notified.
-                        if (!launch.getIsNotifiedTenMinute() && this.sharedPref.getBoolean("notifications_launch_minute", false)) {
+                        if (!notification.isNotifiedTenMinute() && this.sharedPref.getBoolean("notifications_launch_minute", false)) {
                             notifyUserImminent(launch, minutes);
                             realm.beginTransaction();
-                            launch.setIsNotifiedTenMinute(true);
+                            notification.setNotifiedTenMinute(true);
                             realm.commitTransaction();
-                        } else if (!launch.getIsNotifiedHour() && this.sharedPref.getBoolean("notifications_launch_imminent", true)) {
+                        } else if (!notification.isNotifiedHour() && this.sharedPref.getBoolean("notifications_launch_imminent", true)) {
                             notifyUserImminent(launch, minutes);
                             realm.beginTransaction();
-                            launch.setIsNotifiedHour(true);
+                            notification.setNotifiedHour(true);
                             realm.commitTransaction();
                         }
                     }
@@ -424,10 +444,10 @@ public class NextLaunchTracker extends IntentService implements
                         int minutes = (int) ((timeToFinish / (1000 * 60)) % 60);
                         //Check settings to see if user should be notified.
                         if (this.sharedPref.getBoolean("notifications_launch_imminent", true)) {
-                            if (!launch.getIsNotifiedHour()) {
+                            if (!notification.isNotifiedHour()) {
                                 notifyUserImminent(launch, minutes);
                                 realm.beginTransaction();
-                                launch.setIsNotifiedHour(true);
+                                notification.setNotifiedHour(true);
                                 realm.commitTransaction();
                             }
                         }
@@ -441,7 +461,7 @@ public class NextLaunchTracker extends IntentService implements
                         int hours = (int) ((timeToFinish / (1000 * 60 * 60)) % 24);
                         //Check settings to see if user should be notified.
                         if (this.sharedPref.getBoolean("notifications_launch_day", true)) {
-                            if (!launch.getIsNotifiedDay()) {
+                            if (!notification.isNotifiedDay()) {
 
                                 //Round up for standard notification.
                                 if (hours == 23){
@@ -450,7 +470,7 @@ public class NextLaunchTracker extends IntentService implements
 
                                 notifyUser(launch, hours);
                                 realm.beginTransaction();
-                                launch.setIsNotifiedDay(true);
+                                notification.setNotifiedDay(true);
                                 realm.commitTransaction();
                             }
                         }
@@ -654,40 +674,64 @@ public class NextLaunchTracker extends IntentService implements
         return cal;
     }
 
-    public void scheduleUpdate(long convert) {
-        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        long nextUpdate = Calendar.getInstance().getTimeInMillis() + convert;
-
+    public void scheduleUpdate(long interval) {
         if (BuildConfig.DEBUG) {
+            long nextUpdate = Calendar.getInstance().getTimeInMillis() + interval;
+
             // Create a DateFormatter object for displaying date in specified format.
             SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss zz");
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(nextUpdate);
 
             String intervalString = String.format("%02d:%02d:%02d",
-                    TimeUnit.MILLISECONDS.toHours(convert),
-                    TimeUnit.MILLISECONDS.toMinutes(convert) -
-                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(convert)), // The change is in this line
-                    TimeUnit.MILLISECONDS.toSeconds(convert) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(convert)));
+                    TimeUnit.MILLISECONDS.toHours(interval),
+                    TimeUnit.MILLISECONDS.toMinutes(interval) -
+                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(interval)), // The change is in this line
+                    TimeUnit.MILLISECONDS.toSeconds(interval) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(interval)));
 
             NotificationCompat.Builder mBuilder = new NotificationCompat
                     .Builder(getApplicationContext());
             NotificationManager mNotifyManager = (NotificationManager) getApplicationContext()
                     .getSystemService(Context.NOTIFICATION_SERVICE);
 
-            String msg = String.format("Interval: %s - Time: %s - IntervalString - %s", convert, formatter.format(calendar.getTime()), intervalString);
+            String msg = String.format("Interval: %s - Time: %s - IntervalString - %s", interval, formatter.format(calendar.getTime()), intervalString);
             mBuilder.setContentTitle("Scheduling Update - ")
                     .setStyle(new NotificationCompat.BigTextStyle()
                             .bigText(msg))
                     .setSmallIcon(R.drawable.ic_rocket_white)
                     .setContentText(msg);
             mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
-            Timber.v("Scheduling Update - Interval: %s - Time: %s - IntervalString - %s", convert, formatter.format(calendar.getTime()), intervalString);
+            Timber.v("Scheduling Update - Interval: %s - Time: %s - IntervalString - %s", interval, formatter.format(calendar.getTime()), intervalString);
         }
 
-        alarmManager.set(AlarmManager.RTC_WAKEUP, nextUpdate,
-                PendingIntent.getBroadcast(this, 165432, new Intent(Strings.ACTION_CHECK_NEXT_LAUNCH_TIMER), 0));
+        long windowStart;
+        long windowEnd;
+        long intervalSeconds = interval / 1000;
+        long intervalMinutes = intervalSeconds / 60;
+
+        if (intervalMinutes > 30){
+            windowStart = intervalSeconds - 600;
+            windowEnd = intervalSeconds + 600;
+        } else {
+            windowStart = intervalSeconds - 60;
+            windowEnd = intervalSeconds;
+        }
+
+        OneoffTask.Builder taskBuilder = new OneoffTask.Builder()
+                .setService(ConnectivityReceiver.class)
+                .setExecutionWindow(windowStart, windowEnd)
+                .setTag(Strings.ACTION_CHECK_NEXT_LAUNCH_TIMER)
+                .setUpdateCurrent(false)
+                .setRequiresCharging(false);
+
+        if (sharedPref.getBoolean("wifi_only", false)){
+            taskBuilder.setRequiredNetwork(Task.NETWORK_STATE_UNMETERED);
+        } else {
+            taskBuilder.setRequiredNetwork(Task.NETWORK_STATE_CONNECTED);
+        }
+
+        mGcmNetworkManager.schedule(taskBuilder.build());
     }
 
     // Create a data map and put data in it
