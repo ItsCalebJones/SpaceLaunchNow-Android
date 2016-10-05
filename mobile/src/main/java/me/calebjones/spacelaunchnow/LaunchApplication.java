@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.format.DateFormat;
+import android.widget.Toast;
 import android.zetterstrom.com.forecast.ForecastClient;
 import android.zetterstrom.com.forecast.ForecastConfiguration;
 
@@ -116,15 +117,6 @@ public class LaunchApplication extends Application {
                         .build();
         ForecastClient.create(configuration);
 
-        // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder(this)
-                .schemaVersion(1)
-                .migration(new Migration())
-                .deleteRealmIfMigrationNeeded()
-                .build();
-
-        // Get a Realm instance for this thread
-        Realm.setDefaultConfiguration(realmConfig);
 
         mInstance = this;
 
@@ -132,6 +124,30 @@ public class LaunchApplication extends Application {
 
         sharedPreference = ListPreferences.getInstance(this);
         switchPreferences = SwitchPreferences.getInstance(this);
+
+        RealmConfiguration realmConfig;
+        if (switchPreferences.getVersionCode() >= 151) {
+            // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
+            realmConfig = new RealmConfiguration.Builder(this)
+                    .schemaVersion(1)
+                    .migration(new Migration())
+                    .build();
+        } else if (switchPreferences.getVersionCode() > 0){
+            realmConfig = new RealmConfiguration.Builder(this)
+                    .schemaVersion(1)
+                    .deleteRealmIfMigrationNeeded()
+                    .build();
+
+            Toast.makeText(this, "Unable to migrate database on upgrade, please refresh to get launch data.", Toast.LENGTH_SHORT).show();
+        } else {
+            realmConfig = new RealmConfiguration.Builder(this)
+                    .schemaVersion(1)
+                    .deleteRealmIfMigrationNeeded()
+                    .build();
+        }
+
+        // Get a Realm instance for this thread
+        Realm.setDefaultConfiguration(realmConfig);
 
         if(sharedPreference.isNightThemeEnabled()){
             if(sharedPreference.isDayNightAutoEnabled()){

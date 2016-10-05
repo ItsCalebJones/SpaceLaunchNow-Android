@@ -320,6 +320,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             long timeToFinish = future.getTimeInMillis() - mTime.getTimeInMillis();
             if (timeToFinish <= 0){
                 launchName = "Syncing Next Launch...";
+                launchTime = 0;
             }
 
             //Parse time into day, hour, minute, and second

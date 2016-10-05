@@ -19,8 +19,7 @@ public class Migration implements RealmMigration {
         if (oldVersion == 0){
             Timber.v("Running migration from Schema version 0 to 1.");
             schema.get("LaunchRealm")
-                    .renameField("favorite", "syncCalendar")
-                    .addField("eventID", Integer.class);
+                    .renameField("favorite", "syncCalendar");
 
             schema.get("LaunchRealm")
                     .addField("userToggledCalendar", boolean.class)
@@ -47,7 +46,7 @@ public class Migration implements RealmMigration {
                         }
                     });
 
-            RealmObjectSchema petSchema = schema.create("LaunchNotification")
+            RealmObjectSchema notificationSchema = schema.create("LaunchNotification")
                     .addField("id", Integer.class, FieldAttribute.PRIMARY_KEY)
                     .addField("isNotifiedDay", boolean.class)
                     .addField("isNotifiedHour", boolean.class)
@@ -70,34 +69,6 @@ public class Migration implements RealmMigration {
                             obj.setBoolean("isNotifiedTenMinute", false);
                         }
                     });
-
-            if(!schema.get("LaunchRealm").getFieldNames().contains("eventID")){
-                schema.get("LaunchRealm")
-                        .addField("eventID", Integer.class);
-            }
-
-            schema.get("CalendarItem")
-                    .removeField("name")
-                    .removeField("location")
-                    .removeField("description")
-                    .removeField("start")
-                    .removeField("end")
-                    .removeField("id")
-                    .renameField("launchID", "id")
-                    .addField("accountName", String.class);
-
-            schema.get("LaunchRealm")
-                    .addField("eventID", Integer.class);
-
-            schema.get("CalendarItem")
-            .transform(new RealmObjectSchema.Function() {
-                @Override
-                public void apply(DynamicRealmObject obj) {
-                    obj.deleteFromRealm();
-                }
-            });
-            schema.get("CalendarItem")
-                    .setRequired("id", true);
             oldVersion++;
         }
 
