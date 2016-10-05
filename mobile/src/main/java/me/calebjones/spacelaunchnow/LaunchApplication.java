@@ -118,7 +118,7 @@ public class LaunchApplication extends Application {
 
         // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
         RealmConfiguration realmConfig = new RealmConfiguration.Builder(this)
-                .schemaVersion(3)
+                .schemaVersion(9)
                 .migration(new Migration())
                 .build();
 
@@ -160,7 +160,7 @@ public class LaunchApplication extends Application {
 
             if (sharedPreference.getLastVehicleUpdate() > 0) {
                 Timber.d("Time since last VehicleUpdate: %s", (System.currentTimeMillis() - sharedPreference.getLastVehicleUpdate()));
-                if ((System.currentTimeMillis() - sharedPreference.getLastVehicleUpdate()) > 604800000) {
+                if ((System.currentTimeMillis() - sharedPreference.getLastVehicleUpdate()) > 1209600000) {
                     Intent rocketIntent = new Intent(this, VehicleDataService.class);
                     rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
                     this.startService(rocketIntent);

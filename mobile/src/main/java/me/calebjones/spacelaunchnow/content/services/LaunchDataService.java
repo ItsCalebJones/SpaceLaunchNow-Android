@@ -1,29 +1,35 @@
 package me.calebjones.spacelaunchnow.content.services;
 
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import me.calebjones.spacelaunchnow.BuildConfig;
+import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.interfaces.LibraryRequestInterface;
 import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.realm.LaunchNotification;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.responses.launchlibrary.LaunchResponse;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
+import me.calebjones.spacelaunchnow.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.Stopwatch;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import retrofit2.Call;
@@ -50,6 +56,13 @@ public class LaunchDataService extends BaseService {
         Timber.v("Sending Delete intent.");
     }
 
+    public static void startActionUpdateNextLaunch(Context context) {
+        Intent intent = new Intent(context, LaunchDataService.class);
+        intent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
+        context.startService(intent);
+        Timber.v("Sending Delete intent.");
+    }
+
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
@@ -58,6 +71,25 @@ public class LaunchDataService extends BaseService {
 
             // Create a new empty instance of Realm
             mRealm = Realm.getDefaultInstance();
+
+            if (BuildConfig.DEBUG) {
+
+                Date now = new Date();
+                int id = Integer.parseInt(new SimpleDateFormat("ddHHmmss",  Locale.US).format(now));
+
+                NotificationCompat.Builder mBuilder = new NotificationCompat
+                        .Builder(getApplicationContext());
+                NotificationManager mNotifyManager = (NotificationManager) getApplicationContext()
+                        .getSystemService(Context.NOTIFICATION_SERVICE);
+
+                String msg = "Launch Data - Intent received - " + action;
+                mBuilder.setContentTitle("Scheduling Update - ")
+                        .setStyle(new NotificationCompat.BigTextStyle()
+                                .bigText(msg))
+                        .setSmallIcon(R.drawable.ic_rocket_white)
+                        .setContentText(msg);
+                mNotifyManager.notify(id, mBuilder.build());
+            }
 
             //Usually called on first launch
             if (Strings.ACTION_GET_ALL_WIFI.equals(action)) {
@@ -83,6 +115,7 @@ public class LaunchDataService extends BaseService {
                     getLaunchById(id);
                 }
                 syncNotifiers();
+
                 // Called from NextLaunchFragment
             } else if (Strings.ACTION_GET_UP_LAUNCHES.equals(action)) {
 
@@ -93,6 +126,7 @@ public class LaunchDataService extends BaseService {
                 getUpcomingLaunches();
                 syncNotifiers();
                 this.startService(new Intent(this, NextLaunchTracker.class));
+
                 // Called from PrevLaunchFragment
             } else if (Strings.ACTION_GET_PREV_LAUNCHES.equals(action)) {
 
@@ -107,12 +141,39 @@ public class LaunchDataService extends BaseService {
 
                 Timber.v("Intent action received: %s", action);
                 getNextLaunches();
+                syncNotifiers();
+
+                this.startService(new Intent(this, NextLaunchTracker.class));
+
+            } else if (Strings.SYNC_NOTIFIERS.equals(action)) {
 
                 syncNotifiers();
-                this.startService(new Intent(this, NextLaunchTracker.class));
-            } else if (Strings.SYNC_NOTIFIERS.equals(action)) {
-                syncNotifiers();
+
+            } else if (Strings.ACTION_UPDATE_BACKGROUND.equals(action)) {
+
+                Timber.v("Intent action received: %s", action);
+                boolean wifiOnly = sharedPref.getBoolean("wifi_only", false);
+                boolean dataSaver = sharedPref.getBoolean("data_saver", false);
+                boolean wifiConnected = Connectivity.isConnectedWifi(this);
+
+                if(wifiOnly){
+                    if(wifiConnected){
+                        getUpcomingLaunches();
+                        syncNotifiers();
+
+                        //TODO check time since last full sync and respond
+                    }
+                } else if (dataSaver && !wifiConnected){
+                    getNextLaunches();
+
+                    //TODO check time since last full sync and respond
+
+                } else {
+                    getUpcomingLaunches();
+                    //TODO check time since last full sync and respond
+                }
             } else {
+
                 Timber.e("LaunchDataService - onHandleIntent: ERROR - Unknown Intent %s", action);
             }
             Timber.v("Finished!");
@@ -124,16 +185,16 @@ public class LaunchDataService extends BaseService {
         RealmResults<LaunchRealm> launchRealms;
         Date date = new Date();
 
-        if(switchPreferences.getAllSwitch()){
+        if (switchPreferences.getAllSwitch()) {
             launchRealms = mRealm.where(LaunchRealm.class)
                     .greaterThanOrEqualTo("net", date)
                     .findAllSorted("net", Sort.ASCENDING);
         } else {
-           launchRealms = QueryBuilder.buildSwitchQuery(this, mRealm);
+            launchRealms = QueryBuilder.buildSwitchQuery(this, mRealm);
         }
 
-        for (final LaunchRealm launchrealm: launchRealms){
-            if (!launchrealm.isUserToggledNotifiable() && !launchrealm.isNotifiable()){
+        for (final LaunchRealm launchrealm : launchRealms) {
+            if (!launchrealm.isUserToggledNotifiable() && !launchrealm.isNotifiable()) {
                 mRealm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
@@ -291,8 +352,11 @@ public class LaunchDataService extends BaseService {
                     if ((!previous.getNet().equals(item.getNet())
                             || (previous.getStatus().intValue() != item.getStatus().intValue()))) {
                         Timber.v("%s status has changed.", item.getName());
+                        LaunchNotification notification = mRealm.where(LaunchNotification.class).equalTo("id", item.getId()).findFirst();
                         mRealm.beginTransaction();
+                        notification.resetNotifiers();
                         previous.resetNotifiers();
+                        mRealm.copyToRealmOrUpdate(notification);
                         mRealm.copyToRealmOrUpdate(previous);
                         mRealm.commitTransaction();
                         getLaunchById(item.getId());
@@ -366,24 +430,21 @@ public class LaunchDataService extends BaseService {
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         //Get sync period.
-        String notificationTimer = this.sharedPref.getString("notification_sync_time", "24");
+        boolean dataSaver = this.sharedPref.getBoolean("data_saver", false);
 
         long interval;
 
-        Pattern p = Pattern.compile("(\\d+)");
-        Matcher m = p.matcher(notificationTimer);
-
-        if (m.matches()) {
-            int hrs = Integer.parseInt(m.group(1));
-            interval = (long) hrs * 60 * 60 * 1000;
-            Timber.d("LaunchDataService - Notification Timer: %s to millisecond %s", notificationTimer, interval);
-
-            long nextUpdate = Calendar.getInstance().getTimeInMillis() + interval;
-            Timber.d("LaunchDataService - Scheduling Alarm at %s with interval of %s", nextUpdate, interval);
-            alarmManager.setInexactRepeating(AlarmManager.RTC, nextUpdate, interval,
-                    PendingIntent.getBroadcast(this, 165435, new Intent(Strings.ACTION_UPDATE_UP_LAUNCHES), 0));
+        if (dataSaver){
+            interval = 168 * 60 * 60 * 1000;
         } else {
-            Timber.e("LaunchDataService - Error setting alarm, failed to change %s to milliseconds", notificationTimer);
+            interval = 24 * 60 * 60 * 1000;
         }
+
+        Timber.d("LaunchDataService - Notification Timer - Data saver: %s Interval: %s", dataSaver, interval);
+
+        long nextUpdate = Calendar.getInstance().getTimeInMillis() + interval;
+        Timber.d("LaunchDataService - Scheduling Alarm at %s with interval of %s", nextUpdate, interval);
+        alarmManager.setInexactRepeating(AlarmManager.RTC, nextUpdate, interval,
+                PendingIntent.getBroadcast(this, 165435, new Intent(Strings.ACTION_UPDATE_BACKGROUND), 0));
     }
 }
