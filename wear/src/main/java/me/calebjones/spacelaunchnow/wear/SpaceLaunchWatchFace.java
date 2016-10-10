@@ -16,8 +16,6 @@
 
 package me.calebjones.spacelaunchnow.wear;
 
-import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -321,7 +319,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             Calendar future = DateToCalendar(mDate);
             long timeToFinish = future.getTimeInMillis() - mTime.getTimeInMillis();
             if (timeToFinish <= 0){
-                launchName = "Syncing Next Launch...";
+                launchName = "Waiting for Next Launch...";
                 launchTime = 0;
             }
 
