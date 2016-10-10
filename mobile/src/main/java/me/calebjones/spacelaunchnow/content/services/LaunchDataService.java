@@ -395,7 +395,9 @@ public class LaunchDataService extends BaseService {
                         Timber.v("%s status has changed.", item.getName());
                         LaunchNotification notification = mRealm.where(LaunchNotification.class).equalTo("id", item.getId()).findFirst();
                         mRealm.beginTransaction();
-                        notification.resetNotifiers();
+                        if (notification != null) {
+                            notification.resetNotifiers();
+                        }
                         previous.resetNotifiers();
                         mRealm.copyToRealmOrUpdate(notification);
                         mRealm.copyToRealmOrUpdate(previous);
