@@ -17,7 +17,7 @@
         <item name="android:textColor">@color/dark_secondary_text_color_selector</item>
     </style>
 
-    <style name="ShowCaseThemeDark" parent="ShowcaseView">
+    <style name="ShowCaseThemeDark" parent="ShowCaseThemeDark">
         <item name="sv_backgroundColor">@color/darkPrimary</item>
         <item name="sv_showcaseColor">@color/darkAccent</item>
         <item name="sv_buttonText">Hide</item>

@@ -1,5 +1,7 @@
 package me.calebjones.spacelaunchnow.content.models;
 
+import java.util.Date;
+
 import io.realm.DynamicRealm;
 import io.realm.DynamicRealmObject;
 import io.realm.FieldAttribute;
@@ -46,7 +48,7 @@ public class Migration implements RealmMigration {
                         }
                     });
 
-            RealmObjectSchema notificationSchema = schema.create("LaunchNotification")
+            schema.create("LaunchNotification")
                     .addField("id", Integer.class, FieldAttribute.PRIMARY_KEY)
                     .addField("isNotifiedDay", boolean.class)
                     .addField("isNotifiedHour", boolean.class)
@@ -70,6 +72,13 @@ public class Migration implements RealmMigration {
                         }
                     });
             oldVersion++;
+        }
+
+        if (oldVersion == 1){
+            schema.create("UpdateRecord")
+                    .addField("type", String.class, FieldAttribute.PRIMARY_KEY)
+                    .addField("date", Date.class)
+                    .addField("successful", boolean.class);
         }
 
         Timber.v("Finished running migrations.");

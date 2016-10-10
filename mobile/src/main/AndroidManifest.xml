@@ -45,7 +45,7 @@
         </activity>
         <activity
             android:name=".ui.activity.LaunchDetailActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/BaseAppTheme" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -77,13 +77,6 @@
         <service
             android:name=".content.services.NextLaunchTracker"
             android:exported="false" />
-
-        <service android:name=".content.receivers.ConnectivityReceiver"
-            android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE">
-            <intent-filter>
-                <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY" />
-            </intent-filter>
-        </service>
 
         <receiver android:name=".content.receivers.UpdateUpcomingLaunchesReceiver">
             <intent-filter>

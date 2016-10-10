@@ -21,8 +21,6 @@ import android.support.v4.app.NotificationCompat;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.gcm.GcmNetworkManager;
-import com.google.android.gms.gcm.OneoffTask;
-import com.google.android.gms.gcm.Task;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
@@ -43,10 +41,10 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.content.jobs.NextLaunchJob;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchNotification;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
-import me.calebjones.spacelaunchnow.content.receivers.ConnectivityReceiver;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import timber.log.Timber;
 
@@ -704,34 +702,7 @@ public class NextLaunchTracker extends IntentService implements
             mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
             Timber.v("Scheduling Update - Interval: %s - Time: %s - IntervalString - %s", interval, formatter.format(calendar.getTime()), intervalString);
         }
-
-        long windowStart;
-        long windowEnd;
-        long intervalSeconds = interval / 1000;
-        long intervalMinutes = intervalSeconds / 60;
-
-        if (intervalMinutes > 30){
-            windowStart = intervalSeconds - 600;
-            windowEnd = intervalSeconds + 600;
-        } else {
-            windowStart = intervalSeconds - 60;
-            windowEnd = intervalSeconds;
-        }
-
-        OneoffTask.Builder taskBuilder = new OneoffTask.Builder()
-                .setService(ConnectivityReceiver.class)
-                .setExecutionWindow(windowStart, windowEnd)
-                .setTag(Strings.ACTION_CHECK_NEXT_LAUNCH_TIMER)
-                .setUpdateCurrent(false)
-                .setRequiresCharging(false);
-
-        if (sharedPref.getBoolean("wifi_only", false)){
-            taskBuilder.setRequiredNetwork(Task.NETWORK_STATE_UNMETERED);
-        } else {
-            taskBuilder.setRequiredNetwork(Task.NETWORK_STATE_CONNECTED);
-        }
-
-        mGcmNetworkManager.schedule(taskBuilder.build());
+        NextLaunchJob.scheduleJob(interval, this);
     }
 
     // Create a data map and put data in it
