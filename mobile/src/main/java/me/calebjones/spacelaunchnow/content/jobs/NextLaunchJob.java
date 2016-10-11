@@ -9,6 +9,7 @@ import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
 
 import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 
 
 public class NextLaunchJob extends Job {
@@ -18,7 +19,11 @@ public class NextLaunchJob extends Job {
     @NonNull
     @Override
     protected Result onRunJob(Params params) {
-        return null;
+        if(LaunchDataService.getNextLaunches(getContext())){
+            return Result.SUCCESS;
+        } else {
+            return Result.RESCHEDULE;
+        }
     }
 
     @Override
@@ -44,7 +49,7 @@ public class NextLaunchJob extends Job {
         }
 
         JobRequest.Builder builder = new JobRequest.Builder(NextLaunchJob.TAG)
-                .setExecutionWindow(windowStart, windowEnd)
+                .setExecutionWindow(windowStart * 1000, windowEnd * 1000)
                 .setUpdateCurrent(false);
 
         if (sharedPref.getBoolean("wifi_only", false)){

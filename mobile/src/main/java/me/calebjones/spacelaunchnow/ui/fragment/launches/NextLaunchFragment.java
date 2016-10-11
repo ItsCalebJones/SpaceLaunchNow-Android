@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -30,13 +31,17 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 
+import java.io.IOException;
 import java.util.Date;
 
 import butterknife.BindView;
@@ -47,23 +52,23 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.BuildConfig;
-
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
 import me.calebjones.spacelaunchnow.content.adapter.CardBigAdapter;
 import me.calebjones.spacelaunchnow.content.adapter.CardSmallAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
-import me.calebjones.spacelaunchnow.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.supporter.Products;
+import me.calebjones.spacelaunchnow.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.ui.activity.DownloadActivity;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
+import me.calebjones.spacelaunchnow.utils.FileUtils;
 import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
@@ -216,7 +221,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     if (switchChanged) {
                         showLoading();
                         displayLaunches();
-                        if(switchPreferences.getCalendarStatus()){
+                        if (switchPreferences.getCalendarStatus()) {
                             CalendarSyncService.startActionResync(context);
                         }
                     }
@@ -278,7 +283,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     @Override
     public void onStop() {
         super.onStop();
-        if(!getRealm().isClosed()) {
+        if (!getRealm().isClosed()) {
             launchRealms.removeChangeListener(callback); // remove a particular listener
             // or
             launchRealms.removeChangeListeners(); // remove all registered listeners
@@ -336,7 +341,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
     private void setLayoutManager(int size) {
-        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && (launchRealms != null && launchRealms.size() == 1 || size == 1 )) {
+        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && (launchRealms != null && launchRealms.size() == 1 || size == 1)) {
             linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(),
                     LinearLayoutManager.VERTICAL, false);
             mRecyclerView.setLayoutManager(linearLayoutManager);
@@ -433,8 +438,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         Timber.v("Sending GET_UP_LAUNCHES");
         Intent intent = new Intent(getContext(), LaunchDataService.class);
         intent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
-        Timber.d("Sending service intent!");
         getContext().startService(intent);
+        Timber.d("Sending service intent!");
     }
 
     public void showLoading() {
@@ -452,7 +457,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         setTitle();
 
         //First install
-        if (switchPreferences.getVersionCode() == 0){
+        if (switchPreferences.getVersionCode() == 0) {
             switchPreferences.setVersionCode(Utils.getVersionCode(context));
             showCaseView();
             final Handler handler = new Handler();
@@ -464,7 +469,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             }, 1000);
 
             //build 87 is where Realm change happened
-        } else if (switchPreferences.getVersionCode() <= 87){
+        } else if (switchPreferences.getVersionCode() <= 87) {
             Intent intent = new Intent(context, DownloadActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
@@ -637,6 +642,41 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             Intent nextIntent = new Intent(getActivity(), LaunchDataService.class);
             nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
             getActivity().startService(nextIntent);
+        } else if (id == R.id.debug_log){
+            try {
+                byte[] data = FileUtils.readFile(LaunchDataService.getSuccessFile(context));
+                if (data == null || data.length == 0) {
+                    Toast.makeText(context, "Null file.", Toast.LENGTH_SHORT).show();
+                } else {
+
+                    new MaterialDialog.Builder(getActivity())
+                            .title("History")
+                            .content(new String(data))
+                            .negativeText("Delete File")
+                            .positiveText("Ok")
+                            .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    try {
+                                        FileUtils.delete(LaunchDataService.getSuccessFile(getContext()));
+                                    } catch (IOException e) {
+                                        Timber.e(e.getLocalizedMessage());
+                                    }
+                                }
+                            })
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                }
+
+            } catch (IOException e) {
+                Timber.e(e.getLocalizedMessage());
+                Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            }
         } else if (id == R.id.action_alert) {
             if (!active) {
                 switchChanged = false;
@@ -660,7 +700,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 if (switchChanged) {
                     showLoading();
                     displayLaunches();
-                    if(switchPreferences.getCalendarStatus()){
+                    if (switchPreferences.getCalendarStatus()) {
                         CalendarSyncService.startActionResync(context);
                     }
                 }

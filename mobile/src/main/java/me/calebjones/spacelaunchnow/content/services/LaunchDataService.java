@@ -7,6 +7,9 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
+import net.vrallev.android.cat.Cat;
+
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -30,6 +33,7 @@ import me.calebjones.spacelaunchnow.content.models.realm.UpdateRecord;
 import me.calebjones.spacelaunchnow.content.responses.launchlibrary.LaunchResponse;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
+import me.calebjones.spacelaunchnow.utils.FileUtils;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -171,32 +175,36 @@ public class LaunchDataService extends BaseService {
         mRealm.close();
     }
 
-    private void syncBackground(Context context) {
+    public static boolean syncBackground(Context context) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
         boolean wifiOnly = sharedPref.getBoolean("wifi_only", false);
         boolean dataSaver = sharedPref.getBoolean("data_saver", false);
         boolean wifiConnected = Connectivity.isConnectedWifi(context);
+        boolean success;
 
         if (wifiOnly) {
             if (wifiConnected) {
-                getUpcomingLaunches(context);
+                success = getUpcomingLaunches(context);
                 syncNotifiers(context);
 
                 //TODO check time since last full sync and respond
 
+            } else {
+                success = false;
             }
         } else if (dataSaver && !wifiConnected) {
-            getNextLaunches(context);
+            success = getNextLaunches(context);
 
             //TODO check time since last full sync and respond
 
         } else {
-            getUpcomingLaunches(context);
+            success = getUpcomingLaunches(context);
 
             //TODO check time since last full sync and respond
 
         }
+        return success;
     }
 
     private static void syncNotifiers(Context context) {
@@ -341,6 +349,8 @@ public class LaunchDataService extends BaseService {
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
             context.getApplicationContext().sendBroadcast(broadcastIntent);
+            mRealm.close();
+            saveSuccess(true, Strings.ACTION_SUCCESS_UP_LAUNCHES, context);
             return true;
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());
@@ -360,11 +370,12 @@ public class LaunchDataService extends BaseService {
             broadcastIntent.putExtra("error", e.getLocalizedMessage());
             broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
             context.getApplicationContext().sendBroadcast(broadcastIntent);
+            mRealm.close();
             return false;
         }
     }
 
-    private static void getNextLaunches(Context context) {
+    public static boolean getNextLaunches(Context context) {
         LibraryRequestInterface request = getRetrofit().create(LibraryRequestInterface.class);
         Call<LaunchResponse> call;
         Response<LaunchResponse> launchResponse;
@@ -397,9 +408,9 @@ public class LaunchDataService extends BaseService {
                         mRealm.beginTransaction();
                         if (notification != null) {
                             notification.resetNotifiers();
+                            mRealm.copyToRealmOrUpdate(notification);
                         }
                         previous.resetNotifiers();
-                        mRealm.copyToRealmOrUpdate(notification);
                         mRealm.copyToRealmOrUpdate(previous);
                         mRealm.commitTransaction();
                         getLaunchById(item.getId(), context);
@@ -422,6 +433,9 @@ public class LaunchDataService extends BaseService {
             broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
             context.sendBroadcast(broadcastIntent);
 
+            mRealm.close();
+            saveSuccess(true, Strings.ACTION_UPDATE_NEXT_LAUNCH, context);
+            return true;
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());
 
@@ -440,6 +454,9 @@ public class LaunchDataService extends BaseService {
             broadcastIntent.putExtra("error", e.getLocalizedMessage());
             broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
             context.sendBroadcast(broadcastIntent);
+            mRealm.close();
+            saveSuccess(false, Strings.ACTION_UPDATE_NEXT_LAUNCH, context);
+            return false;
         }
     }
 
@@ -484,6 +501,8 @@ public class LaunchDataService extends BaseService {
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_SUCCESS_LAUNCH);
             context.sendBroadcast(broadcastIntent);
+            mRealm.close();
+            saveSuccess(true, Strings.ACTION_SUCCESS_LAUNCH, context);
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());
 
@@ -491,11 +510,29 @@ public class LaunchDataService extends BaseService {
             broadcastIntent.putExtra("error", e.getLocalizedMessage());
             broadcastIntent.setAction(Strings.ACTION_FAILURE_LAUNCH);
             context.sendBroadcast(broadcastIntent);
+            mRealm.close();
+            saveSuccess(false, Strings.ACTION_SUCCESS_LAUNCH, context);
         }
     }
 
     public void scheduleLaunchUpdates() {
         Timber.d("LaunchDataService - scheduleLaunchUpdates");
         UpdateJob.scheduleJob(this);
+    }
+
+    private static void saveSuccess(boolean success, String msg, Context context) {
+        if(BuildConfig.DEBUG) {
+            SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault());
+            String text = DATE_FORMAT.format(new Date()) + "\t\t" + success + " " + msg + '\n';
+            try {
+                FileUtils.writeFile(getSuccessFile(context), text, true);
+            } catch (IOException e) {
+                Cat.e(e);
+            }
+        }
+    }
+
+    public static File getSuccessFile(Context context) {
+        return new File(context.getCacheDir(), "success.txt");
     }
 }
