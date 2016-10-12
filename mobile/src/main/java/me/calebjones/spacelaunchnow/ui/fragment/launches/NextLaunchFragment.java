@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,7 +18,9 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,6 +44,7 @@ import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
@@ -604,79 +608,129 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.debug_add_launch) {
-            if (sharedPreference.isDebugEnabled()) {
-                sharedPreference.setDebugLaunch(false);
-            } else {
-                sharedPreference.setDebugLaunch(true);
-            }
-            RealmResults<LaunchRealm> results = getRealm().where(LaunchRealm.class).findAll();
+        if (id == R.id.debug_menu){
+            String[] strings = new String[]{"Next Launch", "Supporter", "Debug Launches", "Log", "Background Sync", "Vehicles"};
+            new MaterialDialog.Builder(getActivity())
+                    .title("Debug Menu")
+                    .items(strings)
+                    .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                        @Override
+                        public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                            switch (which){
+                                case 0:
+                                    Intent nextIntent = new Intent(getActivity(), LaunchDataService.class);
+                                    nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
+                                    getActivity().startService(nextIntent);
+                                    break;
+                                case 1:
+                                    Realm realm = Realm.getDefaultInstance();
+                                    if (sharedPreference.isDebugSupporterEnabled()) {
+                                        sharedPreference.setDebugSupporter(false);
+                                        realm.beginTransaction();
+                                        realm.delete(Products.class);
+                                        realm.commitTransaction();
+                                        Snackbar.make(coordinatorLayout, "Supporter: " + sharedPreference.isDebugSupporterEnabled(),
+                                                Snackbar.LENGTH_SHORT).show();
+                                    } else {
+                                        sharedPreference.setDebugSupporter(true);
+                                        realm.beginTransaction();
+                                        realm.copyToRealm(SupporterHelper.getProduct(SupporterHelper.SKU_TWO_DOLLAR));
+                                        realm.commitTransaction();
+                                        Snackbar.make(coordinatorLayout, "Supporter: " + sharedPreference.isDebugSupporterEnabled(),
+                                                Snackbar.LENGTH_SHORT).show();
+                                    }
+                                    break;
+                                case 2:
+                                    if (sharedPreference.isDebugEnabled()) {
+                                        sharedPreference.setDebugLaunch(false);
+                                    } else {
+                                        sharedPreference.setDebugLaunch(true);
+                                    }
+                                    RealmResults<LaunchRealm> results = getRealm().where(LaunchRealm.class).findAll();
 
-            getRealm().beginTransaction();
-            results.deleteAllFromRealm();
-            getRealm().commitTransaction();
+                                    getRealm().beginTransaction();
+                                    results.deleteAllFromRealm();
+                                    getRealm().commitTransaction();
 
-            Timber.v("%s", sharedPreference.isDebugEnabled());
-            Snackbar.make(coordinatorLayout, "Debug: " + sharedPreference.isDebugEnabled(),
-                    Snackbar.LENGTH_LONG).show();
-            context.startService(new Intent(context, LaunchDataService.class)
-                    .setAction(Strings.ACTION_GET_ALL_WIFI));
-        } else if (id == R.id.debug_supporter) {
-            Realm realm = Realm.getDefaultInstance();
-            if (sharedPreference.isDebugSupporterEnabled()) {
-                sharedPreference.setDebugSupporter(false);
-                realm.beginTransaction();
-                realm.delete(Products.class);
-                realm.commitTransaction();
-                Snackbar.make(coordinatorLayout, "Supporter: " + sharedPreference.isDebugSupporterEnabled(),
-                        Snackbar.LENGTH_SHORT).show();
-            } else {
-                sharedPreference.setDebugSupporter(true);
-                realm.beginTransaction();
-                realm.copyToRealm(SupporterHelper.getProduct(SupporterHelper.SKU_TWO_DOLLAR));
-                realm.commitTransaction();
-                Snackbar.make(coordinatorLayout, "Supporter: " + sharedPreference.isDebugSupporterEnabled(),
-                        Snackbar.LENGTH_SHORT).show();
-            }
-        } else if (id == R.id.debug_next_launch) {
-            Intent nextIntent = new Intent(getActivity(), LaunchDataService.class);
-            nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
-            getActivity().startService(nextIntent);
-        } else if (id == R.id.debug_log){
-            try {
-                byte[] data = FileUtils.readFile(LaunchDataService.getSuccessFile(context));
-                if (data == null || data.length == 0) {
-                    Toast.makeText(context, "Null file.", Toast.LENGTH_SHORT).show();
-                } else {
-
-                    new MaterialDialog.Builder(getActivity())
-                            .title("History")
-                            .content(new String(data))
-                            .negativeText("Delete File")
-                            .positiveText("Ok")
-                            .onNegative(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    Timber.v("%s", sharedPreference.isDebugEnabled());
+                                    Snackbar.make(coordinatorLayout, "Debug: " + sharedPreference.isDebugEnabled(),
+                                            Snackbar.LENGTH_LONG).show();
+                                    context.startService(new Intent(context, LaunchDataService.class)
+                                            .setAction(Strings.ACTION_GET_ALL_WIFI));
+                                    break;
+                                case 3:
                                     try {
-                                        FileUtils.delete(LaunchDataService.getSuccessFile(getContext()));
+                                        byte[] data = FileUtils.readFile(FileUtils.getSuccessFile(context));
+                                        if (data == null || data.length == 0) {
+                                            Toast.makeText(context, "Null file.", Toast.LENGTH_SHORT).show();
+                                        } else {
+
+                                            new MaterialDialog.Builder(getActivity())
+                                                    .title("History")
+                                                    .content(new String(data))
+                                                    .negativeText("Delete File")
+                                                    .positiveText("Ok")
+                                                    .neutralText("Save File")
+                                                    .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                                                        @Override
+                                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                            File textFile = new File(context.getCacheDir(), "success.txt");
+                                                            Uri uriForFile = FileProvider.getUriForFile(context, "me.calebjones.spacelaunchnow", textFile);
+                                                            context.grantUriPermission("me.calebjones.spacelaunchnow", uriForFile, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                                                            Intent intent = ShareCompat.IntentBuilder.from(getActivity())
+                                                                    .setStream(uriForFile) // uri from FileProvider
+                                                                    .setType("text/plain")
+                                                                    .getIntent()
+                                                                    .setAction(Intent.ACTION_SEND) //Change if needed
+                                                                    .setDataAndType(uriForFile, "text/plain")
+                                                                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                                                            startActivity(Intent.createChooser(intent, "Save File"));
+                                                        }
+                                                    })
+                                                    .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                                        @Override
+                                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                            try {
+                                                                FileUtils.delete(FileUtils.getSuccessFile(getContext()));
+                                                            } catch (IOException e) {
+                                                                Timber.e(e.getLocalizedMessage());
+                                                            }
+                                                        }
+                                                    })
+                                                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                                        @Override
+                                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                            dialog.dismiss();
+                                                        }
+                                                    })
+                                                    .show();
+                                        }
+
                                     } catch (IOException e) {
                                         Timber.e(e.getLocalizedMessage());
+                                        Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                                     }
-                                }
-                            })
-                            .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .show();
-                }
+                                    break;
+                                case 4:
+                                    Intent background = new Intent(getActivity(), LaunchDataService.class);
+                                    background.setAction(Strings.ACTION_UPDATE_BACKGROUND);
+                                    getActivity().startService(background);
+                                    break;
+                                case 5:
+                                    Intent rocketIntent = new Intent(context, VehicleDataService.class);
+                                    rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
+                                    context.startService(rocketIntent);
+                                    break;
+                            }
 
-            } catch (IOException e) {
-                Timber.e(e.getLocalizedMessage());
-                Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-            }
+                            return true;
+                        }
+                    })
+                    .positiveText("Ok")
+                    .show();
+
         } else if (id == R.id.action_alert) {
             if (!active) {
                 switchChanged = false;
@@ -705,10 +759,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     }
                 }
             }
-        } else if (id == R.id.debug_vehicle) {
-            Intent rocketIntent = new Intent(context, VehicleDataService.class);
-            rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
-            context.startService(rocketIntent);
         }
         return super.onOptionsItemSelected(item);
     }

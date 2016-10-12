@@ -7,9 +7,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
-import net.vrallev.android.cat.Cat;
-
-import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -109,7 +106,7 @@ public class LaunchDataService extends BaseService {
                 }
 
                 if (getUpcomingLaunches(this)) {
-                    if (getLaunchesByDate("1950-01-01", Utils.getEndDate(this))) {
+                    if (getLaunchesByDate("1950-01-01", Utils.getEndDate(this), this)) {
                         Intent rocketIntent = new Intent(getApplicationContext(), VehicleDataService.class);
                         rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
                         startService(rocketIntent);
@@ -142,9 +139,9 @@ public class LaunchDataService extends BaseService {
 
                 Timber.v("Intent action received: %s", action);
                 if (intent.getStringExtra("startDate") != null && intent.getStringExtra("endDate") != null) {
-                    getLaunchesByDate(intent.getStringExtra("startDate"), intent.getStringExtra("endDate"));
+                    getLaunchesByDate(intent.getStringExtra("startDate"), intent.getStringExtra("endDate"), this);
                 } else {
-                    getLaunchesByDate("1950-01-01", Utils.getEndDate(this));
+                    getLaunchesByDate("1950-01-01", Utils.getEndDate(this), this);
                 }
 
             } else if (Strings.ACTION_UPDATE_NEXT_LAUNCH.equals(action)) {
@@ -187,24 +184,75 @@ public class LaunchDataService extends BaseService {
             if (wifiConnected) {
                 success = getUpcomingLaunches(context);
                 syncNotifiers(context);
-
-                //TODO check time since last full sync and respond
+                checkFullSync(context);
 
             } else {
                 success = false;
             }
         } else if (dataSaver && !wifiConnected) {
+
             success = getNextLaunches(context);
 
-            //TODO check time since last full sync and respond
-
         } else {
-            success = getUpcomingLaunches(context);
 
-            //TODO check time since last full sync and respond
+            success = getUpcomingLaunches(context);
+            checkFullSync(context);
 
         }
         return success;
+    }
+
+    private static void checkFullSync(Context context) {
+        Realm realm = Realm.getDefaultInstance();
+        checkPreviousLaunches(context, realm);
+        checkMissions(context, realm);
+        checkVehicles(context, realm);
+    }
+
+    private static void checkMissions(Context context, Realm realm) {
+        UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Strings.ACTION_GET_MISSION).findFirst();
+        if (record != null){
+            Date currentDate = new Date();
+            Date lastUpdateDate = record.getDate();
+            long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
+            if (timeSinceUpdate > 1209600000) {
+                context.startService(new Intent(context, MissionDataService.class));
+            }
+        } else {
+            context.startService(new Intent(context, MissionDataService.class));
+        }
+    }
+
+    private static void checkPreviousLaunches(Context context, Realm realm) {
+        UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Strings.ACTION_GET_PREV_LAUNCHES).findFirst();
+        if (record != null){
+            Date currentDate = new Date();
+            Date lastUpdateDate = record.getDate();
+            long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
+            if (timeSinceUpdate > 1209600000){
+                getLaunchesByDate("1950-01-01", Utils.getEndDate(context), context);
+            }
+        } else {
+            getLaunchesByDate("1950-01-01", Utils.getEndDate(context), context);
+        }
+    }
+
+    private static void checkVehicles(Context context, Realm realm) {
+        UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Strings.ACTION_GET_VEHICLES_DETAIL).findFirst();
+        if (record != null){
+            Date currentDate = new Date();
+            Date lastUpdateDate = record.getDate();
+            long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
+            if (timeSinceUpdate > 1209600000){
+                Intent rocketIntent = new Intent(context, VehicleDataService.class);
+                rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
+                context.startService(rocketIntent);
+            }
+        } else {
+            Intent rocketIntent = new Intent(context, VehicleDataService.class);
+            rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
+            context.startService(rocketIntent);
+        }
     }
 
     private static void syncNotifiers(Context context) {
@@ -234,11 +282,16 @@ public class LaunchDataService extends BaseService {
         }
     }
 
-    private boolean getLaunchesByDate(String startDate, String endDate) {
-        LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
+    private static boolean getLaunchesByDate(String startDate, String endDate, Context context) {
+        LibraryRequestInterface request = getRetrofit().create(LibraryRequestInterface.class);
         Call<LaunchResponse> call;
         Response<LaunchResponse> launchResponse;
         RealmList<LaunchRealm> items = new RealmList<>();
+
+        Realm mRealm = Realm.getDefaultInstance();
+
+        ListPreferences listPreference = ListPreferences.getInstance(context);
+
         int offset = 0;
         int total = 10;
         int count;
@@ -268,18 +321,41 @@ public class LaunchDataService extends BaseService {
             mRealm.copyToRealmOrUpdate(items);
             mRealm.commitTransaction();
 
+            mRealm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    UpdateRecord updateRecord = new UpdateRecord();
+                    updateRecord.setType(Strings.ACTION_GET_PREV_LAUNCHES);
+                    updateRecord.setDate(new Date());
+                    updateRecord.setSuccessful(true);
+                    realm.copyToRealmOrUpdate(updateRecord);
+                }
+            });
+
             Timber.v("Success!");
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
-            this.sendBroadcast(broadcastIntent);
+            context.sendBroadcast(broadcastIntent);
             return true;
 
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());
+
+            mRealm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    UpdateRecord updateRecord = new UpdateRecord();
+                    updateRecord.setType(Strings.ACTION_GET_PREV_LAUNCHES);
+                    updateRecord.setDate(new Date());
+                    updateRecord.setSuccessful(false);
+                    realm.copyToRealmOrUpdate(updateRecord);
+                }
+            });
+
             Intent broadcastIntent = new Intent();
             broadcastIntent.putExtra("error", e.getLocalizedMessage());
             broadcastIntent.setAction(Strings.ACTION_FAILURE_PREV_LAUNCHES);
-            this.sendBroadcast(broadcastIntent);
+            context.sendBroadcast(broadcastIntent);
             return false;
         }
     }
@@ -349,8 +425,9 @@ public class LaunchDataService extends BaseService {
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
             context.getApplicationContext().sendBroadcast(broadcastIntent);
+
             mRealm.close();
-            saveSuccess(true, Strings.ACTION_SUCCESS_UP_LAUNCHES, context);
+            FileUtils.saveSuccess(true, Strings.ACTION_SUCCESS_UP_LAUNCHES, context);
             return true;
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());
@@ -361,7 +438,7 @@ public class LaunchDataService extends BaseService {
                     UpdateRecord updateRecord = new UpdateRecord();
                     updateRecord.setType(Strings.ACTION_GET_UP_LAUNCHES);
                     updateRecord.setDate(new Date());
-                    updateRecord.setSuccessful(true);
+                    updateRecord.setSuccessful(false);
                     realm.copyToRealmOrUpdate(updateRecord);
                 }
             });
@@ -371,6 +448,7 @@ public class LaunchDataService extends BaseService {
             broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
             context.getApplicationContext().sendBroadcast(broadcastIntent);
             mRealm.close();
+            FileUtils.saveSuccess(false, Strings.ACTION_SUCCESS_UP_LAUNCHES + " " + e.getLocalizedMessage(), context);
             return false;
         }
     }
@@ -434,7 +512,7 @@ public class LaunchDataService extends BaseService {
             context.sendBroadcast(broadcastIntent);
 
             mRealm.close();
-            saveSuccess(true, Strings.ACTION_UPDATE_NEXT_LAUNCH, context);
+            FileUtils.saveSuccess(true, Strings.ACTION_UPDATE_NEXT_LAUNCH, context);
             return true;
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());
@@ -455,12 +533,12 @@ public class LaunchDataService extends BaseService {
             broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
             context.sendBroadcast(broadcastIntent);
             mRealm.close();
-            saveSuccess(false, Strings.ACTION_UPDATE_NEXT_LAUNCH, context);
+            FileUtils.saveSuccess(false, Strings.ACTION_UPDATE_NEXT_LAUNCH + " " + e.getLocalizedMessage(), context);
             return false;
         }
     }
 
-    private static void getLaunchById(int id, Context context) {
+    private static boolean getLaunchById(int id, Context context) {
         LibraryRequestInterface request = getRetrofit().create(LibraryRequestInterface.class);
         Call<LaunchResponse> call;
 
@@ -498,41 +576,19 @@ public class LaunchDataService extends BaseService {
                     Timber.v("Updated launch: %s", item.getId());
                 }
             }
-            Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Strings.ACTION_SUCCESS_LAUNCH);
-            context.sendBroadcast(broadcastIntent);
             mRealm.close();
-            saveSuccess(true, Strings.ACTION_SUCCESS_LAUNCH, context);
+            FileUtils.saveSuccess(true, Strings.ACTION_SUCCESS_LAUNCH, context);
+            return true;
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());
-
-            Intent broadcastIntent = new Intent();
-            broadcastIntent.putExtra("error", e.getLocalizedMessage());
-            broadcastIntent.setAction(Strings.ACTION_FAILURE_LAUNCH);
-            context.sendBroadcast(broadcastIntent);
             mRealm.close();
-            saveSuccess(false, Strings.ACTION_SUCCESS_LAUNCH, context);
+            FileUtils.saveSuccess(false, Strings.ACTION_SUCCESS_LAUNCH, context);
+            return false;
         }
     }
 
     public void scheduleLaunchUpdates() {
         Timber.d("LaunchDataService - scheduleLaunchUpdates");
         UpdateJob.scheduleJob(this);
-    }
-
-    private static void saveSuccess(boolean success, String msg, Context context) {
-        if(BuildConfig.DEBUG) {
-            SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault());
-            String text = DATE_FORMAT.format(new Date()) + "\t\t" + success + " " + msg + '\n';
-            try {
-                FileUtils.writeFile(getSuccessFile(context), text, true);
-            } catch (IOException e) {
-                Cat.e(e);
-            }
-        }
-    }
-
-    public static File getSuccessFile(Context context) {
-        return new File(context.getCacheDir(), "success.txt");
     }
 }

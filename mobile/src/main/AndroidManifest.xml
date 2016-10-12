@@ -8,8 +8,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
 
     <!-- Required to act as a calendar service. -->
     <uses-permission android:name="android.permission.READ_CALENDAR" />
@@ -29,6 +30,17 @@
         android:supportsRtl="true"
         android:theme="@style/BaseAppTheme"
         tools:replace="label,android:allowBackup">
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="me.calebjones.spacelaunchnow"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <activity
             android:name=".ui.activity.MainActivity"
             android:configChanges="screenSize"
@@ -57,8 +69,8 @@
         <activity
             android:name=".settings.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/CustomPreferenceTheme"
-            android:parentActivityName=".ui.activity.MainActivity"/>
+            android:parentActivityName=".ui.activity.MainActivity"
+            android:theme="@style/CustomPreferenceTheme" />
         <activity android:name=".ui.activity.OrbiterDetailActivity" />
         <activity android:name=".ui.activity.LauncherDetailActivity" />
 
@@ -133,15 +145,15 @@
             android:name=".ui.activity.WebViewFallbackActivity"
             android:label="@string/title_activity_web_view_fallback"
             android:parentActivityName=".ui.activity.MainActivity"
-            android:theme="@style/BaseAppTheme"/>
+            android:theme="@style/BaseAppTheme" />
 
         <receiver
             android:name=".widget.LaunchTimerWidgetProvider"
             android:label="Countdown">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_REFRESH"/>
-                <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_CLICK"/>
+                <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_REFRESH" />
+                <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_CLICK" />
             </intent-filter>
 
             <meta-data
@@ -154,7 +166,7 @@
             android:label="Launch Card">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="me.calebjones.spacelaunchnow.widget.LaunchCardCompactWidgetProvider.ACTION_WIDGET_REFRESH"/>
+                <action android:name="me.calebjones.spacelaunchnow.widget.LaunchCardCompactWidgetProvider.ACTION_WIDGET_REFRESH" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
@@ -166,8 +178,8 @@
             android:label="Next Launch">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_REFRESH"/>
-                <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_CLICK"/>
+                <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_REFRESH" />
+                <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_CLICK" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
