@@ -8,6 +8,7 @@ buildscript {
         classpath 'io.fabric.tools:gradle:1.21.4'
     }
 }
+
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'org.moallemi.advanced-build-version'
@@ -21,8 +22,8 @@ repositories {
 advancedVersioning {
     nameOptions {
         versionMajor 1
-        versionMinor 4
-        versionPatch 2
+        versionMinor 5
+        versionPatch 0
 
     }
     codeOptions {
@@ -35,6 +36,16 @@ advancedVersioning {
 
 def appVersionName = advancedVersioning.versionName
 def appVersionCode = advancedVersioning.versionCode
+
+def renameAPK(variant, defaultConfig) {
+    variant.outputs.each { output ->
+        def formattedDate = new Date().format('yyyyMMdd')
+
+        def file = output.packageApplication.outputFile
+        def fileName = applicationName + "-release-" + defaultConfig.versionName + "." + defaultConfig.versionCode + "-" + formattedDate + "-" + 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim() + ".apk"
+        output.packageApplication.outputFile = new File(file.parent, fileName)
+    }
+}
 
 android {
 
@@ -72,6 +83,9 @@ android {
 //            minifyEnabled true
 //            shrinkResources true
 //            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            applicationVariants.all { variant ->
+                renameAPK(variant, defaultConfig)
+            }
         }
     }
     productFlavors {
