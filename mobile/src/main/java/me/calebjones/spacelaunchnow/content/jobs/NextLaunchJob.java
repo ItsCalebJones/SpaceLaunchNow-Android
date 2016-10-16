@@ -37,6 +37,9 @@ public class NextLaunchJob extends Job {
 
         long windowStart;
         long windowEnd;
+        if (interval < 300000){
+            interval = 300000;
+        }
         long intervalSeconds = interval / 1000;
         long intervalMinutes = intervalSeconds / 60;
 
@@ -50,7 +53,7 @@ public class NextLaunchJob extends Job {
 
         JobRequest.Builder builder = new JobRequest.Builder(NextLaunchJob.TAG)
                 .setExecutionWindow(windowStart * 1000, windowEnd * 1000)
-                .setUpdateCurrent(false);
+                .setUpdateCurrent(true);
 
         if (sharedPref.getBoolean("wifi_only", false)){
             builder.setRequiredNetworkType(JobRequest.NetworkType.UNMETERED);
