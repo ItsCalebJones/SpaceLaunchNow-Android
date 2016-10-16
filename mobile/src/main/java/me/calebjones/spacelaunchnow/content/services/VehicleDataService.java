@@ -17,6 +17,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collections;
+import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -29,9 +30,11 @@ import me.calebjones.spacelaunchnow.content.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.content.models.realm.RocketDetailsRealm;
 import me.calebjones.spacelaunchnow.content.models.realm.RocketFamilyRealm;
 import me.calebjones.spacelaunchnow.content.models.realm.RocketRealm;
+import me.calebjones.spacelaunchnow.content.models.realm.UpdateRecord;
 import me.calebjones.spacelaunchnow.content.responses.base.VehicleResponse;
 import me.calebjones.spacelaunchnow.content.responses.launchlibrary.RocketFamilyResponse;
 import me.calebjones.spacelaunchnow.content.responses.launchlibrary.RocketResponse;
+import me.calebjones.spacelaunchnow.utils.FileUtils;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -128,19 +131,29 @@ public class VehicleDataService extends IntentService {
             String action = intent.getAction();
             if (Strings.ACTION_GET_VEHICLES_DETAIL.equals(action)) {
                 listPreference.setLastVehicleUpdate(System.currentTimeMillis());
-                getBaseVehicleDetails();
-                getLibraryRockets();
-                getLibraryRocketsFamily();
-            }
-            if (Strings.ACTION_GET_VEHICLES.equals(action)) {
-                getLibraryRockets();
-                getLibraryRocketsFamily();
+                boolean success;
+                success = getBaseVehicleDetails();
+                success = getLibraryRockets();
+                success = getLibraryRocketsFamily();
+                final boolean finalSuccess = success;
+                mRealm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        UpdateRecord updateRecord = new UpdateRecord();
+                        updateRecord.setType(Strings.ACTION_GET_MISSION);
+                        updateRecord.setDate(new Date());
+                        updateRecord.setSuccessful(finalSuccess);
+                        realm.copyToRealmOrUpdate(updateRecord);
+                    }
+                });
+
+                FileUtils.saveSuccess(success, Strings.ACTION_GET_MISSION, this);
             }
         }
         mRealm.close();
     }
 
-    private void getBaseVehicleDetails() {
+    private boolean getBaseVehicleDetails() {
         APIRequestInterface request = apiRetrofit.create(APIRequestInterface.class);
         Call<VehicleResponse> call;
         Response<VehicleResponse> launchResponse;
@@ -164,6 +177,9 @@ public class VehicleDataService extends IntentService {
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_VEHICLE_DETAILS);
                 VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+                return true;
+            } else {
+                return false;
             }
         } catch (IOException e) {
 
@@ -171,10 +187,11 @@ public class VehicleDataService extends IntentService {
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_FAILURE_VEHICLE_DETAILS);
             VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+            return false;
         }
     }
 
-    private void getLibraryRockets() {
+    private boolean getLibraryRockets() {
         LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
         Call<RocketResponse> call;
         Response<RocketResponse> launchResponse;
@@ -208,10 +225,12 @@ public class VehicleDataService extends IntentService {
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_VEHICLES);
                 VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+                return true;
             } else {
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_FAILURE_VEHICLES);
                 VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+                return false;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -220,10 +239,11 @@ public class VehicleDataService extends IntentService {
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Strings.ACTION_FAILURE_VEHICLES);
             VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+            return false;
         }
     }
 
-    private void getLibraryRocketsFamily() {
+    private boolean getLibraryRocketsFamily() {
         LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
         Call<RocketFamilyResponse> call;
         Response<RocketFamilyResponse> launchResponse;
@@ -254,9 +274,11 @@ public class VehicleDataService extends IntentService {
                 mRealm.copyToRealmOrUpdate(items);
                 mRealm.commitTransaction();
             }
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
             Timber.e("VehicleDataService - ERROR: %s", e.getLocalizedMessage());
+            return false;
         }
     }
 }

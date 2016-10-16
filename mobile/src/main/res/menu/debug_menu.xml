@@ -11,26 +11,8 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
-
     <item
-        android:id="@+id/debug_vehicle"
-        android:title="Refresh Vehicles"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/debug_next_launch"
-        android:title="Next Launch"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/debug_add_launch"
-        android:title="Debug Launch"
-        app:showAsAction="never"
-        android:icon="@drawable/fab_add"/>
-
-    <item
-        android:id="@+id/debug_supporter"
-        android:title="Supporter"
-        app:showAsAction="never"
-        android:icon="@drawable/ic_support"/>
+        android:id="@+id/debug_menu"
+        android:title="Debug"
+        />
 </menu>

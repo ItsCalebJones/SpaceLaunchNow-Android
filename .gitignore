@@ -39,3 +39,5 @@ mobile/fabric.properties
 .idea/modules.xml
 
 projectFilesBackup/.idea/workspace.xml
+
+*.apk

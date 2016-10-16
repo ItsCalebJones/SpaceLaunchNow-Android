@@ -96,8 +96,9 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
             Timber.v("Data changed - size: %s", results.size());
             adapter.clear();
 
-            if (missionList.size() > 0) {
+            if (results.size() > 0) {
                 adapter.addItems(results);
+                missionList = results;
             } else {
                 showErrorSnackbar("Unable to load missions.");
             }
