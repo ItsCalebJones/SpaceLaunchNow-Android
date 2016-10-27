@@ -11,20 +11,15 @@
     tools:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <LinearLayout
-
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical">
 
         <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
+            android:layout_width="@dimen/max_width"
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
-            android:layout_margin="@dimen/material_component_cards_space_between_cards"
-            android:paddingBottom="@dimen/material_layout_keylines_screen_edge_margin"
-            android:paddingLeft="@dimen/material_layout_keylines_screen_edge_margin"
-            android:paddingRight="@dimen/material_layout_keylines_screen_edge_margin"
-            android:paddingTop="@dimen/material_layout_keylines_screen_edge_margin"
+            android:layout_gravity="center"
             card_view:cardCornerRadius="@dimen/card_view_corner_radius"
             card_view:cardElevation="@dimen/material_card_elevation_resting"
             card_view:cardPreventCornerOverlap="true"
@@ -241,14 +236,10 @@
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
+            android:layout_width="@dimen/max_width"
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
-            android:layout_margin="@dimen/material_component_cards_space_between_cards"
-            android:paddingBottom="@dimen/material_layout_keylines_screen_edge_margin"
-            android:paddingLeft="@dimen/material_layout_keylines_screen_edge_margin"
-            android:paddingRight="@dimen/material_layout_keylines_screen_edge_margin"
-            android:paddingTop="@dimen/material_layout_keylines_screen_edge_margin"
+            android:layout_gravity="center"
             card_view:cardCornerRadius="@dimen/card_view_corner_radius"
             card_view:cardElevation="@dimen/material_card_elevation_resting"
             card_view:cardPreventCornerOverlap="true"
@@ -260,39 +251,39 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="@dimen/material_component_cards_primary_title_bottom_padding"
-                android:paddingTop="@dimen/material_component_cards_primary_title_top_padding">
-
-                <TextView
-                    android:id="@+id/launch_agency_title"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:lines="1"
-                    android:text="Launch Location Agencies"
-                    android:textAlignment="center"
-                    android:textColor="?android:textColorPrimary"
-                    android:textSize="@dimen/material_typography_regular_title_text_size"
-                    android:textStyle="bold" />
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/material_component_cards_primary_title_bottom_padding"
+                    android:paddingTop="@dimen/material_component_cards_primary_title_top_padding">
 
-                <TextView
-                    android:id="@+id/launch_agency_type"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:gravity="center"
-                    android:lines="1"
-                    android:singleLine="false"
-                    android:text="Unknown Mission Agencies"
-                    android:textAlignment="center"
-                    android:textColor="?android:textColorSecondary"
-                    android:textSize="@dimen/material_typography_regular_subheading_text_size" />
+                    <TextView
+                        android:id="@+id/launch_agency_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:lines="1"
+                        android:text="Launch Location Agencies"
+                        android:textAlignment="center"
+                        android:textColor="?android:textColorPrimary"
+                        android:textSize="@dimen/material_typography_regular_title_text_size"
+                        android:textStyle="bold" />
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/launch_agency_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:lines="1"
+                        android:singleLine="false"
+                        android:text="Unknown Mission Agencies"
+                        android:textAlignment="center"
+                        android:textColor="?android:textColorSecondary"
+                        android:textSize="@dimen/material_typography_regular_subheading_text_size" />
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/agency_one"

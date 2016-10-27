@@ -9,5 +9,6 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="product_bottom">16dp</dimen>
     <dimen name="product_bottom_text">48dp</dimen>
+    <dimen name="max_width">400dp</dimen>
 
 </resources>

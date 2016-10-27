@@ -44,8 +44,8 @@ public class NextLaunchJob extends Job {
         long intervalMinutes = intervalSeconds / 60;
 
         if (intervalMinutes > 30){
-            windowStart = intervalSeconds - 600;
-            windowEnd = intervalSeconds + 600;
+            windowStart = intervalSeconds - 300;
+            windowEnd = intervalSeconds + 300;
         } else {
             windowStart = intervalSeconds - 60;
             windowEnd = intervalSeconds;

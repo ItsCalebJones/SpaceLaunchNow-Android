@@ -37,12 +37,12 @@ advancedVersioning {
 def appVersionName = advancedVersioning.versionName
 def appVersionCode = advancedVersioning.versionCode
 
-def renameAPK(variant, defaultConfig) {
+def renameAPK(variant, defaultConfig, buildType) {
     variant.outputs.each { output ->
         def formattedDate = new Date().format('yyyyMMdd')
 
         def file = output.packageApplication.outputFile
-        def fileName = applicationName + "-release-" + defaultConfig.versionName + "." + defaultConfig.versionCode + "-" + formattedDate + "-" + 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim() + ".apk"
+        def fileName = applicationName + "-" + buildType + "-" + defaultConfig.versionName + "." + defaultConfig.versionCode + "-" + formattedDate + "-" + 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim() + ".apk"
         output.packageApplication.outputFile = new File(file.parent, fileName)
     }
 }
@@ -78,13 +78,16 @@ android {
             applicationIdSuffix '.debug'
             manifestPlaceholders = [appNameLabel         : "SLN - Debug",
                                     manifestApplicationId: "me.calebjones.spacelaunchnow.debug"]
+            applicationVariants.all { variant ->
+                renameAPK(variant, defaultConfig, "debug")
+            }
         }
         release {
 //            minifyEnabled true
 //            shrinkResources true
 //            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             applicationVariants.all { variant ->
-                renameAPK(variant, defaultConfig)
+                renameAPK(variant, defaultConfig, "release")
             }
         }
     }
@@ -144,4 +147,6 @@ dependencies {
     compile 'it.macisamuele:calendarprovider-lib:0.0.1'
     compile 'com.github.michael-rapp:android-preference-activity:4.2.8'
     compile 'com.evernote:android-job:1.1.0'
+    compile 'blue.aodev:material-values:1.0.1'
+    compile 'com.dmitrymalkovich.android:material-design-dimens:1.4'
 }

@@ -61,7 +61,7 @@
             android:layout_marginTop="-48dp"
             android:fitsSystemWindows="true"
             android:minHeight="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:layout_scrollFlags="scroll"
             app:theme="@style/ThemeOverlay.AppCompat.Dark" />
         ​
 
@@ -70,6 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            app:layout_scrollFlags="scroll"
             android:orientation="vertical">
             ​
 
