@@ -542,9 +542,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.agencies.id", 17)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 17);
+            query.equalTo("location.id", 17);
         }
 
         if (switchPreferences.getSwitchCape()) {
@@ -667,9 +665,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.agencies.id", 17)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 17);
+            query.equalTo("location.id", 17);
         }
 
         if (switchPreferences.getSwitchCape()) {
