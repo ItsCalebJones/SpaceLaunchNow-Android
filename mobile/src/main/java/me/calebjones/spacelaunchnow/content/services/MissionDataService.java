@@ -64,11 +64,15 @@ public class MissionDataService extends BaseService {
                     call = request.getAllMisisons(offset);
                 }
                 launchResponse = call.execute();
-                total = launchResponse.body().getTotal();
-                count = launchResponse.body().getCount();
-                offset = offset + count;
-                Timber.v("Count: %s", offset);
-                Collections.addAll(items, launchResponse.body().getMissions());
+                if (launchResponse.isSuccessful()) {
+                    total = launchResponse.body().getTotal();
+                    count = launchResponse.body().getCount();
+                    offset = offset + count;
+                    Timber.v("Count: %s", offset);
+                    Collections.addAll(items, launchResponse.body().getMissions());
+                } else {
+                    throw new IOException(launchResponse.errorBody().string());
+                }
 
                 mRealm.beginTransaction();
                 mRealm.copyToRealmOrUpdate(items);
