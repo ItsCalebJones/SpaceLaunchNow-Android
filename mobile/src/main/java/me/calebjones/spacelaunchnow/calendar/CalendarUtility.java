@@ -140,7 +140,7 @@ public class CalendarUtility {
 
             calEvent.put(CalendarContract.Events.DESCRIPTION, description);
             calEvent.put(CalendarContract.Events.EVENT_LOCATION, launch.getLocation().getName());
-            if(startDate != null && endDate != null) {
+            if (startDate != null && endDate != null) {
                 calEvent.put(CalendarContract.Events.DTSTART, startDate.getTime());
                 calEvent.put(CalendarContract.Events.DTEND, endDate.getTime());
 
@@ -151,10 +151,10 @@ public class CalendarUtility {
 
             Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, launch.getEventID());
 
-            for (int time: prefSelected) {
+            for (int time : prefSelected) {
                 setReminder(context, Long.parseLong(updateUri.getLastPathSegment()), time);
             }
-            return cr.update(updateUri, calEvent, null, null) > 0;
+            return updateUri != null && cr.update(updateUri, calEvent, null, null) > 0;
         } return false;
     }
 
