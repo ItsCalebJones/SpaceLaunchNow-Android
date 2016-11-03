@@ -86,7 +86,9 @@ android {
 //            shrinkResources true
 //            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             applicationVariants.all { variant ->
-                renameAPK(variant, defaultConfig, "release")
+                if (variant.buildType.name == "release") {
+                    renameAPK(variant, defaultConfig, "release")
+                }
             }
         }
     }
