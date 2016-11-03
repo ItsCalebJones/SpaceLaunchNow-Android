@@ -149,9 +149,6 @@ public class LaunchDataService extends BaseService {
 
                 Timber.v("Intent action received: %s", action);
                 getNextLaunches(this);
-                syncNotifiers(this);
-
-                this.startService(new Intent(this, NextLaunchTracker.class));
 
             } else if (Strings.SYNC_NOTIFIERS.equals(action)) {
 
@@ -624,6 +621,9 @@ public class LaunchDataService extends BaseService {
             broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
             context.sendBroadcast(broadcastIntent);
 
+            syncNotifiers(context);
+            context.startService(new Intent(context, NextLaunchTracker.class));
+
             mRealm.close();
             FileUtils.saveSuccess(true, Strings.ACTION_UPDATE_UP_LAUNCHES, context);
             return true;
@@ -645,6 +645,10 @@ public class LaunchDataService extends BaseService {
             broadcastIntent.putExtra("error", e.getLocalizedMessage());
             broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
             context.sendBroadcast(broadcastIntent);
+
+            syncNotifiers(context);
+            context.startService(new Intent(context, NextLaunchTracker.class));
+
             mRealm.close();
             FileUtils.saveSuccess(false, Strings.ACTION_UPDATE_UP_LAUNCHES + " " + e.getLocalizedMessage(), context);
             return false;
