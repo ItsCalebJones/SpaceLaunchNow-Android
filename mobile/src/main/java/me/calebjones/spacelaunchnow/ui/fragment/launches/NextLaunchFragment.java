@@ -69,7 +69,6 @@ import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.supporter.Products;
 import me.calebjones.spacelaunchnow.supporter.SupporterHelper;
-import me.calebjones.spacelaunchnow.ui.activity.DownloadActivity;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
 import me.calebjones.spacelaunchnow.utils.FileUtils;
@@ -139,15 +138,17 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         if (NextLaunchFragment.this.isVisible()) {
             Button customButton = (Button) getLayoutInflater(null).inflate(R.layout.view_custom_button, null);
             ViewTarget pinMenuItem = new ViewTarget(R.id.action_alert, getActivity());
-            ShowcaseView.Builder builder = new ShowcaseView.Builder(getActivity())
-                    .withNewStyleShowcase()
-                    .setTarget(pinMenuItem)
-                    .setContentTitle("Launch Filtering")
-                    .setContentText("Only receive notifications for launches that you care about.");
-            if (sharedPreference.isNightModeActive(context)) {
-                builder.setStyle(R.style.ShowCaseThemeDark).replaceEndButton(customButton).build();
-            } else {
-                builder.setStyle(R.style.ShowCaseThemeLight).replaceEndButton(customButton).build();
+            if (pinMenuItem != null && customButton != null) {
+                ShowcaseView.Builder builder = new ShowcaseView.Builder(getActivity())
+                        .withNewStyleShowcase()
+                        .setTarget(pinMenuItem)
+                        .setContentTitle("Launch Filtering")
+                        .setContentText("Only receive notifications for launches that you care about.");
+                if (sharedPreference.isNightModeActive(context)) {
+                    builder.setStyle(R.style.ShowCaseThemeDark).replaceEndButton(customButton).build();
+                } else {
+                    builder.setStyle(R.style.ShowCaseThemeLight).replaceEndButton(customButton).build();
+                }
             }
         }
     }
@@ -474,9 +475,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
             //build 87 is where Realm change happened
         } else if (switchPreferences.getVersionCode() <= 87) {
-            Intent intent = new Intent(context, DownloadActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            Toast.makeText(context,"Upgraded from a legacy build, might need to refresh data manually.", Toast.LENGTH_LONG).show();
 
             //Upgrade post Realm change.
         } else if (Utils.getVersionCode(context) != switchPreferences.getVersionCode()) {
@@ -656,7 +655,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                                     Snackbar.make(coordinatorLayout, "Debug: " + sharedPreference.isDebugEnabled(),
                                             Snackbar.LENGTH_LONG).show();
                                     context.startService(new Intent(context, LaunchDataService.class)
-                                            .setAction(Strings.ACTION_GET_ALL_WIFI));
+                                            .setAction(Strings.ACTION_GET_ALL_DATA));
                                     break;
                                 case 3:
                                     try {

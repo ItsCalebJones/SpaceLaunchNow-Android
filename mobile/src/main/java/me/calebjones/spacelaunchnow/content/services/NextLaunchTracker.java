@@ -396,8 +396,7 @@ public class NextLaunchTracker extends IntentService implements
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        LaunchNotification notification = realm.createObject(LaunchNotification.class);
-                        notification.setId(launch.getId());
+                        realm.createObject(LaunchNotification.class, launch.getId());
                     }
                 });
                 notification = realm.where(LaunchNotification.class).equalTo("id", launch.getId()).findFirst();

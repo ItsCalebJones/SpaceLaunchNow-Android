@@ -25,7 +25,7 @@ public final class Strings {
     public static final String ACTION_GET_PREV_LAUNCHES = "GET_PREV_LAUNCHES";
     public static final String ACTION_GET_UP_LAUNCHES = "GET_UP_LAUNCHES";
     public static final String ACTION_GET_VEHICLES_DETAIL = "GET_ROCKETS";
-    public static final String ACTION_GET_ALL_WIFI = "GET_ALL";
+    public static final String ACTION_GET_ALL_DATA = "GET_ALL";
     public static final String ACTION_GET_ALL_NO_WIFI = "GET_ALL_NO_WIFI";
     public static final String ACTION_GET_MISSION = "GET_ALL_MISSIONS";
     public static final String ACTION_GET_AGENCY = "GET_AGENCY";

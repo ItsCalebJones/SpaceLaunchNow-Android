@@ -34,7 +34,7 @@
     <string name="title_activity_debug">DebugActivity</string>
     <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
 
-    <string name="whats_new_content">1.5.0 - BETA - Calendar Support\n\n
+    <string name="whats_new_content">1.5.0 - Calendar Support\n\n
         \u2022Added a \'Data Saver\' and \'Wifi Only\' mode\'s for background data sync.\n
         \u2022Improved foreground and background data syncing.\n
         \u2022Improved tracking of rescheduled launches and preventing spammy notifications.\n
@@ -53,4 +53,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_download">Download</string>
     <string name="title_activity_web_view_fallback">Space Launch Now</string>
+    <string name="slide_one_title">Space Launch Now</string>
+    <string name="slide_one_description">Keep up to date on all your favorite  orbital launches, missions, and launch vehicles.</string>
+    <string name="slide_two_title">Notification for Launches</string>
+    <string name="slide_two_description">Get notifications for upcoming launches and look into the history of spaceflight</string>
+    <string name="slide_three_title">Find Launch Vehicles</string>
+    <string name="slide_three_description">Get to know the vehicles that have taken us to orbit.</string>
 </resources>

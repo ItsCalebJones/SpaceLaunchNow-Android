@@ -35,8 +35,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingBottom="@dimen/material_component_cards_primary_title_bottom_padding"
-                    android:paddingTop="@dimen/material_component_cards_primary_title_top_padding">
+                    android:paddingBottom="@dimen/material_card_edge_margin"
+                    android:paddingTop="@dimen/material_card_edge_margin">
 
                     <TextView
                         android:id="@+id/mission_agency_title"
@@ -255,8 +255,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingBottom="@dimen/material_component_cards_primary_title_bottom_padding"
-                    android:paddingTop="@dimen/material_component_cards_primary_title_top_padding">
+                    android:paddingBottom="@dimen/material_card_edge_margin"
+                    android:paddingTop="@dimen/material_card_edge_margin">
 
                     <TextView
                         android:id="@+id/launch_agency_title"
