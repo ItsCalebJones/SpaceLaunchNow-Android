@@ -32,6 +32,7 @@ import com.crashlytics.android.Crashlytics;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 
 import java.util.ArrayList;
+
 import de.mrapp.android.preference.activity.PreferenceActivity;
 import io.fabric.sdk.android.Fabric;
 import me.calebjones.spacelaunchnow.BuildConfig;
@@ -57,6 +58,7 @@ public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String NAV_ITEM_ID = "navItemId";
+    private static final int REQUEST_CODE_INTRO = 1837;
     private static ListPreferences listPreferences;
     private final Handler mDrawerActionHandler = new Handler();
     private LaunchesViewPager mlaunchesViewPager;
@@ -105,14 +107,17 @@ public class MainActivity extends BaseActivity
                     AppearanceFragment.class.getName());
             startActivity(sendIntent);
         }
+        listPreferences = ListPreferences.getInstance(this.context);
+        switchPreferences = SwitchPreferences.getInstance(this.context);
+        if (listPreferences.getFirstBoot()) {
+            switchPreferences.setPrevFiltered(false);
+            loadTutorial();
+        }
         int m_theme;
-        int m_layout;
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         this.context = getApplicationContext();
         customTabActivityHelper = new CustomTabActivityHelper();
 
-        listPreferences = ListPreferences.getInstance(this.context);
-        switchPreferences = SwitchPreferences.getInstance(this.context);
 
         if (listPreferences.isNightModeActive(this)) {
             switchPreferences.setNightModeStatus(true);
@@ -234,10 +239,7 @@ public class MainActivity extends BaseActivity
     }
 
     public void checkFirstBoot() {
-        if (listPreferences.getFirstBoot()) {
-            switchPreferences.setPrevFiltered(false);
-            loadTutorial();
-        } else {
+        if (!listPreferences.getFirstBoot()) {
             navigate(mNavItemId);
         }
     }
@@ -282,7 +284,7 @@ public class MainActivity extends BaseActivity
 
     public void getFirstLaunches() {
         Intent launchIntent = new Intent(this.context, LaunchDataService.class);
-        launchIntent.setAction(Strings.ACTION_GET_ALL_WIFI);
+        launchIntent.setAction(Strings.ACTION_GET_ALL_DATA);
         this.context.startService(launchIntent);
     }
 
@@ -511,7 +513,7 @@ public class MainActivity extends BaseActivity
                 R.color.slide_two, R.drawable.intro_slide_two_foreground, R.drawable.intro_slide_background);
 
         TutorialItem tutorialItem4 = new TutorialItem("Find Launch Vehicles", "Get to know the vehicles that have taken us to orbit.",
-                R.color.slide_four, R.drawable.intro_slide_four_foreground, R.drawable.intro_slide_background);
+                R.color.slide_three, R.drawable.intro_slide_four_foreground, R.drawable.intro_slide_background);
 
         ArrayList<TutorialItem> tutorialItems = new ArrayList<>();
         tutorialItems.add(tutorialItem1);
@@ -523,13 +525,16 @@ public class MainActivity extends BaseActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //    super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            if (listPreferences.getFirstBoot()) {
-                Intent intent = new Intent(this, DownloadActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+            super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                if (listPreferences.getFirstBoot()) {
+                    listPreferences.setFirstBoot(false);
+                }
+            } else {
+                listPreferences.setFirstBoot(false);
             }
+            navigate(mNavItemId);
         }
     }
 }

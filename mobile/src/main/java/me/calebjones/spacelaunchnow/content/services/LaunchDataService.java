@@ -99,13 +99,13 @@ public class LaunchDataService extends BaseService {
             }
 
             //Usually called on first launch
-            if (Strings.ACTION_GET_ALL_WIFI.equals(action)) {
+            if (Strings.ACTION_GET_ALL_DATA.equals(action)) {
                 Timber.v("Intent action received: %s", action);
                 if (this.sharedPref.getBoolean("background", true)) {
                     scheduleLaunchUpdates();
                 }
 
-                if (getUpcomingLaunches(this)) {
+                if (getUpcomingLaunchesAll(this)) {
                     if (getLaunchesByDate("1950-01-01", Utils.getEndDate(this), this)) {
                         Intent rocketIntent = new Intent(getApplicationContext(), VehicleDataService.class);
                         rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
@@ -129,8 +129,9 @@ public class LaunchDataService extends BaseService {
                 Timber.v("Intent action received: %s", action);
                 if (this.sharedPref.getBoolean("background", true)) {
                     scheduleLaunchUpdates();
+                } else {
+                    getUpcomingLaunches(this);
                 }
-                getUpcomingLaunches(this);
                 syncNotifiers(this);
                 this.startService(new Intent(this, NextLaunchTracker.class));
 
@@ -204,9 +205,25 @@ public class LaunchDataService extends BaseService {
 
     private static void checkFullSync(Context context) {
         Realm realm = Realm.getDefaultInstance();
+        checkUpcomingLaunches(context, realm);
         checkPreviousLaunches(context, realm);
         checkMissions(context, realm);
         checkVehicles(context, realm);
+    }
+
+    private static void checkUpcomingLaunches(Context context, Realm realm) {
+        UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Strings.ACTION_GET_UP_LAUNCHES).findFirst();
+        if (record != null){
+            Date currentDate = new Date();
+            Date lastUpdateDate = record.getDate();
+            long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
+            long daysMaxUpdate = 2592000000L;
+            if (timeSinceUpdate > daysMaxUpdate) {
+                getUpcomingLaunchesAll(context);
+            }
+        } else {
+            getUpcomingLaunchesAll(context);
+        }
     }
 
     private static void checkMissions(Context context, Realm realm) {
@@ -215,7 +232,8 @@ public class LaunchDataService extends BaseService {
             Date currentDate = new Date();
             Date lastUpdateDate = record.getDate();
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
-            if (timeSinceUpdate > 1209600000) {
+            long daysMaxUpdate = 2592000000L;
+            if (timeSinceUpdate > daysMaxUpdate) {
                 context.startService(new Intent(context, MissionDataService.class));
             }
         } else {
@@ -229,7 +247,8 @@ public class LaunchDataService extends BaseService {
             Date currentDate = new Date();
             Date lastUpdateDate = record.getDate();
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
-            if (timeSinceUpdate > 1209600000){
+            long daysMaxUpdate = 2592000000L;
+            if (timeSinceUpdate > daysMaxUpdate) {
                 getLaunchesByDate("1950-01-01", Utils.getEndDate(context), context);
             }
         } else {
@@ -243,7 +262,8 @@ public class LaunchDataService extends BaseService {
             Date currentDate = new Date();
             Date lastUpdateDate = record.getDate();
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
-            if (timeSinceUpdate > 1209600000){
+            long daysMaxUpdate = 2592000000L;
+            if (timeSinceUpdate > daysMaxUpdate) {
                 Intent rocketIntent = new Intent(context, VehicleDataService.class);
                 rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
                 context.startService(rocketIntent);
@@ -415,6 +435,99 @@ public class LaunchDataService extends BaseService {
                 @Override
                 public void execute(Realm realm) {
                     UpdateRecord updateRecord = new UpdateRecord();
+                    updateRecord.setType(Strings.ACTION_UPDATE_NEXT_LAUNCH);
+                    updateRecord.setDate(new Date());
+                    updateRecord.setSuccessful(true);
+                    realm.copyToRealmOrUpdate(updateRecord);
+                }
+            });
+
+            Intent broadcastIntent = new Intent();
+            broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
+            context.getApplicationContext().sendBroadcast(broadcastIntent);
+
+            mRealm.close();
+            FileUtils.saveSuccess(true, Strings.ACTION_UPDATE_NEXT_LAUNCH, context);
+            return true;
+        } catch (IOException e) {
+            Timber.e("Error: %s", e.getLocalizedMessage());
+
+            mRealm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    UpdateRecord updateRecord = new UpdateRecord();
+                    updateRecord.setType(Strings.ACTION_UPDATE_NEXT_LAUNCH);
+                    updateRecord.setDate(new Date());
+                    updateRecord.setSuccessful(false);
+                    realm.copyToRealmOrUpdate(updateRecord);
+                }
+            });
+
+            Intent broadcastIntent = new Intent();
+            broadcastIntent.putExtra("error", e.getLocalizedMessage());
+            broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
+            context.getApplicationContext().sendBroadcast(broadcastIntent);
+            mRealm.close();
+            FileUtils.saveSuccess(false, Strings.ACTION_UPDATE_NEXT_LAUNCH + " " + e.getLocalizedMessage(), context);
+            return false;
+        }
+    }
+
+    private static boolean getUpcomingLaunchesAll(Context context) {
+        LibraryRequestInterface request = getRetrofit().create(LibraryRequestInterface.class);
+        Call<LaunchResponse> call;
+        Response<LaunchResponse> launchResponse;
+        RealmList<LaunchRealm> items = new RealmList<>();
+
+        Realm mRealm = Realm.getDefaultInstance();
+
+        ListPreferences listPreference = ListPreferences.getInstance(context);
+
+        int offset = 0;
+        int total = 10;
+        int count;
+
+        try {
+            while (total != offset) {
+                if (listPreference.isDebugEnabled()) {
+                    call = request.getDebugUpcomingLaunchesAll(offset);
+                } else {
+                    call = request.getUpcomingLaunchesAll(offset);
+                }
+                launchResponse = call.execute();
+                if (launchResponse.isSuccessful()) {
+                    total = launchResponse.body().getTotal();
+                    count = launchResponse.body().getCount();
+                    offset = offset + count;
+                    Timber.v("UpcomingLaunches Count: %s", offset);
+                    Collections.addAll(items, launchResponse.body().getLaunches());
+                } else {
+                    throw new IOException(launchResponse.errorBody().string());
+                }
+            }
+            for (LaunchRealm item : items) {
+                LaunchRealm previous = mRealm.where(LaunchRealm.class)
+                        .equalTo("id", item.getId())
+                        .findFirst();
+                if (previous != null) {
+                    Timber.v("UpcomingLaunches updating items: %s", previous.getName());
+                    item.setEventID(previous.getEventID());
+                    item.setSyncCalendar(previous.syncCalendar());
+                    item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
+                    item.setIsNotifiedDay(previous.getIsNotifiedDay());
+                    item.setIsNotifiedHour(previous.getIsNotifiedHour());
+                    item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
+                }
+                item.getLocation().setPrimaryID();
+                mRealm.beginTransaction();
+                mRealm.copyToRealmOrUpdate(item);
+                mRealm.commitTransaction();
+            }
+
+            mRealm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    UpdateRecord updateRecord = new UpdateRecord();
                     updateRecord.setType(Strings.ACTION_GET_UP_LAUNCHES);
                     updateRecord.setDate(new Date());
                     updateRecord.setSuccessful(true);
@@ -500,7 +613,7 @@ public class LaunchDataService extends BaseService {
                 @Override
                 public void execute(Realm realm) {
                     UpdateRecord updateRecord = new UpdateRecord();
-                    updateRecord.setType(Strings.ACTION_UPDATE_NEXT_LAUNCH);
+                    updateRecord.setType(Strings.ACTION_UPDATE_UP_LAUNCHES);
                     updateRecord.setDate(new Date());
                     updateRecord.setSuccessful(true);
                     realm.copyToRealmOrUpdate(updateRecord);
@@ -512,7 +625,7 @@ public class LaunchDataService extends BaseService {
             context.sendBroadcast(broadcastIntent);
 
             mRealm.close();
-            FileUtils.saveSuccess(true, Strings.ACTION_UPDATE_NEXT_LAUNCH, context);
+            FileUtils.saveSuccess(true, Strings.ACTION_UPDATE_UP_LAUNCHES, context);
             return true;
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());
@@ -521,7 +634,7 @@ public class LaunchDataService extends BaseService {
                 @Override
                 public void execute(Realm realm) {
                     UpdateRecord updateRecord = new UpdateRecord();
-                    updateRecord.setType(Strings.ACTION_UPDATE_NEXT_LAUNCH);
+                    updateRecord.setType(Strings.ACTION_UPDATE_UP_LAUNCHES);
                     updateRecord.setDate(new Date());
                     updateRecord.setSuccessful(false);
                     realm.copyToRealmOrUpdate(updateRecord);
@@ -533,7 +646,7 @@ public class LaunchDataService extends BaseService {
             broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
             context.sendBroadcast(broadcastIntent);
             mRealm.close();
-            FileUtils.saveSuccess(false, Strings.ACTION_UPDATE_NEXT_LAUNCH + " " + e.getLocalizedMessage(), context);
+            FileUtils.saveSuccess(false, Strings.ACTION_UPDATE_UP_LAUNCHES + " " + e.getLocalizedMessage(), context);
             return false;
         }
     }

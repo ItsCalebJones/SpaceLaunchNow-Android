@@ -19,9 +19,15 @@ public interface LibraryRequestInterface {
     //Get Launches Methods
 
     @GET(version + "/launch/next/1000&mode=verbose&limit=100")
-    Call<LaunchResponse> getUpcomingLaunches(@Query("offset") int offset);
+    Call<LaunchResponse> getUpcomingLaunchesAll(@Query("offset") int offset);
 
     @GET("dev/launch/next/1000&mode=verbose&limit=100")
+    Call<LaunchResponse> getDebugUpcomingLaunchesAll(@Query("offset") int offset);
+
+    @GET(version + "/launch/next/25&mode=verbose")
+    Call<LaunchResponse> getUpcomingLaunches(@Query("offset") int offset);
+
+    @GET("dev/launch/next/25&mode=verbose")
     Call<LaunchResponse> getDebugUpcomingLaunches(@Query("offset") int offset);
 
     @GET(version + "/launch/{start_date}/{end_date}/?limit=300")

@@ -16,7 +16,6 @@ import com.crashlytics.android.Crashlytics;
 import com.evernote.android.job.JobManager;
 import com.karumi.dexter.Dexter;
 import com.onesignal.OneSignal;
-import com.squareup.leakcanary.LeakCanary;
 
 import net.mediavrog.irr.DefaultRuleEngine;
 
@@ -85,7 +84,6 @@ public class LaunchApplication extends Application {
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        LeakCanary.install(this);
         OneSignal.startInit(this)
                 .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
                 .init();
@@ -128,21 +126,22 @@ public class LaunchApplication extends Application {
         switchPreferences = SwitchPreferences.getInstance(this);
 
         RealmConfiguration realmConfig;
+        Realm.init(this);
         if (switchPreferences.getVersionCode() >= 151) {
             // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
-            realmConfig = new RealmConfiguration.Builder(this)
+            realmConfig = new RealmConfiguration.Builder()
                     .schemaVersion(2)
                     .migration(new Migration())
                     .build();
         } else if (switchPreferences.getVersionCode() > 0){
-            realmConfig = new RealmConfiguration.Builder(this)
+            realmConfig = new RealmConfiguration.Builder()
                     .schemaVersion(2)
                     .deleteRealmIfMigrationNeeded()
                     .build();
 
             Toast.makeText(this, "Unable to migrate database on upgrade, please refresh to get launch data.", Toast.LENGTH_SHORT).show();
         } else {
-            realmConfig = new RealmConfiguration.Builder(this)
+            realmConfig = new RealmConfiguration.Builder()
                     .schemaVersion(2)
                     .deleteRealmIfMigrationNeeded()
                     .build();
@@ -193,6 +192,10 @@ public class LaunchApplication extends Application {
                     this.startService(rocketIntent);
                 }
             }
+        } else {
+            Intent intent = new Intent(this, LaunchDataService.class);
+            intent.setAction(Strings.ACTION_GET_ALL_DATA);
+            this.startService(intent);
         }
     }
 

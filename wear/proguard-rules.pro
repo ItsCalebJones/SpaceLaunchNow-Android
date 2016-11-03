@@ -25,6 +25,11 @@
 -keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
     public static final *** NULL;
 }
+
+# WORKAROUND for building project with GMS (google play services)
+-keep class com.google.android.gms.iid.zzd { *; }
+-keep class android.support.v4.content.ContextCompat { *; }
+
 -keepnames @com.google.android.gms.common.annotation.KeepName class *
 -keepclassmembernames class * {
     @com.google.android.gms.common.annotation.KeepName *;
