@@ -129,9 +129,9 @@ public class LaunchDataService extends BaseService {
                 Timber.v("Intent action received: %s", action);
                 if (this.sharedPref.getBoolean("background", true)) {
                     scheduleLaunchUpdates();
-                } else {
-                    getUpcomingLaunches(this);
                 }
+
+                getUpcomingLaunches(this);
                 syncNotifiers(this);
                 this.startService(new Intent(this, NextLaunchTracker.class));
 

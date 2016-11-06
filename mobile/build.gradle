@@ -73,7 +73,7 @@ android {
         versionName appVersionName
         signingConfig signingConfigs.config
         resConfigs "en"
-        vectorDrawables.useSupportLibrary = true
+//        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         debug {
@@ -149,4 +149,10 @@ dependencies {
     compile 'com.github.michael-rapp:android-preference-activity:4.2.8'
     compile 'com.evernote:android-job:1.1.0'
     compile 'blue.aodev:material-values:1.1.0'
+    compile "com.mikepenz:iconics-core:2.8.1@aar"
+    compile 'com.mikepenz:google-material-typeface:2.2.0.3.original@aar'
+    compile('com.mikepenz:materialdrawer:5.7.0@aar') {
+        transitive = true
+    }
+    compile 'com.mikepenz:fontawesome-typeface:4.6.0.3@aar'
 }

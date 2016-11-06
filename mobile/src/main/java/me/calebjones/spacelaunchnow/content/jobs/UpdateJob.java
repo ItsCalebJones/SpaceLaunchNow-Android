@@ -43,7 +43,7 @@ public class UpdateJob extends Job {
         }
 
         JobRequest.Builder builder = new JobRequest.Builder(UpdateJob.TAG)
-                .setPeriodic(interval)
+                .setPeriodic(interval, 3600000)
                 .setPersisted(true)
                 .setUpdateCurrent(true);
 

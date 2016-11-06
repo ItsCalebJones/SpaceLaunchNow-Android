@@ -716,9 +716,9 @@ public class NextLaunchTracker extends IntentService implements
             Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
 
             Timber.v("Sent");
-        }
     }
 
+}
     @Override
     public void onConnected(Bundle bundle) {
         Timber.d("onConnected");

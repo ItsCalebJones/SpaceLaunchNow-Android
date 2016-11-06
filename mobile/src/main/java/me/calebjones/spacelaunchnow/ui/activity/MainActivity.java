@@ -3,7 +3,6 @@ package me.calebjones.spacelaunchnow.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,21 +14,28 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.widget.ImageView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.AccountHeaderBuilder;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.holder.ImageHolder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import java.util.ArrayList;
 
@@ -44,6 +50,7 @@ import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.settings.fragments.AppearanceFragment;
 import me.calebjones.spacelaunchnow.supporter.SupporterActivity;
+import me.calebjones.spacelaunchnow.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.NextLaunchFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.missions.MissionFragment;
@@ -54,8 +61,7 @@ import timber.log.Timber;
 import za.co.riggaroo.materialhelptutorial.TutorialItem;
 import za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity;
 
-public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity {
 
     private static final String NAV_ITEM_ID = "navItemId";
     private static final int REQUEST_CODE_INTRO = 1837;
@@ -66,7 +72,7 @@ public class MainActivity extends BaseActivity
     private NextLaunchFragment mUpcomingFragment;
     private VehiclesViewPager mVehicleViewPager;
     private Toolbar toolbar;
-    private DrawerLayout drawer;
+    private Drawer result = null;
     private SharedPreferences sharedPref;
     private NavigationView navigationView;
     private SwitchPreferences switchPreferences;
@@ -145,48 +151,6 @@ public class MainActivity extends BaseActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                int color = statusColor;
-                int r = (color >> 16) & 0xFF;
-                int g = (color >> 8) & 0xFF;
-                int b = (color >> 0) & 0xFF;
-
-                float currentScroll = slideOffset * 255;
-
-                int currentScrollInt = Math.round(currentScroll);
-
-                if ((slideOffset) < 1 && (slideOffset) > 0) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        Window window = getWindow();
-                        window.setStatusBarColor(Color.argb(reverseNumber(currentScrollInt, 0, 255), r, g, b));
-                    }
-                }
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                Timber.v("onDrawerOpened - Open");
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                Timber.v("onDrawerClosed - Closed");
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    Window window = getWindow();
-                    window.setStatusBarColor(statusColor);
-                }
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-
-            }
-        };
-
         // load saved navigation state if present
         if (null == savedInstanceState) {
             mNavItemId = R.id.menu_next_launch;
@@ -194,20 +158,74 @@ public class MainActivity extends BaseActivity
             mNavItemId = savedInstanceState.getInt(NAV_ITEM_ID);
         }
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        AccountHeader headerResult = new AccountHeaderBuilder()
+                .withActivity(this)
+                .withCompactStyle(false)
+                .withHeaderBackground(new ImageHolder("http://res.cloudinary.com/dnkkbfy3m/image/upload/v1462465326/navbar_one_sqfhes.png"))
+                .withSavedInstance(savedInstanceState)
+                .build();
 
-        View header = navigationView.getHeaderView(0);
-        ImageView imageView = (ImageView) header.findViewById(R.id.backgroundView);
-        Glide.with(this)
-                .load("http://res.cloudinary.com/dnkkbfy3m/image/upload/v1462465326/navbar_one_sqfhes.png")
-                .into(imageView);
+        result = new DrawerBuilder()
+                .withActivity(this)
+                .withTranslucentStatusBar(true)
+                .withToolbar(toolbar)
+                .withHasStableIds(true)
+                .withAccountHeader(headerResult)
+//                                )
+                .addDrawerItems(
+                        new PrimaryDrawerItem().withName("Home")
+                                .withIcon(GoogleMaterial.Icon.gmd_home)
+                                .withIdentifier(R.id.menu_next_launch)
+                                .withSelectable(true),
+                        new PrimaryDrawerItem().withName("Launches")
+                                .withIcon(GoogleMaterial.Icon.gmd_assignment)
+                                .withIdentifier(R.id.menu_launches)
+                                .withSelectable(true),
+                        new PrimaryDrawerItem().withName("Missions")
+                                .withIcon(GoogleMaterial.Icon.gmd_satellite)
+                                .withIdentifier(R.id.menu_missions)
+                                .withSelectable(true),
+                        new PrimaryDrawerItem().withName("Vehicles")
+                                .withIcon(FontAwesome.Icon.faw_rocket)
+                                .withIdentifier(R.id.menu_vehicle)
+                                .withSelectable(true),
+                        new DividerDrawerItem(),
+                        new SecondaryDrawerItem()
+                                .withIcon(GoogleMaterial.Icon.gmd_info_outline)
+                                .withName("What's New?")
+                                .withDescription("See the changelog.")
+                                .withIdentifier(R.id.menu_new)
+                                .withSelectable(false),
+                        new SecondaryDrawerItem()
+                                .withIcon(GoogleMaterial.Icon.gmd_feedback)
+                                .withName("Feedback")
+                                .withDescription("Found a bug?")
+                                .withIdentifier(R.id.menu_feedback)
+                                .withSelectable(false),
+                        new SecondaryDrawerItem().withName("Launch Library")
+                                .withDescription("Thank the librarians!")
+                                .withIcon(GoogleMaterial.Icon.gmd_open_in_browser)
+                                .withIdentifier(R.id.menu_launch)
+                                .withSelectable(true)
+                ).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        if (drawerItem != null) {
+                            navigate((int) drawerItem.getIdentifier());
+                        }
+                        return false;
+                    }
+                }).build();
 
-        // select the correct nav menu item
-        navigationView.getMenu().findItem(mNavItemId).setChecked(true);
+        if (!SupporterHelper.isSupporter()){
+            result.addStickyFooterItem(
+                            new PrimaryDrawerItem().withName("Become a Supporter")
+                                    .withDescription("Get Pro Features")
+                                    .withIcon(GoogleMaterial.Icon.gmd_mood)
+                                    .withIdentifier(R.id.menu_support)
+                                    .withSelectable(false));
+        }
 
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
         checkFirstBoot();
     }
 
@@ -366,24 +384,6 @@ public class MainActivity extends BaseActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(final MenuItem item) {
-        mNavItemId = item.getItemId();
-
-        // allow some time after closing the drawer before performing real navigation
-        // so the user can see what is happening
-        drawer.closeDrawer(GravityCompat.START);
-        mDrawerActionHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                navigate(item.getItemId());
-            }
-        }, 350);
-
-        return true;
-    }
-
     private void navigate(final int itemId) {
         Timber.v("Navigate to %s", itemId);
         // perform the actual navigation logic, updating the main_menu content fragment etc
@@ -525,7 +525,7 @@ public class MainActivity extends BaseActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-            super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 if (listPreferences.getFirstBoot()) {
