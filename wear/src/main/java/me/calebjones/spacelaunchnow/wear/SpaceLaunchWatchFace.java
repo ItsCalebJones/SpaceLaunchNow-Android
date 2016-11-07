@@ -319,7 +319,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             Calendar future = DateToCalendar(mDate);
             long timeToFinish = future.getTimeInMillis() - mTime.getTimeInMillis();
             if (timeToFinish <= 0){
-                launchName = "Syncing Next Launch...";
+                launchName = "Waiting for Next Launch...";
                 launchTime = 0;
             }
 
