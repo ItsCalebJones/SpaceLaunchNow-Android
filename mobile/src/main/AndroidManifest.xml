@@ -138,10 +138,6 @@
             android:theme="@style/BaseAppTheme" />
         <activity android:name=".ui.activity.BaseActivity" />
         <activity
-            android:name=".ui.activity.DownloadActivity"
-            android:label="@string/title_activity_download"
-            android:theme="@style/BaseAppTheme" />
-        <activity
             android:name=".ui.activity.WebViewFallbackActivity"
             android:label="@string/title_activity_web_view_fallback"
             android:parentActivityName=".ui.activity.MainActivity"
