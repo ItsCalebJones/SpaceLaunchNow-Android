@@ -25,7 +25,7 @@ public final class Strings {
     public static final String ACTION_GET_PREV_LAUNCHES = "GET_PREV_LAUNCHES";
     public static final String ACTION_GET_UP_LAUNCHES = "GET_UP_LAUNCHES";
     public static final String ACTION_GET_VEHICLES_DETAIL = "GET_ROCKETS";
-    public static final String ACTION_GET_ALL_WIFI = "GET_ALL";
+    public static final String ACTION_GET_ALL_DATA = "GET_ALL";
     public static final String ACTION_GET_ALL_NO_WIFI = "GET_ALL_NO_WIFI";
     public static final String ACTION_GET_MISSION = "GET_ALL_MISSIONS";
     public static final String ACTION_GET_AGENCY = "GET_AGENCY";
@@ -36,6 +36,7 @@ public final class Strings {
     public static final String ACTION_UPDATE_NEXT_LAUNCH = "UPDATE_NEXT_LAUNCH";
     public static final String ACTION_UPDATE_STORED_LAUNCH = "UPDATE_STORED_LAUNCH";
     public static final String ACTION_UPDATE_UP_LAUNCHES = "UPDATE_UP_LAUNCHES";
+    public static final String ACTION_UPDATE_BACKGROUND = "UPDATE_UP_LAUNCHES_BACKGROUND";
     public static final String ACTION_UPDATE_PREV_LAUNCHES = "UPDATE_PREV_LAUNCHES";
 
     public static final String ACTION_UPDATE_LAUNCH = "UPDATE_LAUNCH";
@@ -43,6 +44,7 @@ public final class Strings {
     public static final String ACTION_UPDATE_VEHICLES = "UPDATE_GET_VEHICLES";
     public static final String ACTION_CHECK_NEXT_LAUNCH_TIMER = "CHECK_NEXT_LAUNCH_TIMER";
     public static final String ACTION_PROGRESS = "ACTION_PROGRESS_COUNTER";
+    public static final String SYNC_NOTIFIERS = "SYNC_LAUNCH_NOTIFIERS";
 
 
     public static int NOTIF_ID = 568975;

@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
     ​
-
     <android.support.design.widget.AppBarLayout
         android:id="@+id/detail.appbar"
         android:layout_width="match_parent"
@@ -61,7 +60,7 @@
             android:layout_marginTop="-48dp"
             android:fitsSystemWindows="true"
             android:minHeight="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:layout_scrollFlags="scroll"
             app:theme="@style/ThemeOverlay.AppCompat.Dark" />
         ​
 
@@ -70,6 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            app:layout_scrollFlags="scroll"
             android:orientation="vertical">
             ​
 
@@ -80,7 +80,7 @@
                 android:layout_marginLeft="32dp"
                 android:layout_marginRight="32dp"
                 android:paddingTop="8dp"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:text="Unknown Rocket"
                 android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
             ​
@@ -91,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="4dp"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:text="Unknown Mission and Location"
                 android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
                 android:textColor="@android:color/white" />

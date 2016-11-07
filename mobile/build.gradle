@@ -1,16 +1,20 @@
 buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
+        jcenter()
     }
 
     dependencies {
         classpath 'io.fabric.tools:gradle:1.21.4'
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
     }
 }
+
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'org.moallemi.advanced-build-version'
 apply plugin: 'realm-android'
+apply plugin: 'com.getkeepsafe.dexcount'
 
 repositories {
     jcenter()
@@ -20,8 +24,8 @@ repositories {
 advancedVersioning {
     nameOptions {
         versionMajor 1
-        versionMinor 4
-        versionPatch 3
+        versionMinor 5
+        versionPatch 1
 
     }
     codeOptions {
@@ -35,6 +39,16 @@ advancedVersioning {
 def appVersionName = advancedVersioning.versionName
 def appVersionCode = advancedVersioning.versionCode
 
+def renameAPK(variant, defaultConfig, buildType) {
+    variant.outputs.each { output ->
+        def formattedDate = new Date().format('yyyyMMdd')
+
+        def file = output.packageApplication.outputFile
+        def fileName = applicationName + "-" + buildType + "-" + defaultConfig.versionName + "." + defaultConfig.versionCode + "-" + formattedDate + "-" + 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim() + ".apk"
+        output.packageApplication.outputFile = new File(file.parent, fileName)
+    }
+}
+
 android {
 
     signingConfigs {
@@ -45,7 +59,7 @@ android {
             storePassword "${password}"
         }
     }
-    compileSdkVersion 24
+    compileSdkVersion 25
     buildToolsVersion '24.0.2'
     defaultConfig {
         applicationId "me.calebjones.spacelaunchnow"
@@ -54,7 +68,7 @@ android {
                                 onesignal_app_id               : "${app_id}",
                                 onesignal_google_project_number: "${google_project_number}"]
         minSdkVersion 16
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode appVersionCode
         versionName appVersionName
         signingConfig signingConfigs.config
@@ -71,51 +85,56 @@ android {
 //            minifyEnabled true
 //            shrinkResources true
 //            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            applicationVariants.all { variant ->
+                if (variant.buildType.name == "release") {
+                    renameAPK(variant, defaultConfig, "release")
+                }
+            }
         }
     }
     productFlavors {
+    }
+
+    lintOptions{
+        abortOnError false
     }
 }
 
 dependencies {
 
     wearApp project(':wear')
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
-    compile('com.mikepenz:aboutlibraries:5.6.5@aar') {
+    compile('com.mikepenz:aboutlibraries:5.8.5@aar') {
         transitive = true
     }
 
     compile('com.github.afollestad.material-dialogs:core:0.9.0.1@aar') { transitive = true }
     compile 'com.github.afollestad.material-dialogs:commons:0.9.0.1@aar'
-    compile "com.android.support:design:$rootProject.supportLibraryVersion"
     compile "com.android.support:customtabs:$rootProject.supportLibraryVersion"
     compile "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:palette-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
+    compile "com.android.support:design:$rootProject.supportLibraryVersion"
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
-    compile 'com.mikepenz:iconics-core:2.8.1@aar'
+    compile 'com.jakewharton:butterknife:8.4.0'
     compile "com.google.android.gms:play-services-location:$rootProject.playServicesVersion"
     compile "com.google.android.gms:play-services-wearable:$rootProject.playServicesVersion"
     compile "com.google.android.gms:play-services-gcm:$rootProject.playServicesVersion"
-    compile 'com.onesignal:OneSignal:3.1.1@aar'
-    compile 'com.github.chrisbanes.photoview:library:1.2.4'
+    compile 'com.onesignal:OneSignal:3.4.0@aar'
+    compile 'com.github.chrisbanes:PhotoView:1.3.1'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.github.rahatarmanahmed:circularprogressview:2.5.0'
     compile 'com.github.clans:fab:1.6.4'
-    compile 'de.hdodenhof:circleimageview:2.1.0'
-    compile 'com.borax12.materialdaterangepicker:library:1.2'
-    compile 'net.mediavrog:integrated-rating-request:1.1.1'
-    compile 'com.jakewharton.timber:timber:4.3.0'
     compile 'za.co.riggaroo:materialhelptutorial:1.1.0'
-    compile 'com.jakewharton:butterknife:8.4.0'
-    compile 'com.simplecityapps:recyclerview-fastscroll:1.0.10'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'com.borax12.materialdaterangepicker:library:1.9'
+    compile 'net.mediavrog:integrated-rating-request:1.1.2'
+    compile 'com.jakewharton.timber:timber:4.3.1'
+    compile 'com.simplecityapps:recyclerview-fastscroll:1.0.11'
     compile 'com.github.javiersantos:MaterialStyledDialogs:1.4.1'
     compile 'com.karumi:dexter:2.3.1'
     compile 'com.anjlab.android.iab.v3:library:1.0.32'
@@ -124,10 +143,16 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.github.renaudcerrato:static-maps-api:1.0.2'
-    compile 'com.mikhaellopez:circularfillableloaders:1.2.0'
-    compile 'com.github.jrejaud:WearSocket:1.0.8'
     compile 'com.github.pwittchen:weathericonview:1.1.0'
     compile 'android.zetterstrom.com.forecast:forecast:1.2.0'
     compile 'it.macisamuele:calendarprovider-lib:0.0.1'
-    compile 'com.github.michael-rapp:android-preference-activity:4.2.7'
+    compile 'com.github.michael-rapp:android-preference-activity:4.2.8'
+    compile 'com.evernote:android-job:1.1.0'
+    compile 'blue.aodev:material-values:1.1.0'
+    compile "com.mikepenz:iconics-core:2.8.1@aar"
+    compile 'com.mikepenz:google-material-typeface:2.2.0.3.original@aar'
+    compile('com.mikepenz:materialdrawer:5.7.0@aar') {
+        transitive = true
+    }
+    compile 'com.mikepenz:fontawesome-typeface:4.6.0.3@aar'
 }

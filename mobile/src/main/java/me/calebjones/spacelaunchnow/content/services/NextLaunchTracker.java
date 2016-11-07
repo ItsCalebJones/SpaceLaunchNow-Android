@@ -20,6 +20,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
@@ -40,7 +41,9 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.content.jobs.NextLaunchJob;
 import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.realm.LaunchNotification;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import timber.log.Timber;
@@ -50,6 +53,7 @@ public class NextLaunchTracker extends IntentService implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
+    private GcmNetworkManager mGcmNetworkManager;
     private LaunchRealm nextLaunch;
     private boolean wear = false;
     private SharedPreferences sharedPref;
@@ -79,6 +83,8 @@ public class NextLaunchTracker extends IntentService implements
                 .addOnConnectionFailedListener(this)
                 .addApi(Wearable.API)
                 .build();
+
+        mGcmNetworkManager = GcmNetworkManager.getInstance(this);
     }
 
     @Override
@@ -215,9 +221,7 @@ public class NextLaunchTracker extends IntentService implements
             } else {
                 first = false;
             }
-            query.equalTo("rocket.agencies.id", 17)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 17);
+            query.equalTo("location.id", 17);
         }
 
         if (switchPreferences.getSwitchCape()) {
@@ -339,9 +343,7 @@ public class NextLaunchTracker extends IntentService implements
             } else {
                 first = false;
             }
-            query.equalTo("rocket.agencies.id", 17)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 17);
+            query.equalTo("location.id", 17);
         }
 
         if (switchPreferences.getSwitchCape()) {
@@ -386,8 +388,19 @@ public class NextLaunchTracker extends IntentService implements
         CalendarSyncService.startActionSyncAll(this);
     }
 
-    private void checkStatus(LaunchRealm launch) {
+    private void checkStatus(final LaunchRealm launch) {
         if (launch != null && launch.getNetstamp() > 0) {
+
+            LaunchNotification notification = realm.where(LaunchNotification.class).equalTo("id", launch.getId()).findFirst();
+            if (notification == null){
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.createObject(LaunchNotification.class, launch.getId());
+                    }
+                });
+                notification = realm.where(LaunchNotification.class).equalTo("id", launch.getId()).findFirst();
+            }
 
             long longdate = launch.getNetstamp();
             longdate = longdate * 1000;
@@ -398,7 +411,7 @@ public class NextLaunchTracker extends IntentService implements
 
             now.setTimeInMillis(System.currentTimeMillis());
             long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
-            boolean notify = this.sharedPref.getBoolean("notifications_new_message", true);
+            boolean notify = (this.sharedPref.getBoolean("notifications_new_message", true) && launch.isNotifiable());
 
             //nextLaunch is in less then one hour
             if (timeToFinish > 0) {
@@ -406,15 +419,15 @@ public class NextLaunchTracker extends IntentService implements
                     if (notify) {
                         int minutes = (int) ((timeToFinish / (1000 * 60)) % 60);
                         //Check settings to see if user should be notified.
-                        if (!launch.getIsNotifiedTenMinute() && this.sharedPref.getBoolean("notifications_launch_minute", false)) {
+                        if (!notification.isNotifiedTenMinute() && this.sharedPref.getBoolean("notifications_launch_minute", false)) {
                             notifyUserImminent(launch, minutes);
                             realm.beginTransaction();
-                            launch.setIsNotifiedTenMinute(true);
+                            notification.setNotifiedTenMinute(true);
                             realm.commitTransaction();
-                        } else if (!launch.getIsNotifiedHour() && this.sharedPref.getBoolean("notifications_launch_imminent", true)) {
+                        } else if (!notification.isNotifiedHour() && this.sharedPref.getBoolean("notifications_launch_imminent", true)) {
                             notifyUserImminent(launch, minutes);
                             realm.beginTransaction();
-                            launch.setIsNotifiedHour(true);
+                            notification.setNotifiedHour(true);
                             realm.commitTransaction();
                         }
                     }
@@ -424,10 +437,10 @@ public class NextLaunchTracker extends IntentService implements
                         int minutes = (int) ((timeToFinish / (1000 * 60)) % 60);
                         //Check settings to see if user should be notified.
                         if (this.sharedPref.getBoolean("notifications_launch_imminent", true)) {
-                            if (!launch.getIsNotifiedHour()) {
+                            if (!notification.isNotifiedHour()) {
                                 notifyUserImminent(launch, minutes);
                                 realm.beginTransaction();
-                                launch.setIsNotifiedHour(true);
+                                notification.setNotifiedHour(true);
                                 realm.commitTransaction();
                             }
                         }
@@ -441,7 +454,7 @@ public class NextLaunchTracker extends IntentService implements
                         int hours = (int) ((timeToFinish / (1000 * 60 * 60)) % 24);
                         //Check settings to see if user should be notified.
                         if (this.sharedPref.getBoolean("notifications_launch_day", true)) {
-                            if (!launch.getIsNotifiedDay()) {
+                            if (!notification.isNotifiedDay()) {
 
                                 //Round up for standard notification.
                                 if (hours == 23){
@@ -450,7 +463,7 @@ public class NextLaunchTracker extends IntentService implements
 
                                 notifyUser(launch, hours);
                                 realm.beginTransaction();
-                                launch.setIsNotifiedDay(true);
+                                notification.setNotifiedDay(true);
                                 realm.commitTransaction();
                             }
                         }
@@ -527,7 +540,7 @@ public class NextLaunchTracker extends IntentService implements
 
         mBuilder.setContentTitle(launchName)
                 .setContentText("Launch attempt in " + minutes + " minutes from " + launchPad)
-                .setSmallIcon(R.drawable.ic_notification)
+                .setSmallIcon(R.drawable.ic_rocket_white)
                 .setAutoCancel(true)
                 .setContentText(expandedText)
                 .extend(wearableExtender)
@@ -619,7 +632,7 @@ public class NextLaunchTracker extends IntentService implements
 
         mBuilder.setContentTitle(launchName)
                 .setContentText("Launch attempt in " + hours + " hours from " + launchPad)
-                .setSmallIcon(R.drawable.ic_notification)
+                .setSmallIcon(R.drawable.ic_rocket_white)
                 .setContentIntent(appIntent)
                 .setContentText(expandedText)
                 .extend(wearableExtender)
@@ -654,40 +667,37 @@ public class NextLaunchTracker extends IntentService implements
         return cal;
     }
 
-    public void scheduleUpdate(long convert) {
-        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        long nextUpdate = Calendar.getInstance().getTimeInMillis() + convert;
-
+    public void scheduleUpdate(long interval) {
         if (BuildConfig.DEBUG) {
+            long nextUpdate = Calendar.getInstance().getTimeInMillis() + interval;
+
             // Create a DateFormatter object for displaying date in specified format.
             SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss zz");
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(nextUpdate);
 
             String intervalString = String.format("%02d:%02d:%02d",
-                    TimeUnit.MILLISECONDS.toHours(convert),
-                    TimeUnit.MILLISECONDS.toMinutes(convert) -
-                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(convert)), // The change is in this line
-                    TimeUnit.MILLISECONDS.toSeconds(convert) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(convert)));
+                    TimeUnit.MILLISECONDS.toHours(interval),
+                    TimeUnit.MILLISECONDS.toMinutes(interval) -
+                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(interval)), // The change is in this line
+                    TimeUnit.MILLISECONDS.toSeconds(interval) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(interval)));
 
             NotificationCompat.Builder mBuilder = new NotificationCompat
                     .Builder(getApplicationContext());
             NotificationManager mNotifyManager = (NotificationManager) getApplicationContext()
                     .getSystemService(Context.NOTIFICATION_SERVICE);
 
-            String msg = String.format("Interval: %s - Time: %s - IntervalString - %s", convert, formatter.format(calendar.getTime()), intervalString);
+            String msg = String.format("Interval: %s - Time: %s - IntervalString - %s", interval, formatter.format(calendar.getTime()), intervalString);
             mBuilder.setContentTitle("Scheduling Update - ")
                     .setStyle(new NotificationCompat.BigTextStyle()
                             .bigText(msg))
-                    .setSmallIcon(R.drawable.ic_notification)
+                    .setSmallIcon(R.drawable.ic_rocket_white)
                     .setContentText(msg);
             mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
-            Timber.v("Scheduling Update - Interval: %s - Time: %s - IntervalString - %s", convert, formatter.format(calendar.getTime()), intervalString);
+            Timber.v("Scheduling Update - Interval: %s - Time: %s - IntervalString - %s", interval, formatter.format(calendar.getTime()), intervalString);
         }
-
-        alarmManager.set(AlarmManager.RTC_WAKEUP, nextUpdate,
-                PendingIntent.getBroadcast(this, 165432, new Intent(Strings.ACTION_CHECK_NEXT_LAUNCH_TIMER), 0));
+        NextLaunchJob.scheduleJob(interval, this);
     }
 
     // Create a data map and put data in it
@@ -706,9 +716,9 @@ public class NextLaunchTracker extends IntentService implements
             Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
 
             Timber.v("Sent");
-        }
     }
 
+}
     @Override
     public void onConnected(Bundle bundle) {
         Timber.d("onConnected");

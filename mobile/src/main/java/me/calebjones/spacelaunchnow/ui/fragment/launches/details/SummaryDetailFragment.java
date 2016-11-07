@@ -1,19 +1,24 @@
 package me.calebjones.spacelaunchnow.ui.fragment.launches.details;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +26,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.zetterstrom.com.forecast.ForecastClient;
 import android.zetterstrom.com.forecast.models.DataPoint;
 import android.zetterstrom.com.forecast.models.Forecast;
@@ -31,21 +37,33 @@ import com.afollestad.materialdialogs.Theme;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.bumptech.glide.Glide;
 import com.github.pwittchen.weathericonview.WeatherIconView;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 import com.mypopsy.maps.StaticMap;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
+import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.models.realm.PadRealm;
 import me.calebjones.spacelaunchnow.content.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.content.models.realm.RocketDetailsRealm;
+import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.util.LaunchListAdapter;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
@@ -67,8 +85,6 @@ public class SummaryDetailFragment extends BaseFragment {
 
     @BindView(R.id.map_view_summary)
     ImageView staticMap;
-    @BindView(R.id.fab_explore)
-    FloatingActionButton fab;
     @BindView(R.id.launch_date_title)
     TextView launch_date_title;
     @BindView(R.id.date)
@@ -81,6 +97,10 @@ public class SummaryDetailFragment extends BaseFragment {
     TextView launch_status;
     @BindView(R.id.watchButton)
     AppCompatButton watchButton;
+    @BindView(R.id.calendar_switch)
+    SwitchCompat calendarSwitch;
+    @BindView(R.id.notification_switch)
+    SwitchCompat notificationSwitch;
     @BindView(R.id.weather_card)
     CardView weatherCard;
     @BindView(R.id.weather_icon)
@@ -176,6 +196,8 @@ public class SummaryDetailFragment extends BaseFragment {
         launch = ((LaunchDetailActivity) getActivity()).getLaunch();
         setUpViews();
 
+        weatherCard.setVisibility(View.GONE);
+
         // Check if Weather card is enabled, defaults to false if null.
         if (sharedPref.getBoolean("weather", false)){
             if (launch.getNet().after(Calendar.getInstance().getTime())) {
@@ -183,8 +205,6 @@ public class SummaryDetailFragment extends BaseFragment {
             } else {
                 fetchPastWeather();
             }
-        } else {
-            weatherCard.setVisibility(View.GONE);
         }
 
         if (sharedPreference.isNightModeActive(context)) {
@@ -217,7 +237,9 @@ public class SummaryDetailFragment extends BaseFragment {
                         public void onResponse(Call<Forecast> forecastCall, Response<Forecast> response) {
                             if (response.isSuccessful()) {
                                 Forecast forecast = response.body();
-                                updateWeatherView(forecast);
+                                if(SummaryDetailFragment.this.isVisible()) {
+                                    updateWeatherView(forecast);
+                                }
                             } else {
                                 Timber.e("Error: %s", response.errorBody());
                             }
@@ -254,7 +276,9 @@ public class SummaryDetailFragment extends BaseFragment {
                         public void onResponse(Call<Forecast> forecastCall, Response<Forecast> response) {
                             if (response.isSuccessful()) {
                                 Forecast forecast = response.body();
-                                updateWeatherView(forecast);
+                                if(SummaryDetailFragment.this.isVisible()) {
+                                    updateWeatherView(forecast);
+                                }
                             } else {
                                 Timber.e("Error: %s", response.errorBody());
                             }
@@ -482,14 +506,9 @@ public class SummaryDetailFragment extends BaseFragment {
         if (dlat == 0 && dlon == 0 || Double.isNaN(dlat) || Double.isNaN(dlon) || dlat == Double.NaN || dlon == Double.NaN) {
             if (staticMap != null) {
                 staticMap.setVisibility(View.GONE);
-                fab.setVisibility(View.GONE);
             }
         } else {
             staticMap.setVisibility(View.VISIBLE);
-            fab.setVisibility(View.VISIBLE);
-//                holder.setMapLocation(dlat, dlon);
-//                // Keep track of MapView
-//                mMaps.add(holder.staticMap);
             final Resources res = context.getResources();
             final StaticMap map = new StaticMap()
                     .center(dlat, dlon)
@@ -538,6 +557,104 @@ public class SummaryDetailFragment extends BaseFragment {
                 launch_status.setText("Launch failure occurred.");
                 break;
         }
+
+        calendarSwitch.setChecked(launch.syncCalendar());
+        calendarSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+                    getRealm().executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            if (!launch.isUserToggledCalendar()){
+                                launch.setUserToggledCalendar(true);
+                            }
+                            launch.setSyncCalendar(!launch.syncCalendar());
+                            Timber.v("Launch %s updated to %s", launch.getName(), launch.syncCalendar());
+                        }
+                    });
+                    CalendarSyncService.startActionResync(context);
+                } else {
+                    Dexter.checkPermission(new PermissionListener() {
+                        @Override
+                        public void onPermissionGranted(PermissionGrantedResponse response) {
+                            final SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
+                            if (getRealm().where(CalendarItem.class).findFirst() == null){
+                                setDefaultCalendar();
+                            }
+                            getRealm().executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    if (!launch.isUserToggledCalendar()){
+                                        launch.setUserToggledCalendar(true);
+                                    }
+                                    launch.setSyncCalendar(!launch.syncCalendar());
+                                    Timber.v("Launch %s updated to %s", launch.getName(), launch.syncCalendar());
+                                }
+                            });
+                            CalendarSyncService.startActionResync(context);
+                        }
+
+                        @Override
+                        public void onPermissionDenied(PermissionDeniedResponse response) {
+                            calendarSwitch.setChecked(false);
+                            if (response.isPermanentlyDenied()){
+                                Toast.makeText(context, "Calendar permission denied, please go to Android Settings -> Apps to enable.", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onPermissionRationaleShouldBeShown(PermissionRequest permission, final PermissionToken token) {
+                            final SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
+                            new AlertDialog.Builder(context).setTitle("Calendar Permission Needed")
+                                    .setMessage("This permission is needed to sync launches with your calendar.")
+                                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            switchPreferences.setCalendarStatus(false);
+                                            dialog.dismiss();
+                                            token.cancelPermissionRequest();
+                                        }
+                                    })
+                                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                            token.continuePermissionRequest();
+                                        }
+                                    })
+                                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                        @Override
+                                        public void onDismiss(DialogInterface dialog) {
+                                            switchPreferences.setCalendarStatus(false);
+                                            token.cancelPermissionRequest();
+                                        }
+                                    })
+                                    .show();
+                        }
+                    }, Manifest.permission.WRITE_CALENDAR);
+                }
+            }
+        });
+
+        notificationSwitch.setChecked(launch.isNotifiable());
+        notificationSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getRealm().executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        if (!launch.isUserToggledNotifiable()){
+                            launch.setUserToggledNotifiable(true);
+                        }
+                        launch.setNotifiable(!launch.isNotifiable());
+                        notificationSwitch.setChecked(launch.isNotifiable());
+                        Timber.v("Launch %s notifiable updated to %s", launch.getName(), launch.isNotifiable());
+                    }
+                });
+                LaunchDataService.startActionSyncNotifiers(context);
+            }
+        });
 
 
         if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
@@ -602,7 +719,35 @@ public class SummaryDetailFragment extends BaseFragment {
             launch_window_start.setVisibility(View.GONE);
             launch_window_end.setVisibility(View.GONE);
         }
+        weatherCard.setVisibility(View.VISIBLE);
+    }
 
+    private void setDefaultCalendar() {
+        SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
+        final List<me.calebjones.spacelaunchnow.calendar.model.Calendar> calendarList = me.calebjones.spacelaunchnow.calendar.model.Calendar.getWritableCalendars(context.getContentResolver());
+
+        if (calendarList.size() > 0) {
+
+            final CalendarItem calendarItem = new CalendarItem();
+            calendarItem.setAccountName(calendarList.get(0).accountName);
+            calendarItem.setId(calendarList.get(0).id);
+
+            getRealm().executeTransactionAsync(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    realm.where(CalendarItem.class).findAll().deleteAllFromRealm();
+                    realm.copyToRealm(calendarItem);
+                }
+            }, new Realm.Transaction.OnSuccess() {
+                @Override
+                public void onSuccess() {
+                    CalendarSyncService.startActionSyncAll(context);
+                }
+            });
+        } else {
+            Toast.makeText(context, "No Calendars available to sync launch events with.", Toast.LENGTH_LONG).show();
+            switchPreferences.setCalendarStatus(false);
+        }
     }
 
     private void getLaunchVehicle(LaunchRealm vehicle) {

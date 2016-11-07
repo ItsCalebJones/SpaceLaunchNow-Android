@@ -40,6 +40,12 @@ public abstract class BaseService extends IntentService {
 
     public void onCreate() {
 
+        retrofit = getRetrofit();
+
+        super.onCreate();
+    }
+
+    public static Retrofit getRetrofit() {
         // Note there is a bug in GSON 2.5 that can cause it to StackOverflow when working with RealmObjects.
         // To work around this, use the ExclusionStrategy below or downgrade to 1.7.1
         // See more here: https://code.google.com/p/google-gson/issues/detail?id=440
@@ -79,11 +85,11 @@ public abstract class BaseService extends IntentService {
                 })
                 .create();
 
-        retrofit = new Retrofit.Builder()
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Strings.LIBRARY_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
-        super.onCreate();
+        return retrofit;
     }
 }

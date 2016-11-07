@@ -21,6 +21,8 @@
 
 #-keep class com.yourpackage.app.model.User { *; }
 -keep class me.calebjones.spacelaunchnow.content.models.** { *;}
+#-keep class com.yourpackage.app.model.User { *; }
+-keep class me.calebjones.spacelaunchnow.ui.** { *;}
 
 -dontwarn android.support.**
 
@@ -62,6 +64,10 @@
 -dontwarn rx.**
 -dontwarn retrofit.**
 -keepattributes Signature
+
+# WORKAROUND for building project with GMS (google play services)
+-keep class com.google.android.gms.iid.zzd { *; }
+-keep class android.support.v4.content.ContextCompat { *; }
 
 -keep class com.squareup.okhttp.** { *; }
 -keep interface com.squareup.okhttp.** { *; }

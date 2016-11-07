@@ -6,13 +6,14 @@ buildscript {
         maven { url "https://jitpack.io" }
     }
     dependencies {
-        classpath "io.realm:realm-gradle-plugin:1.2.0"
-        classpath 'com.android.tools.build:gradle:2.2.0'
+        classpath "io.realm:realm-gradle-plugin:2.1.1"
+        classpath 'com.android.tools.build:gradle:2.2.2'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
         classpath 'org.moallemi.gradle.advanced-build-version:gradle-plugin:1.5.3'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.4'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
+
     }
 }
 
@@ -36,6 +37,6 @@ ext {
     buildToolsVersion = '23.0.3'
 
     // App dependencies
-    supportLibraryVersion = '24.2.0'
-    playServicesVersion = '8.4.+'
+    supportLibraryVersion = '25.0.0'
+    playServicesVersion = '9.8.0'
 }

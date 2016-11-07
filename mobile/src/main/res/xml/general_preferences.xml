@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="Launch Tracking">
     <PreferenceCategory android:title="Default Launch Count">
         <com.afollestad.materialdialogs.prefs.MaterialListPreference
@@ -17,17 +17,21 @@
             android:defaultValue="true"
             android:key="background_sync"
             android:summaryOff="Allow Launch Data to sync in the background, required for launch notifications."
-            android:summaryOn="Launch Data will be synced in the background."
+            android:summaryOn="Launch data will be synced even when the app is in the background."
             android:title="Allow Background Syncs" />
-        <com.afollestad.materialdialogs.prefs.MaterialListPreference
-            android:defaultValue="24"
+        <SwitchPreference
             android:dependency="background_sync"
-            android:entries="@array/sync_timer"
-            android:entryValues="@array/sync_timer_values"
-            android:key="notification_sync_time"
-            android:summary="Select desired time between syncs."
-            android:title="Background Sync Interval" />
+            android:key="data_saver"
+            android:summaryOn="Sync upcoming launches once a week unless a WiFi connection is available. (Does not impact notifications)"
+            android:summaryOff="Launches will sync no more then once per day."
+            android:title="Data Saver" />
+        <SwitchPreference
+            android:dependency="background_sync"
+            android:key="wifi_only"
+            android:summary="Launch data will not be synced unless a WiFi connection is available. This will impact launch notifications."
+            android:title="WiFi Only" />
     </PreferenceCategory>
+
     <PreferenceCategory
         android:key="calendar_category"
         android:title="Calender Settings">
@@ -36,7 +40,7 @@
             android:defaultValue="false"
             android:key="calendar_sync_state"
             android:summary="Allow next launch to sync with default Calendar."
-            android:title="Enable Launch Sync" />
+            android:title="Automatic Calendar Sync" />
 
         <com.afollestad.materialdialogs.prefs.MaterialListPreference
             android:defaultValue="5"

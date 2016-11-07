@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -57,7 +56,6 @@ public class LaunchDetailActivity extends BaseActivity
     private ImageView detail_profile_backdrop;
     private CircleImageView detail_profile_image;
     private TextView detail_rocket, detail_mission_location;
-    private FloatingActionButton fab_favorite;
     private int mMaxScrollSize;
     private SharedPreferences sharedPref;
     private static ListPreferences sharedPreference;
@@ -111,7 +109,6 @@ public class LaunchDetailActivity extends BaseActivity
         detail_rocket = (TextView) findViewById(R.id.detail_rocket);
         detail_mission_location = (TextView) findViewById(R.id.detail_mission_location);
 
-
         //Grab information from Intent
         Intent mIntent = getIntent();
         String type = mIntent.getStringExtra("TYPE");
@@ -152,7 +149,7 @@ public class LaunchDetailActivity extends BaseActivity
 
         Calendar now = rightNow;
         now.setTimeInMillis(System.currentTimeMillis());
-        long timeToFinish = future - now.getTimeInMillis();
+        final long timeToFinish = future - now.getTimeInMillis();
 
         //Assign the title and mission locaiton data
         detail_rocket.setText(launch.getName());

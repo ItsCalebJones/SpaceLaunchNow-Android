@@ -9,14 +9,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,13 +34,18 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 
 import butterknife.BindView;
@@ -47,23 +56,22 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.BuildConfig;
-
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
 import me.calebjones.spacelaunchnow.content.adapter.CardBigAdapter;
 import me.calebjones.spacelaunchnow.content.adapter.CardSmallAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
-import me.calebjones.spacelaunchnow.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.supporter.Products;
-import me.calebjones.spacelaunchnow.ui.activity.DownloadActivity;
+import me.calebjones.spacelaunchnow.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
+import me.calebjones.spacelaunchnow.utils.FileUtils;
 import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
@@ -130,15 +138,17 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         if (NextLaunchFragment.this.isVisible()) {
             Button customButton = (Button) getLayoutInflater(null).inflate(R.layout.view_custom_button, null);
             ViewTarget pinMenuItem = new ViewTarget(R.id.action_alert, getActivity());
-            ShowcaseView.Builder builder = new ShowcaseView.Builder(getActivity())
-                    .withNewStyleShowcase()
-                    .setTarget(pinMenuItem)
-                    .setContentTitle("Launch Filtering")
-                    .setContentText("Only receive notifications for launches that you care about.");
-            if (sharedPreference.isNightModeActive(context)) {
-                builder.setStyle(R.style.ShowCaseThemeDark).replaceEndButton(customButton).hideOnTouchOutside().build();
-            } else {
-                builder.setStyle(R.style.ShowCaseThemeLight).replaceEndButton(customButton).hideOnTouchOutside().build();
+            if (pinMenuItem != null && customButton != null) {
+                ShowcaseView.Builder builder = new ShowcaseView.Builder(getActivity())
+                        .withNewStyleShowcase()
+                        .setTarget(pinMenuItem)
+                        .setContentTitle("Launch Filtering")
+                        .setContentText("Only receive notifications for launches that you care about.");
+                if (sharedPreference.isNightModeActive(context)) {
+                    builder.setStyle(R.style.ShowCaseThemeDark).replaceEndButton(customButton).build();
+                } else {
+                    builder.setStyle(R.style.ShowCaseThemeLight).replaceEndButton(customButton).build();
+                }
             }
         }
     }
@@ -216,7 +226,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     if (switchChanged) {
                         showLoading();
                         displayLaunches();
-                        if(switchPreferences.getCalendarStatus()){
+                        if (switchPreferences.getCalendarStatus()) {
                             CalendarSyncService.startActionResync(context);
                         }
                     }
@@ -278,7 +288,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     @Override
     public void onStop() {
         super.onStop();
-        if(!getRealm().isClosed()) {
+        if (!getRealm().isClosed()) {
             launchRealms.removeChangeListener(callback); // remove a particular listener
             // or
             launchRealms.removeChangeListeners(); // remove all registered listeners
@@ -311,6 +321,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 } else {
                     adapter.addItems(results);
                 }
+            } else {
+                adapter.clear();
             }
             hideLoading();
             launchRealms.removeChangeListeners();
@@ -334,7 +346,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
     private void setLayoutManager(int size) {
-        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && (launchRealms != null && launchRealms.size() == 1 || size == 1 )) {
+        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && (launchRealms != null && launchRealms.size() == 1 || size == 1)) {
             linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(),
                     LinearLayoutManager.VERTICAL, false);
             mRecyclerView.setLayoutManager(linearLayoutManager);
@@ -431,8 +443,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         Timber.v("Sending GET_UP_LAUNCHES");
         Intent intent = new Intent(getContext(), LaunchDataService.class);
         intent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
-        Timber.d("Sending service intent!");
         getContext().startService(intent);
+        Timber.d("Sending service intent!");
     }
 
     public void showLoading() {
@@ -450,7 +462,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         setTitle();
 
         //First install
-        if (switchPreferences.getVersionCode() == 0){
+        if (switchPreferences.getVersionCode() == 0) {
             switchPreferences.setVersionCode(Utils.getVersionCode(context));
             showCaseView();
             final Handler handler = new Handler();
@@ -462,10 +474,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             }, 1000);
 
             //build 87 is where Realm change happened
-        } else if (switchPreferences.getVersionCode() <= 87){
-            Intent intent = new Intent(context, DownloadActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+        } else if (switchPreferences.getVersionCode() <= 87) {
+            Toast.makeText(context,"Upgraded from a legacy build, might need to refresh data manually.", Toast.LENGTH_LONG).show();
 
             //Upgrade post Realm change.
         } else if (Utils.getVersionCode(context) != switchPreferences.getVersionCode()) {
@@ -597,44 +607,129 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.debug_add_launch) {
-            if (sharedPreference.isDebugEnabled()) {
-                sharedPreference.setDebugLaunch(false);
-            } else {
-                sharedPreference.setDebugLaunch(true);
-            }
-            RealmResults<LaunchRealm> results = getRealm().where(LaunchRealm.class).findAll();
+        if (id == R.id.debug_menu){
+            String[] strings = new String[]{"Next Launch", "Supporter", "Debug Launches", "Log", "Background Sync", "Vehicles"};
+            new MaterialDialog.Builder(getActivity())
+                    .title("Debug Menu")
+                    .items(strings)
+                    .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                        @Override
+                        public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                            switch (which){
+                                case 0:
+                                    Intent nextIntent = new Intent(getActivity(), LaunchDataService.class);
+                                    nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
+                                    getActivity().startService(nextIntent);
+                                    break;
+                                case 1:
+                                    Realm realm = Realm.getDefaultInstance();
+                                    if (sharedPreference.isDebugSupporterEnabled()) {
+                                        sharedPreference.setDebugSupporter(false);
+                                        realm.beginTransaction();
+                                        realm.delete(Products.class);
+                                        realm.commitTransaction();
+                                        Snackbar.make(coordinatorLayout, "Supporter: " + sharedPreference.isDebugSupporterEnabled(),
+                                                Snackbar.LENGTH_SHORT).show();
+                                    } else {
+                                        sharedPreference.setDebugSupporter(true);
+                                        realm.beginTransaction();
+                                        realm.copyToRealm(SupporterHelper.getProduct(SupporterHelper.SKU_TWO_DOLLAR));
+                                        realm.commitTransaction();
+                                        Snackbar.make(coordinatorLayout, "Supporter: " + sharedPreference.isDebugSupporterEnabled(),
+                                                Snackbar.LENGTH_SHORT).show();
+                                    }
+                                    break;
+                                case 2:
+                                    if (sharedPreference.isDebugEnabled()) {
+                                        sharedPreference.setDebugLaunch(false);
+                                    } else {
+                                        sharedPreference.setDebugLaunch(true);
+                                    }
+                                    RealmResults<LaunchRealm> results = getRealm().where(LaunchRealm.class).findAll();
 
-            getRealm().beginTransaction();
-            results.deleteAllFromRealm();
-            getRealm().commitTransaction();
+                                    getRealm().beginTransaction();
+                                    results.deleteAllFromRealm();
+                                    getRealm().commitTransaction();
 
-            Timber.v("%s", sharedPreference.isDebugEnabled());
-            Snackbar.make(coordinatorLayout, "Debug: " + sharedPreference.isDebugEnabled(),
-                    Snackbar.LENGTH_LONG).show();
-            context.startService(new Intent(context, LaunchDataService.class)
-                    .setAction(Strings.ACTION_GET_ALL_WIFI));
-        } else if (id == R.id.debug_supporter) {
-            Realm realm = Realm.getDefaultInstance();
-            if (sharedPreference.isDebugSupporterEnabled()) {
-                sharedPreference.setDebugSupporter(false);
-                realm.beginTransaction();
-                realm.delete(Products.class);
-                realm.commitTransaction();
-                Snackbar.make(coordinatorLayout, "Supporter: " + sharedPreference.isDebugSupporterEnabled(),
-                        Snackbar.LENGTH_SHORT).show();
-            } else {
-                sharedPreference.setDebugSupporter(true);
-                realm.beginTransaction();
-                realm.copyToRealm(SupporterHelper.getProduct(SupporterHelper.SKU_TWO_DOLLAR));
-                realm.commitTransaction();
-                Snackbar.make(coordinatorLayout, "Supporter: " + sharedPreference.isDebugSupporterEnabled(),
-                        Snackbar.LENGTH_SHORT).show();
-            }
-        } else if (id == R.id.debug_next_launch) {
-            Intent nextIntent = new Intent(getActivity(), LaunchDataService.class);
-            nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
-            getActivity().startService(nextIntent);
+                                    Timber.v("%s", sharedPreference.isDebugEnabled());
+                                    Snackbar.make(coordinatorLayout, "Debug: " + sharedPreference.isDebugEnabled(),
+                                            Snackbar.LENGTH_LONG).show();
+                                    context.startService(new Intent(context, LaunchDataService.class)
+                                            .setAction(Strings.ACTION_GET_ALL_DATA));
+                                    break;
+                                case 3:
+                                    try {
+                                        byte[] data = FileUtils.readFile(FileUtils.getSuccessFile(context));
+                                        if (data == null || data.length == 0) {
+                                            Toast.makeText(context, "Null file.", Toast.LENGTH_SHORT).show();
+                                        } else {
+
+                                            new MaterialDialog.Builder(getActivity())
+                                                    .title("History")
+                                                    .content(new String(data))
+                                                    .negativeText("Delete File")
+                                                    .positiveText("Ok")
+                                                    .neutralText("Save File")
+                                                    .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                                                        @Override
+                                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                            File textFile = new File(context.getCacheDir(), "success.txt");
+                                                            Uri uriForFile = FileProvider.getUriForFile(context, "me.calebjones.spacelaunchnow", textFile);
+                                                            context.grantUriPermission("me.calebjones.spacelaunchnow", uriForFile, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                                                            Intent intent = ShareCompat.IntentBuilder.from(getActivity())
+                                                                    .setStream(uriForFile) // uri from FileProvider
+                                                                    .setType("text/plain")
+                                                                    .getIntent()
+                                                                    .setAction(Intent.ACTION_SEND) //Change if needed
+                                                                    .setDataAndType(uriForFile, "text/plain")
+                                                                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                                                            startActivity(Intent.createChooser(intent, "Save File"));
+                                                        }
+                                                    })
+                                                    .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                                        @Override
+                                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                            try {
+                                                                FileUtils.delete(FileUtils.getSuccessFile(getContext()));
+                                                            } catch (IOException e) {
+                                                                Timber.e(e.getLocalizedMessage());
+                                                            }
+                                                        }
+                                                    })
+                                                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                                        @Override
+                                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                            dialog.dismiss();
+                                                        }
+                                                    })
+                                                    .show();
+                                        }
+
+                                    } catch (IOException e) {
+                                        Timber.e(e.getLocalizedMessage());
+                                        Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                    break;
+                                case 4:
+                                    Intent background = new Intent(getActivity(), LaunchDataService.class);
+                                    background.setAction(Strings.ACTION_UPDATE_BACKGROUND);
+                                    getActivity().startService(background);
+                                    break;
+                                case 5:
+                                    Intent rocketIntent = new Intent(context, VehicleDataService.class);
+                                    rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
+                                    context.startService(rocketIntent);
+                                    break;
+                            }
+
+                            return true;
+                        }
+                    })
+                    .positiveText("Ok")
+                    .show();
+
         } else if (id == R.id.action_alert) {
             if (!active) {
                 switchChanged = false;
@@ -658,15 +753,11 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 if (switchChanged) {
                     showLoading();
                     displayLaunches();
-                    if(switchPreferences.getCalendarStatus()){
+                    if (switchPreferences.getCalendarStatus()) {
                         CalendarSyncService.startActionResync(context);
                     }
                 }
             }
-        } else if (id == R.id.debug_vehicle) {
-            Intent rocketIntent = new Intent(context, VehicleDataService.class);
-            rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
-            context.startService(rocketIntent);
         }
         return super.onOptionsItemSelected(item);
     }

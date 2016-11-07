@@ -3,13 +3,12 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="match_parent"
     android:textAlignment="center"
     android:transitionGroup="true"
     tools:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <LinearLayout
-
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical">
@@ -17,10 +16,11 @@
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/card_margin"
             android:animateLayoutChanges="true"
-            card_view:cardCornerRadius="0dp"
-            card_view:cardElevation="4dp"
+            android:layout_margin="@dimen/material_card_edge_margin"
+            android:padding="@dimen/material_card_edge_margin"
+            card_view:cardCornerRadius="@dimen/card_view_corner_radius"
+            card_view:cardElevation="@dimen/material_card_elevation_resting"
             card_view:cardPreventCornerOverlap="true"
             card_view:cardUseCompatPadding="true">
 
@@ -41,7 +41,7 @@
                     android:text="Mission Details"
                     android:textAlignment="center"
                     android:textColor="?android:textColorPrimary"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/material_typography_regular_title_text_size"
                     android:textStyle="bold" />
 
                 <TextView
@@ -57,7 +57,7 @@
                     android:text="Unknown Payload"
                     android:textAlignment="center"
                     android:textColor="?android:textColorSecondary"
-                    android:textSize="15sp" />
+                    android:textSize="@dimen/material_typography_regular_subheading_text_size" />
 
                 <TextView
                     android:id="@+id/payload_type"
@@ -66,13 +66,15 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:gravity="center"
-                    android:paddingBottom="2dp"
-                    android:paddingTop="4dp"
+                    android:paddingBottom="@dimen/material_card_supporting_text_padding_bottom"
+                    android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
+                    android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
+                    android:paddingTop="@dimen/material_card_supporting_text_padding_top"
                     android:singleLine="false"
                     android:text="Unknown Mission Type"
                     android:textAlignment="center"
                     android:textColor="?android:textColorSecondary"
-                    android:textSize="15sp" />
+                    android:textSize="@dimen/material_typography_regular_subheading_text_size"  />
 
                 <TextView
                     android:id="@+id/payload_description"
@@ -81,15 +83,14 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:gravity="center"
-                    android:paddingBottom="12dp"
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:paddingTop="4dp"
+                    android:paddingBottom="@dimen/material_card_supporting_text_padding_bottom"
+                    android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
+                    android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
                     android:singleLine="false"
                     android:text=""
                     android:textAlignment="center"
                     android:textColor="?android:textColorSecondary"
-                    android:textSize="15sp" />
+                    android:textSize="@dimen/material_typography_regular_subheading_text_size"  />
 
                 <LinearLayout
 
@@ -131,13 +132,13 @@
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
-
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/card_margin"
             android:animateLayoutChanges="true"
-            card_view:cardCornerRadius="0dp"
-            card_view:cardElevation="4dp"
+            android:layout_margin="@dimen/material_card_edge_margin"
+            android:padding="@dimen/material_card_edge_margin"
+            card_view:cardCornerRadius="@dimen/card_view_corner_radius"
+            card_view:cardElevation="@dimen/material_card_elevation_resting"
             card_view:cardPreventCornerOverlap="true"
             card_view:cardUseCompatPadding="true">
 

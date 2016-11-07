@@ -77,6 +77,7 @@ public class CalendarSyncService extends BaseService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Timber.v("onHandleIntent received: ", intent.getAction());
+        switchPreferences = SwitchPreferences.getInstance(this);
         mRealm = Realm.getDefaultInstance();
         CalendarItem calendarItem = mRealm.where(CalendarItem.class).findFirst();
         if (calendarItem != null) {
@@ -103,17 +104,20 @@ public class CalendarSyncService extends BaseService {
             editor.putBoolean("calendar_sync_state", false);
             editor.apply();
 
-            switchPreferences = SwitchPreferences.getInstance(this);
             switchPreferences.setCalendarStatus(false);
         }
     }
 
     private void handleActionSyncAll() {
-        launchRealms = QueryBuilder.buildSwitchQuery(this, mRealm);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        if (switchPreferences.getCalendarStatus()) {
+            launchRealms = QueryBuilder.buildSwitchQuery(this, mRealm);
+        } else {
+            launchRealms = QueryBuilder.buildSwitchQuery(this, mRealm, true);
+        }
 
         RealmList<LaunchRealm> launchResults = new RealmList<>();
 
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         int size = Integer.parseInt(sharedPref.getString("calendar_count", "5"));
 
         if (launchRealms.size() > size) {
@@ -123,27 +127,45 @@ public class CalendarSyncService extends BaseService {
         }
 
         for (LaunchRealm launchRealm: launchResults){
-            if (launchRealm.getEventID() != null){
-                boolean success = calendarUtil.updateEvent(this, launchRealm);
-                if (!success) {
-                    Timber.v("Unable to update event %s, assuming deleted.", launchRealm.getName());
-                    Integer id = calendarUtil.addEvent(this, launchRealm);
-                    if (id != null) {
-                        mRealm.beginTransaction();
-                        launchRealm.setEventID(id);
-                        mRealm.commitTransaction();
-                    }
+            if (launchRealm.isUserToggledCalendar()){
+                if (launchRealm.syncCalendar()){
+                    syncCalendar(launchRealm);
                 }
             } else {
-                Integer id = calendarUtil.addEvent(this, launchRealm);
-                if (id != null) {
-                    mRealm.beginTransaction();
-                    launchRealm.setEventID(id);
-                    mRealm.commitTransaction();
-                }
+                syncCalendar(launchRealm);
             }
         }
         calendarUtil.deleteDuplicates(this, mRealm, "Space Launch Now", CalendarContract.Events.DESCRIPTION);
+    }
+
+    private void syncCalendar(final LaunchRealm launchRealm){
+        if (launchRealm.getEventID() != null){
+            boolean success = calendarUtil.updateEvent(this, launchRealm);
+            if (!success) {
+                Timber.v("Unable to update event %s, assuming deleted.", launchRealm.getName());
+                final Integer id = calendarUtil.addEvent(this, launchRealm);
+                if (id != null) {
+                    mRealm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            launchRealm.setEventID(id);
+                            launchRealm.setSyncCalendar(true);
+                        }
+                    });
+                }
+            }
+        } else {
+            final Integer id = calendarUtil.addEvent(this, launchRealm);
+            if (id != null) {
+                mRealm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        launchRealm.setEventID(id);
+                        launchRealm.setSyncCalendar(true);
+                    }
+                });
+            }
+        }
     }
 
     private void handleActionDeleteAll() {
@@ -151,12 +173,18 @@ public class CalendarSyncService extends BaseService {
                 .greaterThan("eventID", 0)
                 .findAll();
 
-        for (LaunchRealm launchRealm: launchRealms) {
+        for (final LaunchRealm launchRealm: launchRealms) {
             int success = calendarUtil.deleteEvent(this, launchRealm);
             if (success > 0){
-                mRealm.beginTransaction();
-                launchRealm.setEventID(null);
-                mRealm.commitTransaction();
+                mRealm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        launchRealm.setEventID(null);
+                        if (!launchRealm.isUserToggledCalendar()) {
+                            launchRealm.setSyncCalendar(false);
+                        }
+                    }
+                });
             }
         }
     }

@@ -18,13 +18,13 @@
         android:orientation="vertical">
 
         <android.support.v7.widget.CardView
-
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/card_margin"
             android:animateLayoutChanges="true"
-            card_view:cardCornerRadius="0dp"
-            card_view:cardElevation="4dp"
+            android:layout_margin="@dimen/material_card_edge_margin"
+            android:padding="@dimen/material_card_edge_margin"
+            card_view:cardCornerRadius="@dimen/card_view_corner_radius"
+            card_view:cardElevation="@dimen/material_card_elevation_resting"
             card_view:cardPreventCornerOverlap="true"
             card_view:cardUseCompatPadding="true">
 
@@ -32,7 +32,8 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:weightSum="1">
 
                 <LinearLayout
 
@@ -78,20 +79,8 @@
                         android:id="@+id/map_view_summary"
                         android:layout_width="fill_parent"
                         android:layout_height="160dp"
-                        android:clickable="false"
-                        tools:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-                    <android.support.design.widget.FloatingActionButton
-                        android:id="@+id/fab_explore"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@id/map_view_summary"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginBottom="-32dp"
-                        android:layout_marginRight="20dp"
                         android:clickable="true"
-                        android:elevation="16dp"
-                        app:srcCompat="@drawable/ic_explore" />
+                        tools:layout_behavior="@string/appbar_scrolling_view_behavior" />
                 </RelativeLayout>
 
                 <View
@@ -159,7 +148,26 @@
                     android:textColor="?android:textColorSecondary" />
 
 
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/calendar_switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:gravity="center|left"
+                    android:text="Sync to Calendar" />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/notification_switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:gravity="center|left"
+                    android:text="Launch Notifications" />
+
                 <LinearLayout
+                    android:paddingTop="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -178,9 +186,10 @@
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentTop="false"
                             android:layout_marginLeft="8dp"
-                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="8dp"
                             android:gravity="center"
                             android:text="Watch Launch"
+                            android:layout_centerVertical="true"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
 
@@ -191,13 +200,13 @@
 
         <android.support.v7.widget.CardView
             android:id="@+id/weather_card"
-
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/card_margin"
             android:animateLayoutChanges="true"
-            card_view:cardCornerRadius="0dp"
-            card_view:cardElevation="4dp"
+            android:layout_margin="@dimen/material_card_edge_margin"
+            android:padding="@dimen/material_card_edge_margin"
+            card_view:cardCornerRadius="@dimen/card_view_corner_radius"
+            card_view:cardElevation="@dimen/material_card_elevation_resting"
             card_view:cardPreventCornerOverlap="true"
             card_view:cardUseCompatPadding="true">
 

@@ -15,7 +15,7 @@
         android:breadCrumbTitle="Notifications"/>
     <header
         android:fragment="me.calebjones.spacelaunchnow.settings.fragments.AppearanceFragment"
-        android:icon="@drawable/ic_color_picker"
+        android:icon="@drawable/ic_appearance"
         android:title="Appearance"
         android:summary="Customize app theme and colors."
         android:breadCrumbTitle="Appearance"/>

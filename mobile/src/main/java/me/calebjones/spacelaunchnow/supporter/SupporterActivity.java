@@ -4,12 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
@@ -17,6 +21,7 @@ import com.anjlab.android.iab.v3.TransactionDetails;
 import com.crashlytics.android.answers.AddToCartEvent;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.PurchaseEvent;
+import com.mikepenz.iconics.context.IconicsContextWrapper;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -25,24 +30,38 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.ui.activity.BaseActivity;
 import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 import xyz.hanks.library.SmallBang;
 
-public class SupporterActivity extends BaseActivity implements BillingProcessor.IBillingHandler {
+public class SupporterActivity extends BaseActivity implements BillingProcessor.IBillingHandler, AppBarLayout.OnOffsetChangedListener {
 
     @BindView(R.id.toolbar_support) Toolbar toolbar;
     @BindView(R.id.twoDollar) AppCompatButton two;
     @BindView(R.id.sixDollar) AppCompatButton six;
     @BindView(R.id.twelveDollar) AppCompatButton twelve;
     @BindView(R.id.other) AppCompatButton other;
-    @BindView(R.id.support_coordinator) CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.app_bar_layout) AppBarLayout appBarLayout;
+    @BindView(R.id.main_textview_title) TextView mTitle;
+    @BindView(R.id.main_linearlayout_title) LinearLayout mTitleContainer;
 
     BillingProcessor bp;
     SmallBang mSmallBang;
+
+    private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR  = 0.9f;
+    private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS     = 0.3f;
+    private static final int ALPHA_ANIMATIONS_DURATION              = 200;
+
+    private boolean mIsTheTitleVisible          = false;
+    private boolean mIsTheTitleContainerVisible = true;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(IconicsContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +69,6 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         int m_theme;
         final Context context = this;
 
-        ListPreferences sharedPreference = ListPreferences.getInstance(context);
 
         m_theme = R.style.BaseAppTheme;
         setTheme(m_theme);
@@ -58,18 +76,10 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         setContentView(R.layout.activity_support);
         ButterKnife.bind(this);
 
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
-        toolbar.setTitle("Support");
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        appBarLayout.addOnOffsetChangedListener(this);
+
+        startAlphaAnimation(mTitle, 0, View.INVISIBLE);
+
 
         mSmallBang = SmallBang.attach2Window(this);
 
@@ -83,6 +93,11 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
             twelve.setVisibility(View.GONE);
             other.setText("PayPal");
         }
+    }
+
+    public int reverseNumber(int num, int min, int max) {
+        int number = (max + min) - num;
+        return number;
     }
 
 
@@ -241,5 +256,57 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
                 other.setText("Thanks!");
                 break;
         }
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
+        int maxScroll = appBarLayout.getTotalScrollRange();
+        float percentage = (float) Math.abs(offset) / (float) maxScroll;
+
+        handleAlphaOnTitle(percentage);
+        handleToolbarTitleVisibility(percentage);
+    }
+
+    private void handleToolbarTitleVisibility(float percentage) {
+        if (percentage >= PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR) {
+
+            if(!mIsTheTitleVisible) {
+                startAlphaAnimation(mTitle, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
+                mIsTheTitleVisible = true;
+            }
+
+        } else {
+
+            if (mIsTheTitleVisible) {
+                startAlphaAnimation(mTitle, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
+                mIsTheTitleVisible = false;
+            }
+        }
+    }
+
+    private void handleAlphaOnTitle(float percentage) {
+        if (percentage >= PERCENTAGE_TO_HIDE_TITLE_DETAILS) {
+            if(mIsTheTitleContainerVisible) {
+                startAlphaAnimation(mTitleContainer, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
+                mIsTheTitleContainerVisible = false;
+            }
+
+        } else {
+
+            if (!mIsTheTitleContainerVisible) {
+                startAlphaAnimation(mTitleContainer, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
+                mIsTheTitleContainerVisible = true;
+            }
+        }
+    }
+
+    public static void startAlphaAnimation (View v, long duration, int visibility) {
+        AlphaAnimation alphaAnimation = (visibility == View.VISIBLE)
+                ? new AlphaAnimation(0f, 1f)
+                : new AlphaAnimation(1f, 0f);
+
+        alphaAnimation.setDuration(duration);
+        alphaAnimation.setFillAfter(true);
+        v.startAnimation(alphaAnimation);
     }
 }

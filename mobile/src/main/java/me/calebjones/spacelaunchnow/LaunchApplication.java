@@ -4,17 +4,24 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.format.DateFormat;
+import android.widget.ImageView;
+import android.widget.Toast;
 import android.zetterstrom.com.forecast.ForecastClient;
 import android.zetterstrom.com.forecast.ForecastConfiguration;
 
+import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
+import com.evernote.android.job.JobManager;
 import com.karumi.dexter.Dexter;
+import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
+import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.onesignal.OneSignal;
-import com.squareup.leakcanary.LeakCanary;
 
 import net.mediavrog.irr.DefaultRuleEngine;
 
@@ -29,6 +36,8 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.content.jobs.DataJobCreator;
+import me.calebjones.spacelaunchnow.content.models.Migration;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
@@ -81,27 +90,9 @@ public class LaunchApplication extends Application {
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        LeakCanary.install(this);
         OneSignal.startInit(this)
                 .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
                 .init();
-
-        Dexter.initialize(this);
-
-        ForecastConfiguration configuration =
-                new ForecastConfiguration.Builder(getResources().getString(R.string.forecast_io_key))
-                        .setCacheDirectory(getCacheDir())
-                        .build();
-        ForecastClient.create(configuration);
-
-        // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder(this)
-                .deleteRealmIfMigrationNeeded()
-                .build();
-
-        // Get a Realm instance for this thread
-        Realm.setDefaultConfiguration(realmConfig);
-
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
@@ -124,12 +115,46 @@ public class LaunchApplication extends Application {
             OneSignal.sendTags(tags);
         }
 
+        Dexter.initialize(this);
+
+        ForecastConfiguration configuration =
+                new ForecastConfiguration.Builder(getResources().getString(R.string.forecast_io_key))
+                        .setCacheDirectory(getCacheDir())
+                        .build();
+        ForecastClient.create(configuration);
+
+
         mInstance = this;
 
         ListPreferences.create(this);
 
         sharedPreference = ListPreferences.getInstance(this);
         switchPreferences = SwitchPreferences.getInstance(this);
+
+        RealmConfiguration realmConfig;
+        Realm.init(this);
+        if (switchPreferences.getVersionCode() >= 151) {
+            // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
+            realmConfig = new RealmConfiguration.Builder()
+                    .schemaVersion(2)
+                    .migration(new Migration())
+                    .build();
+        } else if (switchPreferences.getVersionCode() > 0){
+            realmConfig = new RealmConfiguration.Builder()
+                    .schemaVersion(2)
+                    .deleteRealmIfMigrationNeeded()
+                    .build();
+
+            Toast.makeText(this, "Unable to migrate database on upgrade, please refresh to get launch data.", Toast.LENGTH_SHORT).show();
+        } else {
+            realmConfig = new RealmConfiguration.Builder()
+                    .schemaVersion(2)
+                    .deleteRealmIfMigrationNeeded()
+                    .build();
+        }
+
+        // Get a Realm instance for this thread
+        Realm.setDefaultConfiguration(realmConfig);
 
         if(sharedPreference.isNightThemeEnabled()){
             if(sharedPreference.isDayNightAutoEnabled()){
@@ -141,7 +166,22 @@ public class LaunchApplication extends Application {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
 
+        //initialize and create the image loader logic
+        DrawerImageLoader.init(new AbstractDrawerImageLoader() {
+            @Override
+            public void set(ImageView imageView, Uri uri, Drawable placeholder) {
+                Glide.with(imageView.getContext()).load(uri).placeholder(placeholder).centerCrop().into(imageView);
+            }
+
+            @Override
+            public void cancel(ImageView imageView) {
+                Glide.clear(imageView);
+            }
+        });
+
         checkSubscriptions();
+
+        JobManager.create(this).addJobCreator(new DataJobCreator());
 
         DefaultRuleEngine.trackAppStart(this);
 
@@ -159,7 +199,7 @@ public class LaunchApplication extends Application {
 
             if (sharedPreference.getLastVehicleUpdate() > 0) {
                 Timber.d("Time since last VehicleUpdate: %s", (System.currentTimeMillis() - sharedPreference.getLastVehicleUpdate()));
-                if ((System.currentTimeMillis() - sharedPreference.getLastVehicleUpdate()) > 604800000) {
+                if ((System.currentTimeMillis() - sharedPreference.getLastVehicleUpdate()) > 1209600000) {
                     Intent rocketIntent = new Intent(this, VehicleDataService.class);
                     rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
                     this.startService(rocketIntent);
@@ -171,6 +211,10 @@ public class LaunchApplication extends Application {
                     this.startService(rocketIntent);
                 }
             }
+        } else {
+            Intent intent = new Intent(this, LaunchDataService.class);
+            intent.setAction(Strings.ACTION_GET_ALL_DATA);
+            this.startService(intent);
         }
     }
 

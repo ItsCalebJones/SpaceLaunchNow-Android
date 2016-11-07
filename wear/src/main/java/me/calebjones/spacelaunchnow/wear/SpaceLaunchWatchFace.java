@@ -555,6 +555,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
 
         @Override
         public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+            Timber.e("onConnectionFailed - %s %s", connectionResult.getErrorCode(), connectionResult.getErrorMessage());
             Log.e("Space Launch Wear", "onConnectionFailed " + connectionResult.getErrorMessage());
         }
 
