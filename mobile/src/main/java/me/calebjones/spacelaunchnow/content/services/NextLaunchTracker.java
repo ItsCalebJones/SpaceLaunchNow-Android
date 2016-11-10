@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.RingtoneManager;
@@ -18,13 +19,18 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.gcm.GcmNetworkManager;
+import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -94,7 +100,6 @@ public class NextLaunchTracker extends IntentService implements
         this.listPreferences = ListPreferences.getInstance(getApplicationContext());
         this.switchPreferences = SwitchPreferences.getInstance(getApplicationContext());
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-
 
 
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
@@ -392,7 +397,7 @@ public class NextLaunchTracker extends IntentService implements
         if (launch != null && launch.getNetstamp() > 0) {
 
             LaunchNotification notification = realm.where(LaunchNotification.class).equalTo("id", launch.getId()).findFirst();
-            if (notification == null){
+            if (notification == null) {
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
@@ -457,7 +462,7 @@ public class NextLaunchTracker extends IntentService implements
                             if (!notification.isNotifiedDay()) {
 
                                 //Round up for standard notification.
-                                if (hours == 23){
+                                if (hours == 23) {
                                     hours = 24;
                                 }
 
@@ -704,23 +709,46 @@ public class NextLaunchTracker extends IntentService implements
     private void sendToWear(LaunchRealm launch) {
         if (launch != null && launch.getName() != null && launch.getNetstamp() != null) {
             Timber.v("Sending data to wear...");
-            PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/nextLaunch");
+            final PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/nextLaunch");
 
             String NAME_KEY = "me.calebjones.spacelaunchnow.wear.nextname";
             String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
             String DATE_KEY = "me.calebjones.spacelaunchnow.wear.nextdate";
+            final String BACKGROUND_KEY = "me.calebjones.spacelaunchnow.wear.background";
             putDataMapReq.getDataMap().putString(NAME_KEY, launch.getName());
             putDataMapReq.getDataMap().putInt(TIME_KEY, launch.getNetstamp());
-            putDataMapReq.getDataMap().putLong(DATE_KEY,launch.getNet().getTime());
+            putDataMapReq.getDataMap().putLong(DATE_KEY, launch.getNet().getTime());
             putDataMapReq.getDataMap().putLong("time", new Date().getTime());
+
+
+            Glide
+                    .with(this)
+                    .load("http://res.cloudinary.com/dnkkbfy3m/image/upload/b_rgb:000,e_blur:1449,o_57,q_100/v1462465326/navbar_one_sqfhes.png")
+                    .asBitmap()
+                    .into(new SimpleTarget<Bitmap>(300, 300) {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                            Asset asset = createAssetFromBitmap(resource);
+                            putDataMapReq.getDataMap().putAsset(BACKGROUND_KEY, asset);
+                            PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
+                            Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
+                        }
+                    });
 
             PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
             Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
 
             Timber.v("Sent");
+        }
+
     }
 
-}
+    private static Asset createAssetFromBitmap(Bitmap bitmap) {
+        final ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteStream);
+        return Asset.createFromBytes(byteStream.toByteArray());
+    }
+
     @Override
     public void onConnected(Bundle bundle) {
         Timber.d("onConnected");
@@ -728,7 +756,7 @@ public class NextLaunchTracker extends IntentService implements
         Realm realm = Realm.getDefaultInstance();
         if (switchPreferences.getAllSwitch()) {
             sendToWear(realm.where(LaunchRealm.class)
-                    .greaterThan("net", date).findFirst());
+                    .greaterThan("net", date).findAllSorted("net").first());
         } else {
             sendToWear(filterLaunchRealm(date, realm));
         }

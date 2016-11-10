@@ -18,6 +18,7 @@ package me.calebjones.spacelaunchnow.wear;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -57,6 +58,7 @@ import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.Wearable;
 
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -258,8 +260,8 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
 
             } else if (insets.getSystemWindowInsetBottom() > 0) {
                 Timber.v("Watch has chin.");
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)launchInfoContainer.getLayoutParams();
-                params.setMargins(0,0,0,10);
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) launchInfoContainer.getLayoutParams();
+                params.setMargins(0, 0, 0, 10);
 
                 launchInfoContainer.setLayoutParams(params);
             } else {
@@ -395,11 +397,6 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             utcTimeView.setText(utcText);
 
 
-            //Launch Countdown/Status
-            if (launchTime != 0) {
-                launchCountdownView.setText(launchTime);
-            }
-
             //Launch Name
             if (launchName != null) {
                 launchNameView.setText(launchNameText);
@@ -530,6 +527,19 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
                     launchDate = new Date(dataMap.getLong(DATE_KEY));
                     Log.v("Space Launch Wear", "Date = " + launchDate.toString());
                 }
+
+                if (dataMap.containsKey(BACKGROUND_KEY)) {
+                    final Asset profileAsset = dataMap.getAsset(BACKGROUND_KEY);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Bitmap bitmap = loadBitmapFromAsset(profileAsset);
+                            imageView.setImageBitmap(bitmap);
+                            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        }
+                    }).start();
+                    Log.v("Space Launch Wear", "Date = " + launchDate.toString());
+                }
             }
             if (item.getUri().getPath().equals("/config")) {
                 DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
@@ -538,6 +548,28 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
                     Timber.v("24 Hour Mode = %s", twentyfourhourmode);
                 }
             }
+        }
+
+        public Bitmap loadBitmapFromAsset(Asset asset) {
+            if (asset == null) {
+                throw new IllegalArgumentException("Asset must be non-null");
+            }
+            ConnectionResult result =
+                    googleApiClient.blockingConnect(5000, TimeUnit.MILLISECONDS);
+            if (!result.isSuccess()) {
+                return null;
+            }
+            // convert asset into a file descriptor and block until it's ready
+            InputStream assetInputStream = Wearable.DataApi.getFdForAsset(
+                    googleApiClient, asset).await().getInputStream();
+            googleApiClient.disconnect();
+
+            if (assetInputStream == null) {
+                Timber.e("Requested an unknown Asset.");
+                return null;
+            }
+            // decode the stream into a bitmap
+            return BitmapFactory.decodeStream(assetInputStream);
         }
 
         private final ResultCallback<DataItemBuffer> onConnectedResultCallback = new ResultCallback<DataItemBuffer>() {

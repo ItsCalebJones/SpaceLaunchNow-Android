@@ -21,11 +21,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:layout_marginTop="@dimen/material_baseline_grid_1.5x"
+            android:layout_marginTop="@dimen/material_baseline_grid_2x"
             android:gravity="center"
             android:paddingBottom="-4dp"
             android:textColor="@color/white"
-            android:textSize="50sp" />
+            android:textSize="60sp"
+            android:shadowColor="@color/text_shadow"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="2"/>
 
         <LinearLayout
             android:id="@+id/utc_date_container"
@@ -42,7 +46,11 @@
                 style="@style/MaterialTypography.Regular.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/card_grey_text_color" />
+                android:textColor="@color/white"
+                android:shadowColor="@color/text_shadow"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="2"/>
 
             <TextView
                 android:id="@+id/date"
@@ -50,7 +58,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/card_grey_text_color" />
+                android:textColor="@color/white"
+                android:shadowColor="@color/text_shadow"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="2"/>
         </LinearLayout>
 
         <LinearLayout
@@ -70,18 +82,26 @@
                 android:layout_marginRight="6dp"
                 android:gravity="center"
                 android:maxLines="2"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:shadowColor="@color/text_shadow"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="2"/>
 
-            <TextView
+            <me.calebjones.spacelaunchnow.wear.view.AutoResizeTextView
+                style="@style/MaterialTypography.Regular.Caption"
                 android:id="@+id/launch_countdown"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
                 android:gravity="center"
                 android:textColor="@color/material_color_red_500"
-                android:textSize="@dimen/material_typography_regular_body_1_text_size" />
+                android:textSize="16sp"
+                android:shadowColor="@color/text_shadow"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="2"/>
         </LinearLayout>
-
     </LinearLayout>
 </FrameLayout>
