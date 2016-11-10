@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/nav_header"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <me.calebjones.spacelaunchnow.wear.view.AutoResizeTextView
+            android:id="@+id/time"
+            style="@style/MaterialTypography.Regular.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="@dimen/material_baseline_grid_1.5x"
+            android:gravity="center"
+            android:paddingBottom="-4dp"
+            android:textColor="@color/white"
+            android:textSize="50sp" />
+
+        <LinearLayout
+            android:id="@+id/utc_date_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="-8dp"
+            android:gravity="center|top"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/utc_time"
+                style="@style/MaterialTypography.Regular.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/card_grey_text_color" />
+
+            <TextView
+                android:id="@+id/date"
+                style="@style/MaterialTypography.Regular.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/card_grey_text_color" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/launch_info_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/material_baseline_grid_3x"
+            android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+            android:gravity="center|bottom"
+            android:orientation="vertical">
+
+            <me.calebjones.spacelaunchnow.wear.view.AutoResizeTextView
+                android:id="@+id/launch_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:gravity="center"
+                android:maxLines="2"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/launch_countdown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:gravity="center"
+                android:textColor="@color/material_color_red_500"
+                android:textSize="@dimen/material_typography_regular_body_1_text_size" />
+        </LinearLayout>
+
+    </LinearLayout>
+</FrameLayout>

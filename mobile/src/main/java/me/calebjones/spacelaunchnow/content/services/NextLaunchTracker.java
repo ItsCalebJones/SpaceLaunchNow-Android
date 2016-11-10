@@ -708,8 +708,10 @@ public class NextLaunchTracker extends IntentService implements
 
             String NAME_KEY = "me.calebjones.spacelaunchnow.wear.nextname";
             String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
+            String DATE_KEY = "me.calebjones.spacelaunchnow.wear.nextdate";
             putDataMapReq.getDataMap().putString(NAME_KEY, launch.getName());
             putDataMapReq.getDataMap().putInt(TIME_KEY, launch.getNetstamp());
+            putDataMapReq.getDataMap().putLong(DATE_KEY,launch.getNet().getTime());
             putDataMapReq.getDataMap().putLong("time", new Date().getTime());
 
             PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
