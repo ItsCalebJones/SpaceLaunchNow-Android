@@ -98,6 +98,8 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
     public void onBindViewHolder(final ViewHolder holder, int i) {
         final Orbiter item = items.get(i);
 
+        Timber.v("onBindViewHolder %s", item.getName());
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             Glide.with(mContext)
                     .load(item.getImageURL())

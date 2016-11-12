@@ -136,6 +136,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
             public void onResponse(Call<LauncherResponse> call, Response<LauncherResponse> response) {
                 if (response.isSuccessful()) {
                     LauncherResponse jsonResponse = response.body();
+                    Timber.v("Success %s", response.message());
                     items = new ArrayList<>(Arrays.asList(jsonResponse.getItem()));
                     adapter.addItems(items);
                 } else {
