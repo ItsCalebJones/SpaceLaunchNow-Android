@@ -263,11 +263,16 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             if (insets.isRound()) {
                 Timber.v("Watch is Round");
                 mXOffset = mYOffset = 0;
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) launchInfoContainer.getLayoutParams();
+                params.setMargins(0, 0, 0, 12);
+
+                launchInfoContainer.setLayoutParams(params);
+
 
             } else if (insets.getSystemWindowInsetBottom() > 0) {
                 Timber.v("Watch has chin.");
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) launchInfoContainer.getLayoutParams();
-                params.setMargins(0, 0, 0, 10);
+                params.setMargins(0, 0, 0, 24);
 
                 launchInfoContainer.setLayoutParams(params);
             } else {
@@ -282,6 +287,13 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             // Recompute the MeasureSpec fields - these determine the actual size of the layout
             specW = View.MeasureSpec.makeMeasureSpec(displaySize.x, View.MeasureSpec.EXACTLY);
             specH = View.MeasureSpec.makeMeasureSpec(displaySize.y, View.MeasureSpec.EXACTLY);
+
+            if(displaySize.x < 300 || displaySize.y < 300) {
+                launchNameView.setMaxLines(1);
+            } else {
+                launchNameView.setMaxLines(2);
+            }
+            Timber.v("Screen - width: %s height %s", displaySize.x, displaySize.y);
         }
 
         @Override
