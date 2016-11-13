@@ -162,6 +162,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
         private TextView launchCountdownView;
         private final Point displaySize = new Point();
         private LayoutInflater layoutInflater;
+        private int apiConnectedRefresh;
 
 
         /**
@@ -175,6 +176,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             super.onCreate(holder);
 
             Timber.plant(new Timber.DebugTree());
+            Timber.v("onCreate");
 
             watchFaceStyle = new WatchFaceStyle.Builder(SpaceLaunchWatchFace.this)
                     .setCardPeekMode(WatchFaceStyle.PEEK_MODE_VARIABLE)
@@ -222,9 +224,13 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
         public void onVisibilityChanged(boolean visible) {
             super.onVisibilityChanged(visible);
 
+            Timber.v("onVisibilityChanged");
             if (visible) {
                 registerReceiver();
-                googleApiClient.connect();
+                if (!googleApiClient.isConnected()) {
+                    Timber.v("Reconnecting");
+                    googleApiClient.connect();
+                }
             } else {
                 unregisterReceiver();
             }
@@ -308,6 +314,19 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
 
         @Override
         public void onDraw(Canvas canvas, Rect bounds) {
+
+            Timber.v("Connecting: %s Connected: %s Count %s", googleApiClient.isConnecting(), googleApiClient.isConnected(), apiConnectedRefresh);
+
+            if (googleApiClient.isConnected()){
+                apiConnectedRefresh = 0;
+            } else {
+                if (apiConnectedRefresh > 60){
+                    Timber.v("Connecting...");
+                    googleApiClient.connect();
+                } else {
+                    apiConnectedRefresh = apiConnectedRefresh + 1;
+                }
+            }
 
             Date now = new Date();
             mTime = Calendar.getInstance();
@@ -476,7 +495,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
 
         @Override
         public void onConnected(@Nullable Bundle bundle) {
-            Log.v("Space Launch Wear", "onConnected");
+            Timber.v("onConnected");
 
             Wearable.DataApi.addListener(googleApiClient, onDataChangedListener);
             Wearable.DataApi.getDataItems(googleApiClient).setResultCallback(onConnectedResultCallback);
@@ -484,7 +503,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
 
         @Override
         public void onConnectionSuspended(int i) {
-            Log.v("Space Launch Wear", "onConnectedSuspended");
+            Timber.v("onConnectedSuspended");
         }
 
         @Override
@@ -496,7 +515,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
         private final DataApi.DataListener onDataChangedListener = new DataApi.DataListener() {
             @Override
             public void onDataChanged(DataEventBuffer dataEvents) {
-                Log.v("Space Launch Wear", "onDataChanged");
+                Timber.v("onDataChanged");
                 for (DataEvent event : dataEvents) {
                     if (event.getType() == DataEvent.TYPE_CHANGED) {
                         DataItem item = event.getDataItem();
@@ -510,7 +529,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
         };
 
         private void processConfigurationFor(DataItem item) {
-            Log.v("Space Launch Wear", "processConfigurationFor");
+            Timber.v("processConfigurationFor: %s", item.toString());
             if (item.getUri().getPath().equals("/nextLaunch")) {
                 DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
                 if (dataMap.containsKey(NAME_KEY)) {
@@ -562,7 +581,6 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             // convert asset into a file descriptor and block until it's ready
             InputStream assetInputStream = Wearable.DataApi.getFdForAsset(
                     googleApiClient, asset).await().getInputStream();
-            googleApiClient.disconnect();
 
             if (assetInputStream == null) {
                 Timber.e("Requested an unknown Asset.");

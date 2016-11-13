@@ -42,6 +42,7 @@ import java.util.regex.Pattern;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import jp.wasabeef.glide.transformations.BlurTransformation;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
@@ -51,6 +52,7 @@ import me.calebjones.spacelaunchnow.content.jobs.NextLaunchJob;
 import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchNotification;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.content.models.realm.RocketDetailsRealm;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import timber.log.Timber;
 
@@ -73,6 +75,11 @@ public class NextLaunchTracker extends IntentService implements
     private GoogleApiClient mGoogleApiClient;
 
     private Realm realm;
+
+    private String NAME_KEY = "me.calebjones.spacelaunchnow.wear.nextname";
+    private String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
+    private String DATE_KEY = "me.calebjones.spacelaunchnow.wear.nextdate";
+    private final String BACKGROUND_KEY = "me.calebjones.spacelaunchnow.wear.background";
 
     public NextLaunchTracker() {
         super("NextLaunchTracker");
@@ -708,39 +715,95 @@ public class NextLaunchTracker extends IntentService implements
     // Create a data map and put data in it
     private void sendToWear(LaunchRealm launch) {
         if (launch != null && launch.getName() != null && launch.getNetstamp() != null) {
-            Timber.v("Sending data to wear...");
+            Timber.v("Sending data to wear: %s", launch.getName());
             final PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/nextLaunch");
 
-            String NAME_KEY = "me.calebjones.spacelaunchnow.wear.nextname";
-            String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
-            String DATE_KEY = "me.calebjones.spacelaunchnow.wear.nextdate";
-            final String BACKGROUND_KEY = "me.calebjones.spacelaunchnow.wear.background";
             putDataMapReq.getDataMap().putString(NAME_KEY, launch.getName());
             putDataMapReq.getDataMap().putInt(TIME_KEY, launch.getNetstamp());
             putDataMapReq.getDataMap().putLong(DATE_KEY, launch.getNet().getTime());
             putDataMapReq.getDataMap().putLong("time", new Date().getTime());
 
-
-            Glide
-                    .with(this)
-                    .load("http://res.cloudinary.com/dnkkbfy3m/image/upload/b_rgb:000,e_blur:1449,o_57,q_100/v1462465326/navbar_one_sqfhes.png")
-                    .asBitmap()
-                    .into(new SimpleTarget<Bitmap>(300, 300) {
-                        @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
-                            Asset asset = createAssetFromBitmap(resource);
-                            putDataMapReq.getDataMap().putAsset(BACKGROUND_KEY, asset);
-                            PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
-                            Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
+            boolean dynamic = this.sharedPref.getBoolean("supporter_dynamic_background", false);
+            if (dynamic) {
+                if (launch.getRocket().getName() != null) {
+                    if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
+                        Timber.v("Sending image %s", launch.getRocket().getImageURL());
+                        Glide.with(this)
+                                .load(launch.getRocket().getImageURL())
+                                .asBitmap()
+                                .transform(new BlurTransformation(this, 25, 1))
+                                .into(new SimpleTarget<Bitmap>(300, 300) {
+                                    @Override
+                                    public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                                        Asset asset = createAssetFromBitmap(resource);
+                                        putDataMapReq.getDataMap().putAsset(BACKGROUND_KEY, asset);
+                                        putDataMapReq.getDataMap().putLong("time", new Date().getTime());
+                                        PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
+                                        Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
+                                    }
+                                });
+                    } else {
+                        String query;
+                        if (launch.getRocket().getName().contains("Space Shuttle")) {
+                            query = "Space Shuttle";
+                        } else {
+                            query = launch.getRocket().getName();
                         }
-                    });
+                        Realm realm = Realm.getDefaultInstance();
+                        RocketDetailsRealm launchVehicle = realm.where(RocketDetailsRealm.class)
+                                .contains("name", query)
+                                .findFirst();
+                        if (launchVehicle != null && launchVehicle.getImageURL() != null && launchVehicle.getImageURL().length() > 0) {
+                            Timber.v("Sending image %s", launchVehicle.getImageURL());
+                            Glide.with(this)
+                                    .load(launchVehicle.getImageURL())
+                                    .asBitmap()
+                                    .transform(new BlurTransformation(this, 25, 1))
+                                    .into(new SimpleTarget<Bitmap>(300, 300) {
+                                        @Override
+                                        public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                                            Asset asset = createAssetFromBitmap(resource);
+                                            putDataMapReq.getDataMap().putAsset(BACKGROUND_KEY, asset);
+                                            PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
+                                            putDataMapReq.getDataMap().putLong("time", new Date().getTime());
+                                            Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
+                                        }
+                                    });
+                            Timber.d("Glide Loading: %s %s", launchVehicle.getLV_Name(), launchVehicle.getImageURL());
+                            realm.close();
+                        } else {
+                            loadDefaultImage(putDataMapReq);
+                        }
+                    }
+                } else {
+                    loadDefaultImage(putDataMapReq);
+                }
+            } else {
+                loadDefaultImage(putDataMapReq);
+            }
 
             PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
             Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
 
             Timber.v("Sent");
         }
+    }
 
+    private void loadDefaultImage(final PutDataMapRequest putDataMapReq) {
+        Timber.v("Sending default image.");
+        Glide.with(this)
+                .load("http://res.cloudinary.com/dnkkbfy3m/image/upload/b_rgb:000,e_blur:1449,o_57,q_100/v1462465326/navbar_one_sqfhes.png")
+                .asBitmap()
+                .into(new SimpleTarget<Bitmap>(300, 300) {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                        Asset asset = createAssetFromBitmap(resource);
+                        putDataMapReq.getDataMap().putAsset(BACKGROUND_KEY, asset);
+                        PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
+                        putDataMapReq.getDataMap().putLong("time", new Date().getTime());
+                        Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
+                    }
+                });
     }
 
     private static Asset createAssetFromBitmap(Bitmap bitmap) {

@@ -4,7 +4,7 @@
 # work without any subsequent effort. If you choose this strategy, the proguard
 # configuration for the project is simply the line below.
 
-#-keep class me.calebjones.spacelaunchnow.** { *; }
+-keep class me.calebjones.spacelaunchnow.** { *; }
 
 # The more involved strategy is to specifically provide rules to keep portions of your
 # app's codebase unmodified while allowing proguard to optimize the rest.
@@ -14,12 +14,8 @@
 # Unfortunately obfuscation can cause issues for code that uses reflection or a few other
 # techniques. The default is to obfuscate.
 
-#-dontobfuscate
-
 # Additionally you will need to keep specific classes. A common use case is keeping all
 # of the models that are JSON parsed using something like Jackson.
-
--keep class me.calebjones.spacelaunchnow.** { *; }
 
 -keep class android.zetterstrom.com.forecast.** { *; }
 
@@ -180,3 +176,11 @@
 -keepattributes Signature
 # Retain declared checked exceptions for use by a Proxy instance.
 -keepattributes Exceptions
+
+-dontwarn com.evernote.android.job.gcm.**
+-dontwarn com.evernote.android.job.util.GcmAvailableHelper
+
+-keep public class com.evernote.android.job.v21.PlatformJobService
+-keep public class com.evernote.android.job.v14.PlatformAlarmService
+-keep public class com.evernote.android.job.v14.PlatformAlarmReceiver
+-keep public class com.evernote.android.job.JobBootReceiver

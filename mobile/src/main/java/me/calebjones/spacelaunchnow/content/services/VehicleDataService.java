@@ -165,15 +165,18 @@ public class VehicleDataService extends IntentService {
             if (launchResponse.isSuccessful()) {
                 Collections.addAll(items, launchResponse.body().getVehicles());
 
+                int count = 1;
                 for (RocketDetailsRealm item : items) {
+                    Timber.v("%s - %s of %s",item.getLV_Name(), count, items.size());
                     item.setName(item.getLV_Name() + " " + item.getLV_Variant());
+                    count += 1;
                 }
 
                 mRealm.beginTransaction();
                 mRealm.copyToRealmOrUpdate(items);
                 mRealm.commitTransaction();
 
-
+                Timber.v("getBaseVehicleDetails - Success");
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(Strings.ACTION_SUCCESS_VEHICLE_DETAILS);
                 VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);

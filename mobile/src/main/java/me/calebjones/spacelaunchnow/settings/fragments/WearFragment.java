@@ -105,18 +105,11 @@ public class WearFragment extends PreferenceFragment implements SharedPreference
     //Class Methods
     private void setUpPreferences() {
         Preference dynamicBackground = findPreference("supporter_dynamic_background");
-        dynamicBackground.setEnabled(false);
-        dynamicBackground.setSelectable(false);
-        dynamicBackground.setTitle(dynamicBackground.getTitle() + " (Coming Soon)");
 
         //TODO implement dynamic background
         if (SupporterHelper.isSupporter()) {
-            dynamicBackground.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    return true;
-                }
-            });
+            dynamicBackground.setEnabled(true);
+            dynamicBackground.setSelectable(true);
         } else {
             dynamicBackground.setEnabled(false);
             dynamicBackground.setSelectable(false);
