@@ -1,6 +1,7 @@
 package me.calebjones.spacelaunchnow.settings.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -18,6 +19,7 @@ import java.util.Date;
 import de.mrapp.android.preference.activity.PreferenceFragment;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.content.services.NextLaunchTracker;
 import me.calebjones.spacelaunchnow.supporter.SupporterHelper;
 import timber.log.Timber;
 
@@ -83,6 +85,10 @@ public class WearFragment extends PreferenceFragment implements SharedPreference
 
             PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
             Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
+        }
+
+        if (key.equals("supporter_dynamic_background")) {
+            context.startService(new Intent(context, NextLaunchTracker.class));
         }
     }
 
