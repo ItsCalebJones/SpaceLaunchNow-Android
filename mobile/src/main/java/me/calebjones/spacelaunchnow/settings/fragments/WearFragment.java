@@ -1,12 +1,19 @@
 package me.calebjones.spacelaunchnow.settings.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatSeekBar;
+import android.view.View;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.PutDataMapRequest;
@@ -15,13 +22,18 @@ import com.google.android.gms.wearable.Wearable;
 
 import java.util.Date;
 
-import de.mrapp.android.preference.activity.PreferenceFragment;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.content.services.UpdateWearService;
 import me.calebjones.spacelaunchnow.supporter.SupporterHelper;
 import timber.log.Timber;
 
-public class WearFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener,
+import static me.calebjones.spacelaunchnow.content.models.Constants.DEFAULT_BLUR;
+import static me.calebjones.spacelaunchnow.content.models.Constants.DEFAULT_DIM;
+import static me.calebjones.spacelaunchnow.content.models.Constants.DEFAULT_GREY;
+import static me.calebjones.spacelaunchnow.content.models.Constants.DEFAULT_RADIUS;
+
+public class WearFragment extends BaseSettingFragment implements SharedPreferences.OnSharedPreferenceChangeListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
@@ -84,6 +96,8 @@ public class WearFragment extends PreferenceFragment implements SharedPreference
             PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
             Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
         }
+
+        getContext().startService(new Intent(getContext(), UpdateWearService.class));
     }
 
     //Google API client methods
@@ -105,22 +119,88 @@ public class WearFragment extends PreferenceFragment implements SharedPreference
     //Class Methods
     private void setUpPreferences() {
         Preference dynamicBackground = findPreference("supporter_dynamic_background");
-        dynamicBackground.setEnabled(false);
-        dynamicBackground.setSelectable(false);
-        dynamicBackground.setTitle(dynamicBackground.getTitle() + " (Coming Soon)");
+        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         //TODO implement dynamic background
         if (SupporterHelper.isSupporter()) {
-            dynamicBackground.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    return true;
-                }
-            });
+            dynamicBackground.setEnabled(true);
+            dynamicBackground.setSelectable(true);
         } else {
             dynamicBackground.setEnabled(false);
             dynamicBackground.setSelectable(false);
             dynamicBackground.setTitle(dynamicBackground.getTitle() + " (Supporter Feature)");
         }
+
+        Preference blurSettings = findPreference("wear_blur_dialog");
+        blurSettings.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                final MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
+                        .title("Blur Settings")
+                        .customView(R.layout.blur_settings, true)
+                        .positiveText("Ok")
+                        .neutralText("Default")
+                        .negativeText("Cancel")
+                        .positiveColor(ContextCompat.getColor(getActivity(), R.color.primary))
+                        .neutralColor(ContextCompat.getColor(getActivity(), R.color.primary_light))
+                        .build();
+
+                final AppCompatSeekBar blurSeekBar = (AppCompatSeekBar) dialog.getCustomView().findViewById(R.id.blur_seekbar);
+                final AppCompatSeekBar radiusSeekBar = (AppCompatSeekBar) dialog.getCustomView().findViewById(R.id.radius_seekbar);
+                final AppCompatSeekBar dimSeekBar = (AppCompatSeekBar) dialog.getCustomView().findViewById(R.id.dim_seekbar);
+                final AppCompatSeekBar greySeekBar = (AppCompatSeekBar) dialog.getCustomView().findViewById(R.id.grey_seekbar);
+
+                int blurProgress = sharedPreferences.getInt("BLUR_WEAR", DEFAULT_BLUR);
+                final int radiusProgress = sharedPreferences.getInt("RADIUS_WEAR", DEFAULT_RADIUS);
+                int dimProgress = sharedPreferences.getInt("DIM_WEAR", DEFAULT_DIM);
+                int greyProgress = sharedPreferences.getInt("GREY_WEAR", DEFAULT_GREY);
+
+                blurSeekBar.setProgress(blurProgress);
+                radiusSeekBar.setProgress(radiusProgress);
+                dimSeekBar.setProgress(dimProgress);
+                greySeekBar.setProgress(greyProgress);
+
+                View positiveAction = dialog.getActionButton(DialogAction.POSITIVE);
+                View neutralAction = dialog.getActionButton(DialogAction.NEUTRAL);
+
+                positiveAction.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Timber.v("Blur %s - Radius %s - Dim %s - Grey %s", blurSeekBar.getProgress(), radiusSeekBar.getProgress(), dimSeekBar.getProgress(), greySeekBar.getProgress());
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putInt("BLUR_WEAR", blurSeekBar.getProgress());
+                        editor.putInt("RADIUS_WEAR", radiusSeekBar.getProgress());
+                        editor.putInt("DIM_WEAR", dimSeekBar.getProgress());
+                        editor.putInt("GREY_WEAR", greySeekBar.getProgress());
+                        editor.apply();
+
+
+                        getActivity().startService(new Intent(getActivity(), UpdateWearService.class));
+                        dialog.dismiss();
+                    }
+                });
+
+                neutralAction.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Timber.v("Blur %s - Radius %s - Dim %s - Grey %s", blurSeekBar.getProgress(), radiusSeekBar.getProgress(), dimSeekBar.getProgress(), greySeekBar.getProgress());
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putInt("BLUR_WEAR", DEFAULT_BLUR);
+                        editor.putInt("RADIUS_WEAR", DEFAULT_RADIUS);
+                        editor.putInt("DIM_WEAR", DEFAULT_DIM);
+                        editor.putInt("GREY_WEAR", DEFAULT_GREY);
+                        editor.apply();
+
+                        blurSeekBar.setProgress(DEFAULT_BLUR);
+                        radiusSeekBar.setProgress(DEFAULT_RADIUS);
+                        dimSeekBar.setProgress(DEFAULT_DIM);
+                        greySeekBar.setProgress(DEFAULT_GREY);
+                    }
+                });
+
+                dialog.show();
+                return true;
+            }
+        });
     }
 }

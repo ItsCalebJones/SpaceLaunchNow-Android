@@ -89,6 +89,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
         final Launcher item = items.get(i);
+        Timber.v("onBindViewHolder %s", item.getName());
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             Glide.with(mContext)

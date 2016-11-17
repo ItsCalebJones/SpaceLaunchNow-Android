@@ -15,17 +15,16 @@ package me.calebjones.spacelaunchnow.settings.fragments;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
-import de.mrapp.android.preference.activity.PreferenceFragment;
 
 public abstract class BaseSettingFragment extends PreferenceFragment {
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPreferences =
-                PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
     }
 
 }

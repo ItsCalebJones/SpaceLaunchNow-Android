@@ -45,7 +45,7 @@ import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.settings.fragments.AppearanceFragment;
@@ -302,7 +302,7 @@ public class MainActivity extends BaseActivity {
 
     public void getFirstLaunches() {
         Intent launchIntent = new Intent(this.context, LaunchDataService.class);
-        launchIntent.setAction(Strings.ACTION_GET_ALL_DATA);
+        launchIntent.setAction(Constants.ACTION_GET_ALL_DATA);
         this.context.startService(launchIntent);
     }
 

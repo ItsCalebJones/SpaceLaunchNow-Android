@@ -62,7 +62,7 @@ import me.calebjones.spacelaunchnow.content.adapter.CardBigAdapter;
 import me.calebjones.spacelaunchnow.content.adapter.CardSmallAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
@@ -442,7 +442,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     public void fetchData() {
         Timber.v("Sending GET_UP_LAUNCHES");
         Intent intent = new Intent(getContext(), LaunchDataService.class);
-        intent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
+        intent.setAction(Constants.ACTION_GET_UP_LAUNCHES);
         getContext().startService(intent);
         Timber.d("Sending service intent!");
     }
@@ -490,8 +490,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         }
 
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
-        intentFilter.addAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
+        intentFilter.addAction(Constants.ACTION_SUCCESS_UP_LAUNCHES);
+        intentFilter.addAction(Constants.ACTION_FAILURE_UP_LAUNCHES);
 
         getActivity().registerReceiver(nextLaunchReceiver, intentFilter);
 
@@ -554,9 +554,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         @Override
         public void onReceive(Context context, Intent intent) {
             Timber.v("Received: %s", intent.getAction());
-            if (intent.getAction().equals(Strings.ACTION_SUCCESS_UP_LAUNCHES)) {
+            if (intent.getAction().equals(Constants.ACTION_SUCCESS_UP_LAUNCHES)) {
                 onFinishedRefreshing();
-            } else if (intent.getAction().equals(Strings.ACTION_FAILURE_UP_LAUNCHES)) {
+            } else if (intent.getAction().equals(Constants.ACTION_FAILURE_UP_LAUNCHES)) {
                 hideLoading();
                 SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, intent);
             }
@@ -618,7 +618,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                             switch (which){
                                 case 0:
                                     Intent nextIntent = new Intent(getActivity(), LaunchDataService.class);
-                                    nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
+                                    nextIntent.setAction(Constants.ACTION_UPDATE_NEXT_LAUNCH);
                                     getActivity().startService(nextIntent);
                                     break;
                                 case 1:
@@ -655,7 +655,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                                     Snackbar.make(coordinatorLayout, "Debug: " + sharedPreference.isDebugEnabled(),
                                             Snackbar.LENGTH_LONG).show();
                                     context.startService(new Intent(context, LaunchDataService.class)
-                                            .setAction(Strings.ACTION_GET_ALL_DATA));
+                                            .setAction(Constants.ACTION_GET_ALL_DATA));
                                     break;
                                 case 3:
                                     try {
@@ -714,12 +714,12 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                                     break;
                                 case 4:
                                     Intent background = new Intent(getActivity(), LaunchDataService.class);
-                                    background.setAction(Strings.ACTION_UPDATE_BACKGROUND);
+                                    background.setAction(Constants.ACTION_UPDATE_BACKGROUND);
                                     getActivity().startService(background);
                                     break;
                                 case 5:
                                     Intent rocketIntent = new Intent(context, VehicleDataService.class);
-                                    rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
+                                    rocketIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);
                                     context.startService(rocketIntent);
                                     break;
                             }

@@ -34,14 +34,9 @@
     <string name="title_activity_debug">DebugActivity</string>
     <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
 
-    <string name="whats_new_content">1.5.1 - Data Saver\n\n
-        \u2022Further optimization of data usage for normal users.\n
-        \u2022Added a \'Data Saver\' and \'Wifi Only\' mode\'s for background data sync.\n
-        \u2022Improved foreground and background data syncing.\n
-        \u2022Improved tracking of rescheduled launches and preventing spammy notifications.\n
-        \u2022Added Sync to Calendar and Notification switches to launch details.\n
-        \u2022Reduced APK size, working on moving images to vector based assets.\n
-        \u2022Layout changes to some of the UI cards.\n
+    <string name="whats_new_content">1.5.2 - Watchface Improvements\n\n
+        \u2022Update the Android Wear watchface.\n
+        \u2022Start work on dynamic watchface background.\n
     </string>
     <string name="link_feedback">https://www.reddit.com/r/spacelaunchnow</string>
     <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>
@@ -60,4 +55,5 @@
     <string name="slide_two_description">Get notifications for upcoming launches and look into the history of spaceflight</string>
     <string name="slide_three_title">Find Launch Vehicles</string>
     <string name="slide_three_description">Get to know the vehicles that have taken us to orbit.</string>
+    <string name="default_wear_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1462465326/navbar_one_sqfhes.png</string>
 </resources>

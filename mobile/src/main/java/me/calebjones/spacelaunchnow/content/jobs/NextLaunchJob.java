@@ -8,13 +8,13 @@ import android.support.annotation.NonNull;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
 
-import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 
 
 public class NextLaunchJob extends Job {
 
-    public static final String TAG = Strings.ACTION_CHECK_NEXT_LAUNCH_TIMER;
+    public static final String TAG = Constants.ACTION_CHECK_NEXT_LAUNCH_TIMER;
 
     @NonNull
     @Override

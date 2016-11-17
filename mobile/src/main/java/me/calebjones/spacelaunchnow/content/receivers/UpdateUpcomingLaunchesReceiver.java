@@ -12,7 +12,7 @@ import java.util.Calendar;
 
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
 import timber.log.Timber;
@@ -29,23 +29,23 @@ public class UpdateUpcomingLaunchesReceiver extends BroadcastReceiver {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         String action = intent.getAction();
 
-        if (Strings.ACTION_CHECK_NEXT_LAUNCH_TIMER.equals(action)) {
+        if (Constants.ACTION_CHECK_NEXT_LAUNCH_TIMER.equals(action)) {
             boolean wifiOnly = sharedPref.getBoolean("wifi_only", false);
             if (wifiOnly){
                 if (Connectivity.isConnectedWifi(context)){
                     Intent nextIntent = new Intent(context, LaunchDataService.class);
-                    nextIntent.setAction(Strings.ACTION_UPDATE_BACKGROUND);
+                    nextIntent.setAction(Constants.ACTION_UPDATE_BACKGROUND);
                     context.startService(nextIntent);
                 } else {
                     AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
                     long nextUpdate = Calendar.getInstance().getTimeInMillis() + (8 * 60 * 60 * 1000);
 
                     alarmManager.set(AlarmManager.RTC_WAKEUP, nextUpdate,
-                            PendingIntent.getBroadcast(context, 165432, new Intent(Strings.ACTION_CHECK_NEXT_LAUNCH_TIMER), 0));
+                            PendingIntent.getBroadcast(context, 165432, new Intent(Constants.ACTION_CHECK_NEXT_LAUNCH_TIMER), 0));
                 }
             } else {
                 Intent nextIntent = new Intent(context, LaunchDataService.class);
-                nextIntent.setAction(Strings.ACTION_UPDATE_BACKGROUND);
+                nextIntent.setAction(Constants.ACTION_UPDATE_BACKGROUND);
                 context.startService(nextIntent);
             }
         }

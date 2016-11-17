@@ -1,7 +1,7 @@
 package me.calebjones.spacelaunchnow.content.models;
 
 
-public final class Strings {
+public final class Constants {
     public static final String ACTION_SUCCESS_VEHICLE_DETAILS = "SUCCESS_GET_ROCKETS";
     public static final String ACTION_SUCCESS_PREV_LAUNCHES = "SUCCESS_PREV_LAUNCHES";
     public static final String ACTION_SUCCESS_UP_LAUNCHES = "SUCCESS_UP_LAUNCHES";
@@ -70,7 +70,21 @@ public final class Strings {
     public static String LIBRARY_BASE_URL = "https://launchlibrary.net/";
     public static String DEBUG_BASE_URL = "https://launchlibrary.net/";
 
-    private Strings() {
+    //These values are +1'd at runtime.
+    public static final int DEFAULT_BLUR = 0;
+    public static final int DEFAULT_RADIUS = 24;
+    public static final int DEFAULT_DIM = 39;
+    public static final int DEFAULT_GREY = 79;
+
+
+    public static final String NAME_KEY = "me.calebjones.spacelaunchnow.wear.nextname";
+    public static final String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
+    public static final String DATE_KEY = "me.calebjones.spacelaunchnow.wear.nextdate";
+    public static final String HOUR_KEY = "me.calebjones.spacelaunchnow.wear.hourmode";
+    public static final String DYNAMIC_KEY = "me.calebjones.spacelaunchnow.wear.textdynamic";
+    public static final String BACKGROUND_KEY = "me.calebjones.spacelaunchnow.wear.background";
+
+    private Constants() {
     }
 
 }

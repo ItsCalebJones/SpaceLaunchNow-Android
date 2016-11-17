@@ -14,16 +14,11 @@ import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.gcm.GcmNetworkManager;
-import com.google.android.gms.wearable.PutDataMapRequest;
-import com.google.android.gms.wearable.PutDataRequest;
-import com.google.android.gms.wearable.Wearable;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -42,16 +37,14 @@ import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.NextLaunchJob;
-import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchNotification;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import timber.log.Timber;
 
 
-public class NextLaunchTracker extends IntentService implements
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+public class NextLaunchTracker extends IntentService {
 
     private GcmNetworkManager mGcmNetworkManager;
     private LaunchRealm nextLaunch;
@@ -78,12 +71,6 @@ public class NextLaunchTracker extends IntentService implements
         rightNow = Calendar.getInstance();
         super.onCreate();
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Wearable.API)
-                .build();
-
         mGcmNetworkManager = GcmNetworkManager.getInstance(this);
     }
 
@@ -94,7 +81,6 @@ public class NextLaunchTracker extends IntentService implements
         this.listPreferences = ListPreferences.getInstance(getApplicationContext());
         this.switchPreferences = SwitchPreferences.getInstance(getApplicationContext());
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-
 
 
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
@@ -126,8 +112,6 @@ public class NextLaunchTracker extends IntentService implements
             }
         }
         realm.close();
-        mGoogleApiClient.connect();
-        Timber.d("mGoogleApiClient - connect");
     }
 
     private void filterLaunchRealm(Date date, Date dateDay, Realm realm) {
@@ -392,7 +376,7 @@ public class NextLaunchTracker extends IntentService implements
         if (launch != null && launch.getNetstamp() > 0) {
 
             LaunchNotification notification = realm.where(LaunchNotification.class).equalTo("id", launch.getId()).findFirst();
-            if (notification == null){
+            if (notification == null) {
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
@@ -457,7 +441,7 @@ public class NextLaunchTracker extends IntentService implements
                             if (!notification.isNotifiedDay()) {
 
                                 //Round up for standard notification.
-                                if (hours == 23){
+                                if (hours == 23) {
                                     hours = 24;
                                 }
 
@@ -575,7 +559,7 @@ public class NextLaunchTracker extends IntentService implements
                 PendingIntent vidPendingIntent = PendingIntent.getActivity(this, 0, vidIntent, 0);
 
                 mBuilder.addAction(R.drawable.ic_open_in_browser_white, "Watch Live", vidPendingIntent);
-                mNotifyManager.notify(Strings.NOTIF_ID_HOUR, mBuilder.build());
+                mNotifyManager.notify(Constants.NOTIF_ID_HOUR, mBuilder.build());
             }
         } else {
             if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
@@ -586,7 +570,7 @@ public class NextLaunchTracker extends IntentService implements
 
                 mBuilder.addAction(R.drawable.ic_open_in_browser_white, "Watch Live", vidPendingIntent);
             }
-            mNotifyManager.notify(Strings.NOTIF_ID_HOUR, mBuilder.build());
+            mNotifyManager.notify(Constants.NOTIF_ID_HOUR, mBuilder.build());
         }
     }
 
@@ -654,10 +638,10 @@ public class NextLaunchTracker extends IntentService implements
 
         if (sharedPref.getBoolean("notifications_new_message_webcast", false)) {
             if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
-                mNotifyManager.notify(Strings.NOTIF_ID_HOUR, mBuilder.build());
+                mNotifyManager.notify(Constants.NOTIF_ID_HOUR, mBuilder.build());
             }
         } else {
-            mNotifyManager.notify(Strings.NOTIF_ID_HOUR, mBuilder.build());
+            mNotifyManager.notify(Constants.NOTIF_ID_HOUR, mBuilder.build());
         }
     }
 
@@ -694,64 +678,11 @@ public class NextLaunchTracker extends IntentService implements
                             .bigText(msg))
                     .setSmallIcon(R.drawable.ic_rocket_white)
                     .setContentText(msg);
-            mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
+            mNotifyManager.notify(Constants.NOTIF_ID, mBuilder.build());
             Timber.v("Scheduling Update - Interval: %s - Time: %s - IntervalString - %s", interval, formatter.format(calendar.getTime()), intervalString);
         }
         NextLaunchJob.scheduleJob(interval, this);
-    }
-
-    // Create a data map and put data in it
-    private void sendToWear(LaunchRealm launch) {
-        if (launch != null && launch.getName() != null && launch.getNetstamp() != null) {
-            Timber.v("Sending data to wear...");
-            PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/nextLaunch");
-
-            String NAME_KEY = "me.calebjones.spacelaunchnow.wear.nextname";
-            String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
-            putDataMapReq.getDataMap().putString(NAME_KEY, launch.getName());
-            putDataMapReq.getDataMap().putInt(TIME_KEY, launch.getNetstamp());
-            putDataMapReq.getDataMap().putLong("time", new Date().getTime());
-
-            PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
-            Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
-
-            Timber.v("Sent");
-    }
-
-}
-    @Override
-    public void onConnected(Bundle bundle) {
-        Timber.d("onConnected");
-        Date date = new Date();
-        Realm realm = Realm.getDefaultInstance();
-        if (switchPreferences.getAllSwitch()) {
-            sendToWear(realm.where(LaunchRealm.class)
-                    .greaterThan("net", date).findFirst());
-        } else {
-            sendToWear(filterLaunchRealm(date, realm));
-        }
-        realm.close();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        wear = false;
-        Timber.e("onConnectionSuspended");
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        wear = false;
-        Timber.e("onConnectionFailed %s", connectionResult.getErrorMessage());
-    }
-
-    @Override
-    public void onDestroy() {
-        Timber.d("onDestroy");
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            Timber.d("Google Client Disconnect");
-            mGoogleApiClient.disconnect();
-        }
+        this.startService(new Intent(this, UpdateWearService.class));
     }
 
 }

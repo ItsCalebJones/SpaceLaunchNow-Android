@@ -26,7 +26,6 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.mrapp.android.preference.activity.PreferenceFragment;
 import io.realm.Realm;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
@@ -37,7 +36,7 @@ import me.calebjones.spacelaunchnow.settings.util.CalendarPermissionListener;
 import me.calebjones.spacelaunchnow.supporter.SupporterHelper;
 import timber.log.Timber;
 
-public class GeneralFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class GeneralFragment extends BaseSettingFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Context context;
     private Realm mRealm;

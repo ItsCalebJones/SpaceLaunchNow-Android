@@ -4,4 +4,6 @@
     <color name="digital_text">#ffffff</color>
     <color name="countdown_text">#FF303A</color>
     <color name="secondary_text">#7e7e7e</color>
+    <color name="text_shadow">#7F000000</color>
+    <color name="text_shadow_white">#bdbdbd</color>
 </resources>
