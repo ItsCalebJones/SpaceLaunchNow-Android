@@ -55,4 +55,5 @@
     <string name="slide_two_description">Get notifications for upcoming launches and look into the history of spaceflight</string>
     <string name="slide_three_title">Find Launch Vehicles</string>
     <string name="slide_three_description">Get to know the vehicles that have taken us to orbit.</string>
+    <string name="default_wear_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1462465326/navbar_one_sqfhes.png</string>
 </resources>

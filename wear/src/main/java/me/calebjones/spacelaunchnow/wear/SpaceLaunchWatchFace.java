@@ -30,6 +30,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.graphics.Palette;
 import android.support.wearable.watchface.CanvasWatchFaceService;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.text.Html;
@@ -68,6 +70,9 @@ import java.util.concurrent.TimeUnit;
 
 import timber.log.Timber;
 
+import static me.calebjones.spacelaunchnow.wear.Constants.LIGHT;
+import static me.calebjones.spacelaunchnow.wear.Constants.NEUTRAL;
+
 /**
  * Digital watch face with seconds. In ambient mode, the seconds aren't displayed. On devices with
  * low-bit ambient mode, the text is drawn without anti-aliasing in ambient mode.
@@ -80,6 +85,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
     private static final String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
     private static final String DATE_KEY = "me.calebjones.spacelaunchnow.wear.nextdate";
     private static final String HOUR_KEY = "me.calebjones.spacelaunchnow.wear.hourmode";
+    private static final String DYNAMIC_KEY = "me.calebjones.spacelaunchnow.wear.textdynamic";
     private static final String BACKGROUND_KEY = "me.calebjones.spacelaunchnow.wear.background";
     private static final int BACKGROUND_NORMAL = 0;
     private static final int BACKGROUND_CUSTOM = 1;
@@ -128,18 +134,11 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
         final Handler mUpdateTimeHandler = new EngineHandler(this);
         boolean mRegisteredTimeZoneReceiver = false;
-        Paint mBackgroundPaint;
         Paint mTextPaint;
-        Paint mLaunchName;
-        Paint mLaunchTime;
-        Paint mDatePaint;
         boolean mAmbient;
         boolean isRound;
+        private  boolean textDynamic;
         Calendar mTime;
-        float timeXoffset;
-        float timeYoffset;
-        private Bitmap background;
-        private Bitmap customBackgroundBitmap;
         private GoogleApiClient googleApiClient;
         private WatchFaceStyle watchFaceStyle;
         private Asset asset;
@@ -150,18 +149,24 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
 
         float mXOffset = 0;
         float mYOffset = 0;
+
         private int specW, specH;
+        private LayoutInflater layoutInflater;
         private View myLayout;
         private LinearLayout utcDateContainer;
         private LinearLayout launchInfoContainer;
+        private LinearLayout countdownLayout;
         private ImageView imageView;
+        private TextView countdownPrimary;
+        private TextView countdownPrimaryLabel;
+        private TextView countdownSecondary;
+        private TextView countdownSecondaryLabel;
         private TextView timeView;
         private TextView utcTimeView;
         private TextView dateView;
         private TextView launchNameView;
         private TextView launchCountdownView;
         private final Point displaySize = new Point();
-        private LayoutInflater layoutInflater;
         private int apiConnectedRefresh;
 
 
@@ -206,6 +211,11 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             utcDateContainer = (LinearLayout) myLayout.findViewById(R.id.utc_date_container);
             launchInfoContainer = (LinearLayout) myLayout.findViewById(R.id.launch_info_container);
             imageView = (ImageView) myLayout.findViewById(R.id.background);
+            countdownLayout = (LinearLayout) myLayout.findViewById(R.id.countdown_layout);
+            countdownPrimary = (TextView) myLayout.findViewById(R.id.countdown_primary);
+            countdownPrimaryLabel = (TextView) myLayout.findViewById(R.id.countdown_primary_label);
+            countdownSecondary = (TextView) myLayout.findViewById(R.id.countdown_secondary);
+            countdownSecondaryLabel = (TextView) myLayout.findViewById(R.id.countdown_secondary_label);
 
             googleApiClient = new GoogleApiClient.Builder(SpaceLaunchWatchFace.this)
                     .addApi(Wearable.API)
@@ -264,10 +274,9 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
                 Timber.v("Watch is Round");
                 mXOffset = mYOffset = 0;
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) launchInfoContainer.getLayoutParams();
-                params.setMargins(0, 0, 0, 12);
+                params.setMargins(0, 0, 0, 24);
 
                 launchInfoContainer.setLayoutParams(params);
-
 
             } else if (insets.getSystemWindowInsetBottom() > 0) {
                 Timber.v("Watch has chin.");
@@ -313,9 +322,6 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             super.onAmbientModeChanged(inAmbientMode);
             if (mAmbient != inAmbientMode) {
                 mAmbient = inAmbientMode;
-                if (mLowBitAmbient) {
-                    mTextPaint.setAntiAlias(!inAmbientMode);
-                }
                 invalidate();
             }
 
@@ -327,7 +333,9 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
         @Override
         public void onDraw(Canvas canvas, Rect bounds) {
 
-            Timber.v("Connecting: %s Connected: %s Count %s", googleApiClient.isConnecting(), googleApiClient.isConnected(), apiConnectedRefresh);
+            if (!googleApiClient.isConnected() || googleApiClient.isConnecting()) {
+                Timber.v("Connecting: %s Connected: %s Count %s", googleApiClient.isConnecting(), googleApiClient.isConnected(), apiConnectedRefresh);
+            }
 
             if (googleApiClient.isConnected()){
                 apiConnectedRefresh = 0;
@@ -386,6 +394,10 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             String minute;
             String second;
 
+            int days = (int) TimeUnit.MILLISECONDS.toDays(timeToFinish);
+            int hours = (int) (TimeUnit.MILLISECONDS.toHours(timeToFinish) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(timeToFinish)));
+            int minutes = (int) (TimeUnit.MILLISECONDS.toMinutes(timeToFinish) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeToFinish)));
+
             if (TimeUnit.MILLISECONDS.toHours(timeToFinish) -
                     TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(timeToFinish)) < 10) {
                 hour = "0" + String.valueOf(TimeUnit.MILLISECONDS.toHours(timeToFinish) -
@@ -415,9 +427,6 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeToFinish)));
             }
 
-            String countdownTimer = String.format("L - %s %s:%s:%s", day, hour, minute, second);
-
-
             //Current Time
             timeView.setText(timeText);
 
@@ -444,7 +453,23 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
 
             //Launch Countdown/Status
             if (launchTime != 0) {
-                launchCountdownView.setText(countdownTimer);
+                launchCountdownView.setVisibility(View.GONE);
+                countdownLayout.setVisibility(View.VISIBLE);
+                if (days > 0){
+                    countdownPrimaryLabel.setText("Days");
+                    countdownSecondaryLabel.setText("Hours");
+                    countdownPrimary.setText(day);
+                    countdownSecondary.setText(hour);
+
+                } else {
+                    countdownPrimaryLabel.setText("Hours");
+                    countdownSecondaryLabel.setText("Minutes");
+                    countdownPrimary.setText(hour);
+                    countdownSecondary.setText(minute);
+                }
+            } else {
+                launchCountdownView.setVisibility(View.VISIBLE);
+                countdownLayout.setVisibility(View.GONE);
             }
 
             // Update the layout
@@ -546,30 +571,62 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
                 DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
                 if (dataMap.containsKey(NAME_KEY)) {
                     launchName = dataMap.getString(NAME_KEY);
-                    Log.v("Space Launch Wear", "Name = " + launchName);
+                    Timber.v("Name = %s", launchName);
                 }
 
                 if (dataMap.containsKey(TIME_KEY)) {
                     launchTime = dataMap.getInt(TIME_KEY);
-                    Log.v("Space Launch Wear", "Time = " + launchTime);
+                    Timber.v("Time = %s", launchTime);
                 }
 
                 if (dataMap.containsKey(DATE_KEY)) {
                     launchDate = new Date(dataMap.getLong(DATE_KEY));
-                    Log.v("Space Launch Wear", "Date = " + launchDate.toString());
+                    Timber.v("Date = %s", launchDate.toString());
+                }
+
+                if (dataMap.containsKey(DYNAMIC_KEY)){
+                    textDynamic = dataMap.getBoolean(DYNAMIC_KEY);
+                    Timber.v("Dynamic: %s", textDynamic);
                 }
 
                 if (dataMap.containsKey(BACKGROUND_KEY)) {
+                    Timber.v("Retrieving Asset...");
                     final Asset profileAsset = dataMap.getAsset(BACKGROUND_KEY);
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
                             Bitmap bitmap = loadBitmapFromAsset(profileAsset);
+                            Palette palette;
+                            if (textDynamic && bitmap != null && !bitmap.isRecycled()) {
+                                Timber.v("Processing bitmap...");
+                                palette = Palette.from(bitmap).generate();
+                                if(palette.getSwatches().isEmpty()) {
+                                    Timber.v("Getting alternate (UNFILTERED) palette.");
+                                    palette = new Palette.Builder(bitmap)
+                                            .addTarget(LIGHT)
+                                            .addTarget(NEUTRAL)
+                                            .clearFilters() /// allow isBlack(), isWhite(), isNearRedILine()
+                                            .generate();
+                                }
+                                Palette.Swatch lightMutedSwatch = palette.getLightMutedSwatch();
+                                Palette.Swatch lightVibrantSwatch = palette.getLightVibrantSwatch();
+                                if (lightVibrantSwatch != null) {
+                                    Timber.v("Applying light vibrant swatch...");
+                                    applySwatch(lightVibrantSwatch);
+                                } else if (lightMutedSwatch != null) {
+                                    Timber.v("Applying light muted swatch...");
+                                    applySwatch(lightMutedSwatch);
+                                } else {
+                                    applyDefault();
+                                }
+                            } else {
+                                applyDefault();
+                            }
                             imageView.setImageBitmap(bitmap);
                             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                            invalidate();
                         }
                     }).start();
-                    Log.v("Space Launch Wear", "Date = " + launchDate.toString());
                 }
             }
             if (item.getUri().getPath().equals("/config")) {
@@ -579,6 +636,58 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
                     Timber.v("24 Hour Mode = %s", twentyfourhourmode);
                 }
             }
+        }
+
+        private void applyDefault() {
+            Timber.v("Applying Default color...");
+            timeView.setTextColor(Color.WHITE);
+            utcTimeView.setTextColor(Color.WHITE);
+            dateView.setTextColor(Color.WHITE);
+
+            launchNameView.setTextColor(Color.WHITE);
+            launchCountdownView.setTextColor(Color.WHITE);
+            countdownPrimary.setTextColor(Color.WHITE);
+            countdownSecondary.setTextColor(Color.WHITE);
+            countdownPrimaryLabel.setTextColor(Color.WHITE);
+            countdownSecondaryLabel.setTextColor(Color.WHITE);
+
+            int shadowColor = ContextCompat.getColor(getApplicationContext(), R.color.text_shadow);
+
+            timeView.setShadowLayer(1,0,0,shadowColor);
+            utcTimeView.setShadowLayer(1,0,0,shadowColor);
+            dateView.setShadowLayer(1,0,0,shadowColor);
+            launchNameView.setShadowLayer(1,0,0,shadowColor);
+            launchCountdownView.setShadowLayer(1,0,0,shadowColor);
+            countdownPrimary.setShadowLayer(1,0,0,shadowColor);
+            countdownSecondary.setShadowLayer(1,0,0,shadowColor);
+            countdownPrimaryLabel.setShadowLayer(1,0,0,shadowColor);
+            countdownSecondaryLabel.setShadowLayer(1,0,0,shadowColor);
+        }
+
+        private void applySwatch(Palette.Swatch swatch) {
+            int shadowColor = ContextCompat.getColor(getApplicationContext(), R.color.text_shadow);
+            timeView.setTextColor(swatch.getRgb());
+            utcTimeView.setTextColor(swatch.getRgb());
+            dateView.setTextColor(swatch.getRgb());
+
+            launchNameView.setTextColor(swatch.getRgb());
+            launchCountdownView.setTextColor(swatch.getRgb());
+            countdownPrimary.setTextColor(swatch.getRgb());
+            countdownSecondary.setTextColor(swatch.getRgb());
+            countdownPrimaryLabel.setTextColor(swatch.getRgb());
+            countdownSecondaryLabel.setTextColor(swatch.getRgb());
+
+            timeView.setShadowLayer(1,0,0,shadowColor);
+            utcTimeView.setShadowLayer(1,0,0,shadowColor);
+            dateView.setShadowLayer(1,0,0,shadowColor);
+            launchNameView.setShadowLayer(1,0,0,shadowColor);
+            launchCountdownView.setShadowLayer(1,0,0,shadowColor);
+            countdownPrimary.setShadowLayer(1,0,0,shadowColor);
+            countdownSecondary.setShadowLayer(1,0,0,shadowColor);
+            countdownPrimaryLabel.setShadowLayer(1,0,0,shadowColor);
+            countdownSecondaryLabel.setShadowLayer(1,0,0,shadowColor);
+            timeView.setElevation(8);
+
         }
 
         public Bitmap loadBitmapFromAsset(Asset asset) {

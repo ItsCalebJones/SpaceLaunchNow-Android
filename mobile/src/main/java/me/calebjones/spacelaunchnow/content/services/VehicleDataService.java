@@ -25,7 +25,7 @@ import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.interfaces.APIRequestInterface;
 import me.calebjones.spacelaunchnow.content.interfaces.LibraryRequestInterface;
-import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.content.models.realm.RocketDetailsRealm;
 import me.calebjones.spacelaunchnow.content.models.realm.RocketFamilyRealm;
@@ -102,12 +102,12 @@ public class VehicleDataService extends IntentService {
                 .create();
 
         libraryRetrofit = new Retrofit.Builder()
-                .baseUrl(Strings.LIBRARY_BASE_URL)
+                .baseUrl(Constants.LIBRARY_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
         apiRetrofit = new Retrofit.Builder()
-                .baseUrl(Strings.API_BASE_URL)
+                .baseUrl(Constants.API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
@@ -129,7 +129,7 @@ public class VehicleDataService extends IntentService {
 
         if (intent != null) {
             String action = intent.getAction();
-            if (Strings.ACTION_GET_VEHICLES_DETAIL.equals(action)) {
+            if (Constants.ACTION_GET_VEHICLES_DETAIL.equals(action)) {
                 listPreference.setLastVehicleUpdate(System.currentTimeMillis());
                 boolean success;
                 success = getBaseVehicleDetails();
@@ -140,14 +140,14 @@ public class VehicleDataService extends IntentService {
                     @Override
                     public void execute(Realm realm) {
                         UpdateRecord updateRecord = new UpdateRecord();
-                        updateRecord.setType(Strings.ACTION_GET_MISSION);
+                        updateRecord.setType(Constants.ACTION_GET_MISSION);
                         updateRecord.setDate(new Date());
                         updateRecord.setSuccessful(finalSuccess);
                         realm.copyToRealmOrUpdate(updateRecord);
                     }
                 });
 
-                FileUtils.saveSuccess(success, Strings.ACTION_GET_MISSION, this);
+                FileUtils.saveSuccess(success, Constants.ACTION_GET_MISSION, this);
             }
         }
         mRealm.close();
@@ -178,7 +178,7 @@ public class VehicleDataService extends IntentService {
 
                 Timber.v("getBaseVehicleDetails - Success");
                 Intent broadcastIntent = new Intent();
-                broadcastIntent.setAction(Strings.ACTION_SUCCESS_VEHICLE_DETAILS);
+                broadcastIntent.setAction(Constants.ACTION_SUCCESS_VEHICLE_DETAILS);
                 VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
                 return true;
             } else {
@@ -188,7 +188,7 @@ public class VehicleDataService extends IntentService {
 
             Timber.e("VehicleDataService - ERROR: %s", e.getLocalizedMessage());
             Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Strings.ACTION_FAILURE_VEHICLE_DETAILS);
+            broadcastIntent.setAction(Constants.ACTION_FAILURE_VEHICLE_DETAILS);
             VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
             return false;
         }
@@ -226,12 +226,12 @@ public class VehicleDataService extends IntentService {
                 mRealm.commitTransaction();
 
                 Intent broadcastIntent = new Intent();
-                broadcastIntent.setAction(Strings.ACTION_SUCCESS_VEHICLES);
+                broadcastIntent.setAction(Constants.ACTION_SUCCESS_VEHICLES);
                 VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
                 return true;
             } else {
                 Intent broadcastIntent = new Intent();
-                broadcastIntent.setAction(Strings.ACTION_FAILURE_VEHICLES);
+                broadcastIntent.setAction(Constants.ACTION_FAILURE_VEHICLES);
                 VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
                 return false;
             }
@@ -240,7 +240,7 @@ public class VehicleDataService extends IntentService {
             Timber.e("VehicleDataService - ERROR: %s", e.getLocalizedMessage());
 
             Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Strings.ACTION_FAILURE_VEHICLES);
+            broadcastIntent.setAction(Constants.ACTION_FAILURE_VEHICLES);
             VehicleDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
             return false;
         }

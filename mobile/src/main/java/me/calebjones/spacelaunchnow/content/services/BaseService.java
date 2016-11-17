@@ -20,7 +20,7 @@ import io.realm.RealmList;
 import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.models.realm.RealmStr;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -86,7 +86,7 @@ public abstract class BaseService extends IntentService {
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Strings.LIBRARY_BASE_URL)
+                .baseUrl(Constants.LIBRARY_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 

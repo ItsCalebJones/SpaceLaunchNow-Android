@@ -51,7 +51,7 @@ import me.calebjones.spacelaunchnow.content.adapter.ListAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
-import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
@@ -411,7 +411,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     public void getUpcomingLaunchData() {
         Timber.d("Sending GET_UP_LAUNCHES");
         Intent intent = new Intent(getContext(), LaunchDataService.class);
-        intent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
+        intent.setAction(Constants.ACTION_GET_UP_LAUNCHES);
         getContext().startService(intent);
         getRealm().removeAllChangeListeners();
     }
@@ -438,9 +438,9 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
         public void onReceive(Context context, Intent intent) {
             Timber.v("Received: %s", intent.getAction());
             hideLoading();
-            if (intent.getAction().equals(Strings.ACTION_SUCCESS_UP_LAUNCHES)) {
+            if (intent.getAction().equals(Constants.ACTION_SUCCESS_UP_LAUNCHES)) {
                 loadData();
-            } else if (intent.getAction().equals(Strings.ACTION_FAILURE_UP_LAUNCHES)) {
+            } else if (intent.getAction().equals(Constants.ACTION_FAILURE_UP_LAUNCHES)) {
                 SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, intent);
             }
         }
@@ -506,8 +506,8 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     public void onResume() {
         Timber.d("OnResume!");
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
-        intentFilter.addAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
+        intentFilter.addAction(Constants.ACTION_SUCCESS_UP_LAUNCHES);
+        intentFilter.addAction(Constants.ACTION_FAILURE_UP_LAUNCHES);
 
         getActivity().registerReceiver(nextLaunchReceiver, intentFilter);
         setTitle();

@@ -25,7 +25,7 @@ import java.util.TimeZone;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
@@ -223,7 +223,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
             final LaunchRealm launch = launchList.get(getAdapterPosition());
 
             Intent updateIntent = new Intent(mContext, LaunchDataService.class);
-            updateIntent.setAction(Strings.ACTION_UPDATE_LAUNCH);
+            updateIntent.setAction(Constants.ACTION_UPDATE_LAUNCH);
             updateIntent.putExtra("launchID", launch.getId());
             mContext.startService(updateIntent);
 

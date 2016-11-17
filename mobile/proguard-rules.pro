@@ -139,10 +139,11 @@
 
 # OkHttp
 -keepattributes Signature
--keepattributes *Annotation*
+-keepattributes Annotation
 -keep class okhttp3.** { *; }
 -keep interface okhttp3.** { *; }
 -dontwarn okhttp3.**
+-dontwarn okio.**
 
 #AppCompat 7
 -keep public class android.support.v7.widget.** { *; }

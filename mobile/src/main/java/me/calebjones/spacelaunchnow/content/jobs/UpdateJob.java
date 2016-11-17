@@ -8,13 +8,13 @@ import android.support.annotation.NonNull;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
 
-import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 
 
 public class UpdateJob extends Job {
 
-    public static final String TAG = Strings.ACTION_UPDATE_BACKGROUND;
+    public static final String TAG = Constants.ACTION_UPDATE_BACKGROUND;
 
     @NonNull
     @Override
@@ -28,6 +28,7 @@ public class UpdateJob extends Job {
     }
 
     public static void scheduleJob(Context context) {
+
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 

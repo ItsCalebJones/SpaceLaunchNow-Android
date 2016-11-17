@@ -9,28 +9,17 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.gcm.GcmNetworkManager;
-import com.google.android.gms.wearable.Asset;
-import com.google.android.gms.wearable.PutDataMapRequest;
-import com.google.android.gms.wearable.PutDataRequest;
-import com.google.android.gms.wearable.Wearable;
 
-import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -42,24 +31,20 @@ import java.util.regex.Pattern;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
-import jp.wasabeef.glide.transformations.BlurTransformation;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.NextLaunchJob;
-import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchNotification;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
-import me.calebjones.spacelaunchnow.content.models.realm.RocketDetailsRealm;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import timber.log.Timber;
 
 
-public class NextLaunchTracker extends IntentService implements
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+public class NextLaunchTracker extends IntentService {
 
     private GcmNetworkManager mGcmNetworkManager;
     private LaunchRealm nextLaunch;
@@ -76,11 +61,6 @@ public class NextLaunchTracker extends IntentService implements
 
     private Realm realm;
 
-    private String NAME_KEY = "me.calebjones.spacelaunchnow.wear.nextname";
-    private String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
-    private String DATE_KEY = "me.calebjones.spacelaunchnow.wear.nextdate";
-    private final String BACKGROUND_KEY = "me.calebjones.spacelaunchnow.wear.background";
-
     public NextLaunchTracker() {
         super("NextLaunchTracker");
     }
@@ -90,12 +70,6 @@ public class NextLaunchTracker extends IntentService implements
         Timber.d("NextLaunchTracker - onCreate");
         rightNow = Calendar.getInstance();
         super.onCreate();
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Wearable.API)
-                .build();
 
         mGcmNetworkManager = GcmNetworkManager.getInstance(this);
     }
@@ -138,8 +112,6 @@ public class NextLaunchTracker extends IntentService implements
             }
         }
         realm.close();
-        mGoogleApiClient.connect();
-        Timber.d("mGoogleApiClient - connect");
     }
 
     private void filterLaunchRealm(Date date, Date dateDay, Realm realm) {
@@ -587,7 +559,7 @@ public class NextLaunchTracker extends IntentService implements
                 PendingIntent vidPendingIntent = PendingIntent.getActivity(this, 0, vidIntent, 0);
 
                 mBuilder.addAction(R.drawable.ic_open_in_browser_white, "Watch Live", vidPendingIntent);
-                mNotifyManager.notify(Strings.NOTIF_ID_HOUR, mBuilder.build());
+                mNotifyManager.notify(Constants.NOTIF_ID_HOUR, mBuilder.build());
             }
         } else {
             if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
@@ -598,7 +570,7 @@ public class NextLaunchTracker extends IntentService implements
 
                 mBuilder.addAction(R.drawable.ic_open_in_browser_white, "Watch Live", vidPendingIntent);
             }
-            mNotifyManager.notify(Strings.NOTIF_ID_HOUR, mBuilder.build());
+            mNotifyManager.notify(Constants.NOTIF_ID_HOUR, mBuilder.build());
         }
     }
 
@@ -666,10 +638,10 @@ public class NextLaunchTracker extends IntentService implements
 
         if (sharedPref.getBoolean("notifications_new_message_webcast", false)) {
             if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
-                mNotifyManager.notify(Strings.NOTIF_ID_HOUR, mBuilder.build());
+                mNotifyManager.notify(Constants.NOTIF_ID_HOUR, mBuilder.build());
             }
         } else {
-            mNotifyManager.notify(Strings.NOTIF_ID_HOUR, mBuilder.build());
+            mNotifyManager.notify(Constants.NOTIF_ID_HOUR, mBuilder.build());
         }
     }
 
@@ -706,145 +678,11 @@ public class NextLaunchTracker extends IntentService implements
                             .bigText(msg))
                     .setSmallIcon(R.drawable.ic_rocket_white)
                     .setContentText(msg);
-            mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
+            mNotifyManager.notify(Constants.NOTIF_ID, mBuilder.build());
             Timber.v("Scheduling Update - Interval: %s - Time: %s - IntervalString - %s", interval, formatter.format(calendar.getTime()), intervalString);
         }
         NextLaunchJob.scheduleJob(interval, this);
-    }
-
-    // Create a data map and put data in it
-    private void sendToWear(LaunchRealm launch) {
-        if (launch != null && launch.getName() != null && launch.getNetstamp() != null) {
-            Timber.v("Sending data to wear: %s", launch.getName());
-            final PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/nextLaunch");
-
-            putDataMapReq.getDataMap().putString(NAME_KEY, launch.getName());
-            putDataMapReq.getDataMap().putInt(TIME_KEY, launch.getNetstamp());
-            putDataMapReq.getDataMap().putLong(DATE_KEY, launch.getNet().getTime());
-            putDataMapReq.getDataMap().putLong("time", new Date().getTime());
-
-            boolean dynamic = this.sharedPref.getBoolean("supporter_dynamic_background", false);
-            if (dynamic) {
-                if (launch.getRocket().getName() != null) {
-                    if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
-                        Timber.v("Sending image %s", launch.getRocket().getImageURL());
-                        Glide.with(this)
-                                .load(launch.getRocket().getImageURL())
-                                .asBitmap()
-                                .transform(new BlurTransformation(this, 25, 1))
-                                .into(new SimpleTarget<Bitmap>(300, 300) {
-                                    @Override
-                                    public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
-                                        Asset asset = createAssetFromBitmap(resource);
-                                        putDataMapReq.getDataMap().putAsset(BACKGROUND_KEY, asset);
-                                        putDataMapReq.getDataMap().putLong("time", new Date().getTime());
-                                        PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
-                                        Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
-                                    }
-                                });
-                    } else {
-                        String query;
-                        if (launch.getRocket().getName().contains("Space Shuttle")) {
-                            query = "Space Shuttle";
-                        } else {
-                            query = launch.getRocket().getName();
-                        }
-                        Realm realm = Realm.getDefaultInstance();
-                        RocketDetailsRealm launchVehicle = realm.where(RocketDetailsRealm.class)
-                                .contains("name", query)
-                                .findFirst();
-                        if (launchVehicle != null && launchVehicle.getImageURL() != null && launchVehicle.getImageURL().length() > 0) {
-                            Timber.v("Sending image %s", launchVehicle.getImageURL());
-                            Glide.with(this)
-                                    .load(launchVehicle.getImageURL())
-                                    .asBitmap()
-                                    .transform(new BlurTransformation(this, 25, 1))
-                                    .into(new SimpleTarget<Bitmap>(300, 300) {
-                                        @Override
-                                        public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
-                                            Asset asset = createAssetFromBitmap(resource);
-                                            putDataMapReq.getDataMap().putAsset(BACKGROUND_KEY, asset);
-                                            PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
-                                            putDataMapReq.getDataMap().putLong("time", new Date().getTime());
-                                            Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
-                                        }
-                                    });
-                            Timber.d("Glide Loading: %s %s", launchVehicle.getLV_Name(), launchVehicle.getImageURL());
-                            realm.close();
-                        } else {
-                            loadDefaultImage(putDataMapReq);
-                        }
-                    }
-                } else {
-                    loadDefaultImage(putDataMapReq);
-                }
-            } else {
-                loadDefaultImage(putDataMapReq);
-            }
-
-            PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
-            Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
-
-            Timber.v("Sent");
-        }
-    }
-
-    private void loadDefaultImage(final PutDataMapRequest putDataMapReq) {
-        Timber.v("Sending default image.");
-        Glide.with(this)
-                .load("http://res.cloudinary.com/dnkkbfy3m/image/upload/b_rgb:000,e_blur:1449,o_57,q_100/v1462465326/navbar_one_sqfhes.png")
-                .asBitmap()
-                .into(new SimpleTarget<Bitmap>(300, 300) {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
-                        Asset asset = createAssetFromBitmap(resource);
-                        putDataMapReq.getDataMap().putAsset(BACKGROUND_KEY, asset);
-                        PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
-                        putDataMapReq.getDataMap().putLong("time", new Date().getTime());
-                        Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
-                    }
-                });
-    }
-
-    private static Asset createAssetFromBitmap(Bitmap bitmap) {
-        final ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteStream);
-        return Asset.createFromBytes(byteStream.toByteArray());
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        Timber.d("onConnected");
-        Date date = new Date();
-        Realm realm = Realm.getDefaultInstance();
-        if (switchPreferences.getAllSwitch()) {
-            sendToWear(realm.where(LaunchRealm.class)
-                    .greaterThan("net", date).findAllSorted("net").first());
-        } else {
-            sendToWear(filterLaunchRealm(date, realm));
-        }
-        realm.close();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        wear = false;
-        Timber.e("onConnectionSuspended");
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        wear = false;
-        Timber.e("onConnectionFailed %s", connectionResult.getErrorMessage());
-    }
-
-    @Override
-    public void onDestroy() {
-        Timber.d("onDestroy");
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            Timber.d("Google Client Disconnect");
-            mGoogleApiClient.disconnect();
-        }
+        this.startService(new Intent(this, UpdateWearService.class));
     }
 
 }
