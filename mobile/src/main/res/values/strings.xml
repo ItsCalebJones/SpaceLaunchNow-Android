@@ -34,9 +34,9 @@
     <string name="title_activity_debug">DebugActivity</string>
     <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
 
-    <string name="whats_new_content">1.5.2 - Watchface Improvements\n\n
-        \u2022Update the Android Wear watchface.\n
-        \u2022Start work on dynamic watchface background.\n
+    <string name="whats_new_content">1.5.2 - Watch Face Improvements\n\n
+        \u2022Update the Android Wear watch face.\n
+        \u2022Add dynamic watch face for supporters.\n
     </string>
     <string name="link_feedback">https://www.reddit.com/r/spacelaunchnow</string>
     <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>
@@ -45,7 +45,7 @@
 
     <string name="supporter_title">Become a Supporter</string>
     <string name="supporter_description">Help ensure continued updates and timely bug fixes. Get access to supporter only features. Pay what you want, you\'ll get the same value.</string>
-    <string name="supporter_features">\u2022Current weather forecast for launch pads.\n\u2022Historical weather forecast for past launches.\n\u2022Automatically sync upcoming launches to your calendar.\n</string>
+    <string name="supporter_features">\u2022Current weather forecast for launch pads.\n\u2022Historical weather forecast for past launches.\n\u2022Automatically sync upcoming launches to your calendar.\n\u2022Dynamic pictures of launch vehicles as watch face background.\n</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_download">Download</string>
     <string name="title_activity_web_view_fallback">Space Launch Now</string>
