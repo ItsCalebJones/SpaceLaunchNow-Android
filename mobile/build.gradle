@@ -93,19 +93,6 @@ android {
             }
         }
     }
-    productFlavors {
-        // Define separate dev and prod flavors
-        dev21 {
-            minSdkVersion 21
-        }
-        dev16 {
-            minSdkVersion 16
-        }
-        prod {
-            // The actual minSdkVersion for the production app
-            minSdkVersion 16
-        }
-    }
 
     lintOptions{
         abortOnError false
@@ -115,6 +102,7 @@ android {
 dependencies {
 
     wearApp project(':wear')
+
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }

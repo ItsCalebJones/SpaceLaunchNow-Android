@@ -13,8 +13,8 @@
             android:title="Watch Hour Mode" />
 
         <SwitchPreference
-            android:enabled="true"
             android:key="wear_text_dynamic"
+            android:defaultValue="false"
             android:summary="Generate text color based on background."
             android:title="Dynamic Text" />
     </PreferenceCategory>
@@ -22,21 +22,21 @@
     <PreferenceCategory android:title="Background">
 
         <SwitchPreference
-            android:defaultValue="false"
             android:key="supporter_dynamic_background"
+            android:defaultValue="false"
             android:summary="Use image of the next launch vehicle if available."
             android:title="Dynamic Background" />
 
         <SwitchPreference
-            android:defaultValue="true"
             android:key="wear_background_blur"
+            android:defaultValue="true"
             android:summary="Blur the background image."
             android:title="Blur Background" />
 
         <Preference
+            android:key="wear_blur_dialog"
             android:dependency="wear_background_blur"
             android:enabled="true"
-            android:key="wear_blur_dialog"
             android:summary="Configure the strength and characteristics of the blur effect."
             android:title="Blur Settings" />
 

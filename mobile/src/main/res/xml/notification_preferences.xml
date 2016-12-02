@@ -54,7 +54,7 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="notifications_launch_minute"
-            android:summaryOff="Do not notify when a launch is within ten minutes.."
+            android:summaryOff="Do not notify when a launch is within ten minutes."
             android:summaryOn="Receive notification when a launch is within ten minutes."
             android:title="Ten Minute Notification" />
         <SwitchPreference
