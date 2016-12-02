@@ -112,7 +112,7 @@ public class UpdateWearService extends BaseService {
             int radius = sharedPreferences.getInt("RADIUS_WEAR", DEFAULT_RADIUS) + 1;
             int dim = sharedPreferences.getInt("DIM_WEAR", DEFAULT_DIM) + 1;
             int grey = sharedPreferences.getInt("GREY_WEAR", DEFAULT_GREY) + 1;
-            final boolean dynamicText = sharedPreferences.getBoolean("wear_text_dynamic", true);
+            final boolean dynamicText = sharedPreferences.getBoolean("wear_text_dynamic", false);
 
             final PutDataMapRequest putImageReq = PutDataMapRequest.create("/nextLaunch");
 
