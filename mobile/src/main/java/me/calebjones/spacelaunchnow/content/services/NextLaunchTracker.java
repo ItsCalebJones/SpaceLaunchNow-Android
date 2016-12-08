@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -539,7 +538,8 @@ public class NextLaunchTracker extends IntentService {
 
         PendingIntent appIntent = PendingIntent.getActivity(this, 0, mainActivityIntent, 0);
 
-        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone", "default ringtone");
+        Uri alarmSound = Uri.parse(ringtoneBox);
 
         //TODO add launch image when ready from LL
         NotificationCompat.WearableExtender wearableExtender =
@@ -611,7 +611,8 @@ public class NextLaunchTracker extends IntentService {
         String launchName = launch.getName();
         String launchPad = launch.getLocation().getName();
 
-        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone", "default ringtone");
+        Uri alarmSound = Uri.parse(ringtoneBox);
 
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
         mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

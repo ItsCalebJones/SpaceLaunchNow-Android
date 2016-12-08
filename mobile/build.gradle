@@ -152,7 +152,7 @@ dependencies {
     compile 'blue.aodev:material-values:1.1.0'
     compile "com.mikepenz:iconics-core:2.8.1@aar"
     compile 'com.mikepenz:google-material-typeface:2.2.0.3.original@aar'
-    compile('com.mikepenz:materialdrawer:5.7.0@aar') {
+    compile('com.mikepenz:materialdrawer:5.8.0@aar') {
         transitive = true
     }
     compile 'com.mikepenz:fontawesome-typeface:4.6.0.3@aar'
