@@ -1,7 +1,6 @@
 package me.calebjones.spacelaunchnow.content.services;
 
 
-import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.Notification;
@@ -33,7 +32,7 @@ import java.util.regex.Pattern;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
-import me.calebjones.spacelaunchnow.BuildConfig;
+import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
@@ -65,6 +64,7 @@ public class NextLaunchTracker extends IntentService {
     private GoogleApiClient mGoogleApiClient;
 
     private Realm realm;
+    private Boolean jobUpdated;
 
     public NextLaunchTracker() {
         super("NextLaunchTracker");
@@ -98,11 +98,12 @@ public class NextLaunchTracker extends IntentService {
         if (switchPreferences.getAllSwitch()) {
             launchRealms = realm.where(LaunchRealm.class)
                     .between("net", date, dateDay)
-                    .findAll();
+                    .findAllSorted("net", Sort.ASCENDING);
         } else {
             filterLaunchRealm(date, dateDay, realm);
         }
 
+        jobUpdated = false;
         if (launchRealms.size() > 0) {
             for (LaunchRealm realm : launchRealms) {
                 checkNextLaunches(realm);
@@ -258,7 +259,7 @@ public class NextLaunchTracker extends IntentService {
             query.equalTo("location.id", 18);
         }
 
-        launchRealms = query.endGroup().findAll();
+        launchRealms = query.endGroup().findAllSorted("net", Sort.ASCENDING);
     }
 
     private LaunchRealm filterLaunchRealm(Date date, Realm realm) {
@@ -679,38 +680,11 @@ public class NextLaunchTracker extends IntentService {
     }
 
     public void scheduleUpdate(long interval) {
-        if (BuildConfig.DEBUG) {
-            long nextUpdate = Calendar.getInstance().getTimeInMillis() + interval;
-
-            // Create a DateFormatter object for displaying date in specified format.
-            SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss zz");
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(nextUpdate);
-
-            @SuppressLint("DefaultLocale")
-            String intervalString = String.format("%02d:%02d:%02d",
-                    TimeUnit.MILLISECONDS.toHours(interval),
-                    TimeUnit.MILLISECONDS.toMinutes(interval) -
-                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(interval)), // The change is in this line
-                    TimeUnit.MILLISECONDS.toSeconds(interval) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(interval)));
-
-            NotificationCompat.Builder mBuilder = new NotificationCompat
-                    .Builder(getApplicationContext());
-            NotificationManager mNotifyManager = (NotificationManager) getApplicationContext()
-                    .getSystemService(Context.NOTIFICATION_SERVICE);
-
-            String msg = String.format("Interval: %s - Time: %s - IntervalString - %s", interval, formatter.format(calendar.getTime()), intervalString);
-            mBuilder.setContentTitle("Scheduling Update - ")
-                    .setStyle(new NotificationCompat.BigTextStyle()
-                            .bigText(msg))
-                    .setSmallIcon(R.drawable.ic_rocket_white)
-                    .setContentText(msg);
-            mNotifyManager.notify(Constants.NOTIF_ID, mBuilder.build());
-            Timber.v("Scheduling Update - Interval: %s - Time: %s - IntervalString - %s", interval, formatter.format(calendar.getTime()), intervalString);
+        if(!jobUpdated) {
+            jobUpdated = true;
+            NextLaunchJob.scheduleJob(interval);
+            this.startService(new Intent(this, UpdateWearService.class));
         }
-        NextLaunchJob.scheduleJob(interval);
-        this.startService(new Intent(this, UpdateWearService.class));
     }
 
 }
