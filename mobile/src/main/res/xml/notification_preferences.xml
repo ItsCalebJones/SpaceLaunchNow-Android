@@ -1,67 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="Notifications">
-    <PreferenceCategory android:title="Launch Notifications">
+    <PreferenceCategory android:title="General">
 
         <SwitchPreference
             android:defaultValue="true"
             android:key="notifications_new_message"
             android:summaryOff="Allow Notifications for upcoming launches."
             android:summaryOn="Notifications are on for upcoming launches."
-            android:title="Launch Notifications" />
+            android:title="Enable Notifications" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:dependency="notifications_new_message"
+            android:key="notifications_launch_imminent_updates"
+            android:summaryOff="Do not update when a launch status changes."
+            android:summaryOn="Receive update notification for launch status changes."
+            android:title="Status Updates" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:dependency="notifications_new_message"
+            android:key="notifications_new_message_webcast"
+            android:summary="Only notify for launches with webcast's available."
+            android:title="Web-cast Only" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Notification Preferences">
+        <RingtonePreference
+            android:defaultValue="content://settings/system/notification_sound"
+            android:dependency="notifications_new_message"
+            android:key="notifications_new_message_ringtone"
+            android:ringtoneType="notification"
+            android:summary="Select a custom notification ringtone."
+            android:title="Ringtone" />
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:dependency="notifications_new_message"
             android:key="notifications_new_message_heads_up"
-            android:summary="Heads-up notification for Lollipop devices."
-            android:title="Notification Priority" />
+            android:summary="Heads-up notification, sound and vibration by default."
+            android:title="Priority" />
+
         <CheckBoxPreference
             android:defaultValue="true"
             android:dependency="notifications_new_message"
             android:key="notifications_new_message_vibrate"
             android:summary="Allow vibration for notifications."
-            android:title="Notification Vibration" />
+            android:title="Vibration" />
+
         <CheckBoxPreference
             android:defaultValue="true"
             android:dependency="notifications_new_message"
             android:key="notifications_new_message_led"
             android:summary="Allow LED blink with notification. (Works on some devices)"
-            android:title="Notification Lights" />
-        <CheckBoxPreference
-            android:defaultValue="false"
+            android:title="LED Blink" />
+
+        <Preference
+            android:defaultValue="true"
             android:dependency="notifications_new_message"
-            android:key="notifications_new_message_webcast"
-            android:summary="Only notify for launches with webcast's available."
-            android:title="Notify Web-cast Only" />
+            android:key="notifications_new_message_test"
+            android:summary="Send a test notification."
+            android:title="Notification Test" />
     </PreferenceCategory>
 
     <PreferenceCategory
         android:dependency="notifications_new_message"
-        android:title="Default Launches">
-        <SwitchPreference
+        android:title="Notification Intervals"
+        android:summary="Select intervals to receive launch notifications">
+        <CheckBoxPreference
             android:defaultValue="true"
             android:key="notifications_launch_day"
             android:summaryOff="Do not notify for launches within 24 hours."
             android:summaryOn="Receive notification when a launch is within 24 hours."
-            android:title="24 Hour Launch Notification" />
-        <SwitchPreference
+            android:title="24 Hours" />
+        <CheckBoxPreference
             android:defaultValue="true"
             android:key="notifications_launch_imminent"
             android:summaryOff="Do not notify when a launch is imminent."
             android:summaryOn="Receive notification when a launch is within one hour."
-            android:title="Imminent Launch Notification" />
-        <SwitchPreference
+            android:title="One Hour" />
+        <CheckBoxPreference
             android:defaultValue="false"
             android:key="notifications_launch_minute"
-            android:summaryOff="Do not notify when a launch is within ten minutes.."
+            android:summaryOff="Do not notify when a launch is within ten minutes."
             android:summaryOn="Receive notification when a launch is within ten minutes."
-            android:title="Ten Minute Notification" />
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="notifications_launch_imminent_updates"
-            android:summaryOff="Do not update when a launch status changes."
-            android:summaryOn="Receive update notification for launch status changes."
-            android:title="Launch Status Updates" />
+            android:title="Ten Minutes" />
     </PreferenceCategory>
 </PreferenceScreen>

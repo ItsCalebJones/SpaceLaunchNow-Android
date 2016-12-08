@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.format.DateFormat;
 import android.widget.ImageView;
@@ -37,8 +38,8 @@ import io.realm.RealmConfiguration;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.DataJobCreator;
+import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.models.Migration;
-import me.calebjones.spacelaunchnow.content.models.Strings;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
@@ -68,12 +69,12 @@ public class LaunchApplication extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-
         /*
         * Init Crashlytics and gather additional device information.
         * Always leave this at the top so it catches any init failures.
@@ -122,7 +123,6 @@ public class LaunchApplication extends Application {
                         .setCacheDirectory(getCacheDir())
                         .build();
         ForecastClient.create(configuration);
-
 
         mInstance = this;
 
@@ -189,11 +189,11 @@ public class LaunchApplication extends Application {
 
             if(Connectivity.isConnectedWifi(this)){
                 Intent nextIntent = new Intent(this, LaunchDataService.class);
-                nextIntent.setAction(Strings.ACTION_GET_UP_LAUNCHES);
+                nextIntent.setAction(Constants.ACTION_GET_UP_LAUNCHES);
                 this.startService(nextIntent);
             } else {
                 Intent nextIntent = new Intent(this, LaunchDataService.class);
-                nextIntent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
+                nextIntent.setAction(Constants.ACTION_UPDATE_NEXT_LAUNCH);
                 this.startService(nextIntent);
             }
 
@@ -201,19 +201,19 @@ public class LaunchApplication extends Application {
                 Timber.d("Time since last VehicleUpdate: %s", (System.currentTimeMillis() - sharedPreference.getLastVehicleUpdate()));
                 if ((System.currentTimeMillis() - sharedPreference.getLastVehicleUpdate()) > 1209600000) {
                     Intent rocketIntent = new Intent(this, VehicleDataService.class);
-                    rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
+                    rocketIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);
                     this.startService(rocketIntent);
 
                 } else if (Utils.getVersionCode(this) != switchPreferences.getVersionCode()) {
 
                     Intent rocketIntent = new Intent(this, VehicleDataService.class);
-                    rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
+                    rocketIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);
                     this.startService(rocketIntent);
                 }
             }
         } else {
             Intent intent = new Intent(this, LaunchDataService.class);
-            intent.setAction(Strings.ACTION_GET_ALL_DATA);
+            intent.setAction(Constants.ACTION_GET_ALL_DATA);
             this.startService(intent);
         }
     }

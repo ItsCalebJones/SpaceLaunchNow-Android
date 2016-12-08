@@ -6,24 +6,20 @@ import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.gcm.GcmNetworkManager;
-import com.google.android.gms.wearable.PutDataMapRequest;
-import com.google.android.gms.wearable.PutDataRequest;
-import com.google.android.gms.wearable.Wearable;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -36,22 +32,23 @@ import java.util.regex.Pattern;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
-import me.calebjones.spacelaunchnow.BuildConfig;
+import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.NextLaunchJob;
-import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchNotification;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
+import me.calebjones.spacelaunchnow.widget.LaunchCardCompactWidgetProvider;
+import me.calebjones.spacelaunchnow.widget.LaunchTimerWidgetProvider;
+import me.calebjones.spacelaunchnow.widget.LaunchWordTimerWidgetProvider;
 import timber.log.Timber;
 
 
-public class NextLaunchTracker extends IntentService implements
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+public class NextLaunchTracker extends IntentService {
 
     private GcmNetworkManager mGcmNetworkManager;
     private LaunchRealm nextLaunch;
@@ -67,6 +64,7 @@ public class NextLaunchTracker extends IntentService implements
     private GoogleApiClient mGoogleApiClient;
 
     private Realm realm;
+    private Boolean jobUpdated;
 
     public NextLaunchTracker() {
         super("NextLaunchTracker");
@@ -77,12 +75,6 @@ public class NextLaunchTracker extends IntentService implements
         Timber.d("NextLaunchTracker - onCreate");
         rightNow = Calendar.getInstance();
         super.onCreate();
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Wearable.API)
-                .build();
 
         mGcmNetworkManager = GcmNetworkManager.getInstance(this);
     }
@@ -96,7 +88,6 @@ public class NextLaunchTracker extends IntentService implements
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
 
-
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         Calendar calDay = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         calDay.add(Calendar.HOUR, 72);
@@ -107,27 +98,46 @@ public class NextLaunchTracker extends IntentService implements
         if (switchPreferences.getAllSwitch()) {
             launchRealms = realm.where(LaunchRealm.class)
                     .between("net", date, dateDay)
-                    .findAll();
+                    .findAllSorted("net", Sort.ASCENDING);
         } else {
             filterLaunchRealm(date, dateDay, realm);
         }
 
+        jobUpdated = false;
         if (launchRealms.size() > 0) {
             for (LaunchRealm realm : launchRealms) {
                 checkNextLaunches(realm);
             }
         } else {
-            int size = Integer.parseInt(sharedPref.getString("notification_sync_time", "24"));
-            scheduleUpdate(TimeUnit.MILLISECONDS.convert(size, TimeUnit.HOURS));
+            scheduleUpdate(TimeUnit.MILLISECONDS.convert(12, TimeUnit.HOURS));
 
             //If Calendar Sync is enabled sync it up
             if (switchPreferences.getCalendarStatus()) {
                 syncCalendar();
             }
         }
+        updateWidgets();
         realm.close();
-        mGoogleApiClient.connect();
-        Timber.d("mGoogleApiClient - connect");
+    }
+
+    private void updateWidgets() {
+        Intent cardIntent = new Intent(this,LaunchCardCompactWidgetProvider.class);
+        cardIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int cardIds[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), LaunchCardCompactWidgetProvider.class));
+        cardIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,cardIds);
+        sendBroadcast(cardIntent);
+
+        Intent timerIntent = new Intent(this,LaunchTimerWidgetProvider.class);
+        timerIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int timerIds[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), LaunchTimerWidgetProvider.class));
+        timerIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,timerIds);
+        sendBroadcast(timerIntent);
+
+        Intent wordIntent = new Intent(this,LaunchWordTimerWidgetProvider.class);
+        wordIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int wordIds[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), LaunchWordTimerWidgetProvider.class));
+        wordIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,wordIds);
+        sendBroadcast(wordIntent);
     }
 
     private void filterLaunchRealm(Date date, Date dateDay, Realm realm) {
@@ -249,7 +259,7 @@ public class NextLaunchTracker extends IntentService implements
             query.equalTo("location.id", 18);
         }
 
-        launchRealms = query.endGroup().findAll();
+        launchRealms = query.endGroup().findAllSorted("net", Sort.ASCENDING);
     }
 
     private LaunchRealm filterLaunchRealm(Date date, Realm realm) {
@@ -392,7 +402,7 @@ public class NextLaunchTracker extends IntentService implements
         if (launch != null && launch.getNetstamp() > 0) {
 
             LaunchNotification notification = realm.where(LaunchNotification.class).equalTo("id", launch.getId()).findFirst();
-            if (notification == null){
+            if (notification == null) {
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
@@ -431,7 +441,7 @@ public class NextLaunchTracker extends IntentService implements
                             realm.commitTransaction();
                         }
                     }
-                    scheduleUpdate(future.getTimeInMillis() + 3600000);
+                    scheduleUpdate((future.getTimeInMillis() + 3600000) - now.getTimeInMillis());
                 } else if (timeToFinish < 3600000) {
                     if (notify) {
                         int minutes = (int) ((timeToFinish / (1000 * 60)) % 60);
@@ -457,7 +467,7 @@ public class NextLaunchTracker extends IntentService implements
                             if (!notification.isNotifiedDay()) {
 
                                 //Round up for standard notification.
-                                if (hours == 23){
+                                if (hours == 23) {
                                     hours = 24;
                                 }
 
@@ -529,7 +539,8 @@ public class NextLaunchTracker extends IntentService implements
 
         PendingIntent appIntent = PendingIntent.getActivity(this, 0, mainActivityIntent, 0);
 
-        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone", "default ringtone");
+        Uri alarmSound = Uri.parse(ringtoneBox);
 
         //TODO add launch image when ready from LL
         NotificationCompat.WearableExtender wearableExtender =
@@ -575,7 +586,7 @@ public class NextLaunchTracker extends IntentService implements
                 PendingIntent vidPendingIntent = PendingIntent.getActivity(this, 0, vidIntent, 0);
 
                 mBuilder.addAction(R.drawable.ic_open_in_browser_white, "Watch Live", vidPendingIntent);
-                mNotifyManager.notify(Strings.NOTIF_ID_HOUR, mBuilder.build());
+                mNotifyManager.notify(Constants.NOTIF_ID_HOUR, mBuilder.build());
             }
         } else {
             if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
@@ -586,7 +597,7 @@ public class NextLaunchTracker extends IntentService implements
 
                 mBuilder.addAction(R.drawable.ic_open_in_browser_white, "Watch Live", vidPendingIntent);
             }
-            mNotifyManager.notify(Strings.NOTIF_ID_HOUR, mBuilder.build());
+            mNotifyManager.notify(Constants.NOTIF_ID_HOUR, mBuilder.build());
         }
     }
 
@@ -601,7 +612,8 @@ public class NextLaunchTracker extends IntentService implements
         String launchName = launch.getName();
         String launchPad = launch.getLocation().getName();
 
-        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone", "default ringtone");
+        Uri alarmSound = Uri.parse(ringtoneBox);
 
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
         mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -654,10 +666,10 @@ public class NextLaunchTracker extends IntentService implements
 
         if (sharedPref.getBoolean("notifications_new_message_webcast", false)) {
             if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
-                mNotifyManager.notify(Strings.NOTIF_ID_HOUR, mBuilder.build());
+                mNotifyManager.notify(Constants.NOTIF_ID_HOUR, mBuilder.build());
             }
         } else {
-            mNotifyManager.notify(Strings.NOTIF_ID_HOUR, mBuilder.build());
+            mNotifyManager.notify(Constants.NOTIF_ID_HOUR, mBuilder.build());
         }
     }
 
@@ -668,89 +680,10 @@ public class NextLaunchTracker extends IntentService implements
     }
 
     public void scheduleUpdate(long interval) {
-        if (BuildConfig.DEBUG) {
-            long nextUpdate = Calendar.getInstance().getTimeInMillis() + interval;
-
-            // Create a DateFormatter object for displaying date in specified format.
-            SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss zz");
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(nextUpdate);
-
-            String intervalString = String.format("%02d:%02d:%02d",
-                    TimeUnit.MILLISECONDS.toHours(interval),
-                    TimeUnit.MILLISECONDS.toMinutes(interval) -
-                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(interval)), // The change is in this line
-                    TimeUnit.MILLISECONDS.toSeconds(interval) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(interval)));
-
-            NotificationCompat.Builder mBuilder = new NotificationCompat
-                    .Builder(getApplicationContext());
-            NotificationManager mNotifyManager = (NotificationManager) getApplicationContext()
-                    .getSystemService(Context.NOTIFICATION_SERVICE);
-
-            String msg = String.format("Interval: %s - Time: %s - IntervalString - %s", interval, formatter.format(calendar.getTime()), intervalString);
-            mBuilder.setContentTitle("Scheduling Update - ")
-                    .setStyle(new NotificationCompat.BigTextStyle()
-                            .bigText(msg))
-                    .setSmallIcon(R.drawable.ic_rocket_white)
-                    .setContentText(msg);
-            mNotifyManager.notify(Strings.NOTIF_ID, mBuilder.build());
-            Timber.v("Scheduling Update - Interval: %s - Time: %s - IntervalString - %s", interval, formatter.format(calendar.getTime()), intervalString);
-        }
-        NextLaunchJob.scheduleJob(interval, this);
-    }
-
-    // Create a data map and put data in it
-    private void sendToWear(LaunchRealm launch) {
-        if (launch != null && launch.getName() != null && launch.getNetstamp() != null) {
-            Timber.v("Sending data to wear...");
-            PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/nextLaunch");
-
-            String NAME_KEY = "me.calebjones.spacelaunchnow.wear.nextname";
-            String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
-            putDataMapReq.getDataMap().putString(NAME_KEY, launch.getName());
-            putDataMapReq.getDataMap().putInt(TIME_KEY, launch.getNetstamp());
-            putDataMapReq.getDataMap().putLong("time", new Date().getTime());
-
-            PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
-            Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
-
-            Timber.v("Sent");
-    }
-
-}
-    @Override
-    public void onConnected(Bundle bundle) {
-        Timber.d("onConnected");
-        Date date = new Date();
-        Realm realm = Realm.getDefaultInstance();
-        if (switchPreferences.getAllSwitch()) {
-            sendToWear(realm.where(LaunchRealm.class)
-                    .greaterThan("net", date).findFirst());
-        } else {
-            sendToWear(filterLaunchRealm(date, realm));
-        }
-        realm.close();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        wear = false;
-        Timber.e("onConnectionSuspended");
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        wear = false;
-        Timber.e("onConnectionFailed %s", connectionResult.getErrorMessage());
-    }
-
-    @Override
-    public void onDestroy() {
-        Timber.d("onDestroy");
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            Timber.d("Google Client Disconnect");
-            mGoogleApiClient.disconnect();
+        if(!jobUpdated) {
+            jobUpdated = true;
+            NextLaunchJob.scheduleJob(interval);
+            this.startService(new Intent(this, UpdateWearService.class));
         }
     }
 

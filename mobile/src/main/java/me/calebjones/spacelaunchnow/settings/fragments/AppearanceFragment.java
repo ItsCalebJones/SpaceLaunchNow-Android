@@ -18,14 +18,13 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
-import de.mrapp.android.preference.activity.PreferenceFragment;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import timber.log.Timber;
 
-public class AppearanceFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class AppearanceFragment extends BaseSettingFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private SwitchPreferences switchPreferences;
     private Context context;

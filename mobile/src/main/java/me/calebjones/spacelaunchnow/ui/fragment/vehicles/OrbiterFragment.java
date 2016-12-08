@@ -137,6 +137,7 @@ public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayou
             @Override
             public void onResponse(Call<OrbiterResponse> call, Response<OrbiterResponse> response) {
                 if (response.isSuccessful()) {
+                    Timber.v("Success %s", response.message());
                     OrbiterResponse jsonResponse = response.body();
                     items = new ArrayList<>(Arrays.asList(jsonResponse.getItem()));
                     adapter.addItems(items);

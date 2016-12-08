@@ -23,7 +23,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.interfaces.LibraryRequestInterface;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateJob;
-import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchNotification;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.models.realm.UpdateRecord;
@@ -51,21 +51,21 @@ public class LaunchDataService extends BaseService {
 
     public static void startActionSyncNotifiers(Context context) {
         Intent intent = new Intent(context, LaunchDataService.class);
-        intent.setAction(Strings.SYNC_NOTIFIERS);
+        intent.setAction(Constants.SYNC_NOTIFIERS);
         context.startService(intent);
         Timber.v("Sending Delete intent.");
     }
 
     public static void startActionUpdateNextLaunch(Context context) {
         Intent intent = new Intent(context, LaunchDataService.class);
-        intent.setAction(Strings.ACTION_UPDATE_NEXT_LAUNCH);
+        intent.setAction(Constants.ACTION_UPDATE_NEXT_LAUNCH);
         context.startService(intent);
         Timber.v("Sending Delete intent.");
     }
 
     public static void startActionBackground(Context context) {
         Intent intent = new Intent(context, LaunchDataService.class);
-        intent.setAction(Strings.ACTION_UPDATE_BACKGROUND);
+        intent.setAction(Constants.ACTION_UPDATE_BACKGROUND);
         context.startService(intent);
         Timber.v("Sending Delete intent.");
     }
@@ -99,7 +99,7 @@ public class LaunchDataService extends BaseService {
             }
 
             //Usually called on first launch
-            if (Strings.ACTION_GET_ALL_DATA.equals(action)) {
+            if (Constants.ACTION_GET_ALL_DATA.equals(action)) {
                 Timber.v("Intent action received: %s", action);
                 if (this.sharedPref.getBoolean("background", true)) {
                     scheduleLaunchUpdates();
@@ -108,14 +108,14 @@ public class LaunchDataService extends BaseService {
                 if (getUpcomingLaunchesAll(this)) {
                     if (getLaunchesByDate("1950-01-01", Utils.getEndDate(this), this)) {
                         Intent rocketIntent = new Intent(getApplicationContext(), VehicleDataService.class);
-                        rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
+                        rocketIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);
                         startService(rocketIntent);
 
                         startService(new Intent(this, MissionDataService.class));
                         this.startService(new Intent(this, NextLaunchTracker.class));
                     }
                 }
-            } else if (Strings.ACTION_UPDATE_LAUNCH.equals(action)) {
+            } else if (Constants.ACTION_UPDATE_LAUNCH.equals(action)) {
                 int id = intent.getIntExtra("launchID", 0);
                 if (id > 0) {
                     Timber.v("Updating launch id: %s", id);
@@ -124,7 +124,7 @@ public class LaunchDataService extends BaseService {
                 syncNotifiers(this);
 
                 // Called from NextLaunchFragment
-            } else if (Strings.ACTION_GET_UP_LAUNCHES.equals(action)) {
+            } else if (Constants.ACTION_GET_UP_LAUNCHES.equals(action)) {
 
                 Timber.v("Intent action received: %s", action);
                 if (this.sharedPref.getBoolean("background", true)) {
@@ -136,7 +136,7 @@ public class LaunchDataService extends BaseService {
                 this.startService(new Intent(this, NextLaunchTracker.class));
 
                 // Called from PrevLaunchFragment
-            } else if (Strings.ACTION_GET_PREV_LAUNCHES.equals(action)) {
+            } else if (Constants.ACTION_GET_PREV_LAUNCHES.equals(action)) {
 
                 Timber.v("Intent action received: %s", action);
                 if (intent.getStringExtra("startDate") != null && intent.getStringExtra("endDate") != null) {
@@ -145,17 +145,17 @@ public class LaunchDataService extends BaseService {
                     getLaunchesByDate("1950-01-01", Utils.getEndDate(this), this);
                 }
 
-            } else if (Strings.ACTION_UPDATE_NEXT_LAUNCH.equals(action)) {
+            } else if (Constants.ACTION_UPDATE_NEXT_LAUNCH.equals(action)) {
 
                 Timber.v("Intent action received: %s", action);
                 getNextLaunches(this);
 
-            } else if (Strings.SYNC_NOTIFIERS.equals(action)) {
+            } else if (Constants.SYNC_NOTIFIERS.equals(action)) {
 
                 Timber.v("Intent action received: %s", action);
                 syncNotifiers(this);
 
-            } else if (Strings.ACTION_UPDATE_BACKGROUND.equals(action)) {
+            } else if (Constants.ACTION_UPDATE_BACKGROUND.equals(action)) {
 
                 Timber.v("Intent action received: %s", action);
                 syncBackground(this);
@@ -209,7 +209,7 @@ public class LaunchDataService extends BaseService {
     }
 
     private static void checkUpcomingLaunches(Context context, Realm realm) {
-        UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Strings.ACTION_GET_UP_LAUNCHES).findFirst();
+        UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Constants.ACTION_GET_UP_LAUNCHES).findFirst();
         if (record != null){
             Date currentDate = new Date();
             Date lastUpdateDate = record.getDate();
@@ -224,7 +224,7 @@ public class LaunchDataService extends BaseService {
     }
 
     private static void checkMissions(Context context, Realm realm) {
-        UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Strings.ACTION_GET_MISSION).findFirst();
+        UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Constants.ACTION_GET_MISSION).findFirst();
         if (record != null){
             Date currentDate = new Date();
             Date lastUpdateDate = record.getDate();
@@ -239,7 +239,7 @@ public class LaunchDataService extends BaseService {
     }
 
     private static void checkPreviousLaunches(Context context, Realm realm) {
-        UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Strings.ACTION_GET_PREV_LAUNCHES).findFirst();
+        UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Constants.ACTION_GET_PREV_LAUNCHES).findFirst();
         if (record != null){
             Date currentDate = new Date();
             Date lastUpdateDate = record.getDate();
@@ -254,7 +254,7 @@ public class LaunchDataService extends BaseService {
     }
 
     private static void checkVehicles(Context context, Realm realm) {
-        UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Strings.ACTION_GET_VEHICLES_DETAIL).findFirst();
+        UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Constants.ACTION_GET_VEHICLES_DETAIL).findFirst();
         if (record != null){
             Date currentDate = new Date();
             Date lastUpdateDate = record.getDate();
@@ -262,12 +262,12 @@ public class LaunchDataService extends BaseService {
             long daysMaxUpdate = 2592000000L;
             if (timeSinceUpdate > daysMaxUpdate) {
                 Intent rocketIntent = new Intent(context, VehicleDataService.class);
-                rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
+                rocketIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);
                 context.startService(rocketIntent);
             }
         } else {
             Intent rocketIntent = new Intent(context, VehicleDataService.class);
-            rocketIntent.setAction(Strings.ACTION_GET_VEHICLES_DETAIL);
+            rocketIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);
             context.startService(rocketIntent);
         }
     }
@@ -342,7 +342,7 @@ public class LaunchDataService extends BaseService {
                 @Override
                 public void execute(Realm realm) {
                     UpdateRecord updateRecord = new UpdateRecord();
-                    updateRecord.setType(Strings.ACTION_GET_PREV_LAUNCHES);
+                    updateRecord.setType(Constants.ACTION_GET_PREV_LAUNCHES);
                     updateRecord.setDate(new Date());
                     updateRecord.setSuccessful(true);
                     realm.copyToRealmOrUpdate(updateRecord);
@@ -351,7 +351,7 @@ public class LaunchDataService extends BaseService {
 
             Timber.v("Success!");
             Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
+            broadcastIntent.setAction(Constants.ACTION_SUCCESS_PREV_LAUNCHES);
             context.sendBroadcast(broadcastIntent);
             return true;
 
@@ -362,7 +362,7 @@ public class LaunchDataService extends BaseService {
                 @Override
                 public void execute(Realm realm) {
                     UpdateRecord updateRecord = new UpdateRecord();
-                    updateRecord.setType(Strings.ACTION_GET_PREV_LAUNCHES);
+                    updateRecord.setType(Constants.ACTION_GET_PREV_LAUNCHES);
                     updateRecord.setDate(new Date());
                     updateRecord.setSuccessful(false);
                     realm.copyToRealmOrUpdate(updateRecord);
@@ -371,7 +371,7 @@ public class LaunchDataService extends BaseService {
 
             Intent broadcastIntent = new Intent();
             broadcastIntent.putExtra("error", e.getLocalizedMessage());
-            broadcastIntent.setAction(Strings.ACTION_FAILURE_PREV_LAUNCHES);
+            broadcastIntent.setAction(Constants.ACTION_FAILURE_PREV_LAUNCHES);
             context.sendBroadcast(broadcastIntent);
             return false;
         }
@@ -432,7 +432,7 @@ public class LaunchDataService extends BaseService {
                 @Override
                 public void execute(Realm realm) {
                     UpdateRecord updateRecord = new UpdateRecord();
-                    updateRecord.setType(Strings.ACTION_UPDATE_NEXT_LAUNCH);
+                    updateRecord.setType(Constants.ACTION_UPDATE_NEXT_LAUNCH);
                     updateRecord.setDate(new Date());
                     updateRecord.setSuccessful(true);
                     realm.copyToRealmOrUpdate(updateRecord);
@@ -440,11 +440,11 @@ public class LaunchDataService extends BaseService {
             });
 
             Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
+            broadcastIntent.setAction(Constants.ACTION_SUCCESS_UP_LAUNCHES);
             context.getApplicationContext().sendBroadcast(broadcastIntent);
 
             mRealm.close();
-            FileUtils.saveSuccess(true, Strings.ACTION_UPDATE_NEXT_LAUNCH, context);
+            FileUtils.saveSuccess(true, Constants.ACTION_UPDATE_NEXT_LAUNCH, context);
             return true;
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());
@@ -453,7 +453,7 @@ public class LaunchDataService extends BaseService {
                 @Override
                 public void execute(Realm realm) {
                     UpdateRecord updateRecord = new UpdateRecord();
-                    updateRecord.setType(Strings.ACTION_UPDATE_NEXT_LAUNCH);
+                    updateRecord.setType(Constants.ACTION_UPDATE_NEXT_LAUNCH);
                     updateRecord.setDate(new Date());
                     updateRecord.setSuccessful(false);
                     realm.copyToRealmOrUpdate(updateRecord);
@@ -462,10 +462,10 @@ public class LaunchDataService extends BaseService {
 
             Intent broadcastIntent = new Intent();
             broadcastIntent.putExtra("error", e.getLocalizedMessage());
-            broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
+            broadcastIntent.setAction(Constants.ACTION_FAILURE_UP_LAUNCHES);
             context.getApplicationContext().sendBroadcast(broadcastIntent);
             mRealm.close();
-            FileUtils.saveSuccess(false, Strings.ACTION_UPDATE_NEXT_LAUNCH + " " + e.getLocalizedMessage(), context);
+            FileUtils.saveSuccess(false, Constants.ACTION_UPDATE_NEXT_LAUNCH + " " + e.getLocalizedMessage(), context);
             return false;
         }
     }
@@ -525,7 +525,7 @@ public class LaunchDataService extends BaseService {
                 @Override
                 public void execute(Realm realm) {
                     UpdateRecord updateRecord = new UpdateRecord();
-                    updateRecord.setType(Strings.ACTION_GET_UP_LAUNCHES);
+                    updateRecord.setType(Constants.ACTION_GET_UP_LAUNCHES);
                     updateRecord.setDate(new Date());
                     updateRecord.setSuccessful(true);
                     realm.copyToRealmOrUpdate(updateRecord);
@@ -533,11 +533,11 @@ public class LaunchDataService extends BaseService {
             });
 
             Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
+            broadcastIntent.setAction(Constants.ACTION_SUCCESS_UP_LAUNCHES);
             context.getApplicationContext().sendBroadcast(broadcastIntent);
 
             mRealm.close();
-            FileUtils.saveSuccess(true, Strings.ACTION_SUCCESS_UP_LAUNCHES, context);
+            FileUtils.saveSuccess(true, Constants.ACTION_SUCCESS_UP_LAUNCHES, context);
             return true;
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());
@@ -546,7 +546,7 @@ public class LaunchDataService extends BaseService {
                 @Override
                 public void execute(Realm realm) {
                     UpdateRecord updateRecord = new UpdateRecord();
-                    updateRecord.setType(Strings.ACTION_GET_UP_LAUNCHES);
+                    updateRecord.setType(Constants.ACTION_GET_UP_LAUNCHES);
                     updateRecord.setDate(new Date());
                     updateRecord.setSuccessful(false);
                     realm.copyToRealmOrUpdate(updateRecord);
@@ -555,10 +555,10 @@ public class LaunchDataService extends BaseService {
 
             Intent broadcastIntent = new Intent();
             broadcastIntent.putExtra("error", e.getLocalizedMessage());
-            broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
+            broadcastIntent.setAction(Constants.ACTION_FAILURE_UP_LAUNCHES);
             context.getApplicationContext().sendBroadcast(broadcastIntent);
             mRealm.close();
-            FileUtils.saveSuccess(false, Strings.ACTION_SUCCESS_UP_LAUNCHES + " " + e.getLocalizedMessage(), context);
+            FileUtils.saveSuccess(false, Constants.ACTION_SUCCESS_UP_LAUNCHES + " " + e.getLocalizedMessage(), context);
             return false;
         }
     }
@@ -610,7 +610,7 @@ public class LaunchDataService extends BaseService {
                 @Override
                 public void execute(Realm realm) {
                     UpdateRecord updateRecord = new UpdateRecord();
-                    updateRecord.setType(Strings.ACTION_UPDATE_UP_LAUNCHES);
+                    updateRecord.setType(Constants.ACTION_UPDATE_UP_LAUNCHES);
                     updateRecord.setDate(new Date());
                     updateRecord.setSuccessful(true);
                     realm.copyToRealmOrUpdate(updateRecord);
@@ -618,14 +618,14 @@ public class LaunchDataService extends BaseService {
             });
 
             Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Strings.ACTION_SUCCESS_UP_LAUNCHES);
+            broadcastIntent.setAction(Constants.ACTION_SUCCESS_UP_LAUNCHES);
             context.sendBroadcast(broadcastIntent);
 
             syncNotifiers(context);
             context.startService(new Intent(context, NextLaunchTracker.class));
 
             mRealm.close();
-            FileUtils.saveSuccess(true, Strings.ACTION_UPDATE_UP_LAUNCHES, context);
+            FileUtils.saveSuccess(true, Constants.ACTION_UPDATE_UP_LAUNCHES, context);
             return true;
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());
@@ -634,7 +634,7 @@ public class LaunchDataService extends BaseService {
                 @Override
                 public void execute(Realm realm) {
                     UpdateRecord updateRecord = new UpdateRecord();
-                    updateRecord.setType(Strings.ACTION_UPDATE_UP_LAUNCHES);
+                    updateRecord.setType(Constants.ACTION_UPDATE_UP_LAUNCHES);
                     updateRecord.setDate(new Date());
                     updateRecord.setSuccessful(false);
                     realm.copyToRealmOrUpdate(updateRecord);
@@ -643,14 +643,14 @@ public class LaunchDataService extends BaseService {
 
             Intent broadcastIntent = new Intent();
             broadcastIntent.putExtra("error", e.getLocalizedMessage());
-            broadcastIntent.setAction(Strings.ACTION_FAILURE_UP_LAUNCHES);
+            broadcastIntent.setAction(Constants.ACTION_FAILURE_UP_LAUNCHES);
             context.sendBroadcast(broadcastIntent);
 
             syncNotifiers(context);
             context.startService(new Intent(context, NextLaunchTracker.class));
 
             mRealm.close();
-            FileUtils.saveSuccess(false, Strings.ACTION_UPDATE_UP_LAUNCHES + " " + e.getLocalizedMessage(), context);
+            FileUtils.saveSuccess(false, Constants.ACTION_UPDATE_UP_LAUNCHES + " " + e.getLocalizedMessage(), context);
             return false;
         }
     }
@@ -694,12 +694,12 @@ public class LaunchDataService extends BaseService {
                 }
             }
             mRealm.close();
-            FileUtils.saveSuccess(true, Strings.ACTION_SUCCESS_LAUNCH, context);
+            FileUtils.saveSuccess(true, Constants.ACTION_SUCCESS_LAUNCH, context);
             return true;
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());
             mRealm.close();
-            FileUtils.saveSuccess(false, Strings.ACTION_SUCCESS_LAUNCH, context);
+            FileUtils.saveSuccess(false, Constants.ACTION_SUCCESS_LAUNCH, context);
             return false;
         }
     }

@@ -8,7 +8,7 @@ import android.os.Bundle;
 import java.io.File;
 import java.io.IOException;
 
-import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
@@ -56,7 +56,7 @@ abstract public class CustomFragment extends BaseFragment {
                 .build();
 
         retrofit = new Retrofit.Builder()
-                .baseUrl(Strings.API_BASE_URL)
+                .baseUrl(Constants.API_BASE_URL)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

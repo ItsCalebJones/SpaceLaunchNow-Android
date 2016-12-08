@@ -25,7 +25,7 @@ import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.interfaces.APIRequestInterface;
 import me.calebjones.spacelaunchnow.content.interfaces.LibraryRequestInterface;
-import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.models.realm.AgencyRealm;
 import me.calebjones.spacelaunchnow.content.models.realm.LocationRealm;
 import me.calebjones.spacelaunchnow.content.models.realm.MissionRealm;
@@ -108,12 +108,12 @@ public class LibraryDataService extends IntentService {
                 .create();
 
         libraryRetrofit = new Retrofit.Builder()
-                .baseUrl(Strings.LIBRARY_BASE_URL)
+                .baseUrl(Constants.LIBRARY_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
         apiRetrofit = new Retrofit.Builder()
-                .baseUrl(Strings.API_BASE_URL)
+                .baseUrl(Constants.API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
@@ -135,7 +135,7 @@ public class LibraryDataService extends IntentService {
 
         if (intent != null) {
             String action = intent.getAction();
-            if(Strings.ACTION_GET_ALL_DATA.equals(action)){
+            if(Constants.ACTION_GET_ALL_DATA.equals(action)){
                 listPreference.setLastVehicleUpdate(System.currentTimeMillis());
                 getAllAgency();
                 getAllLocations();
@@ -144,20 +144,20 @@ public class LibraryDataService extends IntentService {
                 getBaseVehicleDetails();
                 getLibraryRockets();
                 getLibraryRocketsFamily();
-            } else if (Strings.ACTION_GET_AGENCY.equals(action)) {
+            } else if (Constants.ACTION_GET_AGENCY.equals(action)) {
                 getAllAgency();
-            } else if (Strings.ACTION_GET_MISSION.equals(action)){
+            } else if (Constants.ACTION_GET_MISSION.equals(action)){
                 getAllMissions();
-            } else if (Strings.ACTION_GET_LOCATION.equals(action)){
+            } else if (Constants.ACTION_GET_LOCATION.equals(action)){
                 getAllLocations();
-            } else if (Strings.ACTION_GET_PADS.equals(action)){
+            } else if (Constants.ACTION_GET_PADS.equals(action)){
                 getAllPads();
-            } else if (Strings.ACTION_GET_VEHICLES_DETAIL.equals(action)) {
+            } else if (Constants.ACTION_GET_VEHICLES_DETAIL.equals(action)) {
                 listPreference.setLastVehicleUpdate(System.currentTimeMillis());
                 getBaseVehicleDetails();
                 getLibraryRockets();
                 getLibraryRocketsFamily();
-            } else if (Strings.ACTION_GET_VEHICLES.equals(action)) {
+            } else if (Constants.ACTION_GET_VEHICLES.equals(action)) {
                 getLibraryRockets();
                 getLibraryRocketsFamily();
             }
@@ -192,13 +192,13 @@ public class LibraryDataService extends IntentService {
             mRealm.commitTransaction();
 
             Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Strings.ACTION_SUCCESS_AGENCY);
+            broadcastIntent.setAction(Constants.ACTION_SUCCESS_AGENCY);
             LibraryDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
 
         } catch (Exception e) {
             Crashlytics.logException(e);
             Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Strings.ACTION_FAILURE_AGENCY);
+            broadcastIntent.setAction(Constants.ACTION_FAILURE_AGENCY);
             LibraryDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
         }
     }
@@ -230,13 +230,13 @@ public class LibraryDataService extends IntentService {
             mRealm.commitTransaction();
 
             Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Strings.ACTION_SUCCESS_MISSIONS);
+            broadcastIntent.setAction(Constants.ACTION_SUCCESS_MISSIONS);
             LibraryDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
 
         } catch (Exception e) {
             Crashlytics.logException(e);
             Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Strings.ACTION_FAILURE_MISSIONS);
+            broadcastIntent.setAction(Constants.ACTION_FAILURE_MISSIONS);
             LibraryDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
         }
     }
@@ -268,13 +268,13 @@ public class LibraryDataService extends IntentService {
             mRealm.commitTransaction();
 
             Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Strings.ACTION_SUCCESS_LOCATION);
+            broadcastIntent.setAction(Constants.ACTION_SUCCESS_LOCATION);
             LibraryDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
 
         } catch (Exception e) {
             Crashlytics.logException(e);
             Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Strings.ACTION_FAILURE_LOCATION);
+            broadcastIntent.setAction(Constants.ACTION_FAILURE_LOCATION);
             LibraryDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
         }
     }
@@ -306,13 +306,13 @@ public class LibraryDataService extends IntentService {
             mRealm.commitTransaction();
 
             Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Strings.ACTION_SUCCESS_PADS);
+            broadcastIntent.setAction(Constants.ACTION_SUCCESS_PADS);
             LibraryDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
 
         } catch (Exception e) {
             Crashlytics.logException(e);
             Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Strings.ACTION_FAILURE_PADS);
+            broadcastIntent.setAction(Constants.ACTION_FAILURE_PADS);
             LibraryDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
         }
     }
@@ -334,12 +334,12 @@ public class LibraryDataService extends IntentService {
 
 
             Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Strings.ACTION_SUCCESS_VEHICLE_DETAILS);
+            broadcastIntent.setAction(Constants.ACTION_SUCCESS_VEHICLE_DETAILS);
             LibraryDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
         } catch (IOException e) {
             Timber.e("VehicleDataService - ERROR: %s", e.getLocalizedMessage());
             Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Strings.ACTION_FAILURE_VEHICLE_DETAILS);
+            broadcastIntent.setAction(Constants.ACTION_FAILURE_VEHICLE_DETAILS);
             LibraryDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
         }
     }
@@ -373,14 +373,14 @@ public class LibraryDataService extends IntentService {
             mRealm.commitTransaction();
 
             Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Strings.ACTION_SUCCESS_VEHICLES);
+            broadcastIntent.setAction(Constants.ACTION_SUCCESS_VEHICLES);
             LibraryDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
         } catch (IOException e) {
             e.printStackTrace();
             Timber.e("VehicleDataService - ERROR: %s", e.getLocalizedMessage());
 
             Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Strings.ACTION_FAILURE_VEHICLES);
+            broadcastIntent.setAction(Constants.ACTION_FAILURE_VEHICLES);
             LibraryDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
         }
     }

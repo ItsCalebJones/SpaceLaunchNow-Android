@@ -35,7 +35,7 @@ import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.MissionAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.models.realm.MissionRealm;
 import me.calebjones.spacelaunchnow.content.services.MissionDataService;
 import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
@@ -117,9 +117,9 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
         @Override
         public void onReceive(Context context, Intent intent) {
             Timber.v("Received: %s", intent.getAction());
-            if (intent.getAction().equals(Strings.ACTION_SUCCESS_MISSIONS)){
+            if (intent.getAction().equals(Constants.ACTION_SUCCESS_MISSIONS)){
                 onFinishedRefreshing();
-            } else if (intent.getAction().equals(Strings.ACTION_FAILURE_MISSIONS)){
+            } else if (intent.getAction().equals(Constants.ACTION_FAILURE_MISSIONS)){
                 hideLoading();
                 showErrorSnackbar(intent.getStringExtra("error"));
             }
@@ -140,8 +140,8 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
     public void onResume() {
         Timber.d("OnResume!");
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Strings.ACTION_SUCCESS_MISSIONS);
-        intentFilter.addAction(Strings.ACTION_FAILURE_MISSIONS);
+        intentFilter.addAction(Constants.ACTION_SUCCESS_MISSIONS);
+        intentFilter.addAction(Constants.ACTION_FAILURE_MISSIONS);
 
         getActivity().registerReceiver(nextLaunchReceiver, intentFilter);
         displayMissions();

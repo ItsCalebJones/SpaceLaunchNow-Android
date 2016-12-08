@@ -11,7 +11,7 @@ import io.realm.Realm;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.interfaces.LibraryRequestInterface;
-import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.models.realm.MissionRealm;
 import me.calebjones.spacelaunchnow.content.models.realm.UpdateRecord;
 import me.calebjones.spacelaunchnow.content.responses.launchlibrary.MissionResponse;
@@ -82,20 +82,20 @@ public class MissionDataService extends BaseService {
             Timber.v("Success!");
 
             Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Strings.ACTION_SUCCESS_MISSIONS);
+            broadcastIntent.setAction(Constants.ACTION_SUCCESS_MISSIONS);
 
             mRealm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
                     UpdateRecord updateRecord = new UpdateRecord();
-                    updateRecord.setType(Strings.ACTION_GET_MISSION);
+                    updateRecord.setType(Constants.ACTION_GET_MISSION);
                     updateRecord.setDate(new Date());
                     updateRecord.setSuccessful(true);
                     realm.copyToRealmOrUpdate(updateRecord);
                 }
             });
 
-            FileUtils.saveSuccess(true, Strings.ACTION_GET_MISSION, this);
+            FileUtils.saveSuccess(true, Constants.ACTION_GET_MISSION, this);
 
             this.sendBroadcast(broadcastIntent);
 
@@ -106,18 +106,18 @@ public class MissionDataService extends BaseService {
                 @Override
                 public void execute(Realm realm) {
                     UpdateRecord updateRecord = new UpdateRecord();
-                    updateRecord.setType(Strings.ACTION_GET_MISSION);
+                    updateRecord.setType(Constants.ACTION_GET_MISSION);
                     updateRecord.setDate(new Date());
                     updateRecord.setSuccessful(false);
                     realm.copyToRealmOrUpdate(updateRecord);
                 }
             });
 
-            FileUtils.saveSuccess(false, Strings.ACTION_GET_MISSION  + " " + e.getLocalizedMessage(), this);
+            FileUtils.saveSuccess(false, Constants.ACTION_GET_MISSION  + " " + e.getLocalizedMessage(), this);
 
             Intent broadcastIntent = new Intent();
             broadcastIntent.putExtra("error", e.getLocalizedMessage());
-            broadcastIntent.setAction(Strings.ACTION_FAILURE_MISSIONS);
+            broadcastIntent.setAction(Constants.ACTION_FAILURE_MISSIONS);
 
             this.sendBroadcast(broadcastIntent);
         }

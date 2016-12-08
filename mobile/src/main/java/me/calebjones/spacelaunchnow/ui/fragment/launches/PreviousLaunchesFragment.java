@@ -58,7 +58,7 @@ import me.calebjones.spacelaunchnow.content.adapter.ListAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
-import me.calebjones.spacelaunchnow.content.models.Strings;
+import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
@@ -419,7 +419,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
                         showLoading();
                         getRealm().removeAllChangeListeners();
                         Intent intent = new Intent(getContext(), LaunchDataService.class);
-                        intent.setAction(Strings.ACTION_GET_PREV_LAUNCHES);
+                        intent.setAction(Constants.ACTION_GET_PREV_LAUNCHES);
                         getContext().startService(intent);
                     }
                 })
@@ -715,9 +715,9 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
         public void onReceive(Context context, Intent intent) {
             Timber.v("Received: %s", intent.getAction());
             hideLoading();
-            if (intent.getAction().equals(Strings.ACTION_SUCCESS_PREV_LAUNCHES)) {
+            if (intent.getAction().equals(Constants.ACTION_SUCCESS_PREV_LAUNCHES)) {
                 loadLaunches();
-            } else if (intent.getAction().equals(Strings.ACTION_FAILURE_PREV_LAUNCHES)) {
+            } else if (intent.getAction().equals(Constants.ACTION_FAILURE_PREV_LAUNCHES)) {
                 SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, intent);
             }
         }
@@ -728,8 +728,8 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     public void onResume() {
         Timber.d("OnResume!");
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Strings.ACTION_SUCCESS_PREV_LAUNCHES);
-        intentFilter.addAction(Strings.ACTION_FAILURE_PREV_LAUNCHES);
+        intentFilter.addAction(Constants.ACTION_SUCCESS_PREV_LAUNCHES);
+        intentFilter.addAction(Constants.ACTION_FAILURE_PREV_LAUNCHES);
 
         getActivity().registerReceiver(nextLaunchReceiver, intentFilter);
 

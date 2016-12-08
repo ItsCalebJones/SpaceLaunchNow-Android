@@ -23,7 +23,7 @@
             android:dependency="background_sync"
             android:key="data_saver"
             android:summaryOn="Sync upcoming launches once a week unless a WiFi connection is available. (Does not impact notifications)"
-            android:summaryOff="Launches will sync no more then once per day."
+            android:summaryOff="Launches will sync no more than once per day."
             android:title="Data Saver" />
         <SwitchPreference
             android:dependency="background_sync"

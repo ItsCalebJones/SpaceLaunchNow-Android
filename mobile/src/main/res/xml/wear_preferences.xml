@@ -1,20 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen android:title="Wear"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="Watch Face">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="Wear">
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="wear_hour_mode"
-        android:summaryOff="Use AM/PM mode for keeping time."
-        android:summaryOn="Use 24 Hour mode for keeping time."
-        android:title="Watch Hour Mode" />
+    <PreferenceCategory android:title="Settings">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="wear_hour_mode"
+            android:summaryOff="Use AM/PM mode for keeping time."
+            android:summaryOn="Use 24 Hour mode for keeping time."
+            android:title="Watch Hour Mode" />
+
+        <SwitchPreference
+            android:key="wear_text_dynamic"
+            android:defaultValue="false"
+            android:summary="Generate text color based on background."
+            android:title="Dynamic Text" />
     </PreferenceCategory>
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="supporter_dynamic_background"
-        android:summary="Use image of the next launch vehicle if available."
-        android:title="Dynamic Background" />
+    <PreferenceCategory android:title="Background">
+
+        <SwitchPreference
+            android:key="supporter_dynamic_background"
+            android:defaultValue="false"
+            android:summary="Use image of the next launch vehicle if available."
+            android:title="Dynamic Background" />
+
+        <SwitchPreference
+            android:key="wear_background_blur"
+            android:defaultValue="true"
+            android:summary="Blur the background image."
+            android:title="Blur Background" />
+
+        <Preference
+            android:key="wear_blur_dialog"
+            android:dependency="wear_background_blur"
+            android:enabled="true"
+            android:summary="Configure the strength and characteristics of the blur effect."
+            android:title="Blur Settings" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

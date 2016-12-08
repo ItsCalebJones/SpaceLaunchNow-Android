@@ -4,7 +4,7 @@
 # work without any subsequent effort. If you choose this strategy, the proguard
 # configuration for the project is simply the line below.
 
-#-keep class me.calebjones.spacelaunchnow.** { *; }
+-keep class me.calebjones.spacelaunchnow.** { *; }
 
 # The more involved strategy is to specifically provide rules to keep portions of your
 # app's codebase unmodified while allowing proguard to optimize the rest.
@@ -14,15 +14,12 @@
 # Unfortunately obfuscation can cause issues for code that uses reflection or a few other
 # techniques. The default is to obfuscate.
 
-#-dontobfuscate
-
 # Additionally you will need to keep specific classes. A common use case is keeping all
 # of the models that are JSON parsed using something like Jackson.
 
-#-keep class com.yourpackage.app.model.User { *; }
--keep class me.calebjones.spacelaunchnow.content.models.** { *;}
-#-keep class com.yourpackage.app.model.User { *; }
--keep class me.calebjones.spacelaunchnow.ui.** { *;}
+-keep class android.zetterstrom.com.forecast.** { *; }
+
+-keep class com.anjlab.android.iab.v3.** { *; }
 
 -dontwarn android.support.**
 
@@ -117,8 +114,7 @@
 -keep class com.android.vending.billing.**
 
 
-## GSON 2.2.4 specific rules ##
-
+##---------------Begin: proguard configuration for Gson  ----------
 # Gson uses generic type information stored in a class file when working with fields. Proguard
 # removes such information by default, so configure it to keep all of it.
 -keepattributes Signature
@@ -126,18 +122,28 @@
 # For using GSON @Expose annotation
 -keepattributes *Annotation*
 
--keepattributes EnclosingMethod
-
 # Gson specific classes
 -keep class sun.misc.Unsafe { *; }
--keep class com.google.gson.stream.** { *; }
+#-keep class com.google.gson.stream.** { *; }
+
+# Application classes that will be serialized/deserialized over Gson
+-keep class com.google.gson.examples.android.model.** { *; }
+
+# Prevent proguard from stripping interface information from TypeAdapterFactory,
+# JsonSerializer, JsonDeserializer instances (so they can be used in @JsonAdapter)
+-keep class * implements com.google.gson.TypeAdapterFactory
+-keep class * implements com.google.gson.JsonSerializer
+-keep class * implements com.google.gson.JsonDeserializer
+
+##---------------End: proguard configuration for Gson  ----------
 
 # OkHttp
 -keepattributes Signature
--keepattributes *Annotation*
+-keepattributes Annotation
 -keep class okhttp3.** { *; }
 -keep interface okhttp3.** { *; }
 -dontwarn okhttp3.**
+-dontwarn okio.**
 
 #AppCompat 7
 -keep public class android.support.v7.widget.** { *; }
@@ -161,14 +167,21 @@
 -dontwarn com.paypal.android.sdk.**
 -dontwarn uk.co.senab.photoview.**
 
-# Retrofit 2.X
-## https://square.github.io/retrofit/ ##
-
--dontwarn retrofit2.**
--keep class retrofit2.** { *; }
+# Platform calls Class.forName on types which do not exist on Android to determine platform.
+-dontnote retrofit2.Platform
+# Platform used when running on RoboVM on iOS. Will not be used at runtime.
+-dontnote retrofit2.Platform$IOS$MainThreadExecutor
+# Platform used when running on Java 8 VMs. Will not be used at runtime.
+-dontwarn retrofit2.Platform$Java8
+# Retain generic type information for use by reflection by converters and adapters.
 -keepattributes Signature
+# Retain declared checked exceptions for use by a Proxy instance.
 -keepattributes Exceptions
 
--keepclasseswithmembers class * {
-    @retrofit2.http.* <methods>;
-}
+-dontwarn com.evernote.android.job.gcm.**
+-dontwarn com.evernote.android.job.util.GcmAvailableHelper
+
+-keep public class com.evernote.android.job.v21.PlatformJobService
+-keep public class com.evernote.android.job.v14.PlatformAlarmService
+-keep public class com.evernote.android.job.v14.PlatformAlarmReceiver
+-keep public class com.evernote.android.job.JobBootReceiver

@@ -316,7 +316,7 @@ public class LaunchDetailActivity extends BaseActivity
         }
         RocketDetailsRealm launchVehicle = getRealm().where(RocketDetailsRealm.class)
                 .contains("name", query)
-                .findFirstAsync();
+                .findFirst();
         if (setImage) {
             if (launchVehicle != null && launchVehicle.getImageURL().length() > 0) {
                 Glide.with(this)

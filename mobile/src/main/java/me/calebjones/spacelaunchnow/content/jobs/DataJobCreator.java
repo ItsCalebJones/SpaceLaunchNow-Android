@@ -5,20 +5,20 @@ import com.evernote.android.job.JobCreator;
 
 import timber.log.Timber;
 
-import static me.calebjones.spacelaunchnow.content.models.Strings.ACTION_CHECK_NEXT_LAUNCH_TIMER;
-import static me.calebjones.spacelaunchnow.content.models.Strings.ACTION_UPDATE_BACKGROUND;
-
 public class DataJobCreator implements JobCreator {
 
     @Override
     public Job create(String tag) {
         switch (tag) {
-            case ACTION_CHECK_NEXT_LAUNCH_TIMER:
-                Timber.i(ACTION_CHECK_NEXT_LAUNCH_TIMER);
+            case NextLaunchJob.TAG:
+                Timber.i(NextLaunchJob.TAG);
                 return new NextLaunchJob();
-            case ACTION_UPDATE_BACKGROUND:
-                Timber.i(ACTION_UPDATE_BACKGROUND);
+            case UpdateJob.TAG:
+                Timber.i(UpdateJob.TAG);
                 return new UpdateJob();
+            case UpdateWearJob.TAG:
+                Timber.i(UpdateWearJob.TAG);
+                return new UpdateWearJob();
             default:
                 return null;
         }
