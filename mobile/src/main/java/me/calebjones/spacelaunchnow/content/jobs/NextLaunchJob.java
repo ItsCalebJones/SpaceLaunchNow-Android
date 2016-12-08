@@ -1,8 +1,5 @@
 package me.calebjones.spacelaunchnow.content.jobs;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
 import com.evernote.android.job.Job;
@@ -31,35 +28,13 @@ public class NextLaunchJob extends Job {
         // the rescheduled job has a new ID
     }
 
-    public static void scheduleJob(long interval, Context context) {
-
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-
-        long windowStart;
-        long windowEnd;
+    public static void scheduleJob(long interval) {
         if (interval < 300000){
             interval = 300000;
         }
-        long intervalSeconds = interval / 1000;
-        long intervalMinutes = intervalSeconds / 60;
-
-        if (intervalMinutes > 30){
-            windowStart = intervalSeconds - 300;
-            windowEnd = intervalSeconds + 300;
-        } else {
-            windowStart = intervalSeconds - 60;
-            windowEnd = intervalSeconds;
-        }
 
         JobRequest.Builder builder = new JobRequest.Builder(NextLaunchJob.TAG)
-                .setExecutionWindow(windowStart * 1000, windowEnd * 1000)
-                .setUpdateCurrent(true);
-
-        if (sharedPref.getBoolean("wifi_only", false)){
-            builder.setRequiredNetworkType(JobRequest.NetworkType.UNMETERED);
-        } else {
-            builder.setRequiredNetworkType(JobRequest.NetworkType.CONNECTED);
-        }
+                .setExact(interval);
 
         builder.build().schedule();
     }

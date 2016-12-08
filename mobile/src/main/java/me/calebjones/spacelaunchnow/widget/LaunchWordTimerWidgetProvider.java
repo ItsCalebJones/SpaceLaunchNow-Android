@@ -19,6 +19,7 @@ import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
@@ -132,9 +133,9 @@ public class LaunchWordTimerWidgetProvider extends AppWidgetProvider {
             if (launch != null) {
                 setLaunchName(context, launch, remoteViews, options);
                 setMissionName(context, launch, remoteViews, options);
-                setLaunchTimer(context, launch, remoteViews, appWidgetManager, widgetId, options);
                 setRefreshIntent(context, launch, remoteViews);
                 setWidgetStyle(context, remoteViews);
+                setLaunchTimer(context, launch, remoteViews, appWidgetManager, widgetId, options);
             } else {
                 remoteViews.setTextViewText(R.id.widget_launch_name, "Unknown Launch");
                 remoteViews.setTextViewText(R.id.widget_mission_name, "Unknown Mission");
@@ -144,9 +145,8 @@ public class LaunchWordTimerWidgetProvider extends AppWidgetProvider {
     }
 
     private void setRefreshIntent(Context context, LaunchRealm launch, RemoteViews remoteViews) {
-        Intent refresh = new Intent(context, LaunchWordTimerWidgetProvider.class);
-        refresh.setAction(ACTION_WIDGET_REFRESH);
-        PendingIntent refreshPending = PendingIntent.getBroadcast(context, 0, refresh, 0);
+        Intent nextIntent = new Intent(Constants.ACTION_CHECK_NEXT_LAUNCH_TIMER);
+        PendingIntent refreshPending = PendingIntent.getBroadcast(context, 0, nextIntent, 0);
 
         remoteViews.setOnClickPendingIntent(R.id.widget_refresh_button, refreshPending);
 
@@ -154,17 +154,16 @@ public class LaunchWordTimerWidgetProvider extends AppWidgetProvider {
         exploreIntent.putExtra("TYPE", "launch");
         exploreIntent.putExtra("launchID", launch.getId());
         exploreIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent actionPendingIntent = PendingIntent.getActivity(context, 0, exploreIntent, 0);
+        PendingIntent actionPendingIntent = PendingIntent.getActivity(context, 0, exploreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         remoteViews.setOnClickPendingIntent(R.id.widget_countdown_timer_frame, actionPendingIntent);
     }
 
     private void setRefreshIntentInitial(Context context,RemoteViews remoteViews) {
-        Intent refresh = new Intent(context, LaunchWordTimerWidgetProvider.class);
-        refresh.setAction(ACTION_WIDGET_REFRESH);
-        PendingIntent refreshPending = PendingIntent.getBroadcast(context, 0, refresh, 0);
+        Intent nextIntent = new Intent(Constants.ACTION_CHECK_NEXT_LAUNCH_TIMER);
+        PendingIntent refreshPending = PendingIntent.getBroadcast(context, 0, nextIntent, 0);
 
-        remoteViews.setOnClickPendingIntent(R.id.widget_compact_card_refresh_button, refreshPending);
+        remoteViews.setOnClickPendingIntent(R.id.widget_refresh_button, refreshPending);
     }
 
     @Override
@@ -183,12 +182,12 @@ public class LaunchWordTimerWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         if (!ListPreferences.getInstance(context).getFirstBoot()) {
             if (intent.getAction().equals(ACTION_WIDGET_REFRESH)) {
-                Timber.v("onReceive", ACTION_WIDGET_REFRESH);
+                Timber.v("onReceive %s", ACTION_WIDGET_REFRESH);
                 AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
                 int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, this.getClass()));
                 onUpdate(context, appWidgetManager, appWidgetIds);
             } else if (intent.getAction().equals(ACTION_WIDGET_CLICK)) {
-                Timber.v("onReceive", ACTION_WIDGET_CLICK);
+                Timber.v("onReceive %s", ACTION_WIDGET_CLICK);
             } else {
                 super.onReceive(context, intent);
             }

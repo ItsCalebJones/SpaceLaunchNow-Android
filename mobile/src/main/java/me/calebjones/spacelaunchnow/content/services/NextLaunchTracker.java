@@ -1,11 +1,14 @@
 package me.calebjones.spacelaunchnow.content.services;
 
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -41,6 +44,9 @@ import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchNotification;
 import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
+import me.calebjones.spacelaunchnow.widget.LaunchCardCompactWidgetProvider;
+import me.calebjones.spacelaunchnow.widget.LaunchTimerWidgetProvider;
+import me.calebjones.spacelaunchnow.widget.LaunchWordTimerWidgetProvider;
 import timber.log.Timber;
 
 
@@ -103,15 +109,35 @@ public class NextLaunchTracker extends IntentService {
                 checkNextLaunches(realm);
             }
         } else {
-            int size = Integer.parseInt(sharedPref.getString("notification_sync_time", "24"));
-            scheduleUpdate(TimeUnit.MILLISECONDS.convert(size, TimeUnit.HOURS));
+            scheduleUpdate(TimeUnit.MILLISECONDS.convert(12, TimeUnit.HOURS));
 
             //If Calendar Sync is enabled sync it up
             if (switchPreferences.getCalendarStatus()) {
                 syncCalendar();
             }
         }
+        updateWidgets();
         realm.close();
+    }
+
+    private void updateWidgets() {
+        Intent cardIntent = new Intent(this,LaunchCardCompactWidgetProvider.class);
+        cardIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int cardIds[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), LaunchCardCompactWidgetProvider.class));
+        cardIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,cardIds);
+        sendBroadcast(cardIntent);
+
+        Intent timerIntent = new Intent(this,LaunchTimerWidgetProvider.class);
+        timerIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int timerIds[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), LaunchTimerWidgetProvider.class));
+        timerIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,timerIds);
+        sendBroadcast(timerIntent);
+
+        Intent wordIntent = new Intent(this,LaunchWordTimerWidgetProvider.class);
+        wordIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int wordIds[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), LaunchWordTimerWidgetProvider.class));
+        wordIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,wordIds);
+        sendBroadcast(wordIntent);
     }
 
     private void filterLaunchRealm(Date date, Date dateDay, Realm realm) {
@@ -415,7 +441,7 @@ public class NextLaunchTracker extends IntentService {
                             realm.commitTransaction();
                         }
                     }
-                    scheduleUpdate(future.getTimeInMillis() + 3600000);
+                    scheduleUpdate((future.getTimeInMillis() + 3600000) - now.getTimeInMillis());
                 } else if (timeToFinish < 3600000) {
                     if (notify) {
                         int minutes = (int) ((timeToFinish / (1000 * 60)) % 60);
@@ -660,6 +686,7 @@ public class NextLaunchTracker extends IntentService {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(nextUpdate);
 
+            @SuppressLint("DefaultLocale")
             String intervalString = String.format("%02d:%02d:%02d",
                     TimeUnit.MILLISECONDS.toHours(interval),
                     TimeUnit.MILLISECONDS.toMinutes(interval) -
@@ -681,7 +708,7 @@ public class NextLaunchTracker extends IntentService {
             mNotifyManager.notify(Constants.NOTIF_ID, mBuilder.build());
             Timber.v("Scheduling Update - Interval: %s - Time: %s - IntervalString - %s", interval, formatter.format(calendar.getTime()), intervalString);
         }
-        NextLaunchJob.scheduleJob(interval, this);
+        NextLaunchJob.scheduleJob(interval);
         this.startService(new Intent(this, UpdateWearService.class));
     }
 
