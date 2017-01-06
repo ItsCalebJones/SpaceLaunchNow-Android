@@ -410,20 +410,25 @@ public class LaunchDataService extends BaseService {
                 }
             }
             for (LaunchRealm item : items) {
+                mRealm.beginTransaction();
                 LaunchRealm previous = mRealm.where(LaunchRealm.class)
                         .equalTo("id", item.getId())
                         .findFirst();
                 if (previous != null) {
+                    if ((!previous.getNet().equals(item.getNet()) || (previous.getStatus().intValue() != item.getStatus().intValue()))) {
+                        Timber.v("%s status has changed.", item.getName());
+                        LaunchNotification notification = mRealm.where(LaunchNotification.class).equalTo("id", item.getId()).findFirst();
+                        if (notification != null) {
+                            notification.resetNotifiers();
+                            mRealm.copyToRealmOrUpdate(notification);
+                        }
+                    }
                     Timber.v("UpcomingLaunches updating items: %s", previous.getName());
                     item.setEventID(previous.getEventID());
                     item.setSyncCalendar(previous.syncCalendar());
                     item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
-                    item.setIsNotifiedDay(previous.getIsNotifiedDay());
-                    item.setIsNotifiedHour(previous.getIsNotifiedHour());
-                    item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
                 }
                 item.getLocation().setPrimaryID();
-                mRealm.beginTransaction();
                 mRealm.copyToRealmOrUpdate(item);
                 mRealm.commitTransaction();
             }

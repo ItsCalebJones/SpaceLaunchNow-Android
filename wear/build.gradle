@@ -28,7 +28,7 @@ android {
     defaultConfig {
         manifestPlaceholders = [ applicationLabel:"@string/app_name"]
         applicationId "me.calebjones.spacelaunchnow"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 24
         versionCode appVersionCode
         versionName appVersionName

@@ -118,8 +118,8 @@ dependencies {
     compile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
     compile "com.android.support:preference-v7:$rootProject.supportLibraryVersion"
-    apt 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     compile "com.google.android.gms:play-services-location:$rootProject.playServicesVersion"
     compile "com.google.android.gms:play-services-wearable:$rootProject.playServicesVersion"
     compile "com.google.android.gms:play-services-gcm:$rootProject.playServicesVersion"
