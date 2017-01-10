@@ -29,9 +29,9 @@ public class NextLaunchJob extends Job {
     }
 
     public static void scheduleJob(long interval) {
-        if (interval < 300000){
-            interval = 300000;
-        }
+//        if (interval < 300000){
+//            interval = 300000;
+//        }
 
         JobRequest.Builder builder = new JobRequest.Builder(NextLaunchJob.TAG)
                 .setExact(interval)

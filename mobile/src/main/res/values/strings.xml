@@ -34,13 +34,8 @@
     <string name="title_activity_debug">DebugActivity</string>
     <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
 
-    <string name="whats_new_content">1.5.2 - Watch Face Improvements\n\n
-        \u2022Update the Android Wear watch face with configurable blur settings.\n
-        \u2022Add dynamic watch face for supporters.\n
-        \u2022Allow custom notification sound selection.\n
-        \u2022Fixed a bug that prevented notifications in some situations.\n
-        \u2022Fixed a few bugs with updating widget information.\n
-        \u2022The usual bug squashing.\n
+    <string name="whats_new_content">1.5.3 - HotFix!\n\n
+        \u2022Squash a few bugs!\n
     </string>
     <string name="link_feedback">https://www.reddit.com/r/spacelaunchnow</string>
     <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>

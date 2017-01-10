@@ -103,7 +103,6 @@ public class NextLaunchTracker extends IntentService {
             filterLaunchRealm(date, dateDay, realm);
         }
 
-        jobUpdated = false;
         if (launchRealms.size() > 0) {
             for (LaunchRealm realm : launchRealms) {
                 checkNextLaunches(realm);
@@ -441,7 +440,7 @@ public class NextLaunchTracker extends IntentService {
                             realm.commitTransaction();
                         }
                     }
-                    scheduleUpdate((future.getTimeInMillis() + 3600000) - now.getTimeInMillis());
+                    scheduleUpdate(timeToFinish - 601000);
                 } else if (timeToFinish < 3600000) {
                     if (notify) {
                         int minutes = (int) ((timeToFinish / (1000 * 60)) % 60);
@@ -478,10 +477,10 @@ public class NextLaunchTracker extends IntentService {
                             }
                         }
                     }
-                    interval = timeToFinish / 2;
-                    if (interval < 3600000) {
-                        interval = 3500000;
-                    }
+                    interval = timeToFinish - 3601000;
+//                    if (interval < 3600000) {
+//                        interval = 3500000;
+//                    }
                     scheduleUpdate(interval);
                     //Launch is within 48 hours
                 } else if (timeToFinish < 172800000) {
@@ -517,7 +516,6 @@ public class NextLaunchTracker extends IntentService {
         String launchURL;
         String launchPad = launch.getLocation().getName();
 
-        expandedText = "Launch attempt in " + minutes + " minutes from " + launchPad + ".";
 
         if (launch.getNet() != null) {
             //Get launch date
@@ -525,14 +523,18 @@ public class NextLaunchTracker extends IntentService {
                 SimpleDateFormat df = new SimpleDateFormat("hh:mm a zzz");
                 df.toLocalizedPattern();
                 Date date = launch.getNet();
-                launchDate = "NET: " + df.format(date);
+                launchDate = df.format(date);
             } else {
                 SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a zzz");
                 Date date = launch.getNet();
-                launchDate = "NET: " + sdf.format(date);
+                launchDate = sdf.format(date);
             }
-            mBuilder.setSubText(launchDate);
+            expandedText = "Go for launch at " + launchDate + ".";
+        } else {
+            expandedText = "Launch in " + minutes + " minutes.";
         }
+        mBuilder.setSubText(launchPad);
+
 
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
         mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -550,7 +552,7 @@ public class NextLaunchTracker extends IntentService {
                                 R.drawable.nav_header));
 
         mBuilder.setContentTitle(launchName)
-                .setContentText("Launch attempt in " + minutes + " minutes from " + launchPad)
+                .setContentText(expandedText)
                 .setSmallIcon(R.drawable.ic_rocket_white)
                 .setAutoCancel(true)
                 .setContentText(expandedText)
@@ -619,22 +621,24 @@ public class NextLaunchTracker extends IntentService {
         mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         PendingIntent appIntent = PendingIntent.getActivity(this, 0, mainActivityIntent, 0);
-        expandedText = "Launch attempt in " + hours + " hours from " + launchPad;
 
         if (launch.getNet() != null) {
             //Get launch date
             if (sharedPref.getBoolean("local_time", true)) {
-                SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd - hh:mm a zzz");
+                SimpleDateFormat df = new SimpleDateFormat("hh:mm a zzz");
                 df.toLocalizedPattern();
                 Date date = launch.getNet();
                 launchDate = df.format(date);
             } else {
-                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd - hh:mm a zzz");
+                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a zzz");
                 Date date = launch.getNet();
                 launchDate = sdf.format(date);
             }
-            mBuilder.setSubText(launchDate);
+            expandedText = "Launch attempt in " + hours + " hours at " + launchDate;
+        } else {
+            expandedText = "Launch attempt in " + hours + " hours.";
         }
+        mBuilder.setSubText(launchPad);
 
         NotificationCompat.WearableExtender wearableExtender =
                 new NotificationCompat.WearableExtender()
@@ -643,7 +647,7 @@ public class NextLaunchTracker extends IntentService {
                                 R.drawable.nav_header));
 
         mBuilder.setContentTitle(launchName)
-                .setContentText("Launch attempt in " + hours + " hours from " + launchPad)
+                .setContentText(expandedText)
                 .setSmallIcon(R.drawable.ic_rocket_white)
                 .setContentIntent(appIntent)
                 .setContentText(expandedText)
@@ -680,11 +684,13 @@ public class NextLaunchTracker extends IntentService {
     }
 
     public void scheduleUpdate(long interval) {
-        if(!jobUpdated) {
-            jobUpdated = true;
+        if (interval < 0){
+            interval = Math.abs(interval);
+        } else if (interval == 0){
+            interval = 360000;
+        }
             NextLaunchJob.scheduleJob(interval);
             this.startService(new Intent(this, UpdateWearService.class));
-        }
     }
 
 }

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
@@ -154,7 +155,20 @@ public class CalendarUtility {
             for (int time : prefSelected) {
                 setReminder(context, Long.parseLong(updateUri.getLastPathSegment()), time);
             }
-            return updateUri != null && cr.update(updateUri, calEvent, null, null) > 0;
+            try {
+                return updateUri != null && cr.update(updateUri, calEvent, null, null) > 0;
+            } catch (SQLiteException error) {
+                if (updateUri != null) {
+                    Crashlytics.log("UpdateURI is not null");
+                }
+
+                if (calEvent != null) {
+                    Crashlytics.log("calEvent is not null");
+                }
+                Crashlytics.log("Launch:" + launch.getName());
+                Crashlytics.logException(error);
+                return false;
+            }
         } return false;
     }
 

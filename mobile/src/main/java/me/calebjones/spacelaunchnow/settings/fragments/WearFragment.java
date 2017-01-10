@@ -97,7 +97,7 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
             Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
         }
 
-        getContext().startService(new Intent(getContext(), UpdateWearService.class));
+        getActivity().startService(new Intent(getActivity(), UpdateWearService.class));
     }
 
     //Google API client methods
