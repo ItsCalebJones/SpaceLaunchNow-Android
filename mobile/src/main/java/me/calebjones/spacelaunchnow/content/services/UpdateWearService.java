@@ -56,7 +56,8 @@ public class UpdateWearService extends BaseService {
         Realm realm = Realm.getDefaultInstance();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
-        LaunchRealm launch = realm.where(LaunchRealm.class).greaterThan("net", new Date()).findAllSorted("net").first();
+        try {
+            LaunchRealm launch = realm.where(LaunchRealm.class).greaterThan("net", new Date()).findAllSorted("net").first();
         if (launch != null && launch.getName() != null && launch.getNetstamp() != null) {
             Timber.v("Sending data to wear: %s", launch.getName());
 
@@ -93,6 +94,9 @@ public class UpdateWearService extends BaseService {
             } else {
                 sendImageToWear(context, context.getString(R.string.default_wear_image), launch, modify);
             }
+        }
+        } catch (IndexOutOfBoundsException error){
+            Crashlytics.logException(error);
         }
         realm.close();
     }
