@@ -21,7 +21,7 @@ import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Constants;
-import me.calebjones.spacelaunchnow.content.models.realm.RealmStr;
+import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 

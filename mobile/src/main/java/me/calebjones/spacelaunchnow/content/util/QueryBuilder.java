@@ -15,7 +15,7 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
 import timber.log.Timber;
 
 public class QueryBuilder {

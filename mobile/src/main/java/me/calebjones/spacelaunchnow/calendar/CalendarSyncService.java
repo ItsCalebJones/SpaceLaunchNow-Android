@@ -11,7 +11,7 @@ import io.realm.RealmList;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.content.services.BaseService;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import timber.log.Timber;

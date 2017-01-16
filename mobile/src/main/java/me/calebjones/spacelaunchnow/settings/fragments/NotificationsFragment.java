@@ -25,7 +25,7 @@ import io.realm.Realm;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Constants;
-import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
 import timber.log.Timber;
 

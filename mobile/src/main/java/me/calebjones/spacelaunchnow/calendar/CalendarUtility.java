@@ -28,7 +28,7 @@ import it.macisamuele.calendarprovider.EventInfo;
 import me.calebjones.spacelaunchnow.calendar.model.Calendar;
 import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
 import me.calebjones.spacelaunchnow.calendar.model.Event;
-import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
 import timber.log.Timber;
 
 // these imports are used in the following code

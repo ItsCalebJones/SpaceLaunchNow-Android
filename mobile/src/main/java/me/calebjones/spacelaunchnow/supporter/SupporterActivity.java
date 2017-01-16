@@ -30,6 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.data.models.realm.Products;
 import me.calebjones.spacelaunchnow.ui.activity.BaseActivity;
 import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import me.calebjones.spacelaunchnow.utils.Utils;
