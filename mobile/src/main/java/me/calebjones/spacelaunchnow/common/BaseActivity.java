@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.ui.activity;
+package me.calebjones.spacelaunchnow.common;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,10 +9,6 @@ import timber.log.Timber;
 public class BaseActivity extends AppCompatActivity {
 
     private Realm realm;
-
-//    static {
-//        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

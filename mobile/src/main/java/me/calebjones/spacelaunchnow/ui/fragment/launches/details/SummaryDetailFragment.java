@@ -66,7 +66,7 @@ import me.calebjones.spacelaunchnow.data.models.realm.RocketDetailsRealm;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.util.LaunchListAdapter;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
-import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
+import me.calebjones.spacelaunchnow.common.BaseFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

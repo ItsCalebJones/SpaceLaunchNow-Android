@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.ui.fragment;
+package me.calebjones.spacelaunchnow.common;
 
 import android.content.Context;
 import android.content.Intent;

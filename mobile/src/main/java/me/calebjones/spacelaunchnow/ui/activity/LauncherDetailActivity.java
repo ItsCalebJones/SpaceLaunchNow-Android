@@ -34,6 +34,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.natives.Launcher;
 import me.calebjones.spacelaunchnow.data.models.realm.RocketRealm;
 import me.calebjones.spacelaunchnow.settings.SettingsActivity;
+import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 

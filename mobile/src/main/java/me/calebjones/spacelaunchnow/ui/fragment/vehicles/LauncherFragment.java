@@ -31,7 +31,7 @@ import me.calebjones.spacelaunchnow.data.networking.interfaces.APIRequestInterfa
 import me.calebjones.spacelaunchnow.data.models.natives.Launcher;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LauncherResponse;
 import me.calebjones.spacelaunchnow.ui.activity.LauncherDetailActivity;
-import me.calebjones.spacelaunchnow.ui.fragment.CustomFragment;
+import me.calebjones.spacelaunchnow.common.CustomFragment;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;

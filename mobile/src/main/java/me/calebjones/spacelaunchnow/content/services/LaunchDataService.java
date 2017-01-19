@@ -73,6 +73,7 @@ public class LaunchDataService extends BaseService {
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
+            listPreference.isUpdating(true);
             Timber.d("LaunchDataService - Intent received:  %s ", intent.getAction());
             String action = intent.getAction();
 
@@ -161,6 +162,7 @@ public class LaunchDataService extends BaseService {
                 syncBackground(this);
 
             }
+            listPreference.isUpdating(false);
         } else {
 
             Timber.e("LaunchDataService - onHandleIntent: ERROR - Unknown Intent");

@@ -37,6 +37,7 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.data.models.realm.RocketDetailsRealm;
+import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.details.AgencyDetailFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.details.MissionDetailFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.details.SummaryDetailFragment;
