@@ -114,7 +114,7 @@
             android:name="za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".ui.activity.AboutActivity"
+            android:name=".settings.AboutActivity"
             android:theme="@style/BaseAppTheme" />
 
         <meta-data

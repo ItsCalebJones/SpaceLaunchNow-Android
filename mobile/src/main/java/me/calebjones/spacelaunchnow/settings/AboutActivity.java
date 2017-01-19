@@ -1,9 +1,11 @@
-package me.calebjones.spacelaunchnow.ui.activity;
+package me.calebjones.spacelaunchnow.settings;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.mikepenz.aboutlibraries.LibsConfiguration;
@@ -12,10 +14,13 @@ import com.mikepenz.aboutlibraries.ui.LibsActivity;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.debug.DebugActivity;
 import me.calebjones.spacelaunchnow.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
 public class AboutActivity extends LibsActivity {
+
+    private int clickCounter = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,6 +33,7 @@ public class AboutActivity extends LibsActivity {
         LibsConfiguration.LibsListener libsListener = new LibsConfiguration.LibsListener() {
             @Override
             public void onIconClicked(View v) {
+                clickCounter = clickCounter + 1;
             }
 
             @Override
@@ -57,6 +63,9 @@ public class AboutActivity extends LibsActivity {
 
             @Override
             public boolean onIconLongClicked(View v) {
+                if (clickCounter > 5) {
+                    showInputDialog();
+                }
                 return false;
             }
 
@@ -87,7 +96,28 @@ public class AboutActivity extends LibsActivity {
                 .withAboutSpecial3("Change Log")
                 .withFields(R.string.class.getFields())
                 .intent(this.getApplicationContext()));
+
         super.onCreate(savedInstanceState);
+    }
+
+    private void showInputDialog() {
+        new MaterialDialog.Builder(this)
+                .title("Debug Password")
+                .content("Enter password from support.")
+                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)
+                .input(null, null, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(MaterialDialog dialog, CharSequence input) {
+                        if (DebugAuthManager.getAuthResult(input)){
+                            goToDebug();
+                        }
+                    }
+                }).show();
+    }
+
+    private void goToDebug(){
+        Intent debugIntent = new Intent(this, DebugActivity.class);
+        startActivity(debugIntent);
     }
 
     private void specialButtonOne() {
