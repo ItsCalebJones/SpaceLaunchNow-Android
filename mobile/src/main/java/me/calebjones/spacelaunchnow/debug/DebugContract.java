@@ -7,9 +7,29 @@ public interface DebugContract {
 
     interface View extends BaseView<Presenter> {
 
+        void showSupporterSnackbar();
+
+        void showDebugSnackbar();
+
+        void toggleSupporter();
+
     }
 
     interface Presenter extends BasePresenter {
+
+        void toggleSupporterClicked();
+
+        void toggleDebugLaunchesClicked();
+
+        void syncNextLaunchClicked();
+
+        void syncBackgroundSyncClicked();
+
+        void syncVehiclesClicked();
+
+        void downloadLogsClicked();
+
+        void deleteFilesClicked();
 
     }
 }

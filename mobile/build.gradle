@@ -74,7 +74,7 @@ android {
         signingConfig signingConfigs.config
         resConfigs "en"
         multiDexEnabled true
-//        vectorDrawables.useSupportLibrary = true
+
     }
     buildTypes {
         debug {
