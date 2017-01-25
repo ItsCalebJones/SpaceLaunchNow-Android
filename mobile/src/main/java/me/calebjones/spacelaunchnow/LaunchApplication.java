@@ -23,13 +23,13 @@ import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.onesignal.OneSignal;
 
+import java.util.Locale;
+import java.util.TimeZone;
+
 import net.mediavrog.irr.DefaultRuleEngine;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Locale;
-import java.util.TimeZone;
 
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
@@ -136,7 +136,7 @@ public class LaunchApplication extends Application {
         Realm.init(this);
         realmConfig = new RealmConfiguration.Builder()
                 .schemaVersion(DB_SCHEMA_VERSION)
-                .modules(new LaunchDataModule())
+                .modules(Realm.getDefaultModule(), new LaunchDataModule())
                 .deleteRealmIfMigrationNeeded()
                 .build();
 
