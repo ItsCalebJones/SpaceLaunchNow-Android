@@ -30,7 +30,7 @@
         android:summary="Application information about license, libraries, changelog, etc"
         android:title="About">
         <intent
-            android:targetClass="me.calebjones.spacelaunchnow.ui.activity.AboutActivity"
+            android:targetClass="me.calebjones.spacelaunchnow.settings.AboutActivity"
             android:targetPackage="me.calebjones.spacelaunchnow"/>
     </header>
     <header

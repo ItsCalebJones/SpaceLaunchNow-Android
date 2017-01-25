@@ -46,10 +46,11 @@ public final class Constants {
     public static final String ACTION_PROGRESS = "ACTION_PROGRESS_COUNTER";
     public static final String SYNC_NOTIFIERS = "SYNC_LAUNCH_NOTIFIERS";
 
-
     public static int NOTIF_ID = 568975;
     public static int NOTIF_ID_DAY = 568985;
     public static int NOTIF_ID_HOUR = 568995;
+
+    public static int DB_SCHEMA_VERSION = 188;
 
     public static String LAUNCH_URL = "https://launchlibrary.net/1.2/launch/next/1000&mode=verbose";
     public static String MISSION_URL = "https://launchlibrary.net/1.2/mission?limit=1000&mode=verbose";

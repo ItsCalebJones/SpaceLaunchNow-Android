@@ -2,6 +2,7 @@ package me.calebjones.spacelaunchnow.supporter;
 
 
 import io.realm.Realm;
+import me.calebjones.spacelaunchnow.data.models.realm.Products;
 
 public class SupporterHelper {
     // SKU for our subscription (infinite gas)

@@ -24,8 +24,8 @@ repositories {
 advancedVersioning {
     nameOptions {
         versionMajor 1
-        versionMinor 5
-        versionPatch 2
+        versionMinor 6
+        versionPatch 0
 
     }
     codeOptions {
@@ -74,7 +74,7 @@ android {
         signingConfig signingConfigs.config
         resConfigs "en"
         multiDexEnabled true
-//        vectorDrawables.useSupportLibrary = true
+
     }
     buildTypes {
         debug {
@@ -160,4 +160,5 @@ dependencies {
     compile 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.3.0'
     compile 'com.pavelsikun:material-seekbar-preference:2.3.0'
     compile 'com.android.support:multidex:1.0.1'
+    compile project(path: ':data')
 }

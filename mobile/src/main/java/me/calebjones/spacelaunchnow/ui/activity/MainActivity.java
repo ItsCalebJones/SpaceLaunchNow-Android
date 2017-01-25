@@ -51,6 +51,7 @@ import me.calebjones.spacelaunchnow.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.settings.fragments.AppearanceFragment;
 import me.calebjones.spacelaunchnow.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.fragment.launches.NextLaunchFragment;
 import me.calebjones.spacelaunchnow.ui.fragment.missions.MissionFragment;

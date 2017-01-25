@@ -25,8 +25,8 @@ import io.realm.Realm;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.realm.RocketDetailsRealm;
-import me.calebjones.spacelaunchnow.content.models.realm.RocketRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.RocketDetailsRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.RocketRealm;
 import me.calebjones.spacelaunchnow.ui.activity.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 

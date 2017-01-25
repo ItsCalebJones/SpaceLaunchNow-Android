@@ -36,9 +36,9 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.adapter.MissionAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Constants;
-import me.calebjones.spacelaunchnow.content.models.realm.MissionRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.MissionRealm;
 import me.calebjones.spacelaunchnow.content.services.MissionDataService;
-import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
+import me.calebjones.spacelaunchnow.common.BaseFragment;
 import timber.log.Timber;
 
 public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener {

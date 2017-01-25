@@ -17,11 +17,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
-import me.calebjones.spacelaunchnow.content.models.realm.MissionRealm;
-import me.calebjones.spacelaunchnow.content.models.realm.RocketDetailsRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.MissionRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.RocketDetailsRealm;
 import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
-import me.calebjones.spacelaunchnow.ui.fragment.BaseFragment;
+import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
 public class MissionDetailFragment extends BaseFragment {

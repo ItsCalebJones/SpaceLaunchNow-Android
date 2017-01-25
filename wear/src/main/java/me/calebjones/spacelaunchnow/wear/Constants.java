@@ -2,10 +2,6 @@ package me.calebjones.spacelaunchnow.wear;
 
 import android.support.v7.graphics.Target;
 
-/**
- * Created by cjones on 11/17/16.
- */
-
 public class Constants {
     public static final Target DARK;
     public static final Target LIGHT;

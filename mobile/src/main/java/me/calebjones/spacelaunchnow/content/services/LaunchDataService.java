@@ -21,13 +21,13 @@ import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.interfaces.LibraryRequestInterface;
+import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryRequestInterface;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateJob;
 import me.calebjones.spacelaunchnow.content.models.Constants;
-import me.calebjones.spacelaunchnow.content.models.realm.LaunchNotification;
-import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
-import me.calebjones.spacelaunchnow.content.models.realm.UpdateRecord;
-import me.calebjones.spacelaunchnow.content.responses.launchlibrary.LaunchResponse;
+import me.calebjones.spacelaunchnow.data.models.realm.LaunchNotification;
+import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.UpdateRecord;
+import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.FileUtils;
@@ -73,6 +73,7 @@ public class LaunchDataService extends BaseService {
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
+            listPreference.isUpdating(true);
             Timber.d("LaunchDataService - Intent received:  %s ", intent.getAction());
             String action = intent.getAction();
 
@@ -161,6 +162,7 @@ public class LaunchDataService extends BaseService {
                 syncBackground(this);
 
             }
+            listPreference.isUpdating(false);
         } else {
 
             Timber.e("LaunchDataService - onHandleIntent: ERROR - Unknown Intent");
