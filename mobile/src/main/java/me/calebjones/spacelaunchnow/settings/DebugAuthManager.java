@@ -12,10 +12,10 @@ public class DebugAuthManager {
         DateFormat formatter = new SimpleDateFormat("ddMMyyyy");
         String today = formatter.format(date);
 
-        if (today.equals(input.toString())){
-            return true;
-        } else {
-            return false;
-        }
+        int factor = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        Integer todayInt = Integer.parseInt(today) * factor;
+        Integer inputInt = Integer.parseInt(input.toString());
+
+        return todayInt.equals(inputInt);
     }
 }

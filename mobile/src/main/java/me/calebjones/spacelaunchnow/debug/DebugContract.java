@@ -1,35 +1,64 @@
 package me.calebjones.spacelaunchnow.debug;
 
+import android.app.Activity;
+import android.content.Context;
+import android.support.annotation.NonNull;
+
+import me.calebjones.spacelaunchnow.common.BaseNavigator;
 import me.calebjones.spacelaunchnow.common.BasePresenter;
 import me.calebjones.spacelaunchnow.common.BaseView;
 
 public interface DebugContract {
 
+    interface Navigator extends BaseNavigator {
+
+        void goHome();
+
+    }
+
+    interface NavigatorProvider {
+
+        @NonNull
+        Navigator getNavigator(DebugContract.Presenter presenter);
+    }
+
     interface View extends BaseView<Presenter> {
 
-        void showSupporterSnackbar();
+        void showDebugLaunchSnackbar(boolean state);
 
-        void showDebugSnackbar();
+        void showSupporterSnackbar(boolean state);
 
-        void toggleSupporter();
+        void setSupporterSwitch(boolean state);
+
+        void setDebugLaunches(boolean state);
+
+        void showSnackbarMessage(String message);
 
     }
 
     interface Presenter extends BasePresenter {
 
-        void toggleSupporterClicked();
+        void onHomeClicked();
 
-        void toggleDebugLaunchesClicked();
+        void setNavigator(@NonNull Navigator navigator);
 
-        void syncNextLaunchClicked();
+        void toggleSupporterSwitch(boolean selected);
 
-        void syncBackgroundSyncClicked();
+        void toggleDebugLaunchesClicked(boolean selected, Context context);
 
-        void syncVehiclesClicked();
+        void syncNextLaunchClicked(Context context);
 
-        void downloadLogsClicked();
+        void syncBackgroundSyncClicked(Context context);
 
-        void deleteFilesClicked();
+        void syncVehiclesClicked(Context context);
+
+        void downloadLogsClicked(Activity activity);
+
+        void deleteFilesClicked(Context context);
+
+        boolean getSupporterStatus();
+
+        boolean getDebugStatus();
 
     }
 }

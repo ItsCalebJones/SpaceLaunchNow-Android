@@ -1,133 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/debug_coordinator_layout"
   android:layout_width="match_parent"
-  android:layout_height="wrap_content"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  android:orientation="vertical">
+  android:layout_height="wrap_content">
 
-  <TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/material_baseline_grid_2x"
-    android:layout_marginTop="@dimen/material_baseline_grid_2x"
-    android:text="Settings"
-    android:textColor="@color/material_color_red_700"
-    android:textSize="@dimen/materialize_typography_headline" />
-
-  <View
+  <android.support.v4.widget.NestedScrollView
     android:layout_width="match_parent"
-    android:layout_height="1dp"
-    android:layout_margin="@dimen/material_baseline_grid_1x"
-    android:background="@color/material_color_red_700" />
+    android:layout_height="match_parent">
 
-  <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="@dimen/material_baseline_grid_1x"
-    android:orientation="vertical">
-
-    <android.support.v7.widget.SwitchCompat
-      android:id="@+id/supporter_switch"
-      android:layout_width="200dp"
-      android:layout_height="wrap_content"
-      android:padding="@dimen/material_baseline_grid_1.5x"
-      android:gravity="left"
-      android:text="Supporter"
-      android:textAlignment="textStart"/>
-
-    <android.support.v7.widget.SwitchCompat
-      android:id="@+id/debug_launches_switch"
-      android:layout_width="200dp"
-      android:layout_height="wrap_content"
-      android:padding="@dimen/material_baseline_grid_1.5x"
-      android:layout_gravity="left"
-      android:text="Debug Launches"
-      android:textAlignment="textStart" />
-
-  </LinearLayout>
-
-  <TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/material_baseline_grid_2x"
-    android:layout_marginTop="@dimen/material_baseline_grid_2x"
-    android:text="Sync"
-    android:textColor="@color/material_color_red_700"
-    android:textSize="@dimen/materialize_typography_headline" />
-
-  <View
-    android:layout_width="match_parent"
-    android:layout_height="1dp"
-    android:layout_margin="@dimen/material_baseline_grid_1x"
-    android:background="@color/material_color_red_700" />
-
-  <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="@dimen/material_baseline_grid_2x"
-    android:orientation="vertical">
-
-    <android.support.v7.widget.AppCompatButton
-      android:id="@+id/next_launch_button"
+    <LinearLayout
+      xmlns:android="http://schemas.android.com/apk/res/android"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:padding="@dimen/material_baseline_grid_2x"
-      android:text="Next Launch" />
+      android:orientation="vertical">
 
-    <android.support.v7.widget.AppCompatButton
-      android:id="@+id/background_sync_button"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:padding="@dimen/material_baseline_grid_2x"
-      android:text="Background Sync" />
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/material_baseline_grid_2x"
+        android:layout_marginTop="@dimen/material_baseline_grid_2x"
+        android:text="Settings"
+        android:textColor="@color/material_color_red_700"
+        android:textSize="@dimen/materialize_typography_headline" />
 
-    <android.support.v7.widget.AppCompatButton
-      android:id="@+id/vehicle_sync_button"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:padding="@dimen/material_baseline_grid_2x"
-      android:text="Background Sync" />
-  </LinearLayout>
+      <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="@dimen/material_baseline_grid_1x"
+        android:background="@color/material_color_red_700" />
 
-  <TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Logging"
-    android:layout_marginLeft="@dimen/material_baseline_grid_2x"
-    android:layout_marginTop="@dimen/material_baseline_grid_2x"
-    android:textColor="@color/material_color_red_700"
-    android:textSize="@dimen/materialize_typography_headline" />
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/material_baseline_grid_1x"
+        android:orientation="vertical">
 
-  <View
-    android:layout_width="match_parent"
-    android:layout_height="1dp"
-    android:layout_margin="@dimen/material_baseline_grid_1x"
-    android:background="@color/material_color_red_700" />
+        <android.support.v7.widget.SwitchCompat
+          android:id="@+id/supporter_switch"
+          android:layout_width="200dp"
+          android:layout_height="wrap_content"
+          android:gravity="left"
+          android:padding="@dimen/material_baseline_grid_1.5x"
+          android:text="Supporter"
+          android:textAlignment="textStart" />
 
-  <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="@dimen/material_baseline_grid_2x"
-    android:orientation="vertical">
+        <android.support.v7.widget.SwitchCompat
+          android:id="@+id/debug_launches_switch"
+          android:layout_width="200dp"
+          android:layout_height="wrap_content"
+          android:layout_gravity="left"
+          android:padding="@dimen/material_baseline_grid_1.5x"
+          android:text="Debug Launches"
+          android:textAlignment="textStart" />
 
-    <android.support.v7.widget.AppCompatButton
-      android:id="@+id/download_file"
-      style="@style/Widget.AppCompat.Button.Borderless"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:drawableLeft="@drawable/ic_get"
-      android:drawablePadding="12dp"
-      android:padding="8dp"
-      android:text="Download Logs" />
+      </LinearLayout>
 
-    <android.support.v7.widget.AppCompatButton
-      android:id="@+id/delete_file"
-      style="@style/Widget.AppCompat.Button.Borderless"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:drawableLeft="@drawable/ic_delete"
-      android:drawablePadding="12dp"
-      android:padding="8dp"
-      android:text="Delete File" />
-  </LinearLayout>
-</LinearLayout>
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/material_baseline_grid_2x"
+        android:text="Sync"
+        android:textColor="@color/material_color_red_700"
+        android:textSize="@dimen/materialize_typography_headline" />
+
+      <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="@dimen/material_baseline_grid_1x"
+        android:background="@color/material_color_red_700" />
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/material_baseline_grid_2x"
+        android:paddingBottom="20dp">
+
+        <android.support.v7.widget.AppCompatButton
+          android:id="@+id/next_launch_button"
+          style="@style/Widget.AppCompat.Button.Colored"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:padding="@dimen/material_baseline_grid_2x"
+          android:text="Next Launch"
+          android:elevation="2dp" />
+
+        <android.support.v7.widget.AppCompatButton
+          android:id="@+id/background_sync_button"
+          style="@style/Widget.AppCompat.Button.Colored"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:padding="@dimen/material_baseline_grid_2x"
+          android:text="Background Sync"
+          android:elevation="2dp" />
+
+        <android.support.v7.widget.AppCompatButton
+          android:id="@+id/vehicle_sync_button"
+          style="@style/Widget.AppCompat.Button.Colored"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:padding="@dimen/material_baseline_grid_2x"
+          android:text="Vehicle Sync"
+          android:elevation="2dp" />
+      </LinearLayout>
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/material_baseline_grid_2x"
+        android:text="Logging"
+        android:textColor="@color/material_color_red_700"
+        android:textSize="@dimen/materialize_typography_headline" />
+
+      <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="@dimen/material_baseline_grid_1x"
+        android:background="@color/material_color_red_700" />
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/material_baseline_grid_2x"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.AppCompatButton
+          android:id="@+id/download_file"
+          style="@style/Widget.AppCompat.Button.Borderless"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:drawableLeft="@drawable/ic_get"
+          android:drawablePadding="12dp"
+          android:padding="12dp"
+          android:text="Download Logs" />
+
+        <android.support.v7.widget.AppCompatButton
+          android:id="@+id/delete_file"
+          style="@style/Widget.AppCompat.Button.Borderless"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:drawableLeft="@drawable/ic_delete"
+          android:drawablePadding="12dp"
+          android:padding="12dp"
+          android:text="Delete File" />
+      </LinearLayout>
+    </LinearLayout>
+  </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>

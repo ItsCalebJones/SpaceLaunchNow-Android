@@ -2,18 +2,40 @@ package me.calebjones.spacelaunchnow.debug;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 
-/**
- * Created by cjones on 1/18/17.
- */
+public class DebugFragment extends Fragment implements DebugContract.View {
 
-public class DebugFragment extends Fragment implements DebugContract.View{
+    @BindView(R.id.supporter_switch)
+    SwitchCompat supporterSwitch;
+    @BindView(R.id.debug_launches_switch)
+    SwitchCompat debugLaunchesSwitch;
+    @BindView(R.id.next_launch_button)
+    AppCompatButton nextLaunchButton;
+    @BindView(R.id.background_sync_button)
+    AppCompatButton backgroundSyncButton;
+    @BindView(R.id.vehicle_sync_button)
+    AppCompatButton vehicleSyncButton;
+    @BindView(R.id.download_file)
+    AppCompatButton downloadFileButton;
+    @BindView(R.id.delete_file)
+    AppCompatButton deleteFileButton;
+    @BindView(R.id.debug_coordinator_layout)
+    CoordinatorLayout coordinatorLayout;
+
+    private DebugContract.Presenter debugPresenter;
 
     public DebugFragment() {
         // Requires empty public constructor
@@ -29,28 +51,81 @@ public class DebugFragment extends Fragment implements DebugContract.View{
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_debug, container, false);
+        ButterKnife.bind(this, root);
+        initializeViews();
         return root;
     }
 
     @Override
     public void setPresenter(DebugContract.Presenter presenter) {
-
+        debugPresenter = presenter;
     }
 
     @Override
-    public void showSupporterSnackbar() {
-
+    public void showDebugLaunchSnackbar(boolean state) {
+        SnackbarHandler.showInfoSnackbar(getContext(), coordinatorLayout, "Debug Launch Status: " + state);
     }
 
     @Override
-    public void showDebugSnackbar() {
-
+    public void showSupporterSnackbar(boolean state) {
+        SnackbarHandler.showInfoSnackbar(getContext(), coordinatorLayout, "Supporter Status: " + state);
     }
 
     @Override
-    public void toggleSupporter() {
+    public void setSupporterSwitch(boolean state) {
+        supporterSwitch.setChecked(state);
+    }
 
+    @Override
+    public void setDebugLaunches(boolean state) {
+        debugLaunchesSwitch.setChecked(state);
+    }
+
+    @Override
+    public void showSnackbarMessage(String message) {
+        SnackbarHandler.showInfoSnackbar(getContext(), coordinatorLayout, message);
+    }
+
+    //UI Button and Switches
+    @OnClick(R.id.supporter_switch)
+    void supportSwitchClicked(SwitchCompat view) {
+        debugPresenter.toggleSupporterSwitch(view.isChecked());
+    }
+
+    @OnClick(R.id.debug_launches_switch)
+    void debugSwitchCLicked(SwitchCompat view) {
+        debugPresenter.toggleDebugLaunchesClicked(view.isChecked(), getContext());
+    }
+
+    @OnClick(R.id.next_launch_button)
+    void nextLaunchClicked() {
+        debugPresenter.syncNextLaunchClicked(getContext());
+    }
+
+    @OnClick(R.id.background_sync_button)
+    void backgroundSyncClicked() {
+        debugPresenter.syncBackgroundSyncClicked(getContext());
+    }
+
+    @OnClick(R.id.vehicle_sync_button)
+    void vehicleSyncClicked() {
+        debugPresenter.syncVehiclesClicked(getContext());
+    }
+
+    @OnClick(R.id.download_file)
+    void downloadFileClicked() {
+        debugPresenter.downloadLogsClicked(getActivity());
+    }
+
+    @OnClick(R.id.delete_file)
+    void deleteFileClicked() {
+        debugPresenter.deleteFilesClicked(getContext());
+    }
+
+    public void initializeViews() {
+        supporterSwitch.setChecked(debugPresenter.getSupporterStatus());
+        debugLaunchesSwitch.setChecked(debugPresenter.getDebugStatus());
     }
 }
