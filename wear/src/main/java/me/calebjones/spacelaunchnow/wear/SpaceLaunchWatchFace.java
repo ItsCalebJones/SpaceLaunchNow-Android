@@ -546,7 +546,6 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
         @Override
         public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
             Timber.e("onConnectionFailed - %s %s", connectionResult.getErrorCode(), connectionResult.getErrorMessage());
-
         }
 
         private final DataApi.DataListener onDataChangedListener = new DataApi.DataListener() {
