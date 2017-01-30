@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.calebjones.spacelaunchnow.wear;
+package me.calebjones.spacelaunchnow.wear.watchface;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -68,6 +68,8 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import butterknife.ButterKnife;
+import me.calebjones.spacelaunchnow.wear.R;
 import timber.log.Timber;
 
 import static me.calebjones.spacelaunchnow.wear.Constants.LIGHT;

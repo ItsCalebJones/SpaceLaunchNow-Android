@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="me.calebjones.spacelaunchnow.wear"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="me.calebjones.spacelaunchnow.wear">
 
     <uses-feature android:name="android.hardware.type.watch" />
 
@@ -10,15 +10,15 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        tools:replace="label"
         android:name=".WearApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="${applicationLabel}"
         android:supportsRtl="true"
-        android:theme="@android:style/Theme.DeviceDefault">
+        android:theme="@android:style/Theme.DeviceDefault"
+        tools:replace="label">
         <service
-            android:name=".SpaceLaunchWatchFace"
+            android:name=".watchface.SpaceLaunchWatchFace"
             android:label="${applicationLabel}"
             android:permission="android.permission.BIND_WALLPAPER">
             <meta-data
@@ -42,6 +42,15 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <activity
+            android:name=".main.MainActivity"
+            android:label="@string/title_activity_main">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
