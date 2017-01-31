@@ -1,56 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="me.calebjones.spacelaunchnow.wear">
+  xmlns:tools="http://schemas.android.com/tools"
+  package="me.calebjones.spacelaunchnow.wear">
 
-    <uses-feature android:name="android.hardware.type.watch" />
+  <uses-feature android:name="android.hardware.type.watch" />
 
-    <!-- Required to act as a custom watch face. -->
-    <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <application
-        android:name=".WearApplication"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="${applicationLabel}"
-        android:supportsRtl="true"
-        android:theme="@android:style/Theme.DeviceDefault"
-        tools:replace="label">
-        <service
-            android:name=".watchface.SpaceLaunchWatchFace"
-            android:label="${applicationLabel}"
-            android:permission="android.permission.BIND_WALLPAPER">
-            <meta-data
-                android:name="android.service.wallpaper"
-                android:resource="@xml/watch_face" />
-            <meta-data
-                android:name="com.google.android.wearable.watchface.preview"
-                android:resource="@drawable/square_preview" />
-            <meta-data
-                android:name="com.google.android.wearable.watchface.preview_circular"
-                android:resource="@drawable/circle_preview" />
 
-            <intent-filter>
-                <action android:name="android.service.wallpaper.WallpaperService" />
+  <!-- Required to act as a custom watch face. -->
+  <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
+  <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
-            </intent-filter>
-        </service>
+  <application
+    android:name=".WearApplication"
+    android:allowBackup="true"
+    android:icon="@mipmap/ic_launcher"
+    android:label="${applicationLabel}"
+    android:supportsRtl="true"
+    android:theme="@android:style/Theme.DeviceDefault"
+    tools:replace="label">
 
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+    <uses-library
+      android:name="com.google.android.wearable"
+      android:required="false" />
 
-        <activity
-            android:name=".main.MainActivity"
-            android:label="@string/title_activity_main">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+    <service
+      android:name=".watchface.SpaceLaunchWatchFace"
+      android:label="${applicationLabel}"
+      android:permission="android.permission.BIND_WALLPAPER">
+      <meta-data
+        android:name="android.service.wallpaper"
+        android:resource="@xml/watch_face" />
+      <meta-data
+        android:name="com.google.android.wearable.watchface.preview"
+        android:resource="@drawable/square_preview" />
+      <meta-data
+        android:name="com.google.android.wearable.watchface.preview_circular"
+        android:resource="@drawable/circle_preview" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-    </application>
+      <intent-filter>
+        <action android:name="android.service.wallpaper.WallpaperService" />
+
+        <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
+      </intent-filter>
+    </service>
+
+    <meta-data
+      android:name="com.google.android.gms.version"
+      android:value="@integer/google_play_services_version" />
+
+    <activity
+      android:name=".main.MainActivity"
+      android:label="@string/title_activity_main">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+    <activity
+      android:name=".launch.LaunchActivity"
+      android:label="@string/title_activity_main" />
+  </application>
 
 </manifest>

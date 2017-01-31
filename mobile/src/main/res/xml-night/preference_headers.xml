@@ -11,7 +11,7 @@
         android:fragment="me.calebjones.spacelaunchnow.settings.fragments.NotificationsFragment"
         android:icon="@drawable/ic_notifications_white"
         android:title="Notifications"
-        android:summary="Set up launch notifications and scheduling."
+        android:summary="Set up launchCategory notifications and scheduling."
         android:breadCrumbTitle="Notifications"/>
     <header
         android:fragment="me.calebjones.spacelaunchnow.settings.fragments.AppearanceFragment"

@@ -11,14 +11,14 @@
   <string name="settings">Settings</string>
   <string name="spacex_summary">SpaceX designs, manufactures and launches advanced rockets and spacecraft. The company was founded in 2002 to revolutionize space technology, with the ultimate goal of enabling people to live on other planets.</string>
   <string name="usaf_summary">The United States Air Force is the aerial warfare service branch of the United States Armed Forces and one of the seven American uniformed services.</string>
-  <string name="casc_summary">The China Aerospace Science and Technology Corporation(CASC) is the main contractor for the Chinese space program. It is state-owned and has a number of subordinate entities which design, develop and manufacture a range of spacecraft, launch vehicles, strategic and tactical missile systems, and ground equipment.</string>
+  <string name="casc_summary">The China Aerospace Science and Technology Corporation(CASC) is the main contractor for the Chinese space program. It is state-owned and has a number of subordinate entities which design, develop and manufacture a range of spacecraft, launchCategory vehicles, strategic and tactical missile systems, and ground equipment.</string>
   <string name="cnsa_summary">The China National Space Administration (CNSA) is the national space agency of the People\'s Republic of China. It is responsible for the national space program and for planning and development of space activities.</string>
   <string name="isro_summary">The Indian Space Research Organisation (ISRO), is the space agency of the Indian government headquartered in the city of Bengaluru. Its vision is to \"harness space technology for national development, while pursuing space science research and planetary exploration\".</string>
   <string name="vko_summary">"The Russian Aerospace Defence Forces (VKO) was the branch of the Armed Forces of the Russian Federation responsible for air and missile defence, and the operation of Russian military satellites and the Plesetsk Cosmodrome. "</string>
   <string name="roscosmos_summary">The Roscosmos State Corporation for Space Activities, commonly known as Roscosmos, is the governmental body responsible for the Russian space science program and general aerospace research.</string>
-  <string name="ula_summary"><![CDATA[United Launch Alliance (ULA) is a joint venture of Lockheed Martin Space Systems and Boeing Defense, Space & Security. ULA was formed in December 2006 by combining the teams at these companies which provide spacecraft launch services to the government of the United States.]]></string>
+  <string name="ula_summary"><![CDATA[United Launch Alliance (ULA) is a joint venture of Lockheed Martin Space Systems and Boeing Defense, Space & Security. ULA was formed in December 2006 by combining the teams at these companies which provide spacecraft launchCategory services to the government of the United States.]]></string>
   <string name="gd_summary">General Dynamics Corporation is an American aerospace and defense company formed by mergers and divestitures. It is the world\'s fifth-largest defense contractor based on 2012 revenues.</string>
-  <string name="asa_summary">Arianespace SA is a French multinational company founded in 1980 as the world\'s first commercial launch service provider.</string>
+  <string name="asa_summary">Arianespace SA is a French multinational company founded in 1980 as the world\'s first commercial launchCategory service provider.</string>
   <string name="TsSKB_summary">The Progress State Research and Production Space Centre, also known as TsSKB-Progress, is a Russian \"Federal State Unitary Enterprise\" under the jurisdiction of Roscosmos, the Russian Federal Space Agency responsible for space science and aerospace research. It is the developer of the famous Soyuz-FG rocket used for manned space flight, as well as Soyuz-U used for launching unmanned probes.</string>
   <string name="nasa_summary">The National Aeronautics and Space Administration (NASA) is the United States government agency responsible for the civilian space program as well as aeronautics and aerospace research.</string>
 
@@ -32,7 +32,7 @@
   <string name="jpn_logo">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950129/QOdDYa5_dhdlct.png</string>
   <string name="ariane_logo">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950133/yffq0aI_oyyhmj.jpg</string>
   <string name="title_activity_debug">DebugActivity</string>
-  <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
+  <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launchCategory tracking and application behavior</string>
 
     <string name="whats_new_content">1.5.3 - HotFix!\n\n
         \u2022Squash a few bugs!\n
@@ -44,12 +44,12 @@
 
   <string name="supporter_title">Become a Supporter</string>
   <string name="supporter_description">Help ensure continued updates and timely bug fixes. Get access to supporter only features. Pay what you want, you\'ll get the same value.</string>
-  <string name="supporter_features">\u2022Current weather forecast for launch pads.\n\u2022Historical weather forecast for past launches.\n\u2022Automatically sync upcoming launches to your calendar.\n\u2022Dynamic pictures of launch vehicles as watch face background.\n</string>
+  <string name="supporter_features">\u2022Current weather forecast for launchCategory pads.\n\u2022Historical weather forecast for past launches.\n\u2022Automatically sync upcoming launches to your calendar.\n\u2022Dynamic pictures of launchCategory vehicles as watch face background.\n</string>
   <string name="hello_blank_fragment">Hello blank fragment</string>
   <string name="title_activity_download">Download</string>
   <string name="title_activity_web_view_fallback">Space Launch Now</string>
   <string name="slide_one_title">Space Launch Now</string>
-  <string name="slide_one_description">Keep up to date on all your favorite  orbital launches, missions, and launch vehicles.</string>
+  <string name="slide_one_description">Keep up to date on all your favorite  orbital launches, missions, and launchCategory vehicles.</string>
   <string name="slide_two_title">Notification for Launches</string>
   <string name="slide_two_description">Get notifications for upcoming launches and look into the history of spaceflight</string>
   <string name="slide_three_title">Find Launch Vehicles</string>

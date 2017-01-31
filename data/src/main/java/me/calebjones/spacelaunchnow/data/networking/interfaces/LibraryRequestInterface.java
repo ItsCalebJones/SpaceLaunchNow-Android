@@ -58,6 +58,9 @@ public interface LibraryRequestInterface {
     @GET("dev/launch?next=10&fields=id,net,status")
     Call<LaunchResponse> getDebugMiniNextLaunch();
 
+    @GET(version + "/launch?next=25&fields=id,net,name,")
+    Call<LaunchResponse> getWearNextLaunch();
+
     //Get Missions Methods
 
     @GET(version + "/mission?mode=verbose&limit=500")

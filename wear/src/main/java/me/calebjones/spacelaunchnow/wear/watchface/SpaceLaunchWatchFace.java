@@ -68,7 +68,6 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
-import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.wear.R;
 import timber.log.Timber;
 
@@ -387,7 +386,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             if (launchName != null) {
                 launchNameText = launchName;
             } else {
-                launchNameText = "Waiting for Next Launch...";
+                launchNameText = "Waiting for Next LaunchCategory...";
             }
 
             //Parse time into day, hour, minute, and second
@@ -439,10 +438,10 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             utcTimeView.setText(utcText);
 
 
-            //Launch Name
+            //LaunchCategory Name
             if (launchName != null) {
                 launchNameView.setText(launchNameText);
-                //Launch Countdown/Status
+                //LaunchCategory Countdown/Status
                 if (launchTime == 0 && launchDate != null) {
                     String dayNumberSuffix = getDayNumberSuffix(utcDate.getDate());
                     SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d'" + dayNumberSuffix + "'");
@@ -453,7 +452,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             // Else align text in a manner that fits
 
 
-            //Launch Countdown/Status
+            //LaunchCategory Countdown/Status
             if (launchTime != 0) {
                 launchCountdownView.setVisibility(View.GONE);
                 countdownLayout.setVisibility(View.VISIBLE);
@@ -715,7 +714,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
         private final ResultCallback<DataItemBuffer> onConnectedResultCallback = new ResultCallback<DataItemBuffer>() {
             @Override
             public void onResult(DataItemBuffer dataItems) {
-                Log.v("Space Launch Wear", "onResult");
+                Log.v("Space LaunchCategory Wear", "onResult");
                 for (DataItem item : dataItems) {
                     processConfigurationFor(item);
                 }

@@ -1,13 +1,11 @@
 package me.calebjones.spacelaunchnow.wear.common;
 
-import android.app.Activity;
 import android.os.Bundle;
-import timber.log.Timber;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+import android.support.wearable.activity.WearableActivity;
 
-public class BaseActivity extends Activity {
+import timber.log.Timber;
+
+public class BaseActivity extends WearableActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

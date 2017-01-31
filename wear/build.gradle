@@ -41,7 +41,7 @@ android {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
-            manifestPlaceholders = [ applicationLabel:"Launch Tracker - Debug"]
+            manifestPlaceholders = [ applicationLabel:"LaunchCategory Tracker - Debug"]
         }
     }
 }
@@ -49,10 +49,16 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     provided 'com.google.android.wearable:wearable:1.0.0'
-    compile 'com.google.android.support:wearable:1.4.0'
     compile "com.google.android.gms:play-services-wearable:$rootProject.playServicesVersion"
     compile 'com.jakewharton.timber:timber:4.3.1'
     compile 'blue.aodev:material-values:1.1.0'
     compile 'com.android.support:palette-v7:24.1.1'
     compile 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile 'com.google.android.support:wearable:2.0.0-beta1'
+    compile project(path: ':data')
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.google.code.gson:gson:2.7'
 }

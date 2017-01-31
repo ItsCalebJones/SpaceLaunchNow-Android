@@ -1,11 +1,7 @@
 <resources>
     <string name="app_name">Space Launch Now</string>
     <string name="my_digital_name">Launch Tracker</string>
-
-    <string name="hello">Hello World!</string>
-    <string name="title">Hello Notification!</string>
     <string name="notification_posted">Notification posted</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="hello_round">Hello Round World!</string>
-    <string name="hello_square">Hello Square World!</string>
+    <string name="title_activity_main">Space Launch Now</string>
 </resources>
+

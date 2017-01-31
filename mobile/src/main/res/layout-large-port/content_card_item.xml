@@ -105,7 +105,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="160dp"
                     android:scaleType="centerCrop"
-                    android:contentDescription="A map view of launch location." />
+                    android:contentDescription="A map view of launchCategory location." />
 
                 <android.support.design.widget.FloatingActionButton
                     xmlns:app="http://schemas.android.com/apk/res-auto"

@@ -2,11 +2,19 @@ package me.calebjones.spacelaunchnow.wear;
 
 import android.support.v7.graphics.Target;
 
-public class Constants {
+public final class Constants {
     public static final Target DARK;
     public static final Target LIGHT;
     public static final Target NEUTRAL;
     public static final Target DOMINANT;
+
+    public static String LIBRARY_BASE_URL = "https://launchlibrary.net/";
+    public static String LAUNCH_URL = "https://launchlibrary.net/1.2/launch/next/1000&mode=verbose";
+    public static String MISSION_URL = "https://launchlibrary.net/1.2/mission?limit=1000&mode=verbose";
+    public static String AGENCY_URL = "https://launchlibrary.net/1.2/agency?mode=verbose&limit=1000";
+    public static String VEHICLE_URL = "https://launchlibrary.net/1.2/rocket?mode=verbose&limit=1000";
+    public static String NEXT_URL = "https://launchlibrary.net/1.2/launch?next=10&mode=verbose";
+    public static String NEXT_URL_BY_ID = "https://launchlibrary.net/1.2/launch/%s?mode=verbose";
 
     static {
         DOMINANT = new Target.Builder().setPopulationWeight(1f)
@@ -50,5 +58,8 @@ public class Constants {
                 .setLightnessWeight(0.60f)
                 .setExclusive(false)
                 .build();
+    }
+
+    private Constants() {
     }
 }
