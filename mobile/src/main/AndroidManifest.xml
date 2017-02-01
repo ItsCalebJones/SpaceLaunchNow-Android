@@ -46,7 +46,7 @@
             android:theme="@style/BaseAppTheme" />
 
         <activity
-            android:name=".ui.activity.MainActivity"
+            android:name=".main.MainActivity"
             android:configChanges="screenSize"
             android:theme="@style/BaseAppTheme.Launcher"
             android:windowSoftInputMode="adjustResize">
@@ -60,7 +60,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.LaunchDetailActivity"
+            android:name=".launchdetail.activity.LaunchDetailActivity"
             android:theme="@style/BaseAppTheme" />
 
         <meta-data
@@ -73,10 +73,10 @@
         <activity
             android:name=".settings.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".ui.activity.MainActivity"
+            android:parentActivityName=".main.MainActivity"
             android:theme="@style/CustomPreferenceTheme" />
-        <activity android:name=".ui.activity.OrbiterDetailActivity" />
-        <activity android:name=".ui.activity.LauncherDetailActivity" />
+        <activity android:name=".orbiter.OrbiterDetailActivity" />
+        <activity android:name=".launcher.LauncherDetailActivity" />
 
         <service
             android:name=".content.services.LaunchDataService"
@@ -122,13 +122,13 @@
             android:value="dc9cc4c8ab9f9d19cc6ba7cf0cdef85dab29d1ec" />
 
         <activity
-            android:name=".ui.activity.FullscreenImageActivity"
+            android:name=".imageviewer.FullscreenImageActivity"
             android:label="@string/title_activity_fullscreen_image"
-            android:parentActivityName=".ui.activity.MainActivity"
+            android:parentActivityName=".main.MainActivity"
             android:theme="@style/LightTheme.Transparent">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="me.calebjones.spacelaunchnow.ui.activity.MainActivity" />
+                android:value="me.calebjones.spacelaunchnow.main.MainActivity" />
         </activity>
 
         <service
@@ -140,9 +140,9 @@
             android:theme="@style/BaseAppTheme" />
         <activity android:name=".common.BaseActivity" />
         <activity
-            android:name=".ui.activity.WebViewFallbackActivity"
+            android:name=".webview.WebViewFallbackActivity"
             android:label="@string/title_activity_web_view_fallback"
-            android:parentActivityName=".ui.activity.MainActivity"
+            android:parentActivityName=".main.MainActivity"
             android:theme="@style/BaseAppTheme" />
 
         <receiver

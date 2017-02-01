@@ -21,7 +21,7 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.supporter.SupporterHelper;
-import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
+import me.calebjones.spacelaunchnow.main.MainActivity;
 import timber.log.Timber;
 
 public class AppearanceFragment extends BaseSettingFragment implements SharedPreferences.OnSharedPreferenceChangeListener {

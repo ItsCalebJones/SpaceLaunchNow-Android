@@ -22,7 +22,7 @@ import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
-import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.NumberToWords;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;

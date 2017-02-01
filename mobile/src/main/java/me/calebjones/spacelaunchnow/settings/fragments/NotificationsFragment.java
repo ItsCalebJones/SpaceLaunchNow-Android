@@ -26,7 +26,7 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
-import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
+import me.calebjones.spacelaunchnow.main.MainActivity;
 import timber.log.Timber;
 
 import static me.calebjones.spacelaunchnow.content.services.NextLaunchTracker.DateToCalendar;
