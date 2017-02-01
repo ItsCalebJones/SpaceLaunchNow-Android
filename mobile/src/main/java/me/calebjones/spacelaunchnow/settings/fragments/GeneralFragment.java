@@ -139,7 +139,13 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
 
         for (int i = 0; i < calendarList.size(); i++) {
             Calendar calendar = calendarList.get(i);
-            listName.add(calendar.accountName);
+            String calendarName;
+            if (calendar.displayName.equals(calendar.accountName)){
+                calendarName = calendar.accountName;
+            } else {
+                calendarName = calendar.displayName + " - " + calendar.accountName;
+            }
+            listName.add(calendarName);
             listCount.add(String.valueOf(i));
         }
 
@@ -162,10 +168,10 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
             @Override
             public boolean onPreferenceChange(Preference preference, Object obj) {
                 final Calendar calendar = calendarList.get(Integer.valueOf(obj.toString()));
-                Timber.v("Updating selected calendar to %s", calendar.accountName);
+                Timber.v("Updating selected calendar to %s", calendar.displayName);
                 final CalendarItem calendarItem = new CalendarItem();
                 calendarItem.setId(calendar.id);
-                calendarItem.setAccountName(calendar.accountName);
+                calendarItem.setAccountName(calendar.displayName);
                 mRealm.executeTransactionAsync(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
