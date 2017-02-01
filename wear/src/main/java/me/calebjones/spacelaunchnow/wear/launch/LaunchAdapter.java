@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import io.realm.RealmResults;
-import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.LaunchWear;
 import me.calebjones.spacelaunchnow.wear.R;
 import me.calebjones.spacelaunchnow.wear.content.ContentManager;
 import timber.log.Timber;
@@ -15,12 +15,14 @@ import timber.log.Timber;
 public class LaunchAdapter extends RecyclerView.Adapter<LaunchViewHolder> implements  ContentManager.ContentCallback{
 
     private int category;
-    private RealmResults<LaunchRealm> launchList;
+    private RealmResults<LaunchWear> launchList;
     private ContentManager contentManager;
 
-    public LaunchAdapter(Context context, int category){
+
+
+    public LaunchAdapter(Context context, int category) {
         this.category = category;
-        contentManager = new ContentManager(context, this);
+        contentManager = new ContentManager(context, this, category);
         loadData();
     }
 
@@ -37,7 +39,7 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchViewHolder> implem
 
     @Override
     public void onBindViewHolder(LaunchViewHolder holder, int position) {
-        LaunchRealm launch = launchList.get(position);
+        LaunchWear launch = launchList.get(position);
         holder.launchName.setText(launch.getName());
     }
 

@@ -30,7 +30,7 @@ public class LaunchActivity extends WearableActivity implements NavigationAdapte
         launchFragment = new LaunchFragment();
         Bundle args = new Bundle();
 
-        args.putInt("category", 1);
+        args.putInt("category", 0);
         launchFragment.setArguments(args);
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, launchFragment).commit();

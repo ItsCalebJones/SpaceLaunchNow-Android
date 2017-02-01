@@ -8,23 +8,21 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
-import me.calebjones.spacelaunchnow.data.StringRealmListConverter;
-import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.LaunchWear;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryRequestInterface;
-import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchWearResponse;
 import me.calebjones.spacelaunchnow.wear.Constants;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,6 +32,8 @@ import retrofit2.Retrofit.Builder;
 import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
+import static me.calebjones.spacelaunchnow.wear.model.Constants.*;
+
 public class ContentManager {
 
     private Realm realm;
@@ -42,7 +42,7 @@ public class ContentManager {
     private Retrofit retrofit;
     private ContentCallback contentCallback;
 
-    public ContentManager(Context context, ContentCallback callback) {
+    public ContentManager(Context context, ContentCallback callback, int category) {
         realm = Realm.getDefaultInstance();
         retrofit = getRetrofit();
         this.contentCallback = callback;
@@ -54,14 +54,23 @@ public class ContentManager {
             int bandwidth = mConnectivityManager.getNetworkCapabilities(activeNetwork).getLinkDownstreamBandwidthKbps();
             Timber.v("Network available - Bandwidth: %s/kbps", bandwidth);
             getFreshData();
+            getFreshData(AGENCY_SPACEX);
+            getFreshData(AGENCY_ROSCOSMOS);
+            getFreshData(AGENCY_ULA);
+            getFreshData(AGENCY_NASA);
+            getFreshData(AGENCY_CASC);
         } else {
             // request high-bandwidth network
             Timber.v("Network unavailable.");
         }
     }
 
-    public RealmResults<LaunchRealm> getLaunchList(int category) {
-        return realm.where(LaunchRealm.class).findAll();
+    public RealmResults<LaunchWear> getLaunchList(int category) {
+        if (category > 0 ) {
+            return realm.where(LaunchWear.class).equalTo("agency", category).findAllSorted("net");
+        } else {
+            return realm.where(LaunchWear.class).findAllSorted("net");
+        }
     }
 
     public void cleanup() {
@@ -87,24 +96,6 @@ public class ContentManager {
                         return false;
                     }
                 })
-                .registerTypeAdapter(token, new TypeAdapter<RealmList<RealmStr>>() {
-
-                    @Override
-                    public void write(JsonWriter out, RealmList<RealmStr> value) throws io.realm.internal.IOException {
-                        // Ignore
-                    }
-                    @SuppressWarnings("Ambigious")
-                    @Override
-                    public RealmList<RealmStr> read(JsonReader in) throws io.realm.internal.IOException, java.io.IOException {
-                        RealmList<RealmStr> list = new RealmList<RealmStr>();
-                        in.beginArray();
-                        while (in.hasNext()) {
-                            list.add(new RealmStr(in.nextString()));
-                        }
-                        in.endArray();
-                        return list;
-                    }
-                })
                 .create();
 
         return new Builder()
@@ -115,15 +106,19 @@ public class ContentManager {
 
     private void getFreshData() {
         final LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
-        Call<LaunchResponse> call;
-        final RealmList<LaunchRealm> items = new RealmList<>();
+        Call<LaunchWearResponse> call;
+        final RealmList<LaunchWear> items = new RealmList<>();
 
-        call = request.getWearNextLaunch();
+        //Get Date String
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
 
-        call.enqueue(new Callback<LaunchResponse>() {
+        call = request.getWearNextLaunch(fmt.format(date), 5);
+
+        call.enqueue(new Callback<LaunchWearResponse>() {
 
             @Override
-            public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
+            public void onResponse(Call<LaunchWearResponse> call, Response<LaunchWearResponse> response) {
                 if (response.isSuccessful()) {
                     Timber.v("Successful!");
                     Collections.addAll(items, response.body().getLaunches());
@@ -136,7 +131,44 @@ public class ContentManager {
             }
 
             @Override
-            public void onFailure(Call<LaunchResponse> call, Throwable t) {
+            public void onFailure(Call<LaunchWearResponse> call, Throwable t) {
+                Timber.e(t.getLocalizedMessage());
+            }
+
+        });
+    }
+
+    private void getFreshData(final int category) {
+        final LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
+        Call<LaunchWearResponse> call;
+        final RealmList<LaunchWear> items = new RealmList<>();
+
+        //Get Date String
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+
+        call = request.getWearNextLaunch(fmt.format(date), category, 5);
+
+        call.enqueue(new Callback<LaunchWearResponse>() {
+
+            @Override
+            public void onResponse(Call<LaunchWearResponse> call, Response<LaunchWearResponse> response) {
+                if (response.isSuccessful()) {
+                    Timber.v("Successful!");
+                    Collections.addAll(items, response.body().getLaunches());
+                    realm.beginTransaction();
+                    for (LaunchWear item: items){
+                        item.setAgency(category);
+                        realm.copyToRealmOrUpdate(item);
+                    }
+                    realm.commitTransaction();
+                    contentCallback.dataLoaded();
+                }
+                Timber.e("Error: %s", response.errorBody());
+            }
+
+            @Override
+            public void onFailure(Call<LaunchWearResponse> call, Throwable t) {
                 Timber.e(t.getLocalizedMessage());
             }
 

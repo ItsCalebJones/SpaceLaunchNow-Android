@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import me.calebjones.spacelaunchnow.wear.model.LaunchCategory;
 import timber.log.Timber;
 
+import static me.calebjones.spacelaunchnow.wear.model.Constants.*;
 
 public class NavigationAdapter extends WearableNavigationDrawer.WearableNavigationDrawerAdapter {
 
@@ -21,10 +22,12 @@ public class NavigationAdapter extends WearableNavigationDrawer.WearableNavigati
     }
 
     private void initializeCategories() {
-        launchCategoryList.add(new LaunchCategory("ALL", 1));
-        launchCategoryList.add(new LaunchCategory("SpaceX", 2));
-        launchCategoryList.add(new LaunchCategory("ROSCOSMOS", 3));
-        launchCategoryList.add(new LaunchCategory("ULA", 4));
+        launchCategoryList.add(new LaunchCategory("ALL", AGENCY_ALL));
+        launchCategoryList.add(new LaunchCategory("SpaceX", AGENCY_SPACEX));
+        launchCategoryList.add(new LaunchCategory("ROSCOSMOS", AGENCY_ROSCOSMOS));
+        launchCategoryList.add(new LaunchCategory("ULA", AGENCY_ULA));
+        launchCategoryList.add(new LaunchCategory("NASA", AGENCY_NASA));
+        launchCategoryList.add(new LaunchCategory("CASC", AGENCY_CASC));
     }
 
     @Override

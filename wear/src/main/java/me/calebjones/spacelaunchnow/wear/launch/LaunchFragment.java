@@ -34,7 +34,7 @@ public class LaunchFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_launch, container, false);
         ButterKnife.bind(this, rootView);
-        launchAdapter = new LaunchAdapter(getContext(), getArguments() != null ? getArguments().getInt("category") : 1);
+        launchAdapter = new LaunchAdapter(getContext(), getArguments() != null ? getArguments().getInt("category") : 0);
         recyclerView.setAdapter(launchAdapter);
         RecyclerView.ItemDecoration itemDecoration = new
                 DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);

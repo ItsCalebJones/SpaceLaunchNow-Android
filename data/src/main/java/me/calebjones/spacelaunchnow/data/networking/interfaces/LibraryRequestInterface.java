@@ -2,6 +2,7 @@ package me.calebjones.spacelaunchnow.data.networking.interfaces;
 
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.AgencyResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchWearResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LocationResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.MissionResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.PadResponse;
@@ -58,8 +59,11 @@ public interface LibraryRequestInterface {
     @GET("dev/launch?next=10&fields=id,net,status")
     Call<LaunchResponse> getDebugMiniNextLaunch();
 
-    @GET(version + "/launch?next=25&fields=id,net,name,")
-    Call<LaunchResponse> getWearNextLaunch();
+    @GET(version + "/launch?fields=id,net,status,name")
+    Call<LaunchWearResponse> getWearNextLaunch(@Query("startdate") String date, @Query("agency") int agency, @Query("limit") int limit);
+
+    @GET(version + "/launch?fields=id,net,status,name")
+    Call<LaunchWearResponse> getWearNextLaunch(@Query("startdate") String date, @Query("limit") int limit);
 
     //Get Missions Methods
 
