@@ -1,11 +1,11 @@
 package me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary;
 
-import me.calebjones.spacelaunchnow.data.models.realm.RocketRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.Rocket;
 
 public class RocketResponse extends BaseResponse {
-    private RocketRealm[] rockets;
+    private Rocket[] rockets;
 
-    public RocketRealm[] getRockets() {
+    public Rocket[] getRockets() {
         return rockets;
     }
 }

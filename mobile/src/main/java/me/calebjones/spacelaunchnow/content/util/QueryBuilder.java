@@ -15,13 +15,13 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import timber.log.Timber;
 
 public class QueryBuilder {
     public static boolean first = true;
 
-    public static RealmResults<LaunchRealm> buildPrevQueryAsync(Context context, Realm realm) throws ParseException {
+    public static RealmResults<Launch> buildPrevQueryAsync(Context context, Realm realm) throws ParseException {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
         ListPreferences listPreferences = ListPreferences.getInstance(context);
 
@@ -36,7 +36,7 @@ public class QueryBuilder {
         sDate = df.parse(start);
         eDate = df.parse(end);
 
-        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class).between("net", sDate, eDate).findAll().where();
+        RealmQuery<Launch> query = realm.where(Launch.class).between("net", sDate, eDate).findAll().where();
 
         Integer[] countryFilter = switchPreferences.getPrevCountryFiltered();
         Integer[] agencyFilter = switchPreferences.getPrevAgencyFiltered();
@@ -64,7 +64,7 @@ public class QueryBuilder {
         return query.findAllSortedAsync("net", Sort.DESCENDING);
     }
 
-    public static RealmResults<LaunchRealm> buildPrevQuery(Context context, Realm realm) throws ParseException {
+    public static RealmResults<Launch> buildPrevQuery(Context context, Realm realm) throws ParseException {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
         ListPreferences listPreferences = ListPreferences.getInstance(context);
 
@@ -79,7 +79,7 @@ public class QueryBuilder {
         sDate = df.parse(start);
         eDate = df.parse(end);
 
-        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class).between("net", sDate, eDate).findAll().where();
+        RealmQuery<Launch> query = realm.where(Launch.class).between("net", sDate, eDate).findAll().where();
 
         Integer[] countryFilter = switchPreferences.getPrevCountryFiltered();
         Integer[] agencyFilter = switchPreferences.getPrevAgencyFiltered();
@@ -107,12 +107,12 @@ public class QueryBuilder {
         return query.findAllSorted("net", Sort.DESCENDING);
     }
 
-    public static RealmResults<LaunchRealm> buildUpQueryAsync(Context context, Realm realm) {
+    public static RealmResults<Launch> buildUpQueryAsync(Context context, Realm realm) {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
 
         Date date = new Date();
 
-        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class).greaterThanOrEqualTo("net", date).findAll().where();
+        RealmQuery<Launch> query = realm.where(Launch.class).greaterThanOrEqualTo("net", date).findAll().where();
 
         Integer[] countryFilter = switchPreferences.getUpCountryFiltered();
         Integer[] agencyFilter = switchPreferences.getUpAgencyFiltered();
@@ -145,12 +145,12 @@ public class QueryBuilder {
         return query.findAllSortedAsync("net", Sort.ASCENDING);
     }
 
-    public static RealmResults<LaunchRealm> buildUpQuery(Context context, Realm realm) {
+    public static RealmResults<Launch> buildUpQuery(Context context, Realm realm) {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
 
         Date date = new Date();
 
-        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class).greaterThanOrEqualTo("net", date).findAll().where();
+        RealmQuery<Launch> query = realm.where(Launch.class).greaterThanOrEqualTo("net", date).findAll().where();
 
         Integer[] countryFilter = switchPreferences.getUpCountryFiltered();
         Integer[] agencyFilter = switchPreferences.getUpAgencyFiltered();
@@ -183,7 +183,7 @@ public class QueryBuilder {
         return query.findAllSorted("net", Sort.ASCENDING);
     }
 
-    private static RealmQuery<LaunchRealm> filterVehicle(RealmQuery<LaunchRealm> query, ArrayList<String> vehicleFilter) {
+    private static RealmQuery<Launch> filterVehicle(RealmQuery<Launch> query, ArrayList<String> vehicleFilter) {
         boolean firstGroup = true;
         for (String key : vehicleFilter) {
             if (key.contains("SLV")) {
@@ -200,7 +200,7 @@ public class QueryBuilder {
         return query;
     }
 
-    private static RealmQuery<LaunchRealm> filterLocation(RealmQuery<LaunchRealm> query, ArrayList<String> locationFilter) {
+    private static RealmQuery<Launch> filterLocation(RealmQuery<Launch> query, ArrayList<String> locationFilter) {
         boolean firstGroup = true;
         for (String key : locationFilter) {
             String[] parts = key.split(",");
@@ -219,7 +219,7 @@ public class QueryBuilder {
         return query;
     }
 
-    private static RealmQuery<LaunchRealm> filterAgency(RealmQuery<LaunchRealm> query, ArrayList<String> agencyFilter) {
+    private static RealmQuery<Launch> filterAgency(RealmQuery<Launch> query, ArrayList<String> agencyFilter) {
         boolean firstGroup = true;
         for (String key : agencyFilter) {
             Timber.v("Agency key: %s", key);
@@ -302,7 +302,7 @@ public class QueryBuilder {
         return query;
     }
 
-    private static RealmQuery<LaunchRealm> filterCountry(RealmQuery<LaunchRealm> query, ArrayList<String> countryFilter) {
+    private static RealmQuery<Launch> filterCountry(RealmQuery<Launch> query, ArrayList<String> countryFilter) {
         boolean firstGroup = true;
         for (String key : countryFilter) {
             Timber.v("Country key: %s", key);
@@ -327,11 +327,11 @@ public class QueryBuilder {
         return query;
     }
 
-    public static RealmResults<LaunchRealm> buildSwitchQueryAsync(Context context, Realm realm) {
+    public static RealmResults<Launch> buildSwitchQueryAsync(Context context, Realm realm) {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
         boolean first = true;
         Date date = new Date();
-        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class)
+        RealmQuery<Launch> query = realm.where(Launch.class)
                 .greaterThanOrEqualTo("net", date).beginGroup();
         if (switchPreferences.getSwitchNasa()) {
             first = false;
@@ -450,11 +450,11 @@ public class QueryBuilder {
         return query.endGroup().findAllSortedAsync("net", Sort.ASCENDING);
     }
 
-    public static RealmResults<LaunchRealm> buildSwitchQuery(Context context, Realm realm) {
+    public static RealmResults<Launch> buildSwitchQuery(Context context, Realm realm) {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
         boolean first = true;
         Date date = new Date();
-        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class)
+        RealmQuery<Launch> query = realm.where(Launch.class)
                 .greaterThanOrEqualTo("net", date).beginGroup();
         if (switchPreferences.getSwitchNasa()) {
             first = false;
@@ -573,11 +573,11 @@ public class QueryBuilder {
         return query.endGroup().findAllSorted("net", Sort.ASCENDING);
     }
 
-    public static RealmResults<LaunchRealm> buildSwitchQuery(Context context, Realm realm, boolean calendarState) {
+    public static RealmResults<Launch> buildSwitchQuery(Context context, Realm realm, boolean calendarState) {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
         boolean first = true;
         Date date = new Date();
-        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class)
+        RealmQuery<Launch> query = realm.where(Launch.class)
                 .greaterThanOrEqualTo("net", date).equalTo("syncCalendar", true).beginGroup();
         if (switchPreferences.getSwitchNasa()) {
             first = false;

@@ -16,7 +16,7 @@ import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
-import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.Products;
 import me.calebjones.spacelaunchnow.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.FileUtils;
@@ -84,7 +84,7 @@ public class DebugPresenter implements DebugContract.Presenter {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                RealmResults<LaunchRealm> results = realm.where(LaunchRealm.class).findAll();
+                RealmResults<Launch> results = realm.where(Launch.class).findAll();
                 results.deleteAllFromRealm();
             }
         });

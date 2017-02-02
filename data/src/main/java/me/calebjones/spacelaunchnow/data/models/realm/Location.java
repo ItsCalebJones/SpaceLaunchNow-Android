@@ -5,13 +5,13 @@ import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class LocationRealm extends RealmObject {
+public class Location extends RealmObject {
 
     @PrimaryKey
     private String primaryID;
     private Integer id;
     private String name;
-    private RealmList<PadRealm> pads = new RealmList<>();
+    private RealmList<Pad> pads = new RealmList<>();
 
     public Integer getId() {
         return id;
@@ -29,11 +29,11 @@ public class LocationRealm extends RealmObject {
         this.name = name;
     }
 
-    public RealmList<PadRealm> getPads() {
+    public RealmList<Pad> getPads() {
         return pads;
     }
 
-    public void setPads(RealmList<PadRealm> pads) {
+    public void setPads(RealmList<Pad> pads) {
         this.pads = pads;
     }
 

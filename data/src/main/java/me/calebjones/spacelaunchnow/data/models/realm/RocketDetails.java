@@ -3,7 +3,7 @@ package me.calebjones.spacelaunchnow.data.models.realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class RocketDetailsRealm extends RealmObject {
+public class RocketDetails extends RealmObject {
 
     private String InfoURL;
     private String WikiURL;

@@ -26,7 +26,7 @@ import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -36,7 +36,7 @@ import me.calebjones.spacelaunchnow.utils.Utils;
  */
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> implements FastScrollRecyclerView.SectionedAdapter {
     public int position;
-    private RealmList<LaunchRealm> launchList;
+    private RealmList<Launch> launchList;
     private Context mContext;
     private Calendar rightNow;
     private SharedPreferences sharedPref;
@@ -51,7 +51,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
         this.mContext = context;
     }
 
-    public void addItems(List<LaunchRealm> launchList) {
+    public void addItems(List<Launch> launchList) {
 
         if (this.launchList != null) {
             this.launchList.addAll(launchList);
@@ -87,7 +87,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        final LaunchRealm launchItem = launchList.get(i);
+        final Launch launchItem = launchList.get(i);
 
         String missionType;
         String title;
@@ -220,7 +220,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
         //React to click events.
         @Override
         public void onClick(View v) {
-            final LaunchRealm launch = launchList.get(getAdapterPosition());
+            final Launch launch = launchList.get(getAdapterPosition());
 
             Intent updateIntent = new Intent(mContext, LaunchDataService.class);
             updateIntent.setAction(Constants.ACTION_UPDATE_LAUNCH);
@@ -239,13 +239,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
         }
     }
 
-    public void animateTo(List<LaunchRealm> models) {
+    public void animateTo(List<Launch> models) {
         applyAndAnimateRemovals(models);
         applyAndAnimateAdditions(models);
         applyAndAnimateMovedItems(models);
     }
 
-    private void applyAndAnimateRemovals(List<LaunchRealm> newModels) {
+    private void applyAndAnimateRemovals(List<Launch> newModels) {
         for (int i = launchList.size() - 1; i >= 0; i--) {
             if (!newModels.contains(launchList.get(i))) {
                 removeItem(i);
@@ -253,18 +253,18 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
         }
     }
 
-    private void applyAndAnimateAdditions(List<LaunchRealm> newModels) {
+    private void applyAndAnimateAdditions(List<Launch> newModels) {
         for (int i = 0, count = newModels.size(); i < count; i++) {
-            final LaunchRealm model = newModels.get(i);
+            final Launch model = newModels.get(i);
             if (!launchList.contains(model)) {
                 addItem(i, model);
             }
         }
     }
 
-    private void applyAndAnimateMovedItems(List<LaunchRealm> newModels) {
+    private void applyAndAnimateMovedItems(List<Launch> newModels) {
         for (int toPosition = newModels.size() - 1; toPosition >= 0; toPosition--) {
-            final LaunchRealm model = newModels.get(toPosition);
+            final Launch model = newModels.get(toPosition);
             final int fromPosition = launchList.indexOf(model);
             if (fromPosition >= 0 && fromPosition != toPosition) {
                 moveItem(fromPosition, toPosition);
@@ -272,13 +272,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
         }
     }
 
-    public LaunchRealm removeItem(int position) {
-        LaunchRealm model = launchList.remove(position);
+    public Launch removeItem(int position) {
+        Launch model = launchList.remove(position);
         notifyItemRemoved(position);
         return model;
     }
 
-    public void addItem(int position, LaunchRealm model) {
+    public void addItem(int position, Launch model) {
         launchList.add(position, model);
         notifyItemInserted(position);
     }

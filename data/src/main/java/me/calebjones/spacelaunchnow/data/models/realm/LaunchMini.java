@@ -7,7 +7,7 @@ import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class LaunchRealmMini extends RealmObject {
+public class LaunchMini extends RealmObject {
 
     @PrimaryKey
     private Integer id;

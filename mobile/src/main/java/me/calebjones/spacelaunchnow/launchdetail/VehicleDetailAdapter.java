@@ -25,8 +25,8 @@ import io.realm.Realm;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.realm.RocketDetailsRealm;
-import me.calebjones.spacelaunchnow.data.models.realm.RocketRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.Rocket;
+import me.calebjones.spacelaunchnow.data.models.realm.RocketDetails;
 import me.calebjones.spacelaunchnow.imageviewer.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
@@ -37,9 +37,9 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
     private Activity activity;
     private Calendar rightNow;
     private SharedPreferences sharedPref;
-    private RealmList<RocketRealm> items;
+    private RealmList<Rocket> items;
     private static ListPreferences sharedPreference;
-    private RocketDetailsRealm launchVehicle;
+    private RocketDetails launchVehicle;
     private int defaultBackgroundcolor;
     private static final int SCALE_DELAY = 30;
     private int lastPosition = -1;
@@ -56,7 +56,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
         this.activity = activity;
     }
 
-    public void addItems(List<RocketRealm> items) {
+    public void addItems(List<Rocket> items) {
         if (this.items != null) {
             this.items.addAll(items);
         } else {
@@ -91,9 +91,9 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        final RocketRealm item = items.get(holder.getAdapterPosition());
+        final Rocket item = items.get(holder.getAdapterPosition());
 
-        launchVehicle = new RocketDetailsRealm();
+        launchVehicle = new RocketDetails();
 
         String query;
         if (item.getName().contains("Space Shuttle")) {
@@ -103,7 +103,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
         }
 
 
-        launchVehicle = realm.where(RocketDetailsRealm.class).contains("name", query).findFirst();
+        launchVehicle = realm.where(RocketDetails.class).contains("name", query).findFirst();
 
         if (launchVehicle != null) {
             holder.vehicle_spec_view.setVisibility(View.VISIBLE);

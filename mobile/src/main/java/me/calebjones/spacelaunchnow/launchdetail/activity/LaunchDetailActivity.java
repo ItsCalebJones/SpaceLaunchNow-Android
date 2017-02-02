@@ -35,8 +35,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
-import me.calebjones.spacelaunchnow.data.models.realm.RocketDetailsRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
+import me.calebjones.spacelaunchnow.data.models.realm.RocketDetails;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.launchdetail.fragments.AgencyDetailFragment;
 import me.calebjones.spacelaunchnow.launchdetail.fragments.MissionDetailFragment;
@@ -66,7 +66,7 @@ public class LaunchDetailActivity extends BaseActivity
     private Calendar rightNow = Calendar.getInstance();
 
     public String response;
-    public LaunchRealm launch;
+    public Launch launch;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -118,7 +118,7 @@ public class LaunchDetailActivity extends BaseActivity
 
         if (type.equals("launch")) {
             int id = mIntent.getIntExtra("launchID", 0);
-            launch = getRealm().where(LaunchRealm.class).equalTo("id", id).findFirst();
+            launch = getRealm().where(Launch.class).equalTo("id", id).findFirst();
         }
 
         if (launch != null && launch.getRocket() != null) {
@@ -309,14 +309,14 @@ public class LaunchDetailActivity extends BaseActivity
         super.onResume();
     }
 
-    private void getLaunchVehicle(LaunchRealm result, boolean setImage) {
+    private void getLaunchVehicle(Launch result, boolean setImage) {
         String query;
         if (result.getRocket().getName().contains("Space Shuttle")) {
             query = "Space Shuttle";
         } else {
             query = result.getRocket().getName();
         }
-        RocketDetailsRealm launchVehicle = getRealm().where(RocketDetailsRealm.class)
+        RocketDetails launchVehicle = getRealm().where(RocketDetails.class)
                 .contains("name", query)
                 .findFirst();
         if (setImage) {
@@ -345,7 +345,7 @@ public class LaunchDetailActivity extends BaseActivity
         scanner.close();
     }
 
-    public LaunchRealm getLaunch() {
+    public Launch getLaunch() {
         return launch;
     }
 

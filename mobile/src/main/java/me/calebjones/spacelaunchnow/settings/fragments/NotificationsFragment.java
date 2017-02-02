@@ -25,7 +25,7 @@ import io.realm.Realm;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.main.MainActivity;
 import timber.log.Timber;
 
@@ -80,7 +80,7 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
                 .getSystemService(Context.NOTIFICATION_SERVICE);
 
         Realm realm = Realm.getDefaultInstance();
-        LaunchRealm launch = realm.where(LaunchRealm.class)
+        Launch launch = realm.where(Launch.class)
                 .greaterThan("net", new Date())
                 .findFirst();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());

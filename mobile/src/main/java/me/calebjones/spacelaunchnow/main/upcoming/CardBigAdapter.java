@@ -36,7 +36,7 @@ import java.util.TimeZone;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.launchdetail.activity.LaunchDetailActivity;
@@ -49,7 +49,7 @@ import timber.log.Timber;
 public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHolder> implements SectionIndexer {
 
     private String launchDate;
-    private RealmList<LaunchRealm> launchList;
+    private RealmList<Launch> launchList;
     private Context context;
     private Calendar rightNow;
     private SharedPreferences sharedPref;
@@ -75,7 +75,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         accentColor = ContextCompat.getColor(context, R.color.colorAccent);
     }
 
-    public void addItems(List<LaunchRealm> launchList) {
+    public void addItems(List<Launch> launchList) {
         if (this.launchList != null) {
             this.launchList.addAll(launchList);
         } else {
@@ -113,7 +113,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        LaunchRealm launchItem = launchList.get(i);
+        Launch launchItem = launchList.get(i);
 
         String title;
         if (launchItem.isValid()) {
@@ -513,7 +513,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
             final int position = getAdapterPosition();
             Timber.d("onClick at %s", position);
 
-            final LaunchRealm launch = launchList.get(position);
+            final Launch launch = launchList.get(position);
             Intent sendIntent = new Intent();
 
             SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");

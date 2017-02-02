@@ -59,10 +59,10 @@ import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
 import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
-import me.calebjones.spacelaunchnow.data.models.realm.PadRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
+import me.calebjones.spacelaunchnow.data.models.realm.Pad;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
-import me.calebjones.spacelaunchnow.data.models.realm.RocketDetailsRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.RocketDetails;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
@@ -79,8 +79,8 @@ public class SummaryDetailFragment extends BaseFragment {
     private static ListPreferences sharedPreference;
     private Context context;
 
-    public static LaunchRealm launch;
-    private RocketDetailsRealm launchVehicle;
+    public static Launch launch;
+    private RocketDetails launchVehicle;
     private boolean nightMode;
 
     @BindView(R.id.map_view_summary)
@@ -218,7 +218,7 @@ public class SummaryDetailFragment extends BaseFragment {
     private void fetchPastWeather() {
         if (launch.getLocation().getPads().size() > 0) {
 
-            PadRealm pad = launch.getLocation().getPads().get(0);
+            Pad pad = launch.getLocation().getPads().get(0);
 
             double latitude = pad.getLatitude();
             double longitude = pad.getLongitude();
@@ -257,7 +257,7 @@ public class SummaryDetailFragment extends BaseFragment {
         // Sample WeatherLib client init
         if (launch.getLocation().getPads().size() > 0) {
 
-            PadRealm pad = launch.getLocation().getPads().get(0);
+            Pad pad = launch.getLocation().getPads().get(0);
 
             double latitude = pad.getLatitude();
             double longitude = pad.getLongitude();
@@ -750,7 +750,7 @@ public class SummaryDetailFragment extends BaseFragment {
         }
     }
 
-    private void getLaunchVehicle(LaunchRealm vehicle) {
+    private void getLaunchVehicle(Launch vehicle) {
         String query;
         if (vehicle.getRocket().getName().contains("Space Shuttle")) {
             query = "Space Shuttle";
@@ -758,7 +758,7 @@ public class SummaryDetailFragment extends BaseFragment {
             query = vehicle.getRocket().getName();
         }
 
-        launchVehicle = getRealm().where(RocketDetailsRealm.class).contains("name", query).findFirst();
+        launchVehicle = getRealm().where(RocketDetails.class).contains("name", query).findFirst();
     }
 
     private void setWindowStamp() {

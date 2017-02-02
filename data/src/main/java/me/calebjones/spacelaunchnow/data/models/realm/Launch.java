@@ -7,7 +7,7 @@ import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class LaunchRealm extends RealmObject {
+public class Launch extends RealmObject {
 
     private String name;
     private Date windowstart;
@@ -36,9 +36,9 @@ public class LaunchRealm extends RealmObject {
     private Integer tbdtime;
     private Integer eventID;
 
-    private LocationRealm location;
+    private Location location;
 
-    private RocketRealm rocket;
+    private Rocket rocket;
 
     private Date startDate;
     private Date endDate;
@@ -78,7 +78,7 @@ public class LaunchRealm extends RealmObject {
         this.userToggledCalendar = userToggledCalendar;
     }
 
-    private RealmList<MissionRealm> missions;
+    private RealmList<Mission> missions;
 
     public long getWidgetRefresh() {
         return widgetRefresh;
@@ -256,27 +256,27 @@ public class LaunchRealm extends RealmObject {
         this.tbdtime = tbdtime;
     }
 
-    public LocationRealm getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public void setLocation(LocationRealm location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 
-    public RocketRealm getRocket() {
+    public Rocket getRocket() {
         return rocket;
     }
 
-    public void setRocket(RocketRealm rocket) {
+    public void setRocket(Rocket rocket) {
         this.rocket = rocket;
     }
 
-    public RealmList<MissionRealm> getMissions() {
+    public RealmList<Mission> getMissions() {
         return missions;
     }
 
-    public void setMissions(RealmList<MissionRealm> missions) {
+    public void setMissions(RealmList<Mission> missions) {
         this.missions = missions;
     }
 

@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.realm.MissionRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.Mission;
 import me.calebjones.spacelaunchnow.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.main.MainActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -33,7 +33,7 @@ import timber.log.Timber;
  */
 public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHolder> implements FastScrollRecyclerView.SectionedAdapter {
     public int position;
-    private RealmList<MissionRealm> missionList;
+    private RealmList<Mission> missionList;
 
     private Context mContext;
     private Context aContext;
@@ -47,7 +47,7 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
         this.aContext = aContext;
     }
 
-    public void addItems(List<MissionRealm> missionList) {
+    public void addItems(List<Mission> missionList) {
 
         if (this.missionList == null) {
             this.missionList.addAll(missionList);
@@ -81,7 +81,7 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        final MissionRealm mission = missionList.get(holder.getAdapterPosition());
+        final Mission mission = missionList.get(holder.getAdapterPosition());
 
         //Retrieve missionType
         Timber.v("Position: %s - Type - %s", holder.getAdapterPosition(), mission.getTypeName());
@@ -217,13 +217,13 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
         }
     }
 
-    public void animateTo(List<MissionRealm> models) {
+    public void animateTo(List<Mission> models) {
         applyAndAnimateRemovals(models);
         applyAndAnimateAdditions(models);
         applyAndAnimateMovedItems(models);
     }
 
-    private void applyAndAnimateRemovals(List<MissionRealm> newModels) {
+    private void applyAndAnimateRemovals(List<Mission> newModels) {
         for (int i = missionList.size() - 1; i >= 0; i--) {
             if (!newModels.contains(missionList.get(i))) {
                 removeItem(i);
@@ -231,18 +231,18 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
         }
     }
 
-    private void applyAndAnimateAdditions(List<MissionRealm> newModels) {
+    private void applyAndAnimateAdditions(List<Mission> newModels) {
         for (int i = 0, count = newModels.size(); i < count; i++) {
-            final MissionRealm model = newModels.get(i);
+            final Mission model = newModels.get(i);
             if (!missionList.contains(model)) {
                 addItem(i, model);
             }
         }
     }
 
-    private void applyAndAnimateMovedItems(List<MissionRealm> newModels) {
+    private void applyAndAnimateMovedItems(List<Mission> newModels) {
         for (int toPosition = newModels.size() - 1; toPosition >= 0; toPosition--) {
-            final MissionRealm model = newModels.get(toPosition);
+            final Mission model = newModels.get(toPosition);
             final int fromPosition = missionList.indexOf(model);
             if (fromPosition >= 0 && fromPosition != toPosition) {
                 moveItem(fromPosition, toPosition);
@@ -250,13 +250,13 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
         }
     }
 
-    public MissionRealm removeItem(int position) {
-        MissionRealm model = missionList.remove(position);
+    public Mission removeItem(int position) {
+        Mission model = missionList.remove(position);
         notifyItemRemoved(position);
         return model;
     }
 
-    public void addItem(int position, MissionRealm model) {
+    public void addItem(int position, Mission model) {
         missionList.add(position, model);
         notifyItemInserted(position);
     }

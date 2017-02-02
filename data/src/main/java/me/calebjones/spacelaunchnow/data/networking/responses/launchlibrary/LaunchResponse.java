@@ -1,11 +1,11 @@
 package me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary;
 
-import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 
 public class LaunchResponse extends BaseResponse {
-    private LaunchRealm[] launches;
+    private Launch[] launches;
 
-    public LaunchRealm[] getLaunches() {
+    public Launch[] getLaunches() {
         return launches;
     }
 }

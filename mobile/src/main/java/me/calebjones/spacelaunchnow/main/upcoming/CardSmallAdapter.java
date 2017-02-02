@@ -29,7 +29,7 @@ import java.util.TimeZone;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.launchdetail.activity.LaunchDetailActivity;
@@ -42,7 +42,7 @@ import timber.log.Timber;
 public class CardSmallAdapter extends RecyclerView.Adapter<CardSmallAdapter.ViewHolder> {
     public int position;
     private String launchDate;
-    private RealmList<LaunchRealm> launchList;
+    private RealmList<Launch> launchList;
     private Context mContext;
     private Calendar rightNow;
     private SharedPreferences sharedPref;
@@ -61,7 +61,7 @@ public class CardSmallAdapter extends RecyclerView.Adapter<CardSmallAdapter.View
         accentColor = ContextCompat.getColor(context, R.color.colorAccent);
     }
 
-    public void addItems(List<LaunchRealm> launchList) {
+    public void addItems(List<Launch> launchList) {
         if (this.launchList != null) {
             this.launchList.addAll(launchList);
         } else {
@@ -108,7 +108,7 @@ public class CardSmallAdapter extends RecyclerView.Adapter<CardSmallAdapter.View
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        final LaunchRealm launchItem = launchList.get(i);
+        final Launch launchItem = launchList.get(i);
 
         position = i;
 
@@ -348,7 +348,7 @@ public class CardSmallAdapter extends RecyclerView.Adapter<CardSmallAdapter.View
             final int position = getAdapterPosition();
             Timber.d("onClick at %s", position);
 
-            final LaunchRealm launch = launchList.get(position);
+            final Launch launch = launchList.get(position);
 
             SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
             df.toLocalizedPattern();

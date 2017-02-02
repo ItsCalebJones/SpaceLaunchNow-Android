@@ -3,7 +3,7 @@ package me.calebjones.spacelaunchnow.data.models.realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class FamilyRealm extends RealmObject {
+public class Family extends RealmObject {
 
     @PrimaryKey
     private Integer id;

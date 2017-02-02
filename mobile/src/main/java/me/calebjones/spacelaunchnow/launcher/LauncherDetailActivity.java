@@ -29,10 +29,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.data.models.realm.Rocket;
 import me.calebjones.spacelaunchnow.launchdetail.VehicleDetailAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.natives.Launcher;
-import me.calebjones.spacelaunchnow.data.models.realm.RocketRealm;
 import me.calebjones.spacelaunchnow.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -52,7 +52,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
     private ImageView detail_profile_backdrop;
     private CircleImageView detail_profile_image;
     private VehicleDetailAdapter adapter;
-    private RealmResults<RocketRealm> rocketLaunches;
+    private RealmResults<Rocket> rocketLaunches;
     private AppBarLayout appBarLayout;
     private int mMaxScrollSize;
 
@@ -162,7 +162,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
 
         String name = launcher.getName();
         String agency = launcher.getAgency();
-        rocketLaunches = getRealm().where(RocketRealm.class).contains("family.name", name).or().contains("familyname", name).findAll();
+        rocketLaunches = getRealm().where(Rocket.class).contains("family.name", name).or().contains("familyname", name).findAll();
         detail_rocket.setText(name);
         detail_vehicle_agency.setText(agency);
         adapter.clear();

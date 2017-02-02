@@ -17,9 +17,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
-import me.calebjones.spacelaunchnow.data.models.realm.MissionRealm;
-import me.calebjones.spacelaunchnow.data.models.realm.RocketDetailsRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
+import me.calebjones.spacelaunchnow.data.models.realm.Mission;
+import me.calebjones.spacelaunchnow.data.models.realm.RocketDetails;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -29,8 +29,8 @@ public class MissionDetailFragment extends BaseFragment {
     private SharedPreferences sharedPref;
     private static ListPreferences sharedPreference;
     private Context context;
-    public static LaunchRealm detailLaunch;
-    private RocketDetailsRealm launchVehicle;
+    public static Launch detailLaunch;
+    private RocketDetails launchVehicle;
     @BindView(R.id.vehicle_spec_view)
     View vehicleSpecView;
     @BindView(R.id.payload_type)
@@ -96,7 +96,7 @@ public class MissionDetailFragment extends BaseFragment {
         }
 
         if (detailLaunch.getMissions().size() > 0) {
-            final MissionRealm mission = getRealm().where(MissionRealm.class)
+            final Mission mission = getRealm().where(Mission.class)
                     .equalTo("id", detailLaunch.getMissions().get(0).getId())
                     .findFirst();
 
@@ -156,7 +156,7 @@ public class MissionDetailFragment extends BaseFragment {
         }
     }
 
-    private void getLaunchVehicle(LaunchRealm vehicle) {
+    private void getLaunchVehicle(Launch vehicle) {
         String query;
         if (vehicle.getRocket().getName().contains("Space Shuttle")) {
             query = "Space Shuttle";
@@ -164,7 +164,7 @@ public class MissionDetailFragment extends BaseFragment {
             query = vehicle.getRocket().getName();
         }
 
-        launchVehicle = getRealm().where(RocketDetailsRealm.class).contains("name", query).findFirst();
+        launchVehicle = getRealm().where(RocketDetails.class).contains("name", query).findFirst();
     }
 
     @Override

@@ -1,11 +1,11 @@
 package me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary;
 
-import me.calebjones.spacelaunchnow.data.models.realm.LocationRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.Location;
 
 public class LocationResponse extends BaseResponse{
-    private LocationRealm[] locations;
+    private Location[] locations;
 
-    public LocationRealm[] getLocations() {
+    public Location[] getLocations() {
         return locations;
     }
 }

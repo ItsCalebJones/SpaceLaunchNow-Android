@@ -1,11 +1,11 @@
 package me.calebjones.spacelaunchnow.data.networking.responses.base;
 
-import me.calebjones.spacelaunchnow.data.models.realm.RocketDetailsRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.RocketDetails;
 
 public class VehicleResponse {
-    private RocketDetailsRealm[] vehicles;
+    private RocketDetails[] vehicles;
 
-    public RocketDetailsRealm[] getVehicles() {
+    public RocketDetails[] getVehicles() {
         return vehicles;
     }
 }

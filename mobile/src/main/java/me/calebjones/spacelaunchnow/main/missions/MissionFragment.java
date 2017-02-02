@@ -35,7 +35,7 @@ import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.realm.MissionRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.Mission;
 import me.calebjones.spacelaunchnow.content.services.MissionDataService;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import timber.log.Timber;
@@ -47,7 +47,7 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
     private MissionAdapter adapter;
     private StaggeredGridLayoutManager staggeredLayoutManager;
     private LinearLayoutManager layoutManager;
-    private RealmResults<MissionRealm> missionList;
+    private RealmResults<Mission> missionList;
     private ListPreferences sharedPreference;
     private CoordinatorLayout coordinatorLayout;
     private android.content.SharedPreferences SharedPreferences;
@@ -89,9 +89,9 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
         return view;
     }
 
-    private RealmChangeListener callback = new RealmChangeListener<RealmResults<MissionRealm>>() {
+    private RealmChangeListener callback = new RealmChangeListener<RealmResults<Mission>>() {
         @Override
-        public void onChange(RealmResults<MissionRealm> results) {
+        public void onChange(RealmResults<Mission> results) {
             Timber.v("Data changed - size: %s", results.size());
             adapter.clear();
 
@@ -107,7 +107,7 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
     
     private void displayMissions() {
         showLoading();
-        missionList = getRealm().where(MissionRealm.class)
+        missionList = getRealm().where(Mission.class)
                 .findAllSortedAsync("name", Sort.ASCENDING);
         missionList.addChangeListener(callback);
     }
@@ -223,7 +223,7 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
     @Override
     public boolean onQueryTextChange(String query) {
         // Here is where we are going to implement our filter logic
-        final List<MissionRealm> filteredModelList = filter(missionList, query);
+        final List<Mission> filteredModelList = filter(missionList, query);
         adapter.animateTo(filteredModelList);
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -239,11 +239,11 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
         return false;
     }
 
-    private List<MissionRealm> filter(List<MissionRealm> models, String query) {
+    private List<Mission> filter(List<Mission> models, String query) {
         query = query.toLowerCase();
 
-        final List<MissionRealm> filteredModelList = new ArrayList<>();
-        for (MissionRealm model : models) {
+        final List<Mission> filteredModelList = new ArrayList<>();
+        for (Mission model : models) {
             final String missionName = model.getName().toLowerCase();
             final String summaryText = model.getDescription().toLowerCase();
 

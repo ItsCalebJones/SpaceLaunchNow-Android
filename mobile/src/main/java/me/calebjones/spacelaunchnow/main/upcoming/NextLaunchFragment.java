@@ -54,7 +54,7 @@ import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
-import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.debug.DebugActivity;
 import me.calebjones.spacelaunchnow.main.MainActivity;
 import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
@@ -100,7 +100,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     private View no_data;
     private FloatingActionButton FABMenu;
     private Menu mMenu;
-    private RealmResults<LaunchRealm> launchRealms;
+    private RealmResults<Launch> launchRealms;
     private ListPreferences sharedPreference;
     private SwitchPreferences switchPreferences;
     private SharedPreferences sharedPref;
@@ -287,9 +287,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         }
     }
 
-    private RealmChangeListener callback = new RealmChangeListener<RealmResults<LaunchRealm>>() {
+    private RealmChangeListener callback = new RealmChangeListener<RealmResults<Launch>>() {
         @Override
-        public void onChange(RealmResults<LaunchRealm> results) {
+        public void onChange(RealmResults<Launch> results) {
             Timber.v("Data changed - size: %s", results.size());
 
             int preferredCount = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
@@ -328,7 +328,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         Date date = new Date();
 
         if (switchPreferences.getAllSwitch()) {
-            launchRealms = getRealm().where(LaunchRealm.class)
+            launchRealms = getRealm().where(Launch.class)
                     .greaterThanOrEqualTo("net", date)
                     .findAllSortedAsync("net", Sort.ASCENDING);
             launchRealms.addChangeListener(callback);

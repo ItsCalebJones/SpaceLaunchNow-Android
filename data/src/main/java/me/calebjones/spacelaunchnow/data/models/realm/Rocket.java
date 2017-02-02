@@ -5,7 +5,7 @@ import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class RocketRealm extends RealmObject {
+public class Rocket extends RealmObject {
 
     @PrimaryKey
     private Integer id;
@@ -15,8 +15,8 @@ public class RocketRealm extends RealmObject {
     private String infoURL;
     private String wikiURL;
     private String imageURL;
-    private FamilyRealm family;
-    private RealmList<AgencyRealm> agencies = new RealmList<>();
+    private Family family;
+    private RealmList<Agency> agencies = new RealmList<>();
 
     public Integer getId() {
         return id;
@@ -58,11 +58,11 @@ public class RocketRealm extends RealmObject {
         this.configuration = configuration;
     }
 
-    public FamilyRealm getFamily() {
+    public Family getFamily() {
         return family;
     }
 
-    public void setFamily(FamilyRealm family) {
+    public void setFamily(Family family) {
         this.family = family;
     }
 
@@ -82,11 +82,11 @@ public class RocketRealm extends RealmObject {
         this.imageURL = imageURL;
     }
 
-    public RealmList<AgencyRealm> getAgencies() {
+    public RealmList<Agency> getAgencies() {
         return agencies;
     }
 
-    public void setAgencies(RealmList<AgencyRealm> agencies) {
+    public void setAgencies(RealmList<Agency> agencies) {
         this.agencies = agencies;
     }
 

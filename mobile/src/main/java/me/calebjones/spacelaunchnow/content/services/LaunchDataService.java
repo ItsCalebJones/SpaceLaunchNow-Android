@@ -21,11 +21,11 @@ import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryRequestInterface;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateJob;
 import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchNotification;
-import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.data.models.realm.UpdateRecord;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
@@ -275,21 +275,21 @@ public class LaunchDataService extends BaseService {
     }
 
     private static void syncNotifiers(Context context) {
-        RealmResults<LaunchRealm> launchRealms;
+        RealmResults<Launch> launchRealms;
         Date date = new Date();
 
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
         Realm mRealm = Realm.getDefaultInstance();
 
         if (switchPreferences.getAllSwitch()) {
-            launchRealms = mRealm.where(LaunchRealm.class)
+            launchRealms = mRealm.where(Launch.class)
                     .greaterThanOrEqualTo("net", date)
                     .findAllSorted("net", Sort.ASCENDING);
         } else {
             launchRealms = QueryBuilder.buildSwitchQuery(context, mRealm);
         }
 
-        for (final LaunchRealm launchrealm : launchRealms) {
+        for (final Launch launchrealm : launchRealms) {
             if (!launchrealm.isUserToggledNotifiable() && !launchrealm.isNotifiable()) {
                 mRealm.executeTransaction(new Realm.Transaction() {
                     @Override
@@ -305,7 +305,7 @@ public class LaunchDataService extends BaseService {
         LibraryRequestInterface request = getRetrofit().create(LibraryRequestInterface.class);
         Call<LaunchResponse> call;
         Response<LaunchResponse> launchResponse;
-        RealmList<LaunchRealm> items = new RealmList<>();
+        RealmList<Launch> items = new RealmList<>();
 
         Realm mRealm = Realm.getDefaultInstance();
 
@@ -333,7 +333,7 @@ public class LaunchDataService extends BaseService {
                     throw new IOException(launchResponse.errorBody().string());
                 }
             }
-            for (LaunchRealm item : items) {
+            for (Launch item : items) {
                 item.getLocation().setPrimaryID();
             }
             mRealm.beginTransaction();
@@ -383,7 +383,7 @@ public class LaunchDataService extends BaseService {
         LibraryRequestInterface request = getRetrofit().create(LibraryRequestInterface.class);
         Call<LaunchResponse> call;
         Response<LaunchResponse> launchResponse;
-        RealmList<LaunchRealm> items = new RealmList<>();
+        RealmList<Launch> items = new RealmList<>();
 
         Realm mRealm = Realm.getDefaultInstance();
 
@@ -411,9 +411,9 @@ public class LaunchDataService extends BaseService {
                     throw new IOException(launchResponse.errorBody().string());
                 }
             }
-            for (LaunchRealm item : items) {
+            for (Launch item : items) {
                 mRealm.beginTransaction();
-                LaunchRealm previous = mRealm.where(LaunchRealm.class)
+                Launch previous = mRealm.where(Launch.class)
                         .equalTo("id", item.getId())
                         .findFirst();
                 if (previous != null) {
@@ -481,7 +481,7 @@ public class LaunchDataService extends BaseService {
         LibraryRequestInterface request = getRetrofit().create(LibraryRequestInterface.class);
         Call<LaunchResponse> call;
         Response<LaunchResponse> launchResponse;
-        RealmList<LaunchRealm> items = new RealmList<>();
+        RealmList<Launch> items = new RealmList<>();
 
         Realm mRealm = Realm.getDefaultInstance();
 
@@ -509,8 +509,8 @@ public class LaunchDataService extends BaseService {
                     throw new IOException(launchResponse.errorBody().string());
                 }
             }
-            for (LaunchRealm item : items) {
-                LaunchRealm previous = mRealm.where(LaunchRealm.class)
+            for (Launch item : items) {
+                Launch previous = mRealm.where(Launch.class)
                         .equalTo("id", item.getId())
                         .findFirst();
                 if (previous != null) {
@@ -574,7 +574,7 @@ public class LaunchDataService extends BaseService {
         LibraryRequestInterface request = getRetrofit().create(LibraryRequestInterface.class);
         Call<LaunchResponse> call;
         Response<LaunchResponse> launchResponse;
-        RealmList<LaunchRealm> items = new RealmList<>();
+        RealmList<Launch> items = new RealmList<>();
 
         Realm mRealm = Realm.getDefaultInstance();
 
@@ -592,8 +592,8 @@ public class LaunchDataService extends BaseService {
             } else {
                 throw new IOException();
             }
-            for (LaunchRealm item : items) {
-                LaunchRealm previous = mRealm.where(LaunchRealm.class)
+            for (Launch item : items) {
+                Launch previous = mRealm.where(Launch.class)
                         .equalTo("id", item.getId())
                         .findFirst();
                 if (previous != null) {
@@ -680,9 +680,9 @@ public class LaunchDataService extends BaseService {
         try {
             launchResponse = call.execute();
             if (launchResponse.isSuccessful()) {
-                RealmList<LaunchRealm> items = new RealmList<>(launchResponse.body().getLaunches());
-                for (LaunchRealm item : items) {
-                    LaunchRealm previous = mRealm.where(LaunchRealm.class)
+                RealmList<Launch> items = new RealmList<>(launchResponse.body().getLaunches());
+                for (Launch item : items) {
+                    Launch previous = mRealm.where(Launch.class)
                             .equalTo("id", item.getId())
                             .findFirst();
                     if (previous != null) {

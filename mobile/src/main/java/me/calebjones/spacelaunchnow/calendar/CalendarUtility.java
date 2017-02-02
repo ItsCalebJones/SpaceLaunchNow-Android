@@ -28,7 +28,7 @@ import it.macisamuele.calendarprovider.EventInfo;
 import me.calebjones.spacelaunchnow.calendar.model.Calendar;
 import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
 import me.calebjones.spacelaunchnow.calendar.model.Event;
-import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import timber.log.Timber;
 
 // these imports are used in the following code
@@ -49,7 +49,7 @@ public class CalendarUtility {
             CalendarContract.Calendars.OWNER_ACCOUNT
     };
 
-    public Integer addEvent(Context context, LaunchRealm launch) {
+    public Integer addEvent(Context context, Launch launch) {
         Timber.v("Adding launch event: %s", launch.getName());
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
@@ -102,7 +102,7 @@ public class CalendarUtility {
         return id;
     }
 
-    public boolean updateEvent(Context context, LaunchRealm launch) {
+    public boolean updateEvent(Context context, Launch launch) {
         Timber.v("Updating launch event: %s", launch.getName());
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
 
@@ -172,7 +172,7 @@ public class CalendarUtility {
         } return false;
     }
 
-    public int deleteEvent(Context context, LaunchRealm launch) {
+    public int deleteEvent(Context context, Launch launch) {
         Timber.v("Deleting launch event: %s", launch.getName());
         int iNumRowsDeleted = 0;
 
@@ -234,7 +234,7 @@ public class CalendarUtility {
             for (EventInfo eventInfo : EventInfo.getAllEvents(context)) {
                 if (eventInfo != null & eventInfo.getDescription() !=null && eventInfo.getDescription().contains(queryStr)) {
                     if (eventInfo.getId() != null) {
-                        LaunchRealm launchRealm = realm.where(LaunchRealm.class).equalTo("eventID", eventInfo.getId()).findFirst();
+                        Launch launchRealm = realm.where(Launch.class).equalTo("eventID", eventInfo.getId()).findFirst();
                         if (launchRealm == null) {
                             deleteEvent(context, eventInfo.getId());
                         }

@@ -4,7 +4,7 @@ package me.calebjones.spacelaunchnow.data.models.realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class MissionRealm extends RealmObject {
+public class Mission extends RealmObject {
 
     @PrimaryKey
     private Integer id;
@@ -14,7 +14,7 @@ public class MissionRealm extends RealmObject {
     private String infoURL;
     private String wikiURL;
     private String typeName;
-    private LaunchRealmMini launch;
+    private LaunchMini launch;
 
     public Integer getId() {
         return id;
@@ -32,11 +32,11 @@ public class MissionRealm extends RealmObject {
         this.id = id;
     }
 
-    public LaunchRealmMini getLaunch() {
+    public LaunchMini getLaunch() {
         return launch;
     }
 
-    public void setLaunch(LaunchRealmMini launch) {
+    public void setLaunch(LaunchMini launch) {
         this.launch = launch;
     }
 

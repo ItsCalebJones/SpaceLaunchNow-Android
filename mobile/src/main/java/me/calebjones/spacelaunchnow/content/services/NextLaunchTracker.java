@@ -39,8 +39,8 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.NextLaunchJob;
 import me.calebjones.spacelaunchnow.content.models.Constants;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchNotification;
-import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
 import me.calebjones.spacelaunchnow.main.MainActivity;
 import me.calebjones.spacelaunchnow.widget.LaunchCardCompactWidgetProvider;
 import me.calebjones.spacelaunchnow.widget.LaunchTimerWidgetProvider;
@@ -51,14 +51,14 @@ import timber.log.Timber;
 public class NextLaunchTracker extends IntentService {
 
     private GcmNetworkManager mGcmNetworkManager;
-    private LaunchRealm nextLaunch;
+    private Launch nextLaunch;
     private boolean wear = false;
     private SharedPreferences sharedPref;
     private ListPreferences listPreferences;
     private SwitchPreferences switchPreferences;
     private Calendar rightNow;
     private AlarmManager alarmManager;
-    private RealmResults<LaunchRealm> launchRealms;
+    private RealmResults<Launch> launchRealms;
     private long interval;
 
     private GoogleApiClient mGoogleApiClient;
@@ -96,7 +96,7 @@ public class NextLaunchTracker extends IntentService {
         dateDay = calDay.getTime();
 
         if (switchPreferences.getAllSwitch()) {
-            launchRealms = realm.where(LaunchRealm.class)
+            launchRealms = realm.where(Launch.class)
                     .between("net", date, dateDay)
                     .findAllSorted("net", Sort.ASCENDING);
         } else {
@@ -104,7 +104,7 @@ public class NextLaunchTracker extends IntentService {
         }
 
         if (launchRealms.size() > 0) {
-            for (LaunchRealm realm : launchRealms) {
+            for (Launch realm : launchRealms) {
                 checkNextLaunches(realm);
             }
         } else {
@@ -141,7 +141,7 @@ public class NextLaunchTracker extends IntentService {
 
     private void filterLaunchRealm(Date date, Date dateDay, Realm realm) {
         boolean first = true;
-        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class)
+        RealmQuery<Launch> query = realm.where(Launch.class)
                 .between("net", date, dateDay)
                 .beginGroup();
         if (switchPreferences.getSwitchNasa()) {
@@ -261,9 +261,9 @@ public class NextLaunchTracker extends IntentService {
         launchRealms = query.endGroup().findAllSorted("net", Sort.ASCENDING);
     }
 
-    private LaunchRealm filterLaunchRealm(Date date, Realm realm) {
+    private Launch filterLaunchRealm(Date date, Realm realm) {
         boolean first = true;
-        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class)
+        RealmQuery<Launch> query = realm.where(Launch.class)
                 .greaterThan("net", date)
                 .beginGroup();
         if (switchPreferences.getSwitchNasa()) {
@@ -383,7 +383,7 @@ public class NextLaunchTracker extends IntentService {
         return query.endGroup().findFirst();
     }
 
-    private void checkNextLaunches(LaunchRealm launch) {
+    private void checkNextLaunches(Launch launch) {
         if (launch != null) {
             checkStatus(launch);
         }
@@ -397,7 +397,7 @@ public class NextLaunchTracker extends IntentService {
         CalendarSyncService.startActionSyncAll(this);
     }
 
-    private void checkStatus(final LaunchRealm launch) {
+    private void checkStatus(final Launch launch) {
         if (launch != null && launch.getNetstamp() > 0) {
 
             LaunchNotification notification = realm.where(LaunchNotification.class).equalTo("id", launch.getId()).findFirst();
@@ -504,7 +504,7 @@ public class NextLaunchTracker extends IntentService {
         }
     }
 
-    private void notifyUserImminent(LaunchRealm launch, int minutes) {
+    private void notifyUserImminent(Launch launch, int minutes) {
         NotificationCompat.Builder mBuilder = new NotificationCompat
                 .Builder(getApplicationContext());
         NotificationManager mNotifyManager = (NotificationManager) getApplicationContext()
@@ -603,7 +603,7 @@ public class NextLaunchTracker extends IntentService {
         }
     }
 
-    private void notifyUser(LaunchRealm launch, int hours) {
+    private void notifyUser(Launch launch, int hours) {
         NotificationCompat.Builder mBuilder = new NotificationCompat
                 .Builder(getApplicationContext());
         NotificationManager mNotifyManager = (NotificationManager) getApplicationContext()

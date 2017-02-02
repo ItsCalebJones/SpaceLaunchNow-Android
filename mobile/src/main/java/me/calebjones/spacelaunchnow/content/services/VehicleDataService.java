@@ -23,13 +23,13 @@ import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.data.models.realm.Rocket;
+import me.calebjones.spacelaunchnow.data.models.realm.RocketFamily;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.APIRequestInterface;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryRequestInterface;
 import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
-import me.calebjones.spacelaunchnow.data.models.realm.RocketDetailsRealm;
-import me.calebjones.spacelaunchnow.data.models.realm.RocketFamilyRealm;
-import me.calebjones.spacelaunchnow.data.models.realm.RocketRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.RocketDetails;
 import me.calebjones.spacelaunchnow.data.models.realm.UpdateRecord;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.RocketFamilyResponse;
@@ -157,7 +157,7 @@ public class VehicleDataService extends IntentService {
         APIRequestInterface request = apiRetrofit.create(APIRequestInterface.class);
         Call<VehicleResponse> call;
         Response<VehicleResponse> launchResponse;
-        RealmList<RocketDetailsRealm> items = new RealmList<>();
+        RealmList<RocketDetails> items = new RealmList<>();
 
         try {
             call = request.getVehicles();
@@ -166,7 +166,7 @@ public class VehicleDataService extends IntentService {
                 Collections.addAll(items, launchResponse.body().getVehicles());
 
                 int count = 1;
-                for (RocketDetailsRealm item : items) {
+                for (RocketDetails item : items) {
                     Timber.v("%s - %s of %s",item.getLV_Name(), count, items.size());
                     item.setName(item.getLV_Name() + " " + item.getLV_Variant());
                     count += 1;
@@ -198,7 +198,7 @@ public class VehicleDataService extends IntentService {
         LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
         Call<RocketResponse> call;
         Response<RocketResponse> launchResponse;
-        RealmList<RocketRealm> items = new RealmList<>();
+        RealmList<Rocket> items = new RealmList<>();
 
         int offset = 0;
         int total = 10;
@@ -250,7 +250,7 @@ public class VehicleDataService extends IntentService {
         LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
         Call<RocketFamilyResponse> call;
         Response<RocketFamilyResponse> launchResponse;
-        RealmList<RocketFamilyRealm> items = new RealmList<>();
+        RealmList<RocketFamily> items = new RealmList<>();
 
         int offset = 0;
         int total = 10;

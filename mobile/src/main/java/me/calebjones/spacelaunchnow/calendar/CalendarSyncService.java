@@ -11,7 +11,7 @@ import io.realm.RealmList;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.content.services.BaseService;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import timber.log.Timber;
@@ -27,7 +27,7 @@ public class CalendarSyncService extends BaseService {
     public static final String EVENT_ID = "me.calebjones.spacelaunchnow.content.services.extra.EVENT_ID";
     public static final String LAUNCH_ID = "me.calebjones.spacelaunchnow.content.services.extra.LAUNCH_ID";
 
-    private RealmResults<LaunchRealm> launchRealms;
+    private RealmResults<Launch> launchRealms;
     private CalendarUtility calendarUtil;
     private CalendarItem calendarItem;
     private SharedPreferences sharedPreferences;
@@ -37,7 +37,7 @@ public class CalendarSyncService extends BaseService {
         super("CalendarSyncService");
     }
 
-    public static void startActionSyncEvent(Context context, LaunchRealm launch, long id) {
+    public static void startActionSyncEvent(Context context, Launch launch, long id) {
         Intent intent = new Intent(context, CalendarSyncService.class);
         intent.setAction(SYNC_EVENT);
         intent.putExtra(LAUNCH_ID, launch.getId());
@@ -116,7 +116,7 @@ public class CalendarSyncService extends BaseService {
             launchRealms = QueryBuilder.buildSwitchQuery(this, mRealm, true);
         }
 
-        RealmList<LaunchRealm> launchResults = new RealmList<>();
+        RealmList<Launch> launchResults = new RealmList<>();
 
         int size = Integer.parseInt(sharedPref.getString("calendar_count", "5"));
 
@@ -126,7 +126,7 @@ public class CalendarSyncService extends BaseService {
             launchResults.addAll(launchRealms);
         }
 
-        for (LaunchRealm launchRealm: launchResults){
+        for (Launch launchRealm: launchResults){
             if (launchRealm.isUserToggledCalendar()){
                 if (launchRealm.syncCalendar()){
                     syncCalendar(launchRealm);
@@ -138,7 +138,7 @@ public class CalendarSyncService extends BaseService {
         calendarUtil.deleteDuplicates(this, mRealm, "Space Launch Now", CalendarContract.Events.DESCRIPTION);
     }
 
-    private void syncCalendar(final LaunchRealm launchRealm){
+    private void syncCalendar(final Launch launchRealm){
         if (launchRealm.getEventID() != null){
             boolean success = calendarUtil.updateEvent(this, launchRealm);
             if (!success) {
@@ -169,11 +169,11 @@ public class CalendarSyncService extends BaseService {
     }
 
     private void handleActionDeleteAll() {
-        launchRealms = mRealm.where(LaunchRealm.class)
+        launchRealms = mRealm.where(Launch.class)
                 .greaterThan("eventID", 0)
                 .findAll();
 
-        for (final LaunchRealm launchRealm: launchRealms) {
+        for (final Launch launchRealm: launchRealms) {
             int success = calendarUtil.deleteEvent(this, launchRealm);
             if (success > 0){
                 mRealm.executeTransaction(new Realm.Transaction() {

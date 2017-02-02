@@ -25,8 +25,8 @@ import io.realm.Realm;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.gpu.BrightnessFilterTransformation;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
-import me.calebjones.spacelaunchnow.data.models.realm.RocketDetailsRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
+import me.calebjones.spacelaunchnow.data.models.realm.RocketDetails;
 import me.calebjones.spacelaunchnow.utils.transformations.SaturationTransformation;
 import timber.log.Timber;
 
@@ -57,7 +57,7 @@ public class UpdateWearService extends BaseService {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
         try {
-            LaunchRealm launch = realm.where(LaunchRealm.class).greaterThan("net", new Date()).findAllSorted("net").first();
+            Launch launch = realm.where(Launch.class).greaterThan("net", new Date()).findAllSorted("net").first();
         if (launch != null && launch.getName() != null && launch.getNetstamp() != null) {
             Timber.v("Sending data to wear: %s", launch.getName());
 
@@ -76,7 +76,7 @@ public class UpdateWearService extends BaseService {
                             query = launch.getRocket().getName();
                         }
 
-                        RocketDetailsRealm launchVehicle = realm.where(RocketDetailsRealm.class)
+                        RocketDetails launchVehicle = realm.where(RocketDetails.class)
                                 .contains("name", query)
                                 .findFirst();
                         if (launchVehicle != null && launchVehicle.getImageURL() != null && launchVehicle.getImageURL().length() > 0) {
@@ -101,7 +101,7 @@ public class UpdateWearService extends BaseService {
         realm.close();
     }
 
-    public static void sendImageToWear(Context context, String image, final LaunchRealm launch, boolean modify) {
+    public static void sendImageToWear(Context context, String image, final Launch launch, boolean modify) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         final GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(context)
                 .addApi(Wearable.API)

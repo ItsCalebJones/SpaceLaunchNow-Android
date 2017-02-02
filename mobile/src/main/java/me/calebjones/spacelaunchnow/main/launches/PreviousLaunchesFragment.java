@@ -58,7 +58,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.content.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.main.MainActivity;
 import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecoration;
@@ -74,7 +74,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     private ListAdapter adapter;
     private FloatingActionMenu menu;
     private String start_date, end_date;
-    private RealmResults<LaunchRealm> launchRealms;
+    private RealmResults<Launch> launchRealms;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ListPreferences listPreferences;
     private SwitchPreferences switchPreferences;
@@ -380,9 +380,9 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
         return null;
     }
 
-    private RealmChangeListener callback = new RealmChangeListener<RealmResults<LaunchRealm>>() {
+    private RealmChangeListener callback = new RealmChangeListener<RealmResults<Launch>>() {
         @Override
-        public void onChange(RealmResults<LaunchRealm> results) {
+        public void onChange(RealmResults<Launch> results) {
             Timber.v("Data changed - size: %s", results.size());
             if (results.size() > 0) {
                 adapter.clear();
@@ -661,7 +661,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
         // Here is where we are going to implement our filter logic
         Answers.getInstance().logSearch(new SearchEvent()
                 .putQuery(query));
-        final List<LaunchRealm> filteredModelList = filter(launchRealms, query);
+        final List<Launch> filteredModelList = filter(launchRealms, query);
         if (filteredModelList.size() > 50) {
             adapter.clear();
             adapter.addItems(filteredModelList);
@@ -676,11 +676,11 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
         return false;
     }
 
-    private List<LaunchRealm> filter(List<LaunchRealm> models, String query) {
+    private List<Launch> filter(List<Launch> models, String query) {
         query = query.toLowerCase();
 
-        final List<LaunchRealm> filteredModelList = new ArrayList<>();
-        for (LaunchRealm model : models) {
+        final List<Launch> filteredModelList = new ArrayList<>();
+        for (Launch model : models) {
             final String name = model.getName().toLowerCase();
             final String rocketName = model.getRocket().getName().toLowerCase();
             final String locationName = model.getLocation().getName().toLowerCase();

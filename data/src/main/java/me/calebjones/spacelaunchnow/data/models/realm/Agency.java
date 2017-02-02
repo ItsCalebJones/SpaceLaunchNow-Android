@@ -4,7 +4,7 @@ package me.calebjones.spacelaunchnow.data.models.realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class AgencyRealm extends RealmObject {
+public class Agency extends RealmObject {
 
     @PrimaryKey
     private Integer id;
