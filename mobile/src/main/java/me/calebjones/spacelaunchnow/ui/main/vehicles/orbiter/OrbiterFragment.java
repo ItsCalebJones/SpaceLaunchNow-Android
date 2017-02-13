@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.main.vehicles.orbiter;
+package me.calebjones.spacelaunchnow.ui.main.vehicles.orbiter;
 
 
 import android.app.ActivityOptions;
@@ -32,7 +32,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.APIRequestInterface;
 import me.calebjones.spacelaunchnow.data.models.natives.Orbiter;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.OrbiterResponse;
-import me.calebjones.spacelaunchnow.orbiter.OrbiterDetailActivity;
+import me.calebjones.spacelaunchnow.ui.orbiter.OrbiterDetailActivity;
 import me.calebjones.spacelaunchnow.common.CustomFragment;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
 import retrofit2.Call;

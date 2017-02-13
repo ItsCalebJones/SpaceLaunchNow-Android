@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.main.upcoming;
+package me.calebjones.spacelaunchnow.ui.main.upcoming;
 
 import android.content.Context;
 import android.content.Intent;
@@ -39,7 +39,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
-import me.calebjones.spacelaunchnow.launchdetail.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 

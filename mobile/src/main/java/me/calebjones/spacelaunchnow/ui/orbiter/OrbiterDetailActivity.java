@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.orbiter;
+package me.calebjones.spacelaunchnow.ui.orbiter;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -31,7 +31,7 @@ import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.natives.Orbiter;
-import me.calebjones.spacelaunchnow.settings.SettingsActivity;
+import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;

@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.main;
+package me.calebjones.spacelaunchnow.ui.main;
 
 import android.content.Context;
 import android.content.Intent;
@@ -47,15 +47,15 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
-import me.calebjones.spacelaunchnow.settings.SettingsActivity;
-import me.calebjones.spacelaunchnow.settings.fragments.AppearanceFragment;
-import me.calebjones.spacelaunchnow.supporter.SupporterActivity;
-import me.calebjones.spacelaunchnow.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
+import me.calebjones.spacelaunchnow.ui.settings.fragments.AppearanceFragment;
+import me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity;
+import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
-import me.calebjones.spacelaunchnow.launchdetail.fragments.LaunchesViewPager;
-import me.calebjones.spacelaunchnow.main.upcoming.NextLaunchFragment;
-import me.calebjones.spacelaunchnow.main.missions.MissionFragment;
-import me.calebjones.spacelaunchnow.main.vehicles.VehiclesViewPager;
+import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.LaunchesViewPager;
+import me.calebjones.spacelaunchnow.ui.main.upcoming.NextLaunchFragment;
+import me.calebjones.spacelaunchnow.ui.main.missions.MissionFragment;
+import me.calebjones.spacelaunchnow.ui.main.vehicles.VehiclesViewPager;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;
@@ -444,7 +444,7 @@ public class MainActivity extends BaseActivity {
                 Utils.openCustomTab(this, getApplicationContext(), "https://launchlibrary.net/");
                 break;
             case R.id.menu_settings:
-                Intent settingsIntent = new Intent(this, me.calebjones.spacelaunchnow.settings.SettingsActivity.class);
+                Intent settingsIntent = new Intent(this, me.calebjones.spacelaunchnow.ui.settings.SettingsActivity.class);
                 settingsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(settingsIntent);
                 break;

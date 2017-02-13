@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.main.launches;
+package me.calebjones.spacelaunchnow.ui.main.launches;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,7 +28,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
-import me.calebjones.spacelaunchnow.launchdetail.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
 /**

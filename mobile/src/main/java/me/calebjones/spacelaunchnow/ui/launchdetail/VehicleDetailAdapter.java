@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.launchdetail;
+package me.calebjones.spacelaunchnow.ui.launchdetail;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
@@ -27,7 +27,7 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.realm.Rocket;
 import me.calebjones.spacelaunchnow.data.models.realm.RocketDetails;
-import me.calebjones.spacelaunchnow.imageviewer.FullscreenImageActivity;
+import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
 public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdapter.ViewHolder> {

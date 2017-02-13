@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.launcher;
+package me.calebjones.spacelaunchnow.ui.launcher;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -30,10 +30,10 @@ import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.realm.Rocket;
-import me.calebjones.spacelaunchnow.launchdetail.VehicleDetailAdapter;
+import me.calebjones.spacelaunchnow.ui.launchdetail.VehicleDetailAdapter;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.natives.Launcher;
-import me.calebjones.spacelaunchnow.settings.SettingsActivity;
+import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;

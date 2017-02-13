@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.main.upcoming;
+package me.calebjones.spacelaunchnow.ui.main.upcoming;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -55,8 +55,8 @@ import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.realm.Launch;
-import me.calebjones.spacelaunchnow.debug.DebugActivity;
-import me.calebjones.spacelaunchnow.main.MainActivity;
+import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
+import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;

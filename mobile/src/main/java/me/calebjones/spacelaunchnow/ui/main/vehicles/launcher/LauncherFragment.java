@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.main.vehicles.launcher;
+package me.calebjones.spacelaunchnow.ui.main.vehicles.launcher;
 
 
 import android.content.Context;
@@ -29,7 +29,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.APIRequestInterface;
 import me.calebjones.spacelaunchnow.data.models.natives.Launcher;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LauncherResponse;
-import me.calebjones.spacelaunchnow.launcher.LauncherDetailActivity;
+import me.calebjones.spacelaunchnow.ui.launcher.LauncherDetailActivity;
 import me.calebjones.spacelaunchnow.common.CustomFragment;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
 import okhttp3.OkHttpClient;
