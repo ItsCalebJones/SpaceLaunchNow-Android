@@ -35,7 +35,6 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
-import com.github.rahatarmanahmed.cpv.CircularProgressView;
 
 import java.util.Date;
 
@@ -211,7 +210,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                         color_reveal.setVisibility(View.INVISIBLE);
                     }
                     if (switchChanged) {
-                        showLoading();
                         displayLaunches();
                         if (switchPreferences.getCalendarStatus()) {
                             CalendarSyncService.startActionResync(context);
@@ -273,7 +271,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     @Override
     public void onStart() {
         Timber.v("onStart");
-        showLoading();
         super.onStart();
     }
 
@@ -324,7 +321,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     };
 
     public void displayLaunches() {
-        Timber.v("loadLaunches - showLoading");
+        Timber.v("loadLaunches...");
+        showLoading();
         Date date = new Date();
 
         if (switchPreferences.getAllSwitch()) {
@@ -442,6 +440,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
     private void showLoading() {
+        Timber.v("Show Loading...");
         if (!mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.post(new Runnable() {
                 @Override
@@ -453,13 +452,15 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
     private void hideLoading() {
+        Timber.v("Hide Loading...");
         if (mSwipeRefreshLayout.isRefreshing()) {
-            mSwipeRefreshLayout.setRefreshing(false);
+            mSwipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
+            });
         }
-        CircularProgressView progressView = (CircularProgressView)
-                view.findViewById(R.id.progress_View);
-        progressView.setVisibility(View.GONE);
-        progressView.resetAnimation();
     }
 
 
@@ -503,7 +504,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
         getActivity().registerReceiver(nextLaunchReceiver, intentFilter);
 
-        showLoading();
         displayLaunches();
     }
 
@@ -632,7 +632,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     color_reveal.setVisibility(View.INVISIBLE);
                 }
                 if (switchChanged) {
-                    showLoading();
                     displayLaunches();
                     if (switchPreferences.getCalendarStatus()) {
                         CalendarSyncService.startActionResync(context);
