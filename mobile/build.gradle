@@ -80,7 +80,7 @@ android {
         debug {
             applicationIdSuffix '.debug'
             manifestPlaceholders = [appNameLabel         : "SLN - Debug",
-                                    manifestApplicationId: "me.calebjones.spacelaunchnow.debug"]
+                                    manifestApplicationId: "me.calebjones.spacelaunchnow.ui.debug"]
         }
         release {
             minifyEnabled true

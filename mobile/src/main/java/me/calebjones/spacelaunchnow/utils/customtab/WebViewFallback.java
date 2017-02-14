@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 
-import me.calebjones.spacelaunchnow.webview.WebViewFallbackActivity;
+import me.calebjones.spacelaunchnow.ui.webview.WebViewFallbackActivity;
 
 /**
  * A Fallback that opens a Webview when Custom Tabs is not available
