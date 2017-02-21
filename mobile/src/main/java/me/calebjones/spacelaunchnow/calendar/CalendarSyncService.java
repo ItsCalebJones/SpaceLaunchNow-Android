@@ -76,7 +76,7 @@ public class CalendarSyncService extends BaseService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Timber.v("onHandleIntent received: ", intent.getAction());
+        Timber.v("onHandleIntent received: %s", intent.getAction());
         switchPreferences = SwitchPreferences.getInstance(this);
         mRealm = Realm.getDefaultInstance();
         CalendarItem calendarItem = mRealm.where(CalendarItem.class).findFirst();

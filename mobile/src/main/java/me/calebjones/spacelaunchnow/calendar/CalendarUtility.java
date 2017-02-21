@@ -152,9 +152,6 @@ public class CalendarUtility {
 
             Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, launch.getEventID());
 
-            for (int time : prefSelected) {
-                setReminder(context, Long.parseLong(updateUri.getLastPathSegment()), time);
-            }
             try {
                 return updateUri != null && cr.update(updateUri, calEvent, null, null) > 0;
             } catch (SQLiteException error) {
@@ -216,6 +213,7 @@ public class CalendarUtility {
             values.put(CalendarContract.Reminders.MINUTES, timeBefore);
             values.put(CalendarContract.Reminders.EVENT_ID, eventID);
             values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+
             Uri uri = contentResolver.insert(CalendarContract.Reminders.CONTENT_URI, values);
             Cursor c = CalendarContract.Reminders.query(contentResolver, eventID, new String[]{CalendarContract.Reminders.MINUTES});
             c.close();
