@@ -33,7 +33,6 @@ import android.zetterstrom.com.forecast.models.Forecast;
 import android.zetterstrom.com.forecast.models.Unit;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.Theme;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.bumptech.glide.Glide;
 import com.github.pwittchen.weathericonview.WeatherIconView;
@@ -57,15 +56,15 @@ import io.realm.Realm;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
 import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
+import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.Pad;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.data.models.realm.RocketDetails;
-import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
-import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
-import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -691,10 +690,8 @@ public class SummaryDetailFragment extends BaseFragment {
                         MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
                                 .title("Select a Source")
                                 .content("Long press for additional options.")
-                                .adapter(adapter, null);
-                        if (sharedPreference.isNightModeActive(context)) {
-                            builder.theme(Theme.DARK);
-                        }
+                                .adapter(adapter, null)
+                                .negativeText("Cancel");
                         builder.show();
                     }
                 }
