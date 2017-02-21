@@ -588,7 +588,7 @@ public class NextLaunchTracker extends IntentService {
                 PendingIntent vidPendingIntent = PendingIntent.getActivity(this, 0, vidIntent, 0);
 
                 mBuilder.addAction(R.drawable.ic_open_in_browser_white, "Watch Live", vidPendingIntent);
-                mNotifyManager.notify(Constants.NOTIF_ID_HOUR, mBuilder.build());
+                mNotifyManager.notify(Constants.NOTIF_ID_HOUR + launch.getId(), mBuilder.build());
             }
         } else {
             if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
@@ -599,7 +599,7 @@ public class NextLaunchTracker extends IntentService {
 
                 mBuilder.addAction(R.drawable.ic_open_in_browser_white, "Watch Live", vidPendingIntent);
             }
-            mNotifyManager.notify(Constants.NOTIF_ID_HOUR, mBuilder.build());
+            mNotifyManager.notify(Constants.NOTIF_ID_HOUR + launch.getId(), mBuilder.build());
         }
     }
 
@@ -670,10 +670,10 @@ public class NextLaunchTracker extends IntentService {
 
         if (sharedPref.getBoolean("notifications_new_message_webcast", false)) {
             if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
-                mNotifyManager.notify(Constants.NOTIF_ID_HOUR, mBuilder.build());
+                mNotifyManager.notify(Constants.NOTIF_ID_HOUR + launch.getId(), mBuilder.build());
             }
         } else {
-            mNotifyManager.notify(Constants.NOTIF_ID_HOUR, mBuilder.build());
+            mNotifyManager.notify(Constants.NOTIF_ID_HOUR + launch.getId(), mBuilder.build());
         }
     }
 
