@@ -108,7 +108,7 @@ public class NextLaunchTracker extends IntentService {
                 checkNextLaunches(realm);
             }
         } else {
-            scheduleUpdate(TimeUnit.MILLISECONDS.convert(12, TimeUnit.HOURS));
+            scheduleUpdate(TimeUnit.MILLISECONDS.convert(12, TimeUnit.HOURS), 0);
 
             //If Calendar Sync is enabled sync it up
             if (switchPreferences.getCalendarStatus()) {
@@ -440,7 +440,7 @@ public class NextLaunchTracker extends IntentService {
                             realm.commitTransaction();
                         }
                     }
-                    scheduleUpdate(timeToFinish - 601000);
+                    scheduleUpdate(timeToFinish - 601000, launch.getId());
                 } else if (timeToFinish < 3600000) {
                     if (notify) {
                         int minutes = (int) ((timeToFinish / (1000 * 60)) % 60);
@@ -454,7 +454,7 @@ public class NextLaunchTracker extends IntentService {
                             }
                         }
                     }
-                    scheduleUpdate((future.getTimeInMillis() - 600000) - now.getTimeInMillis());
+                    scheduleUpdate((future.getTimeInMillis() - 600000) - now.getTimeInMillis(), launch.getId());
 
                     //Launch is in less then 24 hours
                 } else if (timeToFinish < 86400000) {
@@ -481,12 +481,12 @@ public class NextLaunchTracker extends IntentService {
 //                    if (interval < 3600000) {
 //                        interval = 3500000;
 //                    }
-                    scheduleUpdate(interval);
+                    scheduleUpdate(interval, launch.getId());
                     //Launch is within 48 hours
                 } else if (timeToFinish < 172800000) {
-                    scheduleUpdate((future.getTimeInMillis() - 86400000) - now.getTimeInMillis());
+                    scheduleUpdate((future.getTimeInMillis() - 86400000) - now.getTimeInMillis(), launch.getId());
                 } else {
-                    scheduleUpdate((timeToFinish / 2) + 43200000);
+                    scheduleUpdate((timeToFinish / 2) + 43200000, launch.getId());
                 }
             }
         } else {
@@ -499,7 +499,7 @@ public class NextLaunchTracker extends IntentService {
             if (m.matches()) {
                 int hrs = Integer.parseInt(m.group(1));
                 interval = (long) hrs * 60 * 60 * 1000;
-                scheduleUpdate(interval);
+                scheduleUpdate(interval, launch.getId());
             }
         }
     }
@@ -683,13 +683,13 @@ public class NextLaunchTracker extends IntentService {
         return cal;
     }
 
-    public void scheduleUpdate(long interval) {
+    public void scheduleUpdate(long interval, int launchId) {
         if (interval < 0){
             interval = Math.abs(interval);
         } else if (interval == 0){
             interval = 360000;
         }
-            NextLaunchJob.scheduleJob(interval);
+            NextLaunchJob.scheduleJob(interval, launchId);
             this.startService(new Intent(this, UpdateWearService.class));
     }
 
