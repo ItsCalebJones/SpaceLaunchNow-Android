@@ -30,7 +30,7 @@
         android:summary="Application information about license, libraries, changelog, etc"
         android:title="About">
         <intent
-            android:targetClass="me.calebjones.spacelaunchnow.settings.AboutActivity"
+            android:targetClass="me.calebjones.spacelaunchnow.ui.settings.AboutActivity"
             android:targetPackage="me.calebjones.spacelaunchnow"/>
     </header>
     <header
@@ -38,7 +38,7 @@
         android:summary="Follow my projects and contribute to future development."
         android:title="Support">
         <intent
-            android:targetClass="me.calebjones.spacelaunchnow.supporter.SupporterActivity"
+            android:targetClass="me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity"
             android:targetPackage="me.calebjones.spacelaunchnow"/>
     </header>
 

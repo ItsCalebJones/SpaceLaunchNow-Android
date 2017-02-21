@@ -43,7 +43,7 @@
   <string name="title_activity_fullscreen_image">Image Viewer</string>
 
   <string name="supporter_title">Become a Supporter</string>
-  <string name="supporter_description">Help ensure continued updates and timely bug fixes. Get access to supporter only features. Pay what you want, you\'ll get the same value.</string>
+  <string name="supporter_description">Help ensure continued support, timely bug fixes, and new features.</string>
   <string name="supporter_features">\u2022Current weather forecast for launch pads.\n\u2022Historical weather forecast for past launches.\n\u2022Automatically sync upcoming launches to your calendar.\n\u2022Dynamic pictures of launch vehicles as watch face background.\n</string>
   <string name="hello_blank_fragment">Hello blank fragment</string>
   <string name="title_activity_download">Download</string>
@@ -55,4 +55,5 @@
   <string name="slide_three_title">Find Launch Vehicles</string>
   <string name="slide_three_description">Get to know the vehicles that have taken us to orbit.</string>
   <string name="default_wear_image">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1462465326/navbar_one_sqfhes.png</string>
+  <string name="thank_you">This application, Space Launch Now, started as a simple weekend project. In the course of a year its grown to nearly 10,000 active users. I am incredibly appreciative to everyone that has taken the time to report bugs, give feedback, participate in BETA\'s and become supporters.</string>
 </resources>

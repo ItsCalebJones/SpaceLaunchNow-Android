@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.Theme;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 
 import java.text.SimpleDateFormat;
@@ -29,9 +28,9 @@ import java.util.TimeZone;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
-import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
@@ -385,10 +384,8 @@ public class CardSmallAdapter extends RecyclerView.Adapter<CardSmallAdapter.View
                         MaterialDialog.Builder builder = new MaterialDialog.Builder(mContext)
                                 .title("Select a Source")
                                 .content("Long press for additional options.")
-                                .adapter(adapter, null);
-                        if (sharedPreference.isNightModeActive(mContext)) {
-                            builder.theme(Theme.DARK);
-                        }
+                                .adapter(adapter, null)
+                                .negativeText("Cancel");
                         builder.show();
                     }
                     break;

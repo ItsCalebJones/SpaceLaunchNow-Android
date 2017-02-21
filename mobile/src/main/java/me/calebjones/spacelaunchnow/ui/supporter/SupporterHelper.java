@@ -9,6 +9,7 @@ public class SupporterHelper {
     public static final String SKU_TWO_DOLLAR = "two_dollar_support";
     public static final String SKU_SIX_DOLLAR = "six_dollar_support";
     public static final String SKU_TWELVE_DOLLAR = "twelve_dollar_support";
+    public static final String SKU_THIRTY_DOLLAR = "thirty_dollar_support";
     public static final String SKU_OTHER = "beta_supporter";
 
     public static Products getProduct(String productID){
@@ -28,15 +29,16 @@ public class SupporterHelper {
             product.setDescription("This ensures you will always have access to every supporter features.");
             product.setType("Supporter");
             product.setPrice(12);
+        } else if (productID.equals(SKU_THIRTY_DOLLAR)) {
+            product.setName("Founder 2016 - Platinum");
+            product.setDescription("This ensures you will always have access to every supporter features.");
+            product.setType("Supporter");
+            product.setPrice(30);
         }
         return product;
     }
 
     public static boolean isSupporter(){
-        Realm realm = Realm.getDefaultInstance();
-        boolean supporter = false;
-        Products realmResults = realm.where(Products.class).findFirst();
-
-        return realm.where(Products.class).findFirst() != null;
+        return Realm.getDefaultInstance().where(Products.class).findFirst() != null;
     }
 }
