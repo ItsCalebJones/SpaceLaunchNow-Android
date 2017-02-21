@@ -43,19 +43,19 @@ import de.mrapp.android.preference.activity.PreferenceActivity;
 import io.fabric.sdk.android.Fabric;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.LaunchesViewPager;
+import me.calebjones.spacelaunchnow.ui.main.missions.MissionFragment;
+import me.calebjones.spacelaunchnow.ui.main.upcoming.NextLaunchFragment;
+import me.calebjones.spacelaunchnow.ui.main.vehicles.VehiclesViewPager;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.ui.settings.fragments.AppearanceFragment;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
-import me.calebjones.spacelaunchnow.common.BaseActivity;
-import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.LaunchesViewPager;
-import me.calebjones.spacelaunchnow.ui.main.upcoming.NextLaunchFragment;
-import me.calebjones.spacelaunchnow.ui.main.missions.MissionFragment;
-import me.calebjones.spacelaunchnow.ui.main.vehicles.VehiclesViewPager;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;
@@ -268,28 +268,27 @@ public class MainActivity extends BaseActivity {
         View customView = inflater.inflate(R.layout.whats_new, null);
         View nightView = inflater.inflate(R.layout.whats_new_night, null);
 
-        MaterialStyledDialog dialog = new MaterialStyledDialog(this)
+        MaterialStyledDialog.Builder dialog = new MaterialStyledDialog.Builder(this)
                 .withIconAnimation(false)
                 .withDialogAnimation(true)
                 .withDivider(true)
                 .setIcon(R.drawable.ic_about)
                 .setTitle("Whats New? " + Utils.getVersionName(this))
                 .setScrollable(true)
-                .setNegative("Feedback", new MaterialDialog.SingleButtonCallback() {
+                .setPositiveText("Okay")
+                .setNegativeText("Feedback")
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onClick(MaterialDialog dialog, DialogAction which) {
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         dialog.dismiss();
                         showFeedback();
                     }
+                }).onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
                 });
-
-
-        dialog.setPositive("Okay", new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(MaterialDialog dialog, DialogAction which) {
-                dialog.dismiss();
-            }
-        });
 
         if (listPreferences.isNightModeActive(this)) {
             dialog.setHeaderColor(R.color.darkPrimary);

@@ -16,15 +16,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.github.rahatarmanahmed.cpv.CircularProgressView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +30,11 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.realm.Mission;
 import me.calebjones.spacelaunchnow.content.services.MissionDataService;
-import me.calebjones.spacelaunchnow.common.BaseFragment;
+import me.calebjones.spacelaunchnow.data.models.realm.Mission;
 import timber.log.Timber;
 
 public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener {
@@ -45,7 +42,6 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
     private View view, empty;
     private RecyclerView mRecyclerView;
     private MissionAdapter adapter;
-    private StaggeredGridLayoutManager staggeredLayoutManager;
     private LinearLayoutManager layoutManager;
     private RealmResults<Mission> missionList;
     private ListPreferences sharedPreference;
@@ -171,17 +167,11 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
     }
 
     private void showLoading() {
-        CircularProgressView progressView = (CircularProgressView)
-                view.findViewById(R.id.progress_View);
-        progressView.setVisibility(View.VISIBLE);
-        progressView.startAnimation();
+
     }
 
     private void hideLoading() {
-        CircularProgressView progressView = (CircularProgressView)
-                view.findViewById(R.id.progress_View);
-        progressView.setVisibility(View.GONE);
-        progressView.resetAnimation();
+
     }
 
     private void showErrorSnackbar(String error) {

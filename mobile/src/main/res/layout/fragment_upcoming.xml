@@ -30,14 +30,6 @@
                     android:columnWidth="320dp"
                     android:visibility="visible" />
 
-                <com.github.rahatarmanahmed.cpv.CircularProgressView xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/progress_View"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center_horizontal|center_vertical"
-                    android:visibility="gone"
-                    app:cpv_indeterminate="true" />
-
                 <RelativeLayout
                     android:id="@+id/no_launches"
                     android:layout_width="match_parent"

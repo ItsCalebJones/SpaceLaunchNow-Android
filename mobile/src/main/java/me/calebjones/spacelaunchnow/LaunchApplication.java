@@ -17,8 +17,8 @@ import android.zetterstrom.com.forecast.ForecastConfiguration;
 
 import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.evernote.android.job.JobManager;
-import com.karumi.dexter.Dexter;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.onesignal.OneSignal;
@@ -81,11 +81,19 @@ public class LaunchApplication extends Application {
         * Always leave this at the top so it catches any init failures.
         * Version 1.3.0-Beta had a bug where starting a service crashed before Crashlytics picked it up.
         */
-        Fabric.with(this, new Crashlytics());
+        // Set up Crashlytics, disabled for debug builds
+        Crashlytics crashlyticsKit = new Crashlytics.Builder()
+                .core(new CrashlyticsCore.Builder()
+                              .disabled(BuildConfig.DEBUG).build())
+                .build();
+        Fabric.with(this, crashlyticsKit);
+
+        // Initialize Fabric with the debug-disabled crashlytics.
         Crashlytics.setString("Timezone", String.valueOf(TimeZone.getDefault().getDisplayName()));
         Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
         Crashlytics.setBool("is24", DateFormat.is24HourFormat(getApplicationContext()));
         Crashlytics.setBool("Network State", Utils.isNetworkAvailable(this));
+
         if (Connectivity.getNetworkInfo(this) != null){
             Crashlytics.setString("Network Info", Connectivity.getNetworkInfo(this).toString());
         }
@@ -116,8 +124,6 @@ public class LaunchApplication extends Application {
             }
             OneSignal.sendTags(tags);
         }
-
-        Dexter.initialize(this);
 
         ForecastConfiguration configuration =
                 new ForecastConfiguration.Builder(getResources().getString(R.string.forecast_io_key))

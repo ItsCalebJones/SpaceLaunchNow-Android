@@ -52,7 +52,7 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
         context = getActivity();
         mRealm = Realm.getDefaultInstance();
 
-        Dexter.continuePendingRequestsIfPossible(allPermissionsListener);
+        Dexter.withActivity(getActivity()).continueRequestingPendingPermissions(allPermissionsListener);
 
         createPermissionListeners();
         setupPreference();
@@ -249,19 +249,10 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
 
     public void checkCalendarPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            if (Dexter.isRequestOngoing()) {
-                return;
-            }
-            Dexter.checkPermissions(allPermissionsListener, Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR);
-        }
-    }
-
-    public void checkLocationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            if (Dexter.isRequestOngoing()) {
-                return;
-            }
-            Dexter.checkPermissions(allPermissionsListener, Manifest.permission.ACCESS_COARSE_LOCATION);
+            Dexter.withActivity(getActivity())
+                    .withPermissions(Manifest.permission.READ_CALENDAR,
+                                     Manifest.permission.WRITE_CALENDAR)
+                    .withListener(allPermissionsListener).check();
         }
     }
 

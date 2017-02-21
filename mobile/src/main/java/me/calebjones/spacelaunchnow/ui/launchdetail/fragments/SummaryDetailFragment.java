@@ -574,7 +574,7 @@ public class SummaryDetailFragment extends BaseFragment {
                     });
                     CalendarSyncService.startActionResync(context);
                 } else {
-                    Dexter.checkPermission(new PermissionListener() {
+                    Dexter.withActivity(getActivity()).withPermission(Manifest.permission.WRITE_CALENDAR).withListener(new PermissionListener() {
                         @Override
                         public void onPermissionGranted(PermissionGrantedResponse response) {
                             final SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
@@ -631,7 +631,7 @@ public class SummaryDetailFragment extends BaseFragment {
                                     })
                                     .show();
                         }
-                    }, Manifest.permission.WRITE_CALENDAR);
+                    }).check();
                 }
             }
         });

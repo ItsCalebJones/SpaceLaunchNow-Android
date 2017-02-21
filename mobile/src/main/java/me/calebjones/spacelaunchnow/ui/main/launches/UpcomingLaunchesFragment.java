@@ -36,7 +36,6 @@ import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.SearchEvent;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
-import com.github.rahatarmanahmed.cpv.CircularProgressView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -151,11 +150,6 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
                 super.onScrollStateChanged(recyclerView, newState);
             }
         });
-
-        CircularProgressView progressView = (CircularProgressView)
-                view.findViewById(R.id.progress_View);
-        progressView.setVisibility(View.VISIBLE);
-        progressView.startAnimation();
 
         setUpFab();
         return view;
@@ -426,10 +420,6 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
-        CircularProgressView progressView = (CircularProgressView)
-                view.findViewById(R.id.progress_View);
-        progressView.setVisibility(View.GONE);
-        progressView.resetAnimation();
     }
 
     private final BroadcastReceiver nextLaunchReceiver = new BroadcastReceiver() {

@@ -39,7 +39,6 @@ import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.SearchEvent;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
-import com.github.rahatarmanahmed.cpv.CircularProgressView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -160,11 +159,6 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
             }
         });
         setUpFab();
-
-        CircularProgressView progressView = (CircularProgressView)
-                view.findViewById(R.id.progress_View);
-        progressView.setVisibility(View.VISIBLE);
-        progressView.startAnimation();
         return view;
     }
 
@@ -442,10 +436,6 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
-        CircularProgressView progressView = (CircularProgressView)
-                view.findViewById(R.id.progress_View);
-        progressView.setVisibility(View.GONE);
-        progressView.resetAnimation();
     }
 
     public void fetchDataFiltered() {

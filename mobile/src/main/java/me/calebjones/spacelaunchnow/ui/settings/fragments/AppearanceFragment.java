@@ -128,10 +128,7 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
 
     public void checkLocationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            if (Dexter.isRequestOngoing()) {
-                return;
-            }
-            Dexter.checkPermission(new PermissionListener() {
+            Dexter.withActivity(getActivity()).withPermission(Manifest.permission.ACCESS_COARSE_LOCATION).withListener(new PermissionListener() {
                 @Override
                 public void onPermissionGranted(PermissionGrantedResponse response) {
 
@@ -148,7 +145,7 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
                 public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
                     token.continuePermissionRequest();
                 }
-            }, Manifest.permission.ACCESS_COARSE_LOCATION);
+            }).check();
         }
     }
 }
