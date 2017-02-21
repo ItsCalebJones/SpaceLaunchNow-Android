@@ -159,9 +159,19 @@ public class Utils {
         return propertyAnimator;
     }
 
-    public static String getEndDate(Context context) {
+    public static String getEndDate(Context context, int days) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DATE, 1);
+        c.add(Calendar.DATE, days);
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = df.format(c.getTime());
+
+        return String.valueOf(formattedDate);
+    }
+
+    public static String getStartDate(Context context, int days) {
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, days);
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = df.format(c.getTime());

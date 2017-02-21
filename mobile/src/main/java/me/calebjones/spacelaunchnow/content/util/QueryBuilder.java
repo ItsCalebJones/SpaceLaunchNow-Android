@@ -7,6 +7,7 @@ import com.crashlytics.android.Crashlytics;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import io.realm.Realm;
@@ -327,10 +328,12 @@ public class QueryBuilder {
         return query;
     }
 
-    public static RealmResults<Launch> buildSwitchQueryAsync(Context context, Realm realm) {
+    public static RealmResults<Launch> buildUpcomingSwitchQueryAsync(Context context, Realm realm) {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
         boolean first = true;
-        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR_OF_DAY, -24);
+        Date date = calendar.getTime();
         RealmQuery<Launch> query = realm.where(Launch.class)
                 .greaterThanOrEqualTo("net", date).beginGroup();
         if (switchPreferences.getSwitchNasa()) {

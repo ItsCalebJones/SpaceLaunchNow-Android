@@ -21,14 +21,14 @@ import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.data.models.realm.Launch;
-import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryRequestInterface;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateJob;
 import me.calebjones.spacelaunchnow.content.models.Constants;
+import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchNotification;
 import me.calebjones.spacelaunchnow.data.models.realm.UpdateRecord;
+import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryRequestInterface;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
-import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.FileUtils;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -107,7 +107,7 @@ public class LaunchDataService extends BaseService {
                 }
 
                 if (getUpcomingLaunchesAll(this)) {
-                    if (getLaunchesByDate("1950-01-01", Utils.getEndDate(this), this)) {
+                    if (getLaunchesByDate("1950-01-01", Utils.getEndDate(this, 1), this)) {
                         Intent rocketIntent = new Intent(getApplicationContext(), VehicleDataService.class);
                         rocketIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);
                         startService(rocketIntent);
@@ -143,7 +143,7 @@ public class LaunchDataService extends BaseService {
                 if (intent.getStringExtra("startDate") != null && intent.getStringExtra("endDate") != null) {
                     getLaunchesByDate(intent.getStringExtra("startDate"), intent.getStringExtra("endDate"), this);
                 } else {
-                    getLaunchesByDate("1950-01-01", Utils.getEndDate(this), this);
+                    getLaunchesByDate("1950-01-01", Utils.getEndDate(this, 1), this);
                 }
 
             } else if (Constants.ACTION_UPDATE_NEXT_LAUNCH.equals(action)) {
@@ -248,10 +248,10 @@ public class LaunchDataService extends BaseService {
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
             long daysMaxUpdate = 2592000000L;
             if (timeSinceUpdate > daysMaxUpdate) {
-                getLaunchesByDate("1950-01-01", Utils.getEndDate(context), context);
+                getLaunchesByDate("1950-01-01", Utils.getEndDate(context, 1), context);
             }
         } else {
-            getLaunchesByDate("1950-01-01", Utils.getEndDate(context), context);
+            getLaunchesByDate("1950-01-01", Utils.getEndDate(context, 1), context);
         }
     }
 
@@ -396,9 +396,9 @@ public class LaunchDataService extends BaseService {
         try {
             while (total != offset) {
                 if (listPreference.isDebugEnabled()) {
-                    call = request.getDebugUpcomingLaunches(offset);
+                    call = request.getDebugUpcomingLaunches(Utils.getStartDate(context, -1), Utils.getEndDate(context, 10), offset);
                 } else {
-                    call = request.getUpcomingLaunches(offset);
+                    call = request.getUpcomingLaunches(Utils.getStartDate(context, -1), Utils.getEndDate(context, 10), offset);
                 }
                 launchResponse = call.execute();
                 if (launchResponse.isSuccessful()) {
@@ -582,9 +582,9 @@ public class LaunchDataService extends BaseService {
 
         try {
             if (listPreference.isDebugEnabled()) {
-                call = request.getDebugMiniNextLaunch();
+                call = request.getDebugMiniNextLaunch(Utils.getStartDate(context, -1), Utils.getEndDate(context, 10));
             } else {
-                call = request.getMiniNextLaunch();
+                call = request.getMiniNextLaunch(Utils.getStartDate(context, -1), Utils.getEndDate(context, 10));
             }
             launchResponse = call.execute();
             if (launchResponse.isSuccessful()) {

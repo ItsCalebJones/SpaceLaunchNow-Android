@@ -36,6 +36,7 @@ import com.crashlytics.android.answers.ContentViewEvent;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import butterknife.BindView;
@@ -323,7 +324,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     public void displayLaunches() {
         Timber.v("loadLaunches...");
         showLoading();
-        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR_OF_DAY, -24);
+        Date date = calendar.getTime();
 
         if (switchPreferences.getAllSwitch()) {
             launchRealms = getRealm().where(Launch.class)
@@ -359,7 +362,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
     private void filterLaunchRealm() {
-        launchRealms = QueryBuilder.buildSwitchQueryAsync(context, getRealm());
+        launchRealms = QueryBuilder.buildUpcomingSwitchQueryAsync(context, getRealm());
         launchRealms.addChangeListener(callback);
     }
 

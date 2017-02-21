@@ -24,13 +24,17 @@ public interface LibraryRequestInterface {
     @GET("dev/launch/next/1000&mode=verbose&limit=100")
     Call<LaunchResponse> getDebugUpcomingLaunchesAll(@Query("offset") int offset);
 
-    @GET(version + "/launch/next/25&mode=verbose")
-    Call<LaunchResponse> getUpcomingLaunches(@Query("offset") int offset);
+    @GET(version + "/launch/{start_date}/{end_date}?mode=verbose")
+    Call<LaunchResponse> getUpcomingLaunches(@Path("start_date") String start_date,
+                                             @Path("end_date") String end_date,
+                                             @Query("offset") int offset);
 
-    @GET("dev/launch/next/25&mode=verbose")
-    Call<LaunchResponse> getDebugUpcomingLaunches(@Query("offset") int offset);
+    @GET("dev/launch/{start_date}/{end_date}?mode=verbose")
+    Call<LaunchResponse> getDebugUpcomingLaunches(@Path("start_date") String start_date,
+                                                  @Path("end_date") String end_date,
+                                                  @Query("offset") int offset);
 
-    @GET(version + "/launch/{start_date}/{end_date}/?limit=300")
+    @GET(version + "/launch/{start_date}/{end_date}")
     Call<LaunchResponse> getLaunchesByDate(@Path("start_date") String start_date,
                                            @Path("end_date") String end_date,
                                            @Query("offset") int offset);
@@ -52,11 +56,13 @@ public interface LibraryRequestInterface {
     @GET("dev/launch/{launchID}?mode=verbose")
     Call<LaunchResponse> getDebugLaunchByID(@Path("launchID") int launchID);
 
-    @GET(version + "/launch?next=10&fields=id,net,status")
-    Call<LaunchResponse> getMiniNextLaunch();
+    @GET(version + "/launch/{start_date}/{end_date}?fields=id,net,status")
+    Call<LaunchResponse> getMiniNextLaunch(@Path("start_date") String start_date,
+                                           @Path("end_date") String end_date);
 
-    @GET("dev/launch?next=10&fields=id,net,status")
-    Call<LaunchResponse> getDebugMiniNextLaunch();
+    @GET("/launch/{start_date}/{end_date}?fields=id,net,status")
+    Call<LaunchResponse> getDebugMiniNextLaunch(@Path("start_date") String start_date,
+                                                @Path("end_date") String end_date);
 
     //Get Missions Methods
 
