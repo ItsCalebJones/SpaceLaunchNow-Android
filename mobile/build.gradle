@@ -25,7 +25,7 @@ advancedVersioning {
     nameOptions {
         versionMajor 1
         versionMinor 5
-        versionPatch 3
+        versionPatch 4
 
     }
     codeOptions {
@@ -54,7 +54,7 @@ android {
         config {
             keyAlias "${alias}"
             keyPassword "${password}"
-            storeFile file('/Users/cjones/Google Drive/Dev/BlogSite.keystore')
+            storeFile file('/Users/cjones/Google Drive/Caleb/Development/BlogSite.keystore')
             storePassword "${password}"
         }
     }
@@ -93,7 +93,7 @@ android {
             zipAlignEnabled true
             minifyEnabled true
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules-release.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             applicationVariants.all { variant ->
                 if (variant.buildType.name == "release") {
                     renameAPK(variant, defaultConfig, "release")
@@ -103,7 +103,6 @@ android {
 
         validation.initWith(debug)
         validation {
-            signingConfig android.signingConfigs.config
             debuggable false
             renderscriptOptimLevel 3
             applicationIdSuffix ".test"

@@ -34,7 +34,7 @@
   <string name="title_activity_debug">DebugActivity</string>
   <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
 
-    <string name="whats_new_content">1.5.3 - Bug Fixes and Small UI update.\n\n
+    <string name="whats_new_content">1.5.4 - Bug Fixes and Small UI update.\n\n
       \u2022Updated the UI for upgrading to Supporter.\n
       \u2022Squash a lot of bugs!\n
       \u2022Fixed issue with duplicate Calendar reminders.\n
