@@ -211,6 +211,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     public void onPurchaseHistoryRestored() {
         Timber.v("Purchase History restored.");
         if (bp != null && bp.listOwnedProducts().size() > 0) {
+            animatePurchase();
             SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Purchase history restored.");
         }
     }
@@ -333,7 +334,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
                                               .sizeDp(96));
                 break;
             case 2:
-                text.setText("Gold - $12.99");
+                text.setText("Gold - $11.99");
                 icon.setImageDrawable(new IconicsDrawable(this)
                                               .icon(GoogleMaterial.Icon.gmd_local_dining)
                                               .color(Color.BLACK)
