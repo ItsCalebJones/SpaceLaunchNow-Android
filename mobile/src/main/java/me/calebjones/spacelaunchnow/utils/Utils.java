@@ -56,7 +56,7 @@ import java.util.Random;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.utils.customtab.WebViewFallback;
 import okhttp3.Interceptor;
@@ -159,9 +159,19 @@ public class Utils {
         return propertyAnimator;
     }
 
-    public static String getEndDate(Context context) {
+    public static String getEndDate(Context context, int days) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DATE, 1);
+        c.add(Calendar.DATE, days);
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = df.format(c.getTime());
+
+        return String.valueOf(formattedDate);
+    }
+
+    public static String getStartDate(Context context, int days) {
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, days);
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = df.format(c.getTime());
@@ -214,7 +224,7 @@ public class Utils {
         return PendingIntent.getActivity(context, 0, actionIntent, 0);
     }
 
-    public static Intent buildShareIntent(LaunchRealm launch) {
+    public static Intent buildShareIntent(Launch launch) {
         SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy hh:mm a zzz");
         df.toLocalizedPattern();
 

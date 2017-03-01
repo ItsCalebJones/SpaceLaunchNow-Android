@@ -22,9 +22,9 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Constants;
-import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
-import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
@@ -69,7 +69,7 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    private LaunchRealm getLaunch(Context context) {
+    private Launch getLaunch(Context context) {
         Date date = new Date();
 
         switchPreferences = SwitchPreferences.getInstance(context);
@@ -79,9 +79,9 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
             mRealm = Realm.getDefaultInstance();
         }
 
-        RealmResults<LaunchRealm> launchRealms;
+        RealmResults<Launch> launchRealms;
         if (switchPreferences.getAllSwitch()) {
-            launchRealms = mRealm.where(LaunchRealm.class)
+            launchRealms = mRealm.where(Launch.class)
                     .greaterThanOrEqualTo("net", date)
                     .findAllSorted("net", Sort.ASCENDING);
             Timber.v("loadLaunches - Realm query created.");
@@ -90,7 +90,7 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
             Timber.v("loadLaunches - Filtered Realm query created.");
         }
 
-        for (LaunchRealm launch : launchRealms) {
+        for (Launch launch : launchRealms) {
             if (launch.getNetstamp() != 0) {
                 return launch;
             }
@@ -108,7 +108,7 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
 
             Timber.v("Size: [%s-%s] x [%s-%s]", minWidth, maxWidth, minHeight, maxHeight);
 
-            LaunchRealm launch = getLaunch(context);
+            Launch launch = getLaunch(context);
 
             if (minWidth <= 200 || minHeight <= 100) {
                 remoteViews = new RemoteViews(context.getPackageName(),
@@ -141,7 +141,7 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    private void setRefreshIntent(Context context, LaunchRealm launch, RemoteViews remoteViews) {
+    private void setRefreshIntent(Context context, Launch launch, RemoteViews remoteViews) {
         Intent nextIntent = new Intent(Constants.ACTION_CHECK_NEXT_LAUNCH_TIMER);
         PendingIntent refreshPending = PendingIntent.getBroadcast(context, 0, nextIntent, 0);
 
@@ -172,7 +172,7 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
     public void setWidgetStyle(Context context, RemoteViews remoteViews) {
     }
 
-    public void setLocationName(Context context, LaunchRealm launchRealm, RemoteViews remoteViews, Bundle options) {
+    public void setLocationName(Context context, Launch launchRealm, RemoteViews remoteViews, Bundle options) {
         String locationName = null;
 
         if (launchRealm.getLocation() != null && launchRealm.getLocation().getName() != null){
@@ -186,7 +186,7 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    public void setLaunchName(Context context, LaunchRealm launchRealm, RemoteViews remoteViews, Bundle options) {
+    public void setLaunchName(Context context, Launch launchRealm, RemoteViews remoteViews, Bundle options) {
         String launchName = getLaunchName(launchRealm);
 
         if (launchName != null) {
@@ -196,7 +196,7 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    private void setLaunchDate(Context context, LaunchRealm launch, RemoteViews remoteViews) {
+    private void setLaunchDate(Context context, Launch launch, RemoteViews remoteViews) {
         SimpleDateFormat sdf;
         if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("24_hour_mode", false)) {
             sdf = new SimpleDateFormat("MMMM dd, yyyy");
@@ -212,7 +212,7 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
     }
 
     //TODO Light/Dark
-    private void setCategoryIcon(Context context, LaunchRealm launch, RemoteViews remoteViews) {
+    private void setCategoryIcon(Context context, Launch launch, RemoteViews remoteViews) {
         if (launch.getMissions() != null && launch.getMissions().size() > 0) {
             Utils.setCategoryIcon(remoteViews, launch.getMissions().get(0).getTypeName(), true, R.id.widget_categoryIcon);
         } else {
@@ -220,7 +220,7 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    public String getLaunchName(LaunchRealm launchRealm) {
+    public String getLaunchName(Launch launchRealm) {
         //Replace with launch
         if (launchRealm.getRocket() != null && launchRealm.getRocket().getName() != null) {
             //Replace with mission name
@@ -230,7 +230,7 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    public String getMissionName(LaunchRealm launchRealm) {
+    public String getMissionName(Launch launchRealm) {
 
         if (launchRealm.getMissions().size() > 0) {
             //Replace with mission name
@@ -240,11 +240,11 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    public long getFutureMilli(LaunchRealm launchRealm) {
+    public long getFutureMilli(Launch launchRealm) {
         return getLaunchDate(launchRealm).getTimeInMillis();
     }
 
-    public Calendar getLaunchDate(LaunchRealm launchRealm) {
+    public Calendar getLaunchDate(Launch launchRealm) {
 
         //Replace with launchData
         long longdate = launchRealm.getNetstamp();

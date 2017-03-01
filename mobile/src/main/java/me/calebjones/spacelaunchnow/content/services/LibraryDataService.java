@@ -23,24 +23,24 @@ import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.interfaces.APIRequestInterface;
-import me.calebjones.spacelaunchnow.content.interfaces.LibraryRequestInterface;
+import me.calebjones.spacelaunchnow.data.models.realm.Pad;
+import me.calebjones.spacelaunchnow.data.models.realm.RocketDetails;
+import me.calebjones.spacelaunchnow.data.networking.interfaces.APIRequestInterface;
+import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryRequestInterface;
 import me.calebjones.spacelaunchnow.content.models.Constants;
-import me.calebjones.spacelaunchnow.content.models.realm.AgencyRealm;
-import me.calebjones.spacelaunchnow.content.models.realm.LocationRealm;
-import me.calebjones.spacelaunchnow.content.models.realm.MissionRealm;
-import me.calebjones.spacelaunchnow.content.models.realm.PadRealm;
-import me.calebjones.spacelaunchnow.content.models.realm.RealmStr;
-import me.calebjones.spacelaunchnow.content.models.realm.RocketDetailsRealm;
-import me.calebjones.spacelaunchnow.content.models.realm.RocketFamilyRealm;
-import me.calebjones.spacelaunchnow.content.models.realm.RocketRealm;
-import me.calebjones.spacelaunchnow.content.responses.base.VehicleResponse;
-import me.calebjones.spacelaunchnow.content.responses.launchlibrary.AgencyResponse;
-import me.calebjones.spacelaunchnow.content.responses.launchlibrary.LocationResponse;
-import me.calebjones.spacelaunchnow.content.responses.launchlibrary.MissionResponse;
-import me.calebjones.spacelaunchnow.content.responses.launchlibrary.PadResponse;
-import me.calebjones.spacelaunchnow.content.responses.launchlibrary.RocketFamilyResponse;
-import me.calebjones.spacelaunchnow.content.responses.launchlibrary.RocketResponse;
+import me.calebjones.spacelaunchnow.data.models.realm.Agency;
+import me.calebjones.spacelaunchnow.data.models.realm.Location;
+import me.calebjones.spacelaunchnow.data.models.realm.Mission;
+import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
+import me.calebjones.spacelaunchnow.data.models.realm.RocketFamily;
+import me.calebjones.spacelaunchnow.data.models.realm.Rocket;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.AgencyResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LocationResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.MissionResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.PadResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.RocketFamilyResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.RocketResponse;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -169,7 +169,7 @@ public class LibraryDataService extends IntentService {
         LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
         Call<AgencyResponse> call;
         Response<AgencyResponse> launchResponse;
-        RealmList<AgencyRealm> items = new RealmList<>();
+        RealmList<Agency> items = new RealmList<>();
         int offset = 0;
         int total = 10;
         int count;
@@ -207,7 +207,7 @@ public class LibraryDataService extends IntentService {
         LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
         Call<MissionResponse> call;
         Response<MissionResponse> launchResponse;
-        RealmList<MissionRealm> items = new RealmList<>();
+        RealmList<Mission> items = new RealmList<>();
         int offset = 0;
         int total = 10;
         int count;
@@ -245,7 +245,7 @@ public class LibraryDataService extends IntentService {
         LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
         Call<LocationResponse> call;
         Response<LocationResponse> launchResponse;
-        RealmList<LocationRealm> items = new RealmList<>();
+        RealmList<Location> items = new RealmList<>();
         int offset = 0;
         int total = 10;
         int count;
@@ -283,7 +283,7 @@ public class LibraryDataService extends IntentService {
         LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
         Call<PadResponse> call;
         Response<PadResponse> launchResponse;
-        RealmList<PadRealm> items = new RealmList<>();
+        RealmList<Pad> items = new RealmList<>();
         int offset = 0;
         int total = 10;
         int count;
@@ -321,7 +321,7 @@ public class LibraryDataService extends IntentService {
         APIRequestInterface request = apiRetrofit.create(APIRequestInterface.class);
         Call<VehicleResponse> call;
         Response<VehicleResponse> launchResponse;
-        RealmList<RocketDetailsRealm> items = new RealmList<>();
+        RealmList<RocketDetails> items = new RealmList<>();
 
         try {
             call = request.getVehicles();
@@ -348,7 +348,7 @@ public class LibraryDataService extends IntentService {
         LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
         Call<RocketResponse> call;
         Response<RocketResponse> launchResponse;
-        RealmList<RocketRealm> items = new RealmList<>();
+        RealmList<Rocket> items = new RealmList<>();
 
         int offset = 0;
         int total = 10;
@@ -390,7 +390,7 @@ public class LibraryDataService extends IntentService {
         LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
         Call<RocketFamilyResponse> call;
         Response<RocketFamilyResponse> launchResponse;
-        RealmList<RocketFamilyRealm> items = new RealmList<>();
+        RealmList<RocketFamily> items = new RealmList<>();
 
         int offset = 0;
         int total = 10;

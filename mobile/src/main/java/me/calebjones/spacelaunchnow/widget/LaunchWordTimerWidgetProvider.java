@@ -21,8 +21,8 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
-import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
-import me.calebjones.spacelaunchnow.ui.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
+import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.NumberToWords;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
@@ -78,7 +78,7 @@ public class LaunchWordTimerWidgetProvider extends AppWidgetProvider {
         Timber.v("Widget(s) removed, stopping service...");
     }
 
-    private LaunchRealm getLaunch(Context context) {
+    private Launch getLaunch(Context context) {
         Date date = new Date();
 
         switchPreferences = SwitchPreferences.getInstance(context);
@@ -88,9 +88,9 @@ public class LaunchWordTimerWidgetProvider extends AppWidgetProvider {
             mRealm = Realm.getDefaultInstance();
         }
 
-        RealmResults<LaunchRealm> launchRealms;
+        RealmResults<Launch> launchRealms;
         if (switchPreferences.getAllSwitch()) {
-            launchRealms = mRealm.where(LaunchRealm.class)
+            launchRealms = mRealm.where(Launch.class)
                     .greaterThanOrEqualTo("net", date)
                     .findAllSorted("net", Sort.ASCENDING);
             Timber.v("loadLaunches - Realm query created.");
@@ -99,7 +99,7 @@ public class LaunchWordTimerWidgetProvider extends AppWidgetProvider {
             Timber.v("loadLaunches - Filtered Realm query created.");
         }
 
-        for (LaunchRealm launch : launchRealms) {
+        for (Launch launch : launchRealms) {
             if (launch.getNetstamp() != 0) {
                 return launch;
             }
@@ -114,7 +114,7 @@ public class LaunchWordTimerWidgetProvider extends AppWidgetProvider {
         int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
         int maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
 
-        LaunchRealm launch = getLaunch(context);
+        Launch launch = getLaunch(context);
 
         Timber.v("Size: [%s-%s] x [%s-%s]", minWidth, maxWidth, minHeight, maxHeight);
 
@@ -144,7 +144,7 @@ public class LaunchWordTimerWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    private void setRefreshIntent(Context context, LaunchRealm launch, RemoteViews remoteViews) {
+    private void setRefreshIntent(Context context, Launch launch, RemoteViews remoteViews) {
         Intent nextIntent = new Intent(Constants.ACTION_CHECK_NEXT_LAUNCH_TIMER);
         PendingIntent refreshPending = PendingIntent.getBroadcast(context, 0, nextIntent, 0);
 
@@ -197,7 +197,7 @@ public class LaunchWordTimerWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    public String getLaunchName(LaunchRealm launchRealm) {
+    public String getLaunchName(Launch launchRealm) {
         if (launchRealm.getRocket() != null && launchRealm.getRocket().getName() != null) {
             return launchRealm.getRocket().getName();
         } else {
@@ -205,7 +205,7 @@ public class LaunchWordTimerWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    public String getMissionName(LaunchRealm launchRealm) {
+    public String getMissionName(Launch launchRealm) {
         if (launchRealm.getMissions().size() > 0) {
             return launchRealm.getMissions().get(0).getName();
         } else {
@@ -213,11 +213,11 @@ public class LaunchWordTimerWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    public long getFutureMilli(LaunchRealm launchRealm) {
+    public long getFutureMilli(Launch launchRealm) {
         return getLaunchDate(launchRealm).getTimeInMillis();
     }
 
-    public Calendar getLaunchDate(LaunchRealm launchRealm) {
+    public Calendar getLaunchDate(Launch launchRealm) {
 
         //Replace with launchData
         long longdate = launchRealm.getNetstamp();
@@ -229,7 +229,7 @@ public class LaunchWordTimerWidgetProvider extends AppWidgetProvider {
     public void setWidgetStyle(Context context, RemoteViews remoteViews) {
     }
 
-    public void setLaunchTimer(Context context, LaunchRealm launchRealm, final RemoteViews remoteViews, final AppWidgetManager appWidgetManager, final int widgetId, final Bundle options) {
+    public void setLaunchTimer(Context context, Launch launchRealm, final RemoteViews remoteViews, final AppWidgetManager appWidgetManager, final int widgetId, final Bundle options) {
 
         long millisUntilFinished = getFutureMilli(launchRealm) - System.currentTimeMillis();
 
@@ -249,7 +249,7 @@ public class LaunchWordTimerWidgetProvider extends AppWidgetProvider {
         appWidgetManager.updateAppWidget(widgetId, remoteViews);
     }
 
-    public void setMissionName(Context context, LaunchRealm launchRealm, RemoteViews remoteViews, Bundle options) {
+    public void setMissionName(Context context, Launch launchRealm, RemoteViews remoteViews, Bundle options) {
         String missionName = getMissionName(launchRealm);
 
         if (missionName != null) {
@@ -259,7 +259,7 @@ public class LaunchWordTimerWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    public void setLaunchName(Context context, LaunchRealm launchRealm, RemoteViews remoteViews, Bundle options) {
+    public void setLaunchName(Context context, Launch launchRealm, RemoteViews remoteViews, Bundle options) {
         String launchName = getLaunchName(launchRealm);
 
         if (launchName != null) {

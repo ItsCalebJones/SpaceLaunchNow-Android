@@ -21,14 +21,14 @@ import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.interfaces.LibraryRequestInterface;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateJob;
 import me.calebjones.spacelaunchnow.content.models.Constants;
-import me.calebjones.spacelaunchnow.content.models.realm.LaunchNotification;
-import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
-import me.calebjones.spacelaunchnow.content.models.realm.UpdateRecord;
-import me.calebjones.spacelaunchnow.content.responses.launchlibrary.LaunchResponse;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
+import me.calebjones.spacelaunchnow.data.models.realm.LaunchNotification;
+import me.calebjones.spacelaunchnow.data.models.realm.UpdateRecord;
+import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryRequestInterface;
+import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.FileUtils;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -73,6 +73,7 @@ public class LaunchDataService extends BaseService {
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
+            listPreference.isUpdating(true);
             Timber.d("LaunchDataService - Intent received:  %s ", intent.getAction());
             String action = intent.getAction();
 
@@ -106,7 +107,7 @@ public class LaunchDataService extends BaseService {
                 }
 
                 if (getUpcomingLaunchesAll(this)) {
-                    if (getLaunchesByDate("1950-01-01", Utils.getEndDate(this), this)) {
+                    if (getLaunchesByDate("1950-01-01", Utils.getEndDate(this, 1), this)) {
                         Intent rocketIntent = new Intent(getApplicationContext(), VehicleDataService.class);
                         rocketIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);
                         startService(rocketIntent);
@@ -142,7 +143,7 @@ public class LaunchDataService extends BaseService {
                 if (intent.getStringExtra("startDate") != null && intent.getStringExtra("endDate") != null) {
                     getLaunchesByDate(intent.getStringExtra("startDate"), intent.getStringExtra("endDate"), this);
                 } else {
-                    getLaunchesByDate("1950-01-01", Utils.getEndDate(this), this);
+                    getLaunchesByDate("1950-01-01", Utils.getEndDate(this, 1), this);
                 }
 
             } else if (Constants.ACTION_UPDATE_NEXT_LAUNCH.equals(action)) {
@@ -161,6 +162,7 @@ public class LaunchDataService extends BaseService {
                 syncBackground(this);
 
             }
+            listPreference.isUpdating(false);
         } else {
 
             Timber.e("LaunchDataService - onHandleIntent: ERROR - Unknown Intent");
@@ -246,10 +248,10 @@ public class LaunchDataService extends BaseService {
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
             long daysMaxUpdate = 2592000000L;
             if (timeSinceUpdate > daysMaxUpdate) {
-                getLaunchesByDate("1950-01-01", Utils.getEndDate(context), context);
+                getLaunchesByDate("1950-01-01", Utils.getEndDate(context, 1), context);
             }
         } else {
-            getLaunchesByDate("1950-01-01", Utils.getEndDate(context), context);
+            getLaunchesByDate("1950-01-01", Utils.getEndDate(context, 1), context);
         }
     }
 
@@ -273,21 +275,21 @@ public class LaunchDataService extends BaseService {
     }
 
     private static void syncNotifiers(Context context) {
-        RealmResults<LaunchRealm> launchRealms;
+        RealmResults<Launch> launchRealms;
         Date date = new Date();
 
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
         Realm mRealm = Realm.getDefaultInstance();
 
         if (switchPreferences.getAllSwitch()) {
-            launchRealms = mRealm.where(LaunchRealm.class)
+            launchRealms = mRealm.where(Launch.class)
                     .greaterThanOrEqualTo("net", date)
                     .findAllSorted("net", Sort.ASCENDING);
         } else {
             launchRealms = QueryBuilder.buildSwitchQuery(context, mRealm);
         }
 
-        for (final LaunchRealm launchrealm : launchRealms) {
+        for (final Launch launchrealm : launchRealms) {
             if (!launchrealm.isUserToggledNotifiable() && !launchrealm.isNotifiable()) {
                 mRealm.executeTransaction(new Realm.Transaction() {
                     @Override
@@ -303,7 +305,7 @@ public class LaunchDataService extends BaseService {
         LibraryRequestInterface request = getRetrofit().create(LibraryRequestInterface.class);
         Call<LaunchResponse> call;
         Response<LaunchResponse> launchResponse;
-        RealmList<LaunchRealm> items = new RealmList<>();
+        RealmList<Launch> items = new RealmList<>();
 
         Realm mRealm = Realm.getDefaultInstance();
 
@@ -331,7 +333,7 @@ public class LaunchDataService extends BaseService {
                     throw new IOException(launchResponse.errorBody().string());
                 }
             }
-            for (LaunchRealm item : items) {
+            for (Launch item : items) {
                 item.getLocation().setPrimaryID();
             }
             mRealm.beginTransaction();
@@ -381,7 +383,7 @@ public class LaunchDataService extends BaseService {
         LibraryRequestInterface request = getRetrofit().create(LibraryRequestInterface.class);
         Call<LaunchResponse> call;
         Response<LaunchResponse> launchResponse;
-        RealmList<LaunchRealm> items = new RealmList<>();
+        RealmList<Launch> items = new RealmList<>();
 
         Realm mRealm = Realm.getDefaultInstance();
 
@@ -394,9 +396,9 @@ public class LaunchDataService extends BaseService {
         try {
             while (total != offset) {
                 if (listPreference.isDebugEnabled()) {
-                    call = request.getDebugUpcomingLaunches(offset);
+                    call = request.getDebugUpcomingLaunches(Utils.getStartDate(context, -1), Utils.getEndDate(context, 10), offset);
                 } else {
-                    call = request.getUpcomingLaunches(offset);
+                    call = request.getUpcomingLaunches(Utils.getStartDate(context, -1), Utils.getEndDate(context, 10), offset);
                 }
                 launchResponse = call.execute();
                 if (launchResponse.isSuccessful()) {
@@ -409,9 +411,9 @@ public class LaunchDataService extends BaseService {
                     throw new IOException(launchResponse.errorBody().string());
                 }
             }
-            for (LaunchRealm item : items) {
+            for (Launch item : items) {
                 mRealm.beginTransaction();
-                LaunchRealm previous = mRealm.where(LaunchRealm.class)
+                Launch previous = mRealm.where(Launch.class)
                         .equalTo("id", item.getId())
                         .findFirst();
                 if (previous != null) {
@@ -479,7 +481,7 @@ public class LaunchDataService extends BaseService {
         LibraryRequestInterface request = getRetrofit().create(LibraryRequestInterface.class);
         Call<LaunchResponse> call;
         Response<LaunchResponse> launchResponse;
-        RealmList<LaunchRealm> items = new RealmList<>();
+        RealmList<Launch> items = new RealmList<>();
 
         Realm mRealm = Realm.getDefaultInstance();
 
@@ -507,8 +509,8 @@ public class LaunchDataService extends BaseService {
                     throw new IOException(launchResponse.errorBody().string());
                 }
             }
-            for (LaunchRealm item : items) {
-                LaunchRealm previous = mRealm.where(LaunchRealm.class)
+            for (Launch item : items) {
+                Launch previous = mRealm.where(Launch.class)
                         .equalTo("id", item.getId())
                         .findFirst();
                 if (previous != null) {
@@ -572,7 +574,7 @@ public class LaunchDataService extends BaseService {
         LibraryRequestInterface request = getRetrofit().create(LibraryRequestInterface.class);
         Call<LaunchResponse> call;
         Response<LaunchResponse> launchResponse;
-        RealmList<LaunchRealm> items = new RealmList<>();
+        RealmList<Launch> items = new RealmList<>();
 
         Realm mRealm = Realm.getDefaultInstance();
 
@@ -580,9 +582,9 @@ public class LaunchDataService extends BaseService {
 
         try {
             if (listPreference.isDebugEnabled()) {
-                call = request.getDebugMiniNextLaunch();
+                call = request.getDebugMiniNextLaunch(Utils.getStartDate(context, -1), Utils.getEndDate(context, 10));
             } else {
-                call = request.getMiniNextLaunch();
+                call = request.getMiniNextLaunch(Utils.getStartDate(context, -1), Utils.getEndDate(context, 10));
             }
             launchResponse = call.execute();
             if (launchResponse.isSuccessful()) {
@@ -590,8 +592,8 @@ public class LaunchDataService extends BaseService {
             } else {
                 throw new IOException();
             }
-            for (LaunchRealm item : items) {
-                LaunchRealm previous = mRealm.where(LaunchRealm.class)
+            for (Launch item : items) {
+                Launch previous = mRealm.where(Launch.class)
                         .equalTo("id", item.getId())
                         .findFirst();
                 if (previous != null) {
@@ -678,9 +680,9 @@ public class LaunchDataService extends BaseService {
         try {
             launchResponse = call.execute();
             if (launchResponse.isSuccessful()) {
-                RealmList<LaunchRealm> items = new RealmList<>(launchResponse.body().getLaunches());
-                for (LaunchRealm item : items) {
-                    LaunchRealm previous = mRealm.where(LaunchRealm.class)
+                RealmList<Launch> items = new RealmList<>(launchResponse.body().getLaunches());
+                for (Launch item : items) {
+                    Launch previous = mRealm.where(Launch.class)
                             .equalTo("id", item.getId())
                             .findFirst();
                     if (previous != null) {

@@ -10,11 +10,11 @@ import java.util.Date;
 import io.realm.Realm;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.interfaces.LibraryRequestInterface;
+import me.calebjones.spacelaunchnow.data.models.realm.Mission;
+import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryRequestInterface;
 import me.calebjones.spacelaunchnow.content.models.Constants;
-import me.calebjones.spacelaunchnow.content.models.realm.MissionRealm;
-import me.calebjones.spacelaunchnow.content.models.realm.UpdateRecord;
-import me.calebjones.spacelaunchnow.content.responses.launchlibrary.MissionResponse;
+import me.calebjones.spacelaunchnow.data.models.realm.UpdateRecord;
+import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.MissionResponse;
 import me.calebjones.spacelaunchnow.utils.FileUtils;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -51,7 +51,7 @@ public class MissionDataService extends BaseService {
         LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
         Call<MissionResponse> call;
         Response<MissionResponse> launchResponse;
-        RealmList<MissionRealm> items = new RealmList<>();
+        RealmList<Mission> items = new RealmList<>();
         int offset = 0;
         int total = 10;
         int count;
@@ -137,7 +137,7 @@ public class MissionDataService extends BaseService {
         try {
             launchResponse = call.execute();
             if (launchResponse.isSuccessful()) {
-                RealmList<MissionRealm> items = new RealmList<>(launchResponse.body().getMissions());
+                RealmList<Mission> items = new RealmList<>(launchResponse.body().getMissions());
 
                 mRealm.beginTransaction();
                 mRealm.copyToRealmOrUpdate(items);

@@ -23,26 +23,47 @@
 
 
                 <android.support.v7.widget.RecyclerView
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:clipToPadding="false"
-                    android:columnWidth="320dp" />
+                    android:columnWidth="320dp"
+                    android:visibility="visible" />
 
-                <com.github.rahatarmanahmed.cpv.CircularProgressView xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/progress_View"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center_horizontal|center_vertical"
-                    android:visibility="gone"
-                    app:cpv_indeterminate="true" />
+                <RelativeLayout
+                    android:id="@+id/no_launches"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:elevation="2dp"
+                    android:visibility="visible">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_centerInParent="true">
+
+                        <ImageView
+                            android:id="@+id/no_launches_icon"
+                            android:layout_width="72dp"
+                            android:layout_height="72dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/launcher" />
+
+                        <TextView
+                            android:id="@+id/no_launches_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="8dp"
+                            android:text="Uh oh...no launches!" />
+                    </LinearLayout>
+                </RelativeLayout>
 
                 <FrameLayout
                     android:id="@+id/color_reveal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/colorPrimary"
                     android:elevation="2dp"
                     android:visibility="invisible">
 
@@ -82,9 +103,9 @@
                             <View
                                 android:layout_width="match_parent"
                                 android:layout_height="2dp"
+                                android:layout_marginTop="8dp"
                                 android:background="@color/white"
-                                android:padding="12dp"
-                                android:layout_marginTop="8dp" />
+                                android:padding="12dp" />
 
                             <LinearLayout
                                 android:layout_width="fill_parent"

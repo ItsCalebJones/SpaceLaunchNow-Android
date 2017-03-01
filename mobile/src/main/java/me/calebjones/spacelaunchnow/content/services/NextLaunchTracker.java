@@ -39,9 +39,9 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.NextLaunchJob;
 import me.calebjones.spacelaunchnow.content.models.Constants;
-import me.calebjones.spacelaunchnow.content.models.realm.LaunchNotification;
-import me.calebjones.spacelaunchnow.content.models.realm.LaunchRealm;
-import me.calebjones.spacelaunchnow.ui.activity.MainActivity;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
+import me.calebjones.spacelaunchnow.data.models.realm.LaunchNotification;
+import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.widget.LaunchCardCompactWidgetProvider;
 import me.calebjones.spacelaunchnow.widget.LaunchTimerWidgetProvider;
 import me.calebjones.spacelaunchnow.widget.LaunchWordTimerWidgetProvider;
@@ -51,14 +51,14 @@ import timber.log.Timber;
 public class NextLaunchTracker extends IntentService {
 
     private GcmNetworkManager mGcmNetworkManager;
-    private LaunchRealm nextLaunch;
+    private Launch nextLaunch;
     private boolean wear = false;
     private SharedPreferences sharedPref;
     private ListPreferences listPreferences;
     private SwitchPreferences switchPreferences;
     private Calendar rightNow;
     private AlarmManager alarmManager;
-    private RealmResults<LaunchRealm> launchRealms;
+    private RealmResults<Launch> launchRealms;
     private long interval;
 
     private GoogleApiClient mGoogleApiClient;
@@ -96,7 +96,7 @@ public class NextLaunchTracker extends IntentService {
         dateDay = calDay.getTime();
 
         if (switchPreferences.getAllSwitch()) {
-            launchRealms = realm.where(LaunchRealm.class)
+            launchRealms = realm.where(Launch.class)
                     .between("net", date, dateDay)
                     .findAllSorted("net", Sort.ASCENDING);
         } else {
@@ -104,11 +104,11 @@ public class NextLaunchTracker extends IntentService {
         }
 
         if (launchRealms.size() > 0) {
-            for (LaunchRealm realm : launchRealms) {
+            for (Launch realm : launchRealms) {
                 checkNextLaunches(realm);
             }
         } else {
-            scheduleUpdate(TimeUnit.MILLISECONDS.convert(12, TimeUnit.HOURS));
+            scheduleUpdate(TimeUnit.MILLISECONDS.convert(12, TimeUnit.HOURS), 0);
 
             //If Calendar Sync is enabled sync it up
             if (switchPreferences.getCalendarStatus()) {
@@ -141,7 +141,7 @@ public class NextLaunchTracker extends IntentService {
 
     private void filterLaunchRealm(Date date, Date dateDay, Realm realm) {
         boolean first = true;
-        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class)
+        RealmQuery<Launch> query = realm.where(Launch.class)
                 .between("net", date, dateDay)
                 .beginGroup();
         if (switchPreferences.getSwitchNasa()) {
@@ -261,9 +261,9 @@ public class NextLaunchTracker extends IntentService {
         launchRealms = query.endGroup().findAllSorted("net", Sort.ASCENDING);
     }
 
-    private LaunchRealm filterLaunchRealm(Date date, Realm realm) {
+    private Launch filterLaunchRealm(Date date, Realm realm) {
         boolean first = true;
-        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class)
+        RealmQuery<Launch> query = realm.where(Launch.class)
                 .greaterThan("net", date)
                 .beginGroup();
         if (switchPreferences.getSwitchNasa()) {
@@ -383,7 +383,7 @@ public class NextLaunchTracker extends IntentService {
         return query.endGroup().findFirst();
     }
 
-    private void checkNextLaunches(LaunchRealm launch) {
+    private void checkNextLaunches(Launch launch) {
         if (launch != null) {
             checkStatus(launch);
         }
@@ -397,7 +397,7 @@ public class NextLaunchTracker extends IntentService {
         CalendarSyncService.startActionSyncAll(this);
     }
 
-    private void checkStatus(final LaunchRealm launch) {
+    private void checkStatus(final Launch launch) {
         if (launch != null && launch.getNetstamp() > 0) {
 
             LaunchNotification notification = realm.where(LaunchNotification.class).equalTo("id", launch.getId()).findFirst();
@@ -440,7 +440,7 @@ public class NextLaunchTracker extends IntentService {
                             realm.commitTransaction();
                         }
                     }
-                    scheduleUpdate(timeToFinish - 601000);
+                    scheduleUpdate(timeToFinish - 601000, launch.getId());
                 } else if (timeToFinish < 3600000) {
                     if (notify) {
                         int minutes = (int) ((timeToFinish / (1000 * 60)) % 60);
@@ -454,7 +454,7 @@ public class NextLaunchTracker extends IntentService {
                             }
                         }
                     }
-                    scheduleUpdate((future.getTimeInMillis() - 600000) - now.getTimeInMillis());
+                    scheduleUpdate((future.getTimeInMillis() - 600000) - now.getTimeInMillis(), launch.getId());
 
                     //Launch is in less then 24 hours
                 } else if (timeToFinish < 86400000) {
@@ -481,12 +481,12 @@ public class NextLaunchTracker extends IntentService {
 //                    if (interval < 3600000) {
 //                        interval = 3500000;
 //                    }
-                    scheduleUpdate(interval);
+                    scheduleUpdate(interval, launch.getId());
                     //Launch is within 48 hours
                 } else if (timeToFinish < 172800000) {
-                    scheduleUpdate((future.getTimeInMillis() - 86400000) - now.getTimeInMillis());
+                    scheduleUpdate((future.getTimeInMillis() - 86400000) - now.getTimeInMillis(), launch.getId());
                 } else {
-                    scheduleUpdate((timeToFinish / 2) + 43200000);
+                    scheduleUpdate((timeToFinish / 2) + 43200000, launch.getId());
                 }
             }
         } else {
@@ -499,12 +499,12 @@ public class NextLaunchTracker extends IntentService {
             if (m.matches()) {
                 int hrs = Integer.parseInt(m.group(1));
                 interval = (long) hrs * 60 * 60 * 1000;
-                scheduleUpdate(interval);
+                scheduleUpdate(interval, launch.getId());
             }
         }
     }
 
-    private void notifyUserImminent(LaunchRealm launch, int minutes) {
+    private void notifyUserImminent(Launch launch, int minutes) {
         NotificationCompat.Builder mBuilder = new NotificationCompat
                 .Builder(getApplicationContext());
         NotificationManager mNotifyManager = (NotificationManager) getApplicationContext()
@@ -588,7 +588,7 @@ public class NextLaunchTracker extends IntentService {
                 PendingIntent vidPendingIntent = PendingIntent.getActivity(this, 0, vidIntent, 0);
 
                 mBuilder.addAction(R.drawable.ic_open_in_browser_white, "Watch Live", vidPendingIntent);
-                mNotifyManager.notify(Constants.NOTIF_ID_HOUR, mBuilder.build());
+                mNotifyManager.notify(Constants.NOTIF_ID_HOUR + launch.getId(), mBuilder.build());
             }
         } else {
             if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
@@ -599,11 +599,11 @@ public class NextLaunchTracker extends IntentService {
 
                 mBuilder.addAction(R.drawable.ic_open_in_browser_white, "Watch Live", vidPendingIntent);
             }
-            mNotifyManager.notify(Constants.NOTIF_ID_HOUR, mBuilder.build());
+            mNotifyManager.notify(Constants.NOTIF_ID_HOUR + launch.getId(), mBuilder.build());
         }
     }
 
-    private void notifyUser(LaunchRealm launch, int hours) {
+    private void notifyUser(Launch launch, int hours) {
         NotificationCompat.Builder mBuilder = new NotificationCompat
                 .Builder(getApplicationContext());
         NotificationManager mNotifyManager = (NotificationManager) getApplicationContext()
@@ -670,10 +670,10 @@ public class NextLaunchTracker extends IntentService {
 
         if (sharedPref.getBoolean("notifications_new_message_webcast", false)) {
             if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
-                mNotifyManager.notify(Constants.NOTIF_ID_HOUR, mBuilder.build());
+                mNotifyManager.notify(Constants.NOTIF_ID_HOUR + launch.getId(), mBuilder.build());
             }
         } else {
-            mNotifyManager.notify(Constants.NOTIF_ID_HOUR, mBuilder.build());
+            mNotifyManager.notify(Constants.NOTIF_ID_HOUR + launch.getId(), mBuilder.build());
         }
     }
 
@@ -683,13 +683,13 @@ public class NextLaunchTracker extends IntentService {
         return cal;
     }
 
-    public void scheduleUpdate(long interval) {
+    public void scheduleUpdate(long interval, int launchId) {
         if (interval < 0){
             interval = Math.abs(interval);
         } else if (interval == 0){
             interval = 360000;
         }
-            NextLaunchJob.scheduleJob(interval);
+            NextLaunchJob.scheduleJob(interval, launchId);
             this.startService(new Intent(this, UpdateWearService.class));
     }
 

@@ -19,6 +19,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import timber.log.Timber;
+
 
 public class ListPreferences {
 
@@ -287,5 +289,18 @@ public class ListPreferences {
             }
         }
 
+    }
+
+    public void isUpdating(boolean bool) {
+        Timber.v("Changing to updating: %s", bool);
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean("isUpdating", bool);
+        this.prefsEditor.apply();
+    }
+
+    public boolean getIsUpdating() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getBoolean("isUpdating", false);
     }
 }

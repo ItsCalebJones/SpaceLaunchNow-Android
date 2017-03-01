@@ -8,7 +8,6 @@ import com.evernote.android.job.JobRequest;
 import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 
-
 public class NextLaunchJob extends Job {
 
     public static final String TAG = Constants.ACTION_CHECK_NEXT_LAUNCH_TIMER;
@@ -28,12 +27,8 @@ public class NextLaunchJob extends Job {
         // the rescheduled job has a new ID
     }
 
-    public static void scheduleJob(long interval) {
-//        if (interval < 300000){
-//            interval = 300000;
-//        }
-
-        JobRequest.Builder builder = new JobRequest.Builder(NextLaunchJob.TAG)
+    public static void scheduleJob(long interval , int launchId) {
+        JobRequest.Builder builder = new JobRequest.Builder(NextLaunchJob.TAG + launchId)
                 .setExact(interval)
                 .setUpdateCurrent(true);
 
