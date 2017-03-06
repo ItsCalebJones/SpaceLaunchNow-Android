@@ -24,15 +24,9 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
-import com.crashlytics.android.answers.AddToCartEvent;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.PurchaseEvent;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
-
-import java.math.BigDecimal;
-import java.util.Currency;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,6 +34,7 @@ import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.data.models.realm.Products;
+import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import timber.log.Timber;
 import xyz.hanks.library.SmallBang;
@@ -177,12 +172,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         if (BillingProcessor.isIabServiceAvailable(this)) {
             // continue
             Products products = SupporterHelper.getProduct(sku);
-            Answers.getInstance().logAddToCart(new AddToCartEvent()
-                                                       .putItemPrice(BigDecimal.valueOf(products.getPrice()))
-                                                       .putCurrency(Currency.getInstance("USD"))
-                                                       .putItemName(products.getName())
-                                                       .putItemType(products.getType())
-                                                       .putItemId(sku));
+            Analytics.from(this).sendAddToCartEvent(products, sku);
             bp.purchase(this, sku);
         } else {
             SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, "Issues connecting to Google Play Billing");
@@ -194,17 +184,11 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         Timber.v("%s purchased.", productId);
         SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Thanks for helping keep the gears turning!");
         animatePurchase();
-        Products products = SupporterHelper.getProduct(productId);
+        Products product = SupporterHelper.getProduct(productId);
         getRealm().beginTransaction();
-        getRealm().copyToRealmOrUpdate(products);
+        getRealm().copyToRealmOrUpdate(product);
         getRealm().commitTransaction();
-        Answers.getInstance().logPurchase(new PurchaseEvent()
-                                                  .putItemPrice(BigDecimal.valueOf(products.getPrice()))
-                                                  .putCurrency(Currency.getInstance("USD"))
-                                                  .putItemName(products.getName())
-                                                  .putItemType(products.getType())
-                                                  .putItemId(productId)
-                                                  .putSuccess(true));
+        Analytics.from(this).sendPurchaseEvent(product, productId);
     }
 
     @Override

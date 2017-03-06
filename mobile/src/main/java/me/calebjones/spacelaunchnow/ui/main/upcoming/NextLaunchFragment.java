@@ -166,14 +166,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
         sharedPreference = ListPreferences.getInstance(context);
 
-        if (!BuildConfig.DEBUG) {
-            if (!BuildConfig.DEBUG) {
-                Answers.getInstance().logContentView(new ContentViewEvent()
-                        .putContentName("NextLaunchFragment")
-                        .putContentType("Fragment"));
-            }
-        }
-
         super.onCreateView(inflater, container, savedInstanceState);
 
         setHasOptionsMenu(true);

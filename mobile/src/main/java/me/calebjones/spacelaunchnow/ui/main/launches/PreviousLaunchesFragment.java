@@ -34,9 +34,6 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.borax12.materialdaterangepicker.date.DatePickerDialog;
 import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.ContentViewEvent;
-import com.crashlytics.android.answers.SearchEvent;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
@@ -51,17 +48,17 @@ import butterknife.ButterKnife;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
-import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.BaseFragment;
+import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.content.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
-import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecoration;
-import me.calebjones.spacelaunchnow.common.BaseFragment;
+import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import timber.log.Timber;
 
@@ -101,12 +98,6 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
         this.context = getContext();
 
         listPreferences = ListPreferences.getInstance(this.context);
-
-        if (!BuildConfig.DEBUG) {
-            Answers.getInstance().logContentView(new ContentViewEvent()
-                    .putContentName("PreviousLaunchesFragment")
-                    .putContentType("Fragment"));
-        }
 
         super.onCreateView(inflater, container, savedInstanceState);
         setHasOptionsMenu(true);
@@ -649,9 +640,9 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     public boolean onQueryTextChange(String query) {
         switchPreferences.setPrevFiltered(true);
         // Here is where we are going to implement our filter logic
-        Answers.getInstance().logSearch(new SearchEvent()
-                .putQuery(query));
         final List<Launch> filteredModelList = filter(launchRealms, query);
+        Analytics.from(this).sendSearchEvent(query, Analytics.TYPE_PREVIOUS_LAUNCH,filteredModelList.size());
+
         if (filteredModelList.size() > 50) {
             adapter.clear();
             adapter.addItems(filteredModelList);

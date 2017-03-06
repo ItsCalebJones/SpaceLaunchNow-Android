@@ -2,18 +2,32 @@ package me.calebjones.spacelaunchnow.utils;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 
+import com.crashlytics.android.answers.AddToCartEvent;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+import com.crashlytics.android.answers.PurchaseEvent;
 import com.crashlytics.android.answers.SearchEvent;
 import com.crashlytics.android.answers.ShareEvent;
 
+import java.math.BigDecimal;
+import java.util.Currency;
+
+import me.calebjones.spacelaunchnow.data.models.realm.Products;
 import timber.log.Timber;
 
 public class Analytics {
 
-    public static Analytics from(Context context) {
+    public static final String TYPE_PREVIOUS_LAUNCH = "Previous";
+    public static final String TYPE_UPCOMING_LAUNCH = "Upcoming";
+
+    public static Analytics from(Context context){
         return ((Provider) context.getApplicationContext()).getAnalytics();
+    }
+
+    public static Analytics from(Fragment fragment) {
+        return from(fragment.getActivity());
     }
 
     public interface Provider {
@@ -111,6 +125,27 @@ public class Analytics {
                                                 .putPreferenceName(prefName)
         );
         Timber.v("Weather Event: %s changed.", prefName);
+    }
+
+    public void sendAddToCartEvent(@NonNull Products products, String sku){
+        Answers.getInstance().logAddToCart(new AddToCartEvent()
+                                                   .putItemPrice(BigDecimal.valueOf(products.getPrice()))
+                                                   .putCurrency(Currency.getInstance("USD"))
+                                                   .putItemName(products.getName())
+                                                   .putItemType(products.getType())
+                                                   .putItemId(sku));
+        Timber.v("Add to Cart: %s %s - $% SKU: %s", products.getName(), products.getType(), products.getPrice(), sku);
+    }
+
+    public void sendPurchaseEvent(@NonNull Products products, String sku) {
+        Answers.getInstance().logPurchase(new PurchaseEvent()
+                                                  .putItemPrice(BigDecimal.valueOf(products.getPrice()))
+                                                  .putCurrency(Currency.getInstance("USD"))
+                                                  .putItemName(products.getName())
+                                                  .putItemType(products.getType())
+                                                  .putItemId(sku)
+                                                  .putSuccess(true));
+        Timber.v("Purchased: %s %s - $% SKU: %s", products.getName(), products.getType(), products.getPrice(), sku);
     }
 
     //Custom Answer Events

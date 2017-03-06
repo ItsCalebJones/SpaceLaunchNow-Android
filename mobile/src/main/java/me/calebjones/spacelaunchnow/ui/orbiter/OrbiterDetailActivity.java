@@ -22,12 +22,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.ContentViewEvent;
 import com.google.gson.Gson;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.natives.Orbiter;
@@ -70,12 +67,6 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
         }
 
         m_theme = R.style.BaseAppTheme;
-
-        if (!BuildConfig.DEBUG) {
-            Answers.getInstance().logContentView(new ContentViewEvent()
-                    .putContentName("OrbiterDetailActivity")
-                    .putContentType("Activity"));
-        }
 
         setTheme(m_theme);
 
