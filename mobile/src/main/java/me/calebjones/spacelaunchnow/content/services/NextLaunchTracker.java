@@ -441,6 +441,7 @@ public class NextLaunchTracker extends IntentService {
                         }
                     }
                     scheduleUpdate(timeToFinish - 601000, launch.getId());
+                    scheduleUpdate(601000, 0);
                 } else if (timeToFinish < 3600000) {
                     if (notify) {
                         int minutes = (int) ((timeToFinish / (1000 * 60)) % 60);
@@ -455,6 +456,7 @@ public class NextLaunchTracker extends IntentService {
                         }
                     }
                     scheduleUpdate((future.getTimeInMillis() - 600000) - now.getTimeInMillis(), launch.getId());
+                    scheduleUpdate(600000, 0);
 
                     //Launch is in less then 24 hours
                 } else if (timeToFinish < 86400000) {
@@ -482,11 +484,14 @@ public class NextLaunchTracker extends IntentService {
 //                        interval = 3500000;
 //                    }
                     scheduleUpdate(interval, launch.getId());
+                    scheduleUpdate(86400000, 0);
                     //Launch is within 48 hours
                 } else if (timeToFinish < 172800000) {
                     scheduleUpdate((future.getTimeInMillis() - 86400000) - now.getTimeInMillis(), launch.getId());
+                    scheduleUpdate(86400000, 0);
                 } else {
                     scheduleUpdate((timeToFinish / 2) + 43200000, launch.getId());
+                    scheduleUpdate(86400000, 0);
                 }
             }
         } else {
@@ -529,7 +534,7 @@ public class NextLaunchTracker extends IntentService {
                 Date date = launch.getNet();
                 launchDate = sdf.format(date);
             }
-            expandedText = "Go for launch at " + launchDate + ".";
+            expandedText = "Go for launch at " + launchDate + " in " + minutes + " minutes.";
         } else {
             expandedText = "Launch in " + minutes + " minutes.";
         }

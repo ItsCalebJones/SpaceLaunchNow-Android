@@ -15,7 +15,7 @@ public class NextLaunchJob extends Job {
     @NonNull
     @Override
     protected Result onRunJob(Params params) {
-        if(LaunchDataService.getNextLaunches(getContext())){
+        if (LaunchDataService.getNextLaunches(getContext())) {
             return Result.SUCCESS;
         } else {
             return Result.RESCHEDULE;
@@ -27,10 +27,15 @@ public class NextLaunchJob extends Job {
         // the rescheduled job has a new ID
     }
 
-    public static void scheduleJob(long interval , int launchId) {
+    public static void scheduleJob(long interval, int launchId) {
         JobRequest.Builder builder = new JobRequest.Builder(NextLaunchJob.TAG + launchId)
-                .setExact(interval)
-                .setUpdateCurrent(true);
+                .setExact(interval);
+
+        if (launchId > 0) {
+            builder.setUpdateCurrent(true);
+        } else {
+            builder.setUpdateCurrent(false);
+        }
 
         builder.build().schedule();
     }
