@@ -41,6 +41,7 @@ import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
 import me.calebjones.spacelaunchnow.data.models.LaunchDataModule;
+import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import okhttp3.OkHttpClient;
@@ -49,7 +50,7 @@ import timber.log.Timber;
 import static me.calebjones.spacelaunchnow.content.models.Constants.DB_SCHEMA_VERSION;
 
 
-public class LaunchApplication extends Application {
+public class LaunchApplication extends Application implements Analytics.Provider {
 
     public static final String TAG = "Space Launch Now";
     public OkHttpClient client;
@@ -57,6 +58,7 @@ public class LaunchApplication extends Application {
     private static ListPreferences sharedPreference;
     private SwitchPreferences switchPreferences;
     private SharedPreferences sharedPref;
+    protected volatile Analytics mAnalytics;
 
     public static synchronized LaunchApplication getInstance() {
         return mInstance;
@@ -301,5 +303,19 @@ public class LaunchApplication extends Application {
     @Override
     public void onLowMemory() {
         super.onLowMemory();
+    }
+
+    @Override
+    public Analytics getAnalytics() {
+        Analytics analytics = mAnalytics;
+        if (analytics == null) {
+            synchronized (this) {
+                analytics = mAnalytics;
+                if (analytics == null) {
+                    mAnalytics = analytics = new Analytics();
+                }
+            }
+        }
+        return analytics;
     }
 }
