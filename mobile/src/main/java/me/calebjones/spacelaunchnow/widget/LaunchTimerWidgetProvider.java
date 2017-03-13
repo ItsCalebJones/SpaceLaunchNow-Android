@@ -32,8 +32,8 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
 
     private Realm mRealm;
     private int last_refresh_counter = 0;
-    private static CountDownTimer countDownTimer;
-    private static boolean invalid = false;
+    private CountDownTimer countDownTimer;
+    private boolean invalid = false;
     public RemoteViews remoteViews;
     public SwitchPreferences switchPreferences;
     public static String ACTION_WIDGET_REFRESH = "ActionReceiverRefresh";

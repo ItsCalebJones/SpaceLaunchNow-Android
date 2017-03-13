@@ -25,7 +25,7 @@ advancedVersioning {
     nameOptions {
         versionMajor 1
         versionMinor 5
-        versionPatch 4
+        versionPatch 5
 
     }
     codeOptions {
@@ -59,7 +59,7 @@ android {
         }
     }
     compileSdkVersion 25
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '25.0.2'
     defaultConfig {
         applicationId "me.calebjones.spacelaunchnow"
         manifestPlaceholders = [appNameLabel                   : "@string/application_name",
