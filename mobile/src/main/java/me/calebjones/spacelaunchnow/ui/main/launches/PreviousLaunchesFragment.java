@@ -90,6 +90,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setScreenName("Previous Launch Fragment");
     }
 
     @Override

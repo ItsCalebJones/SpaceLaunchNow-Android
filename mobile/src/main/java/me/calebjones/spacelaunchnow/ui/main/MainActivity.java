@@ -50,7 +50,7 @@ import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.main.missions.MissionFragment;
-import me.calebjones.spacelaunchnow.ui.main.upcoming.NextLaunchFragment;
+import me.calebjones.spacelaunchnow.ui.main.next.NextLaunchFragment;
 import me.calebjones.spacelaunchnow.ui.main.vehicles.VehiclesViewPager;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.ui.settings.fragments.AppearanceFragment;
@@ -95,6 +95,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public MainActivity() {
+        super("Main Activity");
     }
 
     @Override
@@ -398,7 +399,7 @@ public class MainActivity extends BaseActivity {
                 if (mUpcomingFragment == null) {
                     mUpcomingFragment = new NextLaunchFragment();
                     // Tell it who it is working with.
-                    fm.beginTransaction().replace(R.id.flContent, mUpcomingFragment, "NEXT_LAUNCH").commit();
+                    fm.beginTransaction().replace(R.id.flContent, NextLaunchFragment.newInstance(), "NEXT_LAUNCH").commit();
                 }
                 break;
             case R.id.menu_launches:

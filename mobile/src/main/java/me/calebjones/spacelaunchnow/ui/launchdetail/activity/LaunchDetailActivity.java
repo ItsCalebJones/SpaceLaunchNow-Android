@@ -65,6 +65,10 @@ public class LaunchDetailActivity extends BaseActivity
     public String response;
     public Launch launch;
 
+    LaunchDetailActivity() {
+        super("Launch Detail Activity");
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

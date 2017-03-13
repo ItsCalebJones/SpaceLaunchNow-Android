@@ -23,6 +23,8 @@ public class Analytics {
     public static final String TYPE_PREVIOUS_LAUNCH = "Previous";
     public static final String TYPE_UPCOMING_LAUNCH = "Upcoming";
 
+    private String mLastScreenName;
+
     public static Analytics from(Context context){
         return ((Provider) context.getApplicationContext()).getAnalytics();
     }
@@ -36,6 +38,32 @@ public class Analytics {
     }
 
     //Logging methods.
+    public void sendScreenView(@NonNull String screenName, @NonNull String state) {
+
+        if (!screenName.equals(mLastScreenName)) {
+            mLastScreenName = screenName;
+            Answers.getInstance().logCustom(new UIEvent()
+                                                    .putScreenName(screenName)
+                                                    .putState(state));
+            Timber.v("UI Event: %-%", screenName, state);
+        }
+    }
+
+    public void sendScreenView(@NonNull String screenName) {
+
+        if (!screenName.equals(mLastScreenName)) {
+            mLastScreenName = screenName;
+            Answers.getInstance().logCustom(new UIEvent()
+                                                    .putScreenName(screenName));
+            Timber.v("UI Event: %", screenName);
+        }
+    }
+
+    public void notifyGoneBackground() {
+        Answers.getInstance().logCustom(new UIEvent()
+                                                .putScreenName("In background."));
+    }
+
     public void sendLaunchDetailViewedEvent(@NonNull String launchName, @NonNull String launchType, @NonNull String launchID) {
         Answers.getInstance().logCustom(new LaunchDetailViewed()
                                                 .putLaunchName(launchName + " " + launchID)
@@ -265,6 +293,23 @@ public class Analytics {
 
         PreferenceEvent putEnabled(@NonNull String result) {
             this.putCustomAttribute("enabled", result);
+            return this;
+        }
+    }
+
+    private class UIEvent extends CustomEvent {
+
+        UIEvent() {
+            super("UIEvent");
+        }
+
+        UIEvent putScreenName(@NonNull String screen) {
+            this.putCustomAttribute("screen", screen);
+            return this;
+        }
+
+        UIEvent putState(@NonNull String state) {
+            this.putCustomAttribute("state", state);
             return this;
         }
     }

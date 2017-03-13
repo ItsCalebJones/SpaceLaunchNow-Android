@@ -76,8 +76,10 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
 
     private static final Field sChildFragmentManagerField;
 
-    public UpcomingLaunchesFragment() {
-        // Required empty public constructor
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setScreenName("Upcoming Launch Fragment");
     }
 
     @Override

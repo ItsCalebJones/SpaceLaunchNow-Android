@@ -53,6 +53,10 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
     private AppBarLayout appBarLayout;
     private int mMaxScrollSize;
 
+    public LauncherDetailActivity() {
+        super("Launcher Detail Activity");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         int m_theme;

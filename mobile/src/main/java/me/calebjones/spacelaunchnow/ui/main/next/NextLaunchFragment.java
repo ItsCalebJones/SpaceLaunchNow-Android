@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.ui.main.upcoming;
+package me.calebjones.spacelaunchnow.ui.main.next;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -31,8 +31,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.ContentViewEvent;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
@@ -110,14 +108,12 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     private boolean switchChanged;
     private boolean cardSizeSmall;
 
-    public NextLaunchFragment() {
-        // Required empty public constructor
-    }
-
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sharedPreference = ListPreferences.getInstance(getActivity().getApplication());
         switchPreferences = SwitchPreferences.getInstance(getActivity().getApplication());
+        setScreenName("Next Launch Fragment");
     }
 
     public void showCaseView() {

@@ -168,6 +168,12 @@ public class SummaryDetailFragment extends BaseFragment {
     WeatherIconView weatherSpeedIcon;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setScreenName("Summary Detail Fragment");
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         this.context = getContext();

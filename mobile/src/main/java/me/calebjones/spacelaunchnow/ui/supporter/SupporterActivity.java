@@ -59,6 +59,10 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     private AppCompatSeekBar seekbar;
     private TextView text;
 
+    public SupporterActivity() {
+        super("Supporter Activity");
+    }
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(IconicsContextWrapper.wrap(newBase));
@@ -96,6 +100,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
+            Analytics.from(this).sendButtonClicked("Back - From Supporter Page");
             onBackPressed();
         }
 
@@ -114,6 +119,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     public void checkClick(View v) {
         switch (v.getId()) {
             case R.id.purchase:
+                Analytics.from(this).sendButtonClicked("Supporter Button clicked.");
                 MaterialDialog dialog = new MaterialDialog.Builder(this)
                         .title("Thanks for your Support!")
                         .customView(R.layout.seekbar_dialog_supporter, true)

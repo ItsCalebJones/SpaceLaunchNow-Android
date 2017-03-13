@@ -16,11 +16,11 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.Mission;
 import me.calebjones.spacelaunchnow.data.models.realm.RocketDetails;
-import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
@@ -63,6 +63,12 @@ public class MissionDetailFragment extends BaseFragment {
     TextView launchVehicleSpecsLaunchMass;
     @BindView(R.id.launch_vehicle_specs_thrust)
     TextView launchVehicleSpecsThrust;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setScreenName("Mission Detail Fragment");
+    }
 
     @Nullable
     @Override

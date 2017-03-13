@@ -54,6 +54,7 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
         SharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         this.sharedPreference = ListPreferences.getInstance(getActivity().getApplicationContext());
         adapter = new MissionAdapter(getActivity().getApplicationContext(), getActivity());
+        setScreenName("Mission Fragment");
     }
 
     @Override
