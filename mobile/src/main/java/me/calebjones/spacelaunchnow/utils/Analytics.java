@@ -10,6 +10,7 @@ import com.crashlytics.android.answers.CustomEvent;
 import com.crashlytics.android.answers.PurchaseEvent;
 import com.crashlytics.android.answers.SearchEvent;
 import com.crashlytics.android.answers.ShareEvent;
+import com.crashlytics.android.answers.StartCheckoutEvent;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -135,6 +136,13 @@ public class Analytics {
                                                    .putItemType(products.getType())
                                                    .putItemId(sku));
         Timber.v("Add to Cart: %s %s - $% SKU: %s", products.getName(), products.getType(), products.getPrice(), sku);
+    }
+
+    public void sendStartCheckout(@NonNull Products products) {
+        Answers.getInstance().logStartCheckout(new StartCheckoutEvent().putTotalPrice(BigDecimal.valueOf(products.getPrice()))
+                                                   .putCurrency(Currency.getInstance("USD"))
+                                                   .putItemCount(1));
+        Timber.v("StartCheckout: %s %s - $%", products.getName(), products.getType(), products.getPrice());
     }
 
     public void sendPurchaseEvent(@NonNull Products products, String sku) {

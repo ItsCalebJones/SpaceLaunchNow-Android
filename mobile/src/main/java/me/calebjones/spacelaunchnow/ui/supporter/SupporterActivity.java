@@ -173,6 +173,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
             // continue
             Products products = SupporterHelper.getProduct(sku);
             Analytics.from(this).sendAddToCartEvent(products, sku);
+            Analytics.from(this).sendStartCheckout(products);
             bp.purchase(this, sku);
         } else {
             SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, "Issues connecting to Google Play Billing");
