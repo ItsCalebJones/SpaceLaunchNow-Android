@@ -1,6 +1,5 @@
 package me.calebjones.spacelaunchnow.ui.main.launches;
 
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
@@ -31,11 +30,9 @@ import android.view.animation.OvershootInterpolator;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.ContentViewEvent;
-import com.crashlytics.android.answers.SearchEvent;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -44,19 +41,18 @@ import java.util.List;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
-import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.BaseFragment;
+import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.content.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
-import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecoration;
-import me.calebjones.spacelaunchnow.common.BaseFragment;
+import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
-
 import timber.log.Timber;
 
 /**
@@ -65,7 +61,7 @@ import timber.log.Timber;
 public class UpcomingLaunchesFragment extends BaseFragment implements SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
 
     private View view;
-    private RecyclerView mRecyclerView;
+    private FastScrollRecyclerView mRecyclerView;
     private ListAdapter adapter;
     private LinearLayoutManager layoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -81,8 +77,10 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
 
     private static final Field sChildFragmentManagerField;
 
-    public UpcomingLaunchesFragment() {
-        // Required empty public constructor
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setScreenName("Upcoming Launch Fragment");
     }
 
     @Override
@@ -91,12 +89,6 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
         this.context = getContext();
 
         listPreference = ListPreferences.getInstance(this.context);
-
-        if (!BuildConfig.DEBUG) {
-            Answers.getInstance().logContentView(new ContentViewEvent()
-                    .putContentName("UpcomingLaunchesFragment")
-                    .putContentType("Fragment"));
-        }
 
         super.onCreateView(inflater, container, savedInstanceState);
 
@@ -124,7 +116,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.launches_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        mRecyclerView = (FastScrollRecyclerView) view.findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
@@ -140,7 +132,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
                     if (dy > 0) {
                         menu.hideMenu(true);
                     } else {
-                        menu.showMenu(true);
+                        menu.showMenu(false);
                     }
                 }
             }
@@ -174,6 +166,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - Reset");
                 switchPreferences.resetAllUpFilters();
                 if (switchPreferences.isUpFiltered()) {
                     switchPreferences.setUpFiltered(false);
@@ -187,6 +180,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
         agency.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 showAgencyDialog();
             }
         });
@@ -211,6 +205,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     }
 
     private void showCountryDialog() {
+        Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - Country");
         new MaterialDialog.Builder(getContext())
                 .title("Select a Country")
                 .content("Check an country below, to remove all filters use reset icon in the toolbar.")
@@ -224,6 +219,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
                         for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
+                        Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - Country Selection", keyArray.toString());
                         if (keyArray.size() > 0) {
                             switchPreferences.setUpCountryFilteredArray(keyArray);
                             switchPreferences.setUpFiltered(true);
@@ -242,6 +238,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     }
 
     private void showLocationDialog() {
+        Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - Location");
         new MaterialDialog.Builder(getContext())
                 .title("Select a Location")
                 .content("Check an location below, to remove all filters use reset icon in the toolbar.")
@@ -255,6 +252,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
                         for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
+                        Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - Location Selection", keyArray.toString());
                         if (keyArray.size() > 0) {
                             switchPreferences.setUpLocationFilteredArray(keyArray);
                             switchPreferences.setUpFiltered(true);
@@ -273,6 +271,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     }
 
     private void showAgencyDialog() {
+        Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - Agency");
         new MaterialDialog.Builder(getContext())
                 .title("Select an Agency")
                 .content("Check an agency below, to remove all filters use reset icon in the toolbar.")
@@ -286,6 +285,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
                         for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
+                        Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - Agency Selection", keyArray.toString());
                         if (keyArray.size() > 0) {
                             switchPreferences.setUpAgencyFilterArray(keyArray);
                             switchPreferences.setUpFiltered(true);
@@ -304,6 +304,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     }
 
     private void showVehicleDialog() {
+        Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - Vehicle");
         new MaterialDialog.Builder(getContext())
                 .title("Select a Launch Vehicle")
                 .content("Check a vehicle below, to remove all filters use reset icon in the toolbar.")
@@ -317,6 +318,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
                         for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
+                        Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - Vehicle Selection", keyArray.toString());
                         if (keyArray.size() > 0) {
                             switchPreferences.setUpVehicleFilteredArray(keyArray);
                             switchPreferences.setUpFiltered(true);
@@ -583,10 +585,10 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     public boolean onQueryTextChange(String query) {
         switchPreferences.setPrevFiltered(true);
         // Here is where we are going to implement our filter logic
-        Answers.getInstance().logSearch(new SearchEvent()
-                .putQuery(query));
         final List<Launch> filteredModelList = filter(launchRealms, query);
-        if (filteredModelList.size() > 100) {
+        Analytics.from(this).sendSearchEvent(query, Analytics.TYPE_UPCOMING_LAUNCH, filteredModelList.size());
+
+        if (filteredModelList.size() > 50) {
             adapter.clear();
             adapter.addItems(filteredModelList);
         } else {

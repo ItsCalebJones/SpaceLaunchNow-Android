@@ -1,6 +1,5 @@
 package me.calebjones.spacelaunchnow.ui.settings.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -26,12 +25,10 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.services.UpdateWearService;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.utils.Analytics;
 import timber.log.Timber;
 
-import static me.calebjones.spacelaunchnow.content.models.Constants.DEFAULT_BLUR;
-import static me.calebjones.spacelaunchnow.content.models.Constants.DEFAULT_DIM;
-import static me.calebjones.spacelaunchnow.content.models.Constants.DEFAULT_GREY;
-import static me.calebjones.spacelaunchnow.content.models.Constants.DEFAULT_RADIUS;
+import static me.calebjones.spacelaunchnow.content.models.Constants.*;
 
 public class WearFragment extends BaseSettingFragment implements SharedPreferences.OnSharedPreferenceChangeListener,
         GoogleApiClient.ConnectionCallbacks,
@@ -39,7 +36,6 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
 
     private GoogleApiClient mGoogleApiClient;
     private SwitchPreferences switchPreferences;
-    private Context context;
     private static final String HOUR_KEY = "me.calebjones.spacelaunchnow.wear.hourmode";
     private static final String BACKGROUND_KEY = "me.calebjones.spacelaunchnow.wear.background";
 
@@ -58,6 +54,7 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
         mGoogleApiClient.connect();
 
         setUpPreferences();
+        setName("Wear Fragment");
     }
 
     @Override
@@ -89,12 +86,16 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
         Timber.i("Wear preference %s changed.", key);
 
         if (key.equals("wear_hour_mode")) {
+            boolean hourMode = sharedPreferences.getBoolean(key, false);
             PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/config");
-            putDataMapReq.getDataMap().putBoolean(HOUR_KEY, sharedPreferences.getBoolean(key, false));
+            putDataMapReq.getDataMap().putBoolean(HOUR_KEY, hourMode);
             putDataMapReq.getDataMap().putLong("time", new Date().getTime());
 
             PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
             Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
+            Analytics.from(this).sendPreferenceEvent(key, hourMode);
+        } else {
+            Analytics.from(this).sendPreferenceEvent(key);
         }
 
         getActivity().startService(new Intent(getActivity(), UpdateWearService.class));
@@ -134,7 +135,9 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
         Preference blurSettings = findPreference("wear_blur_dialog");
         blurSettings.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
-            public boolean onPreferenceClick(Preference preference) {
+            public boolean onPreferenceClick(final Preference preference) {
+                final String key = preference.getKey();
+                Analytics.from(getActivity()).sendPreferenceEvent(key, "Preference clicked.");
                 final MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
                         .title("Blur Settings")
                         .customView(R.layout.blur_settings, true)
@@ -166,7 +169,9 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
                 positiveAction.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Timber.v("Blur %s - Radius %s - Dim %s - Grey %s", blurSeekBar.getProgress(), radiusSeekBar.getProgress(), dimSeekBar.getProgress(), greySeekBar.getProgress());
+                        String result = String.format("Blur %s - Radius %s - Dim %s - Grey %s", blurSeekBar.getProgress(), radiusSeekBar.getProgress(), dimSeekBar.getProgress(), greySeekBar.getProgress());
+                        Analytics.from(getActivity()).sendPreferenceEvent(key, result);
+                        Timber.v(result);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putInt("BLUR_WEAR", blurSeekBar.getProgress());
                         editor.putInt("RADIUS_WEAR", radiusSeekBar.getProgress());
@@ -183,6 +188,7 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
                 neutralAction.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        Analytics.from(getActivity()).sendPreferenceEvent(key, "Blur settings to default.");
                         Timber.v("Blur %s - Radius %s - Dim %s - Grey %s", blurSeekBar.getProgress(), radiusSeekBar.getProgress(), dimSeekBar.getProgress(), greySeekBar.getProgress());
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putInt("BLUR_WEAR", DEFAULT_BLUR);

@@ -13,20 +13,19 @@ import com.mikepenz.aboutlibraries.entity.Library;
 import com.mikepenz.aboutlibraries.ui.LibsActivity;
 
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity;
+import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
 public class AboutActivity extends LibsActivity {
 
     private int clickCounter = 0;
+    private String name = "About Activity";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         int m_theme;
-
-        ListPreferences sharedPreference = ListPreferences.getInstance(this);
 
         m_theme = R.style.AboutLibraries;
 
@@ -100,6 +99,30 @@ public class AboutActivity extends LibsActivity {
         super.onCreate(savedInstanceState);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Analytics.from(this).sendScreenView(name, "Activity destroyed.");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Analytics.from(this).sendScreenView(name, name + " started.");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Analytics.from(this).sendScreenView(name, name + " resumed.");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Analytics.from(this).notifyGoneBackground();
+    }
+
     private void showInputDialog() {
         new MaterialDialog.Builder(this)
                 .title("Debug Password")
@@ -116,16 +139,19 @@ public class AboutActivity extends LibsActivity {
     }
 
     private void goToDebug(){
+        Analytics.from(this).sendScreenView(name, "Debug Menu activated.");
         Intent debugIntent = new Intent(this, DebugActivity.class);
         startActivity(debugIntent);
     }
 
     private void specialButtonOne() {
+        Analytics.from(this).sendScreenView(name, "Go to Supporter Activity");
         Intent intent = new Intent(this, SupporterActivity.class);
         startActivity(intent);
     }
 
     public void customTabCallback(){
+        Analytics.from(this).sendScreenView(name, "Go to github release notes.");
         Utils.openCustomTab(this, this, "https://github.com/caman9119/SpaceLaunchNow/releases");
     }
 

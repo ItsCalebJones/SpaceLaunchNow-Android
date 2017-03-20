@@ -34,6 +34,7 @@ import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.ui.settings.util.CalendarPermissionListener;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.utils.Analytics;
 import timber.log.Timber;
 
 public class GeneralFragment extends BaseSettingFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -56,6 +57,7 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
 
         createPermissionListeners();
         setupPreference();
+        setName("General Fragment");
     }
 
     @Override
@@ -84,15 +86,14 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Timber.i("General preference %s changed.", key);
         if (key.equals("calendar_reminder_array") ) {
+            Analytics.from(this).sendPreferenceEvent(key, sharedPreferences.getBoolean(key, false));
             CalendarSyncService.startActionSyncAll(context);
-        }
-
-        if (key.equals("calendar_count")){
+        } else if (key.equals("calendar_count")){
+            Analytics.from(this).sendPreferenceEvent(key, sharedPreferences.getBoolean(key, false));
             CalendarSyncService.startActionResync(context);
-        }
-
-        if (key.equals("calendar_sync_state")) {
+        } else if (key.equals("calendar_sync_state")) {
             Timber.v("Calendar Sync State: %s", sharedPreferences.getBoolean(key, true));
+            Analytics.from(this).sendPreferenceEvent(key, sharedPreferences.getBoolean(key, false));
             if (sharedPreferences.getBoolean(key, true)) {
                 Timber.v("Calendar Status: %s", switchPreferences.getCalendarStatus());
                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
@@ -112,6 +113,8 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
                 CalendarSyncService.startActionDeleteAll(context);
                 switchPreferences.setCalendarStatus(false);
             }
+        } else {
+            Analytics.from(this).sendPreferenceEvent(key);
         }
     }
 

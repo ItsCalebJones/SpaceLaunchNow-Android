@@ -5,25 +5,29 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.AppCompatActivity;
 import android.transition.Transition;
 import android.view.MenuItem;
 
 import com.bumptech.glide.Glide;
 
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.BaseActivity;
 import uk.co.senab.photoview.PhotoView;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class FullscreenImageActivity extends AppCompatActivity {
+public class FullscreenImageActivity extends BaseActivity {
 
 
     private String imageURL;
     private Bitmap bitmap;
     private PhotoView photoView;
+
+    public FullscreenImageActivity() {
+        super("Fullscreen Image Activity");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

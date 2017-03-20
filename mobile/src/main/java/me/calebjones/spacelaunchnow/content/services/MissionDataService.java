@@ -15,6 +15,7 @@ import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryRequestInt
 import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.realm.UpdateRecord;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.MissionResponse;
+import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.FileUtils;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -49,7 +50,7 @@ public class MissionDataService extends BaseService {
 
     private void getMissionLaunches() {
         LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
-        Call<MissionResponse> call;
+        Call<MissionResponse> call = null;
         Response<MissionResponse> launchResponse;
         RealmList<Mission> items = new RealmList<>();
         int offset = 0;
@@ -97,6 +98,8 @@ public class MissionDataService extends BaseService {
 
             FileUtils.saveSuccess(true, Constants.ACTION_GET_MISSION, this);
 
+            Analytics.from(this).sendNetworkEvent(Constants.ACTION_GET_MISSION, call.request().url().toString(), true);
+
             this.sendBroadcast(broadcastIntent);
 
         } catch (IOException e) {
@@ -118,6 +121,8 @@ public class MissionDataService extends BaseService {
             Intent broadcastIntent = new Intent();
             broadcastIntent.putExtra("error", e.getLocalizedMessage());
             broadcastIntent.setAction(Constants.ACTION_FAILURE_MISSIONS);
+
+            Analytics.from(this).sendNetworkEvent(Constants.ACTION_GET_MISSION, call.request().url().toString(), false, e.getLocalizedMessage());
 
             this.sendBroadcast(broadcastIntent);
         }

@@ -50,7 +50,7 @@ import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.main.missions.MissionFragment;
-import me.calebjones.spacelaunchnow.ui.main.upcoming.NextLaunchFragment;
+import me.calebjones.spacelaunchnow.ui.main.next.NextLaunchFragment;
 import me.calebjones.spacelaunchnow.ui.main.vehicles.VehiclesViewPager;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.ui.settings.fragments.AppearanceFragment;
@@ -95,6 +95,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public MainActivity() {
+        super("Main Activity");
     }
 
     @Override
@@ -298,12 +299,6 @@ public class MainActivity extends BaseActivity {
             dialog.setCustomView(customView);
         }
         dialog.show();
-    }
-
-    public void getFirstLaunches() {
-        Intent launchIntent = new Intent(this.context, LaunchDataService.class);
-        launchIntent.setAction(Constants.ACTION_GET_ALL_DATA);
-        this.context.startService(launchIntent);
     }
 
     public void onResume() {
