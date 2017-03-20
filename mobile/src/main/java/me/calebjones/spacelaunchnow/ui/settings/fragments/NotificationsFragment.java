@@ -27,6 +27,7 @@ import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
+import me.calebjones.spacelaunchnow.utils.Analytics;
 import timber.log.Timber;
 
 import static me.calebjones.spacelaunchnow.content.services.NextLaunchTracker.DateToCalendar;
@@ -48,6 +49,7 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
                 return true;
             }
         });
+        setName("Notifications Fragment");
     }
 
     @Override
@@ -69,6 +71,9 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
         Timber.i("Notifications preference %s changed.", key);
         if (key.equals("notifications_launch_imminent_updates")) {
             OneSignal.setSubscription(sharedPreferences.getBoolean(key, true));
+            Analytics.from(this).sendPreferenceEvent(key, sharedPreferences.getBoolean(key, true));
+        }   else {
+            Analytics.from(this).sendPreferenceEvent(key);
         }
 
     }

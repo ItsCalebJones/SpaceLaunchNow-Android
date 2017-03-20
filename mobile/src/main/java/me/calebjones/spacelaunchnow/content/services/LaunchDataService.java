@@ -29,6 +29,7 @@ import me.calebjones.spacelaunchnow.data.models.realm.LaunchNotification;
 import me.calebjones.spacelaunchnow.data.models.realm.UpdateRecord;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryRequestInterface;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
+import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.FileUtils;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -303,7 +304,7 @@ public class LaunchDataService extends BaseService {
 
     private static boolean getLaunchesByDate(String startDate, String endDate, Context context) {
         LibraryRequestInterface request = getRetrofit().create(LibraryRequestInterface.class);
-        Call<LaunchResponse> call;
+        Call<LaunchResponse> call = null;
         Response<LaunchResponse> launchResponse;
         RealmList<Launch> items = new RealmList<>();
 
@@ -355,6 +356,10 @@ public class LaunchDataService extends BaseService {
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Constants.ACTION_SUCCESS_PREV_LAUNCHES);
             context.sendBroadcast(broadcastIntent);
+
+            if (call != null) {
+                Analytics.from(context).sendNetworkEvent(Constants.ACTION_GET_PREV_LAUNCHES, call.request().url().toString(), true);
+            }
             return true;
 
         } catch (IOException e) {
@@ -375,13 +380,17 @@ public class LaunchDataService extends BaseService {
             broadcastIntent.putExtra("error", e.getLocalizedMessage());
             broadcastIntent.setAction(Constants.ACTION_FAILURE_PREV_LAUNCHES);
             context.sendBroadcast(broadcastIntent);
+
+            if (call != null) {
+                Analytics.from(context).sendNetworkEvent(Constants.ACTION_GET_PREV_LAUNCHES, call.request().url().toString(), false, e.getLocalizedMessage());
+            }
             return false;
         }
     }
 
     private static boolean getUpcomingLaunches(Context context) {
         LibraryRequestInterface request = getRetrofit().create(LibraryRequestInterface.class);
-        Call<LaunchResponse> call;
+        Call<LaunchResponse> call = null;
         Response<LaunchResponse> launchResponse;
         RealmList<Launch> items = new RealmList<>();
 
@@ -451,7 +460,13 @@ public class LaunchDataService extends BaseService {
             context.getApplicationContext().sendBroadcast(broadcastIntent);
 
             mRealm.close();
+
             FileUtils.saveSuccess(true, Constants.ACTION_UPDATE_NEXT_LAUNCH, context);
+
+            if (call != null) {
+                Analytics.from(context).sendNetworkEvent(Constants.ACTION_UPDATE_NEXT_LAUNCH, call.request().url().toString(), true);
+            }
+
             return true;
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());
@@ -473,13 +488,17 @@ public class LaunchDataService extends BaseService {
             context.getApplicationContext().sendBroadcast(broadcastIntent);
             mRealm.close();
             FileUtils.saveSuccess(false, Constants.ACTION_UPDATE_NEXT_LAUNCH + " " + e.getLocalizedMessage(), context);
+
+            if (call != null) {
+                Analytics.from(context).sendNetworkEvent(Constants.ACTION_UPDATE_NEXT_LAUNCH, call.request().url().toString(), false, e.getLocalizedMessage());
+            }
             return false;
         }
     }
 
     private static boolean getUpcomingLaunchesAll(Context context) {
         LibraryRequestInterface request = getRetrofit().create(LibraryRequestInterface.class);
-        Call<LaunchResponse> call;
+        Call<LaunchResponse> call = null;
         Response<LaunchResponse> launchResponse;
         RealmList<Launch> items = new RealmList<>();
 
@@ -545,6 +564,10 @@ public class LaunchDataService extends BaseService {
 
             mRealm.close();
             FileUtils.saveSuccess(true, Constants.ACTION_SUCCESS_UP_LAUNCHES, context);
+
+            if (call != null) {
+                Analytics.from(context).sendNetworkEvent(Constants.ACTION_SUCCESS_UP_LAUNCHES, call.request().url().toString(), true);
+            }
             return true;
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());
@@ -566,13 +589,17 @@ public class LaunchDataService extends BaseService {
             context.getApplicationContext().sendBroadcast(broadcastIntent);
             mRealm.close();
             FileUtils.saveSuccess(false, Constants.ACTION_SUCCESS_UP_LAUNCHES + " " + e.getLocalizedMessage(), context);
+
+            if (call != null) {
+                Analytics.from(context).sendNetworkEvent(Constants.ACTION_SUCCESS_UP_LAUNCHES, call.request().url().toString(), false, e.getLocalizedMessage());
+            }
             return false;
         }
     }
 
     public static boolean getNextLaunches(Context context) {
         LibraryRequestInterface request = getRetrofit().create(LibraryRequestInterface.class);
-        Call<LaunchResponse> call;
+        Call<LaunchResponse> call = null;
         Response<LaunchResponse> launchResponse;
         RealmList<Launch> items = new RealmList<>();
 
@@ -633,6 +660,10 @@ public class LaunchDataService extends BaseService {
 
             mRealm.close();
             FileUtils.saveSuccess(true, Constants.ACTION_UPDATE_UP_LAUNCHES, context);
+
+            if (call != null) {
+                Analytics.from(context).sendNetworkEvent(Constants.ACTION_UPDATE_UP_LAUNCHES, call.request().url().toString(), true);
+            }
             return true;
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());
@@ -658,6 +689,10 @@ public class LaunchDataService extends BaseService {
 
             mRealm.close();
             FileUtils.saveSuccess(false, Constants.ACTION_UPDATE_UP_LAUNCHES + " " + e.getLocalizedMessage(), context);
+
+            if (call != null) {
+                Analytics.from(context).sendNetworkEvent(Constants.ACTION_UPDATE_UP_LAUNCHES, call.request().url().toString(), false, e.getLocalizedMessage());
+            }
             return false;
         }
     }
@@ -702,11 +737,16 @@ public class LaunchDataService extends BaseService {
             }
             mRealm.close();
             FileUtils.saveSuccess(true, Constants.ACTION_SUCCESS_LAUNCH, context);
+
+            if (call != null) {
+                Analytics.from(context).sendNetworkEvent(Constants.ACTION_UPDATE_UP_LAUNCHES + "_BY_ID", call.request().url().toString(), true);
+            }
             return true;
         } catch (IOException e) {
             Timber.e("Error: %s", e.getLocalizedMessage());
             mRealm.close();
             FileUtils.saveSuccess(false, Constants.ACTION_SUCCESS_LAUNCH, context);
+            Analytics.from(context).sendNetworkEvent(Constants.ACTION_UPDATE_UP_LAUNCHES + "_BY_ID", call.request().url().toString(), false, e.getLocalizedMessage());
             return false;
         }
     }

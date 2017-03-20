@@ -65,7 +65,7 @@ public class LaunchDetailActivity extends BaseActivity
     public String response;
     public Launch launch;
 
-    LaunchDetailActivity() {
+    public LaunchDetailActivity() {
         super("Launch Detail Activity");
     }
 

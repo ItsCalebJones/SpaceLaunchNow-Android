@@ -22,6 +22,7 @@ import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.Mission;
 import me.calebjones.spacelaunchnow.data.models.realm.RocketDetails;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
 public class MissionDetailFragment extends BaseFragment {
@@ -119,6 +120,11 @@ public class MissionDetailFragment extends BaseFragment {
                     public void onClick(View v) {
                         Activity activity = (Activity) context;
                         Utils.openCustomTab(activity, context, mission.getInfoURL());
+                        Analytics.from(getActivity()).sendButtonClickedWithURL(
+                                "Mission Info",
+                                detailLaunch.getName(),
+                                mission.getInfoURL()
+                        );
                     }
                 });
             } else {
@@ -133,6 +139,11 @@ public class MissionDetailFragment extends BaseFragment {
                     public void onClick(View v) {
                         Activity activity = (Activity) context;
                         Utils.openCustomTab(activity, context, mission.getWikiURL());
+                        Analytics.from(getActivity()).sendButtonClickedWithURL(
+                                "Mission Wiki",
+                                detailLaunch.getName(),
+                                mission.getWikiURL()
+                        );
                     }
                 });
             } else {

@@ -15,7 +15,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SwitchCompat;
@@ -66,6 +65,7 @@ import me.calebjones.spacelaunchnow.data.models.realm.Pad;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.data.models.realm.RocketDetails;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.utils.Analytics;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -180,15 +180,12 @@ public class SummaryDetailFragment extends BaseFragment {
 
         sharedPreference = ListPreferences.getInstance(this.context);
 
-        Context themeContext;
         if (sharedPreference.isNightModeActive(context)) {
             nightMode = true;
         } else {
             nightMode = false;
         }
 
-        themeContext = new ContextThemeWrapper(getActivity(), R.style.BaseAppTheme);
-        inflater.cloneInContext(themeContext);
         View view = inflater.inflate(R.layout.detail_launch_summary, container, false);
 
         ButterKnife.bind(this, view);
@@ -243,15 +240,18 @@ public class SummaryDetailFragment extends BaseFragment {
                             if (response.isSuccessful()) {
                                 Forecast forecast = response.body();
                                 if(SummaryDetailFragment.this.isVisible()) {
+                                    Analytics.from(getActivity()).sendWeatherEvent(launch.getName(), true, "Success");
                                     updateWeatherView(forecast);
                                 }
                             } else {
+                                Analytics.from(getActivity()).sendWeatherEvent(launch.getName(), false, response.errorBody().toString());
                                 Timber.e("Error: %s", response.errorBody());
                             }
                         }
 
                         @Override
                         public void onFailure(Call<Forecast> forecastCall, Throwable t) {
+                            Analytics.from(getActivity()).sendWeatherEvent(launch.getName(), false, t.getLocalizedMessage());
                             Timber.e("ERROR: %s", t.getLocalizedMessage());
                         }
                     });

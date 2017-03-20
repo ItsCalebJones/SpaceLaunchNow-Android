@@ -301,12 +301,6 @@ public class MainActivity extends BaseActivity {
         dialog.show();
     }
 
-    public void getFirstLaunches() {
-        Intent launchIntent = new Intent(this.context, LaunchDataService.class);
-        launchIntent.setAction(Constants.ACTION_GET_ALL_DATA);
-        this.context.startService(launchIntent);
-    }
-
     public void onResume() {
         super.onResume();
         if (getSharedPreferences("theme_changed", 0).getBoolean("recreate", false)) {
@@ -399,7 +393,7 @@ public class MainActivity extends BaseActivity {
                 if (mUpcomingFragment == null) {
                     mUpcomingFragment = new NextLaunchFragment();
                     // Tell it who it is working with.
-                    fm.beginTransaction().replace(R.id.flContent, NextLaunchFragment.newInstance(), "NEXT_LAUNCH").commit();
+                    fm.beginTransaction().replace(R.id.flContent, mUpcomingFragment, "NEXT_LAUNCH").commit();
                 }
                 break;
             case R.id.menu_launches:

@@ -35,6 +35,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.services.MissionDataService;
 import me.calebjones.spacelaunchnow.data.models.realm.Mission;
+import me.calebjones.spacelaunchnow.utils.Analytics;
 import timber.log.Timber;
 
 public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener {
@@ -200,12 +201,14 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
         int id = item.getItemId();
 
         if (id == R.id.action_refresh) {
+            Analytics.from(getActivity()).sendButtonClicked("Mission - Refresh Clicked");
             showLoading();
             fetchData();
             return true;
         }
 
         if (id == R.id.return_home) {
+            Analytics.from(getActivity()).sendButtonClicked("Mission - Home Clicked");
             mRecyclerView.scrollToPosition(0);
         }
         return super.onOptionsItemSelected(item);
@@ -215,6 +218,7 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
     public boolean onQueryTextChange(String query) {
         // Here is where we are going to implement our filter logic
         final List<Mission> filteredModelList = filter(missionList, query);
+        Analytics.from(getActivity()).sendSearchEvent(query, "Mission", filteredModelList.size());
         adapter.animateTo(filteredModelList);
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -232,7 +236,6 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
 
     private List<Mission> filter(List<Mission> models, String query) {
         query = query.toLowerCase();
-
         final List<Mission> filteredModelList = new ArrayList<>();
         for (Mission model : models) {
             final String missionName = model.getName().toLowerCase();

@@ -1,6 +1,7 @@
 package me.calebjones.spacelaunchnow.utils;
 
 import android.content.Context;
+import android.preference.PreferenceFragment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
@@ -33,6 +34,10 @@ public class Analytics {
         return from(fragment.getActivity());
     }
 
+    public static Analytics from(PreferenceFragment fragment) {
+        return from(fragment.getActivity());
+    }
+
     public interface Provider {
         Analytics getAnalytics();
     }
@@ -42,10 +47,9 @@ public class Analytics {
 
         if (!screenName.equals(mLastScreenName)) {
             mLastScreenName = screenName;
-            Answers.getInstance().logCustom(new UIEvent()
-                                                    .putScreenName(screenName)
+            Answers.getInstance().logCustom(new UIEvent(screenName)
                                                     .putState(state));
-            Timber.v("UI Event: %-%", screenName, state);
+            Timber.v("UI Event: %s - %s", screenName, state);
         }
     }
 
@@ -53,29 +57,27 @@ public class Analytics {
 
         if (!screenName.equals(mLastScreenName)) {
             mLastScreenName = screenName;
-            Answers.getInstance().logCustom(new UIEvent()
-                                                    .putScreenName(screenName));
-            Timber.v("UI Event: %", screenName);
+            Answers.getInstance().logCustom(new UIEvent(screenName));
+            Timber.v("UI Event: %s", screenName);
         }
     }
 
     public void notifyGoneBackground() {
-        Answers.getInstance().logCustom(new UIEvent()
-                                                .putScreenName("In background."));
+        Answers.getInstance().logCustom(new UIEvent("In background"));
     }
 
     public void sendLaunchDetailViewedEvent(@NonNull String launchName, @NonNull String launchType, @NonNull String launchID) {
         Answers.getInstance().logCustom(new LaunchDetailViewed()
                                                 .putLaunchName(launchName + " " + launchID)
                                                 .putLaunchType(launchType));
-        Timber.v("Launch Detail: % - % ID:% viewed", launchType, launchName, launchID);
+        Timber.v("Launch Detail: %s- %s ID:%s viewed", launchType, launchName, launchID);
     }
 
     public void sendLaunchShared(@NonNull String launchName, @NonNull String launchID) {
         Answers.getInstance().logShare(new ShareEvent()
                                                .putContentName(launchName)
                                                .putContentId(launchID));
-        Timber.v("Share Event: %-%", launchName, launchID);
+        Timber.v("Share Event: %s - %s", launchName, launchID);
     }
 
     public void sendSearchEvent(@NonNull String query, @NonNull String launchType, @NonNull int resultCount) {
@@ -83,57 +85,62 @@ public class Analytics {
                                                 .putQuery(query)
                                                 .putCustomAttribute("type", launchType)
                                                 .putCustomAttribute("result", resultCount));
-        Timber.v("Search Event %: Query - %  Result - %", launchType, query, resultCount);
+        Timber.v("Search Event %s: Query - %s Result - %s", launchType, query, resultCount);
     }
 
     public void sendLaunchMapClicked(@NonNull String launchName) {
         Answers.getInstance().logCustom(new MapClicked().putLaunchName(launchName));
-        Timber.v("Map Click: %", launchName);
+        Timber.v("Map Click: %s", launchName);
     }
 
     public void sendNetworkEvent(@NonNull String eventName, @NonNull String eventURL, @NonNull boolean result, @NonNull String response) {
-        Answers.getInstance().logCustom(new NetworkEvent()
-                                                .putEventName(eventName)
+        Answers.getInstance().logCustom(new NetworkEvent(eventName)
                                                 .putURL(eventURL)
                                                 .putResult(result)
                                                 .putResponse(response)
         );
-        Timber.v("Network Event: % Success - %s URL - %s", eventName, result, eventURL);
+        Timber.v("Network Event: %s Success - %s URL - %s", eventName, result, eventURL);
+    }
+
+    public void sendNetworkEvent(@NonNull String eventName, @NonNull String eventURL, @NonNull boolean result) {
+        Answers.getInstance().logCustom(new NetworkEvent(eventName)
+                                                .putURL(eventURL)
+                                                .putResult(result)
+        );
+        Timber.v("Network Event: %s Success - %s URL - %s", eventName, result, eventURL);
+    }
+
+    public void sendNetworkEvent(@NonNull String eventName) {
+        Answers.getInstance().logCustom(new NetworkEvent(eventName));
+        Timber.v("Network Event: %s Success", eventName);
     }
 
     public void sendButtonClickedWithURL(@NonNull String buttonName, @NonNull String eventURL) {
-        Answers.getInstance().logCustom(new ButtonClicked()
-                                                .putButtonName(buttonName)
+        Answers.getInstance().logCustom(new ButtonClicked(buttonName)
                                                 .putURL(eventURL)
         );
         Timber.v("Button Clicked: %s URL: %s", buttonName, eventURL);
     }
 
     public void sendButtonClickedWithURL(@NonNull String buttonName, @NonNull String launchName,@NonNull String eventURL) {
-        Answers.getInstance().logCustom(new ButtonClicked()
-                                                .putButtonName(buttonName)
+        Answers.getInstance().logCustom(new ButtonClicked(buttonName)
                                                 .putLaunchName(launchName)
-                                                .putURL(eventURL)
-        );
+                                                .putURL(eventURL));
         Timber.v("Button Clicked: %s - %s URL: %s", buttonName, launchName, eventURL);
     }
 
     public void sendButtonClicked(@NonNull String buttonName, @NonNull String launchName) {
-        Answers.getInstance().logCustom(new ButtonClicked()
-                                                .putButtonName(buttonName)
-                                                .putLaunchName(launchName)
-        );
+        Answers.getInstance().logCustom(new ButtonClicked(buttonName)
+                                                .putLaunchName(launchName));
         Timber.v("Button Clicked: %s - %s", buttonName, launchName);
     }
 
     public void sendButtonClicked(@NonNull String buttonName) {
-        Answers.getInstance().logCustom(new ButtonClicked()
-                                                .putButtonName(buttonName)
-        );
+        Answers.getInstance().logCustom(new ButtonClicked(buttonName));
         Timber.v("Button Clicked: %s", buttonName);
     }
 
-    public void sendWeatherEvent(@NonNull String launchName, @NonNull boolean result) {
+    public void sendWeatherEvent(@NonNull String launchName, @NonNull boolean result, String localizedMessage) {
         Answers.getInstance().logCustom(new WeatherEvent()
                                                 .putLaunchName(launchName)
                                                 .putResult(String.valueOf(result))
@@ -142,18 +149,22 @@ public class Analytics {
     }
 
     public void sendPreferenceEvent(@NonNull String prefName, @NonNull boolean result) {
-        Answers.getInstance().logCustom(new PreferenceEvent()
-                                                .putPreferenceName(prefName)
+        Answers.getInstance().logCustom(new PreferenceEvent(prefName)
                                                 .putEnabled(String.valueOf(result))
                                                 );
-        Timber.v("Weather Event: %s Result: %s", prefName, result);
+        Timber.v("Preference Event: %s Result: %s", prefName, result);
+    }
+
+    public void sendPreferenceEvent(@NonNull String prefName, @NonNull String result) {
+        Answers.getInstance().logCustom(new PreferenceEvent(prefName)
+                                                .putStatus(String.valueOf(result))
+        );
+        Timber.v("Preference Event: %s Result: %s", prefName, result);
     }
 
     public void sendPreferenceEvent(@NonNull String prefName) {
-        Answers.getInstance().logCustom(new PreferenceEvent()
-                                                .putPreferenceName(prefName)
-        );
-        Timber.v("Weather Event: %s changed.", prefName);
+        Answers.getInstance().logCustom(new PreferenceEvent(prefName));
+        Timber.v("Preference Event: %s changed.", prefName);
     }
 
     public void sendAddToCartEvent(@NonNull Products products, String sku){
@@ -163,14 +174,14 @@ public class Analytics {
                                                    .putItemName(products.getName())
                                                    .putItemType(products.getType())
                                                    .putItemId(sku));
-        Timber.v("Add to Cart: %s %s - $% SKU: %s", products.getName(), products.getType(), products.getPrice(), sku);
+        Timber.v("Add to Cart: %s %s - $%s SKU: %s", products.getName(), products.getType(), products.getPrice(), sku);
     }
 
     public void sendStartCheckout(@NonNull Products products) {
         Answers.getInstance().logStartCheckout(new StartCheckoutEvent().putTotalPrice(BigDecimal.valueOf(products.getPrice()))
                                                    .putCurrency(Currency.getInstance("USD"))
                                                    .putItemCount(1));
-        Timber.v("StartCheckout: %s %s - $%", products.getName(), products.getType(), products.getPrice());
+        Timber.v("StartCheckout: %s %s - $%s", products.getName(), products.getType(), products.getPrice());
     }
 
     public void sendPurchaseEvent(@NonNull Products products, String sku) {
@@ -181,7 +192,7 @@ public class Analytics {
                                                   .putItemType(products.getType())
                                                   .putItemId(sku)
                                                   .putSuccess(true));
-        Timber.v("Purchased: %s %s - $% SKU: %s", products.getName(), products.getType(), products.getPrice(), sku);
+        Timber.v("Purchased: %s %s - $%sSKU: %s", products.getName(), products.getType(), products.getPrice(), sku);
     }
 
     //Custom Answer Events
@@ -200,7 +211,7 @@ public class Analytics {
     private class LaunchDetailViewed extends CustomEvent {
 
         LaunchDetailViewed() {
-            super("LaunchDetailViewed");
+            super("Launch Details Viewed");
         }
 
         LaunchDetailViewed putLaunchName(@NonNull String launchName) {
@@ -216,13 +227,8 @@ public class Analytics {
 
     private class NetworkEvent extends CustomEvent {
 
-        NetworkEvent() {
-            super("NetworkEvent");
-        }
-
-        NetworkEvent putEventName(@NonNull String eventName) {
-            this.putCustomAttribute("eventName", eventName);
-            return this;
+        NetworkEvent(String eventName) {
+            super(eventName + " Network Event");
         }
 
         NetworkEvent putURL(@NonNull String url) {
@@ -243,13 +249,8 @@ public class Analytics {
 
     private class ButtonClicked extends CustomEvent {
 
-        ButtonClicked() {
-            super("ButtonClicked");
-        }
-
-        ButtonClicked putButtonName(@NonNull String eventName) {
-            this.putCustomAttribute("buttonName", eventName);
-            return this;
+        ButtonClicked(String eventName) {
+            super(eventName + " Button Clicked");
         }
 
         ButtonClicked putLaunchName(@NonNull String launchName) {
@@ -266,7 +267,7 @@ public class Analytics {
     private class WeatherEvent extends CustomEvent {
 
         WeatherEvent() {
-            super("NetworkEvent");
+            super("Weather Event");
         }
 
         WeatherEvent putLaunchName(@NonNull String launchName) {
@@ -282,30 +283,25 @@ public class Analytics {
 
     private class PreferenceEvent extends CustomEvent {
 
-        PreferenceEvent() {
-            super("PreferenceEvent");
-        }
-
-        PreferenceEvent putPreferenceName(@NonNull String prefName) {
-            this.putCustomAttribute("preference", prefName);
-            return this;
+        PreferenceEvent(String prefName) {
+            super(prefName + " Preference Event");
         }
 
         PreferenceEvent putEnabled(@NonNull String result) {
             this.putCustomAttribute("enabled", result);
             return this;
         }
+
+        PreferenceEvent putStatus(@NonNull String result) {
+            this.putCustomAttribute("status", result);
+            return this;
+        }
     }
 
     private class UIEvent extends CustomEvent {
 
-        UIEvent() {
-            super("UIEvent");
-        }
-
-        UIEvent putScreenName(@NonNull String screen) {
-            this.putCustomAttribute("screen", screen);
-            return this;
+        UIEvent(String screen) {
+            super(screen + " UI Event");
         }
 
         UIEvent putState(@NonNull String state) {

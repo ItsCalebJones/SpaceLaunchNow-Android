@@ -1,11 +1,7 @@
 package me.calebjones.spacelaunchnow.ui.webview;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -14,15 +10,19 @@ import android.widget.ProgressBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.BaseActivity;
+import me.calebjones.spacelaunchnow.utils.Analytics;
 
-public class WebViewFallbackActivity extends AppCompatActivity {
+public class WebViewFallbackActivity extends BaseActivity {
     public static final String EXTRA_URL = "extra.url";
 
-    @BindView(R.id.fab) FloatingActionButton fab;
     @BindView(R.id.progressView)
     ProgressBar bar;
+
+    public WebViewFallbackActivity() {
+        super("Web View Activity");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,13 +50,9 @@ public class WebViewFallbackActivity extends AppCompatActivity {
                 }
             }
         });
+        Analytics.from(this).sendScreenView("Web View Activity", "Loaded URL: " + url);
 
         webView.loadUrl(url);
-    }
-
-    @OnClick(R.id.fab) void shareLink(View view){
-        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
     }
 
 }

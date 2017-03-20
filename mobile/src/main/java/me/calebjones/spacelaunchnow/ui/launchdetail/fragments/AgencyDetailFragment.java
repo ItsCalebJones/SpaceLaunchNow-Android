@@ -17,13 +17,15 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.natives.RocketDetails;
 import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
-public class AgencyDetailFragment extends Fragment {
+public class AgencyDetailFragment extends BaseFragment {
 
     private SharedPreferences sharedPref;
     private static ListPreferences sharedPreference;
@@ -90,6 +92,7 @@ public class AgencyDetailFragment extends Fragment {
         View view;
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         this.context = getContext();
+        setScreenName("Agency Detail Fragment");
 
         sharedPreference = ListPreferences.getInstance(this.context);
 
@@ -159,6 +162,14 @@ public class AgencyDetailFragment extends Fragment {
                 public void onClick(View v) {
                     Activity activity = (Activity)context;
                     Utils.openCustomTab(activity, context, detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL());
+                    Analytics.from(getActivity()).sendButtonClickedWithURL("Mission Wiki",
+                                                                           detailLaunch.getName(),
+                                                                           detailLaunch.getLocation()
+                                                                                   .getPads()
+                                                                                   .get(0)
+                                                                                   .getAgencies()
+                                                                                   .get(0)
+                                                                                   .getWikiURL());
                 }
             });
         } else {
@@ -177,6 +188,12 @@ public class AgencyDetailFragment extends Fragment {
                     Activity activity = (Activity)context;
                     Utils.openCustomTab(activity, context, detailLaunch.getLocation().getPads()
                             .get(0).getAgencies().get(0).getInfoURL());
+                    Analytics.from(getActivity()).sendButtonClickedWithURL(
+                            "Mission Info",
+                            detailLaunch.getName(),
+                            detailLaunch.getLocation().getPads()
+                                    .get(0).getAgencies().get(0).getInfoURL()
+                    );
                 }
             });
         } else {
@@ -214,7 +231,10 @@ public class AgencyDetailFragment extends Fragment {
                 public void onClick(View v) {
                     Activity activity = (Activity)context;
                     Utils.openCustomTab(activity,context, detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL());
-
+                    Analytics.from(getActivity()).sendButtonClickedWithURL(
+                            "Mission Wiki",
+                            detailLaunch.getName(),
+                            detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL());
                 }
             });
         } else {
@@ -231,6 +251,10 @@ public class AgencyDetailFragment extends Fragment {
                 public void onClick(View v) {
                     Activity activity = (Activity)context;
                     Utils.openCustomTab(activity, context, detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL());
+                    Analytics.from(getActivity()).sendButtonClickedWithURL(
+                            "Mission Info",
+                            detailLaunch.getName(),
+                            detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL());
 
                 }
             });
@@ -247,6 +271,10 @@ public class AgencyDetailFragment extends Fragment {
                 public void onClick(View v) {
                     Activity activity = (Activity)context;
                     Utils.openCustomTab(activity, context, detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getWikiURL());
+                    Analytics.from(getActivity()).sendButtonClickedWithURL(
+                            "Mission Wiki",
+                            detailLaunch.getName(),
+                            detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getWikiURL());
                 }
             });
         } else {
@@ -263,6 +291,10 @@ public class AgencyDetailFragment extends Fragment {
                 public void onClick(View v) {
                     Activity activity = (Activity)context;
                     Utils.openCustomTab(activity, context, detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getInfoURL());
+                    Analytics.from(getActivity()).sendButtonClickedWithURL(
+                            "Mission Info",
+                            detailLaunch.getName(),
+                            detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getInfoURL());
                 }
             });
         } else {
@@ -308,6 +340,11 @@ public class AgencyDetailFragment extends Fragment {
                 public void onClick(View v) {
                     Activity activity = (Activity)context;
                     Utils.openCustomTab(activity, context, detailLaunch.getRocket().getAgencies().get(0).getWikiURL());
+                    Analytics.from(getActivity()).sendButtonClickedWithURL(
+                            "Mission Wiki",
+                            detailLaunch.getName(),
+                            detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL()
+                    );
                 }
             });
         } else {
@@ -324,6 +361,11 @@ public class AgencyDetailFragment extends Fragment {
                 public void onClick(View v) {
                     Activity activity = (Activity)context;
                     Utils.openCustomTab(activity, context, detailLaunch.getRocket().getAgencies().get(0).getInfoURL());
+                    Analytics.from(getActivity()).sendButtonClickedWithURL(
+                            "Mission Info",
+                            detailLaunch.getName(),
+                            detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL()
+                    );
                 }
             });
         } else {
@@ -375,6 +417,11 @@ public class AgencyDetailFragment extends Fragment {
                 public void onClick(View v) {
                     Activity activity = (Activity)context;
                     Utils.openCustomTab(activity, context, detailLaunch.getRocket().getAgencies().get(0).getWikiURL());
+                    Analytics.from(getActivity()).sendButtonClickedWithURL(
+                            "Mission Wiki",
+                            detailLaunch.getName(),
+                            detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL()
+                    );
                 }
             });
         } else {
@@ -391,6 +438,11 @@ public class AgencyDetailFragment extends Fragment {
                 public void onClick(View v) {
                     Activity activity = (Activity)context;
                     Utils.openCustomTab(activity, context, detailLaunch.getRocket().getAgencies().get(0).getInfoURL());
+                    Analytics.from(getActivity()).sendButtonClickedWithURL(
+                            "Mission Info",
+                            detailLaunch.getName(),
+                            detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL()
+                    );
                 }
             });
         } else {
@@ -406,6 +458,11 @@ public class AgencyDetailFragment extends Fragment {
                 public void onClick(View v) {
                     Activity activity = (Activity)context;
                     Utils.openCustomTab(activity, context, detailLaunch.getRocket().getAgencies().get(1).getWikiURL());
+                    Analytics.from(getActivity()).sendButtonClickedWithURL(
+                            "Mission Wiki",
+                            detailLaunch.getName(),
+                            detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getWikiURL()
+                    );
                 }
             });
         } else {
@@ -421,6 +478,11 @@ public class AgencyDetailFragment extends Fragment {
                 public void onClick(View v) {
                     Activity activity = (Activity)context;
                     Utils.openCustomTab(activity, context, detailLaunch.getRocket().getAgencies().get(1).getInfoURL());
+                    Analytics.from(getActivity()).sendButtonClickedWithURL(
+                            "Mission Info",
+                            detailLaunch.getName(),
+                            detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getInfoURL()
+                    );
                 }
             });
         } else {

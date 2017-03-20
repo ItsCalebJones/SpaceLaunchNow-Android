@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
 import android.view.Menu;
@@ -26,6 +25,7 @@ import com.google.gson.Gson;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.natives.Orbiter;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
@@ -33,7 +33,7 @@ import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;
 
-public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
+public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.OnOffsetChangedListener {
 
     private static final int PERCENTAGE_TO_ANIMATE_AVATAR = 20;
     private boolean mIsAvatarShown = true;
@@ -50,6 +50,10 @@ public class OrbiterDetailActivity extends AppCompatActivity implements AppBarLa
     private CircleImageView detail_profile_image;
     private AppBarLayout appBarLayout;
     private int mMaxScrollSize;
+
+    public OrbiterDetailActivity() {
+        super("Orbiter Detail Activity");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

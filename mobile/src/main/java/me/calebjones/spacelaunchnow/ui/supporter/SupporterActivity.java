@@ -175,10 +175,13 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
                 sku = SupporterHelper.SKU_THIRTY_DOLLAR;
                 break;
         }
+
+        //Get Product from SKU
+        Products products = SupporterHelper.getProduct(sku);
+        Analytics.from(this).sendAddToCartEvent(products, sku);
+
+        //Initiate purchase
         if (BillingProcessor.isIabServiceAvailable(this)) {
-            // continue
-            Products products = SupporterHelper.getProduct(sku);
-            Analytics.from(this).sendAddToCartEvent(products, sku);
             Analytics.from(this).sendStartCheckout(products);
             bp.purchase(this, sku);
         } else {

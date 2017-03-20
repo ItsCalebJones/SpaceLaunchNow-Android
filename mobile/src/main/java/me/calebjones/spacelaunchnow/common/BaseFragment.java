@@ -8,7 +8,7 @@ import me.calebjones.spacelaunchnow.utils.Analytics;
 
 public class BaseFragment extends Fragment {
     private Realm realm;
-    private String screenName;
+    private String screenName = "Unknown (Name not set)";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

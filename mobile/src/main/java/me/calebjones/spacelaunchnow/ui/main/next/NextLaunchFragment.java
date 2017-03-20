@@ -55,6 +55,7 @@ import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
+import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
@@ -604,6 +605,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
         } else if (id == R.id.action_alert) {
             if (!active) {
+                Analytics.from(this).sendButtonClicked("Show Launch filters.");
                 switchChanged = false;
                 active = true;
                 mSwipeRefreshLayout.setEnabled(false);
@@ -614,6 +616,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     color_reveal.setVisibility(View.VISIBLE);
                 }
             } else {
+                Analytics.from(this).sendButtonClicked("Hide Launch filters.");
                 active = false;
                 FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_add_alert));
                 mSwipeRefreshLayout.setEnabled(true);
