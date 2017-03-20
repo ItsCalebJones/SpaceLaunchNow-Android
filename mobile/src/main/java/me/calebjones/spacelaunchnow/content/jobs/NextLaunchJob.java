@@ -31,11 +31,7 @@ public class NextLaunchJob extends Job {
         JobRequest.Builder builder = new JobRequest.Builder(NextLaunchJob.TAG + launchId)
                 .setExact(interval);
 
-        if (launchId > 0) {
-            builder.setUpdateCurrent(true);
-        } else {
-            builder.setUpdateCurrent(false);
-        }
+        builder.setUpdateCurrent(true);
 
         builder.build().schedule();
     }

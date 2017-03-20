@@ -13,6 +13,7 @@ import android.widget.RemoteViews;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -32,8 +33,9 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
 
     private Realm mRealm;
     private int last_refresh_counter = 0;
-    private static CountDownTimer countDownTimer;
-    private static boolean invalid = false;
+    private CountDownTimer countDownTimer;
+    private boolean invalid = false;
+    private int countdownId;
     public RemoteViews remoteViews;
     public SwitchPreferences switchPreferences;
     public static String ACTION_WIDGET_REFRESH = "ActionReceiverRefresh";
@@ -189,6 +191,9 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
         if (!ListPreferences.getInstance(context).getFirstBoot()) {
             if (intent.getAction().equals(ACTION_WIDGET_REFRESH)) {
                 Timber.v("onReceive %s", ACTION_WIDGET_REFRESH);
+                if (countDownTimer != null){
+                    countDownTimer.cancel();
+                }
                 AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
                 int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, this.getClass()));
                 onUpdate(context, appWidgetManager, appWidgetIds);
@@ -243,6 +248,11 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
 
         long millisUntilFinished = getFutureMilli(launchRealm) - System.currentTimeMillis();
 
+        Random rand = new Random();
+
+        countdownId = rand.nextInt(500) + 1;
+        switchPreferences.setWidgetID(countdownId);
+
         if (countDownTimer != null) {
             Timber.v("Cancelling countdown timer.");
             countDownTimer.cancel();
@@ -268,6 +278,16 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
                     Timber.v("Cancelling countdown timer - onClick - invalid = %s", invalid);
                     this.cancel();
                 }
+
+                //Run this check every five seconds.
+                if ((millisUntilFinished / 1000) % 5 == 0){
+                    if (countdownId != switchPreferences.getWidgetID()){
+                        Timber.v("Cancelling countdown timer - onClick - invalid = %s", invalid);
+                        this.cancel();
+                    }
+                }
+
+                Timber.v("onTick %s ID: %s - Valid %s", millisUntilFinished / 1000, countdownId, invalid);
 
                 // Calculate the Days/Hours/Mins/Seconds numerically.
                 long longDays = millisUntilFinished / 86400000;
