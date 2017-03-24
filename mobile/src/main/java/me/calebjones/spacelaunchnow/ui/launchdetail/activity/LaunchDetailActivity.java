@@ -111,7 +111,7 @@ public class LaunchDetailActivity extends BaseActivity
         String type = mIntent.getStringExtra("TYPE");
 
 
-        if (type.equals("launch")) {
+        if (type != null && type.equals("launch")) {
             int id = mIntent.getIntExtra("launchID", 0);
             launch = getRealm().where(Launch.class).equalTo("id", id).findFirst();
         }

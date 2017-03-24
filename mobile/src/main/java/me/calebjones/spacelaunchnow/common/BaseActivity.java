@@ -8,6 +8,8 @@ import me.calebjones.spacelaunchnow.utils.Analytics;
 
 public class BaseActivity extends AppCompatActivity {
 
+    public BaseActivity(){}
+
     public BaseActivity (String screenName){
         name = screenName;
     }
