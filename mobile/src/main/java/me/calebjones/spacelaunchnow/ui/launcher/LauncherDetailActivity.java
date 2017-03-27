@@ -19,6 +19,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -31,6 +32,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.natives.Launcher;
 import me.calebjones.spacelaunchnow.data.models.realm.Rocket;
 import me.calebjones.spacelaunchnow.ui.launchdetail.VehicleDetailAdapter;
+import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
@@ -154,6 +156,13 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
         Intent intent = getIntent();
         Gson gson = new Gson();
         final Launcher launcher = gson.fromJson(intent.getStringExtra("json"), Launcher.class);
+
+        if (launcher == null) {
+            Toast.makeText(context, "Error - Unable to load launcher details.", Toast.LENGTH_SHORT).show();
+            Timber.e("Error - Unable to load launch details.");
+            Intent homeIntent = new Intent(this, MainActivity.class);
+            startActivity(homeIntent);
+        }
 
         String name = launcher.getName();
         String agency = launcher.getAgency();

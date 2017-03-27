@@ -19,6 +19,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -28,6 +29,7 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.natives.Orbiter;
+import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
@@ -164,6 +166,13 @@ public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.
         Intent intent = getIntent();
         Gson gson = new Gson();
         final Orbiter orbiter = gson.fromJson(intent.getStringExtra("json"), Orbiter.class);
+
+        if (orbiter == null){
+            Toast.makeText(context, "Error - Unable to load orbiter details.", Toast.LENGTH_SHORT).show();
+            Timber.e("Error - Unable to load launch details.");
+            Intent homeIntent = new Intent(this, MainActivity.class);
+            startActivity(homeIntent);
+        }
 
         detail_rocket.setText(String.format("%s Spacecraft", orbiter.getName()));
         detail_vehicle_agency.setText(orbiter.getName());
