@@ -87,10 +87,7 @@
         <service
             android:name=".content.services.VehicleDataService"
             android:exported="false" />
-        <service
-            android:name=".content.services.LibraryDataService"
-            android:exported="false" />
-        <service
+      <service
             android:name=".content.services.NextLaunchTracker"
             android:exported="false" />
         <service

@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.content.models;
+package me.calebjones.spacelaunchnow.data.models;
 
 
 public final class Constants {
@@ -26,7 +26,6 @@ public final class Constants {
     public static final String ACTION_GET_UP_LAUNCHES = "GET_UP_LAUNCHES";
     public static final String ACTION_GET_VEHICLES_DETAIL = "GET_ROCKETS";
     public static final String ACTION_GET_ALL_DATA = "GET_ALL";
-    public static final String ACTION_GET_ALL_LIBRARY_DATA = "GET_ALL";
     public static final String ACTION_GET_ALL_NO_WIFI = "GET_ALL_NO_WIFI";
     public static final String ACTION_GET_MISSION = "GET_ALL_MISSIONS";
     public static final String ACTION_GET_AGENCY = "GET_AGENCY";
@@ -53,19 +52,19 @@ public final class Constants {
 
     public static int DB_SCHEMA_VERSION = 188;
 
-    public static String LAUNCH_URL = "https://launchlibrary.net/1.2/launch/next/1000&mode=verbose";
+    public static String LAUNCH_URL = "https://launchlibrary.net/1.2/detailLaunch/next/1000&mode=verbose";
     public static String MISSION_URL = "https://launchlibrary.net/1.2/mission?limit=1000&mode=verbose";
     public static String AGENCY_URL = "https://launchlibrary.net/1.2/agency?mode=verbose&limit=1000";
     public static String VEHICLE_URL = "https://launchlibrary.net/1.2/rocket?mode=verbose&limit=1000";
-    public static String NEXT_URL = "https://launchlibrary.net/1.2/launch?next=10&mode=verbose";
-    public static String NEXT_URL_BY_ID = "https://launchlibrary.net/1.2/launch/%s?mode=verbose";
+    public static String NEXT_URL = "https://launchlibrary.net/1.2/detailLaunch?next=10&mode=verbose";
+    public static String NEXT_URL_BY_ID = "https://launchlibrary.net/1.2/detailLaunch/%s?mode=verbose";
 
-    public static String DEBUG_LAUNCH_URL = "https://launchlibrary.net/dev/launch/next/1000&mode=verbose";
+    public static String DEBUG_LAUNCH_URL = "https://launchlibrary.net/dev/detailLaunch/next/1000&mode=verbose";
     public static String DEBUG_MISSION_URL = "https://launchlibrary.net/dev/mission?limit=1000&mode=verbose";
     public static String DEBUG_AGENCY_URL = "https://launchlibrary.net/dev/agency?mode=verbose&limit=1000";
     public static String DEBUG_VEHICLE_URL = "https://launchlibrary.net/dev/rocket?mode=verbose&limit=1000";
-    public static String DEBUG_NEXT_URL = "https://launchlibrary.net/dev/launch?next=10&mode=verbose";
-    public static String DEBUG_NEXT_URL_BY_ID = "https://launchlibrary.net/dev/launch/%s?mode=verbose";
+    public static String DEBUG_NEXT_URL = "https://launchlibrary.net/dev/detailLaunch?next=10&mode=verbose";
+    public static String DEBUG_NEXT_URL_BY_ID = "https://launchlibrary.net/dev/detailLaunch/%s?mode=verbose";
 
     public static String FORECAST_IO_BASE_URL = "https://api.forecast.io/";
     public static String API_BASE_URL = "http://calebjones.me/app/";

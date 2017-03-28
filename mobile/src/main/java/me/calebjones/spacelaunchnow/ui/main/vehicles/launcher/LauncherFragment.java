@@ -27,7 +27,7 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.CustomFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.natives.Launcher;
-import me.calebjones.spacelaunchnow.data.networking.interfaces.APIRequestInterface;
+import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LauncherResponse;
 import me.calebjones.spacelaunchnow.ui.launcher.LauncherDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Analytics;
@@ -121,7 +121,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
         Timber.v("Loading vehicles...");
         showLoading();
 
-        APIRequestInterface request = getRetrofit().create(APIRequestInterface.class);
+        SpaceLaunchNowService request = getRetrofit().create(SpaceLaunchNowService.class);
         Call<LauncherResponse> call = request.getLaunchers();
         call.enqueue(new Callback<LauncherResponse>() {
             @Override

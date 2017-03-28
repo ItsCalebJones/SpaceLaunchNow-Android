@@ -25,8 +25,8 @@ import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.realm.Pad;
 import me.calebjones.spacelaunchnow.data.models.realm.RocketDetails;
-import me.calebjones.spacelaunchnow.data.networking.interfaces.APIRequestInterface;
-import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryRequestInterface;
+import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
+import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryService;
 import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.realm.Agency;
 import me.calebjones.spacelaunchnow.data.models.realm.Location;
@@ -135,7 +135,7 @@ public class LibraryDataService extends IntentService {
 
         if (intent != null) {
             String action = intent.getAction();
-            if(Constants.ACTION_GET_ALL_DATA.equals(action)){
+            if(Constants.ACTION_GET_ALL_LIBRARY_DATA.equals(action)){
                 listPreference.setLastVehicleUpdate(System.currentTimeMillis());
                 getAllAgency();
                 getAllLocations();
@@ -166,7 +166,7 @@ public class LibraryDataService extends IntentService {
     }
 
     private void getAllAgency() {
-        LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
+        LibraryService request = libraryRetrofit.create(LibraryService.class);
         Call<AgencyResponse> call;
         Response<AgencyResponse> launchResponse;
         RealmList<Agency> items = new RealmList<>();
@@ -204,7 +204,7 @@ public class LibraryDataService extends IntentService {
     }
 
     private void getAllMissions() {
-        LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
+        LibraryService request = libraryRetrofit.create(LibraryService.class);
         Call<MissionResponse> call;
         Response<MissionResponse> launchResponse;
         RealmList<Mission> items = new RealmList<>();
@@ -242,7 +242,7 @@ public class LibraryDataService extends IntentService {
     }
 
     private void getAllLocations() {
-        LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
+        LibraryService request = libraryRetrofit.create(LibraryService.class);
         Call<LocationResponse> call;
         Response<LocationResponse> launchResponse;
         RealmList<Location> items = new RealmList<>();
@@ -280,7 +280,7 @@ public class LibraryDataService extends IntentService {
     }
 
     private void getAllPads() {
-        LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
+        LibraryService request = libraryRetrofit.create(LibraryService.class);
         Call<PadResponse> call;
         Response<PadResponse> launchResponse;
         RealmList<Pad> items = new RealmList<>();
@@ -318,7 +318,7 @@ public class LibraryDataService extends IntentService {
     }
 
     private void getBaseVehicleDetails() {
-        APIRequestInterface request = apiRetrofit.create(APIRequestInterface.class);
+        SpaceLaunchNowService request = apiRetrofit.create(SpaceLaunchNowService.class);
         Call<VehicleResponse> call;
         Response<VehicleResponse> launchResponse;
         RealmList<RocketDetails> items = new RealmList<>();
@@ -345,7 +345,7 @@ public class LibraryDataService extends IntentService {
     }
 
     private void getLibraryRockets() {
-        LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
+        LibraryService request = libraryRetrofit.create(LibraryService.class);
         Call<RocketResponse> call;
         Response<RocketResponse> launchResponse;
         RealmList<Rocket> items = new RealmList<>();
@@ -387,7 +387,7 @@ public class LibraryDataService extends IntentService {
 
     //TODO does this need to send success/failure?
     private void getLibraryRocketsFamily() {
-        LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
+        LibraryService request = libraryRetrofit.create(LibraryService.class);
         Call<RocketFamilyResponse> call;
         Response<RocketFamilyResponse> launchResponse;
         RealmList<RocketFamily> items = new RealmList<>();

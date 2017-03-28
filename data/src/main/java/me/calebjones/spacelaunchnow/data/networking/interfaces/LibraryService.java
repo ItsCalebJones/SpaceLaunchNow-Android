@@ -12,7 +12,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-public interface LibraryRequestInterface {
+public interface LibraryService {
 
     String version = "1.2.1";
 
@@ -34,14 +34,14 @@ public interface LibraryRequestInterface {
                                                   @Path("end_date") String end_date,
                                                   @Query("offset") int offset);
 
-    @GET(version + "/launch/{start_date}/{end_date}")
-    Call<LaunchResponse> getLaunchesByDate(@Path("start_date") String start_date,
-                                           @Path("end_date") String end_date,
+    @GET(version + "/launch?fields=net,name,location,status")
+    Call<LaunchResponse> getLaunchesByDate(@Query("startdate") String start_date,
+                                           @Query("enddate") String end_date,
                                            @Query("offset") int offset);
 
-    @GET("dev/launch/{start_date}/{end_date}/?limit=300")
-    Call<LaunchResponse> getDebugLaunchesByDate(@Path("start_date") String start_date,
-                                                @Path("end_date") String end_date,
+    @GET("dev/launch?fields=net,name,location,status")
+    Call<LaunchResponse> getDebugLaunchesByDate(@Query("startdate") String start_date,
+                                                @Query("enddate") String end_date,
                                                 @Query("offset") int offset);
 
     @GET(version + "/launch?next=5&mode=verbose")

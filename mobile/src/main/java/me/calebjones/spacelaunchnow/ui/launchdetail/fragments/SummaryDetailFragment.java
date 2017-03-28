@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
@@ -64,7 +63,6 @@ import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.Pad;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.data.models.realm.RocketDetails;
-import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Analytics;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -78,7 +76,7 @@ public class SummaryDetailFragment extends BaseFragment {
     private static ListPreferences sharedPreference;
     private Context context;
 
-    public static Launch launch;
+    public Launch detailLaunch;
     private RocketDetails launchVehicle;
     private boolean nightMode;
 
@@ -195,32 +193,29 @@ public class SummaryDetailFragment extends BaseFragment {
 
     @Override
     public void onResume() {
-        launch = ((LaunchDetailActivity) getActivity()).getLaunch();
-        setUpViews();
-
-        weatherCard.setVisibility(View.GONE);
-
-        // Check if Weather card is enabled, defaults to false if null.
-        if (sharedPref.getBoolean("weather", false)){
-            if (launch.getNet().after(Calendar.getInstance().getTime())) {
-                fetchCurrentWeather();
-            } else {
-                fetchPastWeather();
-            }
-        }
 
         if (sharedPreference.isNightModeActive(context)) {
             nightMode = true;
         } else {
             nightMode = false;
         }
+        if (detailLaunch != null) {
+            setUpViews(detailLaunch);
+        }
         super.onResume();
     }
 
-    private void fetchPastWeather() {
-        if (launch.getLocation().getPads().size() > 0) {
+    public void setLaunch(Launch launch) {
+        detailLaunch = launch;
+        if (isVisible()) {
+            setUpViews(launch);
+        }
+    }
 
-            Pad pad = launch.getLocation().getPads().get(0);
+    private void fetchPastWeather() {
+        if (detailLaunch.getLocation().getPads().size() > 0) {
+
+            Pad pad = detailLaunch.getLocation().getPads().get(0);
 
             double latitude = pad.getLatitude();
             double longitude = pad.getLongitude();
@@ -234,24 +229,24 @@ public class SummaryDetailFragment extends BaseFragment {
             }
 
             ForecastClient.getInstance()
-                    .getForecast(latitude, longitude, launch.getNetstamp(), null, unit, null, false, new Callback<Forecast>() {
+                    .getForecast(latitude, longitude, detailLaunch.getNetstamp(), null, unit, null, false, new Callback<Forecast>() {
                         @Override
                         public void onResponse(Call<Forecast> forecastCall, Response<Forecast> response) {
                             if (response.isSuccessful()) {
                                 Forecast forecast = response.body();
                                 if(SummaryDetailFragment.this.isVisible()) {
-                                    Analytics.from(getActivity()).sendWeatherEvent(launch.getName(), true, "Success");
+                                    Analytics.from(getActivity()).sendWeatherEvent(detailLaunch.getName(), true, "Success");
                                     updateWeatherView(forecast);
                                 }
                             } else {
-                                Analytics.from(getActivity()).sendWeatherEvent(launch.getName(), false, response.errorBody().toString());
+                                Analytics.from(getActivity()).sendWeatherEvent(detailLaunch.getName(), false, response.errorBody().toString());
                                 Timber.e("Error: %s", response.errorBody());
                             }
                         }
 
                         @Override
                         public void onFailure(Call<Forecast> forecastCall, Throwable t) {
-                            Analytics.from(getActivity()).sendWeatherEvent(launch.getName(), false, t.getLocalizedMessage());
+                            Analytics.from(getActivity()).sendWeatherEvent(detailLaunch.getName(), false, t.getLocalizedMessage());
                             Timber.e("ERROR: %s", t.getLocalizedMessage());
                         }
                     });
@@ -260,9 +255,9 @@ public class SummaryDetailFragment extends BaseFragment {
 
     private void fetchCurrentWeather() {
         // Sample WeatherLib client init
-        if (launch.getLocation().getPads().size() > 0) {
+        if (detailLaunch.getLocation().getPads().size() > 0) {
 
-            Pad pad = launch.getLocation().getPads().get(0);
+            Pad pad = detailLaunch.getLocation().getPads().get(0);
 
             double latitude = pad.getLatitude();
             double longitude = pad.getLongitude();
@@ -324,7 +319,7 @@ public class SummaryDetailFragment extends BaseFragment {
             }
             if (forecast.getCurrently().getApparentTemperature() != null) {
                 String feelsLikeTemp;
-                if (launch.getNet().after(Calendar.getInstance().getTime())) {
+                if (detailLaunch.getNet().after(Calendar.getInstance().getTime())) {
                     feelsLikeTemp = "Feels like ";
                 } else {
                     feelsLikeTemp = "Felt like ";
@@ -440,7 +435,7 @@ public class SummaryDetailFragment extends BaseFragment {
             weatherSummaryDay.setVisibility(View.GONE);
         }
 
-        weatherLocation.setText(launch.getLocation().getName());
+        weatherLocation.setText(detailLaunch.getLocation().getName());
         weatherCard.setVisibility(View.VISIBLE);
 
         if (nightMode){
@@ -495,16 +490,29 @@ public class SummaryDetailFragment extends BaseFragment {
         super.onSaveInstanceState(outState);
     }
 
-    public void setUpViews() {
-        if (launch.getRocket() != null) {
-            getLaunchVehicle(launch);
+    private void setUpViews(Launch launch) {
+        weatherCard.setVisibility(View.GONE);
+
+        detailLaunch = launch;
+
+        // Check if Weather card is enabled, defaults to false if null.
+        if (sharedPref.getBoolean("weather", false)) {
+            if (detailLaunch.getNet().after(Calendar.getInstance().getTime())) {
+                fetchCurrentWeather();
+            } else {
+                fetchPastWeather();
+            }
+        }
+
+        if (detailLaunch.getRocket() != null) {
+            getLaunchVehicle(detailLaunch);
         }
 
         double dlat = 0;
         double dlon = 0;
-        if (launch.getLocation() != null && launch.getLocation().getPads() != null) {
-            dlat = launch.getLocation().getPads().get(0).getLatitude();
-            dlon = launch.getLocation().getPads().get(0).getLongitude();
+        if (detailLaunch.getLocation() != null && detailLaunch.getLocation().getPads() != null) {
+            dlat = detailLaunch.getLocation().getPads().get(0).getLatitude();
+            dlon = detailLaunch.getLocation().getPads().get(0).getLongitude();
         }
 
         // Getting status
@@ -548,7 +556,7 @@ public class SummaryDetailFragment extends BaseFragment {
         Date mDate;
         String dateText = null;
 
-        switch (launch.getStatus()) {
+        switch (detailLaunch.getStatus()) {
             case 1:
                 launch_status.setText("Launch is GO");
                 break;
@@ -563,7 +571,7 @@ public class SummaryDetailFragment extends BaseFragment {
                 break;
         }
 
-        calendarSwitch.setChecked(launch.syncCalendar());
+        calendarSwitch.setChecked(detailLaunch.syncCalendar());
         calendarSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -571,11 +579,11 @@ public class SummaryDetailFragment extends BaseFragment {
                     getRealm().executeTransaction(new Realm.Transaction() {
                         @Override
                         public void execute(Realm realm) {
-                            if (!launch.isUserToggledCalendar()){
-                                launch.setUserToggledCalendar(true);
+                            if (!detailLaunch.isUserToggledCalendar()){
+                                detailLaunch.setUserToggledCalendar(true);
                             }
-                            launch.setSyncCalendar(!launch.syncCalendar());
-                            Timber.v("Launch %s updated to %s", launch.getName(), launch.syncCalendar());
+                            detailLaunch.setSyncCalendar(!detailLaunch.syncCalendar());
+                            Timber.v("Launch %s updated to %s", detailLaunch.getName(), detailLaunch.syncCalendar());
                         }
                     });
                     CalendarSyncService.startActionResync(context);
@@ -590,11 +598,11 @@ public class SummaryDetailFragment extends BaseFragment {
                             getRealm().executeTransaction(new Realm.Transaction() {
                                 @Override
                                 public void execute(Realm realm) {
-                                    if (!launch.isUserToggledCalendar()){
-                                        launch.setUserToggledCalendar(true);
+                                    if (!detailLaunch.isUserToggledCalendar()){
+                                        detailLaunch.setUserToggledCalendar(true);
                                     }
-                                    launch.setSyncCalendar(!launch.syncCalendar());
-                                    Timber.v("Launch %s updated to %s", launch.getName(), launch.syncCalendar());
+                                    detailLaunch.setSyncCalendar(!detailLaunch.syncCalendar());
+                                    Timber.v("Launch %s updated to %s", detailLaunch.getName(), detailLaunch.syncCalendar());
                                 }
                             });
                             CalendarSyncService.startActionResync(context);
@@ -642,19 +650,19 @@ public class SummaryDetailFragment extends BaseFragment {
             }
         });
 
-        notificationSwitch.setChecked(launch.isNotifiable());
+        notificationSwitch.setChecked(this.detailLaunch.isNotifiable());
         notificationSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getRealm().executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        if (!launch.isUserToggledNotifiable()){
-                            launch.setUserToggledNotifiable(true);
+                        if (!detailLaunch.isUserToggledNotifiable()){
+                            detailLaunch.setUserToggledNotifiable(true);
                         }
-                        launch.setNotifiable(!launch.isNotifiable());
-                        notificationSwitch.setChecked(launch.isNotifiable());
-                        Timber.v("Launch %s notifiable updated to %s", launch.getName(), launch.isNotifiable());
+                        detailLaunch.setNotifiable(!detailLaunch.isNotifiable());
+                        notificationSwitch.setChecked(detailLaunch.isNotifiable());
+                        Timber.v("Launch %s notifiable updated to %s", detailLaunch.getName(), detailLaunch.isNotifiable());
                     }
                 });
                 LaunchDataService.startActionSyncNotifiers(context);
@@ -662,13 +670,13 @@ public class SummaryDetailFragment extends BaseFragment {
         });
 
 
-        if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
+        if (detailLaunch.getVidURLs() != null && detailLaunch.getVidURLs().size() > 0) {
             watchButton.setVisibility(View.VISIBLE);
             watchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Timber.d("Watch: %s", launch.getVidURLs().size());
-                    if (launch.getVidURLs().size() > 0) {
+                    Timber.d("Watch: %s", detailLaunch.getVidURLs().size());
+                    if (detailLaunch.getVidURLs().size() > 0) {
                         final DialogAdapter adapter = new DialogAdapter(new DialogAdapter.Callback() {
 
                             @Override
@@ -676,17 +684,17 @@ public class SummaryDetailFragment extends BaseFragment {
                                 if (longClick) {
                                     Intent sendIntent = new Intent();
                                     sendIntent.setAction(Intent.ACTION_SEND);
-                                    sendIntent.putExtra(Intent.EXTRA_TEXT, launch.getVidURLs().get(index).getVal()); // Simple text and URL to share
+                                    sendIntent.putExtra(Intent.EXTRA_TEXT, detailLaunch.getVidURLs().get(index).getVal()); // Simple text and URL to share
                                     sendIntent.setType("text/plain");
                                     context.startActivity(sendIntent);
                                 } else {
-                                    Uri watchUri = Uri.parse(launch.getVidURLs().get(index).getVal());
+                                    Uri watchUri = Uri.parse(detailLaunch.getVidURLs().get(index).getVal());
                                     Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
                                     context.startActivity(i);
                                 }
                             }
                         });
-                        for (RealmStr s : launch.getVidURLs()) {
+                        for (RealmStr s : detailLaunch.getVidURLs()) {
                             //Do your stuff here
                             adapter.add(new MaterialSimpleListItem.Builder(context)
                                     .content(s.getVal())
@@ -707,7 +715,7 @@ public class SummaryDetailFragment extends BaseFragment {
         }
 
         //Try to convert to Month day, Year.
-        mDate = launch.getNet();
+        mDate = detailLaunch.getNet();
         dateText = output.format(mDate);
         if (mDate.before(Calendar.getInstance().getTime())) {
             launch_date_title.setText("Launch Date");
@@ -715,14 +723,13 @@ public class SummaryDetailFragment extends BaseFragment {
 
         date.setText(dateText);
 
-        //TODO: Get launch window only if wstamp and westamp is available, hide otherwise.
-        if (launch.getWsstamp() > 0 && launch.getWestamp() > 0) {
+        //TODO: Get detailLaunch window only if wstamp and westamp is available, hide otherwise.
+        if (detailLaunch.getWsstamp() > 0 && detailLaunch.getWestamp() > 0) {
             setWindowStamp();
         } else {
             launch_window_start.setVisibility(View.GONE);
             launch_window_end.setVisibility(View.GONE);
         }
-        weatherCard.setVisibility(View.VISIBLE);
     }
 
     private void setDefaultCalendar() {
@@ -748,7 +755,7 @@ public class SummaryDetailFragment extends BaseFragment {
                 }
             });
         } else {
-            Toast.makeText(context, "No Calendars available to sync launch events with.", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "No Calendars available to sync detailLaunch events with.", Toast.LENGTH_LONG).show();
             switchPreferences.setCalendarStatus(false);
         }
     }
@@ -775,14 +782,14 @@ public class SummaryDetailFragment extends BaseFragment {
 
         // Create a calendar object that will convert the date and time value in milliseconds to date.
         Calendar calendarStart = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        long startDate = launch.getWsstamp();
+        long startDate = detailLaunch.getWsstamp();
         startDate = startDate * 1000;
         calendarStart.setTimeInMillis(startDate);
         String start = formatter.format(calendarStart.getTime());
 
         // Create a calendar object that will convert the date and time value in milliseconds to date.
         Calendar calendarEnd = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        long endDate = launch.getWestamp();
+        long endDate = detailLaunch.getWestamp();
         endDate = endDate * 1000;
         calendarEnd.setTimeInMillis(endDate);
         String end = formatter.format(calendarEnd.getTime());
@@ -808,21 +815,21 @@ public class SummaryDetailFragment extends BaseFragment {
     }
 
     private void setWindowStartEnd() {
-        if (!launch.getWindowstart().equals(launch.getWindowend())) {
-            if (launch.getWindowstart().toString().length() > 0
-                    || launch.getWindowend().toString().length() > 0) {
+        if (!detailLaunch.getWindowstart().equals(detailLaunch.getWindowend())) {
+            if (detailLaunch.getWindowstart().toString().length() > 0
+                    || detailLaunch.getWindowend().toString().length() > 0) {
                 launch_window_start.setText("Launch Window unavailable.");
                 launch_window_end.setVisibility(View.INVISIBLE);
             } else {
                 launch_window_start.setText(String.format("Window Start: %s",
-                        launch.getWindowstart()));
+                                                          detailLaunch.getWindowstart()));
                 launch_window_end.setVisibility(View.VISIBLE);
                 launch_window_end.setText(String.format("Window End: %s",
-                        launch.getWindowend()));
+                                                        detailLaunch.getWindowend()));
             }
         } else {
             launch_window_start.setText(String.format("Launch Time: %s",
-                    launch.getWindowstart()));
+                                                      detailLaunch.getWindowstart()));
             launch_window_end.setVisibility(View.INVISIBLE);
         }
     }
@@ -832,7 +839,7 @@ public class SummaryDetailFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    public static Fragment newInstance() {
+    public static SummaryDetailFragment newInstance() {
         return new SummaryDetailFragment();
     }
 }

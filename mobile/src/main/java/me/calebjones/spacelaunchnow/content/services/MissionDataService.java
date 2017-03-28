@@ -11,7 +11,7 @@ import io.realm.Realm;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.realm.Mission;
-import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryRequestInterface;
+import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryService;
 import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.realm.UpdateRecord;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.MissionResponse;
@@ -44,12 +44,12 @@ public class MissionDataService extends BaseService {
         // Create a new empty instance of Realm
         mRealm = Realm.getDefaultInstance();
         
-        getMissionLaunches();
+        getMissions();
         mRealm.close();
     }
 
-    private void getMissionLaunches() {
-        LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
+    private void getMissions() {
+        LibraryService request = retrofit.create(LibraryService.class);
         Call<MissionResponse> call = null;
         Response<MissionResponse> launchResponse;
         RealmList<Mission> items = new RealmList<>();
@@ -129,7 +129,7 @@ public class MissionDataService extends BaseService {
     }
 
     private void getMissionById(int id) {
-        LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
+        LibraryService request = retrofit.create(LibraryService.class);
         Call<MissionResponse> call;
 
         if (listPreference.isDebugEnabled()) {

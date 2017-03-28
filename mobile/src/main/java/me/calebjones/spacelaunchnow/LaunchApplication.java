@@ -41,6 +41,7 @@ import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
 import me.calebjones.spacelaunchnow.data.models.LaunchDataModule;
+import me.calebjones.spacelaunchnow.data.networking.LibraryClient;
 import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -132,6 +133,8 @@ public class LaunchApplication extends Application implements Analytics.Provider
                         .setCacheDirectory(getCacheDir())
                         .build();
         ForecastClient.create(configuration);
+
+        LibraryClient.create();
 
         mInstance = this;
 

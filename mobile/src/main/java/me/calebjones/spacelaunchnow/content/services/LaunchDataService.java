@@ -27,7 +27,7 @@ import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchNotification;
 import me.calebjones.spacelaunchnow.data.models.realm.UpdateRecord;
-import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryRequestInterface;
+import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryService;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
 import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
@@ -100,7 +100,7 @@ public class LaunchDataService extends BaseService {
                 mNotifyManager.notify(id, mBuilder.build());
             }
 
-            //Usually called on first launch
+            //Usually called on first detailLaunch
             if (Constants.ACTION_GET_ALL_DATA.equals(action)) {
                 Timber.v("Intent action received: %s", action);
                 if (this.sharedPref.getBoolean("background", true)) {
@@ -120,7 +120,7 @@ public class LaunchDataService extends BaseService {
             } else if (Constants.ACTION_UPDATE_LAUNCH.equals(action)) {
                 int id = intent.getIntExtra("launchID", 0);
                 if (id > 0) {
-                    Timber.v("Updating launch id: %s", id);
+                    Timber.v("Updating detailLaunch id: %s", id);
                     getLaunchById(id, this);
                 }
                 syncNotifiers(this);
@@ -206,9 +206,28 @@ public class LaunchDataService extends BaseService {
     private static void checkFullSync(Context context) {
         Realm realm = Realm.getDefaultInstance();
         checkUpcomingLaunches(context, realm);
-        checkPreviousLaunches(context, realm);
         checkMissions(context, realm);
         checkVehicles(context, realm);
+        checkLibraryData(context, realm);
+    }
+
+    private static void checkLibraryData(Context context, Realm realm) {
+        UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Constants.ACTION_GET_UP_LAUNCHES).findFirst();
+        if (record != null) {
+            Date currentDate = new Date();
+            Date lastUpdateDate = record.getDate();
+            long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
+            long daysMaxUpdate = 2592000000L;
+            if (timeSinceUpdate > daysMaxUpdate) {
+                Intent rocketIntent = new Intent(context, VehicleDataService.class);
+                rocketIntent.setAction(Constants.ACTION_GET_ALL_LIBRARY_DATA);
+                context.startService(rocketIntent);
+            }
+        } else {
+            Intent rocketIntent = new Intent(context, VehicleDataService.class);
+            rocketIntent.setAction(Constants.ACTION_GET_ALL_LIBRARY_DATA);
+            context.startService(rocketIntent);
+        }
     }
 
     private static void checkUpcomingLaunches(Context context, Realm realm) {
@@ -238,21 +257,6 @@ public class LaunchDataService extends BaseService {
             }
         } else {
             context.startService(new Intent(context, MissionDataService.class));
-        }
-    }
-
-    private static void checkPreviousLaunches(Context context, Realm realm) {
-        UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Constants.ACTION_GET_PREV_LAUNCHES).findFirst();
-        if (record != null){
-            Date currentDate = new Date();
-            Date lastUpdateDate = record.getDate();
-            long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
-            long daysMaxUpdate = 2592000000L;
-            if (timeSinceUpdate > daysMaxUpdate) {
-                getLaunchesByDate("1950-01-01", Utils.getEndDate(context, 1), context);
-            }
-        } else {
-            getLaunchesByDate("1950-01-01", Utils.getEndDate(context, 1), context);
         }
     }
 
@@ -303,7 +307,7 @@ public class LaunchDataService extends BaseService {
     }
 
     private static boolean getLaunchesByDate(String startDate, String endDate, Context context) {
-        LibraryRequestInterface request = getRetrofit().create(LibraryRequestInterface.class);
+        LibraryService request = getRetrofit().create(LibraryService.class);
         Call<LaunchResponse> call = null;
         Response<LaunchResponse> launchResponse;
         RealmList<Launch> items = new RealmList<>();
@@ -333,9 +337,6 @@ public class LaunchDataService extends BaseService {
                 } else {
                     throw new IOException(launchResponse.errorBody().string());
                 }
-            }
-            for (Launch item : items) {
-                item.getLocation().setPrimaryID();
             }
             mRealm.beginTransaction();
             mRealm.copyToRealmOrUpdate(items);
@@ -389,7 +390,7 @@ public class LaunchDataService extends BaseService {
     }
 
     private static boolean getUpcomingLaunches(Context context) {
-        LibraryRequestInterface request = getRetrofit().create(LibraryRequestInterface.class);
+        LibraryService request = getRetrofit().create(LibraryService.class);
         Call<LaunchResponse> call = null;
         Response<LaunchResponse> launchResponse;
         RealmList<Launch> items = new RealmList<>();
@@ -497,7 +498,7 @@ public class LaunchDataService extends BaseService {
     }
 
     private static boolean getUpcomingLaunchesAll(Context context) {
-        LibraryRequestInterface request = getRetrofit().create(LibraryRequestInterface.class);
+        LibraryService request = getRetrofit().create(LibraryService.class);
         Call<LaunchResponse> call = null;
         Response<LaunchResponse> launchResponse;
         RealmList<Launch> items = new RealmList<>();
@@ -598,7 +599,7 @@ public class LaunchDataService extends BaseService {
     }
 
     public static boolean getNextLaunches(Context context) {
-        LibraryRequestInterface request = getRetrofit().create(LibraryRequestInterface.class);
+        LibraryService request = getRetrofit().create(LibraryService.class);
         Call<LaunchResponse> call = null;
         Response<LaunchResponse> launchResponse;
         RealmList<Launch> items = new RealmList<>();
@@ -698,7 +699,7 @@ public class LaunchDataService extends BaseService {
     }
 
     private static boolean getLaunchById(int id, Context context) {
-        LibraryRequestInterface request = getRetrofit().create(LibraryRequestInterface.class);
+        LibraryService request = getRetrofit().create(LibraryService.class);
         Call<LaunchResponse> call;
 
         Realm mRealm = Realm.getDefaultInstance();
@@ -732,7 +733,7 @@ public class LaunchDataService extends BaseService {
                     item.getLocation().setPrimaryID();
                     mRealm.copyToRealmOrUpdate(item);
                     mRealm.commitTransaction();
-                    Timber.v("Updated launch: %s", item.getId());
+                    Timber.v("Updated detailLaunch: %s", item.getId());
                 }
             }
             mRealm.close();

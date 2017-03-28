@@ -29,8 +29,8 @@ import me.calebjones.spacelaunchnow.data.models.realm.Rocket;
 import me.calebjones.spacelaunchnow.data.models.realm.RocketDetails;
 import me.calebjones.spacelaunchnow.data.models.realm.RocketFamily;
 import me.calebjones.spacelaunchnow.data.models.realm.UpdateRecord;
-import me.calebjones.spacelaunchnow.data.networking.interfaces.APIRequestInterface;
-import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryRequestInterface;
+import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
+import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryService;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.RocketFamilyResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.RocketResponse;
@@ -155,7 +155,7 @@ public class VehicleDataService extends IntentService {
     }
 
     private boolean getBaseVehicleDetails() {
-        APIRequestInterface request = apiRetrofit.create(APIRequestInterface.class);
+        SpaceLaunchNowService request = apiRetrofit.create(SpaceLaunchNowService.class);
         Call<VehicleResponse> call = null;
         Response<VehicleResponse> launchResponse;
         RealmList<RocketDetails> items = new RealmList<>();
@@ -201,7 +201,7 @@ public class VehicleDataService extends IntentService {
     }
 
     private boolean getLibraryRockets() {
-        LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
+        LibraryService request = libraryRetrofit.create(LibraryService.class);
         Call<RocketResponse> call = null;
         Response<RocketResponse> launchResponse = null;
         RealmList<Rocket> items = new RealmList<>();
@@ -259,7 +259,7 @@ public class VehicleDataService extends IntentService {
     }
 
     private boolean getLibraryRocketsFamily() {
-        LibraryRequestInterface request = libraryRetrofit.create(LibraryRequestInterface.class);
+        LibraryService request = libraryRetrofit.create(LibraryService.class);
         Call<RocketFamilyResponse> call = null;
         Response<RocketFamilyResponse> launchResponse;
         RealmList<RocketFamily> items = new RealmList<>();
