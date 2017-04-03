@@ -56,13 +56,13 @@ public interface LibraryRequestInterface {
     @GET("dev/launch/{launchID}?mode=verbose")
     Call<LaunchResponse> getDebugLaunchByID(@Path("launchID") int launchID);
 
-    @GET(version + "/launch/{start_date}/{end_date}?fields=id,net,status")
-    Call<LaunchResponse> getMiniNextLaunch(@Path("start_date") String start_date,
-                                           @Path("end_date") String end_date);
+    @GET(version + "/launch?fields=id,net,status")
+    Call<LaunchResponse> getMiniNextLaunch(@Query("start_date") String start_date,
+                                           @Query("end_date") String end_date);
 
-    @GET("/launch/{start_date}/{end_date}?fields=id,net,status")
-    Call<LaunchResponse> getDebugMiniNextLaunch(@Path("start_date") String start_date,
-                                                @Path("end_date") String end_date);
+    @GET("/dev/launch?fields=id,net,status")
+    Call<LaunchResponse> getDebugMiniNextLaunch(@Query("start_date") String start_date,
+                                                @Query("end_date") String end_date);
 
     //Get Missions Methods
 

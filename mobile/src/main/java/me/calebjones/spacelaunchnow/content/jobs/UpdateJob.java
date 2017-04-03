@@ -29,7 +29,6 @@ public class UpdateJob extends Job {
 
     public static void scheduleJob(Context context) {
 
-
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
         //Get sync period.

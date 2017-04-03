@@ -690,7 +690,7 @@ public class LaunchDataService extends BaseService {
             mRealm.close();
             FileUtils.saveSuccess(false, Constants.ACTION_UPDATE_UP_LAUNCHES + " " + e.getLocalizedMessage(), context);
 
-            if (call != null) {
+            if (call != null && e.getLocalizedMessage() != null) {
                 Analytics.from(context).sendNetworkEvent(Constants.ACTION_UPDATE_UP_LAUNCHES, call.request().url().toString(), false, e.getLocalizedMessage());
             }
             return false;
