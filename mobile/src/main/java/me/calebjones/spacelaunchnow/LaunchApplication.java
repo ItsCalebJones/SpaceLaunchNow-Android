@@ -39,7 +39,7 @@ import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.DataJobCreator;
 import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
-import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
+import me.calebjones.spacelaunchnow.content.services.LibraryDataService;
 import me.calebjones.spacelaunchnow.data.models.LaunchDataModule;
 import me.calebjones.spacelaunchnow.data.networking.LibraryClient;
 import me.calebjones.spacelaunchnow.utils.Analytics;
@@ -204,13 +204,13 @@ public class LaunchApplication extends Application implements Analytics.Provider
                 if (sharedPreference.getLastVehicleUpdate() > 0) {
                     Timber.d("Time since last VehicleUpdate: %s", (System.currentTimeMillis() - sharedPreference.getLastVehicleUpdate()));
                     if ((System.currentTimeMillis() - sharedPreference.getLastVehicleUpdate()) > 1209600000) {
-                        Intent rocketIntent = new Intent(this, VehicleDataService.class);
+                        Intent rocketIntent = new Intent(this, LibraryDataService.class);
                         rocketIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);
                         this.startService(rocketIntent);
 
                     } else if (Utils.getVersionCode(this) != switchPreferences.getVersionCode()) {
 
-                        Intent rocketIntent = new Intent(this, VehicleDataService.class);
+                        Intent rocketIntent = new Intent(this, LibraryDataService.class);
                         rocketIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);
                         this.startService(rocketIntent);
                     }

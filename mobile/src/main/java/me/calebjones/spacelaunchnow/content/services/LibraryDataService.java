@@ -18,22 +18,24 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collections;
+import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.realm.Pad;
-import me.calebjones.spacelaunchnow.data.models.realm.RocketDetails;
-import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
-import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryService;
 import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.realm.Agency;
 import me.calebjones.spacelaunchnow.data.models.realm.Location;
 import me.calebjones.spacelaunchnow.data.models.realm.Mission;
+import me.calebjones.spacelaunchnow.data.models.realm.Pad;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
-import me.calebjones.spacelaunchnow.data.models.realm.RocketFamily;
 import me.calebjones.spacelaunchnow.data.models.realm.Rocket;
+import me.calebjones.spacelaunchnow.data.models.realm.RocketDetails;
+import me.calebjones.spacelaunchnow.data.models.realm.RocketFamily;
+import me.calebjones.spacelaunchnow.data.models.realm.UpdateRecord;
+import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryService;
+import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.AgencyResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LocationResponse;
@@ -41,6 +43,8 @@ import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.Miss
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.PadResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.RocketFamilyResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.RocketResponse;
+import me.calebjones.spacelaunchnow.utils.Analytics;
+import me.calebjones.spacelaunchnow.utils.FileUtils;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -205,7 +209,7 @@ public class LibraryDataService extends IntentService {
 
     private void getAllMissions() {
         LibraryService request = libraryRetrofit.create(LibraryService.class);
-        Call<MissionResponse> call;
+        Call<MissionResponse> call = null;
         Response<MissionResponse> launchResponse;
         RealmList<Mission> items = new RealmList<>();
         int offset = 0;
@@ -220,24 +224,66 @@ public class LibraryDataService extends IntentService {
                     call = request.getAllMisisons(offset);
                 }
                 launchResponse = call.execute();
-                total = launchResponse.body().getTotal();
-                count = launchResponse.body().getCount();
-                offset = offset + count;
-                Collections.addAll(items, launchResponse.body().getMissions());
+                if (launchResponse.isSuccessful()) {
+                    total = launchResponse.body().getTotal();
+                    count = launchResponse.body().getCount();
+                    offset = offset + count;
+                    Timber.v("Count: %s", offset);
+                    Collections.addAll(items, launchResponse.body().getMissions());
+                } else {
+                    throw new IOException(launchResponse.errorBody().string());
+                }
+
+                mRealm.beginTransaction();
+                mRealm.copyToRealmOrUpdate(items);
+                mRealm.commitTransaction();
             }
-            mRealm.beginTransaction();
-            mRealm.copyToRealmOrUpdate(items);
-            mRealm.commitTransaction();
+
+            Timber.v("Success!");
 
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Constants.ACTION_SUCCESS_MISSIONS);
-            LibraryDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
 
-        } catch (Exception e) {
-            Crashlytics.logException(e);
+            mRealm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    UpdateRecord updateRecord = new UpdateRecord();
+                    updateRecord.setType(Constants.ACTION_GET_MISSION);
+                    updateRecord.setDate(new Date());
+                    updateRecord.setSuccessful(true);
+                    realm.copyToRealmOrUpdate(updateRecord);
+                }
+            });
+
+            FileUtils.saveSuccess(true, Constants.ACTION_GET_MISSION, this);
+
+            Analytics.from(this).sendNetworkEvent(Constants.ACTION_GET_MISSION, call.request().url().toString(), true);
+
+            this.sendBroadcast(broadcastIntent);
+
+        } catch (IOException e) {
+            Timber.e("Error: %s", e.getLocalizedMessage());
+
+            mRealm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    UpdateRecord updateRecord = new UpdateRecord();
+                    updateRecord.setType(Constants.ACTION_GET_MISSION);
+                    updateRecord.setDate(new Date());
+                    updateRecord.setSuccessful(false);
+                    realm.copyToRealmOrUpdate(updateRecord);
+                }
+            });
+
+            FileUtils.saveSuccess(false, Constants.ACTION_GET_MISSION + " " + e.getLocalizedMessage(), this);
+
             Intent broadcastIntent = new Intent();
+            broadcastIntent.putExtra("error", e.getLocalizedMessage());
             broadcastIntent.setAction(Constants.ACTION_FAILURE_MISSIONS);
-            LibraryDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+
+            Analytics.from(this).sendNetworkEvent(Constants.ACTION_GET_MISSION, call.request().url().toString(), false, e.getLocalizedMessage());
+
+            this.sendBroadcast(broadcastIntent);
         }
     }
 
@@ -319,35 +365,52 @@ public class LibraryDataService extends IntentService {
 
     private void getBaseVehicleDetails() {
         SpaceLaunchNowService request = apiRetrofit.create(SpaceLaunchNowService.class);
-        Call<VehicleResponse> call;
+        Call<VehicleResponse> call = null;
         Response<VehicleResponse> launchResponse;
         RealmList<RocketDetails> items = new RealmList<>();
 
         try {
             call = request.getVehicles();
             launchResponse = call.execute();
-            Collections.addAll(items, launchResponse.body().getVehicles());
+            if (launchResponse.isSuccessful()) {
+                Collections.addAll(items, launchResponse.body().getVehicles());
 
-            mRealm.beginTransaction();
-            mRealm.copyToRealmOrUpdate(items);
-            mRealm.commitTransaction();
+                int count = 1;
+                for (RocketDetails item : items) {
+                    Timber.v("%s - %s of %s", item.getLV_Name(), count, items.size());
+                    item.setName(item.getLV_Name() + " " + item.getLV_Variant());
+                    count += 1;
+                }
 
+                mRealm.beginTransaction();
+                mRealm.copyToRealmOrUpdate(items);
+                mRealm.commitTransaction();
 
-            Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Constants.ACTION_SUCCESS_VEHICLE_DETAILS);
-            LibraryDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+                Timber.v("getBaseVehicleDetails - Success");
+                Intent broadcastIntent = new Intent();
+                broadcastIntent.setAction(Constants.ACTION_SUCCESS_VEHICLE_DETAILS);
+                LibraryDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+
+                Analytics.from(this).sendNetworkEvent(Constants.ACTION_GET_VEHICLES_DETAIL, call.request().url().toString(), true);
+            } else {
+                Analytics.from(this).sendNetworkEvent(Constants.ACTION_GET_VEHICLES_DETAIL, call.request().url().toString(), false, launchResponse.message());
+
+            }
         } catch (IOException e) {
-            Timber.e("VehicleDataService - ERROR: %s", e.getLocalizedMessage());
+
+            Timber.e("LibraryDataService - ERROR: %s", e.getLocalizedMessage());
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Constants.ACTION_FAILURE_VEHICLE_DETAILS);
             LibraryDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+
+            Analytics.from(this).sendNetworkEvent(Constants.ACTION_GET_VEHICLES_DETAIL, call.request().url().toString(), false, e.getLocalizedMessage());
         }
     }
 
     private void getLibraryRockets() {
         LibraryService request = libraryRetrofit.create(LibraryService.class);
-        Call<RocketResponse> call;
-        Response<RocketResponse> launchResponse;
+        Call<RocketResponse> call = null;
+        Response<RocketResponse> launchResponse = null;
         RealmList<Rocket> items = new RealmList<>();
 
         int offset = 0;
@@ -362,33 +425,48 @@ public class LibraryDataService extends IntentService {
                     call = request.getAllRockets(offset);
                 }
                 launchResponse = call.execute();
-                total = launchResponse.body().getTotal();
-                count = launchResponse.body().getCount();
-                offset = offset + count;
-                Collections.addAll(items, launchResponse.body().getRockets());
+                if (launchResponse.isSuccessful()) {
+                    total = launchResponse.body().getTotal();
+                    count = launchResponse.body().getCount();
+                    offset = offset + count;
+                    Collections.addAll(items, launchResponse.body().getRockets());
+                }
             }
 
-            mRealm.beginTransaction();
-            mRealm.copyToRealmOrUpdate(items);
-            mRealm.commitTransaction();
+            if (items.size() > 0) {
+                mRealm.beginTransaction();
+                mRealm.copyToRealmOrUpdate(items);
+                mRealm.commitTransaction();
 
-            Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(Constants.ACTION_SUCCESS_VEHICLES);
-            LibraryDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+                Intent broadcastIntent = new Intent();
+                broadcastIntent.setAction(Constants.ACTION_SUCCESS_VEHICLES);
+                LibraryDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+
+                Analytics.from(this).sendNetworkEvent(Constants.ACTION_GET_VEHICLES_DETAIL, call.request().url().toString(), true);
+
+            } else {
+
+                Analytics.from(this).sendNetworkEvent(Constants.ACTION_GET_VEHICLES_DETAIL, call.request().url().toString(), false, launchResponse.message());
+                Intent broadcastIntent = new Intent();
+                broadcastIntent.setAction(Constants.ACTION_FAILURE_VEHICLES);
+
+            }
         } catch (IOException e) {
             e.printStackTrace();
-            Timber.e("VehicleDataService - ERROR: %s", e.getLocalizedMessage());
+            Timber.e("LibraryDataService - ERROR: %s", e.getLocalizedMessage());
 
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(Constants.ACTION_FAILURE_VEHICLES);
             LibraryDataService.this.getApplicationContext().sendBroadcast(broadcastIntent);
+
+            Analytics.from(this).sendNetworkEvent(Constants.ACTION_GET_VEHICLES_DETAIL, call.request().url().toString(), false, e.getLocalizedMessage());
+
         }
     }
 
-    //TODO does this need to send success/failure?
     private void getLibraryRocketsFamily() {
         LibraryService request = libraryRetrofit.create(LibraryService.class);
-        Call<RocketFamilyResponse> call;
+        Call<RocketFamilyResponse> call = null;
         Response<RocketFamilyResponse> launchResponse;
         RealmList<RocketFamily> items = new RealmList<>();
 
@@ -404,19 +482,25 @@ public class LibraryDataService extends IntentService {
                     call = request.getAllRocketFamily(offset);
                 }
                 launchResponse = call.execute();
-                total = launchResponse.body().getTotal();
-                count = launchResponse.body().getCount();
-                offset = offset + count;
-                Collections.addAll(items, launchResponse.body().getRocketFamilies());
+                if (launchResponse.isSuccessful()) {
+                    total = launchResponse.body().getTotal();
+                    count = launchResponse.body().getCount();
+                    offset = offset + count;
+                    Collections.addAll(items, launchResponse.body().getRocketFamilies());
+                }
             }
 
-            mRealm.beginTransaction();
-            mRealm.copyToRealmOrUpdate(items);
-            mRealm.commitTransaction();
+            if (items.size() > 0) {
+                mRealm.beginTransaction();
+                mRealm.copyToRealmOrUpdate(items);
+                mRealm.commitTransaction();
+            }
 
+            Analytics.from(this).sendNetworkEvent(Constants.ACTION_GET_VEHICLES_DETAIL, call.request().url().toString(), true);
         } catch (IOException e) {
             e.printStackTrace();
-            Timber.e("VehicleDataService - ERROR: %s", e.getLocalizedMessage());
+            Timber.e("LibraryDataService - ERROR: %s", e.getLocalizedMessage());
+            Analytics.from(this).sendNetworkEvent(Constants.ACTION_GET_VEHICLES_DETAIL, call.request().url().toString(), false, e.getLocalizedMessage());
         }
     }
 }

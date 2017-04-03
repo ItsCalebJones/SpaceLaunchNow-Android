@@ -109,11 +109,13 @@ public class LaunchDataService extends BaseService {
 
                 if (getUpcomingLaunchesAll(this)) {
                     if (getLaunchesByDate("1950-01-01", Utils.getEndDate(this, 1), this)) {
-                        Intent rocketIntent = new Intent(getApplicationContext(), VehicleDataService.class);
+                        Intent rocketIntent = new Intent(getApplicationContext(), LibraryDataService.class);
                         rocketIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);
                         startService(rocketIntent);
 
-                        startService(new Intent(this, MissionDataService.class));
+                        Intent missionIntent = new Intent(getApplicationContext(), LibraryDataService.class);
+                        missionIntent.setAction(Constants.ACTION_GET_MISSION);
+                        startService(missionIntent);
                         this.startService(new Intent(this, NextLaunchTracker.class));
                     }
                 }
@@ -219,12 +221,12 @@ public class LaunchDataService extends BaseService {
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
             long daysMaxUpdate = 2592000000L;
             if (timeSinceUpdate > daysMaxUpdate) {
-                Intent rocketIntent = new Intent(context, VehicleDataService.class);
+                Intent rocketIntent = new Intent(context, LibraryDataService.class);
                 rocketIntent.setAction(Constants.ACTION_GET_ALL_LIBRARY_DATA);
                 context.startService(rocketIntent);
             }
         } else {
-            Intent rocketIntent = new Intent(context, VehicleDataService.class);
+            Intent rocketIntent = new Intent(context, LibraryDataService.class);
             rocketIntent.setAction(Constants.ACTION_GET_ALL_LIBRARY_DATA);
             context.startService(rocketIntent);
         }
@@ -253,10 +255,14 @@ public class LaunchDataService extends BaseService {
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
             long daysMaxUpdate = 2592000000L;
             if (timeSinceUpdate > daysMaxUpdate) {
-                context.startService(new Intent(context, MissionDataService.class));
+                Intent missionIntent = new Intent(context, LibraryDataService.class);
+                missionIntent.setAction(Constants.ACTION_GET_MISSION);
+                context.startService(missionIntent);
             }
         } else {
-            context.startService(new Intent(context, MissionDataService.class));
+            Intent missionIntent = new Intent(context, LibraryDataService.class);
+            missionIntent.setAction(Constants.ACTION_GET_MISSION);
+            context.startService(missionIntent);
         }
     }
 
@@ -268,12 +274,12 @@ public class LaunchDataService extends BaseService {
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
             long daysMaxUpdate = 2592000000L;
             if (timeSinceUpdate > daysMaxUpdate) {
-                Intent rocketIntent = new Intent(context, VehicleDataService.class);
+                Intent rocketIntent = new Intent(context, LibraryDataService.class);
                 rocketIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);
                 context.startService(rocketIntent);
             }
         } else {
-            Intent rocketIntent = new Intent(context, VehicleDataService.class);
+            Intent rocketIntent = new Intent(context, LibraryDataService.class);
             rocketIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);
             context.startService(rocketIntent);
         }

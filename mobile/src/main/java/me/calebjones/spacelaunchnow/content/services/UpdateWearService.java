@@ -52,7 +52,7 @@ public class UpdateWearService extends BaseService {
     }
 
     // Create a data map and put data in it
-    public static void sendToWear(Context context) {
+    private void sendToWear(Context context) {
         Realm realm = Realm.getDefaultInstance();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -120,7 +120,7 @@ public class UpdateWearService extends BaseService {
 
             final PutDataMapRequest putImageReq = PutDataMapRequest.create("/nextLaunch");
 
-            /**
+            /*
              * brightness value ranges from -1.0 to 1.0, with 0.0 as the normal level
              */
             float dimFloat = (float) (dim - 50) / 100;
