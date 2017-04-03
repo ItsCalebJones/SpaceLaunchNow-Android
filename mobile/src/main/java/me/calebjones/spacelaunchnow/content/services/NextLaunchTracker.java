@@ -440,7 +440,7 @@ public class NextLaunchTracker extends IntentService {
                             realm.commitTransaction();
                         }
                     }
-                    scheduleUpdate(timeToFinish - 601000, launch.getId());
+                    scheduleUpdate((future.getTimeInMillis() - 601000) - now.getTimeInMillis(), launch.getId());
                     scheduleUpdate(601000, 0);
                 } else if (timeToFinish < 3600000) {
                     if (notify) {
