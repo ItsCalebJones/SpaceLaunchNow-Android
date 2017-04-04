@@ -9,8 +9,8 @@ import com.evernote.android.job.util.support.PersistableBundleCompat;
 
 import java.util.Set;
 
-import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.data.models.Constants;
 import timber.log.Timber;
 
 public class NextLaunchJob extends Job {

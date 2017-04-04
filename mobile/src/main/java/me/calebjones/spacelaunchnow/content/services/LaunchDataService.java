@@ -22,8 +22,8 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateJob;
-import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
+import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchNotification;
 import me.calebjones.spacelaunchnow.data.models.realm.UpdateRecord;
@@ -106,6 +106,9 @@ public class LaunchDataService extends BaseService {
                 if (this.sharedPref.getBoolean("background", true)) {
                     scheduleLaunchUpdates();
                 }
+                Intent libraryIntent = new Intent(this, LibraryDataService.class);
+                libraryIntent.setAction(Constants.ACTION_GET_ALL_LIBRARY_DATA);
+                this.startService(libraryIntent);
 
                 if (getUpcomingLaunchesAll(this)) {
                     if (getLaunchesByDate("1950-01-01", Utils.getEndDate(this, 1), this)) {

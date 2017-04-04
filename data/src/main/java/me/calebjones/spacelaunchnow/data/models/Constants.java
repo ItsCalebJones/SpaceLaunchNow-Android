@@ -30,15 +30,16 @@ public final class Constants {
     public static final String ACTION_GET_MISSION = "GET_ALL_MISSIONS";
     public static final String ACTION_GET_AGENCY = "GET_AGENCY";
     public static final String ACTION_GET_LOCATION = "GET_LOCATION";
-    public static final String ACTION_GET_VEHICLES = "GET_VEHICLES";
+    public static final String ACTION_GET_ALL_LIBRARY_DATA = "GET_ALL_LIBRARY_DATA";
 
+    public static final String ACTION_GET_VEHICLES = "GET_VEHICLES";
     public static final String ACTION_GET_PADS = "GET_PADS";
     public static final String ACTION_UPDATE_NEXT_LAUNCH = "UPDATE_NEXT_LAUNCH";
     public static final String ACTION_UPDATE_STORED_LAUNCH = "UPDATE_STORED_LAUNCH";
     public static final String ACTION_UPDATE_UP_LAUNCHES = "UPDATE_UP_LAUNCHES";
     public static final String ACTION_UPDATE_BACKGROUND = "UPDATE_UP_LAUNCHES_BACKGROUND";
-    public static final String ACTION_UPDATE_PREV_LAUNCHES = "UPDATE_PREV_LAUNCHES";
 
+    public static final String ACTION_UPDATE_PREV_LAUNCHES = "UPDATE_PREV_LAUNCHES";
     public static final String ACTION_UPDATE_LAUNCH = "UPDATE_LAUNCH";
     public static final String ACTION_UPDATE_AGENCY = "UPDATE_GET_AGENCY";
     public static final String ACTION_UPDATE_VEHICLES = "UPDATE_GET_VEHICLES";
@@ -50,7 +51,8 @@ public final class Constants {
     public static int NOTIF_ID_DAY = 568985;
     public static int NOTIF_ID_HOUR = 568995;
 
-    public static int DB_SCHEMA_VERSION = 188;
+    public static int DB_SCHEMA_VERSION = 189;
+    public static int DB_SCHEMA_VERSION_OLD = 188;
 
     public static String LAUNCH_URL = "https://launchlibrary.net/1.2/detailLaunch/next/1000&mode=verbose";
     public static String MISSION_URL = "https://launchlibrary.net/1.2/mission?limit=1000&mode=verbose";

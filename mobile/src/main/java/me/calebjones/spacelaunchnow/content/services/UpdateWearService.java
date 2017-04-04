@@ -30,15 +30,7 @@ import me.calebjones.spacelaunchnow.data.models.realm.RocketDetails;
 import me.calebjones.spacelaunchnow.utils.transformations.SaturationTransformation;
 import timber.log.Timber;
 
-import static me.calebjones.spacelaunchnow.content.models.Constants.BACKGROUND_KEY;
-import static me.calebjones.spacelaunchnow.content.models.Constants.DATE_KEY;
-import static me.calebjones.spacelaunchnow.content.models.Constants.DEFAULT_BLUR;
-import static me.calebjones.spacelaunchnow.content.models.Constants.DEFAULT_DIM;
-import static me.calebjones.spacelaunchnow.content.models.Constants.DEFAULT_GREY;
-import static me.calebjones.spacelaunchnow.content.models.Constants.DEFAULT_RADIUS;
-import static me.calebjones.spacelaunchnow.content.models.Constants.DYNAMIC_KEY;
-import static me.calebjones.spacelaunchnow.content.models.Constants.NAME_KEY;
-import static me.calebjones.spacelaunchnow.content.models.Constants.TIME_KEY;
+import static me.calebjones.spacelaunchnow.data.models.Constants.*;
 
 public class UpdateWearService extends BaseService {
 

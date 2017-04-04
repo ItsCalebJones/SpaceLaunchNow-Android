@@ -8,7 +8,7 @@ import android.os.Bundle;
 import java.io.File;
 import java.io.IOException;
 
-import me.calebjones.spacelaunchnow.content.models.Constants;
+import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import okhttp3.Cache;
 import okhttp3.Interceptor;

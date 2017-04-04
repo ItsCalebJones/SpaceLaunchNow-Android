@@ -37,9 +37,10 @@ import io.realm.RealmConfiguration;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.DataJobCreator;
-import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataService;
+import me.calebjones.spacelaunchnow.data.Migration;
+import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.LaunchDataModule;
 import me.calebjones.spacelaunchnow.data.networking.LibraryClient;
 import me.calebjones.spacelaunchnow.utils.Analytics;
@@ -48,8 +49,7 @@ import me.calebjones.spacelaunchnow.utils.Utils;
 import okhttp3.OkHttpClient;
 import timber.log.Timber;
 
-import static me.calebjones.spacelaunchnow.content.models.Constants.DB_SCHEMA_VERSION;
-
+import static me.calebjones.spacelaunchnow.data.models.Constants.DB_SCHEMA_VERSION;
 
 public class LaunchApplication extends Application implements Analytics.Provider {
 
@@ -148,7 +148,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
         realmConfig = new RealmConfiguration.Builder()
                 .schemaVersion(DB_SCHEMA_VERSION)
                 .modules(Realm.getDefaultModule(), new LaunchDataModule())
-                .deleteRealmIfMigrationNeeded()
+                .migration(new Migration())
                 .build();
 
         // Get a Realm instance for this thread
