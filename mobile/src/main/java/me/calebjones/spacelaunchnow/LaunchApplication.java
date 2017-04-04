@@ -39,7 +39,7 @@ import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.DataJobCreator;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataService;
-import me.calebjones.spacelaunchnow.data.Migration;
+import me.calebjones.spacelaunchnow.data.models.Migration;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.LaunchDataModule;
 import me.calebjones.spacelaunchnow.data.networking.LibraryClient;
