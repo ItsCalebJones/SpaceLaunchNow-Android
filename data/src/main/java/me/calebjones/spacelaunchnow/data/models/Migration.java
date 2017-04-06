@@ -16,8 +16,8 @@ public class Migration implements RealmMigration {
         RealmSchema schema = realm.getSchema();
 
         /*
-        * Migration for Version 1.6.0
-        * Releases prior to 1.6.0 do not need to be migrated.
+         Migration for Version 1.6.0
+         Releases prior to 1.6.0 do not need to be migrated.
         */
         if (oldVersion <= Constants.DB_SCHEMA_VERSION_1_5_5) {
             // Change type from String to int

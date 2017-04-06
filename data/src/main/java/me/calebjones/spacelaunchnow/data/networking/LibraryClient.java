@@ -1,7 +1,6 @@
 package me.calebjones.spacelaunchnow.data.networking;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
@@ -16,6 +15,7 @@ import java.lang.reflect.Type;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import me.calebjones.spacelaunchnow.data.helpers.Utils;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryService;
@@ -24,7 +24,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
+import timber.log.Timber;
 
 public class LibraryClient {
 
@@ -114,7 +114,15 @@ public class LibraryClient {
 
         LaunchCall.enqueue(launchCallback);
 
-        Log.v("LibraryClient", "Creating getLaunchByID for Launch: " + launchID);
+        Timber.v("Creating getLaunchByID for Launch: %s", launchID);
+
+        return LaunchCall;
+    }
+
+    public Call<LaunchResponse> getNextLaunches(Callback<LaunchResponse> launchCallback){
+        Call<LaunchResponse> LaunchCall = mService.getMiniNextLaunch(Utils.getStartDate(-1), Utils.getEndDate(10));
+
+        LaunchCall.enqueue(launchCallback);
 
         return LaunchCall;
     }

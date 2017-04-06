@@ -27,6 +27,7 @@ import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchNotification;
 import me.calebjones.spacelaunchnow.data.models.realm.UpdateRecord;
+import me.calebjones.spacelaunchnow.data.networking.LibraryClient;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryService;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
 import me.calebjones.spacelaunchnow.utils.Analytics;
@@ -34,8 +35,11 @@ import me.calebjones.spacelaunchnow.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.FileUtils;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
+
+import static android.R.attr.id;
 
 public class LaunchDataService extends BaseService {
 
@@ -94,7 +98,7 @@ public class LaunchDataService extends BaseService {
                 String msg = "Launch Data - Intent received - " + action;
                 mBuilder.setContentTitle("Scheduling Update - ")
                         .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText(msg))
+                                          .bigText(msg))
                         .setSmallIcon(R.drawable.ic_rocket_white)
                         .setContentText(msg);
                 mNotifyManager.notify(id, mBuilder.build());
@@ -126,7 +130,7 @@ public class LaunchDataService extends BaseService {
                 int id = intent.getIntExtra("launchID", 0);
                 if (id > 0) {
                     Timber.v("Updating detailLaunch id: %s", id);
-                    getLaunchById(id, this);
+                    getLaunchById(id);
                 }
                 syncNotifiers(this);
 
@@ -237,7 +241,7 @@ public class LaunchDataService extends BaseService {
 
     private static void checkUpcomingLaunches(Context context, Realm realm) {
         UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Constants.ACTION_GET_UP_LAUNCHES).findFirst();
-        if (record != null){
+        if (record != null) {
             Date currentDate = new Date();
             Date lastUpdateDate = record.getDate();
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
@@ -252,7 +256,7 @@ public class LaunchDataService extends BaseService {
 
     private static void checkMissions(Context context, Realm realm) {
         UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Constants.ACTION_GET_MISSION).findFirst();
-        if (record != null){
+        if (record != null) {
             Date currentDate = new Date();
             Date lastUpdateDate = record.getDate();
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
@@ -271,7 +275,7 @@ public class LaunchDataService extends BaseService {
 
     private static void checkVehicles(Context context, Realm realm) {
         UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Constants.ACTION_GET_VEHICLES_DETAIL).findFirst();
-        if (record != null){
+        if (record != null) {
             Date currentDate = new Date();
             Date lastUpdateDate = record.getDate();
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
@@ -367,9 +371,7 @@ public class LaunchDataService extends BaseService {
             broadcastIntent.setAction(Constants.ACTION_SUCCESS_PREV_LAUNCHES);
             context.sendBroadcast(broadcastIntent);
 
-            if (call != null) {
-                Analytics.from(context).sendNetworkEvent(Constants.ACTION_GET_PREV_LAUNCHES, call.request().url().toString(), true);
-            }
+            Analytics.from(context).sendNetworkEvent(Constants.ACTION_GET_PREV_LAUNCHES, call.request().url().toString(), true);
             return true;
 
         } catch (IOException e) {
@@ -391,9 +393,7 @@ public class LaunchDataService extends BaseService {
             broadcastIntent.setAction(Constants.ACTION_FAILURE_PREV_LAUNCHES);
             context.sendBroadcast(broadcastIntent);
 
-            if (call != null) {
-                Analytics.from(context).sendNetworkEvent(Constants.ACTION_GET_PREV_LAUNCHES, call.request().url().toString(), false, e.getLocalizedMessage());
-            }
+            Analytics.from(context).sendNetworkEvent(Constants.ACTION_GET_PREV_LAUNCHES, call.request().url().toString(), false, e.getLocalizedMessage());
             return false;
         }
     }
@@ -607,6 +607,49 @@ public class LaunchDataService extends BaseService {
         }
     }
 
+    public void getNextLaunches() {
+        LibraryClient.getInstance().getNextLaunches(new Callback<LaunchResponse>() {
+            @Override
+            public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> launchResponse) {
+                Realm mRealm = Realm.getDefaultInstance();
+                if (launchResponse.isSuccessful()) {
+                    Collections.addAll(items, launchResponse.body().getLaunches());
+                }
+                for (Launch item : items) {
+                    Launch previous = mRealm.where(Launch.class)
+                            .equalTo("id", item.getId())
+                            .findFirst();
+                    if (previous != null) {
+                        if ((!previous.getNet().equals(item.getNet()) || (previous.getStatus().intValue() != item.getStatus().intValue()))) {
+                            Timber.v("%s status has changed.", item.getName());
+                            LaunchNotification notification = mRealm.where(LaunchNotification.class).equalTo("id", item.getId()).findFirst();
+                            mRealm.beginTransaction();
+                            if (notification != null) {
+                                notification.resetNotifiers();
+                                mRealm.copyToRealmOrUpdate(notification);
+                            }
+                            previous.resetNotifiers();
+                            mRealm.copyToRealmOrUpdate(previous);
+                            mRealm.commitTransaction();
+                            getLaunchById(item.getId());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LaunchResponse> call, Throwable t) {
+                Analytics.from(getApplication())
+                        .sendNetworkEvent(
+                                Constants.ACTION_UPDATE_UP_LAUNCHES + "_BY_ID",
+                                call.request().url().toString(),
+                                false,
+                                t.getLocalizedMessage()
+                        );
+            }
+        });
+    }
+
     public static boolean getNextLaunches(Context context) {
         LibraryService request = getRetrofit().create(LibraryService.class);
         Call<LaunchResponse> call = null;
@@ -619,9 +662,15 @@ public class LaunchDataService extends BaseService {
 
         try {
             if (listPreference.isDebugEnabled()) {
-                call = request.getDebugMiniNextLaunch(Utils.getStartDate(context, -1), Utils.getEndDate(context, 10));
+                call = request.getDebugMiniNextLaunch(
+                        Utils.getStartDate(-1),
+                        Utils.getEndDate(10)
+                );
             } else {
-                call = request.getMiniNextLaunch(Utils.getStartDate(context, -1), Utils.getEndDate(context, 10));
+                call = request.getMiniNextLaunch(
+                        Utils.getStartDate(-1),
+                        Utils.getEndDate(10)
+                );
             }
             launchResponse = call.execute();
             if (launchResponse.isSuccessful()) {
@@ -645,7 +694,7 @@ public class LaunchDataService extends BaseService {
                         previous.resetNotifiers();
                         mRealm.copyToRealmOrUpdate(previous);
                         mRealm.commitTransaction();
-                        getLaunchById(item.getId(), context);
+                        getLaunchById(item.getId());
                     }
                 }
             }
@@ -707,58 +756,56 @@ public class LaunchDataService extends BaseService {
         }
     }
 
-    private static boolean getLaunchById(int id, Context context) {
-        LibraryService request = getRetrofit().create(LibraryService.class);
-        Call<LaunchResponse> call;
-
-        Realm mRealm = Realm.getDefaultInstance();
-
-        ListPreferences listPreference = ListPreferences.getInstance(context);
-
-        if (listPreference.isDebugEnabled()) {
-            call = request.getDebugLaunchByID(id);
-        } else {
-            call = request.getLaunchByID(id);
-        }
-
-        Response<LaunchResponse> launchResponse;
-        try {
-            launchResponse = call.execute();
-            if (launchResponse.isSuccessful()) {
-                RealmList<Launch> items = new RealmList<>(launchResponse.body().getLaunches());
-                for (Launch item : items) {
-                    Launch previous = mRealm.where(Launch.class)
-                            .equalTo("id", item.getId())
-                            .findFirst();
-                    if (previous != null) {
-                        item.setEventID(previous.getEventID());
-                        item.setSyncCalendar(previous.syncCalendar());
-                        item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
-                        item.setIsNotifiedDay(previous.getIsNotifiedDay());
-                        item.setIsNotifiedHour(previous.getIsNotifiedHour());
-                        item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
+    private void getLaunchById(int id) {
+        LibraryClient.getInstance().getLaunchById(id, new Callback<LaunchResponse>() {
+            @Override
+            public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
+                Realm mRealm = Realm.getDefaultInstance();
+                if (response.isSuccessful()) {
+                    RealmList<Launch> items = new RealmList<>(response.body().getLaunches());
+                    for (final Launch item : items) {
+                        Launch previous = mRealm.where(Launch.class)
+                                .equalTo("id", item.getId())
+                                .findFirst();
+                        if (previous != null) {
+                            item.setEventID(previous.getEventID());
+                            item.setSyncCalendar(previous.syncCalendar());
+                            item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
+                            item.setIsNotifiedDay(previous.getIsNotifiedDay());
+                            item.setIsNotifiedHour(previous.getIsNotifiedHour());
+                            item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
+                        }
+                        mRealm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                item.getLocation().setPrimaryID();
+                                realm.copyToRealmOrUpdate(item);
+                                Timber.v("Updated detailLaunch: %s", item.getId());
+                            }
+                        });
                     }
-                    mRealm.beginTransaction();
-                    item.getLocation().setPrimaryID();
-                    mRealm.copyToRealmOrUpdate(item);
-                    mRealm.commitTransaction();
-                    Timber.v("Updated detailLaunch: %s", item.getId());
+                    syncNotifiers(getApplication());
+                    Analytics.from(getApplication())
+                            .sendNetworkEvent(
+                                    Constants.ACTION_UPDATE_UP_LAUNCHES + "_BY_ID",
+                                    call.request().url().toString(),
+                                    true
+                            );
+
                 }
             }
-            mRealm.close();
-            FileUtils.saveSuccess(true, Constants.ACTION_SUCCESS_LAUNCH, context);
 
-            if (call != null) {
-                Analytics.from(context).sendNetworkEvent(Constants.ACTION_UPDATE_UP_LAUNCHES + "_BY_ID", call.request().url().toString(), true);
+            @Override
+            public void onFailure(Call<LaunchResponse> call, Throwable t) {
+                Analytics.from(getApplication())
+                        .sendNetworkEvent(
+                                Constants.ACTION_UPDATE_UP_LAUNCHES + "_BY_ID",
+                                call.request().url().toString(),
+                                false,
+                                t.getLocalizedMessage()
+                        );
             }
-            return true;
-        } catch (IOException e) {
-            Timber.e("Error: %s", e.getLocalizedMessage());
-            mRealm.close();
-            FileUtils.saveSuccess(false, Constants.ACTION_SUCCESS_LAUNCH, context);
-            Analytics.from(context).sendNetworkEvent(Constants.ACTION_UPDATE_UP_LAUNCHES + "_BY_ID", call.request().url().toString(), false, e.getLocalizedMessage());
-            return false;
-        }
+        });
     }
 
     public void scheduleLaunchUpdates() {
