@@ -158,6 +158,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_launch_timer_info" />
         </receiver>
+
         <receiver
             android:name=".widget.LaunchCardCompactWidgetProvider"
             android:label="Launch Card">

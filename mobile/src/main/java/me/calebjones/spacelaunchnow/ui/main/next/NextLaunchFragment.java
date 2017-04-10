@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.ui.main.upcoming;
+package me.calebjones.spacelaunchnow.ui.main.next;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -31,8 +31,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.ContentViewEvent;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
@@ -57,6 +55,7 @@ import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
+import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
@@ -110,14 +109,12 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     private boolean switchChanged;
     private boolean cardSizeSmall;
 
-    public NextLaunchFragment() {
-        // Required empty public constructor
-    }
-
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sharedPreference = ListPreferences.getInstance(getActivity().getApplication());
         switchPreferences = SwitchPreferences.getInstance(getActivity().getApplication());
+        setScreenName("Next Launch Fragment");
     }
 
     public void showCaseView() {
@@ -165,14 +162,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
 
         sharedPreference = ListPreferences.getInstance(context);
-
-        if (!BuildConfig.DEBUG) {
-            if (!BuildConfig.DEBUG) {
-                Answers.getInstance().logContentView(new ContentViewEvent()
-                        .putContentName("NextLaunchFragment")
-                        .putContentType("Fragment"));
-            }
-        }
 
         super.onCreateView(inflater, container, savedInstanceState);
 
@@ -616,6 +605,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
         } else if (id == R.id.action_alert) {
             if (!active) {
+                Analytics.from(this).sendButtonClicked("Show Launch filters.");
                 switchChanged = false;
                 active = true;
                 mSwipeRefreshLayout.setEnabled(false);
@@ -626,6 +616,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     color_reveal.setVisibility(View.VISIBLE);
                 }
             } else {
+                Analytics.from(this).sendButtonClicked("Hide Launch filters.");
                 active = false;
                 FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_add_alert));
                 mSwipeRefreshLayout.setEnabled(true);

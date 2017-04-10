@@ -8,7 +8,7 @@ import android.support.v7.app.ActionBar;
 import de.mrapp.android.preference.activity.PreferenceActivity;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
-
+import me.calebjones.spacelaunchnow.utils.Analytics;
 
 public class SettingsActivity extends PreferenceActivity {
 
@@ -28,6 +28,7 @@ public class SettingsActivity extends PreferenceActivity {
     public final void onStart() {
         super.onStart();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Analytics.from(this).sendScreenView("Settings", "Settings started.");
     }
 
     @Override

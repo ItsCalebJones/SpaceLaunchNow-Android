@@ -16,12 +16,13 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.Mission;
 import me.calebjones.spacelaunchnow.data.models.realm.RocketDetails;
-import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
 public class MissionDetailFragment extends BaseFragment {
@@ -63,6 +64,12 @@ public class MissionDetailFragment extends BaseFragment {
     TextView launchVehicleSpecsLaunchMass;
     @BindView(R.id.launch_vehicle_specs_thrust)
     TextView launchVehicleSpecsThrust;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setScreenName("Mission Detail Fragment");
+    }
 
     @Nullable
     @Override
@@ -113,6 +120,11 @@ public class MissionDetailFragment extends BaseFragment {
                     public void onClick(View v) {
                         Activity activity = (Activity) context;
                         Utils.openCustomTab(activity, context, mission.getInfoURL());
+                        Analytics.from(getActivity()).sendButtonClickedWithURL(
+                                "Mission Info",
+                                detailLaunch.getName(),
+                                mission.getInfoURL()
+                        );
                     }
                 });
             } else {
@@ -127,6 +139,11 @@ public class MissionDetailFragment extends BaseFragment {
                     public void onClick(View v) {
                         Activity activity = (Activity) context;
                         Utils.openCustomTab(activity, context, mission.getWikiURL());
+                        Analytics.from(getActivity()).sendButtonClickedWithURL(
+                                "Mission Wiki",
+                                detailLaunch.getName(),
+                                mission.getWikiURL()
+                        );
                     }
                 });
             } else {

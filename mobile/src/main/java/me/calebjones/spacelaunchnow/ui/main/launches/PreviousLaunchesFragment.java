@@ -1,6 +1,5 @@
 package me.calebjones.spacelaunchnow.ui.main.launches;
 
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
@@ -26,19 +25,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.borax12.materialdaterangepicker.date.DatePickerDialog;
 import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.ContentViewEvent;
-import com.crashlytics.android.answers.SearchEvent;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,17 +46,17 @@ import butterknife.ButterKnife;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
-import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.BaseFragment;
+import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.content.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
+import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
-import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecoration;
-import me.calebjones.spacelaunchnow.common.BaseFragment;
+import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import timber.log.Timber;
 
@@ -69,7 +64,7 @@ import timber.log.Timber;
 public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener, DatePickerDialog.OnDateSetListener {
 
     private View view, empty;
-    private RecyclerView mRecyclerView;
+    private FastScrollRecyclerView mRecyclerView;
     private ListAdapter adapter;
     private FloatingActionMenu menu;
     private String start_date, end_date;
@@ -93,6 +88,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setScreenName("Previous Launch Fragment");
     }
 
     @Override
@@ -101,12 +97,6 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
         this.context = getContext();
 
         listPreferences = ListPreferences.getInstance(this.context);
-
-        if (!BuildConfig.DEBUG) {
-            Answers.getInstance().logContentView(new ContentViewEvent()
-                    .putContentName("PreviousLaunchesFragment")
-                    .putContentType("Fragment"));
-        }
 
         super.onCreateView(inflater, container, savedInstanceState);
         setHasOptionsMenu(true);
@@ -134,7 +124,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.previous_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        mRecyclerView = (FastScrollRecyclerView) view.findViewById(R.id.recycler_view);
         RecyclerView hideView = (RecyclerView) view.findViewById(R.id.recycler_view_staggered);
         if (mRecyclerView.getVisibility() != View.VISIBLE) {
             hideView.setVisibility(View.GONE);
@@ -152,7 +142,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
                     if (dy > 0) {
                         menu.hideMenu(true);
                     } else {
-                        menu.showMenu(true);
+                        menu.showMenu(false);
                     }
                 }
                 mSwipeRefreshLayout.setEnabled(layoutManager.findFirstCompletelyVisibleItemPosition() == 0);
@@ -191,6 +181,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Analytics.from(getActivity()).sendButtonClicked("Previous Filter - Reset");
                 switchPreferences.resetAllPrevFilters(context);
                 switchPreferences.setPrevFiltered(false);
                 getDefaultDateRange();
@@ -226,6 +217,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     }
 
     private void showCountryDialog() {
+        Analytics.from(getActivity()).sendButtonClicked("Previous Filter - Country");
         new MaterialDialog.Builder(getContext())
                 .title("Select a Country")
                 .content("Check a country below, to remove all filters use reset icon in the toolbar.")
@@ -241,6 +233,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
                                 for (int i = 0; i < which.length; i++) {
                                     keyArray.add(text[i].toString());
                                 }
+                                Analytics.from(getActivity()).sendButtonClicked("Previous Filter - Country Selection", keyArray.toString());
                                 if (keyArray.size() > 0) {
                                     switchPreferences.setPrevCountryFilteredArray(keyArray);
                                     switchPreferences.setPrevFiltered(true);
@@ -259,6 +252,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     }
 
     private void showLocationDialog() {
+        Analytics.from(getActivity()).sendButtonClicked("Previous Filter - Location");
         new MaterialDialog.Builder(getContext())
                 .title("Select a Location")
                 .content("Check an location below, to remove all filters use reset icon in the toolbar.")
@@ -272,6 +266,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
                         for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
+                        Analytics.from(getActivity()).sendButtonClicked("Previous Filter - Location Selection", keyArray.toString());
                         if (keyArray.size() > 0) {
                             switchPreferences.setPrevLocationFilteredArray(keyArray);
                             switchPreferences.setPrevFiltered(true);
@@ -290,6 +285,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     }
 
     private void showAgencyDialog() {
+        Analytics.from(getActivity()).sendButtonClicked("Previous Filter - Agency");
         new MaterialDialog.Builder(getContext())
                 .title("Select an Agency")
                 .content("Check an agency below, to remove all filters use reset icon in the toolbar.")
@@ -303,6 +299,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
                         for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
+                        Analytics.from(getActivity()).sendButtonClicked("Previous Filter - Agency Selection", keyArray.toString());
                         if (keyArray.size() > 0) {
                             switchPreferences.setPrevAgencyFilterArray(keyArray);
                             switchPreferences.setPrevFiltered(true);
@@ -321,6 +318,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     }
 
     private void showVehicleDialog() {
+        Analytics.from(getActivity()).sendButtonClicked("Previous Filter - Vehicle");
         new MaterialDialog.Builder(getContext())
                 .title("Select a Launch Vehicle")
                 .content("Check a vehicle below, to remove all filters use reset icon in the toolbar.")
@@ -334,6 +332,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
                         for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
+                        Analytics.from(getActivity()).sendButtonClicked("Previous Filter - Vehicle Selection", keyArray.toString());
                         if (keyArray.size() > 0) {
                             switchPreferences.setPrevVehicleFilteredArray(keyArray);
                             switchPreferences.setPrevFiltered(true);
@@ -409,6 +408,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        Analytics.from(getActivity()).sendButtonClicked("Previous Refresh");
                         showLoading();
                         getRealm().removeAllChangeListeners();
                         Intent intent = new Intent(getContext(), LaunchDataService.class);
@@ -649,9 +649,9 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     public boolean onQueryTextChange(String query) {
         switchPreferences.setPrevFiltered(true);
         // Here is where we are going to implement our filter logic
-        Answers.getInstance().logSearch(new SearchEvent()
-                .putQuery(query));
         final List<Launch> filteredModelList = filter(launchRealms, query);
+        Analytics.from(this).sendSearchEvent(query, Analytics.TYPE_PREVIOUS_LAUNCH,filteredModelList.size());
+
         if (filteredModelList.size() > 50) {
             adapter.clear();
             adapter.addItems(filteredModelList);
@@ -754,13 +754,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
         }
     }
 
-    private void fabSlideOut() {
-        menu.animate().translationX(menu.getWidth() + 250).setInterpolator(new AccelerateInterpolator(1)).start();
-    }
 
-    private void fabSlideIn() {
-        menu.animate().translationX(0).setInterpolator(new DecelerateInterpolator(4)).start();
-    }
 
     @Override
     public void onDetach() {

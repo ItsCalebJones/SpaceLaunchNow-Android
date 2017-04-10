@@ -34,11 +34,12 @@
   <string name="title_activity_debug">DebugActivity</string>
   <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
 
-    <string name="whats_new_content">1.5.4 - Bug Fixes and Small UI update.\n\n
-      \u2022Updated the UI for upgrading to Supporter.\n
-      \u2022Squash a lot of bugs!\n
-      \u2022Fixed issue with duplicate Calendar reminders.\n
-      \u2022Fixed an issue with notifications not prompting when multiple launches were within a 48 hour window.\n
+    <string name="whats_new_content">Analytics and Fixes\n\n
+      Unfortunately the countdown widget is causing performance issues for some users, fairly certain it\'s fixed but let me know if you have slowness in your app launcher. \n\n
+      \u2022Added analytics for tracking application network usage and user behavior.\n
+      \u2022Fixed an issue with the scrollbar popup not hiding in some cases.\n
+      \u2022Fixed an issue with notifications not showing up.\n
+      \u2022Added more error checking for rare bugs.\n
     </string>
   <string name="link_feedback">https://www.reddit.com/r/spacelaunchnow</string>
   <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>

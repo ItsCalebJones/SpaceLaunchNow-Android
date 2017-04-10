@@ -1,122 +1,126 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/coordinatorLayout"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/coordinatorLayout"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+
+  <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_feed_content"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp"
+    tools:context="${relativePackage}.${activityClass}">
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/fragment_feed_content"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        tools:context="${relativePackage}.${activityClass}">
+    <android.support.v4.widget.SwipeRefreshLayout
+      android:id="@+id/previous_swipe_refresh_layout"
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent">
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/previous_swipe_refresh_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+      <FrameLayout
+        android:id="@+id/linear"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-            <FrameLayout
-                android:id="@+id/linear"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+          android:id="@+id/recycler_view"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:clipToPadding="false"
+          app:fastScrollAutoHide="true"
+          app:fastScrollAutoHideDelay="1500"
+          app:fastScrollPopupBackgroundSize="72dp"
+          app:fastScrollPopupBgColor="@color/colorAccent"
+          app:fastScrollPopupTextColor="@android:color/primary_text_dark"
+          app:fastScrollPopupTextSize="48sp"
+          app:fastScrollThumbColor="@color/colorAccent" />
 
-                <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:id="@+id/recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clipToPadding="false"
-                    app:fastScrollPopupBgColor="@color/colorAccent"
-                    app:fastScrollPopupTextColor="@android:color/primary_text_dark"
-                    app:fastScrollThumbColor="@color/colorAccent" />
+        <include layout="@layout/empty_launch" />
 
-                <include layout="@layout/empty_launch" />
-
-            </FrameLayout>
-
-
-        </android.support.v4.widget.SwipeRefreshLayout>
-
-        <com.github.clans.fab.FloatingActionMenu
-            android:id="@+id/menu"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="bottom|right"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            app:menu_backgroundColor="#4d8e8e8e"
-            app:menu_colorNormal="@color/colorAccent"
-            app:menu_colorPressed="@color/colorAccentLight"
-            app:menu_fab_hide_animation="@anim/hide_to_bottom"
-            app:menu_fab_show_animation="@anim/show_from_bottom"
-            app:menu_icon="@drawable/ic_sort"
-            app:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
-            app:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
-            app:menu_showShadow="true">
-
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/reset"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginRight="16dp"
-                android:src="@drawable/ic_refresh_white"
-                app:fab_colorNormal="@color/colorAccent"
-                app:fab_colorPressed="@color/colorAccentLight"
-                app:fab_label="Reset"
-                app:fab_size="mini" />
-
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/agency"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_government_white"
-                app:fab_colorNormal="@color/colorAccent"
-                app:fab_colorPressed="@color/colorAccentLight"
-                app:fab_label="Agency"
-                app:fab_size="mini" />
-
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/country"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_flag"
-                app:fab_colorNormal="@color/colorAccent"
-                app:fab_colorPressed="@color/colorAccentLight"
-                app:fab_label="Country"
-                app:fab_size="mini" />
-
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/launch_location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_earth_white"
-                app:fab_colorNormal="@color/colorAccent"
-                app:fab_colorPressed="@color/colorAccentLight"
-                app:fab_label="Location"
-                app:fab_size="mini" />
-
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/vehicle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_rocket_white"
-                app:fab_colorNormal="@color/colorAccent"
-                app:fab_colorPressed="@color/colorAccentLight"
-                app:fab_label="Vehicle"
-                app:fab_size="mini" />
+      </FrameLayout>
 
 
-        </com.github.clans.fab.FloatingActionMenu>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
-        <FrameLayout
-            android:id="@+id/fl_interceptor"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:descendantFocusability="blocksDescendants" />
+    <com.github.clans.fab.FloatingActionMenu
+      android:id="@+id/menu"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_gravity="bottom|right"
+      android:paddingBottom="10dp"
+      android:paddingLeft="10dp"
+      android:paddingRight="10dp"
+      app:menu_backgroundColor="#4d8e8e8e"
+      app:menu_colorNormal="@color/colorAccent"
+      app:menu_colorPressed="@color/colorAccentLight"
+      app:menu_fab_hide_animation="@anim/hide_to_bottom"
+      app:menu_fab_show_animation="@anim/show_from_bottom"
+      app:menu_icon="@drawable/ic_sort"
+      app:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
+      app:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
+      app:menu_showShadow="true">
 
-    </FrameLayout>
+      <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/ic_refresh_white"
+        app:fab_colorNormal="@color/colorAccent"
+        app:fab_colorPressed="@color/colorAccentLight"
+        app:fab_label="Reset"
+        app:fab_size="mini" />
+
+      <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/agency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_government_white"
+        app:fab_colorNormal="@color/colorAccent"
+        app:fab_colorPressed="@color/colorAccentLight"
+        app:fab_label="Agency"
+        app:fab_size="mini" />
+
+      <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/country"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_flag"
+        app:fab_colorNormal="@color/colorAccent"
+        app:fab_colorPressed="@color/colorAccentLight"
+        app:fab_label="Country"
+        app:fab_size="mini" />
+
+      <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/launch_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_earth_white"
+        app:fab_colorNormal="@color/colorAccent"
+        app:fab_colorPressed="@color/colorAccentLight"
+        app:fab_label="Location"
+        app:fab_size="mini" />
+
+      <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/vehicle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_rocket_white"
+        app:fab_colorNormal="@color/colorAccent"
+        app:fab_colorPressed="@color/colorAccentLight"
+        app:fab_label="Vehicle"
+        app:fab_size="mini" />
+
+
+    </com.github.clans.fab.FloatingActionMenu>
+
+    <FrameLayout
+      android:id="@+id/fl_interceptor"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:descendantFocusability="blocksDescendants" />
+
+  </FrameLayout>
 </android.support.design.widget.CoordinatorLayout>

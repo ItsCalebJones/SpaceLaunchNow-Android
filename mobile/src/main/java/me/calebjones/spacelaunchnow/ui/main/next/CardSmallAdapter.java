@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.ui.main.upcoming;
+package me.calebjones.spacelaunchnow.ui.main.next;
 
 import android.content.Context;
 import android.content.Intent;

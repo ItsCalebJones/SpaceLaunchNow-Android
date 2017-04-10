@@ -23,8 +23,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.ContentViewEvent;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,12 +30,11 @@ import java.util.Date;
 import java.util.Scanner;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.RocketDetails;
-import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.AgencyDetailFragment;
 import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.MissionDetailFragment;
 import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.SummaryDetailFragment;
@@ -68,6 +65,10 @@ public class LaunchDetailActivity extends BaseActivity
     public String response;
     public Launch launch;
 
+    public LaunchDetailActivity() {
+        super("Launch Detail Activity");
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,12 +94,6 @@ public class LaunchDetailActivity extends BaseActivity
             recreate();
         }
 
-        if (!BuildConfig.DEBUG) {
-            Answers.getInstance().logContentView(new ContentViewEvent()
-                    .putContentName("LaunchDetailActivity")
-                    .putContentType("Activity"));
-        }
-
         setTheme(m_theme);
         setContentView(R.layout.activity_launch_detail);
 
@@ -116,7 +111,7 @@ public class LaunchDetailActivity extends BaseActivity
         String type = mIntent.getStringExtra("TYPE");
 
 
-        if (type.equals("launch")) {
+        if (type != null && type.equals("launch")) {
             int id = mIntent.getIntExtra("launchID", 0);
             launch = getRealm().where(Launch.class).equalTo("id", id).findFirst();
         }

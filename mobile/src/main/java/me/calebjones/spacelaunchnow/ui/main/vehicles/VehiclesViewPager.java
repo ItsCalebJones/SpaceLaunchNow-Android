@@ -17,12 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.ui.main.vehicles.launcher.LauncherFragment;
 import me.calebjones.spacelaunchnow.ui.main.vehicles.orbiter.OrbiterFragment;
-import timber.log.Timber;
 
-public class VehiclesViewPager extends Fragment {
+public class VehiclesViewPager extends BaseFragment {
 
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
@@ -91,28 +91,6 @@ public class VehiclesViewPager extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         // Do your stuff
-    }
-
-    @Override
-    public void onPause() {
-        Timber.d("onPause");
-        super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        Timber.d("onStop");
-        super.onStop();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
     }
 
     @Override

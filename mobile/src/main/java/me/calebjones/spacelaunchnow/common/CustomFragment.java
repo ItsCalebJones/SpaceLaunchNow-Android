@@ -20,9 +20,9 @@ abstract public class CustomFragment extends BaseFragment {
 
     private OkHttpClient client;
     private Retrofit retrofit;
-    private static Context context;
+    private Context context;
 
-    private static final Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
+    private Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
         @Override public okhttp3.Response intercept(Chain chain) throws IOException {
             okhttp3.Response originalResponse = chain.proceed(chain.request());
             if (Utils.isNetworkAvailable(context)) {

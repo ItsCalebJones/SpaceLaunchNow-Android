@@ -19,6 +19,9 @@ public class DataJobCreator implements JobCreator {
             case UpdateWearJob.TAG:
                 Timber.i(UpdateWearJob.TAG);
                 return new UpdateWearJob();
+            case SyncJob.TAG:
+                Timber.i(SyncJob.TAG);
+                return new SyncJob();
             default:
                 return null;
         }

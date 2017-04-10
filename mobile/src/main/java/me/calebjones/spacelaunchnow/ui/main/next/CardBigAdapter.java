@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.ui.main.upcoming;
+package me.calebjones.spacelaunchnow.ui.main.next;
 
 import android.content.Context;
 import android.content.Intent;
@@ -39,6 +39,7 @@ import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.data.models.realm.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
@@ -524,6 +525,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
             switch (v.getId()) {
                 case R.id.watchButton:
                     Timber.d("Watch: %s", launch.getVidURLs().size());
+                    Analytics.from(context).sendButtonClicked("Watch Button - Opening Dialogue");
                     if (launch.getVidURLs().size() > 0) {
                         final DialogAdapter adapter = new DialogAdapter(new DialogAdapter.Callback() {
 
@@ -535,11 +537,14 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                                     sendIntent.putExtra(Intent.EXTRA_TEXT, launch.getVidURLs().get(index).getVal()); // Simple text and URL to share
                                     sendIntent.setType("text/plain");
                                     context.startActivity(sendIntent);
+                                    Analytics.from(context).sendButtonClickedWithURL("Watch Button - URL Long Clicked", launch.getVidURLs().get(index).getVal());
                                 } else {
                                     Uri watchUri = Uri.parse(launch.getVidURLs().get(index).getVal());
                                     Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
                                     context.startActivity(i);
+                                    Analytics.from(context).sendButtonClickedWithURL("Watch Button - URL", launch.getVidURLs().get(index).getVal());
                                 }
+
                             }
                         });
                         for (RealmStr s : launch.getVidURLs()) {
@@ -559,6 +564,8 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                     break;
                 case R.id.exploreButton:
                     Timber.d("Explore: %s", launchList.get(position).getId());
+                    Analytics.from(context).sendButtonClicked("Explore Button", launch.getName());
+
                     Intent exploreIntent = new Intent(context, LaunchDetailActivity.class);
                     exploreIntent.putExtra("TYPE", "launch");
                     exploreIntent.putExtra("launchID", launch.getId());
@@ -602,6 +609,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                                     + launchDate);
                         }
                     }
+                    Analytics.from(context).sendLaunchShared("Explore Button", launch.getName() + "-" + launch.getId().toString());
                     sendIntent.setType("text/plain");
                     context.startActivity(sendIntent);
                     break;
@@ -617,6 +625,8 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                     Uri gmmIntentUri = Uri.parse("geo:" + dlat + ", " + dlon + "?z=12&q=" + dlat + ", " + dlon);
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                     mapIntent.setPackage("com.google.android.apps.maps");
+
+                    Analytics.from(context).sendLaunchMapClicked(launch.getName());
 
                     if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
                         Toast.makeText(context, "Loading " + launchList.get(position).getLocation().getPads().get(0).getName(), Toast.LENGTH_LONG).show();

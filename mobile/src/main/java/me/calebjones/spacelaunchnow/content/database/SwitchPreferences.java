@@ -8,12 +8,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.onesignal.OneSignal;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -983,6 +983,15 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         return gson.fromJson(json, type);
     }
 
+    public int getWidgetID() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getInt("WIDGET_ID", 0);
+    }
 
-    
+    public void setWidgetID(int key) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putInt("WIDGET_ID", key);
+        this.prefsEditor.apply();
+    }
 }

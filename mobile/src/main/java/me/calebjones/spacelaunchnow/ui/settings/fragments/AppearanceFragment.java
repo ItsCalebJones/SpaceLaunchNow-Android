@@ -22,6 +22,7 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
+import me.calebjones.spacelaunchnow.utils.Analytics;
 import timber.log.Timber;
 
 public class AppearanceFragment extends BaseSettingFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -36,6 +37,7 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
         switchPreferences = SwitchPreferences.getInstance(getActivity());
         context = getActivity();
         setupPreferences();
+        setName("Appearance Fragment");
     }
 
     @Override
@@ -61,6 +63,7 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
             themeEditor.apply();
 
             if (switchPreferences.getNightMode()) {
+                Analytics.from(this).sendPreferenceEvent(key, sharedPreferences.getBoolean(key, false));
                 if (switchPreferences.getDayNightAutoMode()) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
                     checkLocationPermission();
@@ -78,6 +81,7 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
             startActivity(intent);
         }
         if (key.equals("theme_auto")) {
+            Analytics.from(this).sendPreferenceEvent(key, sharedPreferences.getBoolean(key, false));
             SharedPreferences.Editor themeEditor = getActivity().getSharedPreferences("theme_changed", 0).edit();
             themeEditor.putBoolean("recreate", true);
             themeEditor.apply();
@@ -97,6 +101,8 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.setAction("me.calebjones.spacelaunchnow.NIGHTMODE");
             startActivity(intent);
+        }    else {
+            Analytics.from(this).sendPreferenceEvent(key);
         }
     }
 

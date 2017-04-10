@@ -13,18 +13,39 @@
  */
 package me.calebjones.spacelaunchnow.ui.settings.fragments;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 
+import me.calebjones.spacelaunchnow.utils.Analytics;
 
 public abstract class BaseSettingFragment extends PreferenceFragment {
+
+    private String name = "Unknown (Name not set)";
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Analytics.from(this).sendScreenView(name, name + " resumed.");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Analytics.from(this).notifyGoneBackground();
+    }
+
+    public void setName(String name){
+        this.name = name;
     }
 
 }
