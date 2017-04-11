@@ -54,20 +54,6 @@ public final class Constants {
     public static int DB_SCHEMA_VERSION = 189;
     public static int DB_SCHEMA_VERSION_1_5_5 = 188;
 
-    public static String LAUNCH_URL = "https://launchlibrary.net/1.2/detailLaunch/next/1000&mode=verbose";
-    public static String MISSION_URL = "https://launchlibrary.net/1.2/mission?limit=1000&mode=verbose";
-    public static String AGENCY_URL = "https://launchlibrary.net/1.2/agency?mode=verbose&limit=1000";
-    public static String VEHICLE_URL = "https://launchlibrary.net/1.2/rocket?mode=verbose&limit=1000";
-    public static String NEXT_URL = "https://launchlibrary.net/1.2/detailLaunch?next=10&mode=verbose";
-    public static String NEXT_URL_BY_ID = "https://launchlibrary.net/1.2/detailLaunch/%s?mode=verbose";
-
-    public static String DEBUG_LAUNCH_URL = "https://launchlibrary.net/dev/detailLaunch/next/1000&mode=verbose";
-    public static String DEBUG_MISSION_URL = "https://launchlibrary.net/dev/mission?limit=1000&mode=verbose";
-    public static String DEBUG_AGENCY_URL = "https://launchlibrary.net/dev/agency?mode=verbose&limit=1000";
-    public static String DEBUG_VEHICLE_URL = "https://launchlibrary.net/dev/rocket?mode=verbose&limit=1000";
-    public static String DEBUG_NEXT_URL = "https://launchlibrary.net/dev/detailLaunch?next=10&mode=verbose";
-    public static String DEBUG_NEXT_URL_BY_ID = "https://launchlibrary.net/dev/detailLaunch/%s?mode=verbose";
-
     public static String FORECAST_IO_BASE_URL = "https://api.forecast.io/";
     public static String API_BASE_URL = "http://calebjones.me/app/";
     public static String LIBRARY_BASE_URL = "https://launchlibrary.net/";
