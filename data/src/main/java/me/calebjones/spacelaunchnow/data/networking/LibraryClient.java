@@ -12,6 +12,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
 import java.lang.reflect.Type;
+import java.util.concurrent.Executors;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -84,6 +85,7 @@ public class LibraryClient {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.LIBRARY_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
+                .callbackExecutor(Executors.newCachedThreadPool())
                 .build();
         return  retrofit;
     }
@@ -121,6 +123,30 @@ public class LibraryClient {
 
     public Call<LaunchResponse> getNextLaunches(Callback<LaunchResponse> launchCallback){
         Call<LaunchResponse> LaunchCall = mService.getMiniNextLaunch(Utils.getStartDate(-1), Utils.getEndDate(10));
+
+        LaunchCall.enqueue(launchCallback);
+
+        return LaunchCall;
+    }
+
+    public Call<LaunchResponse> getUpcomingLaunches(int offset, Callback<LaunchResponse> launchCallback) {
+        Call<LaunchResponse> LaunchCall = mService.getUpcomingLaunches(Utils.getStartDate(-1), Utils.getEndDate(10), offset);
+
+        LaunchCall.enqueue(launchCallback);
+
+        return LaunchCall;
+    }
+
+    public Call<LaunchResponse> getUpcomingLaunchesAll(int offset, Callback<LaunchResponse> launchCallback) {
+        Call<LaunchResponse> LaunchCall = mService.getUpcomingLaunchesAll(offset);
+
+        LaunchCall.enqueue(launchCallback);
+
+        return LaunchCall;
+    }
+
+    public Call<LaunchResponse> getLaunchesByDate(String startDate, String endDate, int offset, Callback<LaunchResponse> launchCallback) {
+        Call<LaunchResponse> LaunchCall = mService.getLaunchesByDate(startDate, endDate, offset);
 
         LaunchCall.enqueue(launchCallback);
 

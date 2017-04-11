@@ -34,7 +34,7 @@ public interface LibraryService {
                                                   @Path("end_date") String end_date,
                                                   @Query("offset") int offset);
 
-    @GET(version + "/launch?fields=net,name,location,status")
+    @GET(version + "/launch?fields=net,name,location,status&limit=1000")
     Call<LaunchResponse> getLaunchesByDate(@Query("startdate") String start_date,
                                            @Query("enddate") String end_date,
                                            @Query("offset") int offset);

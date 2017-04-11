@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.Date;
+import java.util.concurrent.Executors;
 
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -114,11 +115,13 @@ public class LibraryDataService extends IntentService {
         libraryRetrofit = new Retrofit.Builder()
                 .baseUrl(Constants.LIBRARY_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
+                .callbackExecutor(Executors.newCachedThreadPool())
                 .build();
 
         apiRetrofit = new Retrofit.Builder()
                 .baseUrl(Constants.API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
+                .callbackExecutor(Executors.newCachedThreadPool())
                 .build();
 
         super.onCreate();
@@ -132,12 +135,12 @@ public class LibraryDataService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Timber.d("LibraryDataService - Intent received!");
-        
+
         // Create a new empty instance of Realm
         mRealm = Realm.getDefaultInstance();
 
         if (intent != null) {
+            Timber.d("LibraryDataService - Intent %s received!", intent.getAction());
             String action = intent.getAction();
             if(Constants.ACTION_GET_ALL_LIBRARY_DATA.equals(action)){
                 listPreference.setLastVehicleUpdate(System.currentTimeMillis());

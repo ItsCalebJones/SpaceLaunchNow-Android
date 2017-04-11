@@ -9,7 +9,7 @@ import com.evernote.android.job.JobRequest;
 
 import java.util.concurrent.TimeUnit;
 
-import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.content.DataManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import timber.log.Timber;
 
@@ -21,11 +21,16 @@ public class SyncJob extends Job {
     @Override
     protected Result onRunJob(Params params) {
         Timber.v("Running job ID: %s Tag: %s", params.getId(), params.getTag());
-        if (LaunchDataService.getNextLaunches(getContext())) {
-            return Result.SUCCESS;
-        } else {
-            return Result.RESCHEDULE;
+        DataManager dataManager = new DataManager(getContext());
+        dataManager.getNextLaunches();
+        while (dataManager.isRunning) {
+            try {
+                wait(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+        return Result.SUCCESS;
     }
 
     public static void schedulePeriodicJob(Context context) {

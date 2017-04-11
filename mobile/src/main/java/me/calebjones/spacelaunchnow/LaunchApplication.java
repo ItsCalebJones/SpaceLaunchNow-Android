@@ -219,7 +219,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
         } else {
             Intent intent = new Intent(this, LaunchDataService.class);
             intent.setAction(Constants.ACTION_GET_ALL_DATA);
-            this.startService(intent);
+            startService(intent);
         }
     }
 

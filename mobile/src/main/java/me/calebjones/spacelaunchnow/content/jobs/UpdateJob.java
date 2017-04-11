@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
 
-import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.content.DataRepositoryManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 
 public class UpdateJob extends Job {
@@ -18,7 +18,9 @@ public class UpdateJob extends Job {
     @NonNull
     @Override
     protected Result onRunJob(Params params) {
-            return LaunchDataService.syncBackground(getContext()) ? Result.SUCCESS : Result.FAILURE;
+        DataRepositoryManager dataRepositoryManager = new DataRepositoryManager(getContext());
+        dataRepositoryManager.syncBackground();
+        return Result.SUCCESS;
     }
 
     @Override
