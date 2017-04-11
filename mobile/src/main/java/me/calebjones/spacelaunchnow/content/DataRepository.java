@@ -30,7 +30,7 @@ public class DataRepository {
 
     public RealmResults<Launch> getPreviousLaunchData(Realm realm) {
         Timber.v("Syncing launch data...");
-        try {
+        if (ListPreferences.getInstance(context).isFresh()){
             realm.executeTransactionAsync(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
@@ -71,6 +71,8 @@ public class DataRepository {
                     }
                 }
             });
+        }
+        try {
             return QueryBuilder.buildPrevQueryAsync(context, realm);
         } catch (ParseException e) {
             Crashlytics.logException(e);

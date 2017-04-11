@@ -239,7 +239,7 @@ public class QueryBuilder {
                 } else {
                     firstGroup = false;
                 }
-                query.equalTo("rocket.agencies.id", 121);
+                query.equalTo("rocket.agencies.id", 121).or().contains("name", "Falcon");
 
             } else if (key.contains("ROSCOSMOS")) {
                 if (!firstGroup) {
