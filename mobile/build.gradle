@@ -6,7 +6,7 @@ buildscript {
 
     dependencies {
         classpath 'io.fabric.tools:gradle:1.21.4'
-        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.4'
     }
 }
 
@@ -25,7 +25,7 @@ advancedVersioning {
     nameOptions {
         versionMajor 1
         versionMinor 5
-        versionPatch 5
+        versionPatch 6
 
     }
     codeOptions {
@@ -151,7 +151,7 @@ dependencies {
     compile "com.google.android.gms:play-services-gcm:$rootProject.playServicesVersion"
     compile 'com.onesignal:OneSignal:3.4.3@aar'
     compile 'com.github.chrisbanes:PhotoView:1.3.1'
-    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.github.clans:fab:1.6.4'
@@ -160,20 +160,20 @@ dependencies {
     compile 'com.borax12.materialdaterangepicker:library:1.9'
     compile 'net.mediavrog:integrated-rating-request:1.1.2'
     compile 'com.jakewharton.timber:timber:4.5.1'
-    compile 'com.simplecityapps:recyclerview-fastscroll:1.0.12'
+    compile 'com.simplecityapps:recyclerview-fastscroll:1.0.14'
     compile 'com.github.javiersantos:MaterialStyledDialogs:2.1'
-    compile 'com.karumi:dexter:3.0.2'
-    compile 'com.anjlab.android.iab.v3:library:1.0.38'
+    compile 'com.karumi:dexter:4.1.0'
+    compile 'com.anjlab.android.iab.v3:library:1.0.39'
     compile 'hanks.xyz:smallbang-library:0.1.2'
     compile 'com.github.amlcurran.showcaseview:library:5.4.3'
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.retrofit2:retrofit:2.2.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
     compile 'com.github.renaudcerrato:static-maps-api:1.0.2'
     compile 'com.github.pwittchen:weathericonview:1.1.0'
     compile 'android.zetterstrom.com.forecast:forecast:1.2.0'
     compile 'it.macisamuele:calendarprovider-lib:0.0.1'
     compile 'com.github.michael-rapp:android-preference-activity:4.2.10'
-    compile 'com.evernote:android-job:1.1.6'
+    compile 'com.evernote:android-job:1.1.9'
     compile 'blue.aodev:material-values:1.1.1'
     compile 'com.mikepenz:iconics-core:2.8.2@aar'
     compile 'com.mikepenz:google-material-typeface:2.2.0.3.original@aar'
@@ -182,7 +182,7 @@ dependencies {
     }
     compile 'com.mikepenz:fontawesome-typeface:4.7.0.0@aar'
     compile 'jp.wasabeef:glide-transformations:2.0.1'
-    compile 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.3.0'
+    compile 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
     compile 'com.pavelsikun:material-seekbar-preference:2.3.0'
     compile 'com.android.support:multidex:1.0.1'
     compile project(path: ':data')

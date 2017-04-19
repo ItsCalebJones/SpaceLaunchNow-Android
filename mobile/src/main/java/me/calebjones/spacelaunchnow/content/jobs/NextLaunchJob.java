@@ -23,9 +23,9 @@ public class NextLaunchJob extends Job {
         Timber.v("Running job ID: %s Tag: %s", params.getId(), params.getTag());
         DataManager dataManager = new DataManager(getContext());
         dataManager.getNextLaunches();
-        while (dataManager.isRunning) {
+        while (dataManager.isRunning()) {
             try {
-                wait(100);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

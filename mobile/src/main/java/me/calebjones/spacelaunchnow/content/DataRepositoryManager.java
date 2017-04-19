@@ -10,7 +10,7 @@ import java.util.Date;
 import io.realm.Realm;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataService;
 import me.calebjones.spacelaunchnow.data.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.realm.UpdateRecord;
+import me.calebjones.spacelaunchnow.data.models.UpdateRecord;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
 
 /**

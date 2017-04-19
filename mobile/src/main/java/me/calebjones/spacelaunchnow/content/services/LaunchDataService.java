@@ -113,6 +113,12 @@ public class LaunchDataService extends BaseService {
                 Timber.v("Intent action received: %s", action);
                 dataManager.dataRepositoryManager.syncBackground();
 
+            } else if (Constants.ACTION_GET_VEHICLES_DETAIL.equals(action)){
+                Intent libraryIntent = new Intent(this, LibraryDataService.class);
+                libraryIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);
+                startService(libraryIntent);
+            } else {
+                Timber.v("Unknown action received: %s", action);
             }
 
             Timber.v("Finished!");

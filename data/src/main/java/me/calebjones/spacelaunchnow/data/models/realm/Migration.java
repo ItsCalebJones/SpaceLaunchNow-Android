@@ -1,10 +1,11 @@
-package me.calebjones.spacelaunchnow.data.models;
+package me.calebjones.spacelaunchnow.data.models.realm;
 
 import android.util.Log;
 
 import io.realm.DynamicRealm;
 import io.realm.RealmMigration;
 import io.realm.RealmSchema;
+import me.calebjones.spacelaunchnow.data.models.Constants;
 
 public class Migration implements RealmMigration {
 

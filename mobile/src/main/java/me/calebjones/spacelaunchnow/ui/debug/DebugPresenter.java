@@ -16,8 +16,9 @@ import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.data.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.realm.Launch;
-import me.calebjones.spacelaunchnow.data.models.realm.Products;
+import me.calebjones.spacelaunchnow.data.models.Launch;
+import me.calebjones.spacelaunchnow.data.models.Products;
+import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.FileUtils;
 import timber.log.Timber;
@@ -74,10 +75,12 @@ public class DebugPresenter implements DebugContract.Presenter {
         sharedPreference.setDebugLaunch(selected);
         if (selected) {
             sharedPreference.setDebugLaunch(true);
+            DataClient.create("dev");
         } else {
             sharedPreference.setDebugLaunch(false);
-
+            DataClient.create("1.2.1");
         }
+
 
         //Delete from Database
         realm = Realm.getDefaultInstance();

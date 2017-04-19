@@ -39,10 +39,10 @@ import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.DataJobCreator;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataService;
-import me.calebjones.spacelaunchnow.data.models.Migration;
 import me.calebjones.spacelaunchnow.data.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.LaunchDataModule;
-import me.calebjones.spacelaunchnow.data.networking.LibraryClient;
+import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
+import me.calebjones.spacelaunchnow.data.models.realm.Migration;
+import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -97,7 +97,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
         Crashlytics.setBool("is24", DateFormat.is24HourFormat(getApplicationContext()));
         Crashlytics.setBool("Network State", Utils.isNetworkAvailable(this));
 
-        if (Connectivity.getNetworkInfo(this) != null){
+        if (Connectivity.getNetworkInfo(this) != null) {
             Crashlytics.setString("Network Info", Connectivity.getNetworkInfo(this).toString());
         }
 
@@ -134,14 +134,22 @@ public class LaunchApplication extends Application implements Analytics.Provider
                         .build();
         ForecastClient.create(configuration);
 
-        LibraryClient.create();
-
         mInstance = this;
 
         ListPreferences.create(this);
 
         sharedPreference = ListPreferences.getInstance(this);
         switchPreferences = SwitchPreferences.getInstance(this);
+
+
+        String version;
+
+        if (sharedPreference.isDebugEnabled()) {
+            version = "dev";
+        } else {
+            version = "1.2.1";
+        }
+        DataClient.create(version);
 
         RealmConfiguration realmConfig;
         Realm.init(this);
@@ -154,8 +162,8 @@ public class LaunchApplication extends Application implements Analytics.Provider
         // Get a Realm instance for this thread
         Realm.setDefaultConfiguration(realmConfig);
 
-        if(sharedPreference.isNightThemeEnabled()){
-            if(sharedPreference.isDayNightAutoEnabled()){
+        if (sharedPreference.isNightThemeEnabled()) {
+            if (sharedPreference.isDayNightAutoEnabled()) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
             } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
@@ -186,12 +194,12 @@ public class LaunchApplication extends Application implements Analytics.Provider
         if (!sharedPreference.getFirstBoot()) {
             //Module changes, requires migration.
             Timber.v("Stored Version Code: %s", switchPreferences.getVersionCode());
-            if (switchPreferences.getVersionCode() <= DB_SCHEMA_VERSION){
+            if (switchPreferences.getVersionCode() <= DB_SCHEMA_VERSION) {
                 Intent intent = new Intent(this, LaunchDataService.class);
                 intent.setAction(Constants.ACTION_GET_ALL_DATA);
                 this.startService(intent);
             } else {
-                if(Connectivity.isConnectedWifi(this)){
+                if (Connectivity.isConnectedWifi(this)) {
                     Intent nextIntent = new Intent(this, LaunchDataService.class);
                     nextIntent.setAction(Constants.ACTION_GET_UP_LAUNCHES);
                     this.startService(nextIntent);

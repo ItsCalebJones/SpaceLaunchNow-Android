@@ -11,6 +11,7 @@ public final class Constants {
     public static final String ACTION_SUCCESS_LOCATION = "SUCCESS_GET_LOCATION";
     public static final String ACTION_SUCCESS_PADS = "SUCCESS_GET_PADS";
     public static final String ACTION_SUCCESS_LAUNCH = "SUCCESS_GET_LAUNCH";
+    public static final String ACTION_SUCCESS_VEHICLES_FAMILY = "SUCCESS_GET_VEHICLES_FAMILY";
 
     public static final String ACTION_FAILURE_PREV_LAUNCHES = "FAILURE_PREV_LAUNCHES";
     public static final String ACTION_FAILURE_UP_LAUNCHES = "FAILURE_UP_LAUNCHES";
@@ -20,8 +21,9 @@ public final class Constants {
     public static final String ACTION_FAILURE_LOCATION = "FAILURE_GET_LOCATION";
     public static final String ACTION_FAILURE_VEHICLES = "FAILURE_GET_VEHICLES";
     public static final String ACTION_FAILURE_PADS = "FAILURE_GET_PADS";
-    public static final String ACTION_FAILURE_LAUNCH = "FAILURE_GET_LAUNCH";
+    public static final String ACTION_FAILURE_VEHICLES_FAMILY = "FAILURE_GET_VEHICLES_FAMILY";
 
+    public static final String ACTION_FAILURE_LAUNCH = "FAILURE_GET_LAUNCH";
     public static final String ACTION_GET_PREV_LAUNCHES = "GET_PREV_LAUNCHES";
     public static final String ACTION_GET_UP_LAUNCHES = "GET_UP_LAUNCHES";
     public static final String ACTION_GET_VEHICLES_DETAIL = "GET_ROCKETS";
@@ -30,15 +32,15 @@ public final class Constants {
     public static final String ACTION_GET_MISSION = "GET_ALL_MISSIONS";
     public static final String ACTION_GET_AGENCY = "GET_AGENCY";
     public static final String ACTION_GET_LOCATION = "GET_LOCATION";
-    public static final String ACTION_GET_ALL_LIBRARY_DATA = "GET_ALL_LIBRARY_DATA";
 
+    public static final String ACTION_GET_ALL_LIBRARY_DATA = "GET_ALL_LIBRARY_DATA";
     public static final String ACTION_GET_VEHICLES = "GET_VEHICLES";
     public static final String ACTION_GET_PADS = "GET_PADS";
     public static final String ACTION_UPDATE_NEXT_LAUNCH = "UPDATE_NEXT_LAUNCH";
     public static final String ACTION_UPDATE_STORED_LAUNCH = "UPDATE_STORED_LAUNCH";
     public static final String ACTION_UPDATE_UP_LAUNCHES = "UPDATE_UP_LAUNCHES";
-    public static final String ACTION_UPDATE_BACKGROUND = "UPDATE_UP_LAUNCHES_BACKGROUND";
 
+    public static final String ACTION_UPDATE_BACKGROUND = "UPDATE_UP_LAUNCHES_BACKGROUND";
     public static final String ACTION_UPDATE_PREV_LAUNCHES = "UPDATE_PREV_LAUNCHES";
     public static final String ACTION_UPDATE_LAUNCH = "UPDATE_LAUNCH";
     public static final String ACTION_UPDATE_AGENCY = "UPDATE_GET_AGENCY";

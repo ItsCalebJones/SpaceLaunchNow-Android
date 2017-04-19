@@ -18,8 +18,8 @@ import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.natives.RocketDetails;
-import me.calebjones.spacelaunchnow.data.models.realm.Launch;
+import me.calebjones.spacelaunchnow.data.models.VehicleDetails;
+import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -32,7 +32,7 @@ public class AgencyDetailFragment extends BaseFragment {
     private Context context;
 
     public static Launch detailLaunch;
-    private RocketDetails launchVehicle;
+    private VehicleDetails launchVehicle;
 
     @BindView(R.id.mission_one)
     LinearLayout mission_one;

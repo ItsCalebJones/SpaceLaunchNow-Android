@@ -52,7 +52,7 @@ import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.realm.Launch;
+import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.utils.Analytics;
@@ -312,7 +312,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     public void displayLaunches() {
         Timber.v("loadLaunches...");
-        showLoading();
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.HOUR_OF_DAY, -24);
         Date date = calendar.getTime();
@@ -446,12 +445,12 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     private void hideLoading() {
         Timber.v("Hide Loading...");
         if (mSwipeRefreshLayout.isRefreshing()) {
-            mSwipeRefreshLayout.post(new Runnable() {
+            new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
-            });
+            }, 200);
         }
     }
 

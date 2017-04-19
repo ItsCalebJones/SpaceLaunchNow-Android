@@ -20,7 +20,6 @@ import android.widget.ImageView;
 
 import com.google.gson.Gson;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +27,7 @@ import java.util.List;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.CustomFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.natives.Orbiter;
+import me.calebjones.spacelaunchnow.data.models.Orbiter;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.OrbiterResponse;
 import me.calebjones.spacelaunchnow.ui.orbiter.OrbiterDetailActivity;
@@ -121,7 +120,7 @@ public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayou
         Timber.v("Loading vehicles...");
         showLoading();
 
-        SpaceLaunchNowService request = getRetrofit().create(SpaceLaunchNowService.class);
+        SpaceLaunchNowService request = getSpaceLaunchNowRetrofit().create(SpaceLaunchNowService.class);
         Call<OrbiterResponse> call = request.getOrbiter();
         call.enqueue(new Callback<OrbiterResponse>() {
             @Override
@@ -133,11 +132,7 @@ public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayou
                     adapter.addItems(items);
                     Analytics.from(getActivity()).sendNetworkEvent("ORBITER_INFORMATION", call.request().url().toString(), true);
                 } else {
-                    try {
-                        onFailure(call, new Throwable(response.errorBody().string()));
-                    } catch (IOException e) {
-                        onFailure(call, e);
-                    }
+
                 }
                 hideLoading();
             }
