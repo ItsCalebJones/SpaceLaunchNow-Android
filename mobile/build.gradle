@@ -5,7 +5,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.21.4'
+        classpath 'io.fabric.tools:gradle:1.21.6'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.4'
     }
 }
@@ -144,6 +144,9 @@ dependencies {
     compile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
     compile "com.android.support:preference-v7:$rootProject.supportLibraryVersion"
+    compile "com.android.support:animated-vector-drawable:$rootProject.supportLibraryVersion"
+    compile "com.android.support:support-v13:$rootProject.supportLibraryVersion"
+    compile "com.android.support:percent:$rootProject.supportLibraryVersion"
     compile 'com.jakewharton:butterknife:8.5.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     compile "com.google.android.gms:play-services-location:$rootProject.playServicesVersion"
