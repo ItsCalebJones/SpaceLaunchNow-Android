@@ -20,9 +20,9 @@ public interface LibraryService {
     Call<LaunchResponse> getUpcomingLaunchesAll(@Query("offset") int offset);
 
     @GET("launch/{start_date}/{end_date}?mode=verbose")
-    Call<LaunchResponse> getUpcomingLaunches(@Path("start_date") String start_date,
-                                             @Path("end_date") String end_date,
-                                             @Query("offset") int offset);
+    Call<LaunchResponse> getNextUpcomingLaunches(@Path("start_date") String start_date,
+                                                 @Path("end_date") String end_date,
+                                                 @Query("offset") int offset);
 
     @GET("launch?fields=net,name,location,status&limit=1000")
     Call<LaunchResponse> getLaunchesByDate(@Query("startdate") String start_date,
@@ -36,8 +36,8 @@ public interface LibraryService {
     Call<LaunchResponse> getLaunchByID(@Path("launchID") int launchID);
 
     @GET("launch?fields=id,net,status")
-    Call<LaunchResponse> getMiniNextLaunch(@Query("start_date") String start_date,
-                                           @Query("end_date") String end_date);
+    Call<LaunchResponse> getNextUpcomingLaunchesMini(@Query("start_date") String start_date,
+                                                     @Query("end_date") String end_date);
     //Get Missions Methods
 
     @GET("mission?mode=verbose&limit=500")

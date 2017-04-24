@@ -1,9 +1,5 @@
 package me.calebjones.spacelaunchnow.data.networking;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.ListPreference;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
 import me.calebjones.spacelaunchnow.data.helpers.Utils;
@@ -25,10 +21,12 @@ import timber.log.Timber;
 public class DataClient {
 
 //    private final String mCacheControl;
+    private final LibraryService libraryServiceThreaded;
     private final LibraryService libraryService;
     private final SpaceLaunchNowService spaceLaunchNowService;
     private static DataClient mInstance;
     private Retrofit libraryRetrofit;
+    private Retrofit libraryRetrofitThreaded;
     private Retrofit spaceLaunchNowRetrofit;
 
     private DataClient(String version){
@@ -39,9 +37,11 @@ public class DataClient {
 //                        .build();
 //        mCacheControl = cacheControl.toString();
         libraryRetrofit = RetrofitBuilder.getLibraryRetrofit(version);
+        libraryRetrofitThreaded = RetrofitBuilder.getLibraryRetrofitThreaded(version);
         spaceLaunchNowRetrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit();
 
         libraryService = libraryRetrofit.create(LibraryService.class);
+        libraryServiceThreaded = libraryRetrofitThreaded.create(LibraryService.class);
         spaceLaunchNowService = spaceLaunchNowRetrofit.create(SpaceLaunchNowService.class);
 
     }
@@ -64,7 +64,7 @@ public class DataClient {
     /**
      * Singleton accessor
      * <p/>
-     * Will throw an exception if {@link #create()} was never called
+     * Will throw an exception if {@link #create(String version)} was never called
      *
      * @return the DataClient singleton
      */
@@ -75,8 +75,13 @@ public class DataClient {
         return mInstance;
     }
 
-    public Call<LaunchResponse> getLaunchById(int launchID, @NonNull Callback<LaunchResponse> callback) {
-        Call<LaunchResponse> call = libraryService.getLaunchByID(launchID);
+    public Call<LaunchResponse> getLaunchById(int launchID, boolean isUIThread, @NonNull Callback<LaunchResponse> callback) {
+        Call<LaunchResponse> call;
+        if (isUIThread){
+            call = libraryService.getLaunchByID(launchID);
+        } else {
+            call = libraryServiceThreaded.getLaunchByID(launchID);
+        }
 
         call.enqueue(callback);
 
@@ -85,16 +90,16 @@ public class DataClient {
         return call;
     }
 
-    public Call<LaunchResponse> getNextLaunches(Callback<LaunchResponse> callback){
-        Call<LaunchResponse> call = libraryService.getMiniNextLaunch(Utils.getStartDate(-1), Utils.getEndDate(10));
+    public Call<LaunchResponse> getNextUpcomingLaunchesMini(Callback<LaunchResponse> callback){
+        Call<LaunchResponse> call = libraryServiceThreaded.getNextUpcomingLaunchesMini(Utils.getStartDate(-1), Utils.getEndDate(10));
 
         call.enqueue(callback);
 
         return call;
     }
 
-    public Call<LaunchResponse> getUpcomingLaunches(int offset, Callback<LaunchResponse> callback) {
-        Call<LaunchResponse> call = libraryService.getUpcomingLaunches(Utils.getStartDate(-1), Utils.getEndDate(10), offset);
+    public Call<LaunchResponse> getNextUpcomingLaunches(int offset, Callback<LaunchResponse> callback) {
+        Call<LaunchResponse> call = libraryServiceThreaded.getNextUpcomingLaunches(Utils.getStartDate(-1), Utils.getEndDate(10), offset);
 
         call.enqueue(callback);
 
@@ -102,7 +107,7 @@ public class DataClient {
     }
 
     public Call<LaunchResponse> getUpcomingLaunchesAll(int offset, Callback<LaunchResponse> callback) {
-        Call<LaunchResponse> call = libraryService.getUpcomingLaunchesAll(offset);
+        Call<LaunchResponse> call = libraryServiceThreaded.getUpcomingLaunchesAll(offset);
 
         call.enqueue(callback);
 
@@ -110,7 +115,7 @@ public class DataClient {
     }
 
     public Call<LaunchResponse> getLaunchesByDate(String startDate, String endDate, int offset, Callback<LaunchResponse> callback) {
-        Call<LaunchResponse> call = libraryService.getLaunchesByDate(startDate, endDate, offset);
+        Call<LaunchResponse> call = libraryServiceThreaded.getLaunchesByDate(startDate, endDate, offset);
 
         call.enqueue(callback);
 
@@ -118,7 +123,7 @@ public class DataClient {
     }
 
     public Call<AgencyResponse> getAllAgencies(int offset, Callback<AgencyResponse> callback) {
-        Call<AgencyResponse> call = libraryService.getAllAgency(offset);
+        Call<AgencyResponse> call = libraryServiceThreaded.getAllAgency(offset);
 
         call.enqueue(callback);
 
@@ -126,7 +131,7 @@ public class DataClient {
     }
 
     public Call<MissionResponse> getAllMissions(int offset, Callback<MissionResponse> callback) {
-        Call<MissionResponse> call = libraryService.getAllMisisons(offset);
+        Call<MissionResponse> call = libraryServiceThreaded.getAllMisisons(offset);
 
         call.enqueue(callback);
 
@@ -134,7 +139,7 @@ public class DataClient {
     }
 
     public Call<LocationResponse> getAllLocations(int offset, Callback<LocationResponse> callback) {
-        Call<LocationResponse> call = libraryService.getLocations(offset);
+        Call<LocationResponse> call = libraryServiceThreaded.getLocations(offset);
 
         call.enqueue(callback);
 
@@ -142,7 +147,7 @@ public class DataClient {
     }
 
     public Call<LocationResponse> getLocationById(int locationID, Callback<LocationResponse> callback) {
-        Call<LocationResponse> call = libraryService.getLocationsById(locationID);
+        Call<LocationResponse> call = libraryServiceThreaded.getLocationsById(locationID);
 
         call.enqueue(callback);
 
@@ -150,7 +155,7 @@ public class DataClient {
     }
 
     public Call<PadResponse> getAllPads(int offset, Callback<PadResponse> callback) {
-        Call<PadResponse> call = libraryService.getPads(offset);
+        Call<PadResponse> call = libraryServiceThreaded.getPads(offset);
 
         call.enqueue(callback);
 
@@ -158,7 +163,7 @@ public class DataClient {
     }
 
     public Call<PadResponse> getPadsByID(int padID, Callback<PadResponse> callback) {
-        Call<PadResponse> call = libraryService.getPadsById(padID);
+        Call<PadResponse> call = libraryServiceThreaded.getPadsById(padID);
 
         call.enqueue(callback);
 
@@ -174,7 +179,7 @@ public class DataClient {
     }
 
     public Call<RocketResponse> getRockets(int offset, Callback<RocketResponse> callback) {
-        Call<RocketResponse> call = libraryService.getAllRockets(offset);
+        Call<RocketResponse> call = libraryServiceThreaded.getAllRockets(offset);
 
         call.enqueue(callback);
 
@@ -182,7 +187,7 @@ public class DataClient {
     }
 
     public Call<RocketFamilyResponse> getRocketFamily(int offset, Callback<RocketFamilyResponse> callback) {
-        Call<RocketFamilyResponse> call = libraryService.getAllRocketFamily(offset);
+        Call<RocketFamilyResponse> call = libraryServiceThreaded.getAllRocketFamily(offset);
 
         call.enqueue(callback);
 

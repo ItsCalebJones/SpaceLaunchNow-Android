@@ -1,13 +1,12 @@
 package me.calebjones.spacelaunchnow.ui.main.vehicles.launcher;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,6 +31,7 @@ import me.calebjones.spacelaunchnow.data.networking.responses.base.LauncherRespo
 import me.calebjones.spacelaunchnow.ui.launcher.LauncherDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
+import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -112,9 +112,14 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
 
     @Override
     public void onResume() {
-        Timber.v("onResume");
-        loadJSON();
         super.onResume();
+        Timber.v("onResume");
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loadJSON();
+            }
+        }, 100);
     }
 
     private void loadJSON() {
@@ -123,6 +128,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
 
         SpaceLaunchNowService request = getSpaceLaunchNowRetrofit().create(SpaceLaunchNowService.class);
         Call<LauncherResponse> call = request.getLaunchers();
+
         call.enqueue(new Callback<LauncherResponse>() {
             @Override
             public void onResponse(Call<LauncherResponse> call, Response<LauncherResponse> response) {
@@ -136,6 +142,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
 
                 } else {
                     Timber.e(ErrorUtil.parseSpaceLaunchNowError(response).message());
+                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, ErrorUtil.parseSpaceLaunchNowError(response).message());
                 }
                 hideLoading();
             }
@@ -144,7 +151,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
             public void onFailure(Call<LauncherResponse> call, Throwable t) {
                 Timber.e(t.getMessage());
                 hideLoading();
-                Snackbar.make(coordinatorLayout, t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+                SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, t.getLocalizedMessage());
                 Analytics.from(getActivity()).sendNetworkEvent("VEHICLE_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());
             }
         });

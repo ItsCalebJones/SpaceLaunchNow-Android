@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide;
 import java.util.Scanner;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.realm.Realm;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
@@ -108,13 +109,14 @@ public class LaunchDetailActivity extends BaseActivity
 
         if (type != null && type.equals("launch")) {
             int id = mIntent.getIntExtra("launchID", 0);
-            DataClient.getInstance().getLaunchById(id, new Callback<LaunchResponse>() {
+            DataClient.getInstance().getLaunchById(id, true, new Callback<LaunchResponse>() {
                 @Override
                 public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
+                    Realm realm = Realm.getDefaultInstance();
                     if (response.isSuccessful()) {
                         RealmList<Launch> items = new RealmList<>(response.body().getLaunches());
                         for (Launch item : items) {
-                            Launch previous = getRealm().where(Launch.class)
+                            Launch previous = realm.where(Launch.class)
                                     .equalTo("id", item.getId())
                                     .findFirst();
                             if (previous != null) {
@@ -125,14 +127,15 @@ public class LaunchDetailActivity extends BaseActivity
                                 item.setIsNotifiedHour(previous.getIsNotifiedHour());
                                 item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
                             }
-                            getRealm().beginTransaction();
+                            realm.beginTransaction();
                             item.getLocation().setPrimaryID();
-                            getRealm().copyToRealmOrUpdate(item);
-                            getRealm().commitTransaction();
+                            realm.copyToRealmOrUpdate(item);
+                            realm.commitTransaction();
                             updateViews(item);
                             Timber.v("Updated detailLaunch: %s", item.getId());
                         }
                     }
+                    realm.close();
                 }
 
                 @Override

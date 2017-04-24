@@ -424,15 +424,17 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
         }
     }
 
-    private final BroadcastReceiver nextLaunchReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver launchReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Timber.v("Received: %s", intent.getAction());
             hideLoading();
-            if (intent.getAction().equals(Constants.ACTION_SUCCESS_UP_LAUNCHES)) {
-                loadData();
-            } else if (intent.getAction().equals(Constants.ACTION_FAILURE_UP_LAUNCHES)) {
-                SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, intent);
+            if (intent.getAction().equals(Constants.ACTION_GET_UP_LAUNCHES)) {
+                if (intent.getExtras().getBoolean("result")) {
+                    loadData();
+                } else {
+                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, intent.getStringExtra("error"));
+                }
             }
         }
     };
@@ -497,10 +499,9 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     public void onResume() {
         Timber.d("OnResume!");
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Constants.ACTION_SUCCESS_UP_LAUNCHES);
-        intentFilter.addAction(Constants.ACTION_FAILURE_UP_LAUNCHES);
+        intentFilter.addAction(Constants.ACTION_GET_UP_LAUNCHES);
 
-        getActivity().registerReceiver(nextLaunchReceiver, intentFilter);
+        getActivity().registerReceiver(launchReceiver, intentFilter);
         setTitle();
         loadData();
         super.onResume();
@@ -508,7 +509,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
 
     @Override
     public void onPause() {
-        getActivity().unregisterReceiver(nextLaunchReceiver);
+        getActivity().unregisterReceiver(launchReceiver);
         super.onPause();
     }
 

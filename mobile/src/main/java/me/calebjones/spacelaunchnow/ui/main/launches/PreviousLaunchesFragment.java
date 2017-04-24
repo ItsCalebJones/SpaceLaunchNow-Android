@@ -698,15 +698,17 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
         return filteredModelList;
     }
 
-    private final BroadcastReceiver nextLaunchReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver launchReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Timber.v("Received: %s", intent.getAction());
             hideLoading();
-            if (intent.getAction().equals(Constants.ACTION_SUCCESS_PREV_LAUNCHES)) {
-                loadLaunches();
-            } else if (intent.getAction().equals(Constants.ACTION_FAILURE_PREV_LAUNCHES)) {
-                SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, intent);
+            if (intent.getAction().equals(Constants.ACTION_GET_PREV_LAUNCHES)) {
+                if (intent.getExtras().getBoolean("result")) {
+                    loadLaunches();
+                } else {
+                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, intent.getStringExtra("error"));
+                }
             }
         }
     };
@@ -716,10 +718,9 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     public void onResume() {
         Timber.d("OnResume!");
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Constants.ACTION_SUCCESS_PREV_LAUNCHES);
-        intentFilter.addAction(Constants.ACTION_FAILURE_PREV_LAUNCHES);
+        intentFilter.addAction(Constants.ACTION_GET_PREV_LAUNCHES);
 
-        getActivity().registerReceiver(nextLaunchReceiver, intentFilter);
+        getActivity().registerReceiver(launchReceiver, intentFilter);
 
         if (listPreferences.getPreviousFirstBoot()) {
             listPreferences.setPreviousFirstBoot(false);
@@ -737,7 +738,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
 
     @Override
     public void onPause() {
-        getActivity().unregisterReceiver(nextLaunchReceiver);
+        getActivity().unregisterReceiver(launchReceiver);
         if (launchRealms != null) {
             launchRealms.removeChangeListeners();
         }

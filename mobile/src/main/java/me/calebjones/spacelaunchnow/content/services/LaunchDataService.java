@@ -35,7 +35,7 @@ public class LaunchDataService extends BaseService {
 
     public static void startActionUpdateNextLaunch(Context context) {
         Intent intent = new Intent(context, LaunchDataService.class);
-        intent.setAction(Constants.ACTION_UPDATE_NEXT_LAUNCH);
+        intent.setAction(Constants.ACTION_GET_NEXT_LAUNCH);
         context.startService(intent);
         Timber.v("Sending Delete intent.");
     }
@@ -86,7 +86,7 @@ public class LaunchDataService extends BaseService {
                     scheduleLaunchUpdates();
                 }
 
-                dataManager.getUpcomingLaunches();
+                dataManager.getNextUpcomingLaunches();
 
                 // Called from PrevLaunchFragment
             } else if (Constants.ACTION_GET_PREV_LAUNCHES.equals(action)) {
@@ -98,10 +98,10 @@ public class LaunchDataService extends BaseService {
                     dataManager.getLaunchesByDate("1950-01-01", Utils.getEndDate(1), 0);
                 }
 
-            } else if (Constants.ACTION_UPDATE_NEXT_LAUNCH.equals(action)) {
+            } else if (Constants.ACTION_GET_NEXT_LAUNCH.equals(action)) {
 
                 Timber.v("Intent action received: %s", action);
-                dataManager.getNextLaunches();
+                dataManager.getNextUpcomingLaunchesMini();
 
             } else if (Constants.SYNC_NOTIFIERS.equals(action)) {
 

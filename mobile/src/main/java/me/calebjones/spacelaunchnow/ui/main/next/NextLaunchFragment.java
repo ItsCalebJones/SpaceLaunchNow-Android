@@ -490,10 +490,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         }
 
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Constants.ACTION_SUCCESS_UP_LAUNCHES);
-        intentFilter.addAction(Constants.ACTION_FAILURE_UP_LAUNCHES);
+        intentFilter.addAction(Constants.ACTION_GET_UP_LAUNCHES);
 
-        getActivity().registerReceiver(nextLaunchReceiver, intentFilter);
+        getActivity().registerReceiver(launchReceiver, intentFilter);
 
         displayLaunches();
     }
@@ -502,7 +501,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     public void onPause() {
         super.onPause();
         Timber.v("onPause");
-        getActivity().unregisterReceiver(nextLaunchReceiver);
+        getActivity().unregisterReceiver(launchReceiver);
     }
 
     @Override
@@ -549,15 +548,18 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         snackbar.show();
     }
 
-    private final BroadcastReceiver nextLaunchReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver launchReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Timber.v("Received: %s", intent.getAction());
-            if (intent.getAction().equals(Constants.ACTION_SUCCESS_UP_LAUNCHES)) {
-                onFinishedRefreshing();
-            } else if (intent.getAction().equals(Constants.ACTION_FAILURE_UP_LAUNCHES)) {
-                hideLoading();
-                SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, intent);
+            hideLoading();
+            if (intent.getAction().equals(Constants.ACTION_GET_UP_LAUNCHES)) {
+                if (intent.getExtras().getBoolean("result")) {
+                    onFinishedRefreshing();
+                } else {
+                    hideLoading();
+                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, intent.getStringExtra("error"));
+                }
             }
         }
     };

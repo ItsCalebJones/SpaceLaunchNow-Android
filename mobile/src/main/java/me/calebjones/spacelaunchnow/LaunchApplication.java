@@ -34,11 +34,13 @@ import org.json.JSONObject;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import me.calebjones.spacelaunchnow.content.DataRepositoryManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.DataJobCreator;
+import me.calebjones.spacelaunchnow.content.jobs.SyncJob;
+import me.calebjones.spacelaunchnow.content.jobs.UpdateJob;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
-import me.calebjones.spacelaunchnow.content.services.LibraryDataService;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
 import me.calebjones.spacelaunchnow.data.models.realm.Migration;
@@ -189,40 +191,20 @@ public class LaunchApplication extends Application implements Analytics.Provider
 
         JobManager.create(this).addJobCreator(new DataJobCreator());
 
+        UpdateJob.scheduleJob(this);
+        SyncJob.schedulePeriodicJob(this);
+
         DefaultRuleEngine.trackAppStart(this);
 
         if (!sharedPreference.getFirstBoot()) {
-            //Module changes, requires migration.
             Timber.v("Stored Version Code: %s", switchPreferences.getVersionCode());
             if (switchPreferences.getVersionCode() <= DB_SCHEMA_VERSION) {
                 Intent intent = new Intent(this, LaunchDataService.class);
                 intent.setAction(Constants.ACTION_GET_ALL_DATA);
                 this.startService(intent);
             } else {
-                if (Connectivity.isConnectedWifi(this)) {
-                    Intent nextIntent = new Intent(this, LaunchDataService.class);
-                    nextIntent.setAction(Constants.ACTION_GET_UP_LAUNCHES);
-                    this.startService(nextIntent);
-                } else {
-                    Intent nextIntent = new Intent(this, LaunchDataService.class);
-                    nextIntent.setAction(Constants.ACTION_UPDATE_NEXT_LAUNCH);
-                    this.startService(nextIntent);
-                }
-
-                if (sharedPreference.getLastVehicleUpdate() > 0) {
-                    Timber.d("Time since last VehicleUpdate: %s", (System.currentTimeMillis() - sharedPreference.getLastVehicleUpdate()));
-                    if ((System.currentTimeMillis() - sharedPreference.getLastVehicleUpdate()) > 1209600000) {
-                        Intent rocketIntent = new Intent(this, LibraryDataService.class);
-                        rocketIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);
-                        this.startService(rocketIntent);
-
-                    } else if (Utils.getVersionCode(this) != switchPreferences.getVersionCode()) {
-
-                        Intent rocketIntent = new Intent(this, LibraryDataService.class);
-                        rocketIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);
-                        this.startService(rocketIntent);
-                    }
-                }
+                DataRepositoryManager dataRepositoryManager = new DataRepositoryManager(this);
+                dataRepositoryManager.syncBackground();
             }
         } else {
             Intent intent = new Intent(this, LaunchDataService.class);

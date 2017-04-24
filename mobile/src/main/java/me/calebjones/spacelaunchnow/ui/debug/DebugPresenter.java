@@ -98,7 +98,7 @@ public class DebugPresenter implements DebugContract.Presenter {
 
     @Override
     public void syncNextLaunchClicked(Context context) {
-        context.startService(new Intent(context, LaunchDataService.class).setAction(Constants.ACTION_UPDATE_NEXT_LAUNCH));
+        context.startService(new Intent(context, LaunchDataService.class).setAction(Constants.ACTION_GET_NEXT_LAUNCH));
     }
 
     @Override

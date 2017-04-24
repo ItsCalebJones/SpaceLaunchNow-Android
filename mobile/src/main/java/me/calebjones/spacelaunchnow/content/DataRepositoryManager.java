@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataService;
@@ -20,6 +21,11 @@ import me.calebjones.spacelaunchnow.utils.Connectivity;
 public class DataRepositoryManager {
 
     private Context context;
+
+    public DataManager getDataManager() {
+        return dataManager;
+    }
+
     private DataManager dataManager;
 
     public DataRepositoryManager(Context context, DataManager dataManager) {
@@ -41,15 +47,14 @@ public class DataRepositoryManager {
 
         if (wifiOnly) {
             if (wifiConnected) {
-                dataManager.getUpcomingLaunches();
+                dataManager.getNextUpcomingLaunches();
                 dataManager.syncNotifiers();
                 checkFullSync();
 
             }
         } else if (dataSaver && !wifiConnected) {
-            dataManager.getNextLaunches();
+            dataManager.getNextUpcomingLaunchesMini();
         } else {
-            dataManager.getUpcomingLaunches();
             checkFullSync();
         }
     }
@@ -60,6 +65,7 @@ public class DataRepositoryManager {
         checkMissions(realm);
         checkVehicles(realm);
         checkLibraryData(realm);
+        realm.close();
     }
 
     private void checkLibraryData(Realm realm) {
@@ -68,7 +74,7 @@ public class DataRepositoryManager {
             Date currentDate = new Date();
             Date lastUpdateDate = record.getDate();
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
-            long daysMaxUpdate = 2592000000L;
+            long daysMaxUpdate = TimeUnit.DAYS.toMillis(30);
             if (timeSinceUpdate > daysMaxUpdate) {
                 Intent rocketIntent = new Intent(context, LibraryDataService.class);
                 rocketIntent.setAction(Constants.ACTION_GET_ALL_LIBRARY_DATA);
@@ -87,7 +93,7 @@ public class DataRepositoryManager {
             Date currentDate = new Date();
             Date lastUpdateDate = record.getDate();
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
-            long daysMaxUpdate = 2592000000L;
+            long daysMaxUpdate = TimeUnit.DAYS.toMillis(7);
             if (timeSinceUpdate > daysMaxUpdate) {
                 dataManager.getUpcomingLaunchesAll();
             }
@@ -102,7 +108,7 @@ public class DataRepositoryManager {
             Date currentDate = new Date();
             Date lastUpdateDate = record.getDate();
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
-            long daysMaxUpdate = 2592000000L;
+            long daysMaxUpdate = TimeUnit.DAYS.toMillis(30);
             if (timeSinceUpdate > daysMaxUpdate) {
                 Intent missionIntent = new Intent(context, LibraryDataService.class);
                 missionIntent.setAction(Constants.ACTION_GET_MISSION);
@@ -121,7 +127,7 @@ public class DataRepositoryManager {
             Date currentDate = new Date();
             Date lastUpdateDate = record.getDate();
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
-            long daysMaxUpdate = 2592000000L;
+            long daysMaxUpdate = TimeUnit.DAYS.toMillis(30);
             if (timeSinceUpdate > daysMaxUpdate) {
                 Intent rocketIntent = new Intent(context, LibraryDataService.class);
                 rocketIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);

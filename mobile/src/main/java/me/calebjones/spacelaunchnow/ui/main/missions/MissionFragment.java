@@ -36,6 +36,7 @@ import me.calebjones.spacelaunchnow.content.services.LibraryDataService;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Mission;
 import me.calebjones.spacelaunchnow.utils.Analytics;
+import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import timber.log.Timber;
 
 public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener {
@@ -110,15 +111,18 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
         missionList.addChangeListener(callback);
     }
 
-    private final BroadcastReceiver nextLaunchReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver missionReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Timber.v("Received: %s", intent.getAction());
-            if (intent.getAction().equals(Constants.ACTION_SUCCESS_MISSIONS)){
-                onFinishedRefreshing();
-            } else if (intent.getAction().equals(Constants.ACTION_FAILURE_MISSIONS)){
-                hideLoading();
-                showErrorSnackbar(intent.getStringExtra("error"));
+            hideLoading();
+            if (intent.getAction().equals(Constants.ACTION_GET_MISSION)) {
+                if (intent.getExtras().getBoolean("result")) {
+                    onFinishedRefreshing();
+                } else {
+                    hideLoading();
+                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, intent.getStringExtra("error"));
+                }
             }
         }
     };
@@ -137,10 +141,9 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
     public void onResume() {
         Timber.d("OnResume!");
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Constants.ACTION_SUCCESS_MISSIONS);
-        intentFilter.addAction(Constants.ACTION_FAILURE_MISSIONS);
+        intentFilter.addAction(Constants.ACTION_GET_MISSION);
 
-        getActivity().registerReceiver(nextLaunchReceiver, intentFilter);
+        getActivity().registerReceiver(missionReceiver, intentFilter);
         displayMissions();
 
         super.onResume();
@@ -148,7 +151,7 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
 
     @Override
     public void onPause() {
-        getActivity().unregisterReceiver(nextLaunchReceiver);
+        getActivity().unregisterReceiver(missionReceiver);
         super.onPause();
     }
 
