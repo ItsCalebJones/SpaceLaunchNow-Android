@@ -25,7 +25,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -34,7 +33,6 @@ import android.os.Build;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.PathInterpolator;
 import android.webkit.URLUtil;
@@ -45,63 +43,21 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.realm.Launch;
+import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.utils.customtab.WebViewFallback;
-import okhttp3.Interceptor;
-import okhttp3.Response;
 
 public class Utils {
 
     public final static int COLOR_ANIMATION_DURATION = 1000;
     public final static int DEFAULT_DELAY = 0;
 
-    public static final Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-            Response originalResponse = chain.proceed(chain.request());
-            return originalResponse.newBuilder()
-                    .header("Cache-Control", "public, max-age=178200")
-                    .build();
-        }
-    };
-
-    public static int randInt(int min, int max) {
-        Random rand = new Random();
-        return rand.nextInt((max - min) + 1) + min;
-    }
-
-    public static boolean isLollopopUp() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
-    }
-
-    public static boolean isNumeric(String input) {
-        try {
-            int num = Integer.parseInt(input);
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return true;
-    }
-
-    public static void setMargins(View v, int l, int t, int r, int b) {
-        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-            p.setMargins(l, t, r, b);
-            v.requestLayout();
-        }
-    }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void animateViewColor(View v, int startColor, int endColor) {
@@ -112,20 +68,6 @@ public class Utils {
         animator.setInterpolator(new PathInterpolator(0.4f, 0f, 1f, 1f));
         animator.setDuration(COLOR_ANIMATION_DURATION);
         animator.start();
-    }
-
-    public Bitmap getBitmapFromURL(String strURL) {
-        try {
-            URL url = new URL(strURL);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            return BitmapFactory.decodeStream(input);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     /**
@@ -159,7 +101,7 @@ public class Utils {
         return propertyAnimator;
     }
 
-    public static String getEndDate(Context context, int days) {
+    public static String getEndDate(int days) {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DATE, days);
 
@@ -169,7 +111,7 @@ public class Utils {
         return String.valueOf(formattedDate);
     }
 
-    public static String getStartDate(Context context, int days) {
+    public static String getStartDate(int days) {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DATE, days);
 

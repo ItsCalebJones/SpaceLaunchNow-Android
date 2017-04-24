@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +20,6 @@ import android.widget.ImageView;
 
 import com.google.gson.Gson;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,12 +27,14 @@ import java.util.List;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.CustomFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.natives.Orbiter;
-import me.calebjones.spacelaunchnow.data.networking.interfaces.APIRequestInterface;
+import me.calebjones.spacelaunchnow.data.models.Orbiter;
+import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
+import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.OrbiterResponse;
 import me.calebjones.spacelaunchnow.ui.orbiter.OrbiterDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
+import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -112,7 +113,12 @@ public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayou
     @Override
     public void onResume() {
         if (adapter.getItemCount() == 0) {
-            loadJSON();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    loadJSON();
+                }
+            }, 100);
         }
         super.onResume();
     }
@@ -121,7 +127,7 @@ public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayou
         Timber.v("Loading vehicles...");
         showLoading();
 
-        APIRequestInterface request = getRetrofit().create(APIRequestInterface.class);
+        SpaceLaunchNowService request = getSpaceLaunchNowRetrofit().create(SpaceLaunchNowService.class);
         Call<OrbiterResponse> call = request.getOrbiter();
         call.enqueue(new Callback<OrbiterResponse>() {
             @Override
@@ -133,10 +139,9 @@ public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayou
                     adapter.addItems(items);
                     Analytics.from(getActivity()).sendNetworkEvent("ORBITER_INFORMATION", call.request().url().toString(), true);
                 } else {
-                    try {
-                        onFailure(call, new Throwable(response.errorBody().string()));
-                    } catch (IOException e) {
-                        onFailure(call, e);
+                    Timber.e(ErrorUtil.parseSpaceLaunchNowError(response).message());
+                    if (OrbiterFragment.this.getUserVisibleHint()) {
+                        SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, ErrorUtil.parseSpaceLaunchNowError(response).message());
                     }
                 }
                 hideLoading();
@@ -146,7 +151,9 @@ public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayou
             public void onFailure(Call<OrbiterResponse> call, Throwable t) {
                 Timber.e(t.getMessage());
                 hideLoading();
-                Snackbar.make(coordinatorLayout, t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+                if (OrbiterFragment.this.getUserVisibleHint()) {
+                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, t.getLocalizedMessage());
+                }
                 Analytics.from(getActivity()).sendNetworkEvent("ORBITER_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());
             }
         });

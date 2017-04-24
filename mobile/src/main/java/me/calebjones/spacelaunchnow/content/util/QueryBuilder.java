@@ -16,7 +16,7 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.data.models.realm.Launch;
+import me.calebjones.spacelaunchnow.data.models.Launch;
 import timber.log.Timber;
 
 public class QueryBuilder {
@@ -239,7 +239,7 @@ public class QueryBuilder {
                 } else {
                     firstGroup = false;
                 }
-                query.equalTo("rocket.agencies.id", 121);
+                query.equalTo("rocket.agencies.id", 121).or().contains("name", "Falcon");
 
             } else if (key.contains("ROSCOSMOS")) {
                 if (!firstGroup) {

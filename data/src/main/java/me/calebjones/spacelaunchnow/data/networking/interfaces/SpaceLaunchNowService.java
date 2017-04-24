@@ -6,7 +6,7 @@ import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleRespon
 import retrofit2.Call;
 import retrofit2.http.GET;
 
-public interface APIRequestInterface {
+public interface SpaceLaunchNowService {
 
     @GET("orbiter")
     Call<OrbiterResponse> getOrbiter();

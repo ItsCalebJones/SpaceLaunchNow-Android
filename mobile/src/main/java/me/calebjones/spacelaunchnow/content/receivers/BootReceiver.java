@@ -6,9 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
-
+import me.calebjones.spacelaunchnow.data.models.Constants;
 
 public class BootReceiver extends BroadcastReceiver{
     private SharedPreferences sharedPref;

@@ -1,5 +1,5 @@
 
-package me.calebjones.spacelaunchnow.data.models.realm;
+package me.calebjones.spacelaunchnow.data.models;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;

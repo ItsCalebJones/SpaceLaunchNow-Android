@@ -4,13 +4,14 @@ import android.content.Context;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
+import com.crashlytics.android.Crashlytics;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
 
 import java.util.concurrent.TimeUnit;
 
-import me.calebjones.spacelaunchnow.content.models.Constants;
-import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.content.DataManager;
+import me.calebjones.spacelaunchnow.data.models.Constants;
 import timber.log.Timber;
 
 public class SyncJob extends Job {
@@ -20,18 +21,27 @@ public class SyncJob extends Job {
     @NonNull
     @Override
     protected Result onRunJob(Params params) {
-        Timber.v("Running job ID: %s Tag: %s", params.getId(), params.getTag());
-        if (LaunchDataService.getNextLaunches(getContext())) {
-            return Result.SUCCESS;
-        } else {
-            return Result.RESCHEDULE;
+        Timber.d("Running job ID: %s Tag: %s", params.getId(), params.getTag());
+        DataManager dataManager = new DataManager(getContext());
+        dataManager.getNextUpcomingLaunchesMini();
+
+        int count = 0;
+        while (dataManager.isRunning()) {
+            try {
+                count += 100;
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Timber.e("ERROR - %s %s", TAG, e.getLocalizedMessage());
+                Crashlytics.logException(e);
+            }
         }
+        Timber.i("%s complete...returning success after %s milliseconds.", TAG, count);
+        return Result.SUCCESS;
     }
 
     public static void schedulePeriodicJob(Context context) {
         if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("background_sync", true)) {
             Timber.v("Background sync enabled, configuring JobRequest.");
-
 
             JobRequest.Builder builder = new JobRequest.Builder(SyncJob.TAG)
                     .setUpdateCurrent(true)
@@ -45,6 +55,7 @@ public class SyncJob extends Job {
                 builder.setPeriodic(TimeUnit.HOURS.toMillis(6), 7200000);
             }
 
+            Timber.i("Scheduling JobRequests for %s", TAG);
             builder.build().schedule();
         }
     }

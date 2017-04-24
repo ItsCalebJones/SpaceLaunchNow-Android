@@ -70,8 +70,8 @@ import java.util.concurrent.TimeUnit;
 
 import timber.log.Timber;
 
-import static me.calebjones.spacelaunchnow.wear.Constants.LIGHT;
-import static me.calebjones.spacelaunchnow.wear.Constants.NEUTRAL;
+import static me.calebjones.spacelaunchnow.wear.WearConstants.LIGHT;
+import static me.calebjones.spacelaunchnow.wear.WearConstants.NEUTRAL;
 
 /**
  * Digital watch face with seconds. In ambient mode, the seconds aren't displayed. On devices with

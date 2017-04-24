@@ -2,6 +2,7 @@ package me.calebjones.spacelaunchnow.content.jobs;
 
 import android.support.annotation.NonNull;
 
+import com.crashlytics.android.Crashlytics;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
@@ -9,8 +10,8 @@ import com.evernote.android.job.util.support.PersistableBundleCompat;
 
 import java.util.Set;
 
-import me.calebjones.spacelaunchnow.content.models.Constants;
-import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.content.DataManager;
+import me.calebjones.spacelaunchnow.data.models.Constants;
 import timber.log.Timber;
 
 public class NextLaunchJob extends Job {
@@ -20,12 +21,21 @@ public class NextLaunchJob extends Job {
     @NonNull
     @Override
     protected Result onRunJob(Params params) {
-        Timber.v("Running job ID: %s Tag: %s", params.getId(), params.getTag());
-        if (LaunchDataService.getNextLaunches(getContext())) {
-            return Result.SUCCESS;
-        } else {
-            return Result.RESCHEDULE;
+        Timber.d("Running job ID: %s Tag: %s", params.getId(), params.getTag());
+        DataManager dataManager = new DataManager(getContext());
+        dataManager.getNextUpcomingLaunchesMini();
+        int count = 0;
+        while (dataManager.isRunning()) {
+            try {
+                count += 100;
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Timber.e("ERROR - %s %s", TAG, e.getLocalizedMessage());
+                Crashlytics.logException(e);
+            }
         }
+        Timber.i("%s complete...returning success after %s milliseconds.", TAG, count);
+        return Result.SUCCESS;
     }
 
     @Override
@@ -37,9 +47,11 @@ public class NextLaunchJob extends Job {
         Timber.i("Searching JobRequests for %s", launchId);
         Set<JobRequest> jobRequests = JobManager.instance().getAllJobRequestsForTag(NextLaunchJob.TAG);
         for (JobRequest jobRequest : jobRequests) {
-            if (launchId == jobRequest.getExtras().getInt("key", 0)) {
-                jobRequest.cancelAndEdit();
-                Timber.d("Found a match, cancelling.");
+            if (jobRequest.getExtras() != null) {
+                if (launchId == jobRequest.getExtras().getInt("key", 0)) {
+                    jobRequest.cancelAndEdit();
+                    Timber.d("Found a match, cancelling.");
+                }
             }
         }
 
@@ -51,6 +63,7 @@ public class NextLaunchJob extends Job {
                 .setPersisted(true)
                 .setExact(interval);
 
+        Timber.i("Scheduling JobRequests for %s", TAG);
         builder.build().schedule();
     }
 }

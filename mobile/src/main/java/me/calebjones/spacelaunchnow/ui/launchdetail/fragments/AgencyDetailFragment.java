@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +18,12 @@ import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.natives.RocketDetails;
-import me.calebjones.spacelaunchnow.data.models.realm.Launch;
+import me.calebjones.spacelaunchnow.data.models.VehicleDetails;
+import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.Utils;
+import timber.log.Timber;
 
 public class AgencyDetailFragment extends BaseFragment {
 
@@ -32,7 +32,7 @@ public class AgencyDetailFragment extends BaseFragment {
     private Context context;
 
     public static Launch detailLaunch;
-    private RocketDetails launchVehicle;
+    private VehicleDetails launchVehicle;
 
     @BindView(R.id.mission_one)
     LinearLayout mission_one;
@@ -100,12 +100,34 @@ public class AgencyDetailFragment extends BaseFragment {
 
         ButterKnife.bind(this, view);
 
-        setUpViews();
+        Timber.v("Creating views...");
+
+        if (detailLaunch != null){
+            setUpViews(detailLaunch);
+        }
+
         return view;
     }
 
-    public void setUpViews(){
-        detailLaunch = ((LaunchDetailActivity)getActivity()).getLaunch();
+    @Override
+    public void onResume() {
+        if (detailLaunch != null) {
+            setUpViews(detailLaunch);
+        }
+        super.onResume();
+    }
+
+    public void setLaunch(Launch launch) {
+        detailLaunch = launch;
+        if (isVisible()) {
+            setUpViews(launch);
+        }
+    }
+
+    private void setUpViews(Launch launch){
+        detailLaunch = launch;
+
+        Timber.v("Setting up views...");
 
 
         int pads = detailLaunch.getLocation().getPads().size();
@@ -561,7 +583,7 @@ public class AgencyDetailFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    public static Fragment newInstance() {
+    public static AgencyDetailFragment newInstance() {
         return new AgencyDetailFragment();
     }
 

@@ -16,7 +16,7 @@ import com.crashlytics.android.answers.StartCheckoutEvent;
 import java.math.BigDecimal;
 import java.util.Currency;
 
-import me.calebjones.spacelaunchnow.data.models.realm.Products;
+import me.calebjones.spacelaunchnow.data.models.Products;
 import timber.log.Timber;
 
 public class Analytics {

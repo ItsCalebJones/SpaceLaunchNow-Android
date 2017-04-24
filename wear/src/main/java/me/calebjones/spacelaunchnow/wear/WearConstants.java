@@ -2,7 +2,7 @@ package me.calebjones.spacelaunchnow.wear;
 
 import android.support.v7.graphics.Target;
 
-public class Constants {
+public class WearConstants {
     public static final Target DARK;
     public static final Target LIGHT;
     public static final Target NEUTRAL;
