@@ -28,7 +28,7 @@ public class Launch extends RealmObject {
     private Integer westamp;
     private Integer netstamp;
     private Integer launchTimeStamp;
-    private int locationid;
+    private Integer locationid;
 
     private long widgetRefresh;
 
