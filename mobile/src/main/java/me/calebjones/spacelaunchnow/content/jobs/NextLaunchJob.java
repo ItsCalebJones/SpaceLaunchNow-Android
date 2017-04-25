@@ -58,6 +58,10 @@ public class NextLaunchJob extends Job {
         PersistableBundleCompat extras = new PersistableBundleCompat();
         extras.putInt("key", launchId);
 
+        if (interval <= 0){
+            interval = 60000;
+        }
+
         JobRequest.Builder builder = new JobRequest.Builder(NextLaunchJob.TAG)
                 .setExtras(extras)
                 .setPersisted(true)
