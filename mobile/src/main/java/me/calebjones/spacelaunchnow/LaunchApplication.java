@@ -51,7 +51,7 @@ import me.calebjones.spacelaunchnow.utils.Utils;
 import okhttp3.OkHttpClient;
 import timber.log.Timber;
 
-import static me.calebjones.spacelaunchnow.data.models.Constants.DB_SCHEMA_VERSION;
+import static me.calebjones.spacelaunchnow.data.models.Constants.DB_SCHEMA_VERSION_1_5_6;
 
 public class LaunchApplication extends Application implements Analytics.Provider {
 
@@ -157,7 +157,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
 
         // Get a Realm instance for this thread
         Realm.setDefaultConfiguration(new RealmConfiguration.Builder()
-                .schemaVersion(DB_SCHEMA_VERSION)
+                .schemaVersion(DB_SCHEMA_VERSION_1_5_6)
                 .modules(Realm.getDefaultModule(), new LaunchDataModule())
                 .migration(new Migration())
                 .build());
@@ -196,7 +196,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
 
         if (!sharedPreference.getFirstBoot()) {
             Timber.v("Stored Version Code: %s", switchPreferences.getVersionCode());
-            if (switchPreferences.getVersionCode() <= DB_SCHEMA_VERSION) {
+            if (switchPreferences.getVersionCode() <= DB_SCHEMA_VERSION_1_5_6) {
                 Intent intent = new Intent(this, LaunchDataService.class);
                 intent.setAction(Constants.ACTION_GET_ALL_DATA);
                 this.startService(intent);

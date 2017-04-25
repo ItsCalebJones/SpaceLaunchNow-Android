@@ -427,9 +427,9 @@ public class SummaryDetailFragment extends BaseFragment {
             setIconView(weatherIconView, forecast.getCurrently().getIcon().getText());
         }
 
-        if (forecast.getDaily().getSummary() != null) {
+        if (forecast.getDaily() != null && forecast.getDaily().getSummary() != null) {
             weatherSummaryDay.setText(forecast.getDaily().getSummary());
-        } else if (forecast.getCurrently().getSummary() != null){
+        } else if (forecast.getCurrently() != null && forecast.getCurrently().getSummary() != null){
             weatherSummaryDay.setText(forecast.getCurrently().getSummary());
         } else {
             weatherSummaryDay.setVisibility(View.GONE);

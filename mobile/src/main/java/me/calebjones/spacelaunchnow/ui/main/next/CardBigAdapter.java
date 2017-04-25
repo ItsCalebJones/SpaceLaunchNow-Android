@@ -404,7 +404,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                 }
             } else {
                 String[] separated = launchItem.getName().split(" \\| ");
-                if (separated[1].length() > 4) {
+                if (separated.length > 0 && separated[1].length() > 4) {
                     holder.content_mission.setText(separated[1].trim());
                 } else {
                     holder.content_mission.setText("Unknown Mission");

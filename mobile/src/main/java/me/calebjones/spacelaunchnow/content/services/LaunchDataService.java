@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.preference.PreferenceManager;
 
-import io.realm.Realm;
 import me.calebjones.spacelaunchnow.content.DataManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
@@ -30,21 +29,21 @@ public class LaunchDataService extends BaseService {
         Intent intent = new Intent(context, LaunchDataService.class);
         intent.setAction(Constants.SYNC_NOTIFIERS);
         context.startService(intent);
-        Timber.v("Sending Delete intent.");
+        Timber.v("Sending Sync Notifiers intent.");
     }
 
     public static void startActionUpdateNextLaunch(Context context) {
         Intent intent = new Intent(context, LaunchDataService.class);
         intent.setAction(Constants.ACTION_GET_NEXT_LAUNCH);
         context.startService(intent);
-        Timber.v("Sending Delete intent.");
+        Timber.v("Sending Update Next Launch intent.");
     }
 
     public static void startActionBackground(Context context) {
         Intent intent = new Intent(context, LaunchDataService.class);
         intent.setAction(Constants.ACTION_UPDATE_BACKGROUND);
         context.startService(intent);
-        Timber.v("Sending Delete intent.");
+        Timber.v("Sending Background intent.");
     }
 
     @Override
@@ -54,7 +53,6 @@ public class LaunchDataService extends BaseService {
             String action = intent.getAction();
 
             // Create a new empty instance of Realm
-            mRealm = Realm.getDefaultInstance();
             DataManager dataManager = new DataManager(this);
 
             //Usually called on first detailLaunch
@@ -120,10 +118,7 @@ public class LaunchDataService extends BaseService {
             } else {
                 Timber.v("Unknown action received: %s", action);
             }
-
             Timber.v("Finished!");
-            mRealm.close();
-
         }
     }
 
