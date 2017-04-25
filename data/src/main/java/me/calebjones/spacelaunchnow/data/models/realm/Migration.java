@@ -3,8 +3,11 @@ package me.calebjones.spacelaunchnow.data.models.realm;
 import android.util.Log;
 
 import io.realm.DynamicRealm;
+import io.realm.DynamicRealmObject;
 import io.realm.RealmMigration;
+import io.realm.RealmObjectSchema;
 import io.realm.RealmSchema;
+import io.realm.internal.SharedRealm;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 
 public class Migration implements RealmMigration {
@@ -22,7 +25,14 @@ public class Migration implements RealmMigration {
         */
         if (oldVersion <= Constants.DB_SCHEMA_VERSION_1_5_5) {
             // Change type from String to int
-            schema.get("Launch").addField("locationid", int.class);
+            schema.get("launch")
+                    .addField("locationid", Integer.class)
+                    .transform(new RealmObjectSchema.Function() {
+                        @Override
+                        public void apply(DynamicRealmObject obj) {
+                            obj.set("locationid", null);
+                        }
+                    });
             oldVersion++;
         }
     }

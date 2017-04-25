@@ -153,16 +153,14 @@ public class LaunchApplication extends Application implements Analytics.Provider
         }
         DataClient.create(version);
 
-        RealmConfiguration realmConfig;
         Realm.init(this);
-        realmConfig = new RealmConfiguration.Builder()
+
+        // Get a Realm instance for this thread
+        Realm.setDefaultConfiguration(new RealmConfiguration.Builder()
                 .schemaVersion(DB_SCHEMA_VERSION)
                 .modules(Realm.getDefaultModule(), new LaunchDataModule())
                 .migration(new Migration())
-                .build();
-
-        // Get a Realm instance for this thread
-        Realm.setDefaultConfiguration(realmConfig);
+                .build());
 
         if (sharedPreference.isNightThemeEnabled()) {
             if (sharedPreference.isDayNightAutoEnabled()) {

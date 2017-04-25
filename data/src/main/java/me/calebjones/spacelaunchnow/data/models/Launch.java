@@ -28,7 +28,7 @@ public class Launch extends RealmObject {
     private Integer westamp;
     private Integer netstamp;
     private Integer launchTimeStamp;
-    private Integer locationid;
+    private int locationid;
 
     private long widgetRefresh;
 
@@ -344,11 +344,11 @@ public class Launch extends RealmObject {
         this.launchTimeStamp = launchTimeStamp;
     }
 
-    public Integer getLocationid() {
+    public int getLocationid() {
         return locationid;
     }
 
-    public void setLocationid(Integer locationid) {
+    public void setLocationid(int locationid) {
         this.locationid = locationid;
     }
 }
