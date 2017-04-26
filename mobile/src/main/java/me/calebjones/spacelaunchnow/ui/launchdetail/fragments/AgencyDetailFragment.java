@@ -353,7 +353,7 @@ public class AgencyDetailFragment extends BaseFragment {
         launch_vehicle_agency_one.setText(String.format("%s (%s) %s",agencyName , agencyAbbrev, countryCode));
         launch_agency_type_one.setText("Type: " + agencyType);
 
-        if (detailLaunch.getRocket().getAgencies().get(0).getInfoURL().length() > 0){
+        if (detailLaunch.getRocket().getAgencies().get(0).getWikiURL().length() > 0){
             ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(0).getWikiURL()));
 
             wikiButton_one.setVisibility(View.VISIBLE);
@@ -365,7 +365,7 @@ public class AgencyDetailFragment extends BaseFragment {
                     Analytics.from(getActivity()).sendButtonClickedWithURL(
                             "Mission Wiki",
                             detailLaunch.getName(),
-                            detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL()
+                            detailLaunch.getRocket().getAgencies().get(0).getWikiURL()
                     );
                 }
             });
@@ -386,7 +386,7 @@ public class AgencyDetailFragment extends BaseFragment {
                     Analytics.from(getActivity()).sendButtonClickedWithURL(
                             "Mission Info",
                             detailLaunch.getName(),
-                            detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL()
+                            detailLaunch.getRocket().getAgencies().get(0).getInfoURL()
                     );
                 }
             });
@@ -442,7 +442,7 @@ public class AgencyDetailFragment extends BaseFragment {
                     Analytics.from(getActivity()).sendButtonClickedWithURL(
                             "Mission Wiki",
                             detailLaunch.getName(),
-                            detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL()
+                            detailLaunch.getRocket().getAgencies().get(0).getInfoURL()
                     );
                 }
             });
@@ -463,7 +463,7 @@ public class AgencyDetailFragment extends BaseFragment {
                     Analytics.from(getActivity()).sendButtonClickedWithURL(
                             "Mission Info",
                             detailLaunch.getName(),
-                            detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL()
+                            detailLaunch.getRocket().getAgencies().get(0).getInfoURL()
                     );
                 }
             });
@@ -483,7 +483,7 @@ public class AgencyDetailFragment extends BaseFragment {
                     Analytics.from(getActivity()).sendButtonClickedWithURL(
                             "Mission Wiki",
                             detailLaunch.getName(),
-                            detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getWikiURL()
+                            detailLaunch.getRocket().getAgencies().get(1).getWikiURL()
                     );
                 }
             });
@@ -503,7 +503,7 @@ public class AgencyDetailFragment extends BaseFragment {
                     Analytics.from(getActivity()).sendButtonClickedWithURL(
                             "Mission Info",
                             detailLaunch.getName(),
-                            detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getInfoURL()
+                            detailLaunch.getRocket().getAgencies().get(1).getInfoURL()
                     );
                 }
             });
