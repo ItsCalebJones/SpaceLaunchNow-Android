@@ -48,6 +48,7 @@ import me.calebjones.spacelaunchnow.data.models.realm.Migration;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
+import me.calebjones.spacelaunchnow.utils.CrashlyticsTree;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import okhttp3.OkHttpClient;
 import timber.log.Timber;
@@ -129,6 +130,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
                 e.printStackTrace();
             }
             OneSignal.sendTags(tags);
+            Timber.plant(new CrashlyticsTree());
         }
 
         ForecastConfiguration configuration =
@@ -162,7 +164,9 @@ public class LaunchApplication extends Application implements Analytics.Provider
                         .migration(new Migration())
                         .build();
         try {
-            Realm.setDefaultConfiguration(config); // Will migrate if needed
+            Realm.setDefaultConfiguration(config);
+            Realm realm = Realm.getDefaultInstance();
+            realm.close();
         } catch (RealmMigrationNeededException e) {
             Realm.deleteRealm(config);
             Realm.setDefaultConfiguration(config);
