@@ -34,6 +34,7 @@ import org.json.JSONObject;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.exceptions.RealmMigrationNeededException;
 import me.calebjones.spacelaunchnow.content.DataRepositoryManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
@@ -155,12 +156,22 @@ public class LaunchApplication extends Application implements Analytics.Provider
 
         Realm.init(this);
 
-        // Get a Realm instance for this thread
-        Realm.setDefaultConfiguration(new RealmConfiguration.Builder()
-                .schemaVersion(DB_SCHEMA_VERSION_1_5_6)
-                .modules(Realm.getDefaultModule(), new LaunchDataModule())
-                .migration(new Migration())
-                .build());
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                        .schemaVersion(DB_SCHEMA_VERSION_1_5_6)
+                        .modules(Realm.getDefaultModule(), new LaunchDataModule())
+                        .migration(new Migration())
+                        .build();
+        try {
+            Realm.setDefaultConfiguration(config); // Will migrate if needed
+        } catch (RealmMigrationNeededException e) {
+            Realm.deleteRealm(config);
+            Realm.setDefaultConfiguration(config);
+
+            Intent intent = new Intent(this, LaunchDataService.class);
+            intent.setAction(Constants.ACTION_GET_ALL_DATA);
+            this.startService(intent);
+        }
+
 
         if (sharedPreference.isNightThemeEnabled()) {
             if (sharedPreference.isDayNightAutoEnabled()) {
