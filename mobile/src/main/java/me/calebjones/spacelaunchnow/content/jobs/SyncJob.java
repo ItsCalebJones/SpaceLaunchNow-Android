@@ -41,7 +41,7 @@ public class SyncJob extends Job {
 
     public static void schedulePeriodicJob(Context context) {
         if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("background_sync", true)) {
-            Timber.v("Background sync enabled, configuring JobRequest.");
+            Timber.i("Background sync enabled, configuring JobRequest.");
 
             JobRequest.Builder builder = new JobRequest.Builder(SyncJob.TAG)
                     .setUpdateCurrent(true)

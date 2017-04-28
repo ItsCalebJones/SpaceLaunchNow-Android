@@ -210,7 +210,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
         DefaultRuleEngine.trackAppStart(this);
 
         if (!sharedPreference.getFirstBoot()) {
-            Timber.v("Stored Version Code: %s", switchPreferences.getVersionCode());
+            Timber.i("Stored Version Code: %s", switchPreferences.getVersionCode());
             if (switchPreferences.getVersionCode() <= DB_SCHEMA_VERSION_1_5_6) {
                 Intent intent = new Intent(this, LaunchDataService.class);
                 intent.setAction(Constants.ACTION_GET_ALL_DATA);

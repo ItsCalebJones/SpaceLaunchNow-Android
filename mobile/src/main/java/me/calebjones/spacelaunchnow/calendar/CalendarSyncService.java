@@ -142,7 +142,7 @@ public class CalendarSyncService extends BaseService {
         if (launchRealm.getEventID() != null){
             boolean success = calendarUtil.updateEvent(this, launchRealm);
             if (!success) {
-                Timber.v("Unable to update event %s, assuming deleted.", launchRealm.getName());
+                Timber.e("Unable to update event %s, assuming deleted.", launchRealm.getName());
                 final Integer id = calendarUtil.addEvent(this, launchRealm);
                 if (id != null) {
                     mRealm.executeTransaction(new Realm.Transaction() {
