@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.ui.launchdetail.fragments;
+package me.calebjones.spacelaunchnow.ui.main.launches;
 
 
 import android.content.Context;
@@ -16,8 +16,6 @@ import android.view.ViewGroup;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
-import me.calebjones.spacelaunchnow.ui.main.launches.PreviousLaunchesFragment;
-import me.calebjones.spacelaunchnow.ui.main.launches.UpcomingLaunchesFragment;
 import timber.log.Timber;
 
 public class LaunchesViewPager extends Fragment {

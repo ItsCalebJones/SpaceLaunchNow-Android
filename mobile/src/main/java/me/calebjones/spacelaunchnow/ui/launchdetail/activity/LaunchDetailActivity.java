@@ -10,9 +10,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -24,24 +21,24 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Scanner;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.realm.Realm;
+import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.realm.Launch;
-import me.calebjones.spacelaunchnow.data.models.realm.RocketDetails;
-import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.AgencyDetailFragment;
-import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.MissionDetailFragment;
-import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.SummaryDetailFragment;
-import me.calebjones.spacelaunchnow.ui.main.MainActivity;
+import me.calebjones.spacelaunchnow.data.models.Launch;
+import me.calebjones.spacelaunchnow.data.models.RocketDetails;
+import me.calebjones.spacelaunchnow.data.networking.DataClient;
+import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
+import me.calebjones.spacelaunchnow.ui.launchdetail.TabsAdapter;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import timber.log.Timber;
-
 
 public class LaunchDetailActivity extends BaseActivity
         implements AppBarLayout.OnOffsetChangedListener {
@@ -57,10 +54,10 @@ public class LaunchDetailActivity extends BaseActivity
     private TextView detail_rocket, detail_mission_location;
     private int mMaxScrollSize;
     private SharedPreferences sharedPref;
-    private static ListPreferences sharedPreference;
+    private ListPreferences sharedPreference;
     private CustomTabActivityHelper customTabActivityHelper;
     private Context context;
-    private Calendar rightNow = Calendar.getInstance();
+    private TabsAdapter tabAdapter;
 
     public String response;
     public Launch launch;
@@ -110,46 +107,44 @@ public class LaunchDetailActivity extends BaseActivity
         Intent mIntent = getIntent();
         String type = mIntent.getStringExtra("TYPE");
 
-
         if (type != null && type.equals("launch")) {
             int id = mIntent.getIntExtra("launchID", 0);
-            launch = getRealm().where(Launch.class).equalTo("id", id).findFirst();
-        }
-
-        if (launch != null && launch.getRocket() != null) {
-            Timber.v("Loading launch %s", launch.getId());
-            findProfileLogo();
-            if (launch.getRocket().getName() != null) {
-                if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0) {
-                    Glide.with(this)
-                            .load(launch.getRocket().getImageURL())
-                            .centerCrop()
-                            .placeholder(R.drawable.placeholder)
-                            .crossFade()
-                            .into(detail_profile_backdrop);
-                    getLaunchVehicle(launch, false);
-                } else {
-                    getLaunchVehicle(launch, true);
+            DataClient.getInstance().getLaunchById(id, true, new Callback<LaunchResponse>() {
+                @Override
+                public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
+                    Realm realm = Realm.getDefaultInstance();
+                    if (response.isSuccessful()) {
+                        RealmList<Launch> items = new RealmList<>(response.body().getLaunches());
+                        for (Launch item : items) {
+                            Launch previous = realm.where(Launch.class)
+                                    .equalTo("id", item.getId())
+                                    .findFirst();
+                            if (previous != null) {
+                                item.setEventID(previous.getEventID());
+                                item.setSyncCalendar(previous.syncCalendar());
+                                item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
+                                item.setIsNotifiedDay(previous.getIsNotifiedDay());
+                                item.setIsNotifiedHour(previous.getIsNotifiedHour());
+                                item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
+                            }
+                            realm.beginTransaction();
+                            item.getLocation().setPrimaryID();
+                            realm.copyToRealmOrUpdate(item);
+                            realm.commitTransaction();
+                            updateViews(item);
+                            Timber.v("Updated detailLaunch: %s", item.getId());
+                        }
+                    }
+                    realm.close();
                 }
-            }
-        } else {
-            Intent homeIntent = new Intent(this, MainActivity.class);
-            startActivity(homeIntent);
-            Timber.e("Error - Unable to load launch details.");
+
+                @Override
+                public void onFailure(Call<LaunchResponse> call, Throwable t) {
+                    //TODO Handle error
+                }
+            });
+
         }
-
-        SimpleDateFormat df = new SimpleDateFormat("MMMM dd, yyyy HH:mm:ss zzz");
-        Date date;
-        long future;
-        date = launch.getNet();
-        future = date.getTime();
-
-        Calendar now = rightNow;
-        now.setTimeInMillis(System.currentTimeMillis());
-        final long timeToFinish = future - now.getTimeInMillis();
-
-        //Assign the title and mission locaiton data
-        detail_rocket.setText(launch.getName());
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         if (toolbar != null) {
@@ -167,43 +162,68 @@ public class LaunchDetailActivity extends BaseActivity
         appBarLayout.addOnOffsetChangedListener(this);
         mMaxScrollSize = appBarLayout.getTotalScrollRange();
 
-        viewPager.setAdapter(new
+        tabAdapter = new TabsAdapter(getSupportFragmentManager());
 
-                TabsAdapter(getSupportFragmentManager()
+        viewPager.setAdapter(tabAdapter);
 
-        ));
         tabLayout.setupWithViewPager(viewPager);
 
-        appBarLayout.addOnOffsetChangedListener(
-                new AppBarLayout.OnOffsetChangedListener() {
-                    @Override
-                    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                        int totalScroll = appBarLayout.getTotalScrollRange();
-                        int currentScroll = totalScroll + verticalOffset;
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+                                                    @Override
+                                                    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                                                        int totalScroll = appBarLayout.getTotalScrollRange();
+                                                        int currentScroll = totalScroll + verticalOffset;
 
-                        int color = statusColor;
-                        int r = (color >> 16) & 0xFF;
-                        int g = (color >> 8) & 0xFF;
-                        int b = (color >> 0) & 0xFF;
+                                                        int color = statusColor;
+                                                        int r = (color >> 16) & 0xFF;
+                                                        int g = (color >> 8) & 0xFF;
+                                                        int b = (color >> 0) & 0xFF;
 
-                        if ((currentScroll) < 255) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                                        if ((currentScroll) < 255) {
+                                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-                                Window window = getWindow();
-                                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                                window.setStatusBarColor(Color.argb(reverseNumber(currentScroll, 0, 255), r, g, b));
-                            }
-                        } else {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                Window window = getWindow();
-                                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                            }
-                        }
-                    }
-                }
+                                                                Window window = getWindow();
+                                                                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                                                                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                                                                window.setStatusBarColor(Color.argb(reverseNumber(currentScroll, 0, 255), r, g, b));
+                                                            }
+                                                        } else {
+                                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                                                Window window = getWindow();
+                                                                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                                                            }
+                                                        }
+                                                    }
+                                                }
 
         );
+    }
+
+    private void updateViews(Launch launch) {
+        this.launch = launch;
+
+        tabAdapter.updateAllViews(launch);
+
+        if (launch != null && launch.getRocket() != null) {
+            Timber.v("Loading detailLaunch %s", launch.getId());
+            findProfileLogo();
+            if (launch.getRocket().getName() != null) {
+                if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0) {
+                    Glide.with(this)
+                            .load(launch.getRocket().getImageURL())
+                            .centerCrop()
+                            .placeholder(R.drawable.placeholder)
+                            .crossFade()
+                            .into(detail_profile_backdrop);
+                    getLaunchVehicle(launch, false);
+                } else {
+                    getLaunchVehicle(launch, true);
+                }
+            }
+        }
+
+        //Assign the title and mission location data
+        detail_rocket.setText(launch.getName());
     }
 
     @Override
@@ -239,8 +259,10 @@ public class LaunchDetailActivity extends BaseActivity
                 locationCountryCode = launch.getLocation().getPads().
                         get(0).getAgencies().get(0).getCountryCode();
 
-                Timber.v("LaunchDetailActivity - CountryCode length: %s",
-                        String.valueOf(locationCountryCode.length()));
+                Timber.v(
+                        "LaunchDetailActivity - CountryCode length: %s",
+                        String.valueOf(locationCountryCode.length())
+                );
 
                 //Go through various CountryCodes and assign flag.
                 if (locationCountryCode.length() == 3) {
@@ -318,7 +340,7 @@ public class LaunchDetailActivity extends BaseActivity
             if (launchVehicle != null && launchVehicle.getImageURL().length() > 0) {
                 Glide.with(this)
                         .load(launchVehicle
-                                .getImageURL())
+                                      .getImageURL())
                         .centerCrop()
                         .placeholder(R.drawable.placeholder)
                         .crossFade()
@@ -344,11 +366,11 @@ public class LaunchDetailActivity extends BaseActivity
         return launch;
     }
 
-
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-        if (mMaxScrollSize == 0)
+        if (mMaxScrollSize == 0) {
             mMaxScrollSize = appBarLayout.getTotalScrollRange();
+        }
 
         int percentage = (Math.abs(i)) * 100 / mMaxScrollSize;
 
@@ -383,44 +405,6 @@ public class LaunchDetailActivity extends BaseActivity
             Timber.v("mayLaunchURL Accepted - %s", parse.toString());
         } else {
             Timber.v("mayLaunchURL Denied - %s", parse.toString());
-        }
-    }
-
-
-    class TabsAdapter extends FragmentPagerAdapter {
-        public TabsAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public int getCount() {
-            return 3;
-        }
-
-        @Override
-        public Fragment getItem(int i) {
-            switch (i) {
-                case 0:
-                    return SummaryDetailFragment.newInstance();
-                case 1:
-                    return MissionDetailFragment.newInstance();
-                case 2:
-                    return AgencyDetailFragment.newInstance();
-            }
-            return null;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "Details";
-                case 1:
-                    return "Mission";
-                case 2:
-                    return "Agencies";
-            }
-            return "";
         }
     }
 

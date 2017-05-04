@@ -7,8 +7,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
-import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.data.models.Constants;
 import timber.log.Timber;
 
 public class UpdateUpcomingLaunchesReceiver extends BroadcastReceiver {

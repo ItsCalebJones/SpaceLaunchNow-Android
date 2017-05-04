@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.bumptech.glide.Glide;
+import com.crashlytics.android.Crashlytics;
 import com.mypopsy.maps.StaticMap;
 
 import java.text.SimpleDateFormat;
@@ -36,7 +37,7 @@ import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
-import me.calebjones.spacelaunchnow.data.models.realm.Launch;
+import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Analytics;
@@ -48,6 +49,8 @@ import timber.log.Timber;
  */
 public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHolder> implements SectionIndexer {
 
+    private static ListPreferences sharedPreference;
+    public int position;
     private String launchDate;
     private RealmList<Launch> launchList;
     private Context context;
@@ -59,10 +62,6 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
     private int color;
     private int accentColor;
 
-    private static ListPreferences sharedPreference;
-
-    public int position;
-
     public CardBigAdapter(Context context) {
         rightNow = Calendar.getInstance();
         launchList = new RealmList<>();
@@ -73,6 +72,12 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         nightColor = ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color);
         color = ContextCompat.getColor(context, R.color.colorTextSecondary);
         accentColor = ContextCompat.getColor(context, R.color.colorAccent);
+    }
+
+    public static Calendar DateToCalendar(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal;
     }
 
     public void addItems(List<Launch> launchList) {
@@ -116,306 +121,310 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         Launch launchItem = launchList.get(i);
 
         String title;
-        if (launchItem.isValid()) {
-            if (launchItem.getRocket().getAgencies().size() > 0) {
-                title = launchItem.getRocket().getAgencies().get(0).getName() + " | " + (launchItem.getRocket().getName());
-            } else {
-                title = launchItem.getRocket().getName();
-            }
-
-            holder.title.setText(title);
-
-            //Retrieve missionType
-            if (launchItem.getMissions().size() != 0) {
-                Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMissions().get(0).getTypeName(), night);
-            } else {
-                if (night) {
-                    holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
+        try {
+            if (launchItem.isValid()) {
+                if (launchItem.getRocket().getAgencies() != null && launchItem.getRocket().getAgencies().size() > 0) {
+                    title = launchItem.getRocket().getAgencies().get(0).getName() + " | " + (launchItem.getRocket().getName());
                 } else {
-                    holder.categoryIcon.setImageResource(R.drawable.ic_unknown);
+                    title = launchItem.getRocket().getName();
                 }
-            }
 
-            double dlat = 0;
-            double dlon = 0;
-            if (launchItem.getLocation() != null && launchItem.getLocation().getPads() != null) {
-                dlat = launchItem.getLocation().getPads().get(0).getLatitude();
-                dlon = launchItem.getLocation().getPads().get(0).getLongitude();
-            }
+                holder.title.setText(title);
 
-            // Getting status
-            if (dlat == 0 && dlon == 0 || Double.isNaN(dlat) || Double.isNaN(dlon) || dlat == Double.NaN || dlon == Double.NaN) {
-                if (holder.map_view != null) {
-                    holder.map_view.setVisibility(View.GONE);
-                    holder.exploreFab.setVisibility(View.GONE);
-
-                }
-            } else {
-                holder.map_view.setVisibility(View.VISIBLE);
-                holder.exploreFab.setVisibility(View.VISIBLE);
-                final Resources res = context.getResources();
-                final StaticMap map = new StaticMap()
-                        .center(dlat, dlon)
-                        .scale(4)
-                        .type(StaticMap.Type.ROADMAP)
-                        .zoom(5)
-                        .marker(dlat, dlon)
-                        .key(res.getString(R.string.GoogleMapsKey));
-
-                //Strange but necessary to calculate the height/width
-                holder.map_view.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                    public boolean onPreDraw() {
-                        map.size(holder.map_view.getWidth() / 2,
-                                holder.map_view.getHeight() / 2);
-
-                        Timber.v("onPreDraw: %s", map.toString());
-                        Glide.with(context).load(map.toString())
-                                .error(R.drawable.placeholder)
-                                .into(holder.map_view);
-                        holder.map_view.getViewTreeObserver().removeOnPreDrawListener(this);
-                        return true;
+                //Retrieve missionType
+                if (launchItem.getMissions().size() != 0) {
+                    Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMissions().get(0).getTypeName(), night);
+                } else {
+                    if (night) {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
+                    } else {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown);
                     }
-                });
-            }
-
-            switch (launchItem.getStatus()) {
-                case 1:
-                    String go = context.getResources().getString(R.string.status_go);
-                    if (launchItem.getProbability() != null && launchItem.getProbability() > 0) {
-                        go = String.format("%s | Forecast - %s%%", go, launchItem.getProbability());
-                    }
-                    //GO for launch
-                    holder.content_status.setText(go);
-                    holder.content_status.setTextColor(ContextCompat.getColor(context, R.color.colorGo));
-                    break;
-                case 2:
-                    //NO GO for launch
-                    holder.content_status.setText(R.string.status_nogo);
-                    holder.content_status.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
-                    break;
-                case 3:
-                    //Success for launch
-                    holder.content_status.setText(R.string.status_success);
-                    holder.content_status.setTextColor(ContextCompat.getColor(context, R.color.colorGo));
-                    break;
-                case 4:
-                    //Failure to launch
-                    holder.content_status.setText(R.string.status_failure);
-                    holder.content_status.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
-                    break;
-            }
-
-            //If timestamp is available calculate TMinus and date.
-            if (launchItem.getNetstamp() > 0) {
-                long longdate = launchItem.getNetstamp();
-                longdate = longdate * 1000;
-                final Date date = new Date(longdate);
-
-                Calendar future = DateToCalendar(date);
-                Calendar now = rightNow;
-
-                now.setTimeInMillis(System.currentTimeMillis());
-                if (holder.timer != null) {
-                    holder.timer.cancel();
                 }
 
-                final int status = launchItem.getStatus();
-                final String hold = launchItem.getHoldreason();
+                double dlat = 0;
+                double dlon = 0;
+                if (launchItem.getLocation() != null && launchItem.getLocation().getPads() != null) {
+                    dlat = launchItem.getLocation().getPads().get(0).getLatitude();
+                    dlon = launchItem.getLocation().getPads().get(0).getLongitude();
+                }
 
-                holder.content_TMinus_status.setTypeface(Typeface.SANS_SERIF);
-                holder.content_TMinus_status.setTextColor(accentColor);
+                // Getting status
+                if (dlat == 0 && dlon == 0 || Double.isNaN(dlat) || Double.isNaN(dlon) || dlat == Double.NaN || dlon == Double.NaN) {
+                    if (holder.map_view != null) {
+                        holder.map_view.setVisibility(View.GONE);
+                        holder.exploreFab.setVisibility(View.GONE);
 
-                holder.countdownView.setVisibility(View.VISIBLE);
-                holder.timer = new CountDownTimer(future.getTimeInMillis() - now.getTimeInMillis(), 1000) {
-                    StringBuilder time = new StringBuilder();
+                    }
+                } else {
+                    holder.map_view.setVisibility(View.VISIBLE);
+                    holder.exploreFab.setVisibility(View.VISIBLE);
+                    final Resources res = context.getResources();
+                    final StaticMap map = new StaticMap()
+                            .center(dlat, dlon)
+                            .scale(4)
+                            .type(StaticMap.Type.ROADMAP)
+                            .zoom(5)
+                            .marker(dlat, dlon)
+                            .key(res.getString(R.string.GoogleMapsKey));
 
-                    @Override
-                    public void onFinish() {
-                        holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
-                        if (night) {
-                            holder.content_TMinus_status.setTextColor(nightColor);
-                        } else {
-                            holder.content_TMinus_status.setTextColor(color);
+                    //Strange but necessary to calculate the height/width
+                    holder.map_view.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                        public boolean onPreDraw() {
+                            map.size(holder.map_view.getWidth() / 2,
+                                    holder.map_view.getHeight() / 2);
+
+                            Timber.v("onPreDraw: %s", map.toString());
+                            Glide.with(context).load(map.toString())
+                                    .error(R.drawable.placeholder)
+                                    .into(holder.map_view);
+                            holder.map_view.getViewTreeObserver().removeOnPreDrawListener(this);
+                            return true;
                         }
-                        if (status == 1) {
-                            holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
+                    });
+                }
 
-                            //TODO - Get hold reason and show it
-                        } else {
-                            if (hold != null && hold.length() > 1) {
-                                holder.content_TMinus_status.setText(hold);
+                switch (launchItem.getStatus()) {
+                    case 1:
+                        String go = context.getResources().getString(R.string.status_go);
+                        if (launchItem.getProbability() != null && launchItem.getProbability() > 0) {
+                            go = String.format("%s | Forecast - %s%%", go, launchItem.getProbability());
+                        }
+                        //GO for launch
+                        holder.content_status.setText(go);
+                        holder.content_status.setTextColor(ContextCompat.getColor(context, R.color.colorGo));
+                        break;
+                    case 2:
+                        //NO GO for launch
+                        holder.content_status.setText(R.string.status_nogo);
+                        holder.content_status.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
+                        break;
+                    case 3:
+                        //Success for launch
+                        holder.content_status.setText(R.string.status_success);
+                        holder.content_status.setTextColor(ContextCompat.getColor(context, R.color.colorGo));
+                        break;
+                    case 4:
+                        //Failure to launch
+                        holder.content_status.setText(R.string.status_failure);
+                        holder.content_status.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
+                        break;
+                }
+
+                //If timestamp is available calculate TMinus and date.
+                if (launchItem.getNetstamp() > 0) {
+                    long longdate = launchItem.getNetstamp();
+                    longdate = longdate * 1000;
+                    final Date date = new Date(longdate);
+
+                    Calendar future = DateToCalendar(date);
+                    Calendar now = rightNow;
+
+                    now.setTimeInMillis(System.currentTimeMillis());
+                    if (holder.timer != null) {
+                        holder.timer.cancel();
+                    }
+
+                    final int status = launchItem.getStatus();
+                    final String hold = launchItem.getHoldreason();
+
+                    holder.content_TMinus_status.setTypeface(Typeface.SANS_SERIF);
+                    holder.content_TMinus_status.setTextColor(accentColor);
+
+                    holder.countdownView.setVisibility(View.VISIBLE);
+                    holder.timer = new CountDownTimer(future.getTimeInMillis() - now.getTimeInMillis(), 1000) {
+                        StringBuilder time = new StringBuilder();
+
+                        @Override
+                        public void onFinish() {
+                            holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
+                            if (night) {
+                                holder.content_TMinus_status.setTextColor(nightColor);
                             } else {
+                                holder.content_TMinus_status.setTextColor(color);
+                            }
+                            if (status == 1) {
                                 holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
+
+                                //TODO - Get hold reason and show it
+                            } else {
+                                if (hold != null && hold.length() > 1) {
+                                    holder.content_TMinus_status.setText(hold);
+                                } else {
+                                    holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        time.setLength(0);
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+                            time.setLength(0);
 
-                        // Calculate the Days/Hours/Mins/Seconds numerically.
-                        long longDays = millisUntilFinished / 86400000;
-                        long longHours = (millisUntilFinished / 3600000) % 24;
-                        long longMins = (millisUntilFinished / 60000) % 60;
-                        long longSeconds = (millisUntilFinished / 1000) % 60;
+                            // Calculate the Days/Hours/Mins/Seconds numerically.
+                            long longDays = millisUntilFinished / 86400000;
+                            long longHours = (millisUntilFinished / 3600000) % 24;
+                            long longMins = (millisUntilFinished / 60000) % 60;
+                            long longSeconds = (millisUntilFinished / 1000) % 60;
 
-                        String days = String.valueOf(longDays);
-                        String hours;
-                        String minutes;
-                        String seconds;
+                            String days = String.valueOf(longDays);
+                            String hours;
+                            String minutes;
+                            String seconds;
 
-                        // Translate those numerical values to string values.
-                        if (longHours < 10) {
-                            hours = "0" + String.valueOf(longHours);
-                        } else {
-                            hours = String.valueOf(longHours);
+                            // Translate those numerical values to string values.
+                            if (longHours < 10) {
+                                hours = "0" + String.valueOf(longHours);
+                            } else {
+                                hours = String.valueOf(longHours);
+                            }
+
+                            if (longMins < 10) {
+                                minutes = "0" + String.valueOf(longMins);
+                            } else {
+                                minutes = String.valueOf(longMins);
+                            }
+
+                            if (longSeconds < 10) {
+                                seconds = "0" + String.valueOf(longSeconds);
+                            } else {
+                                seconds = String.valueOf(longSeconds);
+                            }
+
+
+                            // Update the views
+                            if (Integer.valueOf(days) > 0) {
+                                holder.countdownDays.setText(days);
+                            } else {
+                                holder.countdownDays.setText("- -");
+                            }
+
+                            if (Integer.valueOf(hours) > 0) {
+                                holder.countdownHours.setText(hours);
+                            } else if (Integer.valueOf(days) > 0) {
+                                holder.countdownHours.setText("00");
+                            } else {
+                                holder.countdownHours.setText("- -");
+                            }
+
+                            if (Integer.valueOf(minutes) > 0) {
+                                holder.countdownMinutes.setText(minutes);
+                            } else if (Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
+                                holder.countdownMinutes.setText("00");
+                            } else {
+                                holder.countdownMinutes.setText("- -");
+                            }
+
+                            if (Integer.valueOf(seconds) > 0) {
+                                holder.countdownSeconds.setText(seconds);
+                            } else if (Integer.valueOf(minutes) > 0 || Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
+                                holder.countdownSeconds.setText("60");
+                            } else {
+                                holder.countdownSeconds.setText("- -");
+                            }
+
+                            // Hide status if countdown is active.
+                            holder.content_TMinus_status.setVisibility(View.GONE);
                         }
+                    }.start();
 
-                        if (longMins < 10) {
-                            minutes = "0" + String.valueOf(longMins);
-                        } else {
-                            minutes = String.valueOf(longMins);
-                        }
-
-                        if (longSeconds < 10) {
-                            seconds = "0" + String.valueOf(longSeconds);
-                        } else {
-                            seconds = String.valueOf(longSeconds);
-                        }
-
-
-                        // Update the views
-                        if (Integer.valueOf(days) > 0) {
-                            holder.countdownDays.setText(days);
-                        } else {
-                            holder.countdownDays.setText("- -");
-                        }
-
-                        if (Integer.valueOf(hours) > 0) {
-                            holder.countdownHours.setText(hours);
-                        } else if (Integer.valueOf(days) > 0) {
-                            holder.countdownHours.setText("00");
-                        } else {
-                            holder.countdownHours.setText("- -");
-                        }
-
-                        if (Integer.valueOf(minutes) > 0) {
-                            holder.countdownMinutes.setText(minutes);
-                        } else if (Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
-                            holder.countdownMinutes.setText("00");
-                        } else {
-                            holder.countdownMinutes.setText("- -");
-                        }
-
-                        if (Integer.valueOf(seconds) > 0) {
-                            holder.countdownSeconds.setText(seconds);
-                        } else if (Integer.valueOf(minutes) > 0 || Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
-                            holder.countdownSeconds.setText("60");
-                        } else {
-                            holder.countdownSeconds.setText("- -");
-                        }
-
-                        // Hide status if countdown is active.
-                        holder.content_TMinus_status.setVisibility(View.GONE);
-                    }
-                }.start();
-
-            } else {
-                holder.countdownView.setVisibility(View.GONE);
-                holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
-                if (night) {
-                    holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color));
                 } else {
-                    holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary));
-                }
-                if (holder.timer != null) {
-                    holder.timer.cancel();
-                }
-                if (launchItem.getStatus() != 1) {
-                    if (launchItem.getRocket().getAgencies().size() > 0) {
-                        holder.content_TMinus_status.setText(String.format("Pending confirmed GO from %s", launchItem.getRocket().getAgencies().get(0).getName()));
+                    holder.countdownView.setVisibility(View.GONE);
+                    holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
+                    if (night) {
+                        holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color));
                     } else {
-                        holder.content_TMinus_status.setText("Pending confirmed GO for Launch from launch agency");
+                        holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary));
                     }
-                } else {
-                    holder.content_TMinus_status.setText("Unknown");
-                }
-            }
-
-            //Get launch date
-            if (launchItem.getStatus() == 2) {
-
-                if (launchItem.getNet() != null) {
-                    //Get launch date
-                    SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy.");
-                    sdf.toLocalizedPattern();
-                    Date date = launchItem.getNet();
-                    launchDate = sdf.format(date);
-                    holder.launch_date.setText("To be determined... " + launchDate);
-                }
-            } else {
-                if (launchItem.getNet() != null) {
-                    if (sharedPref.getBoolean("local_time", true)) {
-                        SimpleDateFormat sdf;
-                        if (sharedPref.getBoolean("24_hour_mode", false)) {
-                            sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - HH:mm zzz");
+                    if (holder.timer != null) {
+                        holder.timer.cancel();
+                    }
+                    if (launchItem.getStatus() != 1) {
+                        if (launchItem.getRocket().getAgencies().size() > 0) {
+                            holder.content_TMinus_status.setText(String.format("Pending confirmed GO from %s", launchItem.getRocket().getAgencies().get(0).getName()));
                         } else {
-                            sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                            holder.content_TMinus_status.setText("Pending confirmed GO for Launch from launch agency");
                         }
+                    } else {
+                        holder.content_TMinus_status.setText("Unknown");
+                    }
+                }
+
+                //Get launch date
+                if (launchItem.getStatus() == 2) {
+
+                    if (launchItem.getNet() != null) {
+                        //Get launch date
+                        SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy.");
                         sdf.toLocalizedPattern();
                         Date date = launchItem.getNet();
                         launchDate = sdf.format(date);
-                    } else {
-                        SimpleDateFormat sdf;
-                        if (sharedPref.getBoolean("24_hour_mode", false)) {
-                            sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - HH:mm zzz");
-                        } else {
-                            sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
-                        }
-                        Date date = launchItem.getNet();
-                        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                        launchDate = sdf.format(date);
+                        holder.launch_date.setText("To be determined... " + launchDate);
                     }
                 } else {
-                    launchDate = "To be determined... ";
+                    if (launchItem.getNet() != null) {
+                        if (sharedPref.getBoolean("local_time", true)) {
+                            SimpleDateFormat sdf;
+                            if (sharedPref.getBoolean("24_hour_mode", false)) {
+                                sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - HH:mm zzz");
+                            } else {
+                                sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                            }
+                            sdf.toLocalizedPattern();
+                            Date date = launchItem.getNet();
+                            launchDate = sdf.format(date);
+                        } else {
+                            SimpleDateFormat sdf;
+                            if (sharedPref.getBoolean("24_hour_mode", false)) {
+                                sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - HH:mm zzz");
+                            } else {
+                                sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                            }
+                            Date date = launchItem.getNet();
+                            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                            launchDate = sdf.format(date);
+                        }
+                    } else {
+                        launchDate = "To be determined... ";
+                    }
+                    holder.launch_date.setText(launchDate);
                 }
-                holder.launch_date.setText(launchDate);
-            }
 
-            if (launchItem.getVidURLs() != null) {
-                if (launchItem.getVidURLs().size() == 0) {
+                if (launchItem.getVidURLs() != null) {
+                    if (launchItem.getVidURLs().size() == 0) {
+                        holder.watchButton.setVisibility(View.GONE);
+                    } else {
+                        holder.watchButton.setVisibility(View.VISIBLE);
+                    }
+                } else {
                     holder.watchButton.setVisibility(View.GONE);
+                }
+
+
+                if (launchItem.getMissions().size() > 0) {
+                    holder.content_mission.setText(launchItem.getMissions().get(0).getName());
+                    String description = launchItem.getMissions().
+                            get(0).getDescription();
+                    if (description.length() > 0) {
+                        holder.content_mission_description_view.setVisibility(View.VISIBLE);
+                        holder.content_mission_description.setText(description);
+                    }
                 } else {
-                    holder.watchButton.setVisibility(View.VISIBLE);
+                    String[] separated = launchItem.getName().split(" \\| ");
+                    if (separated.length > 0 && separated[1].length() > 4) {
+                        holder.content_mission.setText(separated[1].trim());
+                    } else {
+                        holder.content_mission.setText("Unknown Mission");
+                    }
+                    holder.content_mission_description_view.setVisibility(View.GONE);
                 }
-            } else {
-                holder.watchButton.setVisibility(View.GONE);
-            }
 
-
-            if (launchItem.getMissions().size() > 0) {
-                holder.content_mission.setText(launchItem.getMissions().get(0).getName());
-                String description = launchItem.getMissions().
-                        get(0).getDescription();
-                if (description.length() > 0) {
-                    holder.content_mission_description_view.setVisibility(View.VISIBLE);
-                    holder.content_mission_description.setText(description);
+                //If pad and agency exist add it to location, otherwise get whats always available
+                if (launchItem.getLocation() != null) {
+                    holder.location.setText(launchItem.getLocation().getName());
                 }
-            } else {
-                String[] separated = launchItem.getName().split(" \\| ");
-                if (separated[1].length() > 4) {
-                    holder.content_mission.setText(separated[1].trim());
-                } else {
-                    holder.content_mission.setText("Unknown Mission");
-                }
-                holder.content_mission_description_view.setVisibility(View.GONE);
             }
-
-            //If pad and agency exist add it to location, otherwise get whats always available
-            if (launchItem.getLocation() != null) {
-                holder.location.setText(launchItem.getLocation().getName());
-            }
+        } catch (NullPointerException e) {
+            Crashlytics.logException(e);
         }
     }
 
@@ -443,10 +452,95 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         return 0;
     }
 
-    public static Calendar DateToCalendar(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        return cal;
+    private void setCategoryIcon(ViewHolder holder, String type) {
+        if (type != null) {
+            switch (type) {
+                case "Earth Science":
+                    if (night) {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_earth_white);
+                    } else {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_earth);
+                    }
+                    break;
+                case "Planetary Science":
+                    if (night) {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_planetary_white);
+                    } else {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_planetary);
+                    }
+                    break;
+                case "Astrophysics":
+                    if (night) {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_astrophysics_white);
+                    } else {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_astrophysics);
+                    }
+                    break;
+                case "Heliophysics":
+                    if (night) {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_heliophysics_alt_white);
+                    } else {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_heliophysics_alt);
+                    }
+                    break;
+                case "Human Exploration":
+                    if (night) {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_human_explore_white);
+                    } else {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_human_explore);
+                    }
+                    break;
+                case "Robotic Exploration":
+                    if (night) {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_robotic_explore_white);
+                    } else {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_robotic_explore);
+                    }
+                    break;
+                case "Government/Top Secret":
+                    if (night) {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_top_secret_white);
+                    } else {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_top_secret);
+                    }
+                    break;
+                case "Tourism":
+                    if (night) {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_tourism_white);
+                    } else {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_tourism);
+                    }
+                    break;
+                case "Unknown":
+                    if (night) {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
+                    } else {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown);
+                    }
+                    break;
+                case "Communications":
+                    if (night) {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_satellite_white);
+                    } else {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_satellite);
+                    }
+                    break;
+                case "Resupply":
+                    if (night) {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_resupply_white);
+                    } else {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_resupply);
+                    }
+                    break;
+                default:
+                    if (night) {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
+                    } else {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown);
+                    }
+                    break;
+            }
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -636,96 +730,5 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
             }
         }
 
-    }
-
-    private void setCategoryIcon(ViewHolder holder, String type) {
-        if (type != null) {
-            switch (type) {
-                case "Earth Science":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_earth_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_earth);
-                    }
-                    break;
-                case "Planetary Science":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_planetary_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_planetary);
-                    }
-                    break;
-                case "Astrophysics":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_astrophysics_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_astrophysics);
-                    }
-                    break;
-                case "Heliophysics":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_heliophysics_alt_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_heliophysics_alt);
-                    }
-                    break;
-                case "Human Exploration":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_human_explore_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_human_explore);
-                    }
-                    break;
-                case "Robotic Exploration":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_robotic_explore_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_robotic_explore);
-                    }
-                    break;
-                case "Government/Top Secret":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_top_secret_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_top_secret);
-                    }
-                    break;
-                case "Tourism":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_tourism_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_tourism);
-                    }
-                    break;
-                case "Unknown":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown);
-                    }
-                    break;
-                case "Communications":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_satellite_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_satellite);
-                    }
-                    break;
-                case "Resupply":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_resupply_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_resupply);
-                    }
-                    break;
-                default:
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown);
-                    }
-                    break;
-            }
-        }
     }
 }

@@ -8,18 +8,19 @@ import android.os.Bundle;
 import java.io.File;
 import java.io.IOException;
 
-import me.calebjones.spacelaunchnow.content.models.Constants;
+import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.data.networking.RetrofitBuilder;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 abstract public class CustomFragment extends BaseFragment {
 
     private OkHttpClient client;
-    private Retrofit retrofit;
+    private Retrofit libraryRetrofit;
+    private Retrofit spaceLaunchNowRetrofit;
     private Context context;
 
     private Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
@@ -55,11 +56,18 @@ abstract public class CustomFragment extends BaseFragment {
                 .cache(cache)
                 .build();
 
-        retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_BASE_URL)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        ListPreferences sharedPreference = ListPreferences.getInstance(context);
+
+        String version;
+
+        if (sharedPreference.isDebugEnabled()) {
+            version = "dev";
+        } else {
+            version = "1.2.1";
+        }
+
+        libraryRetrofit = RetrofitBuilder.getLibraryRetrofit(version);
+        spaceLaunchNowRetrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit();
     }
 
     public void startActivity(Intent intent, Bundle bundle) {
@@ -74,7 +82,11 @@ abstract public class CustomFragment extends BaseFragment {
         }
     }
 
-    public Retrofit getRetrofit(){
-        return retrofit;
+    public Retrofit getLibraryRetrofit(){
+        return libraryRetrofit;
+    }
+
+    public Retrofit getSpaceLaunchNowRetrofit() {
+        return spaceLaunchNowRetrofit;
     }
 }

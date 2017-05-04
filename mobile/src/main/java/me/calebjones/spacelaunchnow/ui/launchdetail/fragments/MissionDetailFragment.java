@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +17,9 @@ import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.realm.Launch;
-import me.calebjones.spacelaunchnow.data.models.realm.Mission;
-import me.calebjones.spacelaunchnow.data.models.realm.RocketDetails;
+import me.calebjones.spacelaunchnow.data.models.Launch;
+import me.calebjones.spacelaunchnow.data.models.Mission;
+import me.calebjones.spacelaunchnow.data.models.RocketDetails;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -91,13 +90,21 @@ public class MissionDetailFragment extends BaseFragment {
 
     @Override
     public void onResume() {
-
-        setUpViews();
+        if (detailLaunch != null) {
+            setUpViews(detailLaunch);
+        }
         super.onResume();
     }
 
-    private void setUpViews() {
-        detailLaunch = ((LaunchDetailActivity) getActivity()).getLaunch();
+    public void setLaunch(Launch launch) {
+        detailLaunch = launch;
+        if (isVisible()) {
+            setUpViews(launch);
+        }
+    }
+
+    private void setUpViews(Launch launch) {
+        detailLaunch = launch;
         if (detailLaunch.getRocket() != null) {
             getLaunchVehicle(detailLaunch);
         }
@@ -189,7 +196,7 @@ public class MissionDetailFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    public static Fragment newInstance() {
+    public static MissionDetailFragment newInstance() {
         return new MissionDetailFragment();
     }
 

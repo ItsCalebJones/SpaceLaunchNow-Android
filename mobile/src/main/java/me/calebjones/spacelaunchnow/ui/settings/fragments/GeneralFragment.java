@@ -53,8 +53,6 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
         context = getActivity();
         mRealm = Realm.getDefaultInstance();
 
-        Dexter.withActivity(getActivity()).continueRequestingPendingPermissions(allPermissionsListener);
-
         createPermissionListeners();
         setupPreference();
         setName("General Fragment");

@@ -13,8 +13,8 @@
             android:defaultValue="true"
             android:dependency="notifications_new_message"
             android:key="notifications_launch_imminent_updates"
-            android:summaryOff="Do not update when a launch status changes."
-            android:summaryOn="Receive update notification for launch status changes."
+            android:summaryOff="Do not update when a launch successful changes."
+            android:summaryOn="Receive update notification for launch successful changes."
             android:title="Status Updates" />
         <SwitchPreference
             android:defaultValue="false"

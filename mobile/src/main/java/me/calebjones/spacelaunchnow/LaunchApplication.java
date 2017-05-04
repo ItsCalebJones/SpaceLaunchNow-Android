@@ -34,21 +34,26 @@ import org.json.JSONObject;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.exceptions.RealmMigrationNeededException;
+import me.calebjones.spacelaunchnow.content.DataRepositoryManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.DataJobCreator;
-import me.calebjones.spacelaunchnow.content.models.Constants;
+import me.calebjones.spacelaunchnow.content.jobs.SyncJob;
+import me.calebjones.spacelaunchnow.content.jobs.UpdateJob;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
-import me.calebjones.spacelaunchnow.content.services.VehicleDataService;
-import me.calebjones.spacelaunchnow.data.models.LaunchDataModule;
+import me.calebjones.spacelaunchnow.data.models.Constants;
+import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
+import me.calebjones.spacelaunchnow.data.models.realm.Migration;
+import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
+import me.calebjones.spacelaunchnow.utils.CrashlyticsTree;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import okhttp3.OkHttpClient;
 import timber.log.Timber;
 
-import static me.calebjones.spacelaunchnow.content.models.Constants.DB_SCHEMA_VERSION;
-
+import static me.calebjones.spacelaunchnow.data.models.Constants.DB_SCHEMA_VERSION_1_5_6;
 
 public class LaunchApplication extends Application implements Analytics.Provider {
 
@@ -96,7 +101,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
         Crashlytics.setBool("is24", DateFormat.is24HourFormat(getApplicationContext()));
         Crashlytics.setBool("Network State", Utils.isNetworkAvailable(this));
 
-        if (Connectivity.getNetworkInfo(this) != null){
+        if (Connectivity.getNetworkInfo(this) != null) {
             Crashlytics.setString("Network Info", Connectivity.getNetworkInfo(this).toString());
         }
 
@@ -125,6 +130,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
                 e.printStackTrace();
             }
             OneSignal.sendTags(tags);
+            Timber.plant(new CrashlyticsTree());
         }
 
         ForecastConfiguration configuration =
@@ -140,19 +146,42 @@ public class LaunchApplication extends Application implements Analytics.Provider
         sharedPreference = ListPreferences.getInstance(this);
         switchPreferences = SwitchPreferences.getInstance(this);
 
-        RealmConfiguration realmConfig;
+
+        String version;
+
+        if (sharedPreference.isDebugEnabled()) {
+            version = "dev";
+        } else {
+            version = "1.2.1";
+        }
+        DataClient.create(version);
+
         Realm.init(this);
-        realmConfig = new RealmConfiguration.Builder()
-                .schemaVersion(DB_SCHEMA_VERSION)
-                .modules(Realm.getDefaultModule(), new LaunchDataModule())
-                .deleteRealmIfMigrationNeeded()
-                .build();
 
-        // Get a Realm instance for this thread
-        Realm.setDefaultConfiguration(realmConfig);
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                        .schemaVersion(DB_SCHEMA_VERSION_1_5_6)
+                        .modules(Realm.getDefaultModule(), new LaunchDataModule())
+                        .migration(new Migration())
+                        .build();
+        try {
+            Realm.setDefaultConfiguration(config);
+            Realm realm = Realm.getDefaultInstance();
+            realm.close();
+        } catch (RealmMigrationNeededException | NullPointerException e) {
+            Realm.deleteRealm(config);
+            Realm.setDefaultConfiguration(config);
 
-        if(sharedPreference.isNightThemeEnabled()){
-            if(sharedPreference.isDayNightAutoEnabled()){
+            Intent intent = new Intent(this, LaunchDataService.class);
+            intent.setAction(Constants.ACTION_GET_ALL_DATA);
+            this.startService(intent);
+
+            Crashlytics.logException(e);
+
+        }
+
+
+        if (sharedPreference.isNightThemeEnabled()) {
+            if (sharedPreference.isDayNightAutoEnabled()) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
             } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
@@ -178,45 +207,25 @@ public class LaunchApplication extends Application implements Analytics.Provider
 
         JobManager.create(this).addJobCreator(new DataJobCreator());
 
+        UpdateJob.scheduleJob(this);
+        SyncJob.schedulePeriodicJob(this);
+
         DefaultRuleEngine.trackAppStart(this);
 
         if (!sharedPreference.getFirstBoot()) {
-            //Module changes, requires migration.
-            Timber.v("Stored Version Code: %s", switchPreferences.getVersionCode());
-            if (switchPreferences.getVersionCode() <= DB_SCHEMA_VERSION){
+            Timber.i("Stored Version Code: %s", switchPreferences.getVersionCode());
+            if (switchPreferences.getVersionCode() <= DB_SCHEMA_VERSION_1_5_6) {
                 Intent intent = new Intent(this, LaunchDataService.class);
                 intent.setAction(Constants.ACTION_GET_ALL_DATA);
                 this.startService(intent);
             } else {
-                if(Connectivity.isConnectedWifi(this)){
-                    Intent nextIntent = new Intent(this, LaunchDataService.class);
-                    nextIntent.setAction(Constants.ACTION_GET_UP_LAUNCHES);
-                    this.startService(nextIntent);
-                } else {
-                    Intent nextIntent = new Intent(this, LaunchDataService.class);
-                    nextIntent.setAction(Constants.ACTION_UPDATE_NEXT_LAUNCH);
-                    this.startService(nextIntent);
-                }
-
-                if (sharedPreference.getLastVehicleUpdate() > 0) {
-                    Timber.d("Time since last VehicleUpdate: %s", (System.currentTimeMillis() - sharedPreference.getLastVehicleUpdate()));
-                    if ((System.currentTimeMillis() - sharedPreference.getLastVehicleUpdate()) > 1209600000) {
-                        Intent rocketIntent = new Intent(this, VehicleDataService.class);
-                        rocketIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);
-                        this.startService(rocketIntent);
-
-                    } else if (Utils.getVersionCode(this) != switchPreferences.getVersionCode()) {
-
-                        Intent rocketIntent = new Intent(this, VehicleDataService.class);
-                        rocketIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);
-                        this.startService(rocketIntent);
-                    }
-                }
+                DataRepositoryManager dataRepositoryManager = new DataRepositoryManager(this);
+                dataRepositoryManager.syncBackground();
             }
         } else {
             Intent intent = new Intent(this, LaunchDataService.class);
             intent.setAction(Constants.ACTION_GET_ALL_DATA);
-            this.startService(intent);
+            startService(intent);
         }
     }
 

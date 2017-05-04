@@ -291,16 +291,16 @@ public class ListPreferences {
 
     }
 
-    public void isUpdating(boolean bool) {
-        Timber.v("Changing to updating: %s", bool);
+    public void isFresh(boolean bool) {
+        Timber.v("Changing isFresh: %s", bool);
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putBoolean("isUpdating", bool);
+        this.prefsEditor.putBoolean("isFresh", bool);
         this.prefsEditor.apply();
     }
 
-    public boolean getIsUpdating() {
+    public boolean isFresh() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean("isUpdating", false);
+        return this.sharedPrefs.getBoolean("isFresh", false);
     }
 }

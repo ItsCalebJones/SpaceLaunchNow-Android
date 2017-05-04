@@ -32,6 +32,8 @@ public class DebugFragment extends Fragment implements DebugContract.View {
     AppCompatButton downloadFileButton;
     @BindView(R.id.delete_file)
     AppCompatButton deleteFileButton;
+    @BindView(R.id.job_event_button)
+    AppCompatButton jobEventButton;
     @BindView(R.id.debug_coordinator_layout)
     CoordinatorLayout coordinatorLayout;
 
@@ -122,6 +124,11 @@ public class DebugFragment extends Fragment implements DebugContract.View {
     @OnClick(R.id.delete_file)
     void deleteFileClicked() {
         debugPresenter.deleteFilesClicked(getContext());
+    }
+
+    @OnClick(R.id.job_event_button)
+    void jobEventClicked(){
+        debugPresenter.jobEventButtonClicked(getContext());
     }
 
     public void initializeViews() {

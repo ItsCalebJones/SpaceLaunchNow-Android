@@ -37,9 +37,9 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.NextLaunchJob;
 import me.calebjones.spacelaunchnow.content.jobs.SyncJob;
-import me.calebjones.spacelaunchnow.content.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.realm.Launch;
-import me.calebjones.spacelaunchnow.data.models.realm.LaunchNotification;
+import me.calebjones.spacelaunchnow.data.models.Constants;
+import me.calebjones.spacelaunchnow.data.models.Launch;
+import me.calebjones.spacelaunchnow.data.models.LaunchNotification;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.widget.LaunchCardCompactWidgetProvider;
 import me.calebjones.spacelaunchnow.widget.LaunchTimerWidgetProvider;
@@ -48,21 +48,13 @@ import timber.log.Timber;
 
 public class NextLaunchTracker extends IntentService {
 
-    private GcmNetworkManager mGcmNetworkManager;
-    private Launch nextLaunch;
-    private boolean wear = false;
+
     private SharedPreferences sharedPref;
-    private ListPreferences listPreferences;
     private SwitchPreferences switchPreferences;
     private Calendar rightNow;
-    private AlarmManager alarmManager;
     private RealmResults<Launch> launchRealms;
     private long interval;
-
-    private GoogleApiClient mGoogleApiClient;
-
     private Realm realm;
-    private Boolean jobUpdated;
 
     public NextLaunchTracker() {
         super("NextLaunchTracker");
@@ -73,24 +65,19 @@ public class NextLaunchTracker extends IntentService {
         Timber.d("NextLaunchTracker - onCreate");
         rightNow = Calendar.getInstance();
         super.onCreate();
-
-        mGcmNetworkManager = GcmNetworkManager.getInstance(this);
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
         Timber.d("onHandleIntent - %s", intent.describeContents());
         realm = Realm.getDefaultInstance();
-        this.listPreferences = ListPreferences.getInstance(getApplicationContext());
         this.switchPreferences = SwitchPreferences.getInstance(getApplicationContext());
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         Calendar calDay = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         calDay.add(Calendar.HOUR, 72);
         Date date = new Date();
-        Date dateDay = new Date();
-        dateDay = calDay.getTime();
+        Date dateDay = calDay.getTime();
 
         if (switchPreferences.getAllSwitch()) {
             launchRealms = realm.where(Launch.class)
@@ -258,7 +245,6 @@ public class NextLaunchTracker extends IntentService {
         launchRealms = query.endGroup().findAllSorted("net", Sort.ASCENDING);
     }
 
-
     private void checkNextLaunches(Launch launch) {
         if (launch != null) {
             checkStatus(launch);
@@ -277,7 +263,7 @@ public class NextLaunchTracker extends IntentService {
     }
 
     private void checkStatus(final Launch launch) {
-        if (launch != null && launch.getNetstamp() > 0) {
+        if (launch != null && launch.getNetstamp() != null && launch.getNetstamp() > 0) {
 
             LaunchNotification notification = realm.where(LaunchNotification.class).equalTo("id", launch.getId()).findFirst();
             if (notification == null) {

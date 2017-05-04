@@ -1,10 +1,10 @@
-package me.calebjones.spacelaunchnow.data.models.natives;
+package me.calebjones.spacelaunchnow.data.models;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RocketDetails implements Serializable {
+public class VehicleDetails implements Serializable {
 
     private String LVName;
     private String LVFamily;

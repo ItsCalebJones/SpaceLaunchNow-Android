@@ -30,7 +30,6 @@ import android.view.animation.OvershootInterpolator;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.borax12.materialdaterangepicker.date.DatePickerDialog;
-import com.crashlytics.android.Crashlytics;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
@@ -49,12 +48,12 @@ import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecoration;
+import me.calebjones.spacelaunchnow.content.DataRepository;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.models.Constants;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
-import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
-import me.calebjones.spacelaunchnow.data.models.realm.Launch;
+import me.calebjones.spacelaunchnow.data.models.Constants;
+import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.utils.Analytics;
 import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
@@ -376,27 +375,27 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     private RealmChangeListener callback = new RealmChangeListener<RealmResults<Launch>>() {
         @Override
         public void onChange(RealmResults<Launch> results) {
-            Timber.v("Data changed - size: %s", results.size());
-            if (results.size() > 0) {
-                adapter.clear();
-                results.sort("net", Sort.DESCENDING);
-                adapter.addItems(results);
-            } else {
-                adapter.clear();
-            }
-            hideLoading();
-            launchRealms.removeChangeListeners();
+            displayLaunches(results);
         }
     };
 
+    private void displayLaunches(RealmResults<Launch> results){
+        Timber.v("Data changed - size: %s", results.size());
+        if (results.size() > 0) {
+            adapter.clear();
+            results.sort("net", Sort.DESCENDING);
+            adapter.addItems(results);
+        } else {
+            adapter.clear();
+        }
+        hideLoading();
+    }
+
     public void loadLaunches() {
         if (!getRealm().isClosed()) {
-            try {
-                launchRealms = QueryBuilder.buildPrevQueryAsync(context, getRealm());
-            } catch (ParseException e) {
-                Crashlytics.logException(e);
-            }
+            launchRealms = new DataRepository(getActivity()).getPreviousLaunchData(getRealm());
             launchRealms.addChangeListener(callback);
+            displayLaunches(launchRealms);
         }
     }
 
@@ -699,15 +698,17 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
         return filteredModelList;
     }
 
-    private final BroadcastReceiver nextLaunchReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver launchReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Timber.v("Received: %s", intent.getAction());
             hideLoading();
-            if (intent.getAction().equals(Constants.ACTION_SUCCESS_PREV_LAUNCHES)) {
-                loadLaunches();
-            } else if (intent.getAction().equals(Constants.ACTION_FAILURE_PREV_LAUNCHES)) {
-                SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, intent);
+            if (intent.getAction().equals(Constants.ACTION_GET_PREV_LAUNCHES)) {
+                if (intent.getExtras().getBoolean("result")) {
+                    loadLaunches();
+                } else {
+                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, intent.getStringExtra("error"));
+                }
             }
         }
     };
@@ -717,10 +718,9 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     public void onResume() {
         Timber.d("OnResume!");
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Constants.ACTION_SUCCESS_PREV_LAUNCHES);
-        intentFilter.addAction(Constants.ACTION_FAILURE_PREV_LAUNCHES);
+        intentFilter.addAction(Constants.ACTION_GET_PREV_LAUNCHES);
 
-        getActivity().registerReceiver(nextLaunchReceiver, intentFilter);
+        getActivity().registerReceiver(launchReceiver, intentFilter);
 
         if (listPreferences.getPreviousFirstBoot()) {
             listPreferences.setPreviousFirstBoot(false);
@@ -730,13 +730,18 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
             Timber.d("Previous Launch Fragment: Not First Boot.");
             getDateRange();
         }
-        loadLaunches();
+        if (adapter.getItemCount() == 0) {
+            loadLaunches();
+        }
         super.onResume();
     }
 
     @Override
     public void onPause() {
-        getActivity().unregisterReceiver(nextLaunchReceiver);
+        getActivity().unregisterReceiver(launchReceiver);
+        if (launchRealms != null) {
+            launchRealms.removeChangeListeners();
+        }
         super.onPause();
     }
 
@@ -758,6 +763,9 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
 
     @Override
     public void onDetach() {
+        if (launchRealms != null) {
+            launchRealms.removeChangeListeners();
+        }
         super.onDetach();
     }
 

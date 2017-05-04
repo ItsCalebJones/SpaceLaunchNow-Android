@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.data.models.natives;
+package me.calebjones.spacelaunchnow.data.models;
 
 public class Launcher {
     final String name;

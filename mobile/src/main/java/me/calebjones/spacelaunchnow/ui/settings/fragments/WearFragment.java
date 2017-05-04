@@ -24,11 +24,10 @@ import java.util.Date;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.services.UpdateWearService;
+import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.Analytics;
 import timber.log.Timber;
-
-import static me.calebjones.spacelaunchnow.content.models.Constants.*;
 
 public class WearFragment extends BaseSettingFragment implements SharedPreferences.OnSharedPreferenceChangeListener,
         GoogleApiClient.ConnectionCallbacks,
@@ -153,10 +152,10 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
                 final AppCompatSeekBar dimSeekBar = (AppCompatSeekBar) dialog.getCustomView().findViewById(R.id.dim_seekbar);
                 final AppCompatSeekBar greySeekBar = (AppCompatSeekBar) dialog.getCustomView().findViewById(R.id.grey_seekbar);
 
-                int blurProgress = sharedPreferences.getInt("BLUR_WEAR", DEFAULT_BLUR);
-                final int radiusProgress = sharedPreferences.getInt("RADIUS_WEAR", DEFAULT_RADIUS);
-                int dimProgress = sharedPreferences.getInt("DIM_WEAR", DEFAULT_DIM);
-                int greyProgress = sharedPreferences.getInt("GREY_WEAR", DEFAULT_GREY);
+                int blurProgress = sharedPreferences.getInt("BLUR_WEAR", Constants.DEFAULT_BLUR);
+                final int radiusProgress = sharedPreferences.getInt("RADIUS_WEAR", Constants.DEFAULT_RADIUS);
+                int dimProgress = sharedPreferences.getInt("DIM_WEAR", Constants.DEFAULT_DIM);
+                int greyProgress = sharedPreferences.getInt("GREY_WEAR", Constants.DEFAULT_GREY);
 
                 blurSeekBar.setProgress(blurProgress);
                 radiusSeekBar.setProgress(radiusProgress);
@@ -191,16 +190,16 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
                         Analytics.from(getActivity()).sendPreferenceEvent(key, "Blur settings to default.");
                         Timber.v("Blur %s - Radius %s - Dim %s - Grey %s", blurSeekBar.getProgress(), radiusSeekBar.getProgress(), dimSeekBar.getProgress(), greySeekBar.getProgress());
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putInt("BLUR_WEAR", DEFAULT_BLUR);
-                        editor.putInt("RADIUS_WEAR", DEFAULT_RADIUS);
-                        editor.putInt("DIM_WEAR", DEFAULT_DIM);
-                        editor.putInt("GREY_WEAR", DEFAULT_GREY);
+                        editor.putInt("BLUR_WEAR", Constants.DEFAULT_BLUR);
+                        editor.putInt("RADIUS_WEAR", Constants.DEFAULT_RADIUS);
+                        editor.putInt("DIM_WEAR", Constants.DEFAULT_DIM);
+                        editor.putInt("GREY_WEAR", Constants.DEFAULT_GREY);
                         editor.apply();
 
-                        blurSeekBar.setProgress(DEFAULT_BLUR);
-                        radiusSeekBar.setProgress(DEFAULT_RADIUS);
-                        dimSeekBar.setProgress(DEFAULT_DIM);
-                        greySeekBar.setProgress(DEFAULT_GREY);
+                        blurSeekBar.setProgress(Constants.DEFAULT_BLUR);
+                        radiusSeekBar.setProgress(Constants.DEFAULT_RADIUS);
+                        dimSeekBar.setProgress(Constants.DEFAULT_DIM);
+                        greySeekBar.setProgress(Constants.DEFAULT_GREY);
                     }
                 });
 

@@ -25,20 +25,12 @@ import io.realm.Realm;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.gpu.BrightnessFilterTransformation;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.data.models.realm.Launch;
-import me.calebjones.spacelaunchnow.data.models.realm.RocketDetails;
+import me.calebjones.spacelaunchnow.data.models.Launch;
+import me.calebjones.spacelaunchnow.data.models.RocketDetails;
 import me.calebjones.spacelaunchnow.utils.transformations.SaturationTransformation;
 import timber.log.Timber;
 
-import static me.calebjones.spacelaunchnow.content.models.Constants.BACKGROUND_KEY;
-import static me.calebjones.spacelaunchnow.content.models.Constants.DATE_KEY;
-import static me.calebjones.spacelaunchnow.content.models.Constants.DEFAULT_BLUR;
-import static me.calebjones.spacelaunchnow.content.models.Constants.DEFAULT_DIM;
-import static me.calebjones.spacelaunchnow.content.models.Constants.DEFAULT_GREY;
-import static me.calebjones.spacelaunchnow.content.models.Constants.DEFAULT_RADIUS;
-import static me.calebjones.spacelaunchnow.content.models.Constants.DYNAMIC_KEY;
-import static me.calebjones.spacelaunchnow.content.models.Constants.NAME_KEY;
-import static me.calebjones.spacelaunchnow.content.models.Constants.TIME_KEY;
+import static me.calebjones.spacelaunchnow.data.models.Constants.*;
 
 public class UpdateWearService extends BaseService {
 
@@ -52,7 +44,7 @@ public class UpdateWearService extends BaseService {
     }
 
     // Create a data map and put data in it
-    public static void sendToWear(Context context) {
+    private void sendToWear(Context context) {
         Realm realm = Realm.getDefaultInstance();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -120,7 +112,7 @@ public class UpdateWearService extends BaseService {
 
             final PutDataMapRequest putImageReq = PutDataMapRequest.create("/nextLaunch");
 
-            /**
+            /*
              * brightness value ranges from -1.0 to 1.0, with 0.0 as the normal level
              */
             float dimFloat = (float) (dim - 50) / 100;

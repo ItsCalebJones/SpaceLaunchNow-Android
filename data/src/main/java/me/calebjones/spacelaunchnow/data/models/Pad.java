@@ -1,21 +1,21 @@
 
-package me.calebjones.spacelaunchnow.data.models.realm;
+package me.calebjones.spacelaunchnow.data.models;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class Rocket extends RealmObject {
+public class Pad extends RealmObject {
 
     @PrimaryKey
     private Integer id;
+    private Integer padType;
     private String name;
-    private String configuration;
-    private String familyname;
     private String infoURL;
     private String wikiURL;
-    private String imageURL;
-    private Family family;
+    private String mapURL;
+    private Double latitude;
+    private Double longitude;
     private RealmList<Agency> agencies = new RealmList<>();
 
     public Integer getId() {
@@ -50,36 +50,28 @@ public class Rocket extends RealmObject {
         this.wikiURL = wikiURL;
     }
 
-    public String getConfiguration() {
-        return configuration;
+    public String getMapURL() {
+        return mapURL;
     }
 
-    public void setConfiguration(String configuration) {
-        this.configuration = configuration;
+    public void setMapURL(String mapURL) {
+        this.mapURL = mapURL;
     }
 
-    public Family getFamily() {
-        return family;
+    public Double getLatitude() {
+        return latitude;
     }
 
-    public void setFamily(Family family) {
-        this.family = family;
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
     }
 
-    public String getFamilyname() {
-        return familyname;
+    public Double getLongitude() {
+        return longitude;
     }
 
-    public void setFamilyname(String familyname) {
-        this.familyname = familyname;
-    }
-
-    public String getImageURL() {
-        return imageURL;
-    }
-
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     public RealmList<Agency> getAgencies() {
@@ -90,5 +82,11 @@ public class Rocket extends RealmObject {
         this.agencies = agencies;
     }
 
+    public Integer getPadType() {
+        return padType;
+    }
 
+    public void setPadType(Integer padType) {
+        this.padType = padType;
+    }
 }

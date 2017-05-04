@@ -102,6 +102,15 @@
           android:padding="@dimen/material_baseline_grid_2x"
           android:text="Vehicle Sync"
           android:elevation="2dp" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/job_event_button"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="2dp"
+            android:padding="@dimen/material_baseline_grid_2x"
+            android:text="Job Events" />
       </LinearLayout>
 
       <TextView

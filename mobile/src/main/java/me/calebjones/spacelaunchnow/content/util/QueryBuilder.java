@@ -1,6 +1,7 @@
 package me.calebjones.spacelaunchnow.content.util;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -16,7 +17,7 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.data.models.realm.Launch;
+import me.calebjones.spacelaunchnow.data.models.Launch;
 import timber.log.Timber;
 
 public class QueryBuilder {
@@ -43,7 +44,6 @@ public class QueryBuilder {
         Integer[] agencyFilter = switchPreferences.getPrevAgencyFiltered();
         Integer[] locationFilter = switchPreferences.getPrevLocationFiltered();
         Integer[] vehicleFilter = switchPreferences.getPrevVehicleFiltered();
-
 
         if (countryFilter != null && countryFilter.length > 0) {
             query = filterCountry(query, switchPreferences.getPrevCountryFilteredArray()).findAll().where();
@@ -87,7 +87,6 @@ public class QueryBuilder {
         Integer[] locationFilter = switchPreferences.getPrevLocationFiltered();
         Integer[] vehicleFilter = switchPreferences.getPrevVehicleFiltered();
 
-
         if (countryFilter != null && countryFilter.length > 0) {
             query = filterCountry(query, switchPreferences.getPrevCountryFilteredArray()).findAll().where();
         }
@@ -114,6 +113,8 @@ public class QueryBuilder {
         Date date = new Date();
 
         RealmQuery<Launch> query = realm.where(Launch.class).greaterThanOrEqualTo("net", date).findAll().where();
+
+        verifyUpSwitches(context, switchPreferences);
 
         Integer[] countryFilter = switchPreferences.getUpCountryFiltered();
         Integer[] agencyFilter = switchPreferences.getUpAgencyFiltered();
@@ -144,6 +145,53 @@ public class QueryBuilder {
 
         Timber.v("Returning Query");
         return query.findAllSortedAsync("net", Sort.ASCENDING);
+    }
+
+    private static void verifyUpSwitches(Context context, SwitchPreferences switchPreferences) {
+        Integer[] countryFilter = switchPreferences.getUpCountryFiltered();
+        Integer[] agencyFilter = switchPreferences.getUpAgencyFiltered();
+        Integer[] locationFilter = switchPreferences.getUpLocationFiltered();
+        Integer[] vehicleFilter = switchPreferences.getUpVehicleFiltered();
+        ArrayList<String> agencyArray = switchPreferences.getUpAgencyFilteredArray();
+        ArrayList<String> countryArray = switchPreferences.getUpCountryFilteredArray();
+        ArrayList<String> locationArray = switchPreferences.getUpLocationFilteredArray();
+        ArrayList<String> vehicleArray = switchPreferences.getUpVehicleFilteredArray();
+
+        if (countryArray != null && countryFilter != null && countryArray.size() != countryFilter.length){
+            Crashlytics.log("Country Array: " + countryArray + " Country Filter " + countryFilter);
+            Toast.makeText(context, "UNKNOWN ERROR - Resetting Country filter.", Toast.LENGTH_SHORT).show();
+            switchPreferences.resetAllUpFilters();
+            if (switchPreferences.isUpFiltered()) {
+                switchPreferences.setUpFiltered(false);
+            }
+        }
+
+        if (agencyArray != null && agencyFilter != null && agencyArray.size() != agencyFilter.length) {
+            Crashlytics.log("Agency Array: " + agencyArray + " Agency Filter " + agencyFilter);
+            Toast.makeText(context, "UNKNOWN ERROR - Resetting Agency filter.", Toast.LENGTH_SHORT).show();
+            switchPreferences.resetAllUpFilters();
+            if (switchPreferences.isUpFiltered()) {
+                switchPreferences.setUpFiltered(false);
+            }
+        }
+
+        if (locationArray != null && locationFilter != null && locationArray.size() != locationFilter.length) {
+            Crashlytics.log("Location Array: " + locationArray + " Location Filter " + locationFilter);
+            Toast.makeText(context, "UNKNOWN ERROR - Resetting Location filter.", Toast.LENGTH_SHORT).show();
+            switchPreferences.resetAllUpFilters();
+            if (switchPreferences.isUpFiltered()) {
+                switchPreferences.setUpFiltered(false);
+            }
+        }
+
+        if (vehicleArray != null && vehicleFilter != null && vehicleArray.size() != vehicleFilter.length) {
+            Crashlytics.log("Vehicle Array: " + vehicleArray + " Vehicle Filter " + vehicleFilter);
+            Toast.makeText(context, "UNKNOWN ERROR - Resetting Vehicle filter.", Toast.LENGTH_SHORT).show();
+            switchPreferences.resetAllUpFilters();
+            if (switchPreferences.isUpFiltered()) {
+                switchPreferences.setUpFiltered(false);
+            }
+        }
     }
 
     public static RealmResults<Launch> buildUpQuery(Context context, Realm realm) {
@@ -239,7 +287,7 @@ public class QueryBuilder {
                 } else {
                     firstGroup = false;
                 }
-                query.equalTo("rocket.agencies.id", 121);
+                query.equalTo("rocket.agencies.id", 121).or().contains("name", "Falcon");
 
             } else if (key.contains("ROSCOSMOS")) {
                 if (!firstGroup) {
@@ -307,13 +355,13 @@ public class QueryBuilder {
         boolean firstGroup = true;
         for (String key : countryFilter) {
             Timber.v("Country key: %s", key);
-            if (key.contains("China")){
+            if (key.contains("China")) {
                 key = "CHN";
-            } else if (key.contains("Russia")){
+            } else if (key.contains("Russia")) {
                 key = "RUS";
-            } else if (key.contains("India")){
+            } else if (key.contains("India")) {
                 key = "IND";
-            } else if (key.contains("Multi")){
+            } else if (key.contains("Multi")) {
                 key = ",";
             }
             if (!firstGroup) {

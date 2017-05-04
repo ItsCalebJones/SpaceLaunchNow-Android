@@ -11,7 +11,7 @@ import io.realm.RealmList;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.data.models.realm.Launch;
+import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.content.services.BaseService;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import timber.log.Timber;
@@ -142,7 +142,7 @@ public class CalendarSyncService extends BaseService {
         if (launchRealm.getEventID() != null){
             boolean success = calendarUtil.updateEvent(this, launchRealm);
             if (!success) {
-                Timber.v("Unable to update event %s, assuming deleted.", launchRealm.getName());
+                Timber.e("Unable to update event %s, assuming deleted.", launchRealm.getName());
                 final Integer id = calendarUtil.addEvent(this, launchRealm);
                 if (id != null) {
                     mRealm.executeTransaction(new Realm.Transaction() {
