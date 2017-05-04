@@ -41,6 +41,8 @@ public class UpdateJob extends Job {
     @Override
     protected void onReschedule(int newJobId) {
         // the rescheduled job has a new ID
+        super.onReschedule(newJobId);
+        JobUtils.logJobRequest();
     }
 
     public static void scheduleJob(Context context) {
@@ -67,5 +69,6 @@ public class UpdateJob extends Job {
 
         Timber.i("Scheduling JobRequests for %s", TAG);
         builder.build().schedule();
+        JobUtils.logJobRequest();
     }
 }

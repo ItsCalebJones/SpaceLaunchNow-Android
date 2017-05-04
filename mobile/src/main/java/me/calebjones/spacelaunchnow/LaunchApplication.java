@@ -167,13 +167,16 @@ public class LaunchApplication extends Application implements Analytics.Provider
             Realm.setDefaultConfiguration(config);
             Realm realm = Realm.getDefaultInstance();
             realm.close();
-        } catch (RealmMigrationNeededException e) {
+        } catch (RealmMigrationNeededException | NullPointerException e) {
             Realm.deleteRealm(config);
             Realm.setDefaultConfiguration(config);
 
             Intent intent = new Intent(this, LaunchDataService.class);
             intent.setAction(Constants.ACTION_GET_ALL_DATA);
             this.startService(intent);
+
+            Crashlytics.logException(e);
+
         }
 
 

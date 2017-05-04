@@ -55,6 +55,7 @@ public class DataRepositoryManager {
         } else if (dataSaver && !wifiConnected) {
             dataManager.getNextUpcomingLaunchesMini();
         } else {
+            dataManager.getNextUpcomingLaunches();
             checkFullSync();
         }
     }

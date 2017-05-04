@@ -46,6 +46,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
@@ -487,5 +488,12 @@ public class Utils {
                 remoteViews.setImageViewResource(id, R.drawable.ic_unknown);
             }
         }
+    }
+
+    public static String getFormattedDateFromTimestamp(long timestampInMilliSeconds)
+    {
+        Date date = new Date();
+        date.setTime(timestampInMilliSeconds);
+        return new SimpleDateFormat("h:mm a z - MMM d, yyyy ", Locale.US).format(date);
     }
 }

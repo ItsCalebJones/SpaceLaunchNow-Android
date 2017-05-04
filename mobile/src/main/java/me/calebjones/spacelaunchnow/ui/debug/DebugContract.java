@@ -48,6 +48,8 @@ public interface DebugContract {
 
         void syncNextLaunchClicked(Context context);
 
+        void jobEventButtonClicked(Context context);
+
         void syncBackgroundSyncClicked(Context context);
 
         void syncVehiclesClicked(Context context);

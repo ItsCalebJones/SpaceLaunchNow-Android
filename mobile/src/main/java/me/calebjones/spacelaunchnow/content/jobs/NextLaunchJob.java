@@ -41,6 +41,8 @@ public class NextLaunchJob extends Job {
     @Override
     protected void onReschedule(int newJobId) {
         // the rescheduled job has a new ID
+        super.onReschedule(newJobId);
+        JobUtils.logJobRequest();
     }
 
     public static void scheduleIntervalJob(long interval, int launchId) {
@@ -69,5 +71,6 @@ public class NextLaunchJob extends Job {
 
         Timber.i("Scheduling JobRequests for %s", TAG);
         builder.build().schedule();
+        JobUtils.logJobRequest();
     }
 }

@@ -4,16 +4,25 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.FileProvider;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.evernote.android.job.JobRequest;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Set;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.jobs.DataJobCreator;
+import me.calebjones.spacelaunchnow.content.jobs.JobUtils;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Launch;
@@ -21,6 +30,7 @@ import me.calebjones.spacelaunchnow.data.models.Products;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.FileUtils;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 public class DebugPresenter implements DebugContract.Presenter {
@@ -99,6 +109,14 @@ public class DebugPresenter implements DebugContract.Presenter {
     @Override
     public void syncNextLaunchClicked(Context context) {
         context.startService(new Intent(context, LaunchDataService.class).setAction(Constants.ACTION_GET_NEXT_LAUNCH));
+    }
+
+    @Override
+    public void jobEventButtonClicked(Context context) {
+        new MaterialDialog.Builder(context)
+                .title("Job Events")
+                .content(JobUtils.getJobRequestStatus())
+                .show();
     }
 
     @Override

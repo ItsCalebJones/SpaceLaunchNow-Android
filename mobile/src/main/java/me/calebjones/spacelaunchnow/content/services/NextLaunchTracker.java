@@ -48,21 +48,13 @@ import timber.log.Timber;
 
 public class NextLaunchTracker extends IntentService {
 
-    private GcmNetworkManager mGcmNetworkManager;
-    private Launch nextLaunch;
-    private boolean wear = false;
+
     private SharedPreferences sharedPref;
-    private ListPreferences listPreferences;
     private SwitchPreferences switchPreferences;
     private Calendar rightNow;
-    private AlarmManager alarmManager;
     private RealmResults<Launch> launchRealms;
     private long interval;
-
-    private GoogleApiClient mGoogleApiClient;
-
     private Realm realm;
-    private Boolean jobUpdated;
 
     public NextLaunchTracker() {
         super("NextLaunchTracker");
@@ -73,24 +65,19 @@ public class NextLaunchTracker extends IntentService {
         Timber.d("NextLaunchTracker - onCreate");
         rightNow = Calendar.getInstance();
         super.onCreate();
-
-        mGcmNetworkManager = GcmNetworkManager.getInstance(this);
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
         Timber.d("onHandleIntent - %s", intent.describeContents());
         realm = Realm.getDefaultInstance();
-        this.listPreferences = ListPreferences.getInstance(getApplicationContext());
         this.switchPreferences = SwitchPreferences.getInstance(getApplicationContext());
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         Calendar calDay = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         calDay.add(Calendar.HOUR, 72);
         Date date = new Date();
-        Date dateDay = new Date();
-        dateDay = calDay.getTime();
+        Date dateDay = calDay.getTime();
 
         if (switchPreferences.getAllSwitch()) {
             launchRealms = realm.where(Launch.class)
@@ -257,7 +244,6 @@ public class NextLaunchTracker extends IntentService {
 
         launchRealms = query.endGroup().findAllSorted("net", Sort.ASCENDING);
     }
-
 
     private void checkNextLaunches(Launch launch) {
         if (launch != null) {
