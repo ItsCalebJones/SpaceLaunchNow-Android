@@ -126,6 +126,7 @@ public class LaunchDetailActivity extends BaseActivity
                                 item.setIsNotifiedDay(previous.getIsNotifiedDay());
                                 item.setIsNotifiedHour(previous.getIsNotifiedHour());
                                 item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
+                                item.setNotifiable(previous.isNotifiable());
                             }
                             realm.beginTransaction();
                             item.getLocation().setPrimaryID();

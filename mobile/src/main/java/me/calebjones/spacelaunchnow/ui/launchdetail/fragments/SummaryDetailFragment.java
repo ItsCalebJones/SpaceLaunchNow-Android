@@ -662,6 +662,7 @@ public class SummaryDetailFragment extends BaseFragment {
                         }
                         detailLaunch.setNotifiable(!detailLaunch.isNotifiable());
                         notificationSwitch.setChecked(detailLaunch.isNotifiable());
+                        realm.copyToRealmOrUpdate(detailLaunch);
                         Timber.v("Launch %s notifiable updated to %s", detailLaunch.getName(), detailLaunch.isNotifiable());
                     }
                 });

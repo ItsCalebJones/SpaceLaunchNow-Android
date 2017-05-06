@@ -863,6 +863,7 @@ public class DataManager {
                     item.setEventID(previous.getEventID());
                     item.setSyncCalendar(previous.syncCalendar());
                     item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
+                    item.setNotifiable(previous.isNotifiable());
                 }
                 if (item.getLocation() != null) {
                     item.getLocation().setPrimaryID();
