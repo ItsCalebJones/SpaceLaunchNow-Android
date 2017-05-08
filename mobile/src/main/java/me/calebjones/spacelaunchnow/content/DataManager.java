@@ -852,6 +852,8 @@ public class DataManager {
                         .equalTo("id", item.getId())
                         .findFirst();
                 if (previous != null) {
+
+                    //TODO need to only reset notifiers if launch time changes greater then user configurable number
                     if ((!previous.getNet().equals(item.getNet()) || (previous.getStatus().intValue() != item.getStatus().intValue()))) {
                         Timber.v("%s successful has changed.", item.getName());
                         LaunchNotification notification = mRealm.where(LaunchNotification.class).equalTo("id", item.getId()).findFirst();
