@@ -4,24 +4,18 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.FileProvider;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.evernote.android.job.JobRequest;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Set;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.jobs.DataJobCreator;
 import me.calebjones.spacelaunchnow.content.jobs.JobUtils;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.data.models.Constants;
@@ -30,7 +24,6 @@ import me.calebjones.spacelaunchnow.data.models.Products;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.FileUtils;
-import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 public class DebugPresenter implements DebugContract.Presenter {
@@ -80,7 +73,7 @@ public class DebugPresenter implements DebugContract.Presenter {
     }
 
     @Override
-    public void toggleDebugLaunchesClicked(boolean selected, Context context) {
+    public void toggleDebugLaunchesClicked(boolean selected, final Context context) {
         debugView.showDebugLaunchSnackbar(selected);
         sharedPreference.setDebugLaunch(selected);
         if (selected) {
@@ -94,16 +87,20 @@ public class DebugPresenter implements DebugContract.Presenter {
 
         //Delete from Database
         realm = Realm.getDefaultInstance();
-        realm.executeTransaction(new Realm.Transaction() {
+        realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 RealmResults<Launch> results = realm.where(Launch.class).findAll();
                 results.deleteAllFromRealm();
             }
+        }, new Realm.Transaction.OnSuccess() {
+            @Override
+            public void onSuccess() {
+                context.startService(new Intent(context, LaunchDataService.class).setAction(Constants.ACTION_GET_ALL_DATA));
+            }
         });
         realm.close();
 
-        context.startService(new Intent(context, LaunchDataService.class).setAction(Constants.ACTION_GET_ALL_DATA));
     }
 
     @Override

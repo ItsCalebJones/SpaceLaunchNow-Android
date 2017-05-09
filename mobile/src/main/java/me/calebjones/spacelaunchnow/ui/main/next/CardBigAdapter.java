@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
@@ -41,6 +40,7 @@ import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Analytics;
+import me.calebjones.spacelaunchnow.utils.CountDownTimer;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
@@ -222,6 +222,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
                     now.setTimeInMillis(System.currentTimeMillis());
                     if (holder.timer != null) {
+                        Timber.v("Timer is not null, cancelling.");
                         holder.timer.cancel();
                     }
 
@@ -232,7 +233,8 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                     holder.content_TMinus_status.setTextColor(accentColor);
 
                     holder.countdownView.setVisibility(View.VISIBLE);
-                    holder.timer = new CountDownTimer(future.getTimeInMillis() - now.getTimeInMillis(), 1000) {
+                    long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
+                    holder.timer = new CountDownTimer(timeToFinish, 1000) {
                         StringBuilder time = new StringBuilder();
 
                         @Override
@@ -255,6 +257,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                                     holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
                                 }
                             }
+                            holder.content_TMinus_status.setVisibility(View.VISIBLE);
                             holder.countdownDays.setText("- -");
                             holder.countdownHours.setText("- -");
                             holder.countdownMinutes.setText("- -");
@@ -263,6 +266,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
                         @Override
                         public void onTick(long millisUntilFinished) {
+                            Timber.v("onTick - %s", millisUntilFinished);
                             time.setLength(0);
 
                             // Calculate the Days/Hours/Mins/Seconds numerically.
