@@ -207,7 +207,9 @@ public class LaunchApplication extends Application implements Analytics.Provider
 
         JobManager.create(this).addJobCreator(new DataJobCreator());
 
-        UpdateJob.scheduleJob(this);
+        if (sharedPref.getBoolean("background", true)) {
+            UpdateJob.scheduleJob(this);
+        }
         SyncJob.schedulePeriodicJob(this);
 
         DefaultRuleEngine.trackAppStart(this);
