@@ -28,7 +28,6 @@ import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivit
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
-
 public class LaunchTimerWidgetProvider extends AppWidgetProvider {
 
     private Realm mRealm;
@@ -51,6 +50,8 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
             for (int widgetId : appWidgetIds) {
                 Bundle options = appWidgetManager.getAppWidgetOptions(widgetId);
 
+                Timber.v("Checking Widget %s", widgetId);
+
                 int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
                 int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
                 int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
@@ -68,8 +69,10 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
                 mRealm.close();
             }
         } else {
-            setRefreshIntentInitial(context, new RemoteViews(context.getPackageName(),
-                    R.layout.widget_launch_timer_dark));
+            setRefreshIntentInitial(context, new RemoteViews(
+                    context.getPackageName(),
+                    R.layout.widget_launch_timer_dark
+            ));
         }
     }
 
@@ -77,7 +80,6 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
     public void onEnabled(Context context) {
         Timber.v("Widget placed, starting service...");
     }
-
 
     @Override
     public void onDisabled(Context context) {
@@ -126,16 +128,21 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
         Timber.v("Size: [%s-%s] x [%s-%s]", minWidth, maxWidth, minHeight, maxHeight);
 
         if (minWidth <= 200 || minHeight <= 100) {
-            remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.widget_launch_timer_small_dark);
+            remoteViews = new RemoteViews(
+                    context.getPackageName(),
+                    R.layout.widget_launch_timer_small_dark
+            );
         } else if (minWidth <= 320) {
-            remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.widget_launch_timer_dark);
+            remoteViews = new RemoteViews(
+                    context.getPackageName(),
+                    R.layout.widget_launch_timer_dark
+            );
         } else {
-            remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.widget_launch_timer_large_dark);
+            remoteViews = new RemoteViews(
+                    context.getPackageName(),
+                    R.layout.widget_launch_timer_large_dark
+            );
         }
-
 
         if (minWidth > 0 && maxWidth > 0 && minHeight > 0 && maxHeight > 0) {
             if (launch != null) {
@@ -180,8 +187,10 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
         if (!ListPreferences.getInstance(context).getFirstBoot()) {
             updateAppWidget(context, appWidgetManager, appWidgetId, newOptions);
         } else {
-            setRefreshIntentInitial(context, new RemoteViews(context.getPackageName(),
-                    R.layout.widget_launch_timer_dark));
+            setRefreshIntentInitial(context, new RemoteViews(
+                    context.getPackageName(),
+                    R.layout.widget_launch_timer_dark
+            ));
         }
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
     }
@@ -191,7 +200,7 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
         if (!ListPreferences.getInstance(context).getFirstBoot()) {
             if (intent.getAction().equals(ACTION_WIDGET_REFRESH)) {
                 Timber.v("onReceive %s", ACTION_WIDGET_REFRESH);
-                if (countDownTimer != null){
+                if (countDownTimer != null) {
                     countDownTimer.cancel();
                 }
                 AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -203,8 +212,10 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
                 super.onReceive(context, intent);
             }
         } else {
-            setRefreshIntentInitial(context, new RemoteViews(context.getPackageName(),
-                    R.layout.widget_launch_word_timer_dark));
+            setRefreshIntentInitial(context, new RemoteViews(
+                    context.getPackageName(),
+                    R.layout.widget_launch_word_timer_dark
+            ));
         }
     }
 
@@ -280,14 +291,11 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
                 }
 
                 //Run this check every five seconds.
-                if ((millisUntilFinished / 1000) % 5 == 0){
-                    if (countdownId != switchPreferences.getWidgetID()){
-                        Timber.v("Cancelling countdown timer - onClick - invalid = %s", invalid);
-                        this.cancel();
-                    }
-                }
+                if (countdownId != switchPreferences.getWidgetID()) {
+                    Timber.v("Cancelling countdown timer - onClick - invalid = %s", invalid);
+                    this.cancel();
 
-                Timber.v("onTick %s ID: %s - Valid %s", millisUntilFinished / 1000, countdownId, invalid);
+                }
 
                 // Calculate the Days/Hours/Mins/Seconds numerically.
                 long longDays = millisUntilFinished / 86400000;
@@ -318,7 +326,6 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
                 } else {
                     seconds = String.valueOf(longSeconds);
                 }
-
 
                 // Update the views
                 if (Integer.valueOf(days) > 99) {

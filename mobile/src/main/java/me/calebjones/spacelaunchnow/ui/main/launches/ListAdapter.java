@@ -148,9 +148,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
         }
 
         title = launchItem.getName().split("\\|");
-
-        holder.title.setText(title[1].trim());
-        holder.mission.setText(title[0].trim());
+        if (title.length > 0) {
+            holder.title.setText(title[1].trim());
+            holder.mission.setText(title[0].trim());
+        } else {
+            holder.title.setText(launchItem.getName());
+        }
     }
 
     public String parseDateToMMyyyy(String time) {

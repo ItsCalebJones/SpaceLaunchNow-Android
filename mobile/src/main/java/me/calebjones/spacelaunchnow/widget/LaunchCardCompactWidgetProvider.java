@@ -91,7 +91,7 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
         }
 
         for (Launch launch : launchRealms) {
-            if (launch.getNetstamp() != 0) {
+            if (launch.getNetstamp() != null && launch.getNetstamp() != 0) {
                 return launch;
             }
         }

@@ -266,7 +266,6 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
                         @Override
                         public void onTick(long millisUntilFinished) {
-                            Timber.v("onTick - %s", millisUntilFinished);
                             time.setLength(0);
 
                             // Calculate the Days/Hours/Mins/Seconds numerically.
