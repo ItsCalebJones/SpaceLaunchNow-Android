@@ -1,6 +1,5 @@
 package me.calebjones.spacelaunchnow.content.services;
 
-import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -17,9 +16,6 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.gcm.GcmNetworkManager;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,7 +29,6 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.NextLaunchJob;
 import me.calebjones.spacelaunchnow.content.jobs.SyncJob;
@@ -41,13 +36,13 @@ import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.LaunchNotification;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.widget.LaunchCardCompactWidgetProvider;
 import me.calebjones.spacelaunchnow.widget.LaunchTimerWidgetProvider;
 import me.calebjones.spacelaunchnow.widget.LaunchWordTimerWidgetProvider;
 import timber.log.Timber;
 
 public class NextLaunchTracker extends IntentService {
-
 
     private SharedPreferences sharedPref;
     private SwitchPreferences switchPreferences;
@@ -292,7 +287,9 @@ public class NextLaunchTracker extends IntentService {
                 if (timeToFinish <= 600000) {
                     if (notify) {
                         int minutes = (int) ((timeToFinish / (1000 * 60)) % 60);
-                        if (minutes == 9) minutes = 10;
+                        if (minutes == 9) {
+                            minutes = 10;
+                        }
                         //Check settings to see if user should be notified.
                         if (!notification.isNotifiedTenMinute() && this.sharedPref.getBoolean("notifications_launch_minute", false)) {
                             notifyUserImminent(launch, minutes);
@@ -407,14 +404,17 @@ public class NextLaunchTracker extends IntentService {
         String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone", "default ringtone");
         Uri alarmSound = Uri.parse(ringtoneBox);
 
-        //TODO add launch image when ready from LL
         NotificationCompat.WearableExtender wearableExtender =
                 new NotificationCompat.WearableExtender()
-                        .setHintHideIcon(true)
-                        .setBackground(BitmapFactory.decodeResource(
-                                this.getResources(),
-                                R.drawable.nav_header
-                        ));
+                        .setHintHideIcon(true);
+        if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
+            wearableExtender.setBackground(Utils.getBitMapFromUrl(launch.getRocket().getImageURL()));
+        } else {
+            wearableExtender.setBackground(BitmapFactory.decodeResource(
+                    this.getResources(),
+                    R.drawable.nav_header
+            ));
+        }
 
         mBuilder.setContentTitle(launchName)
                 .setContentText(expandedText)
@@ -424,6 +424,17 @@ public class NextLaunchTracker extends IntentService {
                 .extend(wearableExtender)
                 .setContentIntent(appIntent)
                 .setSound(alarmSound);
+
+        NotificationCompat.BigPictureStyle bigPictureStyle =
+                new NotificationCompat.BigPictureStyle();
+        if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
+            bigPictureStyle.bigPicture(Utils.getBitMapFromUrl(launch.getRocket().getImageURL()));
+            mBuilder.setStyle(bigPictureStyle);
+            mBuilder.setLargeIcon(BitmapFactory.decodeResource(
+                    this.getResources(),
+                    R.mipmap.ic_launcher
+            ));
+        }
 
         //Check if heads up notifications are enabled, set priority to high if so.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
@@ -505,20 +516,35 @@ public class NextLaunchTracker extends IntentService {
 
         NotificationCompat.WearableExtender wearableExtender =
                 new NotificationCompat.WearableExtender()
-                        .setHintHideIcon(true)
-                        .setBackground(BitmapFactory.decodeResource(
-                                this.getResources(),
-                                R.drawable.nav_header
-                        ));
+                        .setHintHideIcon(true);
+        if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
+            wearableExtender.setBackground(Utils.getBitMapFromUrl(launch.getRocket().getImageURL()));
+        } else {
+            wearableExtender.setBackground(BitmapFactory.decodeResource(
+                    this.getResources(),
+                    R.drawable.nav_header
+            ));
+        }
 
         mBuilder.setContentTitle(launchName)
                 .setContentText(expandedText)
                 .setSmallIcon(R.drawable.ic_rocket_white)
-                .setContentIntent(appIntent)
+                .setAutoCancel(true)
                 .setContentText(expandedText)
                 .extend(wearableExtender)
-                .setSound(alarmSound)
-                .setAutoCancel(true);
+                .setContentIntent(appIntent)
+                .setSound(alarmSound);
+
+        NotificationCompat.BigPictureStyle bigPictureStyle =
+                new NotificationCompat.BigPictureStyle();
+        if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
+            bigPictureStyle.bigPicture(Utils.getBitMapFromUrl(launch.getRocket().getImageURL()));
+            mBuilder.setStyle(bigPictureStyle);
+            mBuilder.setLargeIcon(BitmapFactory.decodeResource(
+                    this.getResources(),
+                    R.mipmap.ic_launcher
+            ));
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
                 sharedPref.getBoolean("notifications_new_message_heads_up", true)) {

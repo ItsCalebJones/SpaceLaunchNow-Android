@@ -22,12 +22,14 @@ import java.util.Calendar;
 import java.util.Date;
 
 import io.realm.Realm;
+import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.utils.Analytics;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 import static me.calebjones.spacelaunchnow.content.services.NextLaunchTracker.DateToCalendar;
@@ -45,7 +47,13 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
         testPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                sendTestNotification();
+                Thread t = new Thread(new Runnable() {
+                    public void run() {
+                        sendTestNotification();
+                    }
+                });
+
+                t.start();
                 return true;
             }
         });
@@ -86,8 +94,8 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
 
         Realm realm = Realm.getDefaultInstance();
         Launch launch = realm.where(Launch.class)
-                .greaterThan("net", new Date())
-                .findFirst();
+                .greaterThanOrEqualTo("net", new Date())
+                .findAllSorted("net", Sort.ASCENDING).first();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         long longdate = launch.getNetstamp();
@@ -131,18 +139,35 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
 
         NotificationCompat.WearableExtender wearableExtender =
                 new NotificationCompat.WearableExtender()
-                        .setHintHideIcon(true)
-                        .setBackground(BitmapFactory.decodeResource(getResources(),
-                                R.drawable.nav_header));
+                        .setHintHideIcon(true);
+        if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
+            wearableExtender.setBackground(Utils.getBitMapFromUrl(launch.getRocket().getImageURL()));
+        } else {
+            wearableExtender.setBackground(BitmapFactory.decodeResource(
+                    this.getResources(),
+                    R.drawable.nav_header
+            ));
+        }
 
         mBuilder.setContentTitle(launchName)
-                .setContentText("Launch attempt in " + hours + " hours from " + launchPad)
+                .setContentText(expandedText)
                 .setSmallIcon(R.drawable.ic_rocket_white)
-                .setContentIntent(appIntent)
+                .setAutoCancel(true)
                 .setContentText(expandedText)
                 .extend(wearableExtender)
-                .setSound(alarmSound)
-                .setAutoCancel(true);
+                .setContentIntent(appIntent)
+                .setSound(alarmSound);
+
+        NotificationCompat.BigPictureStyle bigPictureStyle =
+                new NotificationCompat.BigPictureStyle();
+        if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
+            bigPictureStyle.bigPicture(Utils.getBitMapFromUrl(launch.getRocket().getImageURL()));
+            mBuilder.setStyle(bigPictureStyle);
+            mBuilder.setLargeIcon(BitmapFactory.decodeResource(
+                    this.getResources(),
+                    R.mipmap.ic_launcher
+            ));
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
                 sharedPref.getBoolean("notifications_new_message_heads_up", true)) {

@@ -79,5 +79,10 @@
             android:key="confirm_exit"
             android:summary="Show confirm dialog before exit."
             android:title="Confirm Exit" />
+        <SwitchPreference
+          android:defaultValue="false"
+          android:key="debug_logging"
+          android:summary="Enable Debug logging for crash investigations."
+          android:title="Debug Logging" />
     </PreferenceCategory>
 </PreferenceScreen>

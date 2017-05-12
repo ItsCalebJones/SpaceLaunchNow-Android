@@ -211,7 +211,6 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    //TODO Light/Dark
     private void setCategoryIcon(Context context, Launch launch, RemoteViews remoteViews) {
         if (launch.getMissions() != null && launch.getMissions().size() > 0) {
             Utils.setCategoryIcon(remoteViews, launch.getMissions().get(0).getTypeName(), true, R.id.widget_categoryIcon);

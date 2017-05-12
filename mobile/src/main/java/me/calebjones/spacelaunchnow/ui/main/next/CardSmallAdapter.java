@@ -179,7 +179,6 @@ public class CardSmallAdapter extends RecyclerView.Adapter<CardSmallAdapter.View
                     if (status == 1) {
                         holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
 
-                        //TODO - Get hold reason and show it
                     } else {
                         if (hold != null && hold.length() > 1) {
                             holder.content_TMinus_status.setText(hold);

@@ -108,7 +108,7 @@ public class LaunchDetailActivity extends BaseActivity
         String type = mIntent.getStringExtra("TYPE");
 
         if (type != null && type.equals("launch")) {
-            int id = mIntent.getIntExtra("launchID", 0);
+            final int id = mIntent.getIntExtra("launchID", 0);
             DataClient.getInstance().getLaunchById(id, true, new Callback<LaunchResponse>() {
                 @Override
                 public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
@@ -135,13 +135,23 @@ public class LaunchDetailActivity extends BaseActivity
                             updateViews(item);
                             Timber.v("Updated detailLaunch: %s", item.getId());
                         }
+                    } else {
+                        Launch item = realm.where(Launch.class)
+                                .equalTo("id", id)
+                                .findFirst();
+                        updateViews(item);
                     }
                     realm.close();
                 }
 
                 @Override
                 public void onFailure(Call<LaunchResponse> call, Throwable t) {
-                    //TODO Handle error
+                    Realm realm = Realm.getDefaultInstance();
+                    Launch item = realm.where(Launch.class)
+                            .equalTo("id", id)
+                            .findFirst();
+                    updateViews(item);
+                    realm.close();
                 }
             });
 
