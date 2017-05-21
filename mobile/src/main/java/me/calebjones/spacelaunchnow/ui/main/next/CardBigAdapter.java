@@ -123,10 +123,17 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         String title;
         try {
             if (launchItem.isValid()) {
-                if (launchItem.getRocket().getAgencies() != null && launchItem.getRocket().getAgencies().size() > 0) {
-                    title = launchItem.getRocket().getAgencies().get(0).getName() + " | " + (launchItem.getRocket().getName());
+                if (launchItem.getRocket() != null) {
+                    if (launchItem.getRocket().getAgencies() != null && launchItem.getRocket().getAgencies().size() > 0) {
+                        title = launchItem.getRocket().getAgencies().get(0).getName() + " | " + (launchItem.getRocket().getName());
+                    } else {
+                        title = launchItem.getRocket().getName();
+                    }
+                } else if (launchItem.getName() != null){
+                    title = launchItem.getName();
                 } else {
-                    title = launchItem.getRocket().getName();
+                    Timber.e("Error - launch item is effectively null.");
+                    title = "Error - Unknown Launch";
                 }
 
                 holder.title.setText(title);
