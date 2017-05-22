@@ -380,7 +380,9 @@ public class QueryBuilder {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
         boolean first = true;
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.HOUR_OF_DAY, -24);
+        if(switchPreferences.getPersistSwitch()) {
+            calendar.add(Calendar.HOUR_OF_DAY, -24);
+        }
         Date date = calendar.getTime();
         RealmQuery<Launch> query = realm.where(Launch.class)
                 .greaterThanOrEqualTo("net", date).beginGroup();
@@ -496,6 +498,10 @@ public class QueryBuilder {
                 query.or();
             }
             query.equalTo("location.id", 18);
+        }
+
+        if (switchPreferences.getNoGoSwitch()) {
+            query.equalTo("status", 1);
         }
 
         return query.endGroup().findAllSortedAsync("net", Sort.ASCENDING);
