@@ -383,9 +383,17 @@ public class QueryBuilder {
         if(switchPreferences.getPersistSwitch()) {
             calendar.add(Calendar.HOUR_OF_DAY, -24);
         }
+
         Date date = calendar.getTime();
         RealmQuery<Launch> query = realm.where(Launch.class)
-                .greaterThanOrEqualTo("net", date).beginGroup();
+                .greaterThanOrEqualTo("net", date);
+
+        if (switchPreferences.getNoGoSwitch()) {
+            query.equalTo("status", 1).findAll();
+        }
+
+        query.beginGroup();
+
         if (switchPreferences.getSwitchNasa()) {
             first = false;
             query.equalTo("rocket.agencies.id", 44)
@@ -500,11 +508,9 @@ public class QueryBuilder {
             query.equalTo("location.id", 18);
         }
 
-        if (switchPreferences.getNoGoSwitch()) {
-            query.equalTo("status", 1);
-        }
+        query.endGroup();
 
-        return query.endGroup().findAllSortedAsync("net", Sort.ASCENDING);
+        return query.findAllSortedAsync("net", Sort.ASCENDING);
     }
 
     public static RealmResults<Launch> buildSwitchQuery(Context context, Realm realm) {
