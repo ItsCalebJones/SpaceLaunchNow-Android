@@ -21,6 +21,7 @@ import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,6 +43,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.RealmChangeListener;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.BuildConfig;
@@ -87,6 +89,10 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     AppCompatCheckBox isroSwitch;
     @BindView(R.id.all_switch)
     AppCompatCheckBox customSwitch;
+    @BindView(R.id.no_go_launch)
+    SwitchCompat noGoSwitch;
+    @BindView(R.id.persist_last_launch)
+    SwitchCompat persistLastSwitch;
 
     private View view;
     private RecyclerView mRecyclerView;
@@ -312,13 +318,18 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     public void displayLaunches() {
         Timber.v("loadLaunches...");
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.HOUR_OF_DAY, -24);
+        if (switchPreferences.getPersistSwitch()) {
+            calendar.add(Calendar.HOUR_OF_DAY, -24);
+        }
         Date date = calendar.getTime();
 
         if (switchPreferences.getAllSwitch()) {
-            launchRealms = getRealm().where(Launch.class)
-                    .greaterThanOrEqualTo("net", date)
-                    .findAllSortedAsync("net", Sort.ASCENDING);
+            RealmQuery<Launch> query = getRealm().where(Launch.class)
+                    .greaterThanOrEqualTo("net", date);
+            if(switchPreferences.getNoGoSwitch()){
+                query.equalTo("status", 1);
+            }
+            launchRealms = query.findAllSortedAsync("net", Sort.ASCENDING);
             launchRealms.addChangeListener(callback);
             Timber.v("loadLaunches - Realm query created.");
         } else {
@@ -371,6 +382,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         capeSwitch.setChecked(switchPreferences.getSwitchCape());
         vanSwitch.setChecked(switchPreferences.getSwitchVan());
         kscSwitch.setChecked(switchPreferences.getSwitchKSC());
+        noGoSwitch.setChecked(switchPreferences.getNoGoSwitch());
+        persistLastSwitch.setChecked(switchPreferences.getPersistSwitch());
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -747,6 +760,18 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         confirm();
         switchPreferences.setAllSwitch(!switchPreferences.getAllSwitch());
         setUpSwitches();
+    }
+
+    @OnClick(R.id.no_go_launch)
+    public void noGoSwitch() {
+        switchPreferences.setNoGoSwitch(noGoSwitch.isChecked());
+        displayLaunches();
+    }
+
+    @OnClick(R.id.persist_last_launch)
+    public void setPersistLastSwitch() {
+        switchPreferences.setPersistLastSwitch(persistLastSwitch.isChecked());
+        displayLaunches();
     }
 }
 

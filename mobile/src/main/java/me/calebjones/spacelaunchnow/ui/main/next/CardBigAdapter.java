@@ -119,6 +119,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
         Launch launchItem = launchList.get(i);
+        Timber.i("Binding %s", launchItem.getName());
 
         String title;
         try {
@@ -343,6 +344,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
                 } else {
                     holder.countdownView.setVisibility(View.GONE);
+                    holder.content_TMinus_status.setVisibility(View.VISIBLE);
                     holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
                     if (night) {
                         holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color));
@@ -356,10 +358,14 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                         if (launchItem.getRocket().getAgencies().size() > 0) {
                             holder.content_TMinus_status.setText(String.format("Pending confirmed GO from %s", launchItem.getRocket().getAgencies().get(0).getName()));
                         } else {
-                            holder.content_TMinus_status.setText("Pending confirmed GO for Launch from launch agency");
+                            holder.content_TMinus_status.setText("Pending confirmed Go for Launch from launch agency");
                         }
                     } else {
-                        holder.content_TMinus_status.setText("Unknown");
+                        if (launchItem.getRocket().getAgencies().size() > 0) {
+                            holder.content_TMinus_status.setText(String.format("Waiting on exact launch time from %s", launchItem.getRocket().getAgencies().first().getName()));
+                        }  else {
+                            holder.content_TMinus_status.setText("Waiting on exact launch time from launch provider");
+                        }
                     }
                 }
 
@@ -424,9 +430,14 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                     }
                 } else {
                     String[] separated = launchItem.getName().split(" \\| ");
-                    if (separated.length > 0 && separated[1].length() > 4) {
-                        holder.content_mission.setText(separated[1].trim());
-                    } else {
+                    try {
+                        if (separated.length > 0 && separated[1].length() > 4) {
+                            holder.content_mission.setText(separated[1].trim());
+                        } else {
+                            holder.content_mission.setText("Unknown Mission");
+                        }
+                    }
+                    catch(ArrayIndexOutOfBoundsException exception) {
                         holder.content_mission.setText("Unknown Mission");
                     }
                     holder.content_mission_description_view.setVisibility(View.GONE);

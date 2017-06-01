@@ -75,9 +75,12 @@ public class NextLaunchTracker extends IntentService {
         Date dateDay = calDay.getTime();
 
         if (switchPreferences.getAllSwitch()) {
-            launchRealms = realm.where(Launch.class)
-                    .between("net", date, dateDay)
-                    .findAllSorted("net", Sort.ASCENDING);
+            RealmQuery<Launch> query = realm.where(Launch.class)
+                    .between("net", date, dateDay);
+            if (switchPreferences.getNoGoSwitch()) {
+                query.equalTo("status", 1);
+            }
+            launchRealms = query.findAllSorted("net", Sort.ASCENDING);
         } else {
             filterLaunchRealm(date, dateDay, realm);
         }
@@ -121,8 +124,14 @@ public class NextLaunchTracker extends IntentService {
     private void filterLaunchRealm(Date date, Date dateDay, Realm realm) {
         boolean first = true;
         RealmQuery<Launch> query = realm.where(Launch.class)
-                .between("net", date, dateDay)
-                .beginGroup();
+                .between("net", date, dateDay);
+
+        if (switchPreferences.getNoGoSwitch()) {
+            query.equalTo("status", 1).findAll();
+        }
+
+        query.beginGroup();
+
         if (switchPreferences.getSwitchNasa()) {
             first = false;
             query.equalTo("rocket.agencies.id", 44)
