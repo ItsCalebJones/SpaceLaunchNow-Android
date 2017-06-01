@@ -27,6 +27,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
+import timber.log.Timber;
 
 /**
  * This adapter takes data from ListPreferences/LoaderService and applies it to RecyclerView
@@ -90,6 +91,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
         String launchDate;
 
         position = i;
+        Timber.d("Binding launch: %s", launchItem.getId());
 
         //Retrieve missionType
         if (launchItem.getMissions().size() != 0) {
@@ -163,6 +165,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
             if (launchItem.getMissions().size() > 0) {
                 holder.title.setText(launchItem.getMissions().get(0).getName());
             }
+
         }
     }
 

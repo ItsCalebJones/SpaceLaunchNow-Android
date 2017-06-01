@@ -37,6 +37,7 @@ import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.ThreadFactory;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -166,7 +167,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             color = R.color.colorPrimary;
         }
 
-
         sharedPreference = ListPreferences.getInstance(context);
 
         super.onCreateView(inflater, container, savedInstanceState);
@@ -230,7 +230,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 super.onScrollStateChanged(recyclerView, newState);
             }
         });
-
 
         //If preference is for small card, landscape tablets get three others get two.
         if (cardSizeSmall) {
@@ -340,23 +339,28 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
     private void setLayoutManager(int size) {
-        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && (launchRealms != null && launchRealms.size() == 1 || size == 1)) {
-            linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(),
-                    LinearLayoutManager.VERTICAL, false);
-            mRecyclerView.setLayoutManager(linearLayoutManager);
-            if (cardSizeSmall) {
-                mRecyclerView.setAdapter(smallAdapter);
-            } else {
-                mRecyclerView.setAdapter(adapter);
+        if (!this.isDetached()) {
+            if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && (launchRealms != null && launchRealms.size() == 1 || size == 1)) {
+                linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(),
+                                                              LinearLayoutManager.VERTICAL, false
+                );
+                mRecyclerView.setLayoutManager(linearLayoutManager);
+                if (cardSizeSmall) {
+                    mRecyclerView.setAdapter(smallAdapter);
+                } else {
+                    mRecyclerView.setAdapter(adapter);
+                }
+            } else if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
+                layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                mRecyclerView.setLayoutManager(layoutManager);
+                if (cardSizeSmall) {
+                    mRecyclerView.setAdapter(smallAdapter);
+                } else {
+                    mRecyclerView.setAdapter(adapter);
+                }
             }
-        } else if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
-            layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-            mRecyclerView.setLayoutManager(layoutManager);
-            if (cardSizeSmall) {
-                mRecyclerView.setAdapter(smallAdapter);
-            } else {
-                mRecyclerView.setAdapter(adapter);
-            }
+        } else if (this.isDetached()) {
+            Timber.v("View is detached.");
         }
     }
 
@@ -467,7 +471,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         }
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
@@ -488,7 +491,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
             //build 87 is where Realm change happened
         } else if (switchPreferences.getVersionCode() <= 87) {
-            Toast.makeText(context,"Upgraded from a legacy build, might need to refresh data manually.", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Upgraded from a legacy build, might need to refresh data manually.", Toast.LENGTH_LONG).show();
 
             //Upgrade post Realm change.
         } else if (Utils.getVersionCode(context) != switchPreferences.getVersionCode()) {
@@ -525,6 +528,11 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 
     @Override
@@ -613,7 +621,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.debug_menu){
+        if (id == R.id.debug_menu) {
             Intent debugIntent = new Intent(getActivity(), DebugActivity.class);
             startActivity(debugIntent);
 
@@ -676,7 +684,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         switchPreferences.setSwitchNasa(!switchPreferences.getSwitchNasa());
         checkAll();
     }
-
 
     @OnClick(R.id.spacex_switch)
     public void spacex_switch() {

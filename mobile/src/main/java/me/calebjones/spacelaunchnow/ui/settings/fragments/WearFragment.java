@@ -121,7 +121,6 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
         Preference dynamicBackground = findPreference("supporter_dynamic_background");
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        //TODO implement dynamic background
         if (SupporterHelper.isSupporter()) {
             dynamicBackground.setEnabled(true);
             dynamicBackground.setSelectable(true);

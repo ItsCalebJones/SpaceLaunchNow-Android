@@ -108,7 +108,7 @@ public class LaunchDetailActivity extends BaseActivity
         String type = mIntent.getStringExtra("TYPE");
 
         if (type != null && type.equals("launch")) {
-            int id = mIntent.getIntExtra("launchID", 0);
+            final int id = mIntent.getIntExtra("launchID", 0);
             DataClient.getInstance().getLaunchById(id, true, new Callback<LaunchResponse>() {
                 @Override
                 public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
@@ -126,6 +126,7 @@ public class LaunchDetailActivity extends BaseActivity
                                 item.setIsNotifiedDay(previous.getIsNotifiedDay());
                                 item.setIsNotifiedHour(previous.getIsNotifiedHour());
                                 item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
+                                item.setNotifiable(previous.isNotifiable());
                             }
                             realm.beginTransaction();
                             item.getLocation().setPrimaryID();
@@ -134,13 +135,23 @@ public class LaunchDetailActivity extends BaseActivity
                             updateViews(item);
                             Timber.v("Updated detailLaunch: %s", item.getId());
                         }
+                    } else {
+                        Launch item = realm.where(Launch.class)
+                                .equalTo("id", id)
+                                .findFirst();
+                        updateViews(item);
                     }
                     realm.close();
                 }
 
                 @Override
                 public void onFailure(Call<LaunchResponse> call, Throwable t) {
-                    //TODO Handle error
+                    Realm realm = Realm.getDefaultInstance();
+                    Launch item = realm.where(Launch.class)
+                            .equalTo("id", id)
+                            .findFirst();
+                    updateViews(item);
+                    realm.close();
                 }
             });
 
@@ -203,23 +214,25 @@ public class LaunchDetailActivity extends BaseActivity
         this.launch = launch;
 
         tabAdapter.updateAllViews(launch);
-
-        if (launch != null && launch.getRocket() != null) {
+        if (!this.isDestroyed() && launch != null && launch.getRocket() != null) {
             Timber.v("Loading detailLaunch %s", launch.getId());
             findProfileLogo();
             if (launch.getRocket().getName() != null) {
                 if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0) {
-                    Glide.with(this)
-                            .load(launch.getRocket().getImageURL())
-                            .centerCrop()
-                            .placeholder(R.drawable.placeholder)
-                            .crossFade()
-                            .into(detail_profile_backdrop);
+
+                        Glide.with(this)
+                                .load(launch.getRocket().getImageURL())
+                                .centerCrop()
+                                .placeholder(R.drawable.placeholder)
+                                .crossFade()
+                                .into(detail_profile_backdrop);
                     getLaunchVehicle(launch, false);
                 } else {
                     getLaunchVehicle(launch, true);
                 }
             }
+        } else if (this.isDestroyed()){
+            Timber.v("DetailLaunch is destroyed, stopping loading data.");
         }
 
         //Assign the title and mission location data

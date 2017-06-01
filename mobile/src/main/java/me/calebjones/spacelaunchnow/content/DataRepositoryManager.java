@@ -45,17 +45,11 @@ public class DataRepositoryManager {
         boolean dataSaver = sharedPref.getBoolean("data_saver", false);
         boolean wifiConnected = Connectivity.isConnectedWifi(context);
 
-        if (wifiOnly) {
-            if (wifiConnected) {
-                dataManager.getNextUpcomingLaunches();
-                dataManager.syncNotifiers();
-                checkFullSync();
-
-            }
+        if (wifiOnly && wifiConnected) {
+            checkFullSync();
         } else if (dataSaver && !wifiConnected) {
             dataManager.getNextUpcomingLaunchesMini();
         } else {
-            dataManager.getNextUpcomingLaunches();
             checkFullSync();
         }
     }
@@ -95,8 +89,12 @@ public class DataRepositoryManager {
             Date lastUpdateDate = record.getDate();
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
             long daysMaxUpdate = TimeUnit.DAYS.toMillis(7);
+            long daysMinUpdate = TimeUnit.DAYS.toMillis(1);
+
             if (timeSinceUpdate > daysMaxUpdate) {
                 dataManager.getUpcomingLaunchesAll();
+            } else if (timeSinceUpdate > daysMinUpdate) {
+                dataManager.getNextUpcomingLaunches();
             }
         } else {
             dataManager.getUpcomingLaunchesAll();

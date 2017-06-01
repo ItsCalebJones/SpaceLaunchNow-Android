@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.RemoteViews;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -100,7 +102,7 @@ public class LaunchWordTimerWidgetProvider extends AppWidgetProvider {
         }
 
         for (Launch launch : launchRealms) {
-            if (launch.getNetstamp() != 0) {
+            if (launch.getNetstamp() != null && launch.getNetstamp() != 0) {
                 return launch;
             }
         }
@@ -117,30 +119,39 @@ public class LaunchWordTimerWidgetProvider extends AppWidgetProvider {
         Launch launch = getLaunch(context);
 
         Timber.v("Size: [%s-%s] x [%s-%s]", minWidth, maxWidth, minHeight, maxHeight);
-
-        if (minWidth <= 200 || minHeight <= 100) {
-            remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.widget_launch_word_timer_small_dark);
-        } else if (minWidth <= 320) {
-            remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.widget_launch_word_timer_dark);
-        } else {
-            remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.widget_launch_word_timer_large_dark);
-        }
-
-        if (minWidth > 0 && maxWidth > 0 && minHeight > 0 && maxHeight > 0) {
-            if (launch != null) {
-                setLaunchName(context, launch, remoteViews, options);
-                setMissionName(context, launch, remoteViews, options);
-                setRefreshIntent(context, launch, remoteViews);
-                setWidgetStyle(context, remoteViews);
-                setLaunchTimer(context, launch, remoteViews, appWidgetManager, widgetId, options);
+        try {
+            if (minWidth <= 200 || minHeight <= 100) {
+                remoteViews = new RemoteViews(
+                        context.getPackageName(),
+                        R.layout.widget_launch_word_timer_small_dark
+                );
+            } else if (minWidth <= 320) {
+                remoteViews = new RemoteViews(
+                        context.getPackageName(),
+                        R.layout.widget_launch_word_timer_dark
+                );
             } else {
-                remoteViews.setTextViewText(R.id.widget_launch_name, "Unknown Launch");
-                remoteViews.setTextViewText(R.id.widget_mission_name, "Unknown Mission");
+                remoteViews = new RemoteViews(
+                        context.getPackageName(),
+                        R.layout.widget_launch_word_timer_large_dark
+                );
             }
-            pushWidgetUpdate(context, remoteViews);
+
+            if (minWidth > 0 && maxWidth > 0 && minHeight > 0 && maxHeight > 0) {
+                if (launch != null) {
+                    setLaunchName(context, launch, remoteViews, options);
+                    setMissionName(context, launch, remoteViews, options);
+                    setRefreshIntent(context, launch, remoteViews);
+                    setWidgetStyle(context, remoteViews);
+                    setLaunchTimer(context, launch, remoteViews, appWidgetManager, widgetId, options);
+                } else {
+                    remoteViews.setTextViewText(R.id.widget_launch_name, "Unknown Launch");
+                    remoteViews.setTextViewText(R.id.widget_mission_name, "Unknown Mission");
+                }
+                pushWidgetUpdate(context, remoteViews);
+            }
+        } catch (NullPointerException e) {
+            Crashlytics.logException(e);
         }
     }
 

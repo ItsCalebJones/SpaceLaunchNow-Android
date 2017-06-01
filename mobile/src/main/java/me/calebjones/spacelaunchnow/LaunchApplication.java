@@ -112,7 +112,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
                 .init();
 
         if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
+            Timber.plant(new Timber.DebugTree(), new CrashlyticsTree(this));
             OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.ERROR);
 
             JSONObject tags = new JSONObject();
@@ -130,7 +130,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
                 e.printStackTrace();
             }
             OneSignal.sendTags(tags);
-            Timber.plant(new CrashlyticsTree());
+            Timber.plant(new CrashlyticsTree(this));
         }
 
         ForecastConfiguration configuration =
@@ -207,7 +207,9 @@ public class LaunchApplication extends Application implements Analytics.Provider
 
         JobManager.create(this).addJobCreator(new DataJobCreator());
 
-        UpdateJob.scheduleJob(this);
+        if (sharedPref.getBoolean("background", true)) {
+            UpdateJob.scheduleJob(this);
+        }
         SyncJob.schedulePeriodicJob(this);
 
         DefaultRuleEngine.trackAppStart(this);

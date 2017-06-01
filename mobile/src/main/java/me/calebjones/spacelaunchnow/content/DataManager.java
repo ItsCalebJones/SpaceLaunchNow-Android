@@ -175,7 +175,6 @@ public class DataManager {
 
                     sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES, false, call, ErrorUtil.parseLibraryError(response)));
 
-                    context.startService(new Intent(context, NextLaunchTracker.class));
                 }
             }
 
@@ -184,8 +183,6 @@ public class DataManager {
                 isUpcomingLaunch = false;
 
                 sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES, false, call, t.getLocalizedMessage()));
-
-                context.startService(new Intent(context, NextLaunchTracker.class));
             }
         });
     }
@@ -207,6 +204,8 @@ public class DataManager {
                         isUpcomingLaunch = false;
 
                         sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES, true, call));
+
+                        context.startService(new Intent(context, NextLaunchTracker.class));
                     }
                 } else {
                     sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES, false, call, ErrorUtil.parseLibraryError(response)));
@@ -215,12 +214,9 @@ public class DataManager {
 
             @Override
             public void onFailure(Call<LaunchResponse> call, Throwable t) {
-                //TODO handle errors
                 isUpcomingLaunch = false;
 
                 sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES, false, call, t.getLocalizedMessage()));
-
-                context.startService(new Intent(context, NextLaunchTracker.class));
             }
         });
     }
@@ -310,13 +306,13 @@ public class DataManager {
                 if (response.isSuccessful()) {
                     saveLaunchesToRealm(response.body().getLaunches(), true);
 
-                    sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES, true, call));
+                    sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_MINI, true, call));
 
                     context.startService(new Intent(context, NextLaunchTracker.class));
                 } else {
                     isNextLaunches = false;
 
-                    sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES, false, call, ErrorUtil.parseLibraryError(response)));
+                    sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_MINI, false, call, ErrorUtil.parseLibraryError(response)));
 
                     context.startService(new Intent(context, NextLaunchTracker.class));
                 }
@@ -326,7 +322,7 @@ public class DataManager {
             public void onFailure(Call<LaunchResponse> call, Throwable t) {
                 isNextLaunches = false;
 
-                sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES, false, call, t.getLocalizedMessage()));
+                sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_MINI, false, call, t.getLocalizedMessage()));
 
                 context.startService(new Intent(context, NextLaunchTracker.class));
             }
@@ -852,6 +848,8 @@ public class DataManager {
                         .equalTo("id", item.getId())
                         .findFirst();
                 if (previous != null) {
+
+                    //TODO need to only reset notifiers if launch time changes greater then user configurable number
                     if ((!previous.getNet().equals(item.getNet()) || (previous.getStatus().intValue() != item.getStatus().intValue()))) {
                         Timber.v("%s successful has changed.", item.getName());
                         LaunchNotification notification = mRealm.where(LaunchNotification.class).equalTo("id", item.getId()).findFirst();
@@ -863,6 +861,7 @@ public class DataManager {
                     item.setEventID(previous.getEventID());
                     item.setSyncCalendar(previous.syncCalendar());
                     item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
+                    item.setNotifiable(previous.isNotifiable());
                 }
                 if (item.getLocation() != null) {
                     item.getLocation().setPrimaryID();
