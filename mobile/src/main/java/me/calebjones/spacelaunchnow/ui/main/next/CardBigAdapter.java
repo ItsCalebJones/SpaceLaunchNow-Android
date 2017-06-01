@@ -119,6 +119,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
         Launch launchItem = launchList.get(i);
+        Timber.i("Binding %s", launchItem.getName());
 
         String title;
         try {
@@ -415,9 +416,14 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                     }
                 } else {
                     String[] separated = launchItem.getName().split(" \\| ");
-                    if (separated.length > 0 && separated[1].length() > 4) {
-                        holder.content_mission.setText(separated[1].trim());
-                    } else {
+                    try {
+                        if (separated.length > 0 && separated[1].length() > 4) {
+                            holder.content_mission.setText(separated[1].trim());
+                        } else {
+                            holder.content_mission.setText("Unknown Mission");
+                        }
+                    }
+                    catch(ArrayIndexOutOfBoundsException exception) {
                         holder.content_mission.setText("Unknown Mission");
                     }
                     holder.content_mission_description_view.setVisibility(View.GONE);

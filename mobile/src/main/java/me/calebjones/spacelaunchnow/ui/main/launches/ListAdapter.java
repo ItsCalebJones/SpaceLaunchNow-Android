@@ -148,9 +148,22 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
         }
 
         title = launchItem.getName().split("\\|");
-
-        holder.title.setText(title[1].trim());
-        holder.mission.setText(title[0].trim());
+        try {
+            if (title.length > 0) {
+                holder.title.setText(title[1].trim());
+                holder.mission.setText(title[0].trim());
+            } else {
+                holder.title.setText(launchItem.getName());
+                if (launchItem.getMissions().size() > 0) {
+                    holder.title.setText(launchItem.getMissions().get(0).getName());
+                }
+            }
+        } catch (ArrayIndexOutOfBoundsException exception) {
+            holder.title.setText(launchItem.getName());
+            if (launchItem.getMissions().size() > 0) {
+                holder.title.setText(launchItem.getMissions().get(0).getName());
+            }
+        }
     }
 
     public String parseDateToMMyyyy(String time) {
