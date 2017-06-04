@@ -58,6 +58,11 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
             }
         });
         setName("Notifications Fragment");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            context = getContext();
+        } else {
+            context = getActivity();
+        }
     }
 
     @Override
@@ -141,7 +146,7 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
                 new NotificationCompat.WearableExtender()
                         .setHintHideIcon(true);
         if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
-            wearableExtender.setBackground(Utils.getBitMapFromUrl(launch.getRocket().getImageURL()));
+            wearableExtender.setBackground(Utils.getBitMapFromUrl(context, launch.getRocket().getImageURL()));
         } else {
             wearableExtender.setBackground(BitmapFactory.decodeResource(
                     this.getResources(),
@@ -161,7 +166,7 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
         NotificationCompat.BigPictureStyle bigPictureStyle =
                 new NotificationCompat.BigPictureStyle();
         if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
-            bigPictureStyle.bigPicture(Utils.getBitMapFromUrl(launch.getRocket().getImageURL()));
+            bigPictureStyle.bigPicture(Utils.getBitMapFromUrl(context, launch.getRocket().getImageURL()));
             mBuilder.setStyle(bigPictureStyle);
             mBuilder.setLargeIcon(BitmapFactory.decodeResource(
                     this.getResources(),

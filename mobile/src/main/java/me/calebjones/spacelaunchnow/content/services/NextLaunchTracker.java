@@ -51,7 +51,7 @@ public class NextLaunchTracker extends IntentService {
     private long interval;
     private Realm realm;
 
-    public NextLaunchTracker() {
+public NextLaunchTracker() {
         super("NextLaunchTracker");
     }
 
@@ -90,13 +90,13 @@ public class NextLaunchTracker extends IntentService {
                 checkNextLaunches(realm);
             }
         } else {
-            SyncJob.schedulePeriodicJob(this);
 
             //If Calendar Sync is enabled sync it up
             if (switchPreferences.getCalendarStatus()) {
                 syncCalendar();
             }
         }
+        SyncJob.schedulePeriodicJob(this);
         updateWidgets();
         realm.close();
     }
@@ -250,6 +250,7 @@ public class NextLaunchTracker extends IntentService {
     }
 
     private void checkNextLaunches(Launch launch) {
+        Timber.i("Checking launch - %s", launch.getName());
         if (launch != null) {
             checkStatus(launch);
         }
@@ -258,7 +259,6 @@ public class NextLaunchTracker extends IntentService {
             syncCalendar();
         }
 
-        SyncJob.schedulePeriodicJob(this);
         scheduleWear();
     }
 
@@ -417,7 +417,7 @@ public class NextLaunchTracker extends IntentService {
                 new NotificationCompat.WearableExtender()
                         .setHintHideIcon(true);
         if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
-            wearableExtender.setBackground(Utils.getBitMapFromUrl(launch.getRocket().getImageURL()));
+            wearableExtender.setBackground(Utils.getBitMapFromUrl(this, launch.getRocket().getImageURL()));
         } else {
             wearableExtender.setBackground(BitmapFactory.decodeResource(
                     this.getResources(),
@@ -437,7 +437,7 @@ public class NextLaunchTracker extends IntentService {
         NotificationCompat.BigPictureStyle bigPictureStyle =
                 new NotificationCompat.BigPictureStyle();
         if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
-            bigPictureStyle.bigPicture(Utils.getBitMapFromUrl(launch.getRocket().getImageURL()));
+            bigPictureStyle.bigPicture(Utils.getBitMapFromUrl(this, launch.getRocket().getImageURL()));
             mBuilder.setStyle(bigPictureStyle);
             mBuilder.setLargeIcon(BitmapFactory.decodeResource(
                     this.getResources(),
@@ -527,7 +527,7 @@ public class NextLaunchTracker extends IntentService {
                 new NotificationCompat.WearableExtender()
                         .setHintHideIcon(true);
         if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
-            wearableExtender.setBackground(Utils.getBitMapFromUrl(launch.getRocket().getImageURL()));
+            wearableExtender.setBackground(Utils.getBitMapFromUrl(this, launch.getRocket().getImageURL()));
         } else {
             wearableExtender.setBackground(BitmapFactory.decodeResource(
                     this.getResources(),
@@ -547,7 +547,7 @@ public class NextLaunchTracker extends IntentService {
         NotificationCompat.BigPictureStyle bigPictureStyle =
                 new NotificationCompat.BigPictureStyle();
         if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
-            bigPictureStyle.bigPicture(Utils.getBitMapFromUrl(launch.getRocket().getImageURL()));
+            bigPictureStyle.bigPicture(Utils.getBitMapFromUrl(this, launch.getRocket().getImageURL()));
             mBuilder.setStyle(bigPictureStyle);
             mBuilder.setLargeIcon(BitmapFactory.decodeResource(
                     this.getResources(),

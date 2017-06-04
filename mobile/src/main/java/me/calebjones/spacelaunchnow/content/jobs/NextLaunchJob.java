@@ -34,7 +34,7 @@ public class NextLaunchJob extends Job {
                 Crashlytics.logException(e);
             }
         }
-        Timber.i("%s complete...returning success after %s milliseconds.", TAG, count);
+        Timber.i("%s complete...returning success.", TAG);
         return Result.SUCCESS;
     }
 
