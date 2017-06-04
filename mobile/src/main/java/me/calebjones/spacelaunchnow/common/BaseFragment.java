@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import io.realm.Realm;
-import me.calebjones.spacelaunchnow.utils.Analytics;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 
 public class BaseFragment extends Fragment {
     private Realm realm;

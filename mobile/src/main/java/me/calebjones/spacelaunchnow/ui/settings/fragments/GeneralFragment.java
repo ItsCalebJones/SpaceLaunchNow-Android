@@ -34,7 +34,7 @@ import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.ui.settings.util.CalendarPermissionListener;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
-import me.calebjones.spacelaunchnow.utils.Analytics;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import timber.log.Timber;
 
 public class GeneralFragment extends BaseSettingFragment implements SharedPreferences.OnSharedPreferenceChangeListener {

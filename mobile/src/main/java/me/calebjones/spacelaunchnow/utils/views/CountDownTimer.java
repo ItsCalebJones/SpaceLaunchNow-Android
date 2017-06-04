@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.utils;
+package me.calebjones.spacelaunchnow.utils.views;
 
 /*
  * Copyright (C) 2008 The Android Open Source Project

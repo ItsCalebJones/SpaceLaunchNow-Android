@@ -21,7 +21,7 @@ import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.Mission;
 import me.calebjones.spacelaunchnow.data.models.RocketDetails;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
-import me.calebjones.spacelaunchnow.utils.Analytics;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 

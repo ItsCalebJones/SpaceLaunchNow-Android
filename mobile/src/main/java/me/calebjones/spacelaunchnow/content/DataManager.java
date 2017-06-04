@@ -32,7 +32,7 @@ import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.Miss
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.PadResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.RocketFamilyResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.RocketResponse;
-import me.calebjones.spacelaunchnow.utils.Analytics;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

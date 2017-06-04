@@ -25,10 +25,11 @@ import io.realm.Realm;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.content.util.NotificationBuilder;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
-import me.calebjones.spacelaunchnow.utils.Analytics;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
@@ -92,107 +93,17 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
     }
 
     private void sendTestNotification() {
-        NotificationCompat.Builder mBuilder = new NotificationCompat
-                .Builder(getActivity());
-        NotificationManager mNotifyManager = (NotificationManager) getActivity()
-                .getSystemService(Context.NOTIFICATION_SERVICE);
-
         Realm realm = Realm.getDefaultInstance();
         Launch launch = realm.where(Launch.class)
                 .greaterThanOrEqualTo("net", new Date())
                 .findAllSorted("net", Sort.ASCENDING).first();
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        long longdate = launch.getNetstamp();
-        longdate = longdate * 1000;
-        final Date futureDate = new Date(longdate);
-
-        Calendar future = DateToCalendar(futureDate);
+        Calendar future = DateToCalendar(new Date(launch.getNetstamp() * 1000));
         Calendar now = Calendar.getInstance();
 
         now.setTimeInMillis(System.currentTimeMillis());
         long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
-        int hours = (int) ((timeToFinish / (1000 * 60 * 60)) % 24);
-        String launchDate;
-        String expandedText;
-        String launchName = launch.getName();
-        String launchPad = launch.getLocation().getName();
 
-        String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone", "default ringtone");
-        Uri alarmSound = Uri.parse(ringtoneBox);
-
-        Intent mainActivityIntent = new Intent(getActivity(), MainActivity.class);
-        mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        PendingIntent appIntent = PendingIntent.getActivity(getActivity(), 0, mainActivityIntent, 0);
-        expandedText = "Launch attempt in " + hours + " hours from " + launchPad;
-
-        if (launch.getNet() != null) {
-            //Get launch date
-            if (sharedPref.getBoolean("local_time", true)) {
-                SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd - hh:mm a zzz");
-                df.toLocalizedPattern();
-                Date date = launch.getNet();
-                launchDate = df.format(date);
-            } else {
-                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd - hh:mm a zzz");
-                Date date = launch.getNet();
-                launchDate = sdf.format(date);
-            }
-            mBuilder.setSubText(launchDate);
-        }
-
-        NotificationCompat.WearableExtender wearableExtender =
-                new NotificationCompat.WearableExtender()
-                        .setHintHideIcon(true);
-        if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
-            wearableExtender.setBackground(Utils.getBitMapFromUrl(context, launch.getRocket().getImageURL()));
-        } else {
-            wearableExtender.setBackground(BitmapFactory.decodeResource(
-                    this.getResources(),
-                    R.drawable.nav_header
-            ));
-        }
-
-        mBuilder.setContentTitle(launchName)
-                .setContentText(expandedText)
-                .setSmallIcon(R.drawable.ic_rocket_white)
-                .setAutoCancel(true)
-                .setContentText(expandedText)
-                .extend(wearableExtender)
-                .setContentIntent(appIntent)
-                .setSound(alarmSound);
-
-        NotificationCompat.BigPictureStyle bigPictureStyle =
-                new NotificationCompat.BigPictureStyle();
-        if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
-            bigPictureStyle.bigPicture(Utils.getBitMapFromUrl(context, launch.getRocket().getImageURL()));
-            mBuilder.setStyle(bigPictureStyle);
-            mBuilder.setLargeIcon(BitmapFactory.decodeResource(
-                    this.getResources(),
-                    R.mipmap.ic_launcher
-            ));
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
-                sharedPref.getBoolean("notifications_new_message_heads_up", true)) {
-            mBuilder.setPriority(Notification.PRIORITY_HIGH);
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN &&
-                sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
-            mBuilder.setVibrate(new long[]{750, 750});
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN
-                && sharedPref.getBoolean("notifications_new_message_led", true)) {
-            mBuilder.setLights(Color.GREEN, 3000, 3000);
-        }
-
-        if (sharedPref.getBoolean("notifications_new_message_webcast", false)) {
-            if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
-                mNotifyManager.notify(Constants.NOTIF_ID_HOUR, mBuilder.build());
-            }
-        } else {
-            mNotifyManager.notify(Constants.NOTIF_ID_HOUR, mBuilder.build());
-        }
+        NotificationBuilder.notifyUser(context, launch, timeToFinish);
     }
 }

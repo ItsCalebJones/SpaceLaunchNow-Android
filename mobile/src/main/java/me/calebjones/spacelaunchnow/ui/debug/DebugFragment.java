@@ -14,7 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
+import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 
 public class DebugFragment extends Fragment implements DebugContract.View {
 

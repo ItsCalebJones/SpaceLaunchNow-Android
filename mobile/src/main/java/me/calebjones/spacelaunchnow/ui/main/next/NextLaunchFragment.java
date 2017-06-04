@@ -37,7 +37,6 @@ import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.ThreadFactory;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,8 +57,8 @@ import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
-import me.calebjones.spacelaunchnow.utils.Analytics;
-import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
+import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
