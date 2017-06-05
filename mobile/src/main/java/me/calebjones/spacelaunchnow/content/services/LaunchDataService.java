@@ -84,7 +84,7 @@ public class LaunchDataService extends BaseService {
                     scheduleLaunchUpdates();
                 }
 
-                dataManager.getNextUpcomingLaunches();
+                dataManager.getUpcomingLaunchesAll();
 
                 // Called from PrevLaunchFragment
             } else if (Constants.ACTION_GET_PREV_LAUNCHES.equals(action)) {

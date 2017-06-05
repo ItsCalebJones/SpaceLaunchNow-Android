@@ -830,7 +830,7 @@ public class DataManager {
                         .equalTo("id", item.getId())
                         .findFirst();
                 if (previous != null) {
-                    if ((!previous.getNet().equals(item.getNet()) || (previous.getStatus().intValue() != item.getStatus().intValue()))) {
+                    if (isLaunchTimeChanged(previous, item)) {
                         Timber.v("%s status has changed.", item.getName());
                         LaunchNotification notification = mRealm.where(LaunchNotification.class).equalTo("id", item.getId()).findFirst();
                         mRealm.beginTransaction();
@@ -852,8 +852,7 @@ public class DataManager {
                         .equalTo("id", item.getId())
                         .findFirst();
                 if (previous != null) {
-                    if ((!previous.getNet().equals(item.getNet()) || (previous.getStatus().intValue() != item.getStatus().intValue()))) {
-                        Timber.v("%s successful has changed.", item.getName());
+                    if (isLaunchTimeChanged(previous, item)) {
                         LaunchNotification notification = mRealm.where(LaunchNotification.class).equalTo("id", item.getId()).findFirst();
                         if (notification != null) {
                             notification.resetNotifiers();
@@ -874,6 +873,15 @@ public class DataManager {
         }
         syncNotifiers();
         isSaving = false;
+    }
+
+    private boolean isLaunchTimeChanged(Launch previous, Launch item) {
+        if ((Math.abs(previous.getNet().getTime() - item.getNet().getTime()) >= 3600)){
+            return true;
+        } else if (previous.getStatus().intValue() != item.getStatus().intValue()){
+            return true;
+        }
+        return false;
     }
 
     public void syncNotifiers() {
