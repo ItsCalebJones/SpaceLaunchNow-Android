@@ -83,13 +83,11 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Timber.i("Notifications preference %s changed.", key);
-        if (key.equals("notifications_launch_imminent_updates")) {
+        if (key.equals("notifications_new_message")){
             OneSignal.setSubscription(sharedPreferences.getBoolean(key, true));
-            Analytics.from(this).sendPreferenceEvent(key, sharedPreferences.getBoolean(key, true));
-        }   else {
+        } else {
             Analytics.from(this).sendPreferenceEvent(key);
         }
-
     }
 
     private void sendTestNotification() {
