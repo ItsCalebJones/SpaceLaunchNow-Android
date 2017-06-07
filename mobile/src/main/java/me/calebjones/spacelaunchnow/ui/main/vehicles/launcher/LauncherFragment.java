@@ -138,7 +138,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
                     Timber.v("Success %s", response.message());
                     items = new ArrayList<>(Arrays.asList(jsonResponse.getItem()));
                     adapter.addItems(items);
-                    Analytics.from(getActivity()).sendNetworkEvent("LAUNCHER_INFORMATION", call.request().url().toString(), true);
+                    Analytics.from(getContext()).sendNetworkEvent("LAUNCHER_INFORMATION", call.request().url().toString(), true);
 
                 } else {
                     Timber.e(ErrorUtil.parseSpaceLaunchNowError(response).message());
@@ -152,7 +152,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
                 Timber.e(t.getMessage());
                 hideLoading();
                 SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, t.getLocalizedMessage());
-                Analytics.from(getActivity()).sendNetworkEvent("VEHICLE_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());
+                Analytics.from(getContext()).sendNetworkEvent("VEHICLE_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());
             }
         });
     }
