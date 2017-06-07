@@ -765,6 +765,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     public void noGoSwitch() {
         switchPreferences.setNoGoSwitch(noGoSwitch.isChecked());
         displayLaunches();
+        CalendarSyncService.startActionResync(context);
     }
 
     @OnClick(R.id.persist_last_launch)

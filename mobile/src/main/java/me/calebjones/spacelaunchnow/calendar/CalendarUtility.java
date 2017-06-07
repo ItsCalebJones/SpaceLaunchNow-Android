@@ -173,7 +173,7 @@ public class CalendarUtility {
         Timber.v("Deleting launch event: %s", launch.getName());
         int iNumRowsDeleted = 0;
 
-        if (launch.getEventID() > 0) {
+        if (launch.getEventID() != null && launch.getEventID() > 0) {
             Uri eventUri = ContentUris
                     .withAppendedId(CalendarContract.Events.CONTENT_URI, launch.getEventID());
             iNumRowsDeleted = context.getContentResolver().delete(eventUri, null, null);

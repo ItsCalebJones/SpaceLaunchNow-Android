@@ -126,7 +126,7 @@ public class CalendarSyncService extends BaseService {
             launchResults.addAll(launches);
         }
 
-        for (Launch launch: launchResults){
+        for (final Launch launch: launchResults){
             if (launch.isUserToggledCalendar()){
                 if (launch.syncCalendar()){
                     syncCalendar(launch);
