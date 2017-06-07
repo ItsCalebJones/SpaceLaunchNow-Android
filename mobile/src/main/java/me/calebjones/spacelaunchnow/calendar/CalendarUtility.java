@@ -193,11 +193,13 @@ public class CalendarUtility {
 
     private int deleteEvent(Context context, Long id) {
         Timber.v("Deleting launch event: %s", id);
-        int iNumRowsDeleted;
+        int iNumRowsDeleted = 0;
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
 
-        Uri eventUri = ContentUris
-                .withAppendedId(CalendarContract.Events.CONTENT_URI, id);
-        iNumRowsDeleted = context.getContentResolver().delete(eventUri, null, null);
+            Uri eventUri = ContentUris
+                    .withAppendedId(CalendarContract.Events.CONTENT_URI, id);
+            iNumRowsDeleted = context.getContentResolver().delete(eventUri, null, null);
+        }
         return iNumRowsDeleted;
     }
 
@@ -229,12 +231,14 @@ public class CalendarUtility {
 
     public void deleteDuplicates(Context context, Realm realm, String queryStr, String type) {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
-            for (EventInfo eventInfo : EventInfo.getAllEvents(context)) {
-                if (eventInfo != null & eventInfo.getDescription() !=null && eventInfo.getDescription().contains(queryStr)) {
-                    if (eventInfo.getId() != null) {
-                        Launch launchRealm = realm.where(Launch.class).equalTo("eventID", eventInfo.getId()).findFirst();
-                        if (launchRealm == null) {
-                            deleteEvent(context, eventInfo.getId());
+            if (EventInfo.getAllEvents(context) != null) {
+                for (EventInfo eventInfo : EventInfo.getAllEvents(context)) {
+                    if (eventInfo != null & eventInfo.getDescription() != null && eventInfo.getDescription().contains(queryStr)) {
+                        if (eventInfo.getId() != null) {
+                            Launch launchRealm = realm.where(Launch.class).equalTo("eventID", eventInfo.getId()).findFirst();
+                            if (launchRealm == null) {
+                                deleteEvent(context, eventInfo.getId());
+                            }
                         }
                     }
                 }
