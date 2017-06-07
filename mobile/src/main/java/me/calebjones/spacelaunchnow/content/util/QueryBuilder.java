@@ -518,7 +518,14 @@ public class QueryBuilder {
         boolean first = true;
         Date date = new Date();
         RealmQuery<Launch> query = realm.where(Launch.class)
-                .greaterThanOrEqualTo("net", date).beginGroup();
+                .greaterThanOrEqualTo("net", date);
+
+        if (switchPreferences.getNoGoSwitch()) {
+            query.equalTo("status", 1).findAll();
+        }
+
+        query.beginGroup();
+
         if (switchPreferences.getSwitchNasa()) {
             first = false;
             query.equalTo("rocket.agencies.id", 44)
@@ -641,7 +648,14 @@ public class QueryBuilder {
         boolean first = true;
         Date date = new Date();
         RealmQuery<Launch> query = realm.where(Launch.class)
-                .greaterThanOrEqualTo("net", date).equalTo("syncCalendar", true).beginGroup();
+                .greaterThanOrEqualTo("net", date).equalTo("syncCalendar", calendarState);
+
+        if (switchPreferences.getNoGoSwitch()) {
+            query.equalTo("status", 1).findAll();
+        }
+
+        query.beginGroup();
+
         if (switchPreferences.getSwitchNasa()) {
             first = false;
             query.equalTo("rocket.agencies.id", 44)
