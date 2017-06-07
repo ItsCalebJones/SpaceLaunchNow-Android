@@ -670,26 +670,40 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
 
         final List<Launch> filteredModelList = new ArrayList<>();
         for (Launch model : models) {
-            final String name = model.getName().toLowerCase();
-            final String rocketName = model.getRocket().getName().toLowerCase();
-            final String locationName = model.getLocation().getName().toLowerCase();
-            String missionName = null;
-            String missionDescription = null;
-            String agencyName = null;
 
-            if (model.getRocket().getAgencies() != null && model.getRocket().getAgencies().size() > 0) {
-                agencyName = model.getRocket().getAgencies().get(0).getName().toLowerCase();
+            String name = "";
+            String rocketName = "";
+            String locationName = "";
+            String missionName = "";
+            String missionDescription = "";
+            String agencyName = "";
+
+            if (model.getName() != null) {
+                name = model.getName().toLowerCase();
             }
 
-            if (model.getMissions().size() > 0) {
-                missionName = model.getMissions().get(0).getName().toLowerCase();
-                missionDescription = model.getMissions().get(0).getDescription().toLowerCase();
+            if (model.getRocket() != null) {
+                rocketName = model.getRocket().getName().toLowerCase();
+                if (model.getRocket().getAgencies() != null && model.getRocket().getAgencies().size() > 0) {
+                    agencyName = model.getRocket().getAgencies().get(0).getName().toLowerCase();
+                }
             }
 
-            if (rocketName.contains(query) || locationName.contains(query) || (agencyName != null && agencyName.contains(query)) || name.contains(query)) {
+            if (model.getLocation() != null) {
+                locationName = model.getLocation().getName().toLowerCase();
+            }
+
+            if (model.getMissions() != null) {
+                if (model.getMissions().size() > 0) {
+                    missionName = model.getMissions().get(0).getName().toLowerCase();
+                    missionDescription = model.getMissions().get(0).getDescription().toLowerCase();
+                }
+            }
+
+            if (rocketName.contains(query) || locationName.contains(query) || agencyName.contains(query) || name.contains(query)) {
                 filteredModelList.add(model);
             } else {
-                if (missionName != null && (missionName.contains(query) || missionDescription.contains(query))) {
+                if (missionName.contains(query) || missionDescription.contains(query)) {
                     filteredModelList.add(model);
                 }
             }
