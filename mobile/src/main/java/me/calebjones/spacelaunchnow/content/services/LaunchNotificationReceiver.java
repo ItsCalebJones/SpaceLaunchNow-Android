@@ -66,7 +66,8 @@ public class LaunchNotificationReceiver extends NotificationExtenderService {
                     //Wait for async task to finish.
                     while (running) {
                         try {
-                            Thread.sleep(1000);
+                            Timber.v("Waiting for response...");
+                            Thread.sleep(100);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }

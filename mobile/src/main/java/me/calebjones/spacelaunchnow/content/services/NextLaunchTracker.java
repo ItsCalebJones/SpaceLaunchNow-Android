@@ -10,8 +10,6 @@ import android.preference.PreferenceManager;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import io.realm.Realm;
 import io.realm.RealmQuery;
@@ -334,18 +332,6 @@ public NextLaunchTracker() {
                 } else {
                     NextLaunchJob.scheduleIntervalJob((timeToFinish / 2) + 43200000, launch.getId());
                 }
-            }
-        } else {
-            //Get sync period.
-            String notificationTimer = this.sharedPref.getString("notification_sync_time", "24");
-
-            Pattern p = Pattern.compile("(\\d+)");
-            Matcher m = p.matcher(notificationTimer);
-
-            if (m.matches()) {
-                int hrs = Integer.parseInt(m.group(1));
-                interval = (long) hrs * 60 * 60 * 1000;
-                NextLaunchJob.scheduleIntervalJob(interval, launch.getId());
             }
         }
     }

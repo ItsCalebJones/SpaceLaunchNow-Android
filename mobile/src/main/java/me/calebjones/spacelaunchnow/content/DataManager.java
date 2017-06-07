@@ -5,23 +5,10 @@ import android.content.Intent;
 
 import com.crashlytics.android.Crashlytics;
 
-import java.util.Collections;
-import java.util.Date;
-
-import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.RealmResults;
-import io.realm.Sort;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.services.NextLaunchTracker;
-import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.Launch;
-import me.calebjones.spacelaunchnow.data.models.LaunchNotification;
 import me.calebjones.spacelaunchnow.data.models.Result;
-import me.calebjones.spacelaunchnow.data.models.UpdateRecord;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
@@ -32,14 +19,13 @@ import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.Miss
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.PadResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.RocketFamilyResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.RocketResponse;
-import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
 /**
- * This class is responsible for async loading of data via the DataClient and saving it to Realm for future use.
+ * This class is responsible for async loading of data via the DataClient and sending it to DataSaver to be saved.
  */
 
 public class DataManager {

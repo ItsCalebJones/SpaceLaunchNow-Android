@@ -47,7 +47,7 @@ public class NextLaunchJob extends Job {
 
     public static void scheduleIntervalJob(long interval, int launchId) {
         Timber.i("Searching JobRequests for %s", launchId);
-        Set<JobRequest> jobRequests = JobManager.instance().getAllJobRequestsForTag(NextLaunchJob.TAG);
+         Set<JobRequest> jobRequests = JobManager.instance().getAllJobRequestsForTag(NextLaunchJob.TAG);
         for (JobRequest jobRequest : jobRequests) {
             if (jobRequest.getExtras() != null) {
                 if (launchId == jobRequest.getExtras().getInt("key", 0)) {

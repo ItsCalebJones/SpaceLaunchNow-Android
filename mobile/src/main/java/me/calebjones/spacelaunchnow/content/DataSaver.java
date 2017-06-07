@@ -22,6 +22,11 @@ import me.calebjones.spacelaunchnow.data.models.UpdateRecord;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import timber.log.Timber;
 
+/**
+ * This class is responsible for saving raw data to Realm.
+ */
+
+
 public class DataSaver {
 
     private Context context;
