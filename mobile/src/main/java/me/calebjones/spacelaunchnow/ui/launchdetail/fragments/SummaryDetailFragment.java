@@ -61,9 +61,9 @@ import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.Pad;
-import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.data.models.RocketDetails;
-import me.calebjones.spacelaunchnow.utils.Analytics;
+import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -491,244 +491,249 @@ public class SummaryDetailFragment extends BaseFragment {
     }
 
     private void setUpViews(Launch launch) {
-        weatherCard.setVisibility(View.GONE);
+        try {
+            weatherCard.setVisibility(View.GONE);
 
-        detailLaunch = launch;
+            detailLaunch = launch;
 
-        // Check if Weather card is enabled, defaults to false if null.
-        if (sharedPref.getBoolean("weather", false)) {
-            if (detailLaunch.getNet().after(Calendar.getInstance().getTime())) {
-                fetchCurrentWeather();
+            // Check if Weather card is enabled, defaults to false if null.
+            if (sharedPref.getBoolean("weather", false)) {
+                if (detailLaunch.getNet().after(Calendar.getInstance().getTime())) {
+                    fetchCurrentWeather();
+                } else {
+                    fetchPastWeather();
+                }
+            }
+
+            if (detailLaunch.getRocket() != null) {
+                getLaunchVehicle(detailLaunch);
+            }
+
+            double dlat = 0;
+            double dlon = 0;
+            if (detailLaunch.getLocation() != null && detailLaunch.getLocation().getPads() != null) {
+                dlat = detailLaunch.getLocation().getPads().get(0).getLatitude();
+                dlon = detailLaunch.getLocation().getPads().get(0).getLongitude();
+            }
+
+            // Getting status
+            if (dlat == 0 && dlon == 0 || Double.isNaN(dlat) || Double.isNaN(dlon) || dlat == Double.NaN || dlon == Double.NaN) {
+                if (staticMap != null) {
+                    staticMap.setVisibility(View.GONE);
+                }
             } else {
-                fetchPastWeather();
+                staticMap.setVisibility(View.VISIBLE);
+                final Resources res = context.getResources();
+                final StaticMap map = new StaticMap()
+                        .center(dlat, dlon)
+                        .scale(4)
+                        .type(StaticMap.Type.ROADMAP)
+                        .zoom(7)
+                        .marker(dlat, dlon)
+                        .key(res.getString(R.string.GoogleMapsKey));
+
+                //Strange but necessary to calculate the height/width
+                staticMap.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                    public boolean onPreDraw() {
+                        map.size(
+                                staticMap.getWidth() / 2,
+                                staticMap.getHeight() / 2
+                        );
+
+                        Timber.v("onPreDraw: %s", map.toString());
+                        Glide.with(context).load(map.toString())
+                                .error(R.drawable.placeholder)
+                                .centerCrop()
+                                .into(staticMap);
+                        staticMap.getViewTreeObserver().removeOnPreDrawListener(this);
+                        return true;
+                    }
+                });
             }
-        }
 
-        if (detailLaunch.getRocket() != null) {
-            getLaunchVehicle(detailLaunch);
-        }
+            //Setup SimpleDateFormat to parse out getNet date.
+            SimpleDateFormat input = new SimpleDateFormat("MMMM dd, yyyy hh:mm:ss zzz");
+            SimpleDateFormat output = new SimpleDateFormat("MMMM dd, yyyy");
+            input.toLocalizedPattern();
 
-        double dlat = 0;
-        double dlon = 0;
-        if (detailLaunch.getLocation() != null && detailLaunch.getLocation().getPads() != null) {
-            dlat = detailLaunch.getLocation().getPads().get(0).getLatitude();
-            dlon = detailLaunch.getLocation().getPads().get(0).getLongitude();
-        }
+            Date mDate;
+            String dateText = null;
 
-        // Getting status
-        if (dlat == 0 && dlon == 0 || Double.isNaN(dlat) || Double.isNaN(dlon) || dlat == Double.NaN || dlon == Double.NaN) {
-            if (staticMap != null) {
-                staticMap.setVisibility(View.GONE);
+            switch (detailLaunch.getStatus()) {
+                case 1:
+                    launch_status.setText("Launch is GO");
+                    break;
+                case 2:
+                    launch_status.setText("Launch is NO-GO");
+                    break;
+                case 3:
+                    launch_status.setText("Launch was successful.");
+                    break;
+                case 4:
+                    launch_status.setText("Launch failure occurred.");
+                    break;
             }
-        } else {
-            staticMap.setVisibility(View.VISIBLE);
-            final Resources res = context.getResources();
-            final StaticMap map = new StaticMap()
-                    .center(dlat, dlon)
-                    .scale(4)
-                    .type(StaticMap.Type.ROADMAP)
-                    .zoom(7)
-                    .marker(dlat, dlon)
-                    .key(res.getString(R.string.GoogleMapsKey));
 
-            //Strange but necessary to calculate the height/width
-            staticMap.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                public boolean onPreDraw() {
-                    map.size(staticMap.getWidth() / 2,
-                            staticMap.getHeight() / 2);
+            calendarSwitch.setChecked(detailLaunch.syncCalendar());
+            calendarSwitch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+                        getRealm().executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                if (!detailLaunch.isUserToggledCalendar()) {
+                                    detailLaunch.setUserToggledCalendar(true);
+                                }
+                                detailLaunch.setSyncCalendar(!detailLaunch.syncCalendar());
+                                Timber.v("Launch %s updated to %s", detailLaunch.getName(), detailLaunch.syncCalendar());
+                            }
+                        });
+                        CalendarSyncService.startActionResync(context);
+                    } else {
+                        Dexter.withActivity(getActivity()).withPermission(Manifest.permission.WRITE_CALENDAR).withListener(new PermissionListener() {
+                            @Override
+                            public void onPermissionGranted(PermissionGrantedResponse response) {
+                                final SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
+                                if (getRealm().where(CalendarItem.class).findFirst() == null) {
+                                    setDefaultCalendar();
+                                }
+                                getRealm().executeTransaction(new Realm.Transaction() {
+                                    @Override
+                                    public void execute(Realm realm) {
+                                        if (!detailLaunch.isUserToggledCalendar()) {
+                                            detailLaunch.setUserToggledCalendar(true);
+                                        }
+                                        detailLaunch.setSyncCalendar(!detailLaunch.syncCalendar());
+                                        Timber.v("Launch %s updated to %s", detailLaunch.getName(), detailLaunch.syncCalendar());
+                                    }
+                                });
+                                CalendarSyncService.startActionResync(context);
+                            }
 
-                    Timber.v("onPreDraw: %s", map.toString());
-                    Glide.with(context).load(map.toString())
-                            .error(R.drawable.placeholder)
-                            .centerCrop()
-                            .into(staticMap);
-                    staticMap.getViewTreeObserver().removeOnPreDrawListener(this);
-                    return true;
+                            @Override
+                            public void onPermissionDenied(PermissionDeniedResponse response) {
+                                calendarSwitch.setChecked(false);
+                                if (response.isPermanentlyDenied()) {
+                                    Toast.makeText(context, "Calendar permission denied, please go to Android Settings -> Apps to enable.", Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                            @Override
+                            public void onPermissionRationaleShouldBeShown(PermissionRequest permission, final PermissionToken token) {
+                                final SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
+                                new AlertDialog.Builder(context).setTitle("Calendar Permission Needed")
+                                        .setMessage("This permission is needed to sync launches with your calendar.")
+                                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                switchPreferences.setCalendarStatus(false);
+                                                dialog.dismiss();
+                                                token.cancelPermissionRequest();
+                                            }
+                                        })
+                                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                                token.continuePermissionRequest();
+                                            }
+                                        })
+                                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                            @Override
+                                            public void onDismiss(DialogInterface dialog) {
+                                                switchPreferences.setCalendarStatus(false);
+                                                token.cancelPermissionRequest();
+                                            }
+                                        })
+                                        .show();
+                            }
+                        }).check();
+                    }
                 }
             });
-        }
 
-        //Setup SimpleDateFormat to parse out getNet date.
-        SimpleDateFormat input = new SimpleDateFormat("MMMM dd, yyyy hh:mm:ss zzz");
-        SimpleDateFormat output = new SimpleDateFormat("MMMM dd, yyyy");
-        input.toLocalizedPattern();
-
-        Date mDate;
-        String dateText = null;
-
-        switch (detailLaunch.getStatus()) {
-            case 1:
-                launch_status.setText("Launch is GO");
-                break;
-            case 2:
-                launch_status.setText("Launch is NO-GO");
-                break;
-            case 3:
-                launch_status.setText("Launch was successful.");
-                break;
-            case 4:
-                launch_status.setText("Launch failure occurred.");
-                break;
-        }
-
-        calendarSwitch.setChecked(detailLaunch.syncCalendar());
-        calendarSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+            notificationSwitch.setChecked(this.detailLaunch.isNotifiable());
+            notificationSwitch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
                     getRealm().executeTransaction(new Realm.Transaction() {
                         @Override
                         public void execute(Realm realm) {
-                            if (!detailLaunch.isUserToggledCalendar()){
-                                detailLaunch.setUserToggledCalendar(true);
+                            if (!detailLaunch.isUserToggledNotifiable()) {
+                                detailLaunch.setUserToggledNotifiable(true);
                             }
-                            detailLaunch.setSyncCalendar(!detailLaunch.syncCalendar());
-                            Timber.v("Launch %s updated to %s", detailLaunch.getName(), detailLaunch.syncCalendar());
+                            detailLaunch.setNotifiable(!detailLaunch.isNotifiable());
+                            notificationSwitch.setChecked(detailLaunch.isNotifiable());
+                            realm.copyToRealmOrUpdate(detailLaunch);
+                            Timber.v("Launch %s notifiable updated to %s", detailLaunch.getName(), detailLaunch.isNotifiable());
                         }
                     });
-                    CalendarSyncService.startActionResync(context);
-                } else {
-                    Dexter.withActivity(getActivity()).withPermission(Manifest.permission.WRITE_CALENDAR).withListener(new PermissionListener() {
-                        @Override
-                        public void onPermissionGranted(PermissionGrantedResponse response) {
-                            final SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
-                            if (getRealm().where(CalendarItem.class).findFirst() == null){
-                                setDefaultCalendar();
-                            }
-                            getRealm().executeTransaction(new Realm.Transaction() {
-                                @Override
-                                public void execute(Realm realm) {
-                                    if (!detailLaunch.isUserToggledCalendar()){
-                                        detailLaunch.setUserToggledCalendar(true);
-                                    }
-                                    detailLaunch.setSyncCalendar(!detailLaunch.syncCalendar());
-                                    Timber.v("Launch %s updated to %s", detailLaunch.getName(), detailLaunch.syncCalendar());
-                                }
-                            });
-                            CalendarSyncService.startActionResync(context);
-                        }
-
-                        @Override
-                        public void onPermissionDenied(PermissionDeniedResponse response) {
-                            calendarSwitch.setChecked(false);
-                            if (response.isPermanentlyDenied()){
-                                Toast.makeText(context, "Calendar permission denied, please go to Android Settings -> Apps to enable.", Toast.LENGTH_LONG).show();
-                            }
-                        }
-
-                        @Override
-                        public void onPermissionRationaleShouldBeShown(PermissionRequest permission, final PermissionToken token) {
-                            final SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
-                            new AlertDialog.Builder(context).setTitle("Calendar Permission Needed")
-                                    .setMessage("This permission is needed to sync launches with your calendar.")
-                                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            switchPreferences.setCalendarStatus(false);
-                                            dialog.dismiss();
-                                            token.cancelPermissionRequest();
-                                        }
-                                    })
-                                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                            token.continuePermissionRequest();
-                                        }
-                                    })
-                                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                        @Override
-                                        public void onDismiss(DialogInterface dialog) {
-                                            switchPreferences.setCalendarStatus(false);
-                                            token.cancelPermissionRequest();
-                                        }
-                                    })
-                                    .show();
-                        }
-                    }).check();
-                }
-            }
-        });
-
-        notificationSwitch.setChecked(this.detailLaunch.isNotifiable());
-        notificationSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getRealm().executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        if (!detailLaunch.isUserToggledNotifiable()){
-                            detailLaunch.setUserToggledNotifiable(true);
-                        }
-                        detailLaunch.setNotifiable(!detailLaunch.isNotifiable());
-                        notificationSwitch.setChecked(detailLaunch.isNotifiable());
-                        Timber.v("Launch %s notifiable updated to %s", detailLaunch.getName(), detailLaunch.isNotifiable());
-                    }
-                });
-                LaunchDataService.startActionSyncNotifiers(context);
-            }
-        });
-
-
-        if (detailLaunch.getVidURLs() != null && detailLaunch.getVidURLs().size() > 0) {
-            watchButton.setVisibility(View.VISIBLE);
-            watchButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Timber.d("Watch: %s", detailLaunch.getVidURLs().size());
-                    if (detailLaunch.getVidURLs().size() > 0) {
-                        final DialogAdapter adapter = new DialogAdapter(new DialogAdapter.Callback() {
-
-                            @Override
-                            public void onListItemSelected(int index, MaterialSimpleListItem item, boolean longClick) {
-                                if (longClick) {
-                                    Intent sendIntent = new Intent();
-                                    sendIntent.setAction(Intent.ACTION_SEND);
-                                    sendIntent.putExtra(Intent.EXTRA_TEXT, detailLaunch.getVidURLs().get(index).getVal()); // Simple text and URL to share
-                                    sendIntent.setType("text/plain");
-                                    context.startActivity(sendIntent);
-                                } else {
-                                    Uri watchUri = Uri.parse(detailLaunch.getVidURLs().get(index).getVal());
-                                    Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
-                                    context.startActivity(i);
-                                }
-                            }
-                        });
-                        for (RealmStr s : detailLaunch.getVidURLs()) {
-                            //Do your stuff here
-                            adapter.add(new MaterialSimpleListItem.Builder(context)
-                                    .content(s.getVal())
-                                    .build());
-                        }
-
-                        MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
-                                .title("Select a Source")
-                                .content("Long press for additional options.")
-                                .adapter(adapter, null)
-                                .negativeText("Cancel");
-                        builder.show();
-                    }
+                    LaunchDataService.startActionSyncNotifiers(context);
                 }
             });
-        } else {
-            watchButton.setVisibility(View.GONE);
-        }
 
-        //Try to convert to Month day, Year.
-        mDate = detailLaunch.getNet();
-        dateText = output.format(mDate);
-        if (mDate.before(Calendar.getInstance().getTime())) {
-            launch_date_title.setText("Launch Date");
-        }
+            if (detailLaunch.getVidURLs() != null && detailLaunch.getVidURLs().size() > 0) {
+                watchButton.setVisibility(View.VISIBLE);
+                watchButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Timber.d("Watch: %s", detailLaunch.getVidURLs().size());
+                        if (detailLaunch.getVidURLs().size() > 0) {
+                            final DialogAdapter adapter = new DialogAdapter(new DialogAdapter.Callback() {
 
-        date.setText(dateText);
+                                @Override
+                                public void onListItemSelected(int index, MaterialSimpleListItem item, boolean longClick) {
+                                    if (longClick) {
+                                        Intent sendIntent = new Intent();
+                                        sendIntent.setAction(Intent.ACTION_SEND);
+                                        sendIntent.putExtra(Intent.EXTRA_TEXT, detailLaunch.getVidURLs().get(index).getVal()); // Simple text and URL to share
+                                        sendIntent.setType("text/plain");
+                                        context.startActivity(sendIntent);
+                                    } else {
+                                        Uri watchUri = Uri.parse(detailLaunch.getVidURLs().get(index).getVal());
+                                        Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
+                                        context.startActivity(i);
+                                    }
+                                }
+                            });
+                            for (RealmStr s : detailLaunch.getVidURLs()) {
+                                //Do your stuff here
+                                adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                    .content(s.getVal())
+                                                    .build());
+                            }
 
-        //TODO: Get detailLaunch window only if wstamp and westamp is available, hide otherwise.
-        if (detailLaunch.getWsstamp() > 0 && detailLaunch.getWestamp() > 0) {
-            setWindowStamp();
-        } else {
-            launch_window_start.setVisibility(View.GONE);
-            launch_window_end.setVisibility(View.GONE);
+                            MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
+                                    .title("Select a Source")
+                                    .content("Long press for additional options.")
+                                    .adapter(adapter, null)
+                                    .negativeText("Cancel");
+                            builder.show();
+                        }
+                    }
+                });
+            } else {
+                watchButton.setVisibility(View.GONE);
+            }
+
+            //Try to convert to Month day, Year.
+            mDate = detailLaunch.getNet();
+            dateText = output.format(mDate);
+            if (mDate.before(Calendar.getInstance().getTime())) {
+                launch_date_title.setText("Launch Date");
+            }
+
+            date.setText(dateText);
+
+            if (detailLaunch.getWsstamp() > 0 && detailLaunch.getWestamp() > 0) {
+                setWindowStamp();
+            } else {
+                launch_window_start.setVisibility(View.GONE);
+                launch_window_end.setVisibility(View.GONE);
+            }
+        } catch (NullPointerException e){
+            Timber.e(e);
         }
     }
 

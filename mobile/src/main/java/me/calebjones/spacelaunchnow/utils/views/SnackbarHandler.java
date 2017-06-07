@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.utils;
+package me.calebjones.spacelaunchnow.utils.views;
 
 
 import android.content.Context;
@@ -7,6 +7,8 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
+
+import me.calebjones.spacelaunchnow.utils.Connectivity;
 
 public class SnackbarHandler {
 

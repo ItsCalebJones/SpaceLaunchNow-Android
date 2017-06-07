@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
@@ -40,7 +39,8 @@ import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
-import me.calebjones.spacelaunchnow.utils.Analytics;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
+import me.calebjones.spacelaunchnow.utils.views.CountDownTimer;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
@@ -119,14 +119,22 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
         Launch launchItem = launchList.get(i);
+        Timber.i("Binding %s", launchItem.getName());
 
         String title;
         try {
             if (launchItem.isValid()) {
-                if (launchItem.getRocket().getAgencies() != null && launchItem.getRocket().getAgencies().size() > 0) {
-                    title = launchItem.getRocket().getAgencies().get(0).getName() + " | " + (launchItem.getRocket().getName());
+                if (launchItem.getRocket() != null) {
+                    if (launchItem.getRocket().getAgencies() != null && launchItem.getRocket().getAgencies().size() > 0) {
+                        title = launchItem.getRocket().getAgencies().get(0).getName() + " | " + (launchItem.getRocket().getName());
+                    } else {
+                        title = launchItem.getRocket().getName();
+                    }
+                } else if (launchItem.getName() != null){
+                    title = launchItem.getName();
                 } else {
-                    title = launchItem.getRocket().getName();
+                    Timber.e("Error - launch item is effectively null.");
+                    title = "Error - Unknown Launch";
                 }
 
                 holder.title.setText(title);
@@ -222,6 +230,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
                     now.setTimeInMillis(System.currentTimeMillis());
                     if (holder.timer != null) {
+                        Timber.v("Timer is not null, cancelling.");
                         holder.timer.cancel();
                     }
 
@@ -232,11 +241,13 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                     holder.content_TMinus_status.setTextColor(accentColor);
 
                     holder.countdownView.setVisibility(View.VISIBLE);
-                    holder.timer = new CountDownTimer(future.getTimeInMillis() - now.getTimeInMillis(), 1000) {
+                    long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
+                    holder.timer = new CountDownTimer(timeToFinish, 1000) {
                         StringBuilder time = new StringBuilder();
 
                         @Override
                         public void onFinish() {
+                            Timber.v("Countdown finished.");
                             holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
                             if (night) {
                                 holder.content_TMinus_status.setTextColor(nightColor);
@@ -246,7 +257,6 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                             if (status == 1) {
                                 holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
 
-                                //TODO - Get hold reason and show it
                             } else {
                                 if (hold != null && hold.length() > 1) {
                                     holder.content_TMinus_status.setText(hold);
@@ -254,6 +264,11 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                                     holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
                                 }
                             }
+                            holder.content_TMinus_status.setVisibility(View.VISIBLE);
+                            holder.countdownDays.setText("- -");
+                            holder.countdownHours.setText("- -");
+                            holder.countdownMinutes.setText("- -");
+                            holder.countdownSeconds.setText("- -");
                         }
 
                         @Override
@@ -317,7 +332,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                             if (Integer.valueOf(seconds) > 0) {
                                 holder.countdownSeconds.setText(seconds);
                             } else if (Integer.valueOf(minutes) > 0 || Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
-                                holder.countdownSeconds.setText("60");
+                                holder.countdownSeconds.setText("00");
                             } else {
                                 holder.countdownSeconds.setText("- -");
                             }
@@ -415,9 +430,14 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                     }
                 } else {
                     String[] separated = launchItem.getName().split(" \\| ");
-                    if (separated.length > 0 && separated[1].length() > 4) {
-                        holder.content_mission.setText(separated[1].trim());
-                    } else {
+                    try {
+                        if (separated.length > 0 && separated[1].length() > 4) {
+                            holder.content_mission.setText(separated[1].trim());
+                        } else {
+                            holder.content_mission.setText("Unknown Mission");
+                        }
+                    }
+                    catch(ArrayIndexOutOfBoundsException exception) {
                         holder.content_mission.setText("Unknown Mission");
                     }
                     holder.content_mission_description_view.setVisibility(View.GONE);
@@ -455,97 +475,6 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
             position = getItemCount() - 1;
         }
         return 0;
-    }
-
-    private void setCategoryIcon(ViewHolder holder, String type) {
-        if (type != null) {
-            switch (type) {
-                case "Earth Science":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_earth_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_earth);
-                    }
-                    break;
-                case "Planetary Science":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_planetary_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_planetary);
-                    }
-                    break;
-                case "Astrophysics":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_astrophysics_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_astrophysics);
-                    }
-                    break;
-                case "Heliophysics":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_heliophysics_alt_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_heliophysics_alt);
-                    }
-                    break;
-                case "Human Exploration":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_human_explore_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_human_explore);
-                    }
-                    break;
-                case "Robotic Exploration":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_robotic_explore_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_robotic_explore);
-                    }
-                    break;
-                case "Government/Top Secret":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_top_secret_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_top_secret);
-                    }
-                    break;
-                case "Tourism":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_tourism_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_tourism);
-                    }
-                    break;
-                case "Unknown":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown);
-                    }
-                    break;
-                case "Communications":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_satellite_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_satellite);
-                    }
-                    break;
-                case "Resupply":
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_resupply_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_resupply);
-                    }
-                    break;
-                default:
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown);
-                    }
-                    break;
-            }
-        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

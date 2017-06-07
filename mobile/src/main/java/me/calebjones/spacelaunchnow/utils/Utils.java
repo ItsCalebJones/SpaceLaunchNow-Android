@@ -25,6 +25,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -40,19 +41,26 @@ import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.utils.customtab.WebViewFallback;
+import timber.log.Timber;
 
 public class Utils {
 
@@ -153,7 +161,7 @@ public class Utils {
         intentBuilder.setExitAnimations(activity,
                 android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 
-        if(URLUtil.isValidUrl(url) ) {
+        if (URLUtil.isValidUrl(url)) {
             CustomTabActivityHelper.openCustomTab(activity, intentBuilder.build(), Uri.parse(url), new WebViewFallback());
         } else {
             Toast.makeText(activity, "ERROR: URL is malformed - sorry! " + url, Toast.LENGTH_SHORT);
@@ -490,10 +498,23 @@ public class Utils {
         }
     }
 
-    public static String getFormattedDateFromTimestamp(long timestampInMilliSeconds)
-    {
+    public static String getFormattedDateFromTimestamp(long timestampInMilliSeconds) {
         Date date = new Date();
         date.setTime(timestampInMilliSeconds);
         return new SimpleDateFormat("h:mm a z - MMM d, yyyy ", Locale.US).format(date);
+    }
+
+    public static Bitmap getBitMapFromUrl(Context context, String imageURL) {
+        try {
+            return Glide.
+                    with(context).
+                    load(imageURL).
+                    asBitmap().
+                    into(-1, -1). // Width and height
+                    get();
+        } catch (InterruptedException | ExecutionException e) {
+            Timber.e(e);
+            return null;
+        }
     }
 }

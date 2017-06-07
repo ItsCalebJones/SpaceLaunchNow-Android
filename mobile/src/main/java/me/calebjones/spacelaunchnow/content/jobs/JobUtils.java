@@ -38,7 +38,7 @@ public class JobUtils {
                 time = "around " + Utils.getFormattedDateFromTimestamp(date.getTime());
             }
             String message = String.format("%s scheduled %s \n", jobRequest.getTag(), time);
-            Timber.d(message);
+            Timber.i(message);
         }
     }
 

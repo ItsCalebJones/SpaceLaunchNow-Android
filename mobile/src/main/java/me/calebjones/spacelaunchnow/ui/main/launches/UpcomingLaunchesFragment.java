@@ -44,15 +44,15 @@ import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecoration;
+import me.calebjones.spacelaunchnow.content.DataManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
-import me.calebjones.spacelaunchnow.utils.Analytics;
-import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
+import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import timber.log.Timber;
 
 /**
@@ -405,9 +405,8 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
 
     public void getUpcomingLaunchData() {
         Timber.d("Sending GET_UP_LAUNCHES");
-        Intent intent = new Intent(getContext(), LaunchDataService.class);
-        intent.setAction(Constants.ACTION_GET_UP_LAUNCHES);
-        getContext().startService(intent);
+        DataManager dataManager = new DataManager(getContext());
+        dataManager.getUpcomingLaunchesAll();
         getRealm().removeAllChangeListeners();
     }
 

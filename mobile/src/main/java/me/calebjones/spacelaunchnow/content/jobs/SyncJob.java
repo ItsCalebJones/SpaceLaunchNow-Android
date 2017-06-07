@@ -6,15 +6,12 @@ import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
 import com.evernote.android.job.Job;
-import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import me.calebjones.spacelaunchnow.content.DataManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
-import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 public class SyncJob extends Job {

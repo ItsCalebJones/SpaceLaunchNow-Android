@@ -21,7 +21,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.VehicleDetails;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
-import me.calebjones.spacelaunchnow.utils.Analytics;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
@@ -124,33 +124,36 @@ public class AgencyDetailFragment extends BaseFragment {
         }
     }
 
-    private void setUpViews(Launch launch){
-        detailLaunch = launch;
+    private void setUpViews(Launch launch) {
+        try {
+            detailLaunch = launch;
 
-        Timber.v("Setting up views...");
+            Timber.v("Setting up views...");
 
+            int pads = detailLaunch.getLocation().getPads().size();
+            int mission_agencies = 0;
+            if (pads > 0) {
+                mission_agencies = detailLaunch.getLocation().getPads().get(0).getAgencies().size();
+            }
+            int vehicle_agencies = detailLaunch.getRocket().getAgencies().size();
 
-        int pads = detailLaunch.getLocation().getPads().size();
-        int mission_agencies= 0;
-        if (pads > 0){
-            mission_agencies = detailLaunch.getLocation().getPads().get(0).getAgencies().size();
-        }
-        int vehicle_agencies = detailLaunch.getRocket().getAgencies().size();
+            if (mission_agencies >= 2) {
+                setTwoMissionAgencies();
+            } else if (mission_agencies == 1) {
+                setOneMissionAgencies();
+            } else {
+                setNoMissionAgencies();
+            }
 
-        if (mission_agencies >= 2){
-            setTwoMissionAgencies();
-        } else if (mission_agencies == 1){
-            setOneMissionAgencies();
-        } else {
-            setNoMissionAgencies();
-        }
-
-        if (vehicle_agencies >= 2){
-            setTwoVehicleAgencies();
-        } else if (vehicle_agencies == 1){
-            setOneVehicleAgencies();
-        } else {
-            setNoVehicleAgencies();
+            if (vehicle_agencies >= 2) {
+                setTwoVehicleAgencies();
+            } else if (vehicle_agencies == 1) {
+                setOneVehicleAgencies();
+            } else {
+                setNoVehicleAgencies();
+            }
+        } catch (NullPointerException e){
+            Timber.e(e);
         }
     }
 

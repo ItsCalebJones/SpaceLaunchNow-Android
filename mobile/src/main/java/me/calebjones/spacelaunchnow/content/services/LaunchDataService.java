@@ -39,13 +39,6 @@ public class LaunchDataService extends BaseService {
         Timber.v("Sending Update Next Launch intent.");
     }
 
-    public static void startActionBackground(Context context) {
-        Intent intent = new Intent(context, LaunchDataService.class);
-        intent.setAction(Constants.ACTION_UPDATE_BACKGROUND);
-        context.startService(intent);
-        Timber.v("Sending Background intent.");
-    }
-
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
@@ -104,12 +97,7 @@ public class LaunchDataService extends BaseService {
             } else if (Constants.SYNC_NOTIFIERS.equals(action)) {
 
                 Timber.v("Intent action received: %s", action);
-                dataManager.syncNotifiers();
-
-            } else if (Constants.ACTION_UPDATE_BACKGROUND.equals(action)) {
-
-                Timber.v("Intent action received: %s", action);
-                dataManager.dataRepositoryManager.syncBackground();
+                dataManager.getDataSaver().syncNotifiers();
 
             } else if (Constants.ACTION_GET_VEHICLES_DETAIL.equals(action)){
                 Intent libraryIntent = new Intent(this, LibraryDataService.class);

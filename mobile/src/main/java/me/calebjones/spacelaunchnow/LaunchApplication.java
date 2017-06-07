@@ -46,9 +46,9 @@ import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
 import me.calebjones.spacelaunchnow.data.models.realm.Migration;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
-import me.calebjones.spacelaunchnow.utils.Analytics;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
-import me.calebjones.spacelaunchnow.utils.CrashlyticsTree;
+import me.calebjones.spacelaunchnow.utils.analytics.CrashlyticsTree;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import okhttp3.OkHttpClient;
 import timber.log.Timber;
@@ -112,7 +112,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
                 .init();
 
         if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
+            Timber.plant(new Timber.DebugTree(), new CrashlyticsTree(this));
             OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.ERROR);
 
             JSONObject tags = new JSONObject();
@@ -130,7 +130,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
                 e.printStackTrace();
             }
             OneSignal.sendTags(tags);
-            Timber.plant(new CrashlyticsTree());
+            Timber.plant(new CrashlyticsTree(this));
         }
 
         ForecastConfiguration configuration =
@@ -207,7 +207,9 @@ public class LaunchApplication extends Application implements Analytics.Provider
 
         JobManager.create(this).addJobCreator(new DataJobCreator());
 
-        UpdateJob.scheduleJob(this);
+        if (sharedPref.getBoolean("background", true)) {
+            UpdateJob.scheduleJob(this);
+        }
         SyncJob.schedulePeriodicJob(this);
 
         DefaultRuleEngine.trackAppStart(this);
@@ -230,7 +232,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
     }
 
     private void checkSubscriptions() {
-        if (sharedPref.getBoolean("notifications_launch_imminent_updates", true)) {
+        if (sharedPref.getBoolean("notifications_new_message", true)) {
             OneSignal.setSubscription(true);
             JSONObject tags = new JSONObject();
             if (switchPreferences.getSwitchNasa()) {
@@ -302,6 +304,12 @@ public class LaunchApplication extends Application implements Analytics.Provider
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
+            //Allow background alarms
+            try {
+                tags.put("background", 1);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
             OneSignal.sendTags(tags);
         } else {

@@ -34,11 +34,8 @@
   <string name="title_activity_debug">DebugActivity</string>
   <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
 
-    <string name="whats_new_content">That Kind of Release\n\n
-      Here\'s going to be the most boring and typical release note I could possibly ever write.\n
-      \u2022 Bug Fixes and optimizations.\n\n
-
-      Im so sorry, am I allowed a few of these?
+    <string name="whats_new_content">Hide No-Go Launches!\n\n
+      Added the ability to hide launches and stop notifications for launches that are not confirmed Go for launch. You may noticed that at the end of nearly every month there are a slew of launches set to No-Go with no confirmed launch time. Now you can hide those launches and won\'t get notified for them!
     </string>
   <string name="link_feedback">https://www.reddit.com/r/spacelaunchnow</string>
   <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>

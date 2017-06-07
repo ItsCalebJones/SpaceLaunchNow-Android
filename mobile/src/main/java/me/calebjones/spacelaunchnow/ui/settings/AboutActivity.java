@@ -15,7 +15,7 @@ import com.mikepenz.aboutlibraries.ui.LibsActivity;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity;
-import me.calebjones.spacelaunchnow.utils.Analytics;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
 public class AboutActivity extends LibsActivity {

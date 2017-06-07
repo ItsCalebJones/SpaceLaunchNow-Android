@@ -24,8 +24,8 @@ repositories {
 advancedVersioning {
     nameOptions {
         versionMajor 1
-        versionMinor 5
-        versionPatch 6
+        versionMinor 6
+        versionPatch 0
 
     }
     codeOptions {

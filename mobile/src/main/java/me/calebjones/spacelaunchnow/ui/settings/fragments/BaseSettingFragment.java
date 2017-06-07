@@ -16,7 +16,7 @@ package me.calebjones.spacelaunchnow.ui.settings.fragments;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
-import me.calebjones.spacelaunchnow.utils.Analytics;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 
 public abstract class BaseSettingFragment extends PreferenceFragment {
 

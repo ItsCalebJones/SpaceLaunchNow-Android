@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />L
+    <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
 
     <!-- Required to act as a calendar service. -->
     <uses-permission android:name="android.permission.READ_CALENDAR" />
@@ -44,7 +44,6 @@
         <activity
             android:name=".ui.debug.DebugActivity"
             android:theme="@style/BaseAppTheme" />
-
         <activity
             android:name=".ui.main.MainActivity"
             android:configChanges="screenSize"
@@ -81,10 +80,10 @@
         <service
             android:name=".content.services.LaunchDataService"
             android:exported="false" />
-      <service
-        android:name=".content.services.LibraryDataService"
-        android:exported="false" />
-      <service
+        <service
+            android:name=".content.services.LibraryDataService"
+            android:exported="false" />
+        <service
             android:name=".content.services.NextLaunchTracker"
             android:exported="false" />
         <service
@@ -152,7 +151,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_launch_timer_info" />
         </receiver>
-
         <receiver
             android:name=".widget.LaunchCardCompactWidgetProvider"
             android:label="Launch Card">
@@ -215,6 +213,19 @@
             </intent-filter>
         </service>
 
+        <receiver android:name=".content.receivers.OnUpgradeReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".content.services.LaunchNotificationReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.onesignal.NotificationExtender" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
