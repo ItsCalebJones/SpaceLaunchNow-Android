@@ -338,7 +338,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
     private void setLayoutManager(int size) {
-        if (!this.isDetached()) {
+        if (!isDetached() && isAdded()) {
             if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && (launchRealms != null && launchRealms.size() == 1 || size == 1)) {
                 linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(),
                                                               LinearLayoutManager.VERTICAL, false
@@ -358,7 +358,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     mRecyclerView.setAdapter(adapter);
                 }
             }
-        } else if (this.isDetached()) {
+        } else if (isDetached()) {
             Timber.v("View is detached.");
         }
     }
