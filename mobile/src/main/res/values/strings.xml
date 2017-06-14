@@ -34,8 +34,11 @@
   <string name="title_activity_debug">DebugActivity</string>
   <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
 
-    <string name="whats_new_content">Hide No-Go Launches!\n\n
-      Added the ability to hide launches and stop notifications for launches that are not confirmed Go for launch. You may noticed that at the end of nearly every month there are a slew of launches set to No-Go with no confirmed launch time. Now you can hide those launches and won\'t get notified for them!
+    <string name="whats_new_content">Bug Fix and Background Updates!\n\n
+      Added a scrollview to the filter screen.\n
+      Changes to support Android 8.0\n
+      Added a lot of code for upcoming server side handling of alarms and notifications.\n
+      Other bug fixes and improvements.
     </string>
   <string name="link_feedback">https://www.reddit.com/r/spacelaunchnow</string>
   <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>
