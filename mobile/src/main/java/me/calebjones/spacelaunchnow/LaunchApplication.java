@@ -46,9 +46,9 @@ import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
 import me.calebjones.spacelaunchnow.data.models.realm.Migration;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
-import me.calebjones.spacelaunchnow.utils.Analytics;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
-import me.calebjones.spacelaunchnow.utils.CrashlyticsTree;
+import me.calebjones.spacelaunchnow.utils.analytics.CrashlyticsTree;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import okhttp3.OkHttpClient;
 import timber.log.Timber;
@@ -232,7 +232,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
     }
 
     private void checkSubscriptions() {
-        if (sharedPref.getBoolean("notifications_launch_imminent_updates", true)) {
+        if (sharedPref.getBoolean("notifications_new_message", true)) {
             OneSignal.setSubscription(true);
             JSONObject tags = new JSONObject();
             if (switchPreferences.getSwitchNasa()) {
@@ -304,6 +304,12 @@ public class LaunchApplication extends Application implements Analytics.Provider
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
+            //Allow background alarms
+            try {
+                tags.put("background", 1);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
             OneSignal.sendTags(tags);
         } else {

@@ -291,10 +291,11 @@ public class LaunchTimerWidgetProvider extends AppWidgetProvider {
                 }
 
                 //Run this check every five seconds.
-                if (countdownId != switchPreferences.getWidgetID()) {
-                    Timber.v("Cancelling countdown timer - onClick - invalid = %s", invalid);
-                    this.cancel();
-
+                if ((millisUntilFinished / 1000) % 10 == 0) {
+                    if (countdownId != switchPreferences.getWidgetID()) {
+                        Timber.v("Cancelling countdown timer - onClick - invalid = %s", invalid);
+                        this.cancel();
+                    }
                 }
 
                 // Calculate the Days/Hours/Mins/Seconds numerically.

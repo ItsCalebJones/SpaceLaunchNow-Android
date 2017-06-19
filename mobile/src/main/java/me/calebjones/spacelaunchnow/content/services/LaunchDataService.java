@@ -77,7 +77,7 @@ public class LaunchDataService extends BaseService {
                     scheduleLaunchUpdates();
                 }
 
-                dataManager.getNextUpcomingLaunches();
+                dataManager.getUpcomingLaunchesAll();
 
                 // Called from PrevLaunchFragment
             } else if (Constants.ACTION_GET_PREV_LAUNCHES.equals(action)) {
@@ -97,7 +97,7 @@ public class LaunchDataService extends BaseService {
             } else if (Constants.SYNC_NOTIFIERS.equals(action)) {
 
                 Timber.v("Intent action received: %s", action);
-                dataManager.syncNotifiers();
+                dataManager.getDataSaver().syncNotifiers();
 
             } else if (Constants.ACTION_GET_VEHICLES_DETAIL.equals(action)){
                 Intent libraryIntent = new Intent(this, LibraryDataService.class);

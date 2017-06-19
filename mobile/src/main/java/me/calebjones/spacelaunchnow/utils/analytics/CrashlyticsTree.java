@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.utils;
+package me.calebjones.spacelaunchnow.utils.analytics;
 
 import android.content.Context;
 import android.content.SharedPreferences;

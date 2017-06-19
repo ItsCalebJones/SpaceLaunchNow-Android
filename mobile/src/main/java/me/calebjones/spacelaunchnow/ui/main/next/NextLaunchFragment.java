@@ -37,7 +37,6 @@ import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.ThreadFactory;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,8 +57,8 @@ import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
-import me.calebjones.spacelaunchnow.utils.Analytics;
-import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
+import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
@@ -339,7 +338,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
     private void setLayoutManager(int size) {
-        if (!this.isDetached()) {
+        if (!isDetached() && isAdded()) {
             if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && (launchRealms != null && launchRealms.size() == 1 || size == 1)) {
                 linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(),
                                                               LinearLayoutManager.VERTICAL, false
@@ -359,7 +358,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     mRecyclerView.setAdapter(adapter);
                 }
             }
-        } else if (this.isDetached()) {
+        } else if (isDetached()) {
             Timber.v("View is detached.");
         }
     }
@@ -766,6 +765,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     public void noGoSwitch() {
         switchPreferences.setNoGoSwitch(noGoSwitch.isChecked());
         displayLaunches();
+        CalendarSyncService.startActionResync(context);
     }
 
     @OnClick(R.id.persist_last_launch)

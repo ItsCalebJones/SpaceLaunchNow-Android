@@ -39,8 +39,8 @@ import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
-import me.calebjones.spacelaunchnow.utils.Analytics;
-import me.calebjones.spacelaunchnow.utils.CountDownTimer;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
+import me.calebjones.spacelaunchnow.utils.views.CountDownTimer;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
@@ -559,20 +559,24 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
                             @Override
                             public void onListItemSelected(int index, MaterialSimpleListItem item, boolean longClick) {
-                                if (longClick) {
-                                    Intent sendIntent = new Intent();
-                                    sendIntent.setAction(Intent.ACTION_SEND);
-                                    sendIntent.putExtra(Intent.EXTRA_TEXT, launch.getVidURLs().get(index).getVal()); // Simple text and URL to share
-                                    sendIntent.setType("text/plain");
-                                    context.startActivity(sendIntent);
-                                    Analytics.from(context).sendButtonClickedWithURL("Watch Button - URL Long Clicked", launch.getVidURLs().get(index).getVal());
-                                } else {
-                                    Uri watchUri = Uri.parse(launch.getVidURLs().get(index).getVal());
-                                    Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
-                                    context.startActivity(i);
-                                    Analytics.from(context).sendButtonClickedWithURL("Watch Button - URL", launch.getVidURLs().get(index).getVal());
+                                try {
+                                    if (longClick) {
+                                        Intent sendIntent = new Intent();
+                                        sendIntent.setAction(Intent.ACTION_SEND);
+                                        sendIntent.putExtra(Intent.EXTRA_TEXT, launch.getVidURLs().get(index).getVal()); // Simple text and URL to share
+                                        sendIntent.setType("text/plain");
+                                        context.startActivity(sendIntent);
+                                        Analytics.from(context).sendButtonClickedWithURL("Watch Button - URL Long Clicked", launch.getVidURLs().get(index).getVal());
+                                    } else {
+                                        Uri watchUri = Uri.parse(launch.getVidURLs().get(index).getVal());
+                                        Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
+                                        context.startActivity(i);
+                                        Analytics.from(context).sendButtonClickedWithURL("Watch Button - URL", launch.getVidURLs().get(index).getVal());
+                                    }
+                                } catch (ArrayIndexOutOfBoundsException e){
+                                    Timber.e(e);
+                                    Toast.makeText(context, "Ops, an error occurred.", Toast.LENGTH_SHORT).show();
                                 }
-
                             }
                         });
                         for (RealmStr s : launch.getVidURLs()) {

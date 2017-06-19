@@ -29,9 +29,9 @@ import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LauncherResponse;
 import me.calebjones.spacelaunchnow.ui.launcher.LauncherDetailActivity;
-import me.calebjones.spacelaunchnow.utils.Analytics;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
-import me.calebjones.spacelaunchnow.utils.SnackbarHandler;
+import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -138,7 +138,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
                     Timber.v("Success %s", response.message());
                     items = new ArrayList<>(Arrays.asList(jsonResponse.getItem()));
                     adapter.addItems(items);
-                    Analytics.from(getActivity()).sendNetworkEvent("LAUNCHER_INFORMATION", call.request().url().toString(), true);
+                    Analytics.from(getContext()).sendNetworkEvent("LAUNCHER_INFORMATION", call.request().url().toString(), true);
 
                 } else {
                     Timber.e(ErrorUtil.parseSpaceLaunchNowError(response).message());
@@ -152,7 +152,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
                 Timber.e(t.getMessage());
                 hideLoading();
                 SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, t.getLocalizedMessage());
-                Analytics.from(getActivity()).sendNetworkEvent("VEHICLE_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());
+                Analytics.from(getContext()).sendNetworkEvent("VEHICLE_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());
             }
         });
     }

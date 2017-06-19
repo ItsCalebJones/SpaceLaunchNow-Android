@@ -1,42 +1,27 @@
 package me.calebjones.spacelaunchnow.content.services;
 
 import android.app.IntentService;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
-import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.NextLaunchJob;
 import me.calebjones.spacelaunchnow.content.jobs.SyncJob;
-import me.calebjones.spacelaunchnow.data.models.Constants;
+import me.calebjones.spacelaunchnow.content.util.NotificationBuilder;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.LaunchNotification;
-import me.calebjones.spacelaunchnow.ui.main.MainActivity;
-import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.widget.LaunchCardCompactWidgetProvider;
 import me.calebjones.spacelaunchnow.widget.LaunchTimerWidgetProvider;
 import me.calebjones.spacelaunchnow.widget.LaunchWordTimerWidgetProvider;
@@ -51,7 +36,7 @@ public class NextLaunchTracker extends IntentService {
     private long interval;
     private Realm realm;
 
-    public NextLaunchTracker() {
+public NextLaunchTracker() {
         super("NextLaunchTracker");
     }
 
@@ -90,13 +75,13 @@ public class NextLaunchTracker extends IntentService {
                 checkNextLaunches(realm);
             }
         } else {
-            SyncJob.schedulePeriodicJob(this);
 
             //If Calendar Sync is enabled sync it up
             if (switchPreferences.getCalendarStatus()) {
                 syncCalendar();
             }
         }
+        SyncJob.schedulePeriodicJob(this);
         updateWidgets();
         realm.close();
     }
@@ -250,6 +235,7 @@ public class NextLaunchTracker extends IntentService {
     }
 
     private void checkNextLaunches(Launch launch) {
+        Timber.i("Checking launch - %s", launch.getName());
         if (launch != null) {
             checkStatus(launch);
         }
@@ -258,7 +244,6 @@ public class NextLaunchTracker extends IntentService {
             syncCalendar();
         }
 
-        SyncJob.schedulePeriodicJob(this);
         scheduleWear();
     }
 
@@ -295,18 +280,14 @@ public class NextLaunchTracker extends IntentService {
             if (timeToFinish > 0) {
                 if (timeToFinish <= 600000) {
                     if (notify) {
-                        int minutes = (int) ((timeToFinish / (1000 * 60)) % 60);
-                        if (minutes == 9) {
-                            minutes = 10;
-                        }
                         //Check settings to see if user should be notified.
                         if (!notification.isNotifiedTenMinute() && this.sharedPref.getBoolean("notifications_launch_minute", false)) {
-                            notifyUserImminent(launch, minutes);
+                            NotificationBuilder.notifyUser(this, launch, timeToFinish);
                             realm.beginTransaction();
                             notification.setNotifiedTenMinute(true);
                             realm.commitTransaction();
                         } else if (!notification.isNotifiedHour() && this.sharedPref.getBoolean("notifications_launch_imminent", true)) {
-                            notifyUserImminent(launch, minutes);
+                            NotificationBuilder.notifyUser(this, launch, timeToFinish);
                             realm.beginTransaction();
                             notification.setNotifiedHour(true);
                             realm.commitTransaction();
@@ -315,11 +296,10 @@ public class NextLaunchTracker extends IntentService {
                     NextLaunchJob.scheduleIntervalJob((future.getTimeInMillis() - 60000) - now.getTimeInMillis(), launch.getId());
                 } else if (timeToFinish < 3600000) {
                     if (notify) {
-                        int minutes = (int) ((timeToFinish / (1000 * 60)) % 60);
                         //Check settings to see if user should be notified.
                         if (this.sharedPref.getBoolean("notifications_launch_imminent", true)) {
                             if (!notification.isNotifiedHour()) {
-                                notifyUserImminent(launch, minutes);
+                                NotificationBuilder.notifyUser(this, launch, timeToFinish);
                                 realm.beginTransaction();
                                 notification.setNotifiedHour(true);
                                 realm.commitTransaction();
@@ -331,17 +311,10 @@ public class NextLaunchTracker extends IntentService {
                 } else if (timeToFinish < 86400000) {
                     Timber.v("Less than 24 hours.");
                     if (notify) {
-                        int hours = (int) ((timeToFinish / (1000 * 60 * 60)) % 24);
                         //Check settings to see if user should be notified.
                         if (this.sharedPref.getBoolean("notifications_launch_day", true)) {
                             if (!notification.isNotifiedDay()) {
-
-                                //Round up for standard notification.
-                                if (hours == 23) {
-                                    hours = 24;
-                                }
-
-                                notifyUser(launch, hours);
+                                NotificationBuilder.notifyUser(this, launch, timeToFinish);
                                 realm.beginTransaction();
                                 notification.setNotifiedDay(true);
                                 realm.commitTransaction();
@@ -360,220 +333,6 @@ public class NextLaunchTracker extends IntentService {
                     NextLaunchJob.scheduleIntervalJob((timeToFinish / 2) + 43200000, launch.getId());
                 }
             }
-        } else {
-            //Get sync period.
-            String notificationTimer = this.sharedPref.getString("notification_sync_time", "24");
-
-            Pattern p = Pattern.compile("(\\d+)");
-            Matcher m = p.matcher(notificationTimer);
-
-            if (m.matches()) {
-                int hrs = Integer.parseInt(m.group(1));
-                interval = (long) hrs * 60 * 60 * 1000;
-                NextLaunchJob.scheduleIntervalJob(interval, launch.getId());
-            }
-        }
-    }
-
-    private void notifyUserImminent(Launch launch, int minutes) {
-        NotificationCompat.Builder mBuilder = new NotificationCompat
-                .Builder(getApplicationContext());
-        NotificationManager mNotifyManager = (NotificationManager) getApplicationContext()
-                .getSystemService(Context.NOTIFICATION_SERVICE);
-
-        String launchDate;
-        String expandedText;
-        String launchName = launch.getName();
-        String launchURL;
-        String launchPad = launch.getLocation().getName();
-
-        if (launch.getNet() != null) {
-            //Get launch date
-            if (sharedPref.getBoolean("local_time", true)) {
-                SimpleDateFormat df = new SimpleDateFormat("hh:mm a zzz");
-                df.toLocalizedPattern();
-                Date date = launch.getNet();
-                launchDate = df.format(date);
-            } else {
-                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a zzz");
-                Date date = launch.getNet();
-                launchDate = sdf.format(date);
-            }
-            expandedText = "Go for launch at " + launchDate + " in " + minutes + " minutes.";
-        } else {
-            expandedText = "Launch in " + minutes + " minutes.";
-        }
-        mBuilder.setSubText(launchPad);
-
-        Intent mainActivityIntent = new Intent(this, MainActivity.class);
-        mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        PendingIntent appIntent = PendingIntent.getActivity(this, 0, mainActivityIntent, 0);
-
-        String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone", "default ringtone");
-        Uri alarmSound = Uri.parse(ringtoneBox);
-
-        NotificationCompat.WearableExtender wearableExtender =
-                new NotificationCompat.WearableExtender()
-                        .setHintHideIcon(true);
-        if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
-            wearableExtender.setBackground(Utils.getBitMapFromUrl(launch.getRocket().getImageURL()));
-        } else {
-            wearableExtender.setBackground(BitmapFactory.decodeResource(
-                    this.getResources(),
-                    R.drawable.nav_header
-            ));
-        }
-
-        mBuilder.setContentTitle(launchName)
-                .setContentText(expandedText)
-                .setSmallIcon(R.drawable.ic_rocket_white)
-                .setAutoCancel(true)
-                .setContentText(expandedText)
-                .extend(wearableExtender)
-                .setContentIntent(appIntent)
-                .setSound(alarmSound);
-
-        NotificationCompat.BigPictureStyle bigPictureStyle =
-                new NotificationCompat.BigPictureStyle();
-        if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
-            bigPictureStyle.bigPicture(Utils.getBitMapFromUrl(launch.getRocket().getImageURL()));
-            mBuilder.setStyle(bigPictureStyle);
-            mBuilder.setLargeIcon(BitmapFactory.decodeResource(
-                    this.getResources(),
-                    R.mipmap.ic_launcher
-            ));
-        }
-
-        //Check if heads up notifications are enabled, set priority to high if so.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
-                sharedPref.getBoolean("notifications_new_message_heads_up", true)) {
-            mBuilder.setPriority(Notification.PRIORITY_HIGH);
-        }
-
-        //Check if vibration is enabled.
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN &&
-                sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
-            mBuilder.setVibrate(new long[]{750, 750});
-        }
-
-        //Check if blinking LED is enabled.
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN
-                && sharedPref.getBoolean("notifications_new_message_led", true)) {
-            mBuilder.setLights(Color.GREEN, 3000, 3000);
-        }
-
-        if (sharedPref.getBoolean("notifications_new_message_webcast", false)) {
-            if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
-                // Sets up the Open and Share action buttons that will appear in the
-                // big view of the notification.
-                Intent vidIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(launch.getVidURLs().get(0).getVal()));
-                PendingIntent vidPendingIntent = PendingIntent.getActivity(this, 0, vidIntent, 0);
-
-                mBuilder.addAction(R.drawable.ic_open_in_browser_white, "Watch Live", vidPendingIntent);
-                mNotifyManager.notify(Constants.NOTIF_ID_HOUR + launch.getId(), mBuilder.build());
-            }
-        } else {
-            if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
-                // Sets up the Open and Share action buttons that will appear in the
-                // big view of the notification.
-                Intent vidIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(launch.getVidURLs().get(0).getVal()));
-                PendingIntent vidPendingIntent = PendingIntent.getActivity(this, 0, vidIntent, 0);
-
-                mBuilder.addAction(R.drawable.ic_open_in_browser_white, "Watch Live", vidPendingIntent);
-            }
-            mNotifyManager.notify(Constants.NOTIF_ID_HOUR + launch.getId(), mBuilder.build());
-        }
-    }
-
-    private void notifyUser(Launch launch, int hours) {
-        NotificationCompat.Builder mBuilder = new NotificationCompat
-                .Builder(getApplicationContext());
-        NotificationManager mNotifyManager = (NotificationManager) getApplicationContext()
-                .getSystemService(Context.NOTIFICATION_SERVICE);
-
-        String launchDate;
-        String expandedText;
-        String launchName = launch.getName();
-        String launchPad = launch.getLocation().getName();
-
-        String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone", "default ringtone");
-        Uri alarmSound = Uri.parse(ringtoneBox);
-
-        Intent mainActivityIntent = new Intent(this, MainActivity.class);
-        mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        PendingIntent appIntent = PendingIntent.getActivity(this, 0, mainActivityIntent, 0);
-
-        if (launch.getNet() != null) {
-            //Get launch date
-            if (sharedPref.getBoolean("local_time", true)) {
-                SimpleDateFormat df = new SimpleDateFormat("hh:mm a zzz");
-                df.toLocalizedPattern();
-                Date date = launch.getNet();
-                launchDate = df.format(date);
-            } else {
-                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a zzz");
-                Date date = launch.getNet();
-                launchDate = sdf.format(date);
-            }
-            expandedText = "Launch attempt in " + hours + " hours at " + launchDate;
-        } else {
-            expandedText = "Launch attempt in " + hours + " hours.";
-        }
-        mBuilder.setSubText(launchPad);
-
-        NotificationCompat.WearableExtender wearableExtender =
-                new NotificationCompat.WearableExtender()
-                        .setHintHideIcon(true);
-        if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
-            wearableExtender.setBackground(Utils.getBitMapFromUrl(launch.getRocket().getImageURL()));
-        } else {
-            wearableExtender.setBackground(BitmapFactory.decodeResource(
-                    this.getResources(),
-                    R.drawable.nav_header
-            ));
-        }
-
-        mBuilder.setContentTitle(launchName)
-                .setContentText(expandedText)
-                .setSmallIcon(R.drawable.ic_rocket_white)
-                .setAutoCancel(true)
-                .setContentText(expandedText)
-                .extend(wearableExtender)
-                .setContentIntent(appIntent)
-                .setSound(alarmSound);
-
-        NotificationCompat.BigPictureStyle bigPictureStyle =
-                new NotificationCompat.BigPictureStyle();
-        if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
-            bigPictureStyle.bigPicture(Utils.getBitMapFromUrl(launch.getRocket().getImageURL()));
-            mBuilder.setStyle(bigPictureStyle);
-            mBuilder.setLargeIcon(BitmapFactory.decodeResource(
-                    this.getResources(),
-                    R.mipmap.ic_launcher
-            ));
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
-                sharedPref.getBoolean("notifications_new_message_heads_up", true)) {
-            mBuilder.setPriority(Notification.PRIORITY_HIGH);
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN &&
-                sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
-            mBuilder.setVibrate(new long[]{750, 750});
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN
-                && sharedPref.getBoolean("notifications_new_message_led", true)) {
-            mBuilder.setLights(Color.GREEN, 3000, 3000);
-        }
-
-        if (sharedPref.getBoolean("notifications_new_message_webcast", false)) {
-            if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
-                mNotifyManager.notify(Constants.NOTIF_ID_HOUR + launch.getId(), mBuilder.build());
-            }
-        } else {
-            mNotifyManager.notify(Constants.NOTIF_ID_HOUR + launch.getId(), mBuilder.build());
         }
     }
 

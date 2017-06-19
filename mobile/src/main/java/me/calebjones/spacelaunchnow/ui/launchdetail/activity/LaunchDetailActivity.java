@@ -211,14 +211,15 @@ public class LaunchDetailActivity extends BaseActivity
     }
 
     private void updateViews(Launch launch) {
-        this.launch = launch;
+        try {
+            this.launch = launch;
 
-        tabAdapter.updateAllViews(launch);
-        if (!this.isDestroyed() && launch != null && launch.getRocket() != null) {
-            Timber.v("Loading detailLaunch %s", launch.getId());
-            findProfileLogo();
-            if (launch.getRocket().getName() != null) {
-                if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0) {
+            tabAdapter.updateAllViews(launch);
+            if (!this.isDestroyed() && launch != null && launch.getRocket() != null) {
+                Timber.v("Loading detailLaunch %s", launch.getId());
+                findProfileLogo();
+                if (launch.getRocket().getName() != null) {
+                    if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0) {
 
                         Glide.with(this)
                                 .load(launch.getRocket().getImageURL())
@@ -226,17 +227,20 @@ public class LaunchDetailActivity extends BaseActivity
                                 .placeholder(R.drawable.placeholder)
                                 .crossFade()
                                 .into(detail_profile_backdrop);
-                    getLaunchVehicle(launch, false);
-                } else {
-                    getLaunchVehicle(launch, true);
+                        getLaunchVehicle(launch, false);
+                    } else {
+                        getLaunchVehicle(launch, true);
+                    }
                 }
+            } else if (this.isDestroyed()) {
+                Timber.v("DetailLaunch is destroyed, stopping loading data.");
             }
-        } else if (this.isDestroyed()){
-            Timber.v("DetailLaunch is destroyed, stopping loading data.");
-        }
 
-        //Assign the title and mission location data
-        detail_rocket.setText(launch.getName());
+            //Assign the title and mission location data
+            detail_rocket.setText(launch.getName());
+        } catch (NoSuchMethodError e) {
+            Timber.e(e);
+        }
     }
 
     @Override

@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
+import com.crashlytics.android.Crashlytics;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -111,189 +112,193 @@ public class CardSmallAdapter extends RecyclerView.Adapter<CardSmallAdapter.View
 
         position = i;
 
-        //Retrieve missionType
-        if (launchItem.getMissions().size() != 0) {
-            Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMissions().get(0).getTypeName(), night);
-        }  else {
-            if (night) {
-                holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
+        try {
+            //Retrieve missionType
+            if (launchItem.getMissions().size() != 0) {
+                Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMissions().get(0).getTypeName(), night);
             } else {
-                holder.categoryIcon.setImageResource(R.drawable.ic_unknown);
-            }
-        }
-
-        SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
-        df.toLocalizedPattern();
-
-        switch (launchItem.getStatus()) {
-            case 1:
-                //GO for launch
-                holder.content_status.setText(R.string.status_go);
-                holder.content_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorGo));
-                break;
-            case 2:
-                //NO GO for launch
-                holder.content_status.setText(R.string.status_nogo);
-                holder.content_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorAccent));
-                break;
-            case 3:
-                //Success for launch
-                holder.content_status.setText(R.string.status_success);
-                holder.content_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorGo));
-                break;
-            case 4:
-                //Failure to launch
-                holder.content_status.setText(R.string.status_failure);
-                holder.content_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorAccent));
-                break;
-        }
-
-        //If timestamp is available calculate TMinus and date.
-        if (launchItem.getNetstamp() > 0) {
-            long longdate = launchItem.getNetstamp();
-            longdate = longdate * 1000;
-            final Date date = new Date(longdate);
-
-            Calendar future = DateToCalendar(date);
-            Calendar now = rightNow;
-
-            now.setTimeInMillis(System.currentTimeMillis());
-            if (holder.timer != null) {
-                holder.timer.cancel();
+                if (night) {
+                    holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
+                } else {
+                    holder.categoryIcon.setImageResource(R.drawable.ic_unknown);
+                }
             }
 
-            final int status = launchItem.getStatus();
-            final String hold = launchItem.getHoldreason();
+            SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+            df.toLocalizedPattern();
 
-            holder.timer = new CountDownTimer(future.getTimeInMillis() - now.getTimeInMillis(), 1000) {
-                StringBuilder time = new StringBuilder();
+            switch (launchItem.getStatus()) {
+                case 1:
+                    //GO for launch
+                    holder.content_status.setText(R.string.status_go);
+                    holder.content_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorGo));
+                    break;
+                case 2:
+                    //NO GO for launch
+                    holder.content_status.setText(R.string.status_nogo);
+                    holder.content_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorAccent));
+                    break;
+                case 3:
+                    //Success for launch
+                    holder.content_status.setText(R.string.status_success);
+                    holder.content_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorGo));
+                    break;
+                case 4:
+                    //Failure to launch
+                    holder.content_status.setText(R.string.status_failure);
+                    holder.content_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorAccent));
+                    break;
+            }
 
-                @Override
-                public void onFinish() {
-                    holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
-                    if (night) {
-                        holder.content_TMinus_status.setTextColor(nightColor);
-                    } else {
-                        holder.content_TMinus_status.setTextColor(color);
-                    }
-                    if (status == 1) {
-                        holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
+            //If timestamp is available calculate TMinus and date.
+            if (launchItem.getNetstamp() > 0) {
+                long longdate = launchItem.getNetstamp();
+                longdate = longdate * 1000;
+                final Date date = new Date(longdate);
 
-                    } else {
-                        if (hold != null && hold.length() > 1) {
-                            holder.content_TMinus_status.setText(hold);
+                Calendar future = DateToCalendar(date);
+                Calendar now = rightNow;
+
+                now.setTimeInMillis(System.currentTimeMillis());
+                if (holder.timer != null) {
+                    holder.timer.cancel();
+                }
+
+                final int status = launchItem.getStatus();
+                final String hold = launchItem.getHoldreason();
+
+                holder.timer = new CountDownTimer(future.getTimeInMillis() - now.getTimeInMillis(), 1000) {
+                    StringBuilder time = new StringBuilder();
+
+                    @Override
+                    public void onFinish() {
+                        holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
+                        if (night) {
+                            holder.content_TMinus_status.setTextColor(nightColor);
                         } else {
+                            holder.content_TMinus_status.setTextColor(color);
+                        }
+                        if (status == 1) {
                             holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
+
+                        } else {
+                            if (hold != null && hold.length() > 1) {
+                                holder.content_TMinus_status.setText(hold);
+                            } else {
+                                holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
+                            }
                         }
                     }
-                }
 
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    time.setLength(0);
-                    // Use days if appropriate
-                    long longDays = millisUntilFinished / 86400000;
-                    long longHours = (millisUntilFinished / 3600000) % 24;
-                    long longMins = (millisUntilFinished / 60000) % 60;
-                    long longSeconds = (millisUntilFinished / 1000) % 60;
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        time.setLength(0);
+                        // Use days if appropriate
+                        long longDays = millisUntilFinished / 86400000;
+                        long longHours = (millisUntilFinished / 3600000) % 24;
+                        long longMins = (millisUntilFinished / 60000) % 60;
+                        long longSeconds = (millisUntilFinished / 1000) % 60;
 
-                    String days = String.valueOf(longDays);
-                    String hours;
-                    String minutes;
-                    String seconds;
-                    if (longHours < 10) {
-                        hours = "0" + String.valueOf(longHours);
-                    } else {
-                        hours = String.valueOf(longHours);
+                        String days = String.valueOf(longDays);
+                        String hours;
+                        String minutes;
+                        String seconds;
+                        if (longHours < 10) {
+                            hours = "0" + String.valueOf(longHours);
+                        } else {
+                            hours = String.valueOf(longHours);
+                        }
+
+                        if (longMins < 10) {
+                            minutes = "0" + String.valueOf(longMins);
+                        } else {
+                            minutes = String.valueOf(longMins);
+                        }
+
+                        if (longSeconds < 10) {
+                            seconds = "0" + String.valueOf(longSeconds);
+                        } else {
+                            seconds = String.valueOf(longSeconds);
+                        }
+                        holder.content_TMinus_status.setTypeface(Typeface.SANS_SERIF);
+                        holder.content_TMinus_status.setTextColor(accentColor);
+                        if (Integer.valueOf(days) > 0) {
+                            holder.content_TMinus_status.setText(String.format("L - %s days - %s:%s:%s", days, hours, minutes, seconds));
+                        } else {
+                            holder.content_TMinus_status.setText(String.format("L - %s:%s:%s", hours, minutes, seconds));
+                        }
                     }
+                }.start();
 
-                    if (longMins < 10) {
-                        minutes = "0" + String.valueOf(longMins);
-                    } else {
-                        minutes = String.valueOf(longMins);
-                    }
-
-                    if (longSeconds < 10) {
-                        seconds = "0" + String.valueOf(longSeconds);
-                    } else {
-                        seconds = String.valueOf(longSeconds);
-                    }
-                    holder.content_TMinus_status.setTypeface(Typeface.SANS_SERIF);
-                    holder.content_TMinus_status.setTextColor(accentColor);
-                    if (Integer.valueOf(days) > 0) {
-                        holder.content_TMinus_status.setText(String.format("L - %s days - %s:%s:%s", days, hours, minutes, seconds));
-                    } else {
-                        holder.content_TMinus_status.setText(String.format("L - %s:%s:%s", hours, minutes, seconds));
-                    }
-                }
-            }.start();
-
-        } else {
-            holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
-            if (night) {
-                holder.content_TMinus_status.setTextColor(ContextCompat.getColor(mContext, R.color.dark_theme_secondary_text_color));
             } else {
-                holder.content_TMinus_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorTextSecondary));
-            }
-            if (holder.timer != null) {
-                holder.timer.cancel();
-            }
-            if (launchItem.getStatus() != 1) {
-                if (launchItem.getRocket().getAgencies().size() > 0) {
-                    holder.content_TMinus_status.setText(String.format("Pending confirmed GO from %s", launchItem.getRocket().getAgencies().get(0).getName()));
+                holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
+                if (night) {
+                    holder.content_TMinus_status.setTextColor(ContextCompat.getColor(mContext, R.color.dark_theme_secondary_text_color));
                 } else {
-                    holder.content_TMinus_status.setText("Pending confirmed GO for Launch from launch agency");
+                    holder.content_TMinus_status.setTextColor(ContextCompat.getColor(mContext, R.color.colorTextSecondary));
                 }
-            } else {
-                holder.content_TMinus_status.setText("Unknown");
-            }
-        }
-
-        //Get launch date
-        if (launchItem.getStatus() == 2) {
-
-            if (launchItem.getNet() !=null) {
-                //Get launch date
-                SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy.");
-                sdf.toLocalizedPattern();
-                Date date = launchItem.getNet();
-                launchDate = sdf.format(date);
-                holder.launch_date.setText("To be determined... " + launchDate);
-            }
-        } else {
-            if (launchItem.getNet() !=null) {
-                if (sharedPref.getBoolean("local_time", true)) {
-                    SimpleDateFormat sdf;
-                    if (sharedPref.getBoolean("24_hour_mode", false)) {
-                        sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - HH:mm zzz");
+                if (holder.timer != null) {
+                    holder.timer.cancel();
+                }
+                if (launchItem.getStatus() != 1) {
+                    if (launchItem.getRocket().getAgencies().size() > 0) {
+                        holder.content_TMinus_status.setText(String.format("Pending confirmed GO from %s", launchItem.getRocket().getAgencies().get(0).getName()));
                     } else {
-                        sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                        holder.content_TMinus_status.setText("Pending confirmed GO for Launch from launch agency");
                     }
+                } else {
+                    holder.content_TMinus_status.setText("Unknown");
+                }
+            }
+
+            //Get launch date
+            if (launchItem.getStatus() == 2) {
+
+                if (launchItem.getNet() != null) {
+                    //Get launch date
+                    SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy.");
                     sdf.toLocalizedPattern();
                     Date date = launchItem.getNet();
                     launchDate = sdf.format(date);
-                } else {
-                    SimpleDateFormat sdf;
-                    if (sharedPref.getBoolean("24_hour_mode", false)) {
-                        sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - HH:mm zzz");
-                    } else {
-                        sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
-                    }
-                    Date date = launchItem.getNet();
-                    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                    launchDate = sdf.format(date);
+                    holder.launch_date.setText("To be determined... " + launchDate);
                 }
             } else {
-                launchDate = "To be determined... ";
+                if (launchItem.getNet() != null) {
+                    if (sharedPref.getBoolean("local_time", true)) {
+                        SimpleDateFormat sdf;
+                        if (sharedPref.getBoolean("24_hour_mode", false)) {
+                            sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - HH:mm zzz");
+                        } else {
+                            sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                        }
+                        sdf.toLocalizedPattern();
+                        Date date = launchItem.getNet();
+                        launchDate = sdf.format(date);
+                    } else {
+                        SimpleDateFormat sdf;
+                        if (sharedPref.getBoolean("24_hour_mode", false)) {
+                            sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - HH:mm zzz");
+                        } else {
+                            sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                        }
+                        Date date = launchItem.getNet();
+                        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                        launchDate = sdf.format(date);
+                    }
+                } else {
+                    launchDate = "To be determined... ";
+                }
+                holder.launch_date.setText(launchDate);
             }
-            holder.launch_date.setText(launchDate);
-        }
 
-        //If location is available then see if pad and agency informaiton is avaialble.
-        if (launchItem.getLocation().getName() != null) {
-            holder.location.setText(launchItem.getLocation().getName());
+            //If location is available then see if pad and agency informaiton is avaialble.
+            if (launchItem.getLocation().getName() != null) {
+                holder.location.setText(launchItem.getLocation().getName());
+            }
+            holder.title.setText(launchItem.getRocket().getName());
+        } catch (NullPointerException e) {
+            Crashlytics.logException(e);
         }
-        holder.title.setText(launchItem.getRocket().getName());
     }
 
     @Override
@@ -307,7 +312,6 @@ public class CardSmallAdapter extends RecyclerView.Adapter<CardSmallAdapter.View
         return cal;
     }
 
-
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView title;
         public TextView content;
@@ -320,7 +324,6 @@ public class CardSmallAdapter extends RecyclerView.Adapter<CardSmallAdapter.View
         public ImageView categoryIcon;
         public LinearLayout content_mission_description_view;
         public CountDownTimer timer;
-
 
         //Add content to the card
         public ViewHolder(View view) {
@@ -351,7 +354,6 @@ public class CardSmallAdapter extends RecyclerView.Adapter<CardSmallAdapter.View
             SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
             df.toLocalizedPattern();
 
-
             switch (v.getId()) {
                 case R.id.watchButton:
                     Timber.d("Watch: %s", launch.getVidURLs().size());
@@ -376,8 +378,8 @@ public class CardSmallAdapter extends RecyclerView.Adapter<CardSmallAdapter.View
                         for (RealmStr s : launch.getVidURLs()) {
                             //Do your stuff here
                             adapter.add(new MaterialSimpleListItem.Builder(mContext)
-                                    .content(s.getVal())
-                                    .build());
+                                                .content(s.getVal())
+                                                .build());
                         }
 
                         MaterialDialog.Builder builder = new MaterialDialog.Builder(mContext)

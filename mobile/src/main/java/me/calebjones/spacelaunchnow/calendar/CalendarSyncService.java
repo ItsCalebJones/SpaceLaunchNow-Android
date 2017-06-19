@@ -27,7 +27,7 @@ public class CalendarSyncService extends BaseService {
     public static final String EVENT_ID = "me.calebjones.spacelaunchnow.content.services.extra.EVENT_ID";
     public static final String LAUNCH_ID = "me.calebjones.spacelaunchnow.content.services.extra.LAUNCH_ID";
 
-    private RealmResults<Launch> launchRealms;
+    private RealmResults<Launch> launches;
     private CalendarUtility calendarUtil;
     private CalendarItem calendarItem;
     private SharedPreferences sharedPreferences;
@@ -89,9 +89,9 @@ public class CalendarSyncService extends BaseService {
                 } else if (DELETE_EVENTS_ALL.equals(action)) {
                     handleActionDeleteAll();
                 } else if (SYNC_EVENT.equals(action)) {
-                    final int param1 = intent.getIntExtra(LAUNCH_ID, 0);
-                    final long param2 = intent.getLongExtra(EVENT_ID, 0);
-                    handleActionDeleteEvent(param1, param2);
+                    final int launchID = intent.getIntExtra(LAUNCH_ID, 0);
+                    final long eventID = intent.getLongExtra(EVENT_ID, 0);
+                    handleActionDeleteEvent(launchID, eventID);
                 } else if (RESYNC_ALL.equals(action)) {
                     handleActionDeleteAll();
                     handleActionSyncAll();
@@ -111,28 +111,28 @@ public class CalendarSyncService extends BaseService {
     private void handleActionSyncAll() {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         if (switchPreferences.getCalendarStatus()) {
-            launchRealms = QueryBuilder.buildSwitchQuery(this, mRealm);
+            launches = QueryBuilder.buildSwitchQuery(this, mRealm);
         } else {
-            launchRealms = QueryBuilder.buildSwitchQuery(this, mRealm, true);
+            launches = QueryBuilder.buildSwitchQuery(this, mRealm, true);
         }
 
         RealmList<Launch> launchResults = new RealmList<>();
 
         int size = Integer.parseInt(sharedPref.getString("calendar_count", "5"));
 
-        if (launchRealms.size() > size) {
-            launchResults.addAll(launchRealms.subList(0, size));
+        if (launches.size() > size) {
+            launchResults.addAll(launches.subList(0, size));
         } else {
-            launchResults.addAll(launchRealms);
+            launchResults.addAll(launches);
         }
 
-        for (Launch launchRealm: launchResults){
-            if (launchRealm.isUserToggledCalendar()){
-                if (launchRealm.syncCalendar()){
-                    syncCalendar(launchRealm);
+        for (final Launch launch: launchResults){
+            if (launch.isUserToggledCalendar()){
+                if (launch.syncCalendar()){
+                    syncCalendar(launch);
                 }
             } else {
-                syncCalendar(launchRealm);
+                syncCalendar(launch);
             }
         }
         calendarUtil.deleteDuplicates(this, mRealm, "Space Launch Now", CalendarContract.Events.DESCRIPTION);
@@ -169,11 +169,11 @@ public class CalendarSyncService extends BaseService {
     }
 
     private void handleActionDeleteAll() {
-        launchRealms = mRealm.where(Launch.class)
+        launches = mRealm.where(Launch.class)
                 .greaterThan("eventID", 0)
                 .findAll();
 
-        for (final Launch launchRealm: launchRealms) {
+        for (final Launch launchRealm: launches) {
             int success = calendarUtil.deleteEvent(this, launchRealm);
             if (success > 0){
                 mRealm.executeTransaction(new Realm.Transaction() {

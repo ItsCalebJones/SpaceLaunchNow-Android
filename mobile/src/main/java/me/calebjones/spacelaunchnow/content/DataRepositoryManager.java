@@ -13,6 +13,7 @@ import me.calebjones.spacelaunchnow.content.services.LibraryDataService;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.UpdateRecord;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
+import timber.log.Timber;
 
 /**
  * This class is responsible for determining the freshness of the cache and requesting new data as needed.
@@ -40,6 +41,7 @@ public class DataRepositoryManager {
 
     public void syncBackground() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        Timber.i("Running syncBackground.");
 
         boolean wifiOnly = sharedPref.getBoolean("wifi_only", false);
         boolean dataSaver = sharedPref.getBoolean("data_saver", false);

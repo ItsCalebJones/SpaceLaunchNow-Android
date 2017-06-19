@@ -8,7 +8,7 @@ import android.support.v7.app.ActionBar;
 import de.mrapp.android.preference.activity.PreferenceActivity;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.utils.Analytics;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 
 public class SettingsActivity extends PreferenceActivity {
 
