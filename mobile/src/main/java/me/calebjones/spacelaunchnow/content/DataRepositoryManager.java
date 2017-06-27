@@ -41,11 +41,13 @@ public class DataRepositoryManager {
 
     public void syncBackground() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        Timber.i("Running syncBackground.");
+
 
         boolean wifiOnly = sharedPref.getBoolean("wifi_only", false);
         boolean dataSaver = sharedPref.getBoolean("data_saver", false);
         boolean wifiConnected = Connectivity.isConnectedWifi(context);
+        Timber.i("Running syncBackground - Wifi Required: %s DataSaver: %s Wifi Connected: %s",
+                wifiOnly, dataSaver, wifiConnected);
 
         if (wifiOnly && wifiConnected) {
             checkFullSync();
@@ -58,6 +60,7 @@ public class DataRepositoryManager {
 
     private void checkFullSync() {
         Realm realm = Realm.getDefaultInstance();
+        Timber.i("Checking full sync...");
         checkUpcomingLaunches(realm);
         checkMissions(realm);
         checkVehicles(realm);
@@ -66,18 +69,23 @@ public class DataRepositoryManager {
     }
 
     private void checkLibraryData(Realm realm) {
-        UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Constants.ACTION_GET_UP_LAUNCHES).findFirst();
+        UpdateRecord record = realm.where(UpdateRecord.class)
+                .equalTo("type", Constants.ACTION_GET_UP_LAUNCHES_ALL)
+                .findFirst();
         if (record != null) {
             Date currentDate = new Date();
             Date lastUpdateDate = record.getDate();
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
             long daysMaxUpdate = TimeUnit.DAYS.toMillis(30);
+            Timber.d("Time since last library sync %s", timeSinceUpdate);
             if (timeSinceUpdate > daysMaxUpdate) {
+                Timber.d("%s greater then %s - updating library data.", timeSinceUpdate, daysMaxUpdate);
                 Intent rocketIntent = new Intent(context, LibraryDataService.class);
                 rocketIntent.setAction(Constants.ACTION_GET_ALL_LIBRARY_DATA);
                 context.startService(rocketIntent);
             }
         } else {
+            Timber.d("No record - checking library data.");
             Intent rocketIntent = new Intent(context, LibraryDataService.class);
             rocketIntent.setAction(Constants.ACTION_GET_ALL_LIBRARY_DATA);
             context.startService(rocketIntent);
@@ -85,24 +93,24 @@ public class DataRepositoryManager {
     }
 
     private void checkUpcomingLaunches(Realm realm) {
-        UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Constants.ACTION_GET_UP_LAUNCHES).findFirst();
+        UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Constants.ACTION_GET_UP_LAUNCHES_ALL).findFirst();
         if (record != null) {
             Date currentDate = new Date();
             Date lastUpdateDate = record.getDate();
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
-            long daysMaxUpdate = TimeUnit.DAYS.toMillis(7);
-            long daysMinUpdate = TimeUnit.DAYS.toMillis(1);
-
+            long daysMaxUpdate = TimeUnit.DAYS.toMillis(1);
+            Timber.d("Time since last upcoming launches sync %s", timeSinceUpdate);
             if (timeSinceUpdate > daysMaxUpdate) {
-                dataManager.getUpcomingLaunchesAll();
-            } else if (timeSinceUpdate > daysMinUpdate) {
+                Timber.d("%s greater then %s - updating library data.", timeSinceUpdate, daysMaxUpdate);
                 dataManager.getNextUpcomingLaunches();
             }
         } else {
+            Timber.d("No record - getting all launches");
             dataManager.getUpcomingLaunchesAll();
         }
     }
 
+    //TODO move from LibraryDataService to DataManager
     private void checkMissions(Realm realm) {
         UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Constants.ACTION_GET_MISSION).findFirst();
         if (record != null) {
@@ -110,18 +118,22 @@ public class DataRepositoryManager {
             Date lastUpdateDate = record.getDate();
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
             long daysMaxUpdate = TimeUnit.DAYS.toMillis(30);
+            Timber.d("Time since last mission sync %s", timeSinceUpdate);
             if (timeSinceUpdate > daysMaxUpdate) {
+                Timber.d("%s greater then %s - updating mission data.", timeSinceUpdate, daysMaxUpdate);
                 Intent missionIntent = new Intent(context, LibraryDataService.class);
                 missionIntent.setAction(Constants.ACTION_GET_MISSION);
                 context.startService(missionIntent);
             }
         } else {
+            Timber.d("No record - getting all missions.");
             Intent missionIntent = new Intent(context, LibraryDataService.class);
             missionIntent.setAction(Constants.ACTION_GET_MISSION);
             context.startService(missionIntent);
         }
     }
 
+    //TODO move from LibraryDataService to DataManager
     private void checkVehicles(Realm realm) {
         UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Constants.ACTION_GET_VEHICLES_DETAIL).findFirst();
         if (record != null) {
@@ -129,12 +141,15 @@ public class DataRepositoryManager {
             Date lastUpdateDate = record.getDate();
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
             long daysMaxUpdate = TimeUnit.DAYS.toMillis(30);
+            Timber.d("Time since last vehicle sync %s", timeSinceUpdate);
             if (timeSinceUpdate > daysMaxUpdate) {
+                Timber.d("%s greater then %s - updating vehicle data.", timeSinceUpdate, daysMaxUpdate);
                 Intent rocketIntent = new Intent(context, LibraryDataService.class);
                 rocketIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);
                 context.startService(rocketIntent);
             }
         } else {
+            Timber.d("No record - getting all vehicles.");
             Intent rocketIntent = new Intent(context, LibraryDataService.class);
             rocketIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);
             context.startService(rocketIntent);

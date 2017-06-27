@@ -11,11 +11,13 @@ import com.google.gson.stream.JsonWriter;
 
 import java.lang.reflect.Type;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -25,6 +27,7 @@ public class RetrofitBuilder {
     public static Retrofit getLibraryRetrofit(String version) {
 
         Retrofit retrofit = new Retrofit.Builder()
+                .client(defaultClient())
                 .baseUrl(Constants.LIBRARY_BASE_URL + version + "/")
                 .addConverterFactory(GsonConverterFactory.create(getGson()))
                 .build();
@@ -36,6 +39,7 @@ public class RetrofitBuilder {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.LIBRARY_BASE_URL + version + "/")
+                .client(defaultClient())
                 .addConverterFactory(GsonConverterFactory.create(getGson()))
                 .callbackExecutor(Executors.newCachedThreadPool())
                 .build();
@@ -44,12 +48,20 @@ public class RetrofitBuilder {
 
     public static Retrofit getSpaceLaunchNowRetrofit() {
 
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.API_BASE_URL)
+                .client(defaultClient())
                 .addConverterFactory(GsonConverterFactory.create(getGson()))
                 .build();
         return retrofit;
+    }
+
+    private static OkHttpClient defaultClient() {
+        OkHttpClient.Builder client = new OkHttpClient().newBuilder();
+        client.connectTimeout(15, TimeUnit.SECONDS);
+        client.readTimeout(15, TimeUnit.SECONDS);
+        client.writeTimeout(15, TimeUnit.SECONDS);
+        return client.build();
     }
 
     private static Gson getGson(){

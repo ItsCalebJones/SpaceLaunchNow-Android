@@ -15,6 +15,7 @@ import java.io.IOException;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import me.calebjones.spacelaunchnow.content.DataRepositoryManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.JobUtils;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
@@ -105,7 +106,7 @@ public class DebugPresenter implements DebugContract.Presenter {
 
     @Override
     public void syncNextLaunchClicked(Context context) {
-        context.startService(new Intent(context, LaunchDataService.class).setAction(Constants.ACTION_GET_NEXT_LAUNCH));
+        context.startService(new Intent(context, LaunchDataService.class).setAction(Constants.ACTION_GET_NEXT_LAUNCH_MINI));
     }
 
     @Override
@@ -118,7 +119,8 @@ public class DebugPresenter implements DebugContract.Presenter {
 
     @Override
     public void syncBackgroundSyncClicked(Context context) {
-        context.startService(new Intent(context, LaunchDataService.class).setAction(Constants.ACTION_UPDATE_BACKGROUND));
+        DataRepositoryManager dataRepositoryManager = new DataRepositoryManager(context);
+        dataRepositoryManager.syncBackground();
     }
 
     @Override
