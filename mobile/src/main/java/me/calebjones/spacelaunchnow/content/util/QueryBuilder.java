@@ -520,7 +520,9 @@ public class QueryBuilder {
         RealmQuery<Launch> query = realm.where(Launch.class)
                 .greaterThanOrEqualTo("net", date);
 
-        query.equalTo("tbdtime", 0).or().isNotNull("eventID").findAll();
+        if (switchPreferences.getNoGoSwitch()) {
+            query.equalTo("status", 1).findAll();
+        }
 
         query.beginGroup();
 
@@ -552,6 +554,7 @@ public class QueryBuilder {
                     .or()
                     .equalTo("location.pads.agencies.id", 121);
         }
+
 
         if (switchPreferences.getSwitchULA()) {
             if (!first) {
@@ -648,7 +651,9 @@ public class QueryBuilder {
         RealmQuery<Launch> query = realm.where(Launch.class)
                 .greaterThanOrEqualTo("net", date).equalTo("syncCalendar", calendarState);
 
-        query.equalTo("tbdtime", 0).or().isNotNull("eventID").findAll();
+        if (switchPreferences.getNoGoSwitch()) {
+            query.equalTo("status", 1).findAll();
+        }
 
         query.beginGroup();
 

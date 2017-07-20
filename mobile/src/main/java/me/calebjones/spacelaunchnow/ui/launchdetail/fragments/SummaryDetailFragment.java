@@ -94,8 +94,6 @@ public class SummaryDetailFragment extends BaseFragment {
     TextView launch_status;
     @BindView(R.id.watchButton)
     AppCompatButton watchButton;
-    @BindView(R.id.calendar_switch)
-    SwitchCompat calendarSwitch;
     @BindView(R.id.notification_switch)
     SwitchCompat notificationSwitch;
     @BindView(R.id.weather_card)
@@ -573,85 +571,6 @@ public class SummaryDetailFragment extends BaseFragment {
                     launch_status.setText("Launch failure occurred.");
                     break;
             }
-
-            calendarSwitch.setChecked(detailLaunch.syncCalendar());
-            calendarSwitch.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
-                        getRealm().executeTransaction(new Realm.Transaction() {
-                            @Override
-                            public void execute(Realm realm) {
-                                if (!detailLaunch.isUserToggledCalendar()) {
-                                    detailLaunch.setUserToggledCalendar(true);
-                                }
-                                detailLaunch.setSyncCalendar(!detailLaunch.syncCalendar());
-                                Timber.v("Launch %s updated to %s", detailLaunch.getName(), detailLaunch.syncCalendar());
-                            }
-                        });
-                        CalendarSyncService.startActionResync(context);
-                    } else {
-                        Dexter.withActivity(getActivity()).withPermission(Manifest.permission.WRITE_CALENDAR).withListener(new PermissionListener() {
-                            @Override
-                            public void onPermissionGranted(PermissionGrantedResponse response) {
-                                final SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
-                                if (getRealm().where(CalendarItem.class).findFirst() == null) {
-                                    setDefaultCalendar();
-                                }
-                                getRealm().executeTransaction(new Realm.Transaction() {
-                                    @Override
-                                    public void execute(Realm realm) {
-                                        if (!detailLaunch.isUserToggledCalendar()) {
-                                            detailLaunch.setUserToggledCalendar(true);
-                                        }
-                                        detailLaunch.setSyncCalendar(!detailLaunch.syncCalendar());
-                                        Timber.v("Launch %s updated to %s", detailLaunch.getName(), detailLaunch.syncCalendar());
-                                    }
-                                });
-                                CalendarSyncService.startActionResync(context);
-                            }
-
-                            @Override
-                            public void onPermissionDenied(PermissionDeniedResponse response) {
-                                calendarSwitch.setChecked(false);
-                                if (response.isPermanentlyDenied()) {
-                                    Toast.makeText(context, "Calendar permission denied, please go to Android Settings -> Apps to enable.", Toast.LENGTH_LONG).show();
-                                }
-                            }
-
-                            @Override
-                            public void onPermissionRationaleShouldBeShown(PermissionRequest permission, final PermissionToken token) {
-                                final SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
-                                new AlertDialog.Builder(context).setTitle("Calendar Permission Needed")
-                                        .setMessage("This permission is needed to sync launches with your calendar.")
-                                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                switchPreferences.setCalendarStatus(false);
-                                                dialog.dismiss();
-                                                token.cancelPermissionRequest();
-                                            }
-                                        })
-                                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                                token.continuePermissionRequest();
-                                            }
-                                        })
-                                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                            @Override
-                                            public void onDismiss(DialogInterface dialog) {
-                                                switchPreferences.setCalendarStatus(false);
-                                                token.cancelPermissionRequest();
-                                            }
-                                        })
-                                        .show();
-                            }
-                        }).check();
-                    }
-                }
-            });
 
             notificationSwitch.setChecked(this.detailLaunch.isNotifiable());
             notificationSwitch.setOnClickListener(new View.OnClickListener() {
