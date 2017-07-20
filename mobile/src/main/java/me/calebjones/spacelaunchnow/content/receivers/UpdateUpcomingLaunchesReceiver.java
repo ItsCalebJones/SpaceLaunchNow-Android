@@ -20,7 +20,7 @@ public class UpdateUpcomingLaunchesReceiver extends BroadcastReceiver {
         String action = intent.getAction();
 
         if (Constants.ACTION_CHECK_NEXT_LAUNCH_TIMER.equals(action)) {
-            LaunchDataService.startActionUpdateNextLaunch(context);
+            LaunchDataService.startActionUpdateNextLaunchMini(context);
             Toast.makeText(context, "Refreshing launch data...", Toast.LENGTH_SHORT).show();
         }
     }

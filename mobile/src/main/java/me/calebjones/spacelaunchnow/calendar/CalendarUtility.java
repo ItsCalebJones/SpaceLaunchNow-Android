@@ -35,19 +35,18 @@ import timber.log.Timber;
 
 public class CalendarUtility {
 
-    private SharedPreferences sharedPrefs;
-    private CalendarItem calendarItem;
-
-    public CalendarUtility(CalendarItem calendarItem) {
-        this.calendarItem = calendarItem;
-    }
-
     final static String[] CALENDAR_QUERY_COLUMNS = {
             CalendarContract.Calendars._ID,
             CalendarContract.Calendars.NAME,
             CalendarContract.Calendars.VISIBLE,
             CalendarContract.Calendars.OWNER_ACCOUNT
     };
+    private SharedPreferences sharedPrefs;
+    private CalendarItem calendarItem;
+
+    public CalendarUtility(CalendarItem calendarItem) {
+        this.calendarItem = calendarItem;
+    }
 
     public Integer addEvent(Context context, Launch launch) {
         Timber.v("Adding launch event: %s", launch.getName());
@@ -95,8 +94,8 @@ public class CalendarUtility {
         }
         event.timezone = TimeZone.getDefault().getDisplayName();
 
-        int id =  event.create(context.getContentResolver());
-        for (int time: prefSelected) {
+        int id = event.create(context.getContentResolver());
+        for (int time : prefSelected) {
             setReminder(context, id, time);
         }
         return id;
@@ -166,7 +165,8 @@ public class CalendarUtility {
                 Crashlytics.logException(error);
                 return false;
             }
-        } return false;
+        }
+        return false;
     }
 
     public int deleteEvent(Context context, Launch launch) {
@@ -231,8 +231,9 @@ public class CalendarUtility {
 
     public void deleteDuplicates(Context context, Realm realm, String queryStr, String type) {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
-            if (EventInfo.getAllEvents(context) != null) {
-                for (EventInfo eventInfo : EventInfo.getAllEvents(context)) {
+            List<EventInfo> eventInfos = EventInfo.getAllEvents(context);
+            if (eventInfos != null) {
+                for (EventInfo eventInfo : eventInfos) {
                     if (eventInfo != null & eventInfo.getDescription() != null && eventInfo.getDescription().contains(queryStr)) {
                         if (eventInfo.getId() != null) {
                             Launch launchRealm = realm.where(Launch.class).equalTo("eventID", eventInfo.getId()).findFirst();

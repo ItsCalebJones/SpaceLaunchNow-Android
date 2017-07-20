@@ -158,14 +158,14 @@ public class DataManager {
                     } else {
                         isUpcomingLaunch = false;
 
-                        dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES, true, call));
+                        dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, true, call));
 
                         context.startService(new Intent(context, NextLaunchTracker.class));
                     }
                 } else {
                     isUpcomingLaunch = false;
 
-                    dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES, false, call, ErrorUtil.parseLibraryError(response)));
+                    dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, false, call, ErrorUtil.parseLibraryError(response)));
 
                 }
             }
@@ -174,12 +174,12 @@ public class DataManager {
             public void onFailure(Call<LaunchResponse> call, Throwable t) {
                 isUpcomingLaunch = false;
 
-                dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES, false, call, t.getLocalizedMessage()));
+                dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, false, call, t.getLocalizedMessage()));
             }
         });
     }
 
-    private void getNextUpcomingLaunches(int offset) {
+    private void getNextUpcomingLaunches(final int offset) {
         isUpcomingLaunch = true;
         Timber.i("Running getNextUpcomingLaunches - %s", offset);
         DataClient.getInstance().getNextUpcomingLaunches(offset, new Callback<LaunchResponse>() {
@@ -187,7 +187,7 @@ public class DataManager {
             public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
                 if (response.isSuccessful()) {
                     int total = response.body().getTotal();
-                    int count = response.body().getCount();
+                    int count = response.body().getCount() + offset;
                     Timber.v("UpcomingLaunches Count: %s", count);
                     dataSaver.saveLaunchesToRealm(response.body().getLaunches(), false);
                     if (count < total) {
@@ -195,12 +195,12 @@ public class DataManager {
                     } else {
                         isUpcomingLaunch = false;
 
-                        dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES, true, call));
+                        dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, true, call));
 
                         context.startService(new Intent(context, NextLaunchTracker.class));
                     }
                 } else {
-                    dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES, false, call, ErrorUtil.parseLibraryError(response)));
+                    dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, false, call, ErrorUtil.parseLibraryError(response)));
                 }
             }
 
@@ -208,15 +208,15 @@ public class DataManager {
             public void onFailure(Call<LaunchResponse> call, Throwable t) {
                 isUpcomingLaunch = false;
 
-                dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES, false, call, t.getLocalizedMessage()));
+                dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, false, call, t.getLocalizedMessage()));
             }
         });
     }
 
-    public void getUpcomingLaunchesAll() {
+    public void getUpcomingLaunches() {
         isUpcomingLaunchAll = true;
-        Timber.i("Running getUpcomingLaunchesAll");
-        DataClient.getInstance().getUpcomingLaunchesAll(0, new Callback<LaunchResponse>() {
+        Timber.i("Running getUpcomingLaunches");
+        DataClient.getInstance().getUpcomingLaunches(0, new Callback<LaunchResponse>() {
             @Override
             public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
                 if (response.isSuccessful()) {
@@ -225,7 +225,7 @@ public class DataManager {
                     int count = response.body().getCount();
                     Timber.v("UpcomingLaunches Count: %s", count);
                     if (count < total) {
-                        getUpcomingLaunchesAll(count);
+                        getUpcomingLaunches(count);
                     } else {
                         isUpcomingLaunchAll = false;
 
@@ -250,10 +250,10 @@ public class DataManager {
         });
     }
 
-    private void getUpcomingLaunchesAll(final int offset) {
+    private void getUpcomingLaunches(final int offset) {
         isUpcomingLaunchAll = true;
-        Timber.i("Running getUpcomingLaunchesAll - %s", offset);
-        DataClient.getInstance().getUpcomingLaunchesAll(offset, new Callback<LaunchResponse>() {
+        Timber.i("Running getUpcomingLaunches - %s", offset);
+        DataClient.getInstance().getUpcomingLaunches(offset, new Callback<LaunchResponse>() {
 
             @Override
             public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
@@ -263,7 +263,7 @@ public class DataManager {
                     int count = response.body().getCount() + offset;
                     Timber.v("UpcomingLaunches Count: %s", count);
                     if (count < total) {
-                        getUpcomingLaunchesAll(count);
+                        getUpcomingLaunches(count);
                     } else {
                         isUpcomingLaunchAll = false;
 
@@ -281,6 +281,81 @@ public class DataManager {
                 isUpcomingLaunchAll = false;
 
                 dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES, false, call, t.getLocalizedMessage()));
+
+                context.startService(new Intent(context, NextLaunchTracker.class));
+
+            }
+        });
+    }
+
+    public void getUpcomingLaunchesAll() {
+        isUpcomingLaunchAll = true;
+        Timber.i("Running getUpcomingLaunchesAll");
+        DataClient.getInstance().getUpcomingLaunchesAll(0, new Callback<LaunchResponse>() {
+            @Override
+            public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
+                if (response.isSuccessful()) {
+                    dataSaver.saveLaunchesToRealm(response.body().getLaunches(), false);
+                    int total = response.body().getTotal();
+                    int count = response.body().getCount();
+                    Timber.v("UpcomingLaunches Count: %s", count);
+                    if (count < total) {
+                        getUpcomingLaunchesAll(count);
+                    } else {
+                        isUpcomingLaunchAll = false;
+
+                        dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_ALL, true, call));
+
+                        context.startService(new Intent(context, NextLaunchTracker.class));
+                    }
+                } else {
+                    dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_ALL, false, call, ErrorUtil.parseLibraryError(response)));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LaunchResponse> call, Throwable t) {
+                isUpcomingLaunchAll = false;
+
+                dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_ALL, false, call, t.getLocalizedMessage()));
+
+                context.startService(new Intent(context, NextLaunchTracker.class));
+
+            }
+        });
+    }
+
+    private void getUpcomingLaunchesAll(final int offset) {
+        isUpcomingLaunchAll = true;
+        Timber.i("Running getUpcomingLaunchesAll - %s", offset);
+        DataClient.getInstance().getUpcomingLaunchesAll(offset, new Callback<LaunchResponse>() {
+
+            @Override
+            public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
+                if (response.isSuccessful()) {
+                    dataSaver.saveLaunchesToRealm(response.body().getLaunches(), false);
+                    int total = response.body().getTotal();
+                    int count = response.body().getCount() + offset;
+                    Timber.v("UpcomingLaunches Count: %s", count);
+                    if (count < total) {
+                        getUpcomingLaunchesAll(count);
+                    } else {
+                        isUpcomingLaunchAll = false;
+
+                        dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_ALL, true, call));
+
+                        context.startService(new Intent(context, NextLaunchTracker.class));
+                    }
+                } else {
+                    dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_ALL, false, call, ErrorUtil.parseLibraryError(response)));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LaunchResponse> call, Throwable t) {
+                isUpcomingLaunchAll = false;
+
+                dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_ALL, false, call, t.getLocalizedMessage()));
 
                 context.startService(new Intent(context, NextLaunchTracker.class));
 

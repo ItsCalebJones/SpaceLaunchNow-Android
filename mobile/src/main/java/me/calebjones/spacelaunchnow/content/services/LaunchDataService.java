@@ -32,9 +32,9 @@ public class LaunchDataService extends BaseService {
         Timber.v("Sending Sync Notifiers intent.");
     }
 
-    public static void startActionUpdateNextLaunch(Context context) {
+    public static void startActionUpdateNextLaunchMini(Context context) {
         Intent intent = new Intent(context, LaunchDataService.class);
-        intent.setAction(Constants.ACTION_GET_NEXT_LAUNCH);
+        intent.setAction(Constants.ACTION_GET_NEXT_LAUNCH_MINI);
         context.startService(intent);
         Timber.v("Sending Update Next Launch intent.");
     }
@@ -70,7 +70,7 @@ public class LaunchDataService extends BaseService {
                 }
 
                 // Called from NextLaunchFragment
-            } else if (Constants.ACTION_GET_UP_LAUNCHES.equals(action)) {
+            } else if (Constants.ACTION_GET_UP_LAUNCHES_ALL.equals(action)) {
 
                 Timber.v("Intent action received: %s", action);
                 if (this.sharedPref.getBoolean("background", true)) {
@@ -89,10 +89,15 @@ public class LaunchDataService extends BaseService {
                     dataManager.getLaunchesByDate("1950-01-01", Utils.getEndDate(1), 0);
                 }
 
-            } else if (Constants.ACTION_GET_NEXT_LAUNCH.equals(action)) {
+            } else if (Constants.ACTION_GET_NEXT_LAUNCH_MINI.equals(action)) {
 
                 Timber.v("Intent action received: %s", action);
                 dataManager.getNextUpcomingLaunchesMini();
+
+            } else if (Constants.ACTION_GET_UP_LAUNCHES.equals(action)) {
+
+                Timber.v("Intent action received: %s", action);
+                dataManager.getUpcomingLaunches();
 
             } else if (Constants.SYNC_NOTIFIERS.equals(action)) {
 

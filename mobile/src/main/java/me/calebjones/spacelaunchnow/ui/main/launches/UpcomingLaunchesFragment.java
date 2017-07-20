@@ -428,7 +428,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
         public void onReceive(Context context, Intent intent) {
             Timber.v("Received: %s", intent.getAction());
             hideLoading();
-            if (intent.getAction().equals(Constants.ACTION_GET_UP_LAUNCHES)) {
+            if (intent.getAction().equals(Constants.ACTION_GET_UP_LAUNCHES_ALL)) {
                 if (intent.getExtras().getBoolean("result")) {
                     loadData();
                 } else {
@@ -498,7 +498,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     public void onResume() {
         Timber.d("OnResume!");
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Constants.ACTION_GET_UP_LAUNCHES);
+        intentFilter.addAction(Constants.ACTION_GET_UP_LAUNCHES_ALL);
 
         getActivity().registerReceiver(launchReceiver, intentFilter);
         setTitle();

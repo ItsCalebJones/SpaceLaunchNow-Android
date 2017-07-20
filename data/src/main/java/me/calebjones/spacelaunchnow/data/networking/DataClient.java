@@ -106,6 +106,14 @@ public class DataClient {
         return call;
     }
 
+    public Call<LaunchResponse> getUpcomingLaunches(int offset, Callback<LaunchResponse> callback) {
+        Call<LaunchResponse> call = libraryServiceThreaded.getUpcomingLaunches(offset);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
     public Call<LaunchResponse> getUpcomingLaunchesAll(int offset, Callback<LaunchResponse> callback) {
         Call<LaunchResponse> call = libraryServiceThreaded.getUpcomingLaunchesAll(offset);
 

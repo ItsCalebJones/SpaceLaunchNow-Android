@@ -19,6 +19,9 @@ public interface LibraryService {
     @GET("launch/next/1000&mode=verbose&limit=100")
     Call<LaunchResponse> getUpcomingLaunchesAll(@Query("offset") int offset);
 
+    @GET("launch/next/50&mode=verbose&limit=10")
+    Call<LaunchResponse> getUpcomingLaunches(@Query("offset") int offset);
+
     @GET("launch/{start_date}/{end_date}?mode=verbose")
     Call<LaunchResponse> getNextUpcomingLaunches(@Path("start_date") String start_date,
                                                  @Path("end_date") String end_date,

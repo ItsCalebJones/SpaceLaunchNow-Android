@@ -3,7 +3,7 @@ package me.calebjones.spacelaunchnow.data.models;
 
 public final class Constants {
     public static final String ACTION_GET_PREV_LAUNCHES = "GET_PREV_LAUNCHES";
-    public static final String ACTION_GET_UP_LAUNCHES = "GET_UP_LAUNCHES";
+    public static final String ACTION_GET_UP_LAUNCHES_ALL = "GET_UP_LAUNCHES_ALL";
     public static final String ACTION_GET_VEHICLES_DETAIL = "GET_ROCKETS";
     public static final String ACTION_GET_VEHICLES_FAMILY = "GET_ROCKET_FAMILY";
     public static final String ACTION_GET_ALL_DATA = "GET_ALL";
@@ -13,7 +13,9 @@ public final class Constants {
     public static final String ACTION_GET_ALL_LIBRARY_DATA = "GET_ALL_LIBRARY_DATA";
     public static final String ACTION_GET_VEHICLES = "GET_VEHICLES";
     public static final String ACTION_GET_PADS = "GET_PADS";
-    public static final String ACTION_GET_NEXT_LAUNCH = "UPDATE_NEXT_LAUNCH";
+    public static final String ACTION_GET_UP_LAUNCHES = "GET_UP_LAUNCHES";
+    public static final String ACTION_GET_NEXT_LAUNCH_MINI = "GET_NEXT_LAUNCH_MINI";
+    public static final String ACTION_GET_NEXT_LAUNCHES = "GET_NEXT_LAUNCHES";
     public static final String ACTION_GET_UP_LAUNCHES_BY_ID = "GET_UP_LAUNCHES_BY_ID";
     public static final String ACTION_UPDATE_BACKGROUND = "UPDATE_UP_LAUNCHES_BACKGROUND";
     public static final String ACTION_UPDATE_LAUNCH = "UPDATE_LAUNCH";
