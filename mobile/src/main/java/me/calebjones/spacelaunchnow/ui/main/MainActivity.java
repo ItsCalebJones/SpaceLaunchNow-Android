@@ -201,6 +201,12 @@ public class MainActivity extends BaseActivity {
                                 .withName("Feedback")
                                 .withDescription("Found a bug?")
                                 .withIdentifier(R.id.menu_feedback)
+                                .withSelectable(false),
+                        new SecondaryDrawerItem()
+                                .withIcon(FontAwesome.Icon.faw_twitter)
+                                .withName("Twitter")
+                                .withDescription("Stay Connected!")
+                                .withIdentifier(R.id.menu_twitter)
                                 .withSelectable(false)
                 ).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -453,6 +459,11 @@ public class MainActivity extends BaseActivity {
             case R.id.menu_feedback:
                 showFeedback();
                 break;
+            case R.id.menu_twitter:
+                String url = "https://twitter.com/spacelaunchnow";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
             default:
                 // ignore
                 break;
