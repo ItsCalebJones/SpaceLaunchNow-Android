@@ -281,7 +281,7 @@ public class MainActivity extends BaseActivity {
                 .withDialogAnimation(true)
                 .withDivider(true)
                 .setIcon(R.drawable.ic_about)
-                .setTitle("Whats New? " + Utils.getVersionName(this))
+                .setTitle("Whats New? v" + Utils.getVersionName(this))
                 .setScrollable(true)
                 .setPositiveText("Okay")
                 .setNegativeText("Feedback")
