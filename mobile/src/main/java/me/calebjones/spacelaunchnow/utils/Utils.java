@@ -294,7 +294,7 @@ public class Utils {
             ComponentName comp = new ComponentName(context, context.getClass());
             return context.getPackageManager().getPackageInfo(comp.getPackageName(), 0).versionName;
         } catch (android.content.pm.PackageManager.NameNotFoundException e) {
-            return null;
+            return "Unknown";
         }
     }
 
