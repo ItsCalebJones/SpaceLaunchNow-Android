@@ -202,11 +202,12 @@ public class MainActivity extends BaseActivity {
                                 .withDescription("Found a bug?")
                                 .withIdentifier(R.id.menu_feedback)
                                 .withSelectable(false),
-                        new SecondaryDrawerItem().withName("Launch Library")
-                                .withDescription("Thank the librarians!")
-                                .withIcon(GoogleMaterial.Icon.gmd_open_in_browser)
-                                .withIdentifier(R.id.menu_launch)
-                                .withSelectable(true)
+                        new SecondaryDrawerItem()
+                                .withIcon(FontAwesome.Icon.faw_twitter)
+                                .withName("Twitter")
+                                .withDescription("Stay Connected!")
+                                .withIdentifier(R.id.menu_twitter)
+                                .withSelectable(false)
                 ).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
@@ -224,6 +225,14 @@ public class MainActivity extends BaseActivity {
                                     .withIcon(GoogleMaterial.Icon.gmd_mood)
                                     .withIdentifier(R.id.menu_support)
                                     .withSelectable(false));
+        }
+
+        if (SupporterHelper.isSupporter()){
+            result.addStickyFooterItem(
+                    new PrimaryDrawerItem().withName("Thank you for the support!")
+                            .withIcon(GoogleMaterial.Icon.gmd_mood)
+                            .withIdentifier(R.id.menu_support)
+                            .withSelectable(false));
         }
 
         checkFirstBoot();
@@ -272,7 +281,7 @@ public class MainActivity extends BaseActivity {
                 .withDialogAnimation(true)
                 .withDivider(true)
                 .setIcon(R.drawable.ic_about)
-                .setTitle("Whats New? " + Utils.getVersionName(this))
+                .setTitle("Whats New? v" + Utils.getVersionName(this))
                 .setScrollable(true)
                 .setPositiveText("Okay")
                 .setNegativeText("Feedback")
@@ -450,6 +459,11 @@ public class MainActivity extends BaseActivity {
             case R.id.menu_feedback:
                 showFeedback();
                 break;
+            case R.id.menu_twitter:
+                String url = "https://twitter.com/spacelaunchnow";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
             default:
                 // ignore
                 break;
@@ -460,28 +474,27 @@ public class MainActivity extends BaseActivity {
         new MaterialDialog.Builder(this)
                 .title("Submit Feedback")
                 .autoDismiss(true)
-                .content("Feel free to submit bugs or feature requests.")
-                .negativeText("Reddit")
-                .positiveColor(ContextCompat.getColor(this, R.color.colorPrimary))
-                .positiveText("Email")
+                .content("Feel free to submit bugs or feature requests for anything related to the app. If you found an issue with the launch data, the libraries at Launch Library that provide the data can be contacted via Discord or Reddit.")
+                .positiveColor(ContextCompat.getColor(this, R.color.colorAccent))
+                .negativeText("Launch Data")
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        String url = "https://www.reddit.com/r/spacelaunchnow";
+                        String url = "https://www.reddit.com/r/LaunchLibrary/";
                         Intent i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(url));
                         startActivity(i);
                     }
                 })
+                .positiveColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                .positiveText("App Feedback")
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        Intent emailIntent = new Intent(Intent.ACTION_SEND);
-                        emailIntent.setData(Uri.parse("mailto:"));
-                        emailIntent.setType("message/rfc822");
-                        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@calebjones.me"});
-                        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "SpaceLaunchNow - Feedback");
-                        startActivity(Intent.createChooser(emailIntent, "Send Email"));
+                        String url = "https://www.reddit.com/r/spacelaunchnow/";
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
                     }
                 })
                 .show();

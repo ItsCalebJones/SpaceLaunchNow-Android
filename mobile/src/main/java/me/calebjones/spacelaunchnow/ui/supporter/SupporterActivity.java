@@ -79,6 +79,12 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
 
         setContentView(R.layout.activity_support);
         ButterKnife.bind(this);
+
+        if (SupporterHelper.isSupporter()){
+            purchaseButton.setText("You again? Sure!");
+        } else {
+            purchaseButton.setText("Upgrade to Supporter");
+        }
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setTitle("");

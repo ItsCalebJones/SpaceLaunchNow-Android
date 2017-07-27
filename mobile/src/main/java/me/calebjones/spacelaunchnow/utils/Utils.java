@@ -294,7 +294,7 @@ public class Utils {
             ComponentName comp = new ComponentName(context, context.getClass());
             return context.getPackageManager().getPackageInfo(comp.getPackageName(), 0).versionName;
         } catch (android.content.pm.PackageManager.NameNotFoundException e) {
-            return null;
+            return "Unknown";
         }
     }
 
@@ -510,7 +510,7 @@ public class Utils {
                     with(context).
                     load(imageURL).
                     asBitmap().
-                    into(-1, -1). // Width and height
+                    into(200, 200). // Width and height
                     get();
         } catch (InterruptedException | ExecutionException e) {
             Timber.e(e);
