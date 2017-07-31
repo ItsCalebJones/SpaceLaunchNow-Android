@@ -279,6 +279,10 @@ public class Utils {
         }
     }
 
+    public static int reverseNumber(int num, int min, int max) {
+        return (max + min) - num;
+    }
+
     public static int getVersionCode(Context context) {
         try {
             ComponentName comp = new ComponentName(context, context.getClass());
