@@ -510,7 +510,7 @@ public class Utils {
                     with(context).
                     load(imageURL).
                     asBitmap().
-                    into(200, 200). // Width and height
+                    into(-1, -1). // Width and height
                     get();
         } catch (InterruptedException | ExecutionException e) {
             Timber.e(e);
