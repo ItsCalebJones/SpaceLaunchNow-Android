@@ -8,12 +8,14 @@ import retrofit2.http.GET;
 
 public interface SpaceLaunchNowService {
 
-    @GET("orbiter")
+    String version = "v1";
+
+    @GET(version + "/orbiters")
     Call<OrbiterResponse> getOrbiter();
 
-    @GET("launchers")
+    @GET(version + "/launchers")
     Call<LauncherResponse> getLaunchers();
 
-    @GET("vehicle")
+    @GET(version + "/launcher_details")
     Call<VehicleResponse> getVehicles();
 }
