@@ -145,7 +145,7 @@ public class DataSaver {
         isSaving = false;
     }
 
-    public static boolean isLaunchTimeChanged(Launch previous, Launch item) {
+    private static boolean isLaunchTimeChanged(Launch previous, Launch item) {
         if ((Math.abs(previous.getNet().getTime() - item.getNet().getTime()) >= 3600)) {
             return true;
         } else if (previous.getStatus().intValue() != item.getStatus().intValue()) {
