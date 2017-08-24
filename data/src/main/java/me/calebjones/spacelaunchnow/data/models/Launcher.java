@@ -1,9 +1,15 @@
 package me.calebjones.spacelaunchnow.data.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Launcher {
     final String name;
     final String agency;
+
+    @SerializedName("image_url")
     final String imageURL;
+
+    @SerializedName("nation_url")
     final String nationURL;
 
     public Launcher(String name, String agency, String imageURL, String nationURL) {

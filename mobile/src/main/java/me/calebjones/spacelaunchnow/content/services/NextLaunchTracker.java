@@ -24,6 +24,7 @@ import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.LaunchNotification;
 import me.calebjones.spacelaunchnow.widget.LaunchCardCompactWidgetProvider;
 import me.calebjones.spacelaunchnow.widget.LaunchTimerWidgetProvider;
+import me.calebjones.spacelaunchnow.widget.LaunchWordTimerWidgetProvider;
 import timber.log.Timber;
 
 public class NextLaunchTracker extends IntentService {
@@ -98,7 +99,11 @@ public NextLaunchTracker() {
         timerIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, timerIds);
         sendBroadcast(timerIntent);
 
-
+        Intent wordIntent = new Intent(this, LaunchWordTimerWidgetProvider.class);
+        wordIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int wordIds[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), LaunchWordTimerWidgetProvider.class));
+        wordIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, wordIds);
+        sendBroadcast(wordIntent);
     }
 
     private void filterLaunchRealm(Date date, Date dateDay, Realm realm) {
