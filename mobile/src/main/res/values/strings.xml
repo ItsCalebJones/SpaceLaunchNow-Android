@@ -33,11 +33,8 @@
   <string name="ariane_logo">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950133/yffq0aI_oyyhmj.jpg</string>
   <string name="title_activity_debug">DebugActivity</string>
   <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
-  <string name="whats_new_content">Backend Work\n\n
-    Finally hook into the backend server, will be eliminating client side scheduling and background updates soon.\n
-    Fix a crash on Android Wear that caused some watches to reboot (Ask Google how thats possible)\n
-    Fixed an issue where some launches were sycning to calendar that shouldnt have.\n
-    Removed a widget that was causing issues with some launchers.
+  <string name="whats_new_content">Backend Work Part 2\n\n
+    Remove more background syncing and improve netcode.
   </string>
   <string name="link_feedback">https://www.reddit.com/r/spacelaunchnow</string>
   <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>

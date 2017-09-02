@@ -31,6 +31,7 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
+import me.calebjones.spacelaunchnow.content.DataManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataService;
 import me.calebjones.spacelaunchnow.data.models.Constants;
@@ -48,6 +49,7 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
     private RealmResults<Mission> missionList;
     private ListPreferences sharedPreference;
     private CoordinatorLayout coordinatorLayout;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private android.content.SharedPreferences SharedPreferences;
     private FloatingActionButton menu;
 
@@ -72,15 +74,11 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
         empty = view.findViewById(R.id.empty_launch_root);
         menu = (FloatingActionButton) view.findViewById(R.id.menu);
         coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.coordinatorLayout);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_view);
+        swipeRefreshLayout.setOnRefreshListener(this);
         menu.setVisibility(View.GONE);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        RecyclerView hideView = (RecyclerView) view.findViewById(R.id.recycler_view_staggered);
-
-        if (mRecyclerView.getVisibility() != View.VISIBLE) {
-            hideView.setVisibility(View.GONE);
-            mRecyclerView.setVisibility(View.VISIBLE);
-        }
 
         layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
@@ -163,27 +161,35 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
 
     public void onFinishedRefreshing() {
         displayMissions();
+        hideLoading();
     }
 
     public void fetchData() {
         Timber.d("Sending service intent!");
         showLoading();
-        Intent missionIntent = new Intent(getContext(), LibraryDataService.class);
-        missionIntent.setAction(Constants.ACTION_GET_MISSION);
-        getContext().startService(missionIntent);
+        DataManager dataManager = new DataManager(getActivity());
+        dataManager.getAllMissions();
+        showSnackbar("Updating mission data... this may take a few seconds.");
     }
 
     private void showLoading() {
-
+        swipeRefreshLayout.setRefreshing(true);
     }
 
     private void hideLoading() {
-
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     private void showErrorSnackbar(String error) {
         Snackbar
                 .make(coordinatorLayout, "Error - " + error, Snackbar.LENGTH_LONG)
+                .setActionTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary))
+                .show();
+    }
+
+    private void showSnackbar(String message) {
+        Snackbar
+                .make(coordinatorLayout, message, Snackbar.LENGTH_LONG)
                 .setActionTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary))
                 .show();
     }

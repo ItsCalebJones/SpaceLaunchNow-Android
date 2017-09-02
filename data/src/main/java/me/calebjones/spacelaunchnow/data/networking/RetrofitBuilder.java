@@ -8,11 +8,9 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-
 import java.lang.reflect.Type;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.data.models.Constants;
