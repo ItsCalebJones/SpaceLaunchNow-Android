@@ -7,7 +7,6 @@
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/fragment_feed_content"
         android:layout_width="fill_parent"
@@ -16,32 +15,33 @@
         android:paddingRight="2dp"
         tools:context="${relativePackage}.${activityClass}">
 
-        <FrameLayout
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/refresh_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
-            <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/recycler_view"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:columnWidth="320dp"
-                app:fastScrollPopupBgColor="@color/colorAccent"
-                app:fastScrollPopupTextColor="@android:color/primary_text_dark"
-                app:fastScrollThumbColor="@color/colorAccent" />
+                android:layout_height="match_parent">
 
 
-            <include layout="@layout/empty_launch" />
+                <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:columnWidth="320dp"
+                    app:fastScrollPopupBgColor="@color/colorAccent"
+                    app:fastScrollPopupTextColor="@android:color/primary_text_dark"
+                    app:fastScrollThumbColor="@color/colorAccent" />
 
-            <me.calebjones.spacelaunchnow.utils.views.AutofitRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/recycler_view_staggered"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:visibility="gone" />
 
-        </FrameLayout>
+                <include layout="@layout/empty_launch" />
+
+            </FrameLayout>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
 
 
         <android.support.design.widget.FloatingActionButton

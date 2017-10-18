@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -15,8 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +30,7 @@ import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
+import me.calebjones.spacelaunchnow.utils.views.CustomOnOffsetChangedListener;
 import timber.log.Timber;
 
 public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.OnOffsetChangedListener {
@@ -117,32 +115,7 @@ public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.
 
         appBarLayout.addOnOffsetChangedListener(this);
         mMaxScrollSize = appBarLayout.getTotalScrollRange();
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                int totalScroll = appBarLayout.getTotalScrollRange();
-                int currentScroll = totalScroll + verticalOffset;
-
-                int color = statusColor;
-                int r = (color >> 16) & 0xFF;
-                int g = (color >> 8) & 0xFF;
-                int b = (color >> 0) & 0xFF;
-
-                if ((currentScroll) < 255) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        Window window = getWindow();
-                        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                        window.setStatusBarColor(Color.argb(reverseNumber(currentScroll, 0, 255), r, g, b));
-                    }
-                } else {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        Window window = getWindow();
-                        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                    }
-                }
-            }
-        });
+        appBarLayout.addOnOffsetChangedListener(new CustomOnOffsetChangedListener(statusColor, getWindow()));
 
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -153,10 +126,6 @@ public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.
             }
         }
         displayOrbiterDetails();
-    }
-
-    public int reverseNumber(int num, int min, int max) {
-        return (max + min) - num;
     }
 
     public void displayOrbiterDetails() {

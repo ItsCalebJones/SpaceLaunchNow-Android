@@ -31,6 +31,7 @@ def getGitHash = { ->
     exec {
         commandLine 'git', 'rev-parse', '--short', 'HEAD'
         standardOutput = stdout
+
     }
     return stdout.toString().trim()
 }

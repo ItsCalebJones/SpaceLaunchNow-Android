@@ -46,14 +46,16 @@ public class DataSaver {
     public void saveObjectsToRealm(final RealmObject[] objects) {
         Realm mRealm = Realm.getDefaultInstance();
         final RealmList<RealmObject> realmList = new RealmList<>();
-        Collections.addAll(realmList, objects);
-        mRealm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                realm.copyToRealmOrUpdate(realmList);
-            }
-        });
-        mRealm.close();
+        if (objects != null) {
+            Collections.addAll(realmList, objects);
+            mRealm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    realm.copyToRealmOrUpdate(realmList);
+                }
+            });
+            mRealm.close();
+        }
     }
 
     public void saveLaunchesToRealm(Launch[] launches, boolean mini) {
@@ -145,7 +147,7 @@ public class DataSaver {
         isSaving = false;
     }
 
-    public static boolean isLaunchTimeChanged(Launch previous, Launch item) {
+    private static boolean isLaunchTimeChanged(Launch previous, Launch item) {
         if ((Math.abs(previous.getNet().getTime() - item.getNet().getTime()) >= 3600)) {
             return true;
         } else if (previous.getStatus().intValue() != item.getStatus().intValue()) {

@@ -137,19 +137,6 @@
             android:theme="@style/BaseAppTheme" />
 
         <receiver
-            android:name=".widget.LaunchTimerWidgetProvider"
-            android:label="Countdown">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_REFRESH" />
-                <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_CLICK" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_launch_timer_info" />
-        </receiver>
-        <receiver
             android:name=".widget.LaunchCardCompactWidgetProvider"
             android:label="Launch Card">
             <intent-filter>
@@ -218,7 +205,7 @@
         </receiver>
 
         <service
-            android:name=".content.services.LaunchNotificationReceiver"
+            android:name=".content.receivers.LaunchNotificationReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.onesignal.NotificationExtender" />

@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.content.services;
+package me.calebjones.spacelaunchnow.content.receivers;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import me.calebjones.spacelaunchnow.content.DataSaver;
+import me.calebjones.spacelaunchnow.content.services.NextLaunchTracker;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Result;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;

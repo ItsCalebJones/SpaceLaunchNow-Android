@@ -9,13 +9,13 @@ import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.Rock
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.RocketResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface LibraryService {
 
     //Get Launches Methods
-
     @GET("launch/next/1000&mode=verbose&limit=100")
     Call<LaunchResponse> getUpcomingLaunchesAll(@Query("offset") int offset);
 

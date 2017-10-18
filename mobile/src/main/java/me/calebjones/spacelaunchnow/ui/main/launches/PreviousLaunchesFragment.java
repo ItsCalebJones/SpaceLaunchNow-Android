@@ -124,11 +124,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         mRecyclerView = (FastScrollRecyclerView) view.findViewById(R.id.recycler_view);
-        RecyclerView hideView = (RecyclerView) view.findViewById(R.id.recycler_view_staggered);
-        if (mRecyclerView.getVisibility() != View.VISIBLE) {
-            hideView.setVisibility(View.GONE);
-            mRecyclerView.setVisibility(View.VISIBLE);
-        }
+
         layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));

@@ -31,7 +31,7 @@ public final class Constants {
     public static int DB_SCHEMA_VERSION_1_5_5 = 188;
 
     public static String FORECAST_IO_BASE_URL = "https://api.forecast.io/";
-    public static String API_BASE_URL = "http://calebjones.me/app/";
+    public static String API_BASE_URL = "https://api.spacelaunchnow.me/";
     public static String LIBRARY_BASE_URL = "https://launchlibrary.net/";
     public static String DEBUG_BASE_URL = "https://launchlibrary.net/";
 

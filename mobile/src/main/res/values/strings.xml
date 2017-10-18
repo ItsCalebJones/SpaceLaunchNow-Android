@@ -33,13 +33,9 @@
   <string name="ariane_logo">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950133/yffq0aI_oyyhmj.jpg</string>
   <string name="title_activity_debug">DebugActivity</string>
   <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
-
-    <string name="whats_new_content">Bug Fix and Background Updates!\n\n
-      Added a scrollview to the filter screen.\n
-      Changes to support Android 8.0\n
-      Added a lot of code for upcoming server side handling of alarms and notifications.\n
-      Other bug fixes and improvements.
-    </string>
+  <string name="whats_new_content">Backend Work Part 2\n\n
+    Remove more background syncing and improve netcode.
+  </string>
   <string name="link_feedback">https://www.reddit.com/r/spacelaunchnow</string>
   <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>
 
