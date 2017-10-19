@@ -23,7 +23,7 @@ repositories {
 
 def versionMajor = 1
 def versionMinor = 6
-def versionPatch = 2
+def versionPatch = 3
 def appVersionCode = 0
 def appVersionName = ""
 def getGitHash = { ->
@@ -36,20 +36,6 @@ def getGitHash = { ->
     return stdout.toString().trim()
 }
 def versionPropsFile = file('version.properties')
-if (versionPropsFile.canRead()) {
-    def Properties versionProps = new Properties()
-
-    versionProps.load(new FileInputStream(versionPropsFile))
-
-    def versionBuild = versionProps['VERSION_CODE'].toInteger() + 1
-
-    versionProps['VERSION_CODE'] = versionBuild.toString()
-    versionProps.store(versionPropsFile.newWriter(), null)
-    appVersionCode = versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
-    appVersionName = "${versionMajor}.${versionMinor}.${versionPatch}"
-} else {
-    throw new GradleException("Could not read version.properties!")
-}
 
 android {
     signingConfigs {
@@ -69,13 +55,27 @@ android {
                                 manifestApplicationId          : "${applicationId}",
                                 onesignal_app_id               : "${app_id}",
                                 onesignal_google_project_number: "${google_project_number}"]
-        minSdkVersion 16
-        targetSdkVersion 26
-        versionCode appVersionCode
-        versionName appVersionName
-        signingConfig signingConfigs.config
-        resConfigs "en"
-        multiDexEnabled true
+        if (versionPropsFile.canRead()) {
+            def Properties versionProps = new Properties()
+
+            versionProps.load(new FileInputStream(versionPropsFile))
+
+            def versionBuild = versionProps['VERSION_CODE'].toInteger() + 1
+
+            versionProps['VERSION_CODE'] = versionBuild.toString()
+            versionProps.store(versionPropsFile.newWriter(), null)
+
+
+            minSdkVersion 16
+            targetSdkVersion 26
+            versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
+            versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+            signingConfig signingConfigs.config
+            resConfigs "en"
+            multiDexEnabled true
+        } else {
+            throw new GradleException("Could not read version.properties!")
+        }
 
     }
     buildTypes {

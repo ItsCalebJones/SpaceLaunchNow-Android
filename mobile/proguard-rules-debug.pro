@@ -14,7 +14,7 @@
 # Unfortunately obfuscation can cause issues for code that uses reflection or a few other
 # techniques. The default is to obfuscate.
 -dontobfuscate
-
+-ignorewarnings
 # Additionally you will need to keep specific classes. A common use case is keeping all
 # of the models that are JSON parsed using something like Jackson.
 
