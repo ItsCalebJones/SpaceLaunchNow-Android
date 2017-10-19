@@ -22,10 +22,10 @@ public class CrashlyticsTree extends Timber.Tree {
     @Override
     protected void log(int priority, String tag, String message, Throwable t) {
 
-        // Track INFO level logs as custom Answers events.
-        if (priority == Log.INFO) {
-            Answers.getInstance().logCustom(new CustomEvent(message));
-        }
+//        Track INFO level logs as custom Answers events.
+//        if (priority == Log.INFO) {
+//            Answers.getInstance().logCustom(new CustomEvent(message));
+//        }
 
         if (priority == Log.VERBOSE) {
             return;
