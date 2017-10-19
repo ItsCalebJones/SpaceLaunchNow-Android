@@ -76,7 +76,7 @@ public class DataRepositoryManager {
             Date currentDate = new Date();
             Date lastUpdateDate = record.getDate();
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
-            long daysMaxUpdate = TimeUnit.DAYS.toMillis(30);
+            long daysMaxUpdate = TimeUnit.DAYS.toMillis(90);
             Timber.d("Time since last library sync %s", timeSinceUpdate);
             if (timeSinceUpdate > daysMaxUpdate) {
                 Timber.d("%s greater then %s - updating library data.", timeSinceUpdate, daysMaxUpdate);

@@ -1,6 +1,6 @@
 package me.calebjones.spacelaunchnow.data.networking.interfaces;
 
-import me.calebjones.spacelaunchnow.data.models.Constants;
+import me.calebjones.spacelaunchnow.data.BuildConfig;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LauncherResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.OrbiterResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
@@ -12,20 +12,20 @@ public interface SpaceLaunchNowService {
 
     String version = "v1";
     @Headers({
-            "User-Agent: SpaceLaunchNow"
+            "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
     })
-    @GET(version + "/orbiters")
+    @GET(version + "/orbiters/")
     Call<OrbiterResponse> getOrbiter();
 
     @Headers({
-            "User-Agent: SpaceLaunchNow"
+            "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
     })
-    @GET(version + "/launchers")
+    @GET(version + "/launchers/")
     Call<LauncherResponse> getLaunchers();
 
     @Headers({
-            "User-Agent: SpaceLaunchNow"
+            "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
     })
-    @GET(version + "/launcher_details")
+    @GET(version + "/launcher_details/")
     Call<VehicleResponse> getVehicles();
 }
