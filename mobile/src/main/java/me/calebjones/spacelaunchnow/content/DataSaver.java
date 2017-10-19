@@ -46,14 +46,16 @@ public class DataSaver {
     public void saveObjectsToRealm(final RealmObject[] objects) {
         Realm mRealm = Realm.getDefaultInstance();
         final RealmList<RealmObject> realmList = new RealmList<>();
-        Collections.addAll(realmList, objects);
-        mRealm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                realm.copyToRealmOrUpdate(realmList);
-            }
-        });
-        mRealm.close();
+        if (objects != null) {
+            Collections.addAll(realmList, objects);
+            mRealm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    realm.copyToRealmOrUpdate(realmList);
+                }
+            });
+            mRealm.close();
+        }
     }
 
     public void saveLaunchesToRealm(Launch[] launches, boolean mini) {

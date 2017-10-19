@@ -1,5 +1,6 @@
 package me.calebjones.spacelaunchnow.ui.main.next;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,6 +9,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -105,11 +107,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         sharedPreference = ListPreferences.getInstance(context);
 
-        if (sharedPreference.isNightModeActive(context)) {
-            night = true;
-        } else {
-            night = false;
-        }
+        night = sharedPreference.isNightModeActive(context);
 
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.content_card_item, viewGroup, false);
 
@@ -130,7 +128,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                     } else {
                         title = launchItem.getRocket().getName();
                     }
-                } else if (launchItem.getName() != null){
+                } else if (launchItem.getName() != null) {
                     title = launchItem.getName();
                 } else {
                     Timber.e("Error - launch item is effectively null.");
@@ -363,7 +361,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                     } else {
                         if (launchItem.getRocket().getAgencies().size() > 0) {
                             holder.content_TMinus_status.setText(String.format("Waiting on exact launch time from %s", launchItem.getRocket().getAgencies().first().getName()));
-                        }  else {
+                        } else {
                             holder.content_TMinus_status.setText("Waiting on exact launch time from launch provider");
                         }
                     }
@@ -436,8 +434,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                         } else {
                             holder.content_mission.setText("Unknown Mission");
                         }
-                    }
-                    catch(ArrayIndexOutOfBoundsException exception) {
+                    } catch (ArrayIndexOutOfBoundsException exception) {
                         holder.content_mission.setText("Unknown Mission");
                     }
                     holder.content_mission_description_view.setVisibility(View.GONE);
@@ -505,28 +502,28 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         public ViewHolder(View view) {
             super(view);
 
-            categoryIcon = (ImageView) view.findViewById(R.id.categoryIcon);
-            exploreFab = (FloatingActionButton) view.findViewById(R.id.fab);
-            exploreButton = (TextView) view.findViewById(R.id.exploreButton);
-            shareButton = (TextView) view.findViewById(R.id.shareButton);
-            watchButton = (TextView) view.findViewById(R.id.watchButton);
-            title = (TextView) view.findViewById(R.id.launch_rocket);
-            location = (TextView) view.findViewById(R.id.location);
-            content_mission = (TextView) view.findViewById(R.id.content_mission);
-            content_mission_description = (TextView) view.findViewById(
+            categoryIcon = view.findViewById(R.id.categoryIcon);
+            exploreFab = view.findViewById(R.id.fab);
+            exploreButton = view.findViewById(R.id.exploreButton);
+            shareButton = view.findViewById(R.id.shareButton);
+            watchButton = view.findViewById(R.id.watchButton);
+            title = view.findViewById(R.id.launch_rocket);
+            location = view.findViewById(R.id.location);
+            content_mission = view.findViewById(R.id.content_mission);
+            content_mission_description = view.findViewById(
                     R.id.content_mission_description);
-            launch_date = (TextView) view.findViewById(R.id.launch_date);
-            content_status = (TextView) view.findViewById(R.id.content_status);
-            content_TMinus_status = (TextView) view.findViewById(R.id.content_TMinus_status);
-            content_mission_description_view = (LinearLayout) view.findViewById(R.id.content_mission_description_view);
+            launch_date = view.findViewById(R.id.launch_date);
+            content_status = view.findViewById(R.id.content_status);
+            content_TMinus_status = view.findViewById(R.id.content_TMinus_status);
+            content_mission_description_view = view.findViewById(R.id.content_mission_description_view);
 
-            countdownDays = (TextView) view.findViewById(R.id.countdown_days);
-            countdownHours = (TextView) view.findViewById(R.id.countdown_hours);
-            countdownMinutes = (TextView) view.findViewById(R.id.countdown_minutes);
-            countdownSeconds = (TextView) view.findViewById(R.id.countdown_seconds);
+            countdownDays = view.findViewById(R.id.countdown_days);
+            countdownHours = view.findViewById(R.id.countdown_hours);
+            countdownMinutes = view.findViewById(R.id.countdown_minutes);
+            countdownSeconds = view.findViewById(R.id.countdown_seconds);
             countdownView = view.findViewById(R.id.countdown_layout);
 
-            map_view = (ImageView) view.findViewById(R.id.map_view);
+            map_view = view.findViewById(R.id.map_view);
             map_view.setClickable(false);
 
             shareButton.setOnClickListener(this);
@@ -573,7 +570,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                                         context.startActivity(i);
                                         Analytics.from(context).sendButtonClickedWithURL("Watch Button - URL", launch.getVidURLs().get(index).getVal());
                                     }
-                                } catch (ArrayIndexOutOfBoundsException e){
+                                } catch (ArrayIndexOutOfBoundsException e) {
                                     Timber.e(e);
                                     Toast.makeText(context, "Ops, an error occurred.", Toast.LENGTH_SHORT).show();
                                 }
@@ -604,8 +601,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                     context.startActivity(exploreIntent);
                     break;
                 case R.id.shareButton:
-                    sendIntent.setAction(Intent.ACTION_SEND);
-                    sendIntent.putExtra(Intent.EXTRA_SUBJECT, launch.getName());
+                    String message;
                     if (launch.getVidURLs().size() > 0) {
                         if (launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
                                 get(0).getAgencies().size() > 0) {
@@ -614,15 +610,13 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                                     get(0).getAgencies().get(0).getCountryCode();
                             country = (country.substring(0, 3));
 
-                            sendIntent.putExtra(Intent.EXTRA_TEXT, launch.getName() + " launching from "
-                                    + launch.getLocation().getName() + " " + country + "\n \n"
-                                    + launchDate
-                                    + "\n\nWatch: " + launch.getVidURLs().get(0) + "\n");
+                            message = launch.getName() + " launching from "
+                                    + launch.getLocation().getName() + " " + country + "\n\n"
+                                    + launchDate;
                         } else {
-                            sendIntent.putExtra(Intent.EXTRA_TEXT, launch.getName() + " launching from "
-                                    + launch.getLocation().getName() + "\n \n"
-                                    + launchDate
-                                    + "\n\nWatch: " + launch.getVidURLs().get(0) + "\n");
+                            message = launch.getName() + " launching from "
+                                    + launch.getLocation().getName() + "\n\n"
+                                    + launchDate;
                         }
                     } else {
                         if (launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
@@ -632,18 +626,21 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                                     get(0).getAgencies().get(0).getCountryCode();
                             country = (country.substring(0, 3));
 
-                            sendIntent.putExtra(Intent.EXTRA_TEXT, launch.getName() + " launching from "
-                                    + launch.getLocation().getName() + " " + country + "\n \n"
-                                    + launchDate);
+                            message = launch.getName() + " launching from "
+                                    + launch.getLocation().getName() + " " + country + "\n\n"
+                                    + launchDate;
                         } else {
-                            sendIntent.putExtra(Intent.EXTRA_TEXT, launch.getName() + " launching from "
-                                    + launch.getLocation().getName() + "\n \n"
-                                    + launchDate);
+                            message = launch.getName() + " launching from "
+                                    + launch.getLocation().getName() + "\n\n"
+                                    + launchDate;
                         }
                     }
+                    ShareCompat.IntentBuilder.from((Activity) context)
+                            .setType("text/plain")
+                            .setChooserTitle("Share: " + launch.getName())
+                            .setText(String.format("%s \nWatch Live: https://spacelaunchnow.me/launch/%s/", message, launch.getId()))
+                            .startChooser();
                     Analytics.from(context).sendLaunchShared("Explore Button", launch.getName() + "-" + launch.getId().toString());
-                    sendIntent.setType("text/plain");
-                    context.startActivity(sendIntent);
                     break;
                 case R.id.fab:
                     String location = launchList.get(position).getLocation().getName();

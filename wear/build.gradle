@@ -1,29 +1,38 @@
 apply plugin: 'com.android.application'
-apply plugin: 'org.moallemi.advanced-build-version'
 
-advancedVersioning {
-    nameOptions {
-        versionMajor 1
-        versionMinor 2
-        versionPatch 0
 
+def versionMajor = 1
+def versionMinor = 2
+def versionPatch = 0
+def appVersionCode = 0
+def appVersionName = ""
+def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
     }
-    codeOptions {
-        versionCodeType org.moallemi.gradle.internal.VersionCodeType.AUTO_INCREMENT_ONE_STEP
-        dependsOnTasks 'release'
-    }
-    outputOptions {
-        renameOutput true
-        nameFormat '${projectName}-${appName}-${buildType}-${versionName}.${versionCode}'
-    }
+    return stdout.toString().trim()
 }
+def versionPropsFile = file('version.properties')
+if (versionPropsFile.canRead()) {
+    def Properties versionProps = new Properties()
 
-def appVersionName = advancedVersioning.versionName
-def appVersionCode = advancedVersioning.versionCode
+    versionProps.load(new FileInputStream(versionPropsFile))
+
+    def versionBuild = versionProps['VERSION_CODE'].toInteger() + 1
+
+    versionProps['VERSION_CODE'] = versionBuild.toString()
+    versionProps.store(versionPropsFile.newWriter(), null)
+    appVersionCode = versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
+    appVersionName = "${versionMajor}.${versionMinor}.${versionPatch}"
+} else {
+    throw new GradleException("Could not read version.properties!")
+}
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         manifestPlaceholders = [ applicationLabel:"@string/app_name"]

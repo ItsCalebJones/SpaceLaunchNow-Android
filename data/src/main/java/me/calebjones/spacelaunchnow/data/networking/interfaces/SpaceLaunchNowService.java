@@ -1,21 +1,31 @@
 package me.calebjones.spacelaunchnow.data.networking.interfaces;
 
+import me.calebjones.spacelaunchnow.data.BuildConfig;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LauncherResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.OrbiterResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 
 public interface SpaceLaunchNowService {
 
     String version = "v1";
-
-    @GET(version + "/orbiters")
+    @Headers({
+            "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
+    })
+    @GET(version + "/orbiters/")
     Call<OrbiterResponse> getOrbiter();
 
-    @GET(version + "/launchers")
+    @Headers({
+            "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
+    })
+    @GET(version + "/launchers/")
     Call<LauncherResponse> getLaunchers();
 
-    @GET(version + "/launcher_details")
+    @Headers({
+            "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
+    })
+    @GET(version + "/launcher_details/")
     Call<VehicleResponse> getVehicles();
 }

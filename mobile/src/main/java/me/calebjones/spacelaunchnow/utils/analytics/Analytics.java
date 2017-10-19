@@ -232,6 +232,9 @@ public class Analytics {
         }
 
         NetworkEvent putURL(@NonNull String url) {
+            if (url.length() > 100){
+                url = url.substring(0,99);
+            }
             this.putCustomAttribute("URL", url);
             return this;
         }

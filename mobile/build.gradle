@@ -5,49 +5,37 @@ buildscript {
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.21.6'
-        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.4'
+        classpath 'io.fabric.tools:gradle:1.24.0'
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.7.3'
     }
 }
 
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
-apply plugin: 'org.moallemi.advanced-build-version'
 apply plugin: 'realm-android'
 apply plugin: 'com.getkeepsafe.dexcount'
 
 repositories {
     jcenter()
     maven { url 'https://maven.fabric.io/public' }
+    google()
 }
 
-advancedVersioning {
-    nameOptions {
-        versionMajor 1
-        versionMinor 7
-        versionPatch 0
+def versionMajor = 1
+def versionMinor = 6
+def versionPatch = 3
+def appVersionCode = 0
+def appVersionName = ""
+def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
 
     }
-    codeOptions {
-        versionCodeType org.moallemi.gradle.internal.VersionCodeType.AUTO_INCREMENT_ONE_STEP
-        dependsOnTasks 'release'
-    }
-    outputOptions {
-    }
+    return stdout.toString().trim()
 }
-
-def appVersionName = advancedVersioning.versionName
-def appVersionCode = advancedVersioning.versionCode
-
-def renameAPK(variant, defaultConfig, buildType) {
-    variant.outputs.each { output ->
-        def formattedDate = new Date().format('yyyyMMdd')
-
-        def file = output.packageApplication.outputFile
-        def fileName = applicationName + "-" + buildType + "-" + defaultConfig.versionName + "." + defaultConfig.versionCode + "-" + formattedDate + "-" + 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim() + ".apk"
-        output.packageApplication.outputFile = new File(file.parent, fileName)
-    }
-}
+def versionPropsFile = file('version.properties')
 
 android {
     signingConfigs {
@@ -58,21 +46,36 @@ android {
             storePassword "${password}"
         }
     }
-    compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    flavorDimensions "release"
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "me.calebjones.spacelaunchnow"
         manifestPlaceholders = [appNameLabel                   : "@string/application_name",
                                 manifestApplicationId          : "${applicationId}",
                                 onesignal_app_id               : "${app_id}",
                                 onesignal_google_project_number: "${google_project_number}"]
-        minSdkVersion 16
-        targetSdkVersion 25
-        versionCode appVersionCode
-        versionName appVersionName
-        signingConfig signingConfigs.config
-        resConfigs "en"
-        multiDexEnabled true
+        if (versionPropsFile.canRead()) {
+            def Properties versionProps = new Properties()
+
+            versionProps.load(new FileInputStream(versionPropsFile))
+
+            def versionBuild = versionProps['VERSION_CODE'].toInteger() + 1
+
+            versionProps['VERSION_CODE'] = versionBuild.toString()
+            versionProps.store(versionPropsFile.newWriter(), null)
+
+
+            minSdkVersion 16
+            targetSdkVersion 26
+            versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
+            versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+            signingConfig signingConfigs.config
+            resConfigs "en"
+            multiDexEnabled true
+        } else {
+            throw new GradleException("Could not read version.properties!")
+        }
 
     }
     buildTypes {
@@ -94,9 +97,9 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            applicationVariants.all { variant ->
-                if (variant.buildType.name == "release") {
-                    renameAPK(variant, defaultConfig, "release")
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "SpaceLaunchNow-release-${variant.versionName}.${variant.versionCode}-${getGitHash()}.apk"
                 }
             }
         }
@@ -119,11 +122,13 @@ android {
         debugTesting {
             minSdkVersion 21
             multiDexEnabled false
+            dimension "release"
         }
         prod {
             // The actual minSdkVersion for the application.
             minSdkVersion 16
             multiDexEnabled false
+            dimension "release"
         }
     }
 }
@@ -133,10 +138,10 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
         transitive = true;
     }
-    compile('com.mikepenz:aboutlibraries:5.9.3@aar') {
+    compile('com.mikepenz:aboutlibraries:5.9.7@aar') {
         transitive = true
     }
-    compile 'com.afollestad.material-dialogs:core:0.9.3.0'
+    compile 'com.afollestad.material-dialogs:core:0.9.4.3'
     compile 'com.afollestad.material-dialogs:commons:0.9.3.0'
     compile "com.android.support:customtabs:$rootProject.supportLibraryVersion"
     compile "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
@@ -147,15 +152,15 @@ dependencies {
     compile "com.android.support:animated-vector-drawable:$rootProject.supportLibraryVersion"
     compile "com.android.support:support-v13:$rootProject.supportLibraryVersion"
     compile "com.android.support:percent:$rootProject.supportLibraryVersion"
-    compile 'com.jakewharton:butterknife:8.5.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile "com.google.android.gms:play-services-location:$rootProject.playServicesVersion"
     compile "com.google.android.gms:play-services-wearable:$rootProject.playServicesVersion"
     compile "com.google.android.gms:play-services-gcm:$rootProject.playServicesVersion"
     compile 'com.onesignal:OneSignal:3.4.3@aar'
     compile 'com.github.chrisbanes:PhotoView:1.3.1'
-    compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+    compile 'com.google.code.gson:gson:2.8.1'
+    compile 'com.squareup.okhttp3:okhttp:3.8.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.github.clans:fab:1.6.4'
     compile 'za.co.riggaroo:materialhelptutorial:1.1.0'
@@ -169,24 +174,24 @@ dependencies {
     compile 'com.anjlab.android.iab.v3:library:1.0.39'
     compile 'hanks.xyz:smallbang-library:0.1.2'
     compile 'com.github.amlcurran.showcaseview:library:5.4.3'
-    compile 'com.squareup.retrofit2:retrofit:2.2.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     compile 'com.github.renaudcerrato:static-maps-api:1.0.2'
     compile 'com.github.pwittchen:weathericonview:1.1.0'
     compile 'android.zetterstrom.com.forecast:forecast:1.2.0'
     compile 'it.macisamuele:calendarprovider-lib:0.0.1'
-    compile 'com.github.michael-rapp:android-preference-activity:4.2.10'
+    compile 'com.github.michael-rapp:android-preference-activity:4.2.11'
     compile 'com.evernote:android-job:1.1.9'
     compile 'blue.aodev:material-values:1.1.1'
-    compile 'com.mikepenz:iconics-core:2.8.2@aar'
+    compile 'com.mikepenz:iconics-core:2.9.3@aar'
     compile 'com.mikepenz:google-material-typeface:2.2.0.3.original@aar'
-    compile('com.mikepenz:materialdrawer:5.8.1@aar') {
+    compile('com.mikepenz:materialdrawer:5.9.5@aar') {
         transitive = true
     }
     compile 'com.mikepenz:fontawesome-typeface:4.7.0.0@aar'
-    compile 'jp.wasabeef:glide-transformations:2.0.1'
+    compile 'jp.wasabeef:glide-transformations:2.0.2'
     compile 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
     compile 'com.pavelsikun:material-seekbar-preference:2.3.0'
-    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:multidex:1.0.2'
     compile project(path: ':data')
 }

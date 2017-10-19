@@ -500,7 +500,7 @@ public class DataManager {
                 if (response.isSuccessful()) {
                     int total = response.body().getTotal();
                     int count = response.body().getCount();
-                    Timber.v("UpcomingLaunches Count: %s", count);
+                    Timber.v("Missions Count: %s", count);
                     dataSaver.saveObjectsToRealm(response.body().getMissions());
                     if (count < total) {
                         getAllMissions(count);
@@ -538,7 +538,7 @@ public class DataManager {
                 if (response.isSuccessful()) {
                     int total = response.body().getTotal();
                     int count = response.body().getCount() + offset;
-                    Timber.v("UpcomingLaunches Count: %s", count);
+                    Timber.v("Missions Count: %s", count);
                     dataSaver.saveObjectsToRealm(response.body().getMissions());
                     if (count < total) {
                         getAllMissions(count);
