@@ -88,8 +88,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
         */
         // Set up Crashlytics, disabled for debug builds
         Crashlytics crashlyticsKit = new Crashlytics.Builder()
-                .core(new CrashlyticsCore.Builder()
-                              .disabled(BuildConfig.DEBUG).build())
+                .core(new CrashlyticsCore.Builder().build())
                 .build();
         Fabric.with(this, crashlyticsKit);
 

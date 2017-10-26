@@ -23,6 +23,7 @@ import me.calebjones.spacelaunchnow.content.notifications.NotificationBuilder;
 import me.calebjones.spacelaunchnow.content.wear.WearWatchfaceManager;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.LaunchNotification;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.widget.LaunchCardCompactWidgetProvider;
 import me.calebjones.spacelaunchnow.widget.LaunchTimerWidgetProvider;
 import me.calebjones.spacelaunchnow.widget.LaunchWordTimerWidgetProvider;
@@ -265,7 +266,7 @@ public NextLaunchTracker(Context context) {
             longdate = longdate * 1000;
             final Date date = new Date(longdate);
 
-            Calendar future = DateToCalendar(date);
+            Calendar future = Utils.DateToCalendar(date);
             Calendar now = rightNow;
 
             now.setTimeInMillis(System.currentTimeMillis());
@@ -330,12 +331,6 @@ public NextLaunchTracker(Context context) {
                 }
             }
         }
-    }
-
-    public static Calendar DateToCalendar(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        return cal;
     }
 
     public void scheduleWear() {
