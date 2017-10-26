@@ -48,7 +48,7 @@ public class Migration implements RealmMigration {
                         });
             oldVersion++;
         }
-        
+
         if (oldVersion <= Constants.DB_SCHEMA_VERSION_1_7_1) {
             RealmObjectSchema lsp = schema.create("LSP")
                     .addField("id", Integer.class, FieldAttribute.PRIMARY_KEY)
