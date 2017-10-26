@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.content;
+package me.calebjones.spacelaunchnow.content.data;
 
 import android.content.Context;
 import android.content.Intent;

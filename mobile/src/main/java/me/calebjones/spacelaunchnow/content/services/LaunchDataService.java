@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.preference.PreferenceManager;
 
-import me.calebjones.spacelaunchnow.content.DataManager;
+import me.calebjones.spacelaunchnow.content.data.DataManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateJob;

@@ -1,8 +1,5 @@
 package me.calebjones.spacelaunchnow.content.notifications;
 
-import android.content.Context;
-import android.content.Intent;
-
 import com.onesignal.NotificationExtenderService;
 import com.onesignal.OSNotificationPayload;
 import com.onesignal.OSNotificationReceivedResult;
@@ -14,10 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import me.calebjones.spacelaunchnow.content.DataSaver;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.services.NextLaunchTracker;
-import me.calebjones.spacelaunchnow.content.notifications.NotificationBuilder;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.Location;
 import me.calebjones.spacelaunchnow.data.models.Rocket;
@@ -26,9 +20,6 @@ import timber.log.Timber;
 
 public class NotificationReceiver extends NotificationExtenderService {
 
-    private boolean running = false;
-    private DataSaver dataSaver = new DataSaver(this);
-    private Context context = this;
     private SwitchPreferences switchPreferences;
 
     @Override
@@ -60,7 +51,12 @@ public class NotificationReceiver extends NotificationExtenderService {
                     Calendar future = Utils.DateToCalendar(launch.getNet());
                     Calendar now = Calendar.getInstance();
                     long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
-                    NotificationBuilder.notifyUser(getApplicationContext(), launch, timeToFinish);
+                    if (switchPreferences.getAllSwitch()) {
+                        NotificationBuilder.notifyUser(getApplicationContext(), launch, timeToFinish);
+                    } else {
+                        // TODO filter out launches we dont care about here?
+                        NotificationBuilder.notifyUser(getApplicationContext(), launch, timeToFinish);
+                    }
                     return true;
                 } else {
                     // Not a background payload, likely no additional data, show the notification
@@ -69,7 +65,6 @@ public class NotificationReceiver extends NotificationExtenderService {
             } catch (JSONException | ParseException e) {
                 // Error parsing additional data,  trigger a sync.
                 Timber.e(e);
-                startService(new Intent(context, NextLaunchTracker.class));
                 return false;
             }
 

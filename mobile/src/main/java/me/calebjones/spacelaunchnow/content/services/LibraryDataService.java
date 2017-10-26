@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import io.realm.Realm;
-import me.calebjones.spacelaunchnow.content.DataManager;
+import me.calebjones.spacelaunchnow.content.data.DataManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import retrofit2.Retrofit;

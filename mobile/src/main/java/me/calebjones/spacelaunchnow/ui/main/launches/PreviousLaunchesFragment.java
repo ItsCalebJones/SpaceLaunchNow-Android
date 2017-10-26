@@ -48,7 +48,7 @@ import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecoration;
-import me.calebjones.spacelaunchnow.content.DataRepository;
+import me.calebjones.spacelaunchnow.content.data.DataRepository;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;

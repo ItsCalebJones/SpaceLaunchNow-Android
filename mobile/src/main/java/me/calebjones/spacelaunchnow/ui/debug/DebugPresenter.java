@@ -15,7 +15,7 @@ import java.io.IOException;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
-import me.calebjones.spacelaunchnow.content.DataRepositoryManager;
+import me.calebjones.spacelaunchnow.content.data.DataRepositoryManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.JobUtils;
 import me.calebjones.spacelaunchnow.content.services.LaunchDataService;

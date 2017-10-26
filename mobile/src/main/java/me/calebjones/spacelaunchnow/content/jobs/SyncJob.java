@@ -10,7 +10,7 @@ import com.evernote.android.job.JobRequest;
 
 import java.util.concurrent.TimeUnit;
 
-import me.calebjones.spacelaunchnow.content.DataManager;
+import me.calebjones.spacelaunchnow.content.data.DataManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import timber.log.Timber;
 

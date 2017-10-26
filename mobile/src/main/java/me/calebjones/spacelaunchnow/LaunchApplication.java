@@ -35,7 +35,7 @@ import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.exceptions.RealmMigrationNeededException;
-import me.calebjones.spacelaunchnow.content.DataRepositoryManager;
+import me.calebjones.spacelaunchnow.content.data.DataRepositoryManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.DataJobCreator;
