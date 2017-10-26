@@ -5,6 +5,7 @@ import io.realm.DynamicRealmObject;
 import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
 import io.realm.RealmSchema;
+import me.calebjones.spacelaunchnow.data.models.Agency;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import timber.log.Timber;
 
@@ -43,6 +44,12 @@ public class Migration implements RealmMigration {
                                 }
                             }
                         });
+            oldVersion++;
+        }
+
+        if (oldVersion <= Constants.DB_SCHEMA_VERSION_1_7_0) {
+            schema.get("Launch")
+                    .addField("lsp", Agency.class);
             oldVersion++;
         }
 
