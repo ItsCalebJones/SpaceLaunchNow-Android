@@ -149,7 +149,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
         if (sharedPreference.isDebugEnabled()) {
             version = "dev";
         } else {
-            version = "1.2.1";
+            version = "1.3";
         }
         DataClient.create(version);
         LibraryDataManager libraryDataManager = new LibraryDataManager(this);

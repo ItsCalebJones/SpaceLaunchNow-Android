@@ -1,6 +1,8 @@
 
 package me.calebjones.spacelaunchnow.data.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 
 import io.realm.RealmList;
