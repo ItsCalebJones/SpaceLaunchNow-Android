@@ -205,7 +205,7 @@
         </receiver>
 
         <service
-            android:name=".content.receivers.LaunchNotificationReceiver"
+            android:name=".content.notifications.NotificationReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.onesignal.NotificationExtender" />

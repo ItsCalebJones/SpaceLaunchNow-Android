@@ -81,7 +81,6 @@ android {
     buildTypes {
         debug {
             ext.alwaysUpdateBuildId = false
-            ext.enableCrashlytics = false
             applicationIdSuffix '.debug'
             manifestPlaceholders = [appNameLabel         : "SLN - Debug",
                                     manifestApplicationId: "me.calebjones.spacelaunchnow.ui.debug"]

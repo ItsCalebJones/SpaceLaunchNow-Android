@@ -15,12 +15,11 @@ import io.realm.Realm;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.util.NotificationBuilder;
+import me.calebjones.spacelaunchnow.content.notifications.NotificationBuilder;
 import me.calebjones.spacelaunchnow.data.models.Launch;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import timber.log.Timber;
-
-import static me.calebjones.spacelaunchnow.content.services.NextLaunchTracker.DateToCalendar;
 
 public class NotificationsFragment extends BaseSettingFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -83,7 +82,7 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
                 .greaterThanOrEqualTo("net", new Date())
                 .findAllSorted("net", Sort.ASCENDING).first();
 
-        Calendar future = DateToCalendar(new Date(launch.getNetstamp() * 1000));
+        Calendar future = Utils.DateToCalendar(new Date(launch.getNetstamp() * 1000));
         Calendar now = Calendar.getInstance();
 
         now.setTimeInMillis(System.currentTimeMillis());
