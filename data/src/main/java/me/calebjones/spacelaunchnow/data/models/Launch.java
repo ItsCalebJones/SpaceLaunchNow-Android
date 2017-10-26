@@ -1,6 +1,8 @@
 
 package me.calebjones.spacelaunchnow.data.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 
 import io.realm.RealmList;
@@ -41,6 +43,9 @@ public class Launch extends RealmObject {
     private Location location;
 
     private Rocket rocket;
+
+    @SerializedName("lsp")
+    private Agency lsp;
 
     private Date startDate;
     private Date endDate;
@@ -328,6 +333,14 @@ public class Launch extends RealmObject {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public Agency getLsp() {
+        return lsp;
+    }
+
+    public void setLsp(Agency lsp) {
+        this.lsp = lsp;
     }
 
     public void resetNotifiers(){
