@@ -307,7 +307,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     adapter.addItems(results);
                 }
             } else {
-                adapter.clear();
+                if (adapter != null) {
+                    adapter.clear();
+                }
             }
             hideLoading();
             launchRealms.removeChangeListeners();
