@@ -603,42 +603,42 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                 case R.id.shareButton:
                     String message;
                     if (launch.getVidURLs().size() > 0) {
-                        if (launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
+                        if (launch.getLocation() != null && launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
                                 get(0).getAgencies().size() > 0) {
-                            //Get the first CountryCode
-                            String country = launch.getLocation().getPads().
-                                    get(0).getAgencies().get(0).getCountryCode();
-                            country = (country.substring(0, 3));
 
                             message = launch.getName() + " launching from "
-                                    + launch.getLocation().getName() + " " + country + "\n\n"
+                                    + launch.getLocation().getName() + "\n\n"
                                     + launchDate;
-                        } else {
+                        } else if (launch.getLocation() != null) {
                             message = launch.getName() + " launching from "
                                     + launch.getLocation().getName() + "\n\n"
+                                    + launchDate;
+                        } else {
+                            message = launch.getName()
+                                    + "\n\n"
                                     + launchDate;
                         }
                     } else {
-                        if (launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
+                        if (launch.getLocation() != null && launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
                                 get(0).getAgencies().size() > 0) {
-                            //Get the first CountryCode
-                            String country = launch.getLocation().getPads().
-                                    get(0).getAgencies().get(0).getCountryCode();
-                            country = (country.substring(0, 3));
 
                             message = launch.getName() + " launching from "
-                                    + launch.getLocation().getName() + " " + country + "\n\n"
+                                    + launch.getLocation().getName() + "\n\n"
                                     + launchDate;
-                        } else {
+                        } else if (launch.getLocation() != null) {
                             message = launch.getName() + " launching from "
                                     + launch.getLocation().getName() + "\n\n"
+                                    + launchDate;
+                        } else {
+                            message = launch.getName()
+                                    + "\n\n"
                                     + launchDate;
                         }
                     }
                     ShareCompat.IntentBuilder.from((Activity) context)
                             .setType("text/plain")
                             .setChooserTitle("Share: " + launch.getName())
-                            .setText(String.format("%s \nWatch Live: https://spacelaunchnow.me/launch/%s/", message, launch.getId()))
+                            .setText(String.format("%s\n\nWatch Live: https://spacelaunchnow.me/launch/%s/", message, launch.getId()))
                             .startChooser();
                     Analytics.from(context).sendLaunchShared("Explore Button", launch.getName() + "-" + launch.getId().toString());
                     break;
