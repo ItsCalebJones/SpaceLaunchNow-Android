@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.content.util;
+package me.calebjones.spacelaunchnow.content.notifications;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -23,14 +23,22 @@ import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
+import static me.calebjones.spacelaunchnow.content.notifications.NotificationHelper.CHANNEL_LAUNCH_IMMINENT;
+
 public class NotificationBuilder {
     public static void notifyUser(Context context, Launch launch, long timeToFinish) {
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
-        NotificationManager mNotifyManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
+        NotificationCompat.Builder mBuilder;
+        NotificationManager mNotifyManager;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationHelper notificationHelper = new NotificationHelper(context);
+            mBuilder = new NotificationCompat.Builder(context, CHANNEL_LAUNCH_IMMINENT);
+            mNotifyManager = notificationHelper.getManager();
+        } else {
+            mBuilder = new NotificationCompat.Builder(context);
+            mNotifyManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        }
         String launchDate;
         String expandedText;
         String launchName = launch.getName();
@@ -39,10 +47,10 @@ public class NotificationBuilder {
         String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone", "default ringtone");
         Uri alarmSound = Uri.parse(ringtoneBox);
 
-        Intent mainActivityIntent = new Intent(context, MainActivity.class);
-        mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent resultIntent = new Intent(Intent.ACTION_VIEW);
+        resultIntent.setData(Uri.parse(launch.getUrl()));
 
-        PendingIntent appIntent = PendingIntent.getActivity(context, 0, mainActivityIntent, 0);
+        PendingIntent pending = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         if (launch.getNet() != null) {
             //Get launch date
@@ -78,18 +86,14 @@ public class NotificationBuilder {
                 .setAutoCancel(true)
                 .setContentText(expandedText)
                 .extend(wearableExtender)
-                .setContentIntent(appIntent)
-                .setSound(alarmSound);
-
-        NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
+                .setContentIntent(pending)
+                .setSound(alarmSound)
+                .setChannelId(CHANNEL_LAUNCH_IMMINENT);
 
         if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
             Bitmap bitmap = Utils.getBitMapFromUrl(context, launch.getRocket().getImageURL());
             if (bitmap != null){
-                bigPictureStyle.bigPicture(bitmap);
-                mBuilder.setStyle(bigPictureStyle);
-                mBuilder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher
-                ));
+                mBuilder.setLargeIcon(bitmap);
             }
         }
 
