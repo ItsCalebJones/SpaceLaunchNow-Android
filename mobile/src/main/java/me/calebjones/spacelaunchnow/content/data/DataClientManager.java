@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.content;
+package me.calebjones.spacelaunchnow.content.data;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,12 +28,13 @@ import timber.log.Timber;
  * This class is responsible for async loading of data via the DataClient and sending it to DataSaver to be saved.
  */
 
-public class DataManager {
+public class DataClientManager {
 
     private Context context;
 
     private DataRepositoryManager dataRepositoryManager;
     private DataSaver dataSaver;
+    private NextLaunchTracker nextLaunchTracker;
 
     private boolean isLaunchByDate = false;
     private boolean isUpcomingLaunch = false;
@@ -50,10 +51,11 @@ public class DataManager {
     private boolean isSaving = false;
     private boolean isSyncing = false;
 
-    public DataManager(Context context) {
+    public DataClientManager(Context context) {
         this.context = context;
         this.dataRepositoryManager = new DataRepositoryManager(context, this);
         this.dataSaver = new DataSaver(context, this);
+        nextLaunchTracker = new NextLaunchTracker(context);
     }
 
     public DataRepositoryManager getDataRepositoryManager() {
@@ -160,7 +162,7 @@ public class DataManager {
 
                         dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, true, call));
 
-                        context.startService(new Intent(context, NextLaunchTracker.class));
+                        nextLaunchTracker.runUpdate();
                     }
                 } else {
                     isUpcomingLaunch = false;
@@ -231,7 +233,7 @@ public class DataManager {
 
                         dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES, true, call));
 
-                        context.startService(new Intent(context, NextLaunchTracker.class));
+                        nextLaunchTracker.runUpdate();
                     }
                 } else {
                     dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES, false, call, ErrorUtil.parseLibraryError(response)));

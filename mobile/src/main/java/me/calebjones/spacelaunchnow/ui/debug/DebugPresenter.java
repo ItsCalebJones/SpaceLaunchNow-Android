@@ -15,11 +15,10 @@ import java.io.IOException;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
-import me.calebjones.spacelaunchnow.content.DataRepositoryManager;
+import me.calebjones.spacelaunchnow.content.data.DataRepositoryManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.JobUtils;
-import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
-import me.calebjones.spacelaunchnow.data.models.Constants;
+import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.Products;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
@@ -33,11 +32,13 @@ public class DebugPresenter implements DebugContract.Presenter {
     private DebugContract.Navigator navigator;
     private ListPreferences sharedPreference;
     private Realm realm;
+    private LibraryDataManager libraryDataManager;
 
-    public DebugPresenter(DebugContract.View view, ListPreferences preferences) {
+    public DebugPresenter(Context context, DebugContract.View view, ListPreferences preferences) {
         debugView = view;
         debugView.setPresenter(this);
         sharedPreference = preferences;
+        libraryDataManager = new LibraryDataManager(context);
     }
 
     @Override
@@ -97,7 +98,7 @@ public class DebugPresenter implements DebugContract.Presenter {
         }, new Realm.Transaction.OnSuccess() {
             @Override
             public void onSuccess() {
-                context.startService(new Intent(context, LaunchDataService.class).setAction(Constants.ACTION_GET_ALL_DATA));
+                libraryDataManager.getAllData();
             }
         });
         realm.close();
@@ -106,7 +107,7 @@ public class DebugPresenter implements DebugContract.Presenter {
 
     @Override
     public void syncNextLaunchClicked(Context context) {
-        context.startService(new Intent(context, LaunchDataService.class).setAction(Constants.ACTION_GET_NEXT_LAUNCH_MINI));
+        libraryDataManager.updateNextLaunchMini();
     }
 
     @Override
@@ -125,7 +126,7 @@ public class DebugPresenter implements DebugContract.Presenter {
 
     @Override
     public void syncVehiclesClicked(Context context) {
-        context.startService(new Intent(context, LaunchDataService.class).setAction(Constants.ACTION_GET_VEHICLES_DETAIL));
+        libraryDataManager.getVehicleDetails();
     }
 
     @Override

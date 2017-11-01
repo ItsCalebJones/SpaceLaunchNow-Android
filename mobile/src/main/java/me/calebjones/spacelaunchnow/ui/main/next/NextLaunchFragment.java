@@ -47,11 +47,11 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
+import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Launch;
@@ -114,6 +114,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     private boolean active;
     private boolean switchChanged;
     private boolean cardSizeSmall;
+    private CalendarSyncManager calendarSyncManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -207,7 +208,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     if (switchChanged) {
                         displayLaunches();
                         if (switchPreferences.getCalendarStatus()) {
-                            CalendarSyncService.startActionResync(context);
+                            calendarSyncManager.resyncAllEvents();
                         }
                     }
                 }
@@ -258,7 +259,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
         //Enable no data by default
         no_data.setVisibility(View.VISIBLE);
-
+        calendarSyncManager = new CalendarSyncManager(context);
         return view;
     }
 
@@ -442,10 +443,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     public void fetchData() {
         Timber.v("Sending GET_UP_LAUNCHES");
-        Intent intent = new Intent(getContext(), LaunchDataService.class);
-        intent.setAction(Constants.ACTION_GET_UP_LAUNCHES);
-        getContext().startService(intent);
-        Timber.d("Sending service intent!");
+        LibraryDataManager libraryDataManager = new LibraryDataManager(context);
+        libraryDataManager.getUpcomingLaunches();
     }
 
     private void showLoading() {
@@ -651,7 +650,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 if (switchChanged) {
                     displayLaunches();
                     if (switchPreferences.getCalendarStatus()) {
-                        CalendarSyncService.startActionResync(context);
+                        calendarSyncManager.resyncAllEvents();
                     }
                 }
             }
@@ -767,7 +766,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     public void noGoSwitch() {
         switchPreferences.setNoGoSwitch(noGoSwitch.isChecked());
         displayLaunches();
-        CalendarSyncService.startActionResync(context);
+
+        calendarSyncManager.resyncAllEvents();
     }
 
     @OnClick(R.id.persist_last_launch)

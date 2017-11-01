@@ -2,7 +2,6 @@ package me.calebjones.spacelaunchnow;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -35,14 +34,13 @@ import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.exceptions.RealmMigrationNeededException;
-import me.calebjones.spacelaunchnow.content.DataRepositoryManager;
+import me.calebjones.spacelaunchnow.content.data.DataRepositoryManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.DataJobCreator;
 import me.calebjones.spacelaunchnow.content.jobs.SyncJob;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateJob;
-import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
-import me.calebjones.spacelaunchnow.data.models.Constants;
+import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
 import me.calebjones.spacelaunchnow.data.models.realm.Migration;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
@@ -163,6 +161,9 @@ public class LaunchApplication extends Application implements Analytics.Provider
                         .modules(Realm.getDefaultModule(), new LaunchDataModule())
                         .migration(new Migration())
                         .build();
+
+        LibraryDataManager libraryDataManager = new LibraryDataManager(this);
+
         try {
             Realm.setDefaultConfiguration(config);
             Realm realm = Realm.getDefaultInstance();
@@ -171,12 +172,9 @@ public class LaunchApplication extends Application implements Analytics.Provider
             Realm.deleteRealm(config);
             Realm.setDefaultConfiguration(config);
 
-            Intent intent = new Intent(this, LaunchDataService.class);
-            intent.setAction(Constants.ACTION_GET_ALL_DATA);
-            this.startService(intent);
+            libraryDataManager.getAllData();
 
             Crashlytics.logException(e);
-
         }
 
 
@@ -217,17 +215,13 @@ public class LaunchApplication extends Application implements Analytics.Provider
         if (!sharedPreference.getFirstBoot()) {
             Timber.i("Stored Version Code: %s", switchPreferences.getVersionCode());
             if (switchPreferences.getVersionCode() <= DB_SCHEMA_VERSION_1_5_6) {
-                Intent intent = new Intent(this, LaunchDataService.class);
-                intent.setAction(Constants.ACTION_GET_ALL_DATA);
-                this.startService(intent);
+                libraryDataManager.getAllData();
             } else {
                 DataRepositoryManager dataRepositoryManager = new DataRepositoryManager(this);
                 dataRepositoryManager.syncBackground();
             }
         } else {
-            Intent intent = new Intent(this, LaunchDataService.class);
-            intent.setAction(Constants.ACTION_GET_ALL_DATA);
-            startService(intent);
+            libraryDataManager.getAllData();
         }
     }
 

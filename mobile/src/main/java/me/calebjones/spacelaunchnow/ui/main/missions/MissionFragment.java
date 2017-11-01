@@ -31,9 +31,8 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
-import me.calebjones.spacelaunchnow.content.DataManager;
+import me.calebjones.spacelaunchnow.content.data.DataClientManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.services.LibraryDataService;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Mission;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
@@ -167,8 +166,8 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
     public void fetchData() {
         Timber.d("Sending service intent!");
         showLoading();
-        DataManager dataManager = new DataManager(getActivity());
-        dataManager.getAllMissions();
+        DataClientManager dataClientManager = new DataClientManager(getActivity());
+        dataClientManager.getAllMissions();
         showSnackbar("Updating mission data... this may take a few seconds.");
     }
 

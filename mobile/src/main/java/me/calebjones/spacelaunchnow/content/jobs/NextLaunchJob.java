@@ -10,7 +10,7 @@ import com.evernote.android.job.util.support.PersistableBundleCompat;
 
 import java.util.Set;
 
-import me.calebjones.spacelaunchnow.content.DataManager;
+import me.calebjones.spacelaunchnow.content.data.DataClientManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import timber.log.Timber;
 
@@ -22,10 +22,10 @@ public class NextLaunchJob extends Job {
     @Override
     protected Result onRunJob(Params params) {
         Timber.d("Running job ID: %s Tag: %s", params.getId(), params.getTag());
-        DataManager dataManager = new DataManager(getContext());
-        dataManager.getNextUpcomingLaunchesMini();
+        DataClientManager dataClientManager = new DataClientManager(getContext());
+        dataClientManager.getNextUpcomingLaunchesMini();
         int count = 0;
-        while (dataManager.isRunning()) {
+        while (dataClientManager.isRunning()) {
             try {
                 count += 100;
                 Thread.sleep(100);

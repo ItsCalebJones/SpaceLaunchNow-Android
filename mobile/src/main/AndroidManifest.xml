@@ -75,19 +75,6 @@
         <activity android:name=".ui.orbiter.OrbiterDetailActivity" />
         <activity android:name=".ui.launcher.LauncherDetailActivity" />
 
-        <service
-            android:name=".content.services.LaunchDataService"
-            android:exported="false" />
-        <service
-            android:name=".content.services.LibraryDataService"
-            android:exported="false" />
-        <service
-            android:name=".content.services.NextLaunchTracker"
-            android:exported="false" />
-        <service
-            android:name=".content.services.UpdateWearService"
-            android:exported="false" />
-
         <receiver android:name=".content.receivers.UpdateUpcomingLaunchesReceiver">
             <intent-filter>
                 <action android:name="UPDATE_UP_LAUNCHES" />
@@ -121,10 +108,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.main.MainActivity" />
         </activity>
-
-        <service
-            android:name=".calendar.CalendarSyncService"
-            android:exported="false" />
 
         <activity
             android:name=".ui.supporter.SupporterActivity"

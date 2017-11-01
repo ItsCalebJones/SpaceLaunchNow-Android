@@ -1,6 +1,5 @@
 package me.calebjones.spacelaunchnow.content.services;
 
-import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -16,12 +15,12 @@ import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
-import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
+import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.NextLaunchJob;
 import me.calebjones.spacelaunchnow.content.jobs.SyncJob;
 import me.calebjones.spacelaunchnow.content.notifications.NotificationBuilder;
-import me.calebjones.spacelaunchnow.data.models.Constants;
+import me.calebjones.spacelaunchnow.content.wear.WearWatchfaceManager;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.LaunchNotification;
 import me.calebjones.spacelaunchnow.widget.LaunchCardCompactWidgetProvider;
@@ -244,7 +243,8 @@ public NextLaunchTracker(Context context) {
     }
 
     private void syncCalendar() {
-        CalendarSyncService.startActionSyncAll(context);
+        CalendarSyncManager calendarSyncManager = new CalendarSyncManager(context);
+        calendarSyncManager.syncAllEevnts();
     }
 
     private void checkStatus(final Launch launch) {
@@ -339,7 +339,8 @@ public NextLaunchTracker(Context context) {
     }
 
     public void scheduleWear() {
-        context.startService(new Intent(context, UpdateWearService.class));
+       WearWatchfaceManager watchfaceManager = new WearWatchfaceManager(context);
+       watchfaceManager.updateWear();
     }
 
 }
