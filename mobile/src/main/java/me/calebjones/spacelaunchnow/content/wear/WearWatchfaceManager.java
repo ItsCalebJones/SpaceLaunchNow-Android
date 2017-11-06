@@ -39,6 +39,7 @@ public class WearWatchfaceManager extends BaseManager {
 
     public WearWatchfaceManager(Context context) {
         super(context);
+        this.context = context;
     }
 
     // Create a data map and put data in it
