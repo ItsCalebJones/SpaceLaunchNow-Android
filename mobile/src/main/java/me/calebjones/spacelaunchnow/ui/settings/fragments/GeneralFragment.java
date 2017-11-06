@@ -28,7 +28,7 @@ import java.util.List;
 
 import io.realm.Realm;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
+import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
 import me.calebjones.spacelaunchnow.calendar.model.Calendar;
 import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
@@ -43,6 +43,7 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
     private Realm mRealm;
     private MultiplePermissionsListener allPermissionsListener;
     private SwitchPreferences switchPreferences;
+    private CalendarSyncManager calendarSyncManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
 
         context = getActivity();
         mRealm = Realm.getDefaultInstance();
+        calendarSyncManager = new CalendarSyncManager(context);
 
         createPermissionListeners();
         setupPreference();
@@ -85,10 +87,10 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
         Timber.i("General preference %s changed.", key);
         if (key.equals("calendar_reminder_array") ) {
             Analytics.from(this).sendPreferenceEvent(key);
-            CalendarSyncService.startActionSyncAll(context);
+            calendarSyncManager.syncAllEevnts();
         } else if (key.equals("calendar_count")){
             Analytics.from(this).sendPreferenceEvent(key);
-            CalendarSyncService.startActionResync(context);
+            calendarSyncManager.resyncAllEvents();
         } else if (key.equals("calendar_sync_state")) {
             Timber.v("Calendar Sync State: %s", sharedPreferences.getBoolean(key, true));
             Analytics.from(this).sendPreferenceEvent(key, sharedPreferences.getBoolean(key, false));
@@ -101,14 +103,14 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
                     if (mRealm.where(CalendarItem.class).findFirst() == null){
                         setDefaultCalendar();
                     } else {
-                        CalendarSyncService.startActionSyncAll(context);
+                        calendarSyncManager.syncAllEevnts();
                     }
                 } else {
                     Timber.v("Calendar Permission - Denied/Pending");
                     checkCalendarPermission();
                 }
             } else {
-                CalendarSyncService.startActionDeleteAll(context);
+                calendarSyncManager.deleteAllEvents();
                 switchPreferences.setCalendarStatus(false);
             }
         } else {
@@ -189,7 +191,7 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
                     public void onSuccess() {
                         Timber.v("Successfully updated active Calendar, sending resync.");
                         setCalendarPreference();
-                        CalendarSyncService.startActionResync(context);
+                        calendarSyncManager.resyncAllEvents();
                     }
                 });
 
@@ -223,7 +225,7 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
             }, new Realm.Transaction.OnSuccess() {
                 @Override
                 public void onSuccess() {
-                    CalendarSyncService.startActionSyncAll(context);
+                    calendarSyncManager.syncAllEevnts();
                 }
             });
         } else {

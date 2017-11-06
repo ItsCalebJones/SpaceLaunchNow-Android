@@ -330,7 +330,7 @@ public class Launch extends RealmObject {
         this.endDate = endDate;
     }
 
-    public void resetNotifiers(){
+    public void resetNotifiers() {
         isNotifiedDay = false;
         isNotifiedHour = false;
         isNotifiedTenMinute = false;
@@ -350,5 +350,9 @@ public class Launch extends RealmObject {
 
     public void setLocationid(int locationid) {
         this.locationid = locationid;
+    }
+
+    public String getUrl() {
+        return String.format("https://spacelaunchnow.me/launch/%s/", id);
     }
 }

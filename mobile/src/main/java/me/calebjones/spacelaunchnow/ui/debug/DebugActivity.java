@@ -38,7 +38,7 @@ public class DebugActivity extends AppCompatActivity implements DebugContract.Na
         }
 
         // Create the presenter
-        debugPresenter = new DebugPresenter(debugFragment, ListPreferences.getInstance(this.getApplication()));
+        debugPresenter = new DebugPresenter(this, debugFragment, ListPreferences.getInstance(this.getApplication()));
         debugPresenter.setNavigator(getNavigator(debugPresenter));
 
         // Load previously saved state, if available.

@@ -22,8 +22,8 @@ repositories {
 }
 
 def versionMajor = 1
-def versionMinor = 6
-def versionPatch = 3
+def versionMinor = 7
+def versionPatch = 1
 def appVersionCode = 0
 def appVersionName = ""
 def getGitHash = { ->
@@ -181,10 +181,10 @@ dependencies {
     compile 'android.zetterstrom.com.forecast:forecast:1.2.0'
     compile 'it.macisamuele:calendarprovider-lib:0.0.1'
     compile 'com.github.michael-rapp:android-preference-activity:4.2.11'
-    compile 'com.evernote:android-job:1.1.9'
+    compile 'com.evernote:android-job:1.2.0'
     compile 'blue.aodev:material-values:1.1.1'
     compile 'com.mikepenz:iconics-core:2.9.3@aar'
-    compile 'com.mikepenz:google-material-typeface:2.2.0.3.original@aar'
+    compile 'com.mikepenz:google-material-typeface:3.0.1.1.original@aar'
     compile('com.mikepenz:materialdrawer:5.9.5@aar') {
         transitive = true
     }

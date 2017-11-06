@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.content;
+package me.calebjones.spacelaunchnow.content.data;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
-import me.calebjones.spacelaunchnow.content.services.LibraryDataService;
+import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.UpdateRecord;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
@@ -23,20 +23,20 @@ public class DataRepositoryManager {
 
     private Context context;
 
-    public DataManager getDataManager() {
-        return dataManager;
+    public DataClientManager getDataClientManager() {
+        return dataClientManager;
     }
 
-    private DataManager dataManager;
+    private DataClientManager dataClientManager;
 
-    public DataRepositoryManager(Context context, DataManager dataManager) {
+    public DataRepositoryManager(Context context, DataClientManager dataClientManager) {
         this.context = context;
-        this.dataManager = dataManager;
+        this.dataClientManager = dataClientManager;
     }
 
     public DataRepositoryManager(Context context) {
         this.context = context;
-        this.dataManager = new DataManager(context);
+        this.dataClientManager = new DataClientManager(context);
     }
 
     public void syncBackground() {
@@ -52,7 +52,7 @@ public class DataRepositoryManager {
         if (wifiOnly && wifiConnected) {
             checkFullSync();
         } else if (dataSaver && !wifiConnected) {
-            dataManager.getNextUpcomingLaunchesMini();
+            dataClientManager.getNextUpcomingLaunchesMini();
         } else {
             checkFullSync();
         }
@@ -78,13 +78,13 @@ public class DataRepositoryManager {
             Timber.d("Time since last library sync %s", timeSinceUpdate);
             if (timeSinceUpdate > daysMaxUpdate) {
                 Timber.d("%s greater then %s - updating library data.", timeSinceUpdate, daysMaxUpdate);
-                Intent rocketIntent = new Intent(context, LibraryDataService.class);
+                Intent rocketIntent = new Intent(context, LibraryDataManager.class);
                 rocketIntent.setAction(Constants.ACTION_GET_ALL_LIBRARY_DATA);
                 context.startService(rocketIntent);
             }
         } else {
             Timber.d("No record - checking library data.");
-            Intent rocketIntent = new Intent(context, LibraryDataService.class);
+            Intent rocketIntent = new Intent(context, LibraryDataManager.class);
             rocketIntent.setAction(Constants.ACTION_GET_ALL_LIBRARY_DATA);
             context.startService(rocketIntent);
         }
@@ -100,15 +100,15 @@ public class DataRepositoryManager {
             Timber.d("Time since last upcoming launches sync %s", timeSinceUpdate);
             if (timeSinceUpdate > daysMaxUpdate) {
                 Timber.d("%s greater then %s - updating library data.", timeSinceUpdate, daysMaxUpdate);
-                dataManager.getNextUpcomingLaunches();
+                dataClientManager.getNextUpcomingLaunches();
             }
         } else {
             Timber.d("No record - getting all launches");
-            dataManager.getUpcomingLaunchesAll();
+            dataClientManager.getUpcomingLaunchesAll();
         }
     }
 
-    //TODO move from LibraryDataService to DataManager
+    //TODO move from LibraryDataManager to DataClientManager
     private void checkMissions(Realm realm) {
         UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Constants.ACTION_GET_MISSION).findFirst();
         if (record != null) {
@@ -119,19 +119,19 @@ public class DataRepositoryManager {
             Timber.d("Time since last Mission sync %s", timeSinceUpdate);
             if (timeSinceUpdate > daysMaxUpdate) {
                 Timber.d("%s greater then %s - updating mission data.", timeSinceUpdate, daysMaxUpdate);
-                Intent missionIntent = new Intent(context, LibraryDataService.class);
+                Intent missionIntent = new Intent(context, LibraryDataManager.class);
                 missionIntent.setAction(Constants.ACTION_GET_MISSION);
                 context.startService(missionIntent);
             }
         } else {
             Timber.d("No record - getting all missions.");
-            Intent missionIntent = new Intent(context, LibraryDataService.class);
+            Intent missionIntent = new Intent(context, LibraryDataManager.class);
             missionIntent.setAction(Constants.ACTION_GET_MISSION);
             context.startService(missionIntent);
         }
     }
 
-    //TODO move from LibraryDataService to DataManager
+    //TODO move from LibraryDataManager to DataClientManager
     private void checkVehicles(Realm realm) {
         UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Constants.ACTION_GET_VEHICLES_DETAIL).findFirst();
         if (record != null) {
@@ -142,13 +142,13 @@ public class DataRepositoryManager {
             Timber.d("Time since last vehicle sync %s", timeSinceUpdate);
             if (timeSinceUpdate > daysMaxUpdate) {
                 Timber.d("%s greater then %s - updating vehicle data.", timeSinceUpdate, daysMaxUpdate);
-                Intent rocketIntent = new Intent(context, LibraryDataService.class);
+                Intent rocketIntent = new Intent(context, LibraryDataManager.class);
                 rocketIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);
                 context.startService(rocketIntent);
             }
         } else {
             Timber.d("No record - getting all vehicles.");
-            Intent rocketIntent = new Intent(context, LibraryDataService.class);
+            Intent rocketIntent = new Intent(context, LibraryDataManager.class);
             rocketIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);
             context.startService(rocketIntent);
         }

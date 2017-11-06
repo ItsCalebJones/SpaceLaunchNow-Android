@@ -48,10 +48,10 @@ import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecoration;
-import me.calebjones.spacelaunchnow.content.DataRepository;
+import me.calebjones.spacelaunchnow.content.data.DataRepository;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
@@ -406,9 +406,8 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
                         Analytics.from(getActivity()).sendButtonClicked("Previous Refresh");
                         showLoading();
                         getRealm().removeAllChangeListeners();
-                        Intent intent = new Intent(getContext(), LaunchDataService.class);
-                        intent.setAction(Constants.ACTION_GET_PREV_LAUNCHES);
-                        getContext().startService(intent);
+                        LibraryDataManager libraryDataManager = new LibraryDataManager(context);
+                        libraryDataManager.getPreviousLaunches();
                     }
                 })
                 .onNegative(new MaterialDialog.SingleButtonCallback() {

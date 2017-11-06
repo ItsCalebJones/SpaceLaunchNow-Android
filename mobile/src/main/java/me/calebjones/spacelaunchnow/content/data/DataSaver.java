@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.content;
+package me.calebjones.spacelaunchnow.content.data;
 
 import android.content.Context;
 import android.content.Intent;
@@ -30,13 +30,13 @@ import timber.log.Timber;
 public class DataSaver {
 
     private Context context;
-    private DataManager dataManager;
+    private DataClientManager dataClientManager;
     public boolean isSaving = false;
     public boolean isSyncing = false;
 
-    public DataSaver(Context context, DataManager dataManager) {
+    public DataSaver(Context context, DataClientManager dataClientManager) {
         this.context = context;
-        this.dataManager = dataManager;
+        this.dataClientManager = dataClientManager;
     }
 
     public DataSaver(Context context) {
@@ -79,7 +79,7 @@ public class DataSaver {
                         previous.resetNotifiers();
                         mRealm.copyToRealmOrUpdate(previous);
                         mRealm.commitTransaction();
-                        dataManager.getLaunchById(item.getId());
+                        dataClientManager.getLaunchById(item.getId());
                     }
                 }
             }

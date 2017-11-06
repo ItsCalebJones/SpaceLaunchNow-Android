@@ -10,7 +10,7 @@ import com.evernote.android.job.JobRequest;
 
 import java.util.concurrent.TimeUnit;
 
-import me.calebjones.spacelaunchnow.content.DataManager;
+import me.calebjones.spacelaunchnow.content.data.DataClientManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import timber.log.Timber;
 
@@ -23,8 +23,7 @@ public class SyncJob extends Job {
             Timber.i("Background sync enabled, configuring JobRequest.");
 
             JobRequest.Builder builder = new JobRequest.Builder(SyncJob.TAG)
-                    .setUpdateCurrent(true)
-                    .setPersisted(true);
+                    .setUpdateCurrent(true);
 
             if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("data_saver", false)) {
                 Timber.v("DataSaver mode enabled...periodic set to once per day.");
@@ -44,11 +43,11 @@ public class SyncJob extends Job {
     @Override
     protected Result onRunJob(Params params) {
         Timber.d("Running job ID: %s Tag: %s", params.getId(), params.getTag());
-        DataManager dataManager = new DataManager(getContext());
-        dataManager.getNextUpcomingLaunchesMini();
+        DataClientManager dataClientManager = new DataClientManager(getContext());
+        dataClientManager.getNextUpcomingLaunchesMini();
 
         int count = 0;
-        while (dataManager.isRunning()) {
+        while (dataClientManager.isRunning()) {
             try {
                 count += 100;
                 Thread.sleep(100);
