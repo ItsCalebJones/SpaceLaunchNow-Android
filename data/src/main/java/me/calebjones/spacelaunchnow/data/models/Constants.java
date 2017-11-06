@@ -27,6 +27,7 @@ public final class Constants {
     public static int NOTIF_ID_DAY = 568985;
     public static int NOTIF_ID_HOUR = 568995;
 
+    public static int DB_SCHEMA_VERSION_1_7_1= 320;
     public static int DB_SCHEMA_VERSION_1_5_6 = 189;
     public static int DB_SCHEMA_VERSION_1_5_5 = 188;
 

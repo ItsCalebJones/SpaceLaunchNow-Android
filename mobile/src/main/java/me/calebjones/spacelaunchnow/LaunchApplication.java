@@ -153,6 +153,8 @@ public class LaunchApplication extends Application implements Analytics.Provider
             version = "1.2.1";
         }
         DataClient.create(version);
+        LibraryDataManager libraryDataManager = new LibraryDataManager(this);
+        JobManager.create(this).addJobCreator(new DataJobCreator());
 
         Realm.init(this);
 
@@ -162,7 +164,6 @@ public class LaunchApplication extends Application implements Analytics.Provider
                         .migration(new Migration())
                         .build();
 
-        LibraryDataManager libraryDataManager = new LibraryDataManager(this);
 
         try {
             Realm.setDefaultConfiguration(config);
@@ -203,7 +204,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
 
         checkSubscriptions();
 
-        JobManager.create(this).addJobCreator(new DataJobCreator());
+
 
         if (sharedPref.getBoolean("background", true)) {
             UpdateJob.scheduleJob(this);

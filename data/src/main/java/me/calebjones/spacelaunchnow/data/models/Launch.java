@@ -39,7 +39,7 @@ public class Launch extends RealmObject {
     private Integer eventID;
 
     private Location location;
-
+    private LSP lsp;
     private Rocket rocket;
 
     private Date startDate;
@@ -354,5 +354,13 @@ public class Launch extends RealmObject {
 
     public String getUrl() {
         return String.format("https://spacelaunchnow.me/launch/%s/", id);
+    }
+
+    public LSP getLsp() {
+        return lsp;
+    }
+
+    public void setLsp(LSP lsp) {
+        this.lsp = lsp;
     }
 }
