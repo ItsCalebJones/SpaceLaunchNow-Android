@@ -47,7 +47,6 @@ public class UpdateJob extends Job {
 
     public static void scheduleJob(Context context) {
         JobRequest.Builder builder = new JobRequest.Builder(UpdateJob.TAG)
-                .setPersisted(true)
                 .setUpdateCurrent(true);
 
 

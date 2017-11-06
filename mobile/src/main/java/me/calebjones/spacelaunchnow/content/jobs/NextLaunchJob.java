@@ -66,7 +66,6 @@ public class NextLaunchJob extends Job {
 
         JobRequest.Builder builder = new JobRequest.Builder(NextLaunchJob.TAG)
                 .setExtras(extras)
-                .setPersisted(true)
                 .setExact(interval);
 
         Timber.i("Scheduling JobRequests for %s", TAG);

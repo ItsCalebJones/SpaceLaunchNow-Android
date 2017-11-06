@@ -638,7 +638,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                     ShareCompat.IntentBuilder.from((Activity) context)
                             .setType("text/plain")
                             .setChooserTitle("Share: " + launch.getName())
-                            .setText(String.format("%s\n\nWatch Live: https://spacelaunchnow.me/launch/%s/", message, launch.getId()))
+                            .setText(String.format("%s\n\nWatch Live: %s", message, launch.getUrl()))
                             .startChooser();
                     Analytics.from(context).sendLaunchShared("Explore Button", launch.getName() + "-" + launch.getId().toString());
                     break;

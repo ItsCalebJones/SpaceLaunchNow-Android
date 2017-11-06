@@ -33,7 +33,6 @@ public class UpdateWearJob extends Job {
 
         JobRequest.Builder builder = new JobRequest.Builder(UpdateWearJob.TAG)
                 .setPeriodic(TimeUnit.HOURS.toMillis(12), TimeUnit.HOURS.toMillis(1))
-                .setPersisted(true)
                 .setUpdateCurrent(true);
 
         builder.build().schedule();
