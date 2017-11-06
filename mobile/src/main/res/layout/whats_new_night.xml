@@ -8,5 +8,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/material_baseline_grid_2x"
-        android:textColor="@color/colorTextSecondary"/>
+        android:textColor="@color/colorTextSecondary"
+        android:linksClickable="true"/>
 </LinearLayout>

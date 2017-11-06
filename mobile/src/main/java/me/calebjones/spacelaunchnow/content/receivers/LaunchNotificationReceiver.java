@@ -10,7 +10,7 @@ import com.onesignal.OSNotificationReceivedResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import me.calebjones.spacelaunchnow.content.DataSaver;
+import me.calebjones.spacelaunchnow.content.data.DataSaver;
 import me.calebjones.spacelaunchnow.content.services.NextLaunchTracker;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Result;
@@ -27,11 +27,13 @@ public class LaunchNotificationReceiver extends NotificationExtenderService {
     private boolean running = false;
     private DataSaver dataSaver = new DataSaver(this);
     private Context context = this;
+    private NextLaunchTracker nextLaunchTracker;
 
     @Override
     protected boolean onNotificationProcessing(OSNotificationReceivedResult receivedResult) {
         // Read properties from result.
         Timber.i("Received Result - App in Focus: %s Payload: %s", receivedResult.isAppInFocus, receivedResult.payload);
+        nextLaunchTracker = new NextLaunchTracker(this);
 
         if (receivedResult.payload != null) {
             OSNotificationPayload payload = receivedResult.payload;
@@ -47,10 +49,10 @@ public class LaunchNotificationReceiver extends NotificationExtenderService {
                             if (response.isSuccessful()) {
                                 dataSaver.saveLaunchesToRealm(response.body().getLaunches());
                                 dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_BY_ID, true, call));
-                                startService(new Intent(context, NextLaunchTracker.class));
+                                nextLaunchTracker.runUpdate();
                                 setRunning(false);
                             } else {
-                                startService(new Intent(context, NextLaunchTracker.class));
+                                nextLaunchTracker.runUpdate();
                                 dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_BY_ID, false, call, ErrorUtil.parseLibraryError(response)));
                                 setRunning(false);
                             }
@@ -58,7 +60,7 @@ public class LaunchNotificationReceiver extends NotificationExtenderService {
 
                         @Override
                         public void onFailure(Call<LaunchResponse> call, Throwable t) {
-                            startService(new Intent(context, NextLaunchTracker.class));
+                            nextLaunchTracker.runUpdate();
                             dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_BY_ID, false, call, t.getLocalizedMessage()));
                             setRunning(false);
                         }
@@ -81,7 +83,7 @@ public class LaunchNotificationReceiver extends NotificationExtenderService {
             } catch (JSONException e) {
                 // Error parsing additional data,  trigger a sync.
                 Timber.e(e);
-                startService(new Intent(context, NextLaunchTracker.class));
+                nextLaunchTracker.runUpdate();
                 return false;
             }
 

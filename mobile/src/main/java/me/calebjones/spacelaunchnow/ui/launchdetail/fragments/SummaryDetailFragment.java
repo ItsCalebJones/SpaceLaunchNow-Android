@@ -1,19 +1,14 @@
 package me.calebjones.spacelaunchnow.ui.launchdetail.fragments;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SwitchCompat;
@@ -34,12 +29,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.bumptech.glide.Glide;
 import com.github.pwittchen.weathericonview.WeatherIconView;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
 import com.mypopsy.maps.StaticMap;
 
 import java.text.SimpleDateFormat;
@@ -52,12 +41,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
+import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
 import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.Pad;
@@ -588,7 +577,8 @@ public class SummaryDetailFragment extends BaseFragment {
                             Timber.v("Launch %s notifiable updated to %s", detailLaunch.getName(), detailLaunch.isNotifiable());
                         }
                     });
-                    LaunchDataService.startActionSyncNotifiers(context);
+                    LibraryDataManager libraryDataManager = new LibraryDataManager(context);
+                    libraryDataManager.syncNotifiers();
                 }
             });
 
@@ -675,7 +665,8 @@ public class SummaryDetailFragment extends BaseFragment {
             }, new Realm.Transaction.OnSuccess() {
                 @Override
                 public void onSuccess() {
-                    CalendarSyncService.startActionSyncAll(context);
+                    CalendarSyncManager calendarSyncManager = new CalendarSyncManager(context);
+                    calendarSyncManager.syncAllEevnts();
                 }
             });
         } else {

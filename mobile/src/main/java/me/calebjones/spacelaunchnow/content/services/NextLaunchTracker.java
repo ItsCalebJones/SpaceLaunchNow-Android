@@ -1,8 +1,8 @@
 package me.calebjones.spacelaunchnow.content.services;
 
-import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -15,11 +15,12 @@ import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
-import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
+import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.NextLaunchJob;
 import me.calebjones.spacelaunchnow.content.jobs.SyncJob;
-import me.calebjones.spacelaunchnow.content.util.NotificationBuilder;
+import me.calebjones.spacelaunchnow.content.notifications.NotificationBuilder;
+import me.calebjones.spacelaunchnow.content.wear.WearWatchfaceManager;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.LaunchNotification;
 import me.calebjones.spacelaunchnow.widget.LaunchCardCompactWidgetProvider;
@@ -27,7 +28,7 @@ import me.calebjones.spacelaunchnow.widget.LaunchTimerWidgetProvider;
 import me.calebjones.spacelaunchnow.widget.LaunchWordTimerWidgetProvider;
 import timber.log.Timber;
 
-public class NextLaunchTracker extends IntentService {
+public class NextLaunchTracker {
 
     private SharedPreferences sharedPref;
     private SwitchPreferences switchPreferences;
@@ -35,24 +36,18 @@ public class NextLaunchTracker extends IntentService {
     private RealmResults<Launch> launchRealms;
     private long interval;
     private Realm realm;
+    private Context context;
 
-public NextLaunchTracker() {
-        super("NextLaunchTracker");
+public NextLaunchTracker(Context context) {
+    Timber.d("NextLaunchTracker - onCreate");
+    rightNow = Calendar.getInstance();
+    this.context = context;
     }
 
-    public void onCreate() {
-        super.onCreate();
-        Timber.d("NextLaunchTracker - onCreate");
-        rightNow = Calendar.getInstance();
-        super.onCreate();
-    }
-
-    @Override
-    protected void onHandleIntent(Intent intent) {
-        Timber.d("onHandleIntent - %s", intent.describeContents());
+    public void runUpdate() {
         realm = Realm.getDefaultInstance();
-        this.switchPreferences = SwitchPreferences.getInstance(getApplicationContext());
-        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        this.switchPreferences = SwitchPreferences.getInstance(context);
+        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
         Calendar calDay = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         calDay.add(Calendar.HOUR, 72);
@@ -81,29 +76,29 @@ public NextLaunchTracker() {
                 syncCalendar();
             }
         }
-        SyncJob.schedulePeriodicJob(this);
+        SyncJob.schedulePeriodicJob(context);
         updateWidgets();
         realm.close();
     }
 
     private void updateWidgets() {
-        Intent cardIntent = new Intent(this, LaunchCardCompactWidgetProvider.class);
+        Intent cardIntent = new Intent(context, LaunchCardCompactWidgetProvider.class);
         cardIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        int cardIds[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), LaunchCardCompactWidgetProvider.class));
+        int cardIds[] = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, LaunchCardCompactWidgetProvider.class));
         cardIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, cardIds);
-        sendBroadcast(cardIntent);
+        context.sendBroadcast(cardIntent);
 
-        Intent timerIntent = new Intent(this, LaunchTimerWidgetProvider.class);
+        Intent timerIntent = new Intent(context, LaunchTimerWidgetProvider.class);
         timerIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        int timerIds[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), LaunchTimerWidgetProvider.class));
+        int timerIds[] = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, LaunchTimerWidgetProvider.class));
         timerIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, timerIds);
-        sendBroadcast(timerIntent);
+        context.sendBroadcast(timerIntent);
 
-        Intent wordIntent = new Intent(this, LaunchWordTimerWidgetProvider.class);
+        Intent wordIntent = new Intent(context, LaunchWordTimerWidgetProvider.class);
         wordIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        int wordIds[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), LaunchWordTimerWidgetProvider.class));
+        int wordIds[] = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, LaunchWordTimerWidgetProvider.class));
         wordIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, wordIds);
-        sendBroadcast(wordIntent);
+        context.sendBroadcast(wordIntent);
     }
 
     private void filterLaunchRealm(Date date, Date dateDay, Realm realm) {
@@ -248,7 +243,8 @@ public NextLaunchTracker() {
     }
 
     private void syncCalendar() {
-        CalendarSyncService.startActionSyncAll(this);
+        CalendarSyncManager calendarSyncManager = new CalendarSyncManager(context);
+        calendarSyncManager.syncAllEevnts();
     }
 
     private void checkStatus(final Launch launch) {
@@ -282,12 +278,12 @@ public NextLaunchTracker() {
                     if (notify) {
                         //Check settings to see if user should be notified.
                         if (!notification.isNotifiedTenMinute() && this.sharedPref.getBoolean("notifications_launch_minute", false)) {
-                            NotificationBuilder.notifyUser(this, launch, timeToFinish);
+                            NotificationBuilder.notifyUser(context, launch, timeToFinish);
                             realm.beginTransaction();
                             notification.setNotifiedTenMinute(true);
                             realm.commitTransaction();
                         } else if (!notification.isNotifiedHour() && this.sharedPref.getBoolean("notifications_launch_imminent", true)) {
-                            NotificationBuilder.notifyUser(this, launch, timeToFinish);
+                            NotificationBuilder.notifyUser(context, launch, timeToFinish);
                             realm.beginTransaction();
                             notification.setNotifiedHour(true);
                             realm.commitTransaction();
@@ -299,7 +295,7 @@ public NextLaunchTracker() {
                         //Check settings to see if user should be notified.
                         if (this.sharedPref.getBoolean("notifications_launch_imminent", true)) {
                             if (!notification.isNotifiedHour()) {
-                                NotificationBuilder.notifyUser(this, launch, timeToFinish);
+                                NotificationBuilder.notifyUser(context, launch, timeToFinish);
                                 realm.beginTransaction();
                                 notification.setNotifiedHour(true);
                                 realm.commitTransaction();
@@ -314,7 +310,7 @@ public NextLaunchTracker() {
                         //Check settings to see if user should be notified.
                         if (this.sharedPref.getBoolean("notifications_launch_day", true)) {
                             if (!notification.isNotifiedDay()) {
-                                NotificationBuilder.notifyUser(this, launch, timeToFinish);
+                                NotificationBuilder.notifyUser(context, launch, timeToFinish);
                                 realm.beginTransaction();
                                 notification.setNotifiedDay(true);
                                 realm.commitTransaction();
@@ -343,7 +339,8 @@ public NextLaunchTracker() {
     }
 
     public void scheduleWear() {
-        this.startService(new Intent(this, UpdateWearService.class));
+       WearWatchfaceManager watchfaceManager = new WearWatchfaceManager(context);
+       watchfaceManager.updateWear();
     }
 
 }
