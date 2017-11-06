@@ -23,8 +23,7 @@ public class SyncJob extends Job {
             Timber.i("Background sync enabled, configuring JobRequest.");
 
             JobRequest.Builder builder = new JobRequest.Builder(SyncJob.TAG)
-                    .setUpdateCurrent(true)
-                    .setPersisted(true);
+                    .setUpdateCurrent(true);
 
             if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("data_saver", false)) {
                 Timber.v("DataSaver mode enabled...periodic set to once per day.");
