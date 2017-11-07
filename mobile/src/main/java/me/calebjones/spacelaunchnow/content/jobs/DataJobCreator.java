@@ -16,9 +16,6 @@ public class DataJobCreator implements JobCreator {
     @Override
     public Job create(String tag) {
         switch (tag) {
-            case NextLaunchJob.TAG:
-                Timber.v(NextLaunchJob.TAG);
-                return new NextLaunchJob();
             case UpdateJob.TAG:
                 Timber.v(UpdateJob.TAG);
                 return new UpdateJob();

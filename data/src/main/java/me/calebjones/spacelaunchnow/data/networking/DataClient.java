@@ -2,7 +2,10 @@ package me.calebjones.spacelaunchnow.data.networking;
 
 import android.support.annotation.NonNull;
 
+import java.io.IOException;
+
 import me.calebjones.spacelaunchnow.data.helpers.Utils;
+import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryService;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
@@ -15,12 +18,13 @@ import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.Rock
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.RocketResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import timber.log.Timber;
 
 public class DataClient {
 
-//    private final String mCacheControl;
+    //    private final String mCacheControl;
     private final LibraryService libraryServiceThreaded;
     private final LibraryService libraryService;
     private final SpaceLaunchNowService spaceLaunchNowService;
@@ -29,7 +33,7 @@ public class DataClient {
     private Retrofit libraryRetrofitThreaded;
     private Retrofit spaceLaunchNowRetrofit;
 
-    private DataClient(String version){
+    private DataClient(String version) {
 
         //TODO figure out caching strategy
 //        CacheControl cacheControl =
@@ -46,7 +50,7 @@ public class DataClient {
 
     }
 
-    public Retrofit getLibraryRetrofit(){
+    public Retrofit getLibraryRetrofit() {
         return libraryRetrofit;
     }
 
@@ -77,7 +81,7 @@ public class DataClient {
 
     public Call<LaunchResponse> getLaunchById(int launchID, boolean isUIThread, @NonNull Callback<LaunchResponse> callback) {
         Call<LaunchResponse> call;
-        if (isUIThread){
+        if (isUIThread) {
             call = libraryService.getLaunchByID(launchID);
         } else {
             call = libraryServiceThreaded.getLaunchByID(launchID);
@@ -90,7 +94,29 @@ public class DataClient {
         return call;
     }
 
-    public Call<LaunchResponse> getNextUpcomingLaunchesMini(Callback<LaunchResponse> callback){
+    public Launch[] getLaunchByIdForNotification(int launchID) throws IOException {
+        Call<LaunchResponse> call = libraryService.getLaunchByID(launchID);
+        Response<LaunchResponse> response = call.execute();
+
+        // Here call newPostResponse.code() to get response code
+        int statusCode = response.code();
+        if (statusCode == 200) {
+            if (response.isSuccessful()) {
+                Launch[] launches;
+                try {
+                    launches = response.body().getLaunches();
+                } catch (NullPointerException e){
+                    return null;
+                }
+                if (launches != null) {
+                    return launches;
+                }
+            }
+        }
+        return null;
+    }
+
+    public Call<LaunchResponse> getNextUpcomingLaunchesMini(Callback<LaunchResponse> callback) {
         Call<LaunchResponse> call = libraryServiceThreaded.getNextUpcomingLaunchesMini(Utils.getStartDate(-1), Utils.getEndDate(10));
 
         call.enqueue(callback);
@@ -178,7 +204,7 @@ public class DataClient {
         return call;
     }
 
-    public Call<VehicleResponse> getVehicles(Callback<VehicleResponse> callback){
+    public Call<VehicleResponse> getVehicles(Callback<VehicleResponse> callback) {
         Call<VehicleResponse> call = spaceLaunchNowService.getVehicles();
 
         call.enqueue(callback);

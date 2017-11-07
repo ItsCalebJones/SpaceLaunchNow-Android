@@ -9,7 +9,6 @@ import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
 
 import java.util.concurrent.TimeUnit;
-
 import me.calebjones.spacelaunchnow.content.data.DataClientManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import timber.log.Timber;
@@ -26,11 +25,11 @@ public class SyncJob extends Job {
                     .setUpdateCurrent(true);
 
             if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("data_saver", false)) {
-                Timber.v("DataSaver mode enabled...periodic set to once per day.");
-                builder.setPeriodic(TimeUnit.DAYS.toMillis(1), 7200000);
+                Timber.v("DataSaver mode enabled...periodic set to once per week.");
+                builder.setPeriodic(TimeUnit.DAYS.toMillis(7), 7200000);
             } else {
-                Timber.v("DataSaver mode not enabled...every six hours.");
-                builder.setPeriodic(TimeUnit.HOURS.toMillis(6), 7200000);
+                Timber.v("DataSaver mode not enabled...every day.");
+                builder.setPeriodic(TimeUnit.HOURS.toMillis(24), 7200000);
             }
 
             Timber.i("Scheduling JobRequests for %s", TAG);
