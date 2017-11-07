@@ -82,6 +82,7 @@
                 <action android:name="CHECK_NEXT_LAUNCH_TIMER" />
             </intent-filter>
         </receiver>
+
         <receiver android:name=".content.receivers.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -149,6 +150,7 @@
             android:name="com.evernote.android.job.v21.PlatformJobService"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+
         <service
             android:name="com.evernote.android.job.v14.PlatformAlarmService"
             android:exported="false" />
@@ -189,6 +191,7 @@
 
         <service
             android:name=".content.notifications.NotificationReceiver"
+            android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.onesignal.NotificationExtender" />

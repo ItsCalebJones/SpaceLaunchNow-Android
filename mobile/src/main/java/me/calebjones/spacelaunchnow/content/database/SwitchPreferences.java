@@ -713,7 +713,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         } else {
             JSONObject tags = new JSONObject();
             try {
-                tags.put("all", false);
+                tags.put("ALL-Filter", false);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -746,7 +746,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
             tags.put("SpaceX", true);
             tags.put("Cape", true);
             tags.put("CASC", true);
-            tags.put("all", true);
+            tags.put("ALL-Filter", true);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -51,12 +51,7 @@ public class NotificationReceiver extends NotificationExtenderService {
                     Calendar future = Utils.DateToCalendar(launch.getNet());
                     Calendar now = Calendar.getInstance();
                     long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
-                    if (switchPreferences.getAllSwitch()) {
-                        NotificationBuilder.notifyUser(getApplicationContext(), launch, timeToFinish);
-                    } else {
-                        // TODO filter out launches we dont care about here?
-                        NotificationBuilder.notifyUser(getApplicationContext(), launch, timeToFinish);
-                    }
+                    NotificationBuilder.notifyUser(getApplicationContext(), launch, timeToFinish);
                     return true;
                 } else {
                     // Not a background payload, likely no additional data, show the notification

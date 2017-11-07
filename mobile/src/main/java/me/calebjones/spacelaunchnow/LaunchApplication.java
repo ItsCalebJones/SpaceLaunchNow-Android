@@ -115,8 +115,8 @@ public class LaunchApplication extends Application implements Analytics.Provider
 
             JSONObject tags = new JSONObject();
             try {
-                tags.put("notification", true);
-                tags.put("DEBUG", 1);
+                tags.put("Production", false);
+                tags.put("Debug", true);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -124,8 +124,8 @@ public class LaunchApplication extends Application implements Analytics.Provider
         } else {
             JSONObject tags = new JSONObject();
             try {
-                tags.put("notification", true);
-                tags.put("DEBUG", 0);
+                tags.put("Production", true);
+                tags.put("Debug", false);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
