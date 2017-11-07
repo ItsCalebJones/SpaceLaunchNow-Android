@@ -333,6 +333,7 @@ public class Launch extends RealmObject {
     }
 
     public void resetNotifiers() {
+
         isNotifiedDay = false;
         isNotifiedHour = false;
         isNotifiedTenMinute = false;
@@ -365,4 +366,5 @@ public class Launch extends RealmObject {
     public void setLsp(LSP lsp) {
         this.lsp = lsp;
     }
+
 }
