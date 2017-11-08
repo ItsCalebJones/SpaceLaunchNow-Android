@@ -1,15 +1,20 @@
 package me.calebjones.spacelaunchnow.ui.launchdetail.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -21,8 +26,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -35,6 +45,7 @@ import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
 import me.calebjones.spacelaunchnow.ui.launchdetail.TabsAdapter;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,6 +56,8 @@ public class LaunchDetailActivity extends BaseActivity
         implements AppBarLayout.OnOffsetChangedListener {
 
     private static final int PERCENTAGE_TO_ANIMATE_AVATAR = 20;
+    @BindView(R.id.fab_share)
+    FloatingActionButton fabShare;
     private boolean mIsAvatarShown = true;
 
     private TabLayout tabLayout;
@@ -71,6 +84,13 @@ public class LaunchDetailActivity extends BaseActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        int currentOrientation = getResources().getConfiguration().orientation;
+        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        }
+
         int m_theme;
         final int statusColor;
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -94,6 +114,7 @@ public class LaunchDetailActivity extends BaseActivity
 
         setTheme(m_theme);
         setContentView(R.layout.activity_launch_detail);
+        ButterKnife.bind(this);
 
         //Setup Views
         tabLayout = (TabLayout) findViewById(R.id.detail_tabs);
@@ -360,7 +381,7 @@ public class LaunchDetailActivity extends BaseActivity
             if (launchVehicle != null && launchVehicle.getImageURL().length() > 0) {
                 Glide.with(this)
                         .load(launchVehicle
-                                      .getImageURL())
+                                .getImageURL())
                         .centerCrop()
                         .placeholder(R.drawable.placeholder)
                         .crossFade()
@@ -428,4 +449,51 @@ public class LaunchDetailActivity extends BaseActivity
         }
     }
 
+    @OnClick(R.id.fab_share)
+    public void onViewClicked() {
+        Date date = launch.getNet();
+        SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+        df.toLocalizedPattern();
+        String launchDate = df.format(date);
+        String message;
+        if (launch.getVidURLs().size() > 0) {
+            if (launch.getLocation() != null && launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
+                    get(0).getAgencies().size() > 0) {
+
+                message = launch.getName() + " launching from "
+                        + launch.getLocation().getName() + "\n\n"
+                        + launchDate;
+            } else if (launch.getLocation() != null) {
+                message = launch.getName() + " launching from "
+                        + launch.getLocation().getName() + "\n\n"
+                        + launchDate;
+            } else {
+                message = launch.getName()
+                        + "\n\n"
+                        + launchDate;
+            }
+        } else {
+            if (launch.getLocation() != null && launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
+                    get(0).getAgencies().size() > 0) {
+
+                message = launch.getName() + " launching from "
+                        + launch.getLocation().getName() + "\n\n"
+                        + launchDate;
+            } else if (launch.getLocation() != null) {
+                message = launch.getName() + " launching from "
+                        + launch.getLocation().getName() + "\n\n"
+                        + launchDate;
+            } else {
+                message = launch.getName()
+                        + "\n\n"
+                        + launchDate;
+            }
+        }
+        ShareCompat.IntentBuilder.from(this)
+                .setType("text/plain")
+                .setChooserTitle("Share: " + launch.getName())
+                .setText(String.format("%s\n\nWatch Live: %s", message, launch.getUrl()))
+                .startChooser();
+        Analytics.from(context).sendLaunchShared("Share FAB", launch.getName() + "-" + launch.getId().toString());
+    }
 }

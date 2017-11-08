@@ -99,9 +99,7 @@ public class MissionDetailFragment extends BaseFragment {
 
     public void setLaunch(Launch launch) {
         detailLaunch = launch;
-        if (isVisible()) {
-            setUpViews(launch);
-        }
+        setUpViews(launch);
     }
 
     private void setUpViews(Launch launch) {
