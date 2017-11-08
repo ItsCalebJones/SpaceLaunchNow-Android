@@ -34,6 +34,7 @@ import me.calebjones.spacelaunchnow.data.models.RocketDetails;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
 import me.calebjones.spacelaunchnow.ui.launchdetail.TabsAdapter;
+import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -163,7 +164,9 @@ public class LaunchDetailActivity extends BaseActivity
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            onBackPressed();
+                            Intent intent = new Intent(context, MainActivity.class);
+                            context.startActivity(intent);
+
                         }
                     }
 
