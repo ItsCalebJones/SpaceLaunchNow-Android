@@ -20,13 +20,13 @@ public interface LibraryService {
     @Headers({
             "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
     })
-    @GET("launch/next/1000&mode=verbose&limit=100")
+    @GET("launch/next/1000?mode=verbose")
     Call<LaunchResponse> getUpcomingLaunchesAll(@Query("offset") int offset);
 
     @Headers({
             "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
     })
-    @GET("launch/next/50&mode=verbose&limit=10")
+    @GET("launch/next/50?mode=verbose")
     Call<LaunchResponse> getUpcomingLaunches(@Query("offset") int offset);
 
     @Headers({

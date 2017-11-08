@@ -20,6 +20,7 @@ import java.util.Date;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Launch;
+import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
@@ -47,8 +48,9 @@ public class NotificationBuilder {
         String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone", "default ringtone");
         Uri alarmSound = Uri.parse(ringtoneBox);
 
-        Intent resultIntent = new Intent(Intent.ACTION_VIEW);
-        resultIntent.setData(Uri.parse(launch.getUrl()));
+        Intent resultIntent = new Intent(context, LaunchDetailActivity.class);
+        resultIntent.putExtra("TYPE", "launch");
+        resultIntent.putExtra("launchID", launch.getId());
 
         PendingIntent pending = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
