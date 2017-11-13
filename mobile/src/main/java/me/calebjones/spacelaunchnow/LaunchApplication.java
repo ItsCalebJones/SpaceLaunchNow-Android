@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.evernote.android.job.JobManager;
+import com.google.android.gms.ads.MobileAds;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.onesignal.OneSignal;
@@ -218,6 +219,8 @@ public class LaunchApplication extends Application implements Analytics.Provider
         SyncJob.schedulePeriodicJob(this);
 
         DefaultRuleEngine.trackAppStart(this);
+
+        MobileAds.initialize(this, "ca-app-pub-9824528399164059~9700152528");
 
         if (!sharedPreference.getFirstBoot()) {
             Timber.i("Stored Version Code: %s", switchPreferences.getVersionCode());

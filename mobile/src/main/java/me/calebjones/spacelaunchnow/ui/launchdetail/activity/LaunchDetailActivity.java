@@ -1,6 +1,5 @@
 package me.calebjones.spacelaunchnow.ui.launchdetail.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,6 +46,7 @@ import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
 import me.calebjones.spacelaunchnow.ui.launchdetail.TabsAdapter;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
+import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import retrofit2.Call;
@@ -58,6 +60,8 @@ public class LaunchDetailActivity extends BaseActivity
     private static final int PERCENTAGE_TO_ANIMATE_AVATAR = 20;
     @BindView(R.id.fab_share)
     FloatingActionButton fabShare;
+    @BindView(R.id.adView)
+    AdView adView;
     private boolean mIsAvatarShown = true;
 
     private TabLayout tabLayout;
@@ -115,6 +119,11 @@ public class LaunchDetailActivity extends BaseActivity
         setTheme(m_theme);
         setContentView(R.layout.activity_launch_detail);
         ButterKnife.bind(this);
+
+        if (!SupporterHelper.isSupporter()) {
+            AdRequest adRequest = new AdRequest.Builder().build();
+            adView.loadAd(adRequest);
+        }
 
         //Setup Views
         tabLayout = (TabLayout) findViewById(R.id.detail_tabs);

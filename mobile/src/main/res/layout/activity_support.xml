@@ -357,6 +357,58 @@
             </LinearLayout>
           </android.support.v7.widget.CardView>
 
+          <android.support.v7.widget.CardView
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+              android:layout_marginLeft="@dimen/material_baseline_grid_1x"
+              android:layout_marginRight="@dimen/material_baseline_grid_1x"
+              android:layout_marginTop="@dimen/material_baseline_grid_0.5x">
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+              <de.hdodenhof.circleimageview.CircleImageView
+                  android:layout_width="64dp"
+                  android:layout_height="fill_parent"
+                  android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                  android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                  android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                  android:gravity="center_vertical"
+                  android:src="@drawable/ic_watch_96dp"
+                  app:civ_border_color="@color/material_color_deep_orange_900"
+                  app:civ_border_width="4dp"
+                  app:civ_fill_color="@color/material_color_deep_orange_900" />
+
+              <LinearLayout
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                    android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                    android:gravity="center_vertical"
+                    android:text="Remove Ads"
+                    style="@style/MaterialTypography.Regular"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:lines="2"
+                    android:text="Dynamic pictures of launch vehicles as watch face background." />
+
+              </LinearLayout>
+
+            </LinearLayout>
+          </android.support.v7.widget.CardView>
+
           <android.support.v7.widget.AppCompatButton
             android:id="@+id/purchase"
             style="@style/Base.Widget.AppCompat.Button.Colored"

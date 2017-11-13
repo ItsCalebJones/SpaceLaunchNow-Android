@@ -124,8 +124,21 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
+        android:layout_marginBottom="@dimen/material_baseline_grid_1x"
         android:src="@drawable/ic_menu_share_white"
         app:layout_anchor="@id/detail_viewpager"
         app:layout_anchorGravity="bottom|right|end" />
+
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-9824528399164059/9713798255"
+        app:layout_anchor="@id/detail_viewpager"
+        app:layout_anchorGravity="bottom"/>
     ​
 </android.support.design.widget.CoordinatorLayout>

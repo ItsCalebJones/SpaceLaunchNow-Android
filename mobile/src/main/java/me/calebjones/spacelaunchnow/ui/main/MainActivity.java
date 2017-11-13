@@ -25,6 +25,8 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -39,6 +41,8 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.mrapp.android.preference.activity.PreferenceActivity;
 import io.fabric.sdk.android.Fabric;
 import me.calebjones.spacelaunchnow.BuildConfig;
@@ -66,6 +70,8 @@ public class MainActivity extends BaseActivity {
     private static final int REQUEST_CODE_INTRO = 1837;
     private static ListPreferences listPreferences;
     private final Handler mDrawerActionHandler = new Handler();
+    @BindView(R.id.adView)
+    AdView adView;
     private LaunchesViewPager mlaunchesViewPager;
     private MissionFragment mMissionFragment;
     private NextLaunchFragment mUpcomingFragment;
@@ -144,6 +150,12 @@ public class MainActivity extends BaseActivity {
         setTheme(m_theme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+
+        if (!SupporterHelper.isSupporter()) {
+            AdRequest adRequest = new AdRequest.Builder().build();
+            adView.loadAd(adRequest);
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setupWindowAnimations();
         }
@@ -218,16 +230,16 @@ public class MainActivity extends BaseActivity {
                     }
                 }).build();
 
-        if (!SupporterHelper.isSupporter()){
+        if (!SupporterHelper.isSupporter()) {
             result.addStickyFooterItem(
-                            new PrimaryDrawerItem().withName("Become a Supporter")
-                                    .withDescription("Get Pro Features")
-                                    .withIcon(GoogleMaterial.Icon.gmd_mood)
-                                    .withIdentifier(R.id.menu_support)
-                                    .withSelectable(false));
+                    new PrimaryDrawerItem().withName("Become a Supporter")
+                            .withDescription("Get Pro Features")
+                            .withIcon(GoogleMaterial.Icon.gmd_mood)
+                            .withIdentifier(R.id.menu_support)
+                            .withSelectable(false));
         }
 
-        if (SupporterHelper.isSupporter()){
+        if (SupporterHelper.isSupporter()) {
             result.addStickyFooterItem(
                     new PrimaryDrawerItem().withName("Thank you for the support!")
                             .withIcon(GoogleMaterial.Icon.gmd_mood)
@@ -239,7 +251,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupWindowAnimations() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Slide slide = new Slide();
             slide.setDuration(1000);
             getWindow().setEnterTransition(slide);
@@ -445,7 +457,7 @@ public class MainActivity extends BaseActivity {
                 Utils.openCustomTab(this, getApplicationContext(), "https://launchlibrary.net/");
                 break;
             case R.id.menu_settings:
-                Intent settingsIntent = new Intent(this, me.calebjones.spacelaunchnow.ui.settings.SettingsActivity.class);
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
                 settingsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(settingsIntent);
                 break;
