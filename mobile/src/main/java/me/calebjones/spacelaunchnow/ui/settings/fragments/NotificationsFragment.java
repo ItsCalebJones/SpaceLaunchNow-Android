@@ -88,6 +88,6 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
         now.setTimeInMillis(System.currentTimeMillis());
         long timeToFinish = now.getTimeInMillis() - future.getTimeInMillis();
 
-        NotificationBuilder.notifyUser(context, launch, timeToFinish);
+        NotificationBuilder.notifyUser(context, launch, timeToFinish, false);
     }
 }
