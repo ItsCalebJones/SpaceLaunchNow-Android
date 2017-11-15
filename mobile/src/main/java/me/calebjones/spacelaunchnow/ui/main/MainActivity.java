@@ -154,7 +154,10 @@ public class MainActivity extends BaseActivity {
 
         if (!SupporterHelper.isSupporter()) {
             AdRequest adRequest = new AdRequest.Builder().build();
+            adView.setVisibility(View.VISIBLE);
             adView.loadAd(adRequest);
+        } else {
+            adView.setVisibility(View.GONE);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setupWindowAnimations();

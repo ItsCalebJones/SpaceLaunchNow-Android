@@ -10,6 +10,10 @@ buildscript {
     }
 }
 
+plugins {
+    id 'com.palantir.git-version' version '0.9.1'
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'realm-android'
@@ -26,15 +30,7 @@ def versionMinor = 7
 def versionPatch = 1
 def appVersionCode = 0
 def appVersionName = ""
-def getGitHash = { ->
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'rev-parse', '--short', 'HEAD'
-        standardOutput = stdout
-
-    }
-    return stdout.toString().trim()
-}
+def details = versionDetails()
 def versionPropsFile = file('version.properties')
 
 android {
@@ -98,7 +94,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
-                    outputFileName = "SpaceLaunchNow-release-${variant.versionName}.${variant.versionCode}-${getGitHash()}.apk"
+                    outputFileName = "SpaceLaunchNow-release-${variant.versionName}.${variant.versionCode}-${details.branchName}-${details.gitHash}.apk"
                 }
             }
         }

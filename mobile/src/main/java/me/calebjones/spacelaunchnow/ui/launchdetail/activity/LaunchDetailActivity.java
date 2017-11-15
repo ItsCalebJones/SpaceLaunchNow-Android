@@ -76,6 +76,7 @@ public class LaunchDetailActivity extends BaseActivity
     private CustomTabActivityHelper customTabActivityHelper;
     private Context context;
     private TabsAdapter tabAdapter;
+    private int statusColor;
 
     public String response;
     public Launch launch;
@@ -96,7 +97,7 @@ public class LaunchDetailActivity extends BaseActivity
         }
 
         int m_theme;
-        final int statusColor;
+
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         context = getApplicationContext();
         customTabActivityHelper = new CustomTabActivityHelper();
@@ -122,7 +123,10 @@ public class LaunchDetailActivity extends BaseActivity
 
         if (!SupporterHelper.isSupporter()) {
             AdRequest adRequest = new AdRequest.Builder().build();
+            adView.setVisibility(View.VISIBLE);
             adView.loadAd(adRequest);
+        } else {
+            adView.setVisibility(View.GONE);
         }
 
         //Setup Views
@@ -211,36 +215,6 @@ public class LaunchDetailActivity extends BaseActivity
         viewPager.setAdapter(tabAdapter);
 
         tabLayout.setupWithViewPager(viewPager);
-
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-                                                    @Override
-                                                    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                                                        int totalScroll = appBarLayout.getTotalScrollRange();
-                                                        int currentScroll = totalScroll + verticalOffset;
-
-                                                        int color = statusColor;
-                                                        int r = (color >> 16) & 0xFF;
-                                                        int g = (color >> 8) & 0xFF;
-                                                        int b = (color >> 0) & 0xFF;
-
-                                                        if ((currentScroll) < 255) {
-                                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-                                                                Window window = getWindow();
-                                                                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                                                                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                                                                window.setStatusBarColor(Color.argb(reverseNumber(currentScroll, 0, 255), r, g, b));
-                                                            }
-                                                        } else {
-                                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                                                Window window = getWindow();
-                                                                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                                                            }
-                                                        }
-                                                    }
-                                                }
-
-        );
     }
 
     private void updateViews(Launch launch) {
@@ -417,16 +391,25 @@ public class LaunchDetailActivity extends BaseActivity
     }
 
     @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        int totalScroll = appBarLayout.getTotalScrollRange();
+        int currentScroll = totalScroll + verticalOffset;
+
+        int color = statusColor;
+        int r = (color >> 16) & 0xFF;
+        int g = (color >> 8) & 0xFF;
+        int b = (color >> 0) & 0xFF;
+
         if (mMaxScrollSize == 0) {
             mMaxScrollSize = appBarLayout.getTotalScrollRange();
         }
 
-        int percentage = (Math.abs(i)) * 100 / mMaxScrollSize;
+        int percentage = (Math.abs(verticalOffset)) * 100 / mMaxScrollSize;
 
         if (percentage >= PERCENTAGE_TO_ANIMATE_AVATAR && mIsAvatarShown) {
             mIsAvatarShown = false;
             detail_profile_image.animate().scaleY(0).scaleX(0).setDuration(200).start();
+            fabShare.hide();
         }
 
         if (percentage <= PERCENTAGE_TO_ANIMATE_AVATAR && !mIsAvatarShown) {
@@ -435,6 +418,24 @@ public class LaunchDetailActivity extends BaseActivity
             detail_profile_image.animate()
                     .scaleY(1).scaleX(1)
                     .start();
+
+            fabShare.show();
+        }
+
+        Timber.v("Total: %s Current: %s RGB: %d %d %d", totalScroll, currentScroll, r, g, b);
+        if ((currentScroll) < 200) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+                Window window = getWindow();
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.setStatusBarColor(Color.argb(reverseNumber(currentScroll, 0, 255), r, g, b));
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Window window = getWindow();
+                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            }
         }
     }
 
