@@ -54,6 +54,7 @@ import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.Laun
 import me.calebjones.spacelaunchnow.ui.launchdetail.TabsAdapter;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import retrofit2.Call;
@@ -150,6 +151,9 @@ public class LaunchDetailActivity extends BaseActivity
         detail_rocket = (TextView) findViewById(R.id.detail_rocket);
         detail_mission_location = (TextView) findViewById(R.id.detail_mission_location);
 
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
         //Grab information from Intent
         Intent mIntent = getIntent();
         String type = mIntent.getStringExtra("TYPE");
@@ -243,12 +247,9 @@ public class LaunchDetailActivity extends BaseActivity
                             && launch.getRocket().getImageURL().length() > 0
                             && !launch.getRocket().getImageURL().contains("placeholder")) {
 
-                        Glide.with(this)
+                        GlideApp.with(this)
                                 .load(launch.getRocket().getImageURL())
-                                .centerCrop()
                                 .placeholder(R.drawable.placeholder)
-                                .error(R.drawable.placeholder)
-                                .crossFade()
                                 .into(detail_profile_backdrop);
                         getLaunchVehicle(launch, false);
                     } else {
@@ -346,9 +347,8 @@ public class LaunchDetailActivity extends BaseActivity
     private void applyProfileLogo(String url) {
         Timber.d("LaunchDetailActivity - Loading Profile Image url: %s ", url);
 
-        Glide.with(this)
+        GlideApp.with(this)
                 .load(url)
-                .centerCrop()
                 .placeholder(R.drawable.icon_international)
                 .error(R.drawable.icon_international)
                 .into(detail_profile_image);
@@ -371,12 +371,9 @@ public class LaunchDetailActivity extends BaseActivity
                 .findFirst();
         if (setImage) {
             if (launchVehicle != null && launchVehicle.getImageURL().length() > 0 && !launchVehicle.getImageURL().contains("placeholder")) {
-                Glide.with(this)
-                        .load(launchVehicle
-                                .getImageURL())
-                        .centerCrop()
+                GlideApp.with(this)
+                        .load(launchVehicle.getImageURL())
                         .placeholder(R.drawable.placeholder)
-                        .crossFade()
                         .into(detail_profile_backdrop);
                 Timber.d("Glide Loading: %s %s", launchVehicle.getLV_Name(), launchVehicle.getImageURL());
             }
@@ -417,7 +414,10 @@ public class LaunchDetailActivity extends BaseActivity
 
         if (percentage >= PERCENTAGE_TO_ANIMATE_AVATAR && mIsAvatarShown) {
             mIsAvatarShown = false;
-            detail_profile_image.animate().scaleY(0).scaleX(0).setDuration(200).start();
+            detail_profile_image.animate()
+                    .scaleY(0).scaleX(0)
+                    .setDuration(200)
+                    .start();
             fabShare.hide();
         }
 
@@ -431,20 +431,20 @@ public class LaunchDetailActivity extends BaseActivity
             fabShare.show();
         }
 
-        if ((currentScroll) < 100) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-                Window window = getWindow();
-                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(Color.argb(reverseNumber(currentScroll, 0, 255), r, g, b));
-            }
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                Window window = getWindow();
-                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            }
-        }
+//        if ((currentScroll) < 100) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//
+//                Window window = getWindow();
+//                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//                window.setStatusBarColor(Color.argb(reverseNumber(currentScroll, 0, 255), r, g, b));
+//            }
+//        } else {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                Window window = getWindow();
+//                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//            }
+//        }
     }
 
     @Override

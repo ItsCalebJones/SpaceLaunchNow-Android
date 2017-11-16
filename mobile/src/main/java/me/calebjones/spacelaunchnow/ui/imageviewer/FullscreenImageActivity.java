@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
+import me.calebjones.spacelaunchnow.utils.GlideApp;
 import uk.co.senab.photoview.PhotoView;
 
 /**
@@ -70,9 +71,8 @@ public class FullscreenImageActivity extends BaseActivity {
             });
         } else {
             // load the full version, crossfading from the thumbnail image
-            Glide.with(getApplicationContext())
+            GlideApp.with(getApplicationContext())
                     .load(imageURL)
-                    .crossFade()
                     .into(photoView);
         }
 

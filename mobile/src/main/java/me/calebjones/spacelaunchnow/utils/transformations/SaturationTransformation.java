@@ -6,15 +6,14 @@ import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
+import android.support.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.Transformation;
-import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.BitmapResource;
+import jp.wasabeef.glide.transformations.BitmapTransformation;
 
 
-public class SaturationTransformation  implements Transformation<Bitmap> {
+public class SaturationTransformation extends BitmapTransformation {
 
     private BitmapPool mBitmapPool;
     private float mSaturation;
@@ -28,10 +27,8 @@ public class SaturationTransformation  implements Transformation<Bitmap> {
         mSaturation = saturation;
     }
 
-    @Override
-    public Resource<Bitmap> transform(Resource<Bitmap> resource, int outWidth, int outHeight) {
-        Bitmap source = resource.get();
-
+    @Override protected Bitmap transform(@NonNull Context context, @NonNull BitmapPool pool,
+                                         @NonNull Bitmap source, int outWidth, int outHeight) {
         int width = source.getWidth();
         int height = source.getHeight();
 
@@ -49,10 +46,10 @@ public class SaturationTransformation  implements Transformation<Bitmap> {
         paint.setColorFilter(new ColorMatrixColorFilter(saturation));
         canvas.drawBitmap(source, 0, 0, paint);
 
-        return BitmapResource.obtain(bitmap, mBitmapPool);
+        return bitmap;
     }
 
-    @Override public String getId() {
-        return "GreyscaleTransformation()";
+    @Override public String key() {
+        return "SaturationTransformation()";
     }
 }

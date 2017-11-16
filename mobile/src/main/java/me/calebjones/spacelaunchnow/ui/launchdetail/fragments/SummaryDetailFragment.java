@@ -60,6 +60,7 @@ import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.Pad;
 import me.calebjones.spacelaunchnow.data.models.RocketDetails;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
+import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.CountDownTimer;
@@ -559,7 +560,8 @@ public class SummaryDetailFragment extends BaseFragment {
                         );
 
                         Timber.v("onPreDraw: %s", map.toString());
-                        Glide.with(context).load(map.toString())
+                        GlideApp.with(context)
+                                .load(map.toString())
                                 .error(R.drawable.placeholder)
                                 .centerCrop()
                                 .into(staticMap);

@@ -46,6 +46,7 @@ import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
 import me.calebjones.spacelaunchnow.data.models.realm.Migration;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
+import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.analytics.CrashlyticsTree;
@@ -197,12 +198,12 @@ public class LaunchApplication extends Application implements Analytics.Provider
         DrawerImageLoader.init(new AbstractDrawerImageLoader() {
             @Override
             public void set(ImageView imageView, Uri uri, Drawable placeholder) {
-                Glide.with(imageView.getContext()).load(uri).placeholder(placeholder).centerCrop().into(imageView);
+                GlideApp.with(imageView.getContext()).load(uri).placeholder(placeholder).centerCrop().into(imageView);
             }
 
             @Override
             public void cancel(ImageView imageView) {
-                Glide.clear(imageView);
+                GlideApp.with(imageView.getContext()).clear(imageView);
             }
         });
 

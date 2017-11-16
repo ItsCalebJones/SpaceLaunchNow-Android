@@ -7,7 +7,9 @@ import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -23,11 +25,13 @@ import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import jp.wasabeef.glide.transformations.BlurTransformation;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import jp.wasabeef.glide.transformations.gpu.BrightnessFilterTransformation;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.services.BaseManager;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.RocketDetails;
+import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.transformations.SaturationTransformation;
 import timber.log.Timber;
 
@@ -120,12 +124,15 @@ public class WearWatchfaceManager extends BaseManager {
 
             if (modify) {
                 try {
-                    Bitmap resource = Glide.with(context)
-                            .load(image)
+                    MultiTransformation multi = new MultiTransformation(new SaturationTransformation(context, satFloat),
+                            new BlurTransformation(radius, blur),
+                            new BrightnessFilterTransformation(dimFloat));
+                    Bitmap resource = GlideApp.with(context)
                             .asBitmap()
+                            .load(image)
                             .skipMemoryCache(true)
-                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                            .transform(new SaturationTransformation(context, satFloat), new BlurTransformation(context, radius, blur), new BrightnessFilterTransformation(context, dimFloat))
+                            .diskCacheStrategy(DiskCacheStrategy.DATA)
+                            .apply(RequestOptions.bitmapTransform(multi))
                             .into(300, 300)
                             .get();
 
@@ -147,9 +154,9 @@ public class WearWatchfaceManager extends BaseManager {
             } else {
                 try {
                     Bitmap resource = Glide.with(context)
-                            .load(image)
                             .asBitmap()
-                            .transform(new BrightnessFilterTransformation(context, -.1f))
+                            .load(image)
+                            .apply(RequestOptions.bitmapTransform(new BrightnessFilterTransformation(-.1f)))
                             .into(300, 300)
                             .get();
                     Asset asset = createAssetFromBitmap(resource);

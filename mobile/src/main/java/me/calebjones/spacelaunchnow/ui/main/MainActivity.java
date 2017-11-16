@@ -501,7 +501,7 @@ public class MainActivity extends BaseActivity {
                 startActivity(i);
                 break;
             case R.id.menu_discord:
-                String discordUrl = "https://discordapp.com/invite/vdgqXc";
+                String discordUrl = "https://discord.gg/WVfzEDW";
                 Intent discordIntent = new Intent(Intent.ACTION_VIEW);
                 discordIntent.setData(Uri.parse(discordUrl));
                 startActivity(discordIntent);
@@ -532,7 +532,7 @@ public class MainActivity extends BaseActivity {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        String url = "https://discordapp.com/invite/vdgqXc";
+                        String url = "https://discord.gg/WVfzEDW";
                         Intent i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(url));
                         startActivity(i);

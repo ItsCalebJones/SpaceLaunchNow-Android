@@ -13,10 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -24,6 +20,7 @@ import java.util.List;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.Launcher;
+import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
@@ -92,27 +89,19 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
         Timber.v("onBindViewHolder %s", item.getName());
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            Glide.with(mContext)
+            GlideApp.with(mContext)
                     .load(item.getImageURL())
-                    .asBitmap()
                     .placeholder(R.drawable.placeholder)
                     .centerCrop()
-                    .into(new BitmapImageViewTarget(holder.picture) {
-                        @Override
-                        public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
-                            super.onResourceReady(bitmap, anim);
-                            setCellColors(bitmap, holder, position);
-                        }
-                    });
+                    .into(holder.picture);
             amimateCell(holder);
         } else {
             holder.grid_root.setScaleY(1);
             holder.grid_root.setScaleX(1);
 
-            Glide.with(mContext)
+            GlideApp.with(mContext)
                     .load(item.getImageURL())
                     .placeholder(R.drawable.placeholder)
-                    .crossFade()
                     .into(holder.picture);
         }
 

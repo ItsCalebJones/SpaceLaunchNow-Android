@@ -34,6 +34,7 @@ import me.calebjones.spacelaunchnow.data.models.Rocket;
 import me.calebjones.spacelaunchnow.ui.launchdetail.VehicleDetailAdapter;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
+import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
@@ -178,20 +179,20 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
 
     private void applyProfileBackdrop(String drawableURL) {
         Timber.d("LauncherDetailActivity - Loading Backdrop Image url: %s ", drawableURL);
-        Glide.with(this)
+        GlideApp.with(this)
                 .load(drawableURL)
                 .centerCrop()
-                .crossFade()
+                .placeholder(R.drawable.icon_international)
                 .into(detail_profile_backdrop);
     }
 
     private void applyProfileLogo(String url) {
         Timber.d("LauncherDetailActivity - Loading Profile Image url: %s ", url);
 
-        Glide.with(this)
+        GlideApp.with(this)
                 .load(url)
                 .centerCrop()
-                .error(R.drawable.icon_international)
+                .placeholder(R.drawable.icon_international)
                 .into(detail_profile_image);
     }
 
