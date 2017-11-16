@@ -90,6 +90,10 @@ public class LaunchDetailActivity extends BaseActivity
     ImageView detail_profile_backdrop;
     @BindView(R.id.detail_appbar)
     AppBarLayout appBarLayout;
+
+    @BindView(R.id.detail_toolbar)
+    Toolbar toolbar;
+
     private boolean mIsAvatarShown = true;
 
     private int mMaxScrollSize;
@@ -217,20 +221,17 @@ public class LaunchDetailActivity extends BaseActivity
 
         }
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
-        if (toolbar != null) {
-            toolbar.setNavigationOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(context, MainActivity.class);
-                            context.startActivity(intent);
+        toolbar.setNavigationOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, MainActivity.class);
+                        context.startActivity(intent);
 
-                        }
                     }
+                }
 
-            );
-        }
+        );
 
         appBarLayout.addOnOffsetChangedListener(this);
         mMaxScrollSize = appBarLayout.getTotalScrollRange();
