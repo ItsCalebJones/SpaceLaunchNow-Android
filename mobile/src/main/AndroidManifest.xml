@@ -31,7 +31,7 @@
         tools:replace="label,android:allowBackup">
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="me.calebjones.spacelaunchnow"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

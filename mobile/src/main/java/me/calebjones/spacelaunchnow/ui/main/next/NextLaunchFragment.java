@@ -35,6 +35,8 @@ import android.widget.Toast;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -51,6 +53,7 @@ import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.content.events.FilterViewEvent;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.Constants;
@@ -181,7 +184,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         no_data = view.findViewById(R.id.no_launches);
         color_reveal = view.findViewById(R.id.color_reveal);
         color_reveal.setBackgroundColor(ContextCompat.getColor(context, color));
-        FABMenu = (FloatingActionButton) view.findViewById(R.id.menu);
+        FABMenu = view.findViewById(R.id.menu);
         FABMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -189,6 +192,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 if (!active) {
                     switchChanged = false;
                     active = true;
+
                     mSwipeRefreshLayout.setEnabled(false);
                     FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_close));
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -390,7 +394,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void hideView() {
-
+        EventBus.getDefault().post(new FilterViewEvent(false));
         // get the center for the clipping circle
         int x = (int) (FABMenu.getX() + FABMenu.getWidth() / 2);
         int y = (int) (FABMenu.getY() + FABMenu.getHeight() / 2);
@@ -417,7 +421,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void showView() {
-
+        EventBus.getDefault().post(new FilterViewEvent(true));
         // get the center for the clipping circle
         int x = (int) (FABMenu.getX() + FABMenu.getWidth() / 2);
         int y = (int) (FABMenu.getY() + FABMenu.getHeight() / 2);

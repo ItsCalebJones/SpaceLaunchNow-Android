@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -39,6 +40,11 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.transitionseverywhere.TransitionManager;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -51,6 +57,7 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.content.events.FilterViewEvent;
 import me.calebjones.spacelaunchnow.ui.main.launches.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.main.missions.MissionFragment;
 import me.calebjones.spacelaunchnow.ui.main.next.NextLaunchFragment;
@@ -73,6 +80,8 @@ public class MainActivity extends BaseActivity {
     private final Handler mDrawerActionHandler = new Handler();
     @BindView(R.id.adView)
     AdView adView;
+    @BindView(R.id.container)
+    RelativeLayout container;
     private LaunchesViewPager mlaunchesViewPager;
     private MissionFragment mMissionFragment;
     private NextLaunchFragment mUpcomingFragment;
@@ -154,29 +163,16 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         if (!SupporterHelper.isSupporter()) {
-            AdRequest adRequest = new AdRequest.Builder().build();
-            adView.loadAd(adRequest);
-            adView.setAdListener(new AdListener() {
-
-                @Override
-                public void onAdLoaded() {
-                    adView.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onAdFailedToLoad(int error) {
-                    adView.setVisibility(View.GONE);
-                }
-
-            });
+            adView.loadAd(new AdRequest.Builder().build());
+            showAd();
         } else {
-            adView.setVisibility(View.GONE);
+            hideAd();
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setupWindowAnimations();
         }
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // load saved navigation state if present
@@ -286,17 +282,22 @@ public class MainActivity extends BaseActivity {
         return number;
     }
 
+    @Override
     public void onStart() {
         super.onStart();
         Timber.v("MainActivity onStart!");
         customTabActivityHelper.bindCustomTabsService(this);
         mayLaunchUrl(Uri.parse("https://launchlibrary.net/"));
+        EventBus.getDefault().register(this);
+
     }
 
+    @Override
     public void onStop() {
-        super.onStop();
         Timber.v("MainActivity onStop!");
         customTabActivityHelper.unbindCustomTabsService(this);
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     public void checkFirstBoot() {
@@ -581,6 +582,28 @@ public class MainActivity extends BaseActivity {
                 listPreferences.setFirstBoot(false);
             }
             navigate(mNavItemId);
+        }
+    }
+
+    private void hideAd() {
+        TransitionManager.beginDelayedTransition(container);
+        adView.setVisibility(View.GONE);
+    }
+
+    private void showAd() {
+        Timber.v("Showing Ad!");
+        TransitionManager.beginDelayedTransition(container);
+        adView.setVisibility(View.VISIBLE);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(FilterViewEvent event) {
+        if (!SupporterHelper.isSupporter()){
+            if (event.isOpened){
+                hideAd();
+            } else {
+                showAd();
+            }
         }
     }
 }
