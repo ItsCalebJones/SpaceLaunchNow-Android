@@ -3,27 +3,27 @@ package me.calebjones.spacelaunchnow.ui.launchdetail.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
-import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -70,14 +70,28 @@ public class LaunchDetailActivity extends BaseActivity
     FloatingActionButton fabShare;
     @BindView(R.id.adView)
     AdView adView;
+    @BindView(R.id.detail_profile_image)
+    CircleImageView detail_profile_image;
+    @BindView(R.id.detail_rocket)
+    TextView detail_rocket;
+    @BindView(R.id.detail_mission_location)
+    TextView detail_mission_location;
+    @BindView(R.id.detail_viewpager)
+    ViewPager viewPager;
+    @BindView(R.id.rootview)
+    CoordinatorLayout rootview;
+    @BindView(R.id.content)
+    FrameLayout content;
+    @BindView(R.id.detail_swipe_refresh)
+    SwipeRefreshLayout detailSwipeRefresh;
+    @BindView(R.id.detail_tabs)
+    TabLayout tabLayout;
+    @BindView(R.id.detail_profile_backdrop)
+    ImageView detail_profile_backdrop;
+    @BindView(R.id.detail_appbar)
+    AppBarLayout appBarLayout;
     private boolean mIsAvatarShown = true;
 
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private AppBarLayout appBarLayout;
-    private ImageView detail_profile_backdrop;
-    private CircleImageView detail_profile_image;
-    private TextView detail_rocket, detail_mission_location;
     private int mMaxScrollSize;
     private SharedPreferences sharedPref;
     private ListPreferences sharedPreference;
@@ -121,6 +135,7 @@ public class LaunchDetailActivity extends BaseActivity
         setTheme(m_theme);
         setContentView(R.layout.activity_launch_detail);
         ButterKnife.bind(this);
+        detailSwipeRefresh.setEnabled(false);
 
         if (!SupporterHelper.isSupporter()) {
             AdRequest adRequest = new AdRequest.Builder().build();
@@ -142,15 +157,6 @@ public class LaunchDetailActivity extends BaseActivity
             adView.setVisibility(View.GONE);
         }
 
-        //Setup Views
-        tabLayout = (TabLayout) findViewById(R.id.detail_tabs);
-        viewPager = (ViewPager) findViewById(R.id.detail_viewpager);
-        appBarLayout = (AppBarLayout) findViewById(R.id.detail_appbar);
-        detail_profile_image = (CircleImageView) findViewById(R.id.detail_profile_image);
-        detail_profile_backdrop = (ImageView) findViewById(R.id.detail_profile_backdrop);
-        detail_rocket = (TextView) findViewById(R.id.detail_rocket);
-        detail_mission_location = (TextView) findViewById(R.id.detail_mission_location);
-
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
@@ -160,6 +166,7 @@ public class LaunchDetailActivity extends BaseActivity
 
         if (type != null && type.equals("launch")) {
             final int id = mIntent.getIntExtra("launchID", 0);
+            detailSwipeRefresh.setRefreshing(true);
             DataClient.getInstance().getLaunchById(id, true, new Callback<LaunchResponse>() {
                 @Override
                 public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
@@ -193,6 +200,7 @@ public class LaunchDetailActivity extends BaseActivity
                         updateViews(item);
                     }
                     realm.close();
+                    detailSwipeRefresh.setRefreshing(false);
                 }
 
                 @Override
@@ -203,6 +211,7 @@ public class LaunchDetailActivity extends BaseActivity
                             .findFirst();
                     updateViews(item);
                     realm.close();
+                    detailSwipeRefresh.setRefreshing(false);
                 }
             });
 
