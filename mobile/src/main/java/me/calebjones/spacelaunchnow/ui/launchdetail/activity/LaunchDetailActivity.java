@@ -24,8 +24,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -40,6 +45,8 @@ import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
+import me.calebjones.spacelaunchnow.content.events.LaunchRequestEvent;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.RocketDetails;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
@@ -89,13 +96,6 @@ public class LaunchDetailActivity extends BaseActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        int currentOrientation = getResources().getConfiguration().orientation;
-        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        } else {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-        }
-
         int m_theme;
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -123,8 +123,20 @@ public class LaunchDetailActivity extends BaseActivity
 
         if (!SupporterHelper.isSupporter()) {
             AdRequest adRequest = new AdRequest.Builder().build();
-            adView.setVisibility(View.VISIBLE);
             adView.loadAd(adRequest);
+            adView.setAdListener(new AdListener() {
+
+                @Override
+                public void onAdLoaded() {
+                    adView.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAdFailedToLoad(int error) {
+                    adView.setVisibility(View.GONE);
+                }
+
+            });
         } else {
             adView.setVisibility(View.GONE);
         }
@@ -213,6 +225,7 @@ public class LaunchDetailActivity extends BaseActivity
         tabAdapter = new TabsAdapter(getSupportFragmentManager());
 
         viewPager.setAdapter(tabAdapter);
+        viewPager.setOffscreenPageLimit(3);
 
         tabLayout.setupWithViewPager(viewPager);
     }
@@ -221,17 +234,20 @@ public class LaunchDetailActivity extends BaseActivity
         try {
             this.launch = launch;
 
-            tabAdapter.updateAllViews(launch);
+            EventBus.getDefault().post(new LaunchEvent(launch));
             if (!this.isDestroyed() && launch != null && launch.getRocket() != null) {
                 Timber.v("Loading detailLaunch %s", launch.getId());
                 findProfileLogo();
                 if (launch.getRocket().getName() != null) {
-                    if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0) {
+                    if (launch.getRocket().getImageURL() != null
+                            && launch.getRocket().getImageURL().length() > 0
+                            && !launch.getRocket().getImageURL().contains("placeholder")) {
 
                         Glide.with(this)
                                 .load(launch.getRocket().getImageURL())
                                 .centerCrop()
                                 .placeholder(R.drawable.placeholder)
+                                .error(R.drawable.placeholder)
                                 .crossFade()
                                 .into(detail_profile_backdrop);
                         getLaunchVehicle(launch, false);
@@ -266,69 +282,62 @@ public class LaunchDetailActivity extends BaseActivity
         String location = "Unknown Location";
         String mission = "Unknown Mission";
         String locationCountryCode = null;
-        String rocketAgency = "";
+        String agencyName = null;
+        //This checks to see if a location is available
 
-        if (launch.getRocket().getAgencies().size() > 0) {
-            for (int i = 0; i < launch.getRocket().getAgencies().size(); i++) {
-                rocketAgency = rocketAgency + launch.getRocket().getAgencies().get(i).getAbbrev() + " ";
+        if (launch.getLsp() != null) {
+            locationCountryCode = launch.getLsp().getCountryCode();
+            agencyName = launch.getLsp().getName();
+            //Go through various CountryCodes and assign flag.
+            if (launch.getLsp().getAbbrev().contains("ASA")) {
+                applyProfileLogo(getString(R.string.ariane_logo));
+            } else if (launch.getLsp().getAbbrev().contains("SpX")) {
+                applyProfileLogo(getString(R.string.spacex_logo));
+            } else if (launch.getLsp().getAbbrev().contains("BA")) {
+                applyProfileLogo(getString(R.string.Yuzhnoye_logo));
+            } else if (launch.getLsp().getAbbrev().contains("ULA")) {
+                applyProfileLogo(getString(R.string.ula_logo));
+            } else if (locationCountryCode.length() == 3) {
+                if (locationCountryCode.contains("USA")) {
+                    applyProfileLogo(getString(R.string.usa_flag));
+                } else if (locationCountryCode.contains("RUS")) {
+                    applyProfileLogo(getString(R.string.rus_logo));
+                } else if (locationCountryCode.contains("CHN")) {
+                    applyProfileLogo(getString(R.string.chn_logo));
+                } else if (locationCountryCode.contains("IND")) {
+                    applyProfileLogo(getString(R.string.ind_logo));
+                } else if (locationCountryCode.contains("JPN")) {
+                    applyProfileLogo(getString(R.string.jpn_logo));
+                }
+            }
+        } else if (launch.getLocation() != null && launch.getLocation().getPads() != null
+                && launch.getLocation().getPads().size() > 0
+                && launch.getLocation().getPads().get(0).getAgencies() != null
+                && launch.getLocation().getPads().get(0).getAgencies().size() > 0) {
+            locationCountryCode = launch.getLocation().getPads().
+                    get(0).getAgencies().get(0).getCountryCode();
+            agencyName = launch.getLocation().getPads().
+                    get(0).getAgencies().get(0).getName();
+            if (locationCountryCode.length() == 3) {
+                if (locationCountryCode.contains("USA")) {
+                    applyProfileLogo(getString(R.string.usa_flag));
+                } else if (locationCountryCode.contains("RUS")) {
+                    applyProfileLogo(getString(R.string.rus_logo));
+                } else if (locationCountryCode.contains("CHN")) {
+                    applyProfileLogo(getString(R.string.chn_logo));
+                } else if (locationCountryCode.contains("IND")) {
+                    applyProfileLogo(getString(R.string.ind_logo));
+                } else if (locationCountryCode.contains("JPN")) {
+                    applyProfileLogo(getString(R.string.jpn_logo));
+                }
             }
         }
 
-        //This checks to see if a location is available
-        if (launch.getLocation().getName() != null) {
+        Timber.v("LaunchDetailActivity - CountryCode: %s - LSP: %s - %s",
+                String.valueOf(locationCountryCode), locationCountryCode, agencyName);
 
-            //Check to see if a countrycode is available
-            if (launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
-                    get(0).getAgencies().size() > 0) {
-                locationCountryCode = launch.getLocation().getPads().
-                        get(0).getAgencies().get(0).getCountryCode();
-
-                Timber.v(
-                        "LaunchDetailActivity - CountryCode length: %s",
-                        String.valueOf(locationCountryCode.length())
-                );
-
-                //Go through various CountryCodes and assign flag.
-                if (locationCountryCode.length() == 3) {
-
-                    if (locationCountryCode.contains("USA")) {
-                        //Check for SpaceX/Boeing/ULA/NASA
-                        if (launch.getRocket().getAgencies().size() > 0) {
-                            if (launch.getLocation().getPads().
-                                    get(0).getAgencies().get(0).getAbbrev().contains("SpX") && launch.getRocket().getAgencies().get(0).getAbbrev().contains("SpX")) {
-                                //Apply SpaceX Logo
-                                applyProfileLogo(getString(R.string.spacex_logo));
-                            }
-                        }
-                        if (launch.getLocation().getPads().
-                                get(0).getAgencies().get(0).getAbbrev() == "BA" && launch.getRocket().getAgencies().get(0).getCountryCode() == "UKR") {
-                            //Apply Yuzhnoye Logo
-                            applyProfileLogo(getString(R.string.Yuzhnoye_logo));
-                        } else if (rocketAgency.contains("ULA")) {
-                            //Apply ULA Logo
-                            applyProfileLogo(getString(R.string.ula_logo));
-                        } else {
-                            //Else Apply USA flag
-                            applyProfileLogo(getString(R.string.usa_flag));
-                        }
-                    } else if (locationCountryCode.contains("RUS")) {
-                        //Apply Russia Logo
-                        applyProfileLogo(getString(R.string.rus_logo));
-                    } else if (locationCountryCode.contains("CHN")) {
-                        applyProfileLogo(getString(R.string.chn_logo));
-                    } else if (locationCountryCode.contains("IND")) {
-                        applyProfileLogo(getString(R.string.ind_logo));
-                    } else if (locationCountryCode.contains("JPN")) {
-                        applyProfileLogo(getString(R.string.jpn_logo));
-                    }
-
-                } else if (launch.getLocation().getPads().
-                        get(0).getAgencies().get(0).getAbbrev() == "ASA") {
-                    //Apply Arianespace Logo
-                    applyProfileLogo(getString(R.string.ariane_logo));
-                }
-                location = (launch.getLocation().getPads().get(0).getName());
-            }
+        if (launch.getLocation() != null && launch.getLocation().getPads() != null && launch.getLocation().getPads().size() > 0) {
+            location = (launch.getLocation().getPads().get(0).getName());
         }
         //Assigns the result of the two above checks.
         detail_mission_location.setText(location);
@@ -361,7 +370,7 @@ public class LaunchDetailActivity extends BaseActivity
                 .contains("name", query)
                 .findFirst();
         if (setImage) {
-            if (launchVehicle != null && launchVehicle.getImageURL().length() > 0) {
+            if (launchVehicle != null && launchVehicle.getImageURL().length() > 0 && !launchVehicle.getImageURL().contains("placeholder")) {
                 Glide.with(this)
                         .load(launchVehicle
                                 .getImageURL())
@@ -422,8 +431,7 @@ public class LaunchDetailActivity extends BaseActivity
             fabShare.show();
         }
 
-        Timber.v("Total: %s Current: %s RGB: %d %d %d", totalScroll, currentScroll, r, g, b);
-        if ((currentScroll) < 200) {
+        if ((currentScroll) < 100) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
                 Window window = getWindow();
@@ -439,16 +447,20 @@ public class LaunchDetailActivity extends BaseActivity
         }
     }
 
+    @Override
     public void onStart() {
         super.onStart();
+        EventBus.getDefault().register(this);
         Timber.v("LaunchDetailActivity onStart!");
         customTabActivityHelper.bindCustomTabsService(this);
     }
 
+    @Override
     public void onStop() {
-        super.onStop();
+        EventBus.getDefault().unregister(this);
         Timber.v("LaunchDetailActivity onStop!");
         customTabActivityHelper.unbindCustomTabsService(this);
+        super.onStop();
     }
 
     public void mayLaunchUrl(Uri parse) {
@@ -506,4 +518,10 @@ public class LaunchDetailActivity extends BaseActivity
                 .startChooser();
         Analytics.from(context).sendLaunchShared("Share FAB", launch.getName() + "-" + launch.getId().toString());
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(LaunchRequestEvent event) {
+        EventBus.getDefault().post(new LaunchEvent(launch));
+    }
+
 }

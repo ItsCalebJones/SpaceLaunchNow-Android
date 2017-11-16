@@ -13,11 +13,16 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.data.models.VehicleDetails;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
@@ -105,6 +110,8 @@ public class AgencyDetailFragment extends BaseFragment {
 
         if (detailLaunch != null) {
             setUpViews(detailLaunch);
+        } else {
+
         }
 
         return view;
@@ -118,7 +125,7 @@ public class AgencyDetailFragment extends BaseFragment {
         super.onResume();
     }
 
-    public void setLaunch(Launch launch) {
+    private void setLaunch(Launch launch) {
         detailLaunch = launch;
         setUpViews(launch);
     }
@@ -590,4 +597,22 @@ public class AgencyDetailFragment extends BaseFragment {
         return new AgencyDetailFragment();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(LaunchEvent event) {
+        setLaunch(event.launch);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Timber.v("On Start");
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        Timber.v("On Stop");
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
 }

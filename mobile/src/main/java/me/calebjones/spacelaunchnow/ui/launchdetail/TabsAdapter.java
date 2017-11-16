@@ -49,10 +49,4 @@ public class TabsAdapter extends FragmentPagerAdapter {
         }
         return "";
     }
-
-    public void updateAllViews(Launch launch) {
-        summaryFragment.setLaunch(launch);
-        missionFragment.setLaunch(launch);
-        agencyFragment.setLaunch(launch);
-    }
 }

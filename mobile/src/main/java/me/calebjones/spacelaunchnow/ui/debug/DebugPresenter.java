@@ -3,7 +3,9 @@ package me.calebjones.spacelaunchnow.ui.debug;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.FileProvider;
@@ -33,12 +35,14 @@ public class DebugPresenter implements DebugContract.Presenter {
     private ListPreferences sharedPreference;
     private Realm realm;
     private LibraryDataManager libraryDataManager;
+    private Context context;
 
     public DebugPresenter(Context context, DebugContract.View view, ListPreferences preferences) {
         debugView = view;
         debugView.setPresenter(this);
         sharedPreference = preferences;
         libraryDataManager = new LibraryDataManager(context);
+        this.context = context;
     }
 
     @Override
@@ -63,6 +67,10 @@ public class DebugPresenter implements DebugContract.Presenter {
                     realm.copyToRealmOrUpdate(SupporterHelper.getProduct(SupporterHelper.SKU_TWO_DOLLAR));
                 }
             });
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean("weather", true);
+            editor.apply();
         } else {
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
@@ -70,6 +78,10 @@ public class DebugPresenter implements DebugContract.Presenter {
                     realm.delete(Products.class);
                 }
             });
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean("weather", false);
+            editor.apply();
         }
         realm.close();
     }

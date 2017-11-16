@@ -25,6 +25,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
@@ -154,8 +155,20 @@ public class MainActivity extends BaseActivity {
 
         if (!SupporterHelper.isSupporter()) {
             AdRequest adRequest = new AdRequest.Builder().build();
-            adView.setVisibility(View.VISIBLE);
             adView.loadAd(adRequest);
+            adView.setAdListener(new AdListener() {
+
+                @Override
+                public void onAdLoaded() {
+                    adView.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAdFailedToLoad(int error) {
+                    adView.setVisibility(View.GONE);
+                }
+
+            });
         } else {
             adView.setVisibility(View.GONE);
         }
