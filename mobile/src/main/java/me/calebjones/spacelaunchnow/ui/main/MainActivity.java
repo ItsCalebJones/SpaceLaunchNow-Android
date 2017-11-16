@@ -220,8 +220,14 @@ public class MainActivity extends BaseActivity {
                         new SecondaryDrawerItem()
                                 .withIcon(FontAwesome.Icon.faw_twitter)
                                 .withName("Twitter")
-                                .withDescription("Stay Connected!")
+                                .withDescription("Stay connected on Twitter!")
                                 .withIdentifier(R.id.menu_twitter)
+                                .withSelectable(false),
+                        new SecondaryDrawerItem()
+                                .withIcon(FontAwesome.Icon.faw_comments)
+                                .withName("Discord")
+                                .withDescription("Join us on Discord during launches!")
+                                .withIdentifier(R.id.menu_discord)
                                 .withSelectable(false)
                 ).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -479,6 +485,12 @@ public class MainActivity extends BaseActivity {
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 startActivity(i);
+                break;
+            case R.id.menu_discord:
+                String discordUrl = "https://discordapp.com/invite/vdgqXc";
+                Intent discordIntent = new Intent(Intent.ACTION_VIEW);
+                discordIntent.setData(Uri.parse(discordUrl));
+                startActivity(discordIntent);
             default:
                 // ignore
                 break;
@@ -506,7 +518,7 @@ public class MainActivity extends BaseActivity {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        String url = "https://www.reddit.com/r/spacelaunchnow/";
+                        String url = "https://discordapp.com/invite/vdgqXc";
                         Intent i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(url));
                         startActivity(i);
