@@ -29,6 +29,7 @@ import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -227,13 +228,13 @@ public class MainActivity extends BaseActivity {
                                 .withIdentifier(R.id.menu_feedback)
                                 .withSelectable(false),
                         new SecondaryDrawerItem()
-                                .withIcon(FontAwesome.Icon.faw_twitter)
+                                .withIcon(CommunityMaterial.Icon.cmd_twitter)
                                 .withName("Twitter")
                                 .withDescription("Stay connected on Twitter!")
                                 .withIdentifier(R.id.menu_twitter)
                                 .withSelectable(false),
                         new SecondaryDrawerItem()
-                                .withIcon(FontAwesome.Icon.faw_comments)
+                                .withIcon(CommunityMaterial.Icon.cmd_discord)
                                 .withName("Discord")
                                 .withDescription("Join us on Discord during launches!")
                                 .withIdentifier(R.id.menu_discord)

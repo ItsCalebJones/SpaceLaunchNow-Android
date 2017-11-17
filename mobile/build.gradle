@@ -185,6 +185,7 @@ dependencies {
     compile 'blue.aodev:material-values:1.1.1'
     compile 'com.mikepenz:iconics-core:2.9.3@aar'
     compile 'com.mikepenz:google-material-typeface:3.0.1.1.original@aar'
+    implementation 'com.mikepenz:community-material-typeface:2.0.46.1@aar'
     compile('com.mikepenz:materialdrawer:5.9.5@aar') {
         transitive = true
     }
