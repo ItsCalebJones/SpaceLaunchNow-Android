@@ -29,7 +29,7 @@ public class DataRepository {
     }
 
     public RealmResults<Launch> getPreviousLaunchData(Realm realm) {
-        Timber.v("Syncing launch data...");
+        Timber.i("Syncing launch data...");
         if (ListPreferences.getInstance(context).isFresh()){
             realm.executeTransactionAsync(new Realm.Transaction() {
                 @Override
@@ -37,37 +37,38 @@ public class DataRepository {
                     RealmResults<Launch> launches = null;
                     try {
                         launches = QueryBuilder.buildPrevQuery(context, realm);
+                        if (ListPreferences.getInstance(context).isFresh()) {
+                            Timber.d("%d launches to sync.", launches.size());
+                            for (Launch launch : launches) {
+                                Timber.v("Syncing launch %s for mission/location data.", launch.getName());
+                                if (launch.getMissions().size() == 0) {
+                                    RealmResults<Mission> missions = realm.where(Mission.class).equalTo("launch.id", launch.getId()).findAll();
+                                    if (missions.size() > 0) {
+                                        Timber.v("Matched launch %s with %s mission", launch.getId(), missions.get(0).getId());
+                                        final RealmList<Mission> results = new RealmList<Mission>();
+                                        results.addAll(missions.subList(0, missions.size()));
+                                        launch.setMissions(results);
+                                        realm.copyToRealmOrUpdate(launch);
+                                    } else {
+                                        Timber.v("Unable to match Launch %s to a mission.", launch.getId());
+                                    }
+                                }
+                                if (launch.getLocation() == null) {
+                                    Location location = realm.where(Location.class).equalTo("pads.id", launch.getLocationid()).findFirst();
+                                    if (location != null) {
+                                        Timber.v("Matched launch %s with %s location", launch.getId(), location.getName());
+                                        launch.setLocation(location);
+                                        realm.copyToRealmOrUpdate(launch);
+                                    } else {
+                                        Timber.v("Unable to match Launch %s to a location.", launch.getId());
+                                    }
+                                }
+                            }
+                            realm.copyToRealmOrUpdate(launches);
+                            ListPreferences.getInstance(context).isFresh(false);
+                        }
                     } catch (ParseException e) {
                         e.printStackTrace();
-                    }
-                    if (ListPreferences.getInstance(context).isFresh()) {
-                        for (Launch launch : launches) {
-                            Timber.d("Syncing launch %s for mission/location data.", launch.getName());
-                            if (launch.getMissions().size() == 0) {
-                                RealmResults<Mission> missions = realm.where(Mission.class).equalTo("launch.id", launch.getId()).findAll();
-                                if (missions.size() > 0) {
-                                    Timber.v("Matched launch %s with %s mission", launch.getId(), missions.get(0).getId());
-                                    final RealmList<Mission> results = new RealmList<Mission>();
-                                    results.addAll(missions.subList(0, missions.size()));
-                                    launch.setMissions(results);
-                                    realm.copyToRealmOrUpdate(launch);
-                                } else {
-                                    Timber.v("Unable to match Launch %s to a mission.", launch.getId());
-                                }
-                            }
-                            if (launch.getLocation() == null) {
-                                Location location = realm.where(Location.class).equalTo("pads.id", launch.getLocationid()).findFirst();
-                                if (location != null) {
-                                    Timber.v("Matched launch %s with %s location", launch.getId(), location.getName());
-                                    launch.setLocation(location);
-                                    realm.copyToRealmOrUpdate(launch);
-                                } else {
-                                    Timber.v("Unable to match Launch %s to a location.", launch.getId());
-                                }
-                            }
-                        }
-                        realm.copyToRealmOrUpdate(launches);
-                        ListPreferences.getInstance(context).isFresh(false);
                     }
                 }
             });

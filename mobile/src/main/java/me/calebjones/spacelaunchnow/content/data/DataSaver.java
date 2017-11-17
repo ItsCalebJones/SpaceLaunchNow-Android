@@ -69,7 +69,7 @@ public class DataSaver {
                         .findFirst();
                 if (previous != null) {
                     if (isLaunchTimeChanged(previous, item)) {
-                        Timber.v("%s status has changed.", item.getName());
+                        Timber.i("%s status has changed.", item.getName());
                         LaunchNotification notification = mRealm.where(LaunchNotification.class).equalTo("id", item.getId()).findFirst();
                         mRealm.beginTransaction();
                         if (notification != null) {
