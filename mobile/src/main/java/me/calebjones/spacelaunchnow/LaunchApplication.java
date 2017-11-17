@@ -36,6 +36,7 @@ import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.exceptions.RealmMigrationNeededException;
+import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.content.data.DataRepositoryManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
@@ -224,7 +225,9 @@ public class LaunchApplication extends Application implements Analytics.Provider
 
         MobileAds.initialize(this, "ca-app-pub-9824528399164059~9700152528");
 
-        if (!sharedPreference.getFirstBoot()) {
+        Once.initialise(this);
+
+        if (Once.beenDone(Once.THIS_APP_INSTALL, "loadInitialData")) {
             Timber.i("Stored Version Code: %s", switchPreferences.getVersionCode());
             if (switchPreferences.getVersionCode() <= DB_SCHEMA_VERSION_1_5_6) {
                 libraryDataManager.getAllData();
@@ -234,6 +237,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
             }
         } else {
             libraryDataManager.getAllData();
+            Once.markDone("loadInitialData");
         }
     }
 

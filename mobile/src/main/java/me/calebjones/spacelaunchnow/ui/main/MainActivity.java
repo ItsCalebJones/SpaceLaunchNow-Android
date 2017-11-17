@@ -52,12 +52,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.mrapp.android.preference.activity.PreferenceActivity;
 import io.fabric.sdk.android.Fabric;
+import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.events.FilterViewEvent;
+import me.calebjones.spacelaunchnow.ui.intro.OnboardingActivity;
 import me.calebjones.spacelaunchnow.ui.main.launches.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.main.missions.MissionFragment;
 import me.calebjones.spacelaunchnow.ui.main.next.NextLaunchFragment;
@@ -69,8 +71,6 @@ import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;
-import za.co.riggaroo.materialhelptutorial.TutorialItem;
-import za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity;
 
 public class MainActivity extends BaseActivity {
 
@@ -131,10 +131,10 @@ public class MainActivity extends BaseActivity {
         }
         listPreferences = ListPreferences.getInstance(this.context);
         switchPreferences = SwitchPreferences.getInstance(this.context);
-        if (listPreferences.getFirstBoot()) {
-            switchPreferences.setPrevFiltered(false);
-            loadTutorial();
+        if (!Once.beenDone(Once.THIS_APP_INSTALL, "showTutorial")) {
+            startActivity(new Intent(this, OnboardingActivity.class));
         }
+
         int m_theme;
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         this.context = getApplicationContext();
@@ -265,7 +265,7 @@ public class MainActivity extends BaseActivity {
                             .withSelectable(false));
         }
 
-        checkFirstBoot();
+        navigate(mNavItemId);
     }
 
     private void setupWindowAnimations() {
@@ -275,11 +275,6 @@ public class MainActivity extends BaseActivity {
             getWindow().setEnterTransition(slide);
             getWindow().setReturnTransition(slide);
         }
-    }
-
-    public int reverseNumber(int num, int min, int max) {
-        int number = (max + min) - num;
-        return number;
     }
 
     @Override
@@ -298,12 +293,6 @@ public class MainActivity extends BaseActivity {
         customTabActivityHelper.unbindCustomTabsService(this);
         EventBus.getDefault().unregister(this);
         super.onStop();
-    }
-
-    public void checkFirstBoot() {
-        if (!listPreferences.getFirstBoot()) {
-            navigate(mNavItemId);
-        }
     }
 
     public void showWhatsNew() {
@@ -544,45 +533,6 @@ public class MainActivity extends BaseActivity {
     protected void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(NAV_ITEM_ID, mNavItemId);
-    }
-
-    public void loadTutorial() {
-        Intent mainAct = new Intent(this, MaterialTutorialActivity.class);
-        mainAct.putParcelableArrayListExtra(MaterialTutorialActivity.MATERIAL_TUTORIAL_ARG_TUTORIAL_ITEMS, getTutorialItems());
-        startActivityForResult(mainAct, REQUEST_CODE);
-    }
-
-    private ArrayList<TutorialItem> getTutorialItems() {
-        TutorialItem tutorialItem1 = new TutorialItem("Space Launch Now", "Keep up to date on all your favorite  orbital launches, missions, and launch vehicles.",
-                R.color.slide_one, R.drawable.intro_slide_one_foreground, R.drawable.intro_slide_background);
-
-        TutorialItem tutorialItem2 = new TutorialItem("Notification for Launches", "Get notifications for upcoming launches and look into the history of spaceflight",
-                R.color.slide_two, R.drawable.intro_slide_two_foreground, R.drawable.intro_slide_background);
-
-        TutorialItem tutorialItem4 = new TutorialItem("Find Launch Vehicles", "Get to know the vehicles that have taken us to orbit.",
-                R.color.slide_three, R.drawable.intro_slide_four_foreground, R.drawable.intro_slide_background);
-
-        ArrayList<TutorialItem> tutorialItems = new ArrayList<>();
-        tutorialItems.add(tutorialItem1);
-        tutorialItems.add(tutorialItem2);
-        tutorialItems.add(tutorialItem4);
-
-        return tutorialItems;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                if (listPreferences.getFirstBoot()) {
-                    listPreferences.setFirstBoot(false);
-                }
-            } else {
-                listPreferences.setFirstBoot(false);
-            }
-            navigate(mNavItemId);
-        }
     }
 
     private void hideAd() {

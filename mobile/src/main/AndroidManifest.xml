@@ -60,6 +60,10 @@
             android:name=".ui.launchdetail.activity.LaunchDetailActivity"
             android:theme="@style/BaseAppTheme" />
 
+        <activity
+            android:name=".ui.intro.OnboardingActivity"
+            android:theme="@style/BaseAppTheme" />
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
