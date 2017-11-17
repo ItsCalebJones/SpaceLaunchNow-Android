@@ -40,7 +40,7 @@ public interface LibraryService {
     @Headers({
             "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
     })
-    @GET("launch?fields=net,name,location,status&limit=1000")
+    @GET("launch?limit=1000&mode=verbose")
     Call<LaunchResponse> getLaunchesByDate(@Query("startdate") String start_date,
                                            @Query("enddate") String end_date,
                                            @Query("offset") int offset);

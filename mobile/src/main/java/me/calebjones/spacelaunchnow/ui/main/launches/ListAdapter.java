@@ -104,7 +104,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
             }
         }
 
-        if (launchItem.getStatus() == 2) {
+        if (launchItem.getStatus() != null && launchItem.getStatus() == 2) {
             //Get launch date
             if (sharedPref.getBoolean("local_time", true)) {
                 SimpleDateFormat df = new SimpleDateFormat("MMMM dd, yyyy.");

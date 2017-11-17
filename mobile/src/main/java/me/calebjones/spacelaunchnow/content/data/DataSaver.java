@@ -150,7 +150,7 @@ public class DataSaver {
     private static boolean isLaunchTimeChanged(Launch previous, Launch item) {
         if ((Math.abs(previous.getNet().getTime() - item.getNet().getTime()) >= 3600)) {
             return true;
-        } else if (previous.getStatus().intValue() != item.getStatus().intValue()) {
+        } else if (previous.getStatus() != null && item.getStatus() != null && previous.getStatus().intValue() != item.getStatus().intValue()) {
             return true;
         }
         return false;
