@@ -156,6 +156,7 @@
 
                 <android.support.v7.widget.SwitchCompat
                     android:id="@+id/notification_switch"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center|left"
