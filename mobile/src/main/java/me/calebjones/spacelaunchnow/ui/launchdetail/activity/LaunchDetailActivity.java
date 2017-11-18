@@ -226,7 +226,7 @@ public class LaunchDetailActivity extends BaseActivity
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(context, MainActivity.class);
-                        context.startActivity(intent);
+                        startActivity(intent);
 
                     }
                 }
@@ -489,7 +489,7 @@ public class LaunchDetailActivity extends BaseActivity
         String launchDate = df.format(date);
         String message;
         if (launch.getVidURLs().size() > 0) {
-            if (launch.getLocation() != null && launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
+            if (launch.getLocation() != null && launch.getLocation().getPads() != null && launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
                     get(0).getAgencies().size() > 0) {
 
                 message = launch.getName() + " launching from "
@@ -505,7 +505,7 @@ public class LaunchDetailActivity extends BaseActivity
                         + launchDate;
             }
         } else {
-            if (launch.getLocation() != null && launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
+            if (launch.getLocation() != null && launch.getLocation().getPads() != null && launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
                     get(0).getAgencies().size() > 0) {
 
                 message = launch.getName() + " launching from "
