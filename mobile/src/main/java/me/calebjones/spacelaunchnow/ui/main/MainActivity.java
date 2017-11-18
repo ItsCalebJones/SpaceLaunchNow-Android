@@ -313,8 +313,8 @@ public class MainActivity extends BaseActivity {
 
     public void showWhatsNew() {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View customView = inflater.inflate(R.layout.whats_new, null);
-        View nightView = inflater.inflate(R.layout.whats_new_night, null);
+
+
 
         MaterialStyledDialog.Builder dialog = new MaterialStyledDialog.Builder(this)
                 .withIconAnimation(false)
@@ -340,9 +340,11 @@ public class MainActivity extends BaseActivity {
 
         if (listPreferences.isNightModeActive(this)) {
             dialog.setHeaderColor(R.color.darkPrimary);
+            View nightView = inflater.inflate(R.layout.whats_new_night, null);
             dialog.setCustomView(nightView);
         } else {
             dialog.setHeaderColor(R.color.colorPrimary);
+            View customView = inflater.inflate(R.layout.whats_new, null);
             dialog.setCustomView(customView);
         }
         dialog.show();
