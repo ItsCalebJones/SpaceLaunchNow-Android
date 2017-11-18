@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -90,12 +91,11 @@ public class MainActivity extends BaseActivity {
     private Toolbar toolbar;
     private Drawer result = null;
     private SharedPreferences sharedPref;
-    private NavigationView navigationView;
     private SwitchPreferences switchPreferences;
     private CustomTabActivityHelper customTabActivityHelper;
     private Context context;
+    private boolean adviewEnabled = false;
 
-    private static final int REQUEST_CODE = 5467;
 
     private int mNavItemId;
 
@@ -165,8 +165,22 @@ public class MainActivity extends BaseActivity {
 
         if (!SupporterHelper.isSupporter()) {
             adView.loadAd(new AdRequest.Builder().build());
-            showAd();
+            adView.setAdListener(new AdListener() {
+                @Override
+                public void onAdFailedToLoad(int i) {
+                    adviewEnabled = false;
+                    super.onAdFailedToLoad(i);
+                }
+
+                @Override
+                public void onAdLoaded() {
+                    adviewEnabled = true;
+                    showAd();
+                    super.onAdLoaded();
+                }
+            });
         } else {
+            adviewEnabled = false;
             hideAd();
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -537,14 +551,14 @@ public class MainActivity extends BaseActivity {
     }
 
     private void hideAd() {
-        TransitionManager.beginDelayedTransition(container);
         adView.setVisibility(View.GONE);
     }
 
     private void showAd() {
         Timber.v("Showing Ad!");
-        TransitionManager.beginDelayedTransition(container);
-        adView.setVisibility(View.VISIBLE);
+        if (adviewEnabled && adView.getVisibility() == View.GONE) {
+            adView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

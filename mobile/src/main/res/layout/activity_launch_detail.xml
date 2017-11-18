@@ -156,7 +156,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_gravity="center|bottom"
-
+                android:visibility="gone"
                 ads:adSize="SMART_BANNER"
                 ads:adUnitId="ca-app-pub-9824528399164059/9713798255" />
 
