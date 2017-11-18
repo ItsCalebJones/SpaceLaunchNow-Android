@@ -26,8 +26,8 @@ repositories {
 }
 
 def versionMajor = 1
-def versionMinor = 7
-def versionPatch = 1
+def versionMinor = 8
+def versionPatch = 0
 def appVersionCode = 0
 def appVersionName = ""
 def details = versionDetails()
@@ -82,7 +82,7 @@ android {
                                     manifestApplicationId: "me.calebjones.spacelaunchnow.ui.debug"]
             debuggable true
             renderscriptOptimLevel 3
-            versionNameSuffix "debug"
+            versionNameSuffix "-debug-${defaultConfig.versionCode}"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
 
@@ -91,6 +91,7 @@ android {
             zipAlignEnabled true
             minifyEnabled true
             shrinkResources true
+            versionNameSuffix "-${defaultConfig.versionCode}"
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
@@ -104,7 +105,7 @@ android {
             debuggable false
             renderscriptOptimLevel 3
             applicationIdSuffix ".test"
-            versionNameSuffix "test"
+            versionNameSuffix "-test"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
             testProguardFile('proguard-rules-test.pro')
