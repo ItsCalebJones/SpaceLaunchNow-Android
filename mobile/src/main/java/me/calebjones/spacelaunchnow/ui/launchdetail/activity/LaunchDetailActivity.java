@@ -488,38 +488,20 @@ public class LaunchDetailActivity extends BaseActivity
         df.toLocalizedPattern();
         String launchDate = df.format(date);
         String message;
-        if (launch.getVidURLs().size() > 0) {
-            if (launch.getLocation() != null && launch.getLocation().getPads() != null && launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
-                    get(0).getAgencies().size() > 0) {
+        if (launch.getLocation() != null && launch.getLocation().getPads() != null &&  launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().get(0).getAgencies() != null && launch.getLocation().getPads().
+                get(0).getAgencies().size() > 0) {
 
-                message = launch.getName() + " launching from "
-                        + launch.getLocation().getName() + "\n\n"
-                        + launchDate;
-            } else if (launch.getLocation() != null) {
-                message = launch.getName() + " launching from "
-                        + launch.getLocation().getName() + "\n\n"
-                        + launchDate;
-            } else {
-                message = launch.getName()
-                        + "\n\n"
-                        + launchDate;
-            }
+            message = launch.getName() + " launching from "
+                    + launch.getLocation().getName() + "\n\n"
+                    + launchDate;
+        } else if (launch.getLocation() != null) {
+            message = launch.getName() + " launching from "
+                    + launch.getLocation().getName() + "\n\n"
+                    + launchDate;
         } else {
-            if (launch.getLocation() != null && launch.getLocation().getPads() != null && launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
-                    get(0).getAgencies().size() > 0) {
-
-                message = launch.getName() + " launching from "
-                        + launch.getLocation().getName() + "\n\n"
-                        + launchDate;
-            } else if (launch.getLocation() != null) {
-                message = launch.getName() + " launching from "
-                        + launch.getLocation().getName() + "\n\n"
-                        + launchDate;
-            } else {
-                message = launch.getName()
-                        + "\n\n"
-                        + launchDate;
-            }
+            message = launch.getName()
+                    + "\n\n"
+                    + launchDate;
         }
         ShareCompat.IntentBuilder.from(this)
                 .setType("text/plain")
