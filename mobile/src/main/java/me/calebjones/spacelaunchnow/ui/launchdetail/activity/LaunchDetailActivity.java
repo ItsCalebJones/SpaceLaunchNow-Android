@@ -3,37 +3,59 @@ package me.calebjones.spacelaunchnow.ui.launchdetail.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
+import me.calebjones.spacelaunchnow.content.events.LaunchRequestEvent;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.RocketDetails;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
 import me.calebjones.spacelaunchnow.ui.launchdetail.TabsAdapter;
+import me.calebjones.spacelaunchnow.ui.main.MainActivity;
+import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.utils.GlideApp;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,20 +66,43 @@ public class LaunchDetailActivity extends BaseActivity
         implements AppBarLayout.OnOffsetChangedListener {
 
     private static final int PERCENTAGE_TO_ANIMATE_AVATAR = 20;
+    @BindView(R.id.fab_share)
+    FloatingActionButton fabShare;
+    @BindView(R.id.adView)
+    AdView adView;
+    @BindView(R.id.detail_profile_image)
+    CircleImageView detail_profile_image;
+    @BindView(R.id.detail_rocket)
+    TextView detail_rocket;
+    @BindView(R.id.detail_mission_location)
+    TextView detail_mission_location;
+    @BindView(R.id.detail_viewpager)
+    ViewPager viewPager;
+    @BindView(R.id.rootview)
+    CoordinatorLayout rootview;
+    @BindView(R.id.content)
+    FrameLayout content;
+    @BindView(R.id.detail_swipe_refresh)
+    SwipeRefreshLayout detailSwipeRefresh;
+    @BindView(R.id.detail_tabs)
+    TabLayout tabLayout;
+    @BindView(R.id.detail_profile_backdrop)
+    ImageView detail_profile_backdrop;
+    @BindView(R.id.detail_appbar)
+    AppBarLayout appBarLayout;
+
+    @BindView(R.id.detail_toolbar)
+    Toolbar toolbar;
+
     private boolean mIsAvatarShown = true;
 
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private AppBarLayout appBarLayout;
-    private ImageView detail_profile_backdrop;
-    private CircleImageView detail_profile_image;
-    private TextView detail_rocket, detail_mission_location;
     private int mMaxScrollSize;
     private SharedPreferences sharedPref;
     private ListPreferences sharedPreference;
     private CustomTabActivityHelper customTabActivityHelper;
     private Context context;
     private TabsAdapter tabAdapter;
+    private int statusColor;
 
     public String response;
     public Launch launch;
@@ -71,7 +116,7 @@ public class LaunchDetailActivity extends BaseActivity
         super.onCreate(savedInstanceState);
 
         int m_theme;
-        final int statusColor;
+
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         context = getApplicationContext();
         customTabActivityHelper = new CustomTabActivityHelper();
@@ -93,15 +138,31 @@ public class LaunchDetailActivity extends BaseActivity
 
         setTheme(m_theme);
         setContentView(R.layout.activity_launch_detail);
+        ButterKnife.bind(this);
+        detailSwipeRefresh.setEnabled(false);
 
-        //Setup Views
-        tabLayout = (TabLayout) findViewById(R.id.detail_tabs);
-        viewPager = (ViewPager) findViewById(R.id.detail_viewpager);
-        appBarLayout = (AppBarLayout) findViewById(R.id.detail_appbar);
-        detail_profile_image = (CircleImageView) findViewById(R.id.detail_profile_image);
-        detail_profile_backdrop = (ImageView) findViewById(R.id.detail_profile_backdrop);
-        detail_rocket = (TextView) findViewById(R.id.detail_rocket);
-        detail_mission_location = (TextView) findViewById(R.id.detail_mission_location);
+        if (!SupporterHelper.isSupporter()) {
+            AdRequest adRequest = new AdRequest.Builder().build();
+            adView.loadAd(adRequest);
+            adView.setAdListener(new AdListener() {
+
+                @Override
+                public void onAdLoaded() {
+                    adView.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAdFailedToLoad(int error) {
+                    adView.setVisibility(View.GONE);
+                }
+
+            });
+        } else {
+            adView.setVisibility(View.GONE);
+        }
+
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
         //Grab information from Intent
         Intent mIntent = getIntent();
@@ -109,6 +170,7 @@ public class LaunchDetailActivity extends BaseActivity
 
         if (type != null && type.equals("launch")) {
             final int id = mIntent.getIntExtra("launchID", 0);
+            detailSwipeRefresh.setRefreshing(true);
             DataClient.getInstance().getLaunchById(id, true, new Callback<LaunchResponse>() {
                 @Override
                 public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
@@ -142,6 +204,7 @@ public class LaunchDetailActivity extends BaseActivity
                         updateViews(item);
                     }
                     realm.close();
+                    detailSwipeRefresh.setRefreshing(false);
                 }
 
                 @Override
@@ -152,23 +215,23 @@ public class LaunchDetailActivity extends BaseActivity
                             .findFirst();
                     updateViews(item);
                     realm.close();
+                    detailSwipeRefresh.setRefreshing(false);
                 }
             });
 
         }
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
-        if (toolbar != null) {
-            toolbar.setNavigationOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            onBackPressed();
-                        }
-                    }
+        toolbar.setNavigationOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, MainActivity.class);
+                        context.startActivity(intent);
 
-            );
-        }
+                    }
+                }
+
+        );
 
         appBarLayout.addOnOffsetChangedListener(this);
         mMaxScrollSize = appBarLayout.getTotalScrollRange();
@@ -176,56 +239,27 @@ public class LaunchDetailActivity extends BaseActivity
         tabAdapter = new TabsAdapter(getSupportFragmentManager());
 
         viewPager.setAdapter(tabAdapter);
+        viewPager.setOffscreenPageLimit(3);
 
         tabLayout.setupWithViewPager(viewPager);
-
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-                                                    @Override
-                                                    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                                                        int totalScroll = appBarLayout.getTotalScrollRange();
-                                                        int currentScroll = totalScroll + verticalOffset;
-
-                                                        int color = statusColor;
-                                                        int r = (color >> 16) & 0xFF;
-                                                        int g = (color >> 8) & 0xFF;
-                                                        int b = (color >> 0) & 0xFF;
-
-                                                        if ((currentScroll) < 255) {
-                                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-                                                                Window window = getWindow();
-                                                                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                                                                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                                                                window.setStatusBarColor(Color.argb(reverseNumber(currentScroll, 0, 255), r, g, b));
-                                                            }
-                                                        } else {
-                                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                                                Window window = getWindow();
-                                                                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                                                            }
-                                                        }
-                                                    }
-                                                }
-
-        );
     }
 
     private void updateViews(Launch launch) {
         try {
             this.launch = launch;
 
-            tabAdapter.updateAllViews(launch);
+            EventBus.getDefault().post(new LaunchEvent(launch));
             if (!this.isDestroyed() && launch != null && launch.getRocket() != null) {
                 Timber.v("Loading detailLaunch %s", launch.getId());
                 findProfileLogo();
                 if (launch.getRocket().getName() != null) {
-                    if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0) {
+                    if (launch.getRocket().getImageURL() != null
+                            && launch.getRocket().getImageURL().length() > 0
+                            && !launch.getRocket().getImageURL().contains("placeholder")) {
 
-                        Glide.with(this)
+                        GlideApp.with(this)
                                 .load(launch.getRocket().getImageURL())
-                                .centerCrop()
                                 .placeholder(R.drawable.placeholder)
-                                .crossFade()
                                 .into(detail_profile_backdrop);
                         getLaunchVehicle(launch, false);
                     } else {
@@ -259,69 +293,62 @@ public class LaunchDetailActivity extends BaseActivity
         String location = "Unknown Location";
         String mission = "Unknown Mission";
         String locationCountryCode = null;
-        String rocketAgency = "";
+        String agencyName = null;
+        //This checks to see if a location is available
 
-        if (launch.getRocket().getAgencies().size() > 0) {
-            for (int i = 0; i < launch.getRocket().getAgencies().size(); i++) {
-                rocketAgency = rocketAgency + launch.getRocket().getAgencies().get(i).getAbbrev() + " ";
+        if (launch.getLsp() != null) {
+            locationCountryCode = launch.getLsp().getCountryCode();
+            agencyName = launch.getLsp().getName();
+            //Go through various CountryCodes and assign flag.
+            if (launch.getLsp().getAbbrev().contains("ASA")) {
+                applyProfileLogo(getString(R.string.ariane_logo));
+            } else if (launch.getLsp().getAbbrev().contains("SpX")) {
+                applyProfileLogo(getString(R.string.spacex_logo));
+            } else if (launch.getLsp().getAbbrev().contains("BA")) {
+                applyProfileLogo(getString(R.string.Yuzhnoye_logo));
+            } else if (launch.getLsp().getAbbrev().contains("ULA")) {
+                applyProfileLogo(getString(R.string.ula_logo));
+            } else if (locationCountryCode.length() == 3) {
+                if (locationCountryCode.contains("USA")) {
+                    applyProfileLogo(getString(R.string.usa_flag));
+                } else if (locationCountryCode.contains("RUS")) {
+                    applyProfileLogo(getString(R.string.rus_logo));
+                } else if (locationCountryCode.contains("CHN")) {
+                    applyProfileLogo(getString(R.string.chn_logo));
+                } else if (locationCountryCode.contains("IND")) {
+                    applyProfileLogo(getString(R.string.ind_logo));
+                } else if (locationCountryCode.contains("JPN")) {
+                    applyProfileLogo(getString(R.string.jpn_logo));
+                }
+            }
+        } else if (launch.getLocation() != null && launch.getLocation().getPads() != null
+                && launch.getLocation().getPads().size() > 0
+                && launch.getLocation().getPads().get(0).getAgencies() != null
+                && launch.getLocation().getPads().get(0).getAgencies().size() > 0) {
+            locationCountryCode = launch.getLocation().getPads().
+                    get(0).getAgencies().get(0).getCountryCode();
+            agencyName = launch.getLocation().getPads().
+                    get(0).getAgencies().get(0).getName();
+            if (locationCountryCode.length() == 3) {
+                if (locationCountryCode.contains("USA")) {
+                    applyProfileLogo(getString(R.string.usa_flag));
+                } else if (locationCountryCode.contains("RUS")) {
+                    applyProfileLogo(getString(R.string.rus_logo));
+                } else if (locationCountryCode.contains("CHN")) {
+                    applyProfileLogo(getString(R.string.chn_logo));
+                } else if (locationCountryCode.contains("IND")) {
+                    applyProfileLogo(getString(R.string.ind_logo));
+                } else if (locationCountryCode.contains("JPN")) {
+                    applyProfileLogo(getString(R.string.jpn_logo));
+                }
             }
         }
 
-        //This checks to see if a location is available
-        if (launch.getLocation().getName() != null) {
+        Timber.v("LaunchDetailActivity - CountryCode: %s - LSP: %s - %s",
+                String.valueOf(locationCountryCode), locationCountryCode, agencyName);
 
-            //Check to see if a countrycode is available
-            if (launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
-                    get(0).getAgencies().size() > 0) {
-                locationCountryCode = launch.getLocation().getPads().
-                        get(0).getAgencies().get(0).getCountryCode();
-
-                Timber.v(
-                        "LaunchDetailActivity - CountryCode length: %s",
-                        String.valueOf(locationCountryCode.length())
-                );
-
-                //Go through various CountryCodes and assign flag.
-                if (locationCountryCode.length() == 3) {
-
-                    if (locationCountryCode.contains("USA")) {
-                        //Check for SpaceX/Boeing/ULA/NASA
-                        if (launch.getRocket().getAgencies().size() > 0) {
-                            if (launch.getLocation().getPads().
-                                    get(0).getAgencies().get(0).getAbbrev().contains("SpX") && launch.getRocket().getAgencies().get(0).getAbbrev().contains("SpX")) {
-                                //Apply SpaceX Logo
-                                applyProfileLogo(getString(R.string.spacex_logo));
-                            }
-                        }
-                        if (launch.getLocation().getPads().
-                                get(0).getAgencies().get(0).getAbbrev() == "BA" && launch.getRocket().getAgencies().get(0).getCountryCode() == "UKR") {
-                            //Apply Yuzhnoye Logo
-                            applyProfileLogo(getString(R.string.Yuzhnoye_logo));
-                        } else if (rocketAgency.contains("ULA")) {
-                            //Apply ULA Logo
-                            applyProfileLogo(getString(R.string.ula_logo));
-                        } else {
-                            //Else Apply USA flag
-                            applyProfileLogo(getString(R.string.usa_flag));
-                        }
-                    } else if (locationCountryCode.contains("RUS")) {
-                        //Apply Russia Logo
-                        applyProfileLogo(getString(R.string.rus_logo));
-                    } else if (locationCountryCode.contains("CHN")) {
-                        applyProfileLogo(getString(R.string.chn_logo));
-                    } else if (locationCountryCode.contains("IND")) {
-                        applyProfileLogo(getString(R.string.ind_logo));
-                    } else if (locationCountryCode.contains("JPN")) {
-                        applyProfileLogo(getString(R.string.jpn_logo));
-                    }
-
-                } else if (launch.getLocation().getPads().
-                        get(0).getAgencies().get(0).getAbbrev() == "ASA") {
-                    //Apply Arianespace Logo
-                    applyProfileLogo(getString(R.string.ariane_logo));
-                }
-                location = (launch.getLocation().getPads().get(0).getName());
-            }
+        if (launch.getLocation() != null && launch.getLocation().getPads() != null && launch.getLocation().getPads().size() > 0) {
+            location = (launch.getLocation().getPads().get(0).getName());
         }
         //Assigns the result of the two above checks.
         detail_mission_location.setText(location);
@@ -330,9 +357,8 @@ public class LaunchDetailActivity extends BaseActivity
     private void applyProfileLogo(String url) {
         Timber.d("LaunchDetailActivity - Loading Profile Image url: %s ", url);
 
-        Glide.with(this)
+        GlideApp.with(this)
                 .load(url)
-                .centerCrop()
                 .placeholder(R.drawable.icon_international)
                 .error(R.drawable.icon_international)
                 .into(detail_profile_image);
@@ -354,13 +380,10 @@ public class LaunchDetailActivity extends BaseActivity
                 .contains("name", query)
                 .findFirst();
         if (setImage) {
-            if (launchVehicle != null && launchVehicle.getImageURL().length() > 0) {
-                Glide.with(this)
-                        .load(launchVehicle
-                                      .getImageURL())
-                        .centerCrop()
+            if (launchVehicle != null && launchVehicle.getImageURL().length() > 0 && !launchVehicle.getImageURL().contains("placeholder")) {
+                GlideApp.with(this)
+                        .load(launchVehicle.getImageURL())
                         .placeholder(R.drawable.placeholder)
-                        .crossFade()
                         .into(detail_profile_backdrop);
                 Timber.d("Glide Loading: %s %s", launchVehicle.getLV_Name(), launchVehicle.getImageURL());
             }
@@ -384,16 +407,28 @@ public class LaunchDetailActivity extends BaseActivity
     }
 
     @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        int totalScroll = appBarLayout.getTotalScrollRange();
+        int currentScroll = totalScroll + verticalOffset;
+
+        int color = statusColor;
+        int r = (color >> 16) & 0xFF;
+        int g = (color >> 8) & 0xFF;
+        int b = (color >> 0) & 0xFF;
+
         if (mMaxScrollSize == 0) {
             mMaxScrollSize = appBarLayout.getTotalScrollRange();
         }
 
-        int percentage = (Math.abs(i)) * 100 / mMaxScrollSize;
+        int percentage = (Math.abs(verticalOffset)) * 100 / mMaxScrollSize;
 
         if (percentage >= PERCENTAGE_TO_ANIMATE_AVATAR && mIsAvatarShown) {
             mIsAvatarShown = false;
-            detail_profile_image.animate().scaleY(0).scaleX(0).setDuration(200).start();
+            detail_profile_image.animate()
+                    .scaleY(0).scaleX(0)
+                    .setDuration(200)
+                    .start();
+            fabShare.hide();
         }
 
         if (percentage <= PERCENTAGE_TO_ANIMATE_AVATAR && !mIsAvatarShown) {
@@ -402,19 +437,40 @@ public class LaunchDetailActivity extends BaseActivity
             detail_profile_image.animate()
                     .scaleY(1).scaleX(1)
                     .start();
+
+            fabShare.show();
         }
+
+//        if ((currentScroll) < 100) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//
+//                Window window = getWindow();
+//                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//                window.setStatusBarColor(Color.argb(reverseNumber(currentScroll, 0, 255), r, g, b));
+//            }
+//        } else {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                Window window = getWindow();
+//                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//            }
+//        }
     }
 
+    @Override
     public void onStart() {
         super.onStart();
+        EventBus.getDefault().register(this);
         Timber.v("LaunchDetailActivity onStart!");
         customTabActivityHelper.bindCustomTabsService(this);
     }
 
+    @Override
     public void onStop() {
-        super.onStop();
+        EventBus.getDefault().unregister(this);
         Timber.v("LaunchDetailActivity onStop!");
         customTabActivityHelper.unbindCustomTabsService(this);
+        super.onStop();
     }
 
     public void mayLaunchUrl(Uri parse) {
@@ -423,6 +479,59 @@ public class LaunchDetailActivity extends BaseActivity
         } else {
             Timber.v("mayLaunchURL Denied - %s", parse.toString());
         }
+    }
+
+    @OnClick(R.id.fab_share)
+    public void onViewClicked() {
+        Date date = launch.getNet();
+        SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+        df.toLocalizedPattern();
+        String launchDate = df.format(date);
+        String message;
+        if (launch.getVidURLs().size() > 0) {
+            if (launch.getLocation() != null && launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
+                    get(0).getAgencies().size() > 0) {
+
+                message = launch.getName() + " launching from "
+                        + launch.getLocation().getName() + "\n\n"
+                        + launchDate;
+            } else if (launch.getLocation() != null) {
+                message = launch.getName() + " launching from "
+                        + launch.getLocation().getName() + "\n\n"
+                        + launchDate;
+            } else {
+                message = launch.getName()
+                        + "\n\n"
+                        + launchDate;
+            }
+        } else {
+            if (launch.getLocation() != null && launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
+                    get(0).getAgencies().size() > 0) {
+
+                message = launch.getName() + " launching from "
+                        + launch.getLocation().getName() + "\n\n"
+                        + launchDate;
+            } else if (launch.getLocation() != null) {
+                message = launch.getName() + " launching from "
+                        + launch.getLocation().getName() + "\n\n"
+                        + launchDate;
+            } else {
+                message = launch.getName()
+                        + "\n\n"
+                        + launchDate;
+            }
+        }
+        ShareCompat.IntentBuilder.from(this)
+                .setType("text/plain")
+                .setChooserTitle("Share: " + launch.getName())
+                .setText(String.format("%s\n\nWatch Live: %s", message, launch.getUrl()))
+                .startChooser();
+        Analytics.from(context).sendLaunchShared("Share FAB", launch.getName() + "-" + launch.getId().toString());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(LaunchRequestEvent event) {
+        EventBus.getDefault().post(new LaunchEvent(launch));
     }
 
 }

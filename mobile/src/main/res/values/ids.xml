@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="menu_twitter" type="id">menu_twitter</item>
+    <item name="menu_discord" type="id">menu_discord</item>
 </resources>

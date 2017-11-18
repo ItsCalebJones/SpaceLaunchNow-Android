@@ -20,13 +20,14 @@ import java.util.Date;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Launch;
+import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
 import static me.calebjones.spacelaunchnow.content.notifications.NotificationHelper.CHANNEL_LAUNCH_IMMINENT;
 
 public class NotificationBuilder {
-    public static void notifyUser(Context context, Launch launch, long timeToFinish) {
+    public static void notifyUser(Context context, Launch launch, long timeToFinish, boolean update) {
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         NotificationCompat.Builder mBuilder;
@@ -47,8 +48,9 @@ public class NotificationBuilder {
         String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone", "default ringtone");
         Uri alarmSound = Uri.parse(ringtoneBox);
 
-        Intent resultIntent = new Intent(Intent.ACTION_VIEW);
-        resultIntent.setData(Uri.parse(launch.getUrl()));
+        Intent resultIntent = new Intent(context, LaunchDetailActivity.class);
+        resultIntent.putExtra("TYPE", "launch");
+        resultIntent.putExtra("launchID", launch.getId());
 
         PendingIntent pending = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -64,9 +66,9 @@ public class NotificationBuilder {
                 Date date = launch.getNet();
                 launchDate = sdf.format(date);
             }
-            expandedText = getContentText(timeToFinish, launchDate);
+            expandedText = getContentText(timeToFinish, launchDate, update);
         } else {
-            expandedText = getContentText(timeToFinish);
+            expandedText = getContentText(timeToFinish, update);
         }
         mBuilder.setSubText(launchPad);
 
@@ -79,9 +81,13 @@ public class NotificationBuilder {
             wearableExtender.setBackground(BitmapFactory.decodeResource(context.getResources(), R.drawable.nav_header
             ));
         }
+        if (update){
+            mBuilder.setContentTitle("UPDATE: " + launchName);
+        } else {
+            mBuilder.setContentTitle(launchName);
+        }
 
-        mBuilder.setContentTitle(launchName)
-                .setContentText(expandedText)
+        mBuilder.setContentText(expandedText)
                 .setSmallIcon(R.drawable.ic_rocket_white)
                 .setAutoCancel(true)
                 .setContentText(expandedText)
@@ -89,6 +95,7 @@ public class NotificationBuilder {
                 .setContentIntent(pending)
                 .setSound(alarmSound)
                 .setChannelId(CHANNEL_LAUNCH_IMMINENT);
+
 
         if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
             Bitmap bitmap = Utils.getBitMapFromUrl(context, launch.getRocket().getImageURL());
@@ -110,51 +117,57 @@ public class NotificationBuilder {
             mBuilder.setLights(Color.GREEN, 3000, 3000);
         }
 
-        if (sharedPref.getBoolean("notifications_new_message_webcast", false)) {
-            if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
-                mNotifyManager.notify(Constants.NOTIF_ID_HOUR + launch.getId(), mBuilder.build());
-            }
-        } else {
-            mNotifyManager.notify(Constants.NOTIF_ID_HOUR + launch.getId(), mBuilder.build());
-        }
+        mNotifyManager.notify(Constants.NOTIF_ID_HOUR + launch.getId(), mBuilder.build());
     }
 
-    private static String getContentText(long timeToFinish) {
+    private static String getContentText(long timeToFinish, boolean update) {
+        String header;
+        if (update){
+            header = "Now launching";
+        } else {
+            header = "Launch attempt";
+        }
         if (timeToFinish < 3600000){
             int minutes = (int) ((timeToFinish / (1000 * 60)) % 60);
             if (minutes == 9) {
-                return "Launch attempt in ten minutes.";
+                return header + " in ten minutes.";
             } else if (minutes == 59){
-                return "Launch attempt in one hour.";
+                return header + " in one hour.";
             } else {
-                return "Launch attempt in " + minutes + " minutes.";
+                return header + " in " + minutes + " minutes.";
             }
         } else {
             int hours = (int) ((timeToFinish / (1000 * 60 * 60)) % 24);
             if (hours == 23) {
-                return "Launch attempt in twenty-four hours.";
+                return header + " in twenty-four hours.";
             } else {
-                return "Launch attempt in " + hours + " hours.";
+                return header + " in " + hours + " hours.";
             }
         }
     }
 
-    private static String getContentText(long timeToFinish, String launchDate) {
+    private static String getContentText(long timeToFinish, String launchDate, boolean update) {
+        String header;
+        if (update){
+            header = "Now launching";
+        } else {
+            header = "Launch attempt";
+        }
         if (timeToFinish < 3600000){
             int minutes = (int) ((timeToFinish / (1000 * 60)) % 60);
             if (minutes == 9) {
-                return "Launch attempt in ten minutes at " + launchDate;
+                return header + " in ten minutes at " + launchDate;
             } else if (minutes == 59){
-                return "Launch attempt in one hour at " + launchDate;
+                return header + " in one hour at " + launchDate;
             } else {
-                return "Launch attempt in " + minutes + " minutes at " + launchDate;
+                return header + " in " + minutes + " minutes at " + launchDate;
             }
         } else {
             int hours = (int) ((timeToFinish / (1000 * 60 * 60)) % 24);
             if (hours == 23) {
-                return "Launch attempt in twenty-four hours at " + launchDate;
+                return header + " in twenty-four hours at " + launchDate;
             } else {
-                return "Launch attempt in " + hours + " hours at " + launchDate;
+                return header + " in " + hours + " hours at " + launchDate;
             }
         }
     }

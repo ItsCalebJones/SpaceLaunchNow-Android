@@ -13,11 +13,16 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.data.models.VehicleDetails;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
@@ -87,7 +92,8 @@ public class AgencyDetailFragment extends BaseFragment {
     @BindView(R.id.mission_agency_summary_two)
     TextView mission_agency_summary_two;
 
-    @Nullable @Override
+    @Nullable
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view;
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
@@ -102,8 +108,10 @@ public class AgencyDetailFragment extends BaseFragment {
 
         Timber.v("Creating views...");
 
-        if (detailLaunch != null){
+        if (detailLaunch != null) {
             setUpViews(detailLaunch);
+        } else {
+
         }
 
         return view;
@@ -117,11 +125,9 @@ public class AgencyDetailFragment extends BaseFragment {
         super.onResume();
     }
 
-    public void setLaunch(Launch launch) {
+    private void setLaunch(Launch launch) {
         detailLaunch = launch;
-        if (isVisible()) {
-            setUpViews(launch);
-        }
+        setUpViews(launch);
     }
 
     private void setUpViews(Launch launch) {
@@ -152,7 +158,7 @@ public class AgencyDetailFragment extends BaseFragment {
             } else {
                 setNoVehicleAgencies();
             }
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             Timber.e(e);
         }
     }
@@ -178,23 +184,23 @@ public class AgencyDetailFragment extends BaseFragment {
         mission_agency_one.setText(String.format("%s (%s)", agencyNameOne, agencyAbbrevOne));
         mission_agency_type_one.setText("Type: " + agencyTypeOne);
 
-        if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL().length() > 0){
-            ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL()));
+        if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL().length() > 0) {
+            ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL()));
 
             mission_wikiButton_one.setVisibility(View.VISIBLE);
             mission_wikiButton_one.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Activity activity = (Activity)context;
+                    Activity activity = (Activity) context;
                     Utils.openCustomTab(activity, context, detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL());
                     Analytics.from(getActivity()).sendButtonClickedWithURL("Mission Wiki",
-                                                                           detailLaunch.getName(),
-                                                                           detailLaunch.getLocation()
-                                                                                   .getPads()
-                                                                                   .get(0)
-                                                                                   .getAgencies()
-                                                                                   .get(0)
-                                                                                   .getWikiURL());
+                            detailLaunch.getName(),
+                            detailLaunch.getLocation()
+                                    .getPads()
+                                    .get(0)
+                                    .getAgencies()
+                                    .get(0)
+                                    .getWikiURL());
                 }
             });
         } else {
@@ -202,15 +208,15 @@ public class AgencyDetailFragment extends BaseFragment {
         }
 
 
-        if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL().length() > 0){
-            ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getLocation()
+        if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL().length() > 0) {
+            ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(detailLaunch.getLocation()
                     .getPads().get(0).getAgencies().get(0).getInfoURL()));
 
             mission_infoButton_one.setVisibility(View.VISIBLE);
             mission_infoButton_one.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Activity activity = (Activity)context;
+                    Activity activity = (Activity) context;
                     Utils.openCustomTab(activity, context, detailLaunch.getLocation().getPads()
                             .get(0).getAgencies().get(0).getInfoURL());
                     Analytics.from(getActivity()).sendButtonClickedWithURL(
@@ -247,15 +253,15 @@ public class AgencyDetailFragment extends BaseFragment {
         mission_agency_one.setText(String.format("%s (%s)", agencyNameOne, agencyAbbrevOne));
         mission_agency_two.setText(String.format("%s (%s)", agencyNameTwo, agencyAbbrevTwo));
 
-        if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL().length() > 0){
-            ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL()));
+        if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL().length() > 0) {
+            ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL()));
 
             mission_wikiButton_one.setVisibility(View.VISIBLE);
             mission_wikiButton_one.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Activity activity = (Activity)context;
-                    Utils.openCustomTab(activity,context, detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL());
+                    Activity activity = (Activity) context;
+                    Utils.openCustomTab(activity, context, detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL());
                     Analytics.from(getActivity()).sendButtonClickedWithURL(
                             "Mission Wiki",
                             detailLaunch.getName(),
@@ -267,14 +273,14 @@ public class AgencyDetailFragment extends BaseFragment {
         }
 
 
-        if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL().length() > 0){
-            ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL()));
+        if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL().length() > 0) {
+            ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL()));
 
             mission_infoButton_one.setVisibility(View.VISIBLE);
             mission_infoButton_one.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Activity activity = (Activity)context;
+                    Activity activity = (Activity) context;
                     Utils.openCustomTab(activity, context, detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL());
                     Analytics.from(getActivity()).sendButtonClickedWithURL(
                             "Mission Info",
@@ -287,14 +293,14 @@ public class AgencyDetailFragment extends BaseFragment {
             mission_infoButton_one.setVisibility(View.GONE);
         }
 
-        if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getWikiURL().length() > 0){
-            ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getWikiURL()));
+        if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getWikiURL().length() > 0) {
+            ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getWikiURL()));
 
             mission_wikiButton_two.setVisibility(View.VISIBLE);
             mission_wikiButton_two.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Activity activity = (Activity)context;
+                    Activity activity = (Activity) context;
                     Utils.openCustomTab(activity, context, detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getWikiURL());
                     Analytics.from(getActivity()).sendButtonClickedWithURL(
                             "Mission Wiki",
@@ -307,14 +313,14 @@ public class AgencyDetailFragment extends BaseFragment {
         }
 
 
-        if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getInfoURL().length() > 0){
-            ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getInfoURL()));
+        if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getInfoURL().length() > 0) {
+            ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getInfoURL()));
 
             mission_infoButton_two.setVisibility(View.VISIBLE);
             mission_infoButton_two.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Activity activity = (Activity)context;
+                    Activity activity = (Activity) context;
                     Utils.openCustomTab(activity, context, detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getInfoURL());
                     Analytics.from(getActivity()).sendButtonClickedWithURL(
                             "Mission Info",
@@ -344,26 +350,26 @@ public class AgencyDetailFragment extends BaseFragment {
 
         checkLaunchSummary(agencyAbbrev, launch_agency_summary_one);
 
-        if (countryCode.length() > 10){
-            countryCode = countryCode.substring(0,3) + ", "+ countryCode.substring(4,7) + ", "+ countryCode.substring(7,10) + "...";
+        if (countryCode.length() > 10) {
+            countryCode = countryCode.substring(0, 3) + ", " + countryCode.substring(4, 7) + ", " + countryCode.substring(7, 10) + "...";
             agencyType = agencyType + " | Multinational";
-        }  else if (countryCode.length() > 4 && countryCode.length() < 10){
-            countryCode = countryCode.substring(0,3);
+        } else if (countryCode.length() > 4 && countryCode.length() < 10) {
+            countryCode = countryCode.substring(0, 3);
         }
 
         launch_one.setVisibility(View.VISIBLE);
         launch_two.setVisibility(View.GONE);
-        launch_vehicle_agency_one.setText(String.format("%s (%s) %s",agencyName , agencyAbbrev, countryCode));
+        launch_vehicle_agency_one.setText(String.format("%s (%s) %s", agencyName, agencyAbbrev, countryCode));
         launch_agency_type_one.setText("Type: " + agencyType);
 
-        if (detailLaunch.getRocket().getAgencies().get(0).getWikiURL().length() > 0){
-            ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(0).getWikiURL()));
+        if (detailLaunch.getRocket().getAgencies().get(0).getWikiURL().length() > 0) {
+            ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(0).getWikiURL()));
 
             wikiButton_one.setVisibility(View.VISIBLE);
             wikiButton_one.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Activity activity = (Activity)context;
+                    Activity activity = (Activity) context;
                     Utils.openCustomTab(activity, context, detailLaunch.getRocket().getAgencies().get(0).getWikiURL());
                     Analytics.from(getActivity()).sendButtonClickedWithURL(
                             "Mission Wiki",
@@ -377,14 +383,14 @@ public class AgencyDetailFragment extends BaseFragment {
         }
 
 
-        if (detailLaunch.getRocket().getAgencies().get(0).getInfoURL().length() > 0){
-            ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(0).getInfoURL()));
+        if (detailLaunch.getRocket().getAgencies().get(0).getInfoURL().length() > 0) {
+            ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(0).getInfoURL()));
 
             infoButton_one.setVisibility(View.VISIBLE);
             infoButton_one.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Activity activity = (Activity)context;
+                    Activity activity = (Activity) context;
                     Utils.openCustomTab(activity, context, detailLaunch.getRocket().getAgencies().get(0).getInfoURL());
                     Analytics.from(getActivity()).sendButtonClickedWithURL(
                             "Mission Info",
@@ -406,10 +412,10 @@ public class AgencyDetailFragment extends BaseFragment {
 
         checkLaunchSummary(agencyAbbrevOne, launch_agency_summary_one);
 
-        if (countryCode.length() > 10){
-            countryCode = countryCode.substring(0,3) + ", "+ countryCode.substring(4,7) + ", "+ countryCode.substring(7,10) + "...";
+        if (countryCode.length() > 10) {
+            countryCode = countryCode.substring(0, 3) + ", " + countryCode.substring(4, 7) + ", " + countryCode.substring(7, 10) + "...";
             agencyOne = agencyOne + " | Multinational";
-        }  else if (countryCode.length() > 4 && countryCode.length() < 10) {
+        } else if (countryCode.length() > 4 && countryCode.length() < 10) {
             countryCode = countryCode.substring(0, 3);
         }
 
@@ -420,10 +426,10 @@ public class AgencyDetailFragment extends BaseFragment {
 
         checkLaunchSummary(agencyAbbrevTwo, launch_agency_summary_two);
 
-        if (countryCodeTwo.length() > 10){
-            countryCodeTwo = countryCodeTwo.substring(0,3) + ", "+ countryCodeTwo.substring(4,7) + ", "+ countryCodeTwo.substring(7,10) + "...";
+        if (countryCodeTwo.length() > 10) {
+            countryCodeTwo = countryCodeTwo.substring(0, 3) + ", " + countryCodeTwo.substring(4, 7) + ", " + countryCodeTwo.substring(7, 10) + "...";
             agencyTwo = agencyTwo + " | Multinational";
-        }  else if (countryCodeTwo.length() > 4 && countryCodeTwo.length() < 10) {
+        } else if (countryCodeTwo.length() > 4 && countryCodeTwo.length() < 10) {
             countryCodeTwo = countryCodeTwo.substring(0, 3);
         }
 
@@ -431,16 +437,16 @@ public class AgencyDetailFragment extends BaseFragment {
         launch_two.setVisibility(View.VISIBLE);
         launch_agency_type_one.setText(String.format("Type: %s", agencyOne));
         launch_agency_type_two.setText(String.format("Type: %s", agencyTwo));
-        launch_vehicle_agency_one.setText(String.format("%s (%s) %s",agencyNameOne, agencyAbbrevOne , countryCode));
-        launch_vehicle_agency_two.setText(String.format("%s (%s) %s", agencyNameTwo,agencyAbbrevTwo, countryCodeTwo));
+        launch_vehicle_agency_one.setText(String.format("%s (%s) %s", agencyNameOne, agencyAbbrevOne, countryCode));
+        launch_vehicle_agency_two.setText(String.format("%s (%s) %s", agencyNameTwo, agencyAbbrevTwo, countryCodeTwo));
 
-        if (detailLaunch.getRocket().getAgencies().get(0).getInfoURL().length() > 0){
-            ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(0).getWikiURL()));
+        if (detailLaunch.getRocket().getAgencies().get(0).getInfoURL().length() > 0) {
+            ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(0).getWikiURL()));
             wikiButton_one.setVisibility(View.VISIBLE);
             wikiButton_one.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Activity activity = (Activity)context;
+                    Activity activity = (Activity) context;
                     Utils.openCustomTab(activity, context, detailLaunch.getRocket().getAgencies().get(0).getWikiURL());
                     Analytics.from(getActivity()).sendButtonClickedWithURL(
                             "Mission Wiki",
@@ -454,14 +460,14 @@ public class AgencyDetailFragment extends BaseFragment {
         }
 
 
-        if (detailLaunch.getRocket().getAgencies().get(0).getInfoURL().length() > 0){
-            ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(0).getInfoURL()));
+        if (detailLaunch.getRocket().getAgencies().get(0).getInfoURL().length() > 0) {
+            ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(0).getInfoURL()));
 
             infoButton_one.setVisibility(View.VISIBLE);
             infoButton_one.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Activity activity = (Activity)context;
+                    Activity activity = (Activity) context;
                     Utils.openCustomTab(activity, context, detailLaunch.getRocket().getAgencies().get(0).getInfoURL());
                     Analytics.from(getActivity()).sendButtonClickedWithURL(
                             "Mission Info",
@@ -474,14 +480,14 @@ public class AgencyDetailFragment extends BaseFragment {
             infoButton_one.setVisibility(View.GONE);
         }
 
-        if (detailLaunch.getRocket().getAgencies().get(1).getWikiURL().length() > 0){
-            ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(1).getWikiURL()));
+        if (detailLaunch.getRocket().getAgencies().get(1).getWikiURL().length() > 0) {
+            ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(1).getWikiURL()));
 
             wikiButton_two.setVisibility(View.VISIBLE);
             wikiButton_two.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Activity activity = (Activity)context;
+                    Activity activity = (Activity) context;
                     Utils.openCustomTab(activity, context, detailLaunch.getRocket().getAgencies().get(1).getWikiURL());
                     Analytics.from(getActivity()).sendButtonClickedWithURL(
                             "Mission Wiki",
@@ -494,14 +500,14 @@ public class AgencyDetailFragment extends BaseFragment {
             wikiButton_two.setVisibility(View.GONE);
         }
 
-        if (detailLaunch.getRocket().getAgencies().get(1).getInfoURL().length() > 1){
-            ((LaunchDetailActivity)context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(1).getInfoURL()));
+        if (detailLaunch.getRocket().getAgencies().get(1).getInfoURL().length() > 1) {
+            ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(1).getInfoURL()));
 
             infoButton_two.setVisibility(View.VISIBLE);
             infoButton_two.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Activity activity = (Activity)context;
+                    Activity activity = (Activity) context;
                     Utils.openCustomTab(activity, context, detailLaunch.getRocket().getAgencies().get(1).getInfoURL());
                     Analytics.from(getActivity()).sendButtonClickedWithURL(
                             "Mission Info",
@@ -516,48 +522,48 @@ public class AgencyDetailFragment extends BaseFragment {
     }
 
     private void checkLaunchSummary(String abbrev, TextView view) {
-        if (abbrev.equalsIgnoreCase("spx")){
+        if (abbrev.equalsIgnoreCase("spx")) {
             view.setText(R.string.spacex_summary);
             view.setVisibility(View.VISIBLE);
-        } else if (abbrev.equalsIgnoreCase("usaf")){
+        } else if (abbrev.equalsIgnoreCase("usaf")) {
             view.setText(R.string.usaf_summary);
             view.setVisibility(View.VISIBLE);
-        } else if (abbrev.equalsIgnoreCase("cnsa")){
+        } else if (abbrev.equalsIgnoreCase("cnsa")) {
             view.setText(R.string.cnsa_summary);
             view.setVisibility(View.VISIBLE);
-        } else if (abbrev.equalsIgnoreCase("casc")){
+        } else if (abbrev.equalsIgnoreCase("casc")) {
             view.setText(R.string.casc_summary);
             view.setVisibility(View.VISIBLE);
-        } else if (abbrev.equalsIgnoreCase("isro")){
+        } else if (abbrev.equalsIgnoreCase("isro")) {
             view.setText(R.string.isro_summary);
             view.setVisibility(View.VISIBLE);
-        } else if (abbrev.equalsIgnoreCase("vko")){
+        } else if (abbrev.equalsIgnoreCase("vko")) {
             view.setText(R.string.vko_summary);
             view.setVisibility(View.VISIBLE);
-        } else if (abbrev.equalsIgnoreCase("fka")){
+        } else if (abbrev.equalsIgnoreCase("fka")) {
             view.setText(R.string.roscosmos_summary);
             view.setVisibility(View.VISIBLE);
-        } else if (abbrev.equalsIgnoreCase("ula")){
+        } else if (abbrev.equalsIgnoreCase("ula")) {
             view.setText(R.string.ula_summary);
             view.setVisibility(View.VISIBLE);
-        } else if (abbrev.equalsIgnoreCase("gd")){
+        } else if (abbrev.equalsIgnoreCase("gd")) {
             view.setText(R.string.gd_summary);
             view.setVisibility(View.VISIBLE);
-        } else if (abbrev.equalsIgnoreCase("asa")){
+        } else if (abbrev.equalsIgnoreCase("asa")) {
             view.setText(R.string.asa_summary);
             view.setVisibility(View.VISIBLE);
-        }  else if (abbrev.equalsIgnoreCase("TsSKB-Progress")){
+        } else if (abbrev.equalsIgnoreCase("TsSKB-Progress")) {
             view.setText(R.string.TsSKB_summary);
             view.setVisibility(View.VISIBLE);
-        }  else if (abbrev.equalsIgnoreCase("nasa")){
+        } else if (abbrev.equalsIgnoreCase("nasa")) {
             view.setText(R.string.nasa_summary);
             view.setVisibility(View.VISIBLE);
         }
     }
 
-    private String getAgencyType(int type){
+    private String getAgencyType(int type) {
         String agency;
-        switch (type){
+        switch (type) {
             case 1:
                 agency = "Government";
                 break;
@@ -582,7 +588,8 @@ public class AgencyDetailFragment extends BaseFragment {
         return agency;
     }
 
-    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -590,4 +597,22 @@ public class AgencyDetailFragment extends BaseFragment {
         return new AgencyDetailFragment();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(LaunchEvent event) {
+        setLaunch(event.launch);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Timber.v("On Start");
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        Timber.v("On Stop");
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
 }

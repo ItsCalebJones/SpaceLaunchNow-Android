@@ -10,7 +10,7 @@ import com.evernote.android.job.JobRequest;
 
 import java.util.concurrent.TimeUnit;
 
-import me.calebjones.spacelaunchnow.content.DataRepositoryManager;
+import me.calebjones.spacelaunchnow.content.data.DataRepositoryManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import timber.log.Timber;
 
@@ -25,7 +25,7 @@ public class UpdateJob extends Job {
         DataRepositoryManager dataRepositoryManager = new DataRepositoryManager(getContext());
         dataRepositoryManager.syncBackground();
         int count = 0;
-        while (dataRepositoryManager.getDataManager().isRunning()) {
+        while (dataRepositoryManager.getDataClientManager().isRunning()) {
             try {
                 count += 100;
                 Thread.sleep(100);

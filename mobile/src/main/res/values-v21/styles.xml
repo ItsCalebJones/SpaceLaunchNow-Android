@@ -32,6 +32,10 @@
         <item name="material_drawer_header_selection_text">@color/material_drawer_header_selection_text</item>
     </style>
 
+    <style name="BaseAppTheme.TranslucentStatus" parent="BaseAppTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
     <style name="CustomPreferenceTheme" parent="@style/PreferenceActivity.Light">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>

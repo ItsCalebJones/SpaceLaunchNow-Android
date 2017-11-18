@@ -2,7 +2,6 @@ package me.calebjones.spacelaunchnow;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -19,6 +18,8 @@ import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.evernote.android.job.JobManager;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.onesignal.OneSignal;
@@ -35,17 +36,18 @@ import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.exceptions.RealmMigrationNeededException;
-import me.calebjones.spacelaunchnow.content.DataRepositoryManager;
+import jonathanfinerty.once.Once;
+import me.calebjones.spacelaunchnow.content.data.DataRepositoryManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.DataJobCreator;
 import me.calebjones.spacelaunchnow.content.jobs.SyncJob;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateJob;
-import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
-import me.calebjones.spacelaunchnow.data.models.Constants;
+import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
 import me.calebjones.spacelaunchnow.data.models.realm.Migration;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
+import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.analytics.CrashlyticsTree;
@@ -54,6 +56,7 @@ import okhttp3.OkHttpClient;
 import timber.log.Timber;
 
 import static me.calebjones.spacelaunchnow.data.models.Constants.DB_SCHEMA_VERSION_1_5_6;
+import static me.calebjones.spacelaunchnow.data.models.Constants.TIME_KEY;
 
 public class LaunchApplication extends Application implements Analytics.Provider {
 
@@ -90,8 +93,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
         */
         // Set up Crashlytics, disabled for debug builds
         Crashlytics crashlyticsKit = new Crashlytics.Builder()
-                .core(new CrashlyticsCore.Builder()
-                              .disabled(BuildConfig.DEBUG).build())
+                .core(new CrashlyticsCore.Builder().build())
                 .build();
         Fabric.with(this, crashlyticsKit);
 
@@ -117,7 +119,8 @@ public class LaunchApplication extends Application implements Analytics.Provider
 
             JSONObject tags = new JSONObject();
             try {
-                tags.put("DEBUG", 1);
+                tags.put("Production", false);
+                tags.put("Debug", true);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -125,7 +128,8 @@ public class LaunchApplication extends Application implements Analytics.Provider
         } else {
             JSONObject tags = new JSONObject();
             try {
-                tags.put("DEBUG", 0);
+                tags.put("Production", true);
+                tags.put("Debug", false);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -152,17 +156,21 @@ public class LaunchApplication extends Application implements Analytics.Provider
         if (sharedPreference.isDebugEnabled()) {
             version = "dev";
         } else {
-            version = "1.2.1";
+            version = "1.3";
         }
         DataClient.create(version);
+        LibraryDataManager libraryDataManager = new LibraryDataManager(this);
+        JobManager.create(this).addJobCreator(new DataJobCreator());
 
         Realm.init(this);
 
         RealmConfiguration config = new RealmConfiguration.Builder()
-                        .schemaVersion(DB_SCHEMA_VERSION_1_5_6)
-                        .modules(Realm.getDefaultModule(), new LaunchDataModule())
-                        .migration(new Migration())
-                        .build();
+                .schemaVersion(DB_SCHEMA_VERSION_1_5_6)
+                .modules(Realm.getDefaultModule(), new LaunchDataModule())
+                .migration(new Migration())
+                .build();
+
+
         try {
             Realm.setDefaultConfiguration(config);
             Realm realm = Realm.getDefaultInstance();
@@ -171,12 +179,9 @@ public class LaunchApplication extends Application implements Analytics.Provider
             Realm.deleteRealm(config);
             Realm.setDefaultConfiguration(config);
 
-            Intent intent = new Intent(this, LaunchDataService.class);
-            intent.setAction(Constants.ACTION_GET_ALL_DATA);
-            this.startService(intent);
+            libraryDataManager.getAllData();
 
             Crashlytics.logException(e);
-
         }
 
 
@@ -194,18 +199,22 @@ public class LaunchApplication extends Application implements Analytics.Provider
         DrawerImageLoader.init(new AbstractDrawerImageLoader() {
             @Override
             public void set(ImageView imageView, Uri uri, Drawable placeholder) {
-                Glide.with(imageView.getContext()).load(uri).placeholder(placeholder).centerCrop().into(imageView);
+                GlideApp.with(imageView.getContext()).load(uri).placeholder(placeholder).centerCrop().into(imageView);
             }
 
             @Override
             public void cancel(ImageView imageView) {
-                Glide.clear(imageView);
+                GlideApp.with(imageView.getContext()).clear(imageView);
             }
         });
 
-        checkSubscriptions();
+        try {
+            checkSubscriptions();
+        } catch (JSONException e) {
+            Timber.e(e);
+            Crashlytics.logException(e);
+        }
 
-        JobManager.create(this).addJobCreator(new DataJobCreator());
 
         if (sharedPref.getBoolean("background", true)) {
             UpdateJob.scheduleJob(this);
@@ -214,103 +223,57 @@ public class LaunchApplication extends Application implements Analytics.Provider
 
         DefaultRuleEngine.trackAppStart(this);
 
-        if (!sharedPreference.getFirstBoot()) {
+        MobileAds.initialize(this, "ca-app-pub-9824528399164059~9700152528");
+
+        Once.initialise(this);
+
+        if (Once.beenDone(Once.THIS_APP_INSTALL, "loadInitialData")) {
             Timber.i("Stored Version Code: %s", switchPreferences.getVersionCode());
             if (switchPreferences.getVersionCode() <= DB_SCHEMA_VERSION_1_5_6) {
-                Intent intent = new Intent(this, LaunchDataService.class);
-                intent.setAction(Constants.ACTION_GET_ALL_DATA);
-                this.startService(intent);
+                libraryDataManager.getAllData();
             } else {
                 DataRepositoryManager dataRepositoryManager = new DataRepositoryManager(this);
                 dataRepositoryManager.syncBackground();
             }
         } else {
-            Intent intent = new Intent(this, LaunchDataService.class);
-            intent.setAction(Constants.ACTION_GET_ALL_DATA);
-            startService(intent);
+            libraryDataManager.getAllData();
+            Once.markDone("loadInitialData");
         }
     }
 
-    private void checkSubscriptions() {
+    private void checkSubscriptions() throws JSONException {
+        //TODO reconsider the boolean for notificaitons_new_message
         if (sharedPref.getBoolean("notifications_new_message", true)) {
             OneSignal.setSubscription(true);
             JSONObject tags = new JSONObject();
-            if (switchPreferences.getSwitchNasa()) {
-                try {
-                    tags.put("Nasa", 1);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (switchPreferences.getSwitchISRO()) {
-                try {
-                    tags.put("ISRO", 1);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (switchPreferences.getSwitchRoscosmos()) {
-                try {
-                    tags.put("ROSCOSMOS", 1);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (switchPreferences.getSwitchULA()) {
-                try {
-                    tags.put("ULA", 1);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (switchPreferences.getSwitchArianespace()) {
-                try {
-                    tags.put("Arianespace", 1);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (switchPreferences.getSwitchKSC()) {
-                try {
-                    tags.put("KSC", 1);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (switchPreferences.getSwitchPles()) {
-                try {
-                    tags.put("Ples", 1);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (switchPreferences.getSwitchVan()) {
-                try {
-                    tags.put("Van", 1);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (switchPreferences.getSwitchSpaceX()) {
-                try {
-                    tags.put("SpaceX", 1);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (switchPreferences.getAllSwitch()) {
-                try {
-                    tags.put("all", 1);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
+
+            tags.put("Nasa", switchPreferences.getSwitchNasa());
+
+            tags.put("ISRO", switchPreferences.getSwitchISRO());
+
+            tags.put("Roscosmos", switchPreferences.getSwitchRoscosmos());
+
+            tags.put("ULA", switchPreferences.getSwitchULA());
+
+            tags.put("Arianespace", switchPreferences.getSwitchArianespace());
+
+            tags.put("KSC", switchPreferences.getSwitchKSC());
+
+            tags.put("Ples", switchPreferences.getSwitchPles());
+
+            tags.put("Van", switchPreferences.getSwitchVan());
+
+            tags.put("SpaceX", switchPreferences.getSwitchSpaceX());
+
+            tags.put("CASC", switchPreferences.getSwitchCASC());
+
+            tags.put("Cape", switchPreferences.getSwitchCape());
+
+            tags.put("all", switchPreferences.getAllSwitch());
+
             //Allow background alarms
-            try {
-                tags.put("background", 1);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            tags.put("background", 1);
+
             OneSignal.sendTags(tags);
         } else {
             OneSignal.setSubscription(false);

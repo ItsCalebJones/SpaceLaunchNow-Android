@@ -9,7 +9,9 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.lang.reflect.Type;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -19,6 +21,8 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.os.Process.THREAD_PRIORITY_LESS_FAVORABLE;
+import static android.os.Process.THREAD_PRIORITY_LOWEST;
 
 
 public class RetrofitBuilder {
@@ -33,13 +37,24 @@ public class RetrofitBuilder {
     }
 
     public static Retrofit getLibraryRetrofitThreaded(String version) {
-
+        Executor httpExecutor = Executors.newCachedThreadPool(new ThreadFactory() {
+            @Override
+            public Thread newThread(final Runnable r) {
+                return new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        android.os.Process.setThreadPriority(THREAD_PRIORITY_LESS_FAVORABLE);
+                        r.run();
+                    }
+                }, "Retrofit-Idle-Background");
+            }
+        });
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.LIBRARY_BASE_URL + version + "/")
                 .client(defaultClient())
                 .addConverterFactory(GsonConverterFactory.create(getGson()))
-                .callbackExecutor(Executors.newCachedThreadPool())
+                .callbackExecutor(httpExecutor)
                 .build();
         return retrofit;
     }

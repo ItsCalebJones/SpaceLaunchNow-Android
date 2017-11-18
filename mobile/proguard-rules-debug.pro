@@ -22,6 +22,9 @@
 
 -keep class com.anjlab.android.iab.v3.** { *; }
 
+-keep public class com.google.android.gms.* { public *; }
+-dontwarn com.google.android.gms.**
+
 -dontwarn android.support.**
 
 -keep public class com.google.ads.** {

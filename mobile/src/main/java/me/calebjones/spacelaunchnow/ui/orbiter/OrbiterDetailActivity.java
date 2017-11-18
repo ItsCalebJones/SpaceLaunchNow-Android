@@ -28,6 +28,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.Orbiter;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
+import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.utils.views.CustomOnOffsetChangedListener;
@@ -146,16 +147,15 @@ public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.
         detail_rocket.setText(String.format("%s Spacecraft", orbiter.getName()));
         detail_vehicle_agency.setText(orbiter.getName());
 
-        Glide.with(this)
+        GlideApp.with(this)
                 .load(orbiter.getImageURL())
                 .centerCrop()
-                .crossFade()
                 .into(detail_profile_backdrop);
 
-        Glide.with(this)
+        GlideApp.with(this)
                 .load(orbiter.getNationURL())
                 .centerCrop()
-                .error(R.drawable.icon_international)
+                .placeholder(R.drawable.icon_international)
                 .into(detail_profile_image);
 
         //Set up history information

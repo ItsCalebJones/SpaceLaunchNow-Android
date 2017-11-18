@@ -23,7 +23,7 @@ import java.util.Date;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.services.UpdateWearService;
+import me.calebjones.spacelaunchnow.content.wear.WearWatchfaceManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
@@ -97,7 +97,7 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
             Analytics.from(this).sendPreferenceEvent(key);
         }
 
-        getActivity().startService(new Intent(getActivity(), UpdateWearService.class));
+        getActivity().startService(new Intent(getActivity(), WearWatchfaceManager.class));
     }
 
     //Google API client methods
@@ -178,7 +178,7 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
                         editor.apply();
 
 
-                        getActivity().startService(new Intent(getActivity(), UpdateWearService.class));
+                        getActivity().startService(new Intent(getActivity(), WearWatchfaceManager.class));
                         dialog.dismiss();
                     }
                 });

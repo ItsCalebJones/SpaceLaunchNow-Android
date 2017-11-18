@@ -28,6 +28,10 @@
         <item name="material_drawer_header_selection_text">@color/material_drawer_header_selection_text</item>
     </style>
 
+    <style name="BaseAppTheme.TranslucentStatus" parent="BaseAppTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
     <style name="ShowCaseThemeDark" parent="ShowCaseThemeDark">
         <item name="sv_backgroundColor">@color/darkPrimary</item>
         <item name="sv_showcaseColor">@color/darkAccent</item>

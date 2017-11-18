@@ -1,19 +1,17 @@
 package me.calebjones.spacelaunchnow.ui.launchdetail.fragments;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SwitchCompat;
@@ -34,13 +32,11 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.bumptech.glide.Glide;
 import com.github.pwittchen.weathericonview.WeatherIconView;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
 import com.mypopsy.maps.StaticMap;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -52,18 +48,22 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.calendar.CalendarSyncService;
+import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
 import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
+import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.Pad;
 import me.calebjones.spacelaunchnow.data.models.RocketDetails;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
+import me.calebjones.spacelaunchnow.utils.GlideApp;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
+import me.calebjones.spacelaunchnow.utils.views.CountDownTimer;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -75,11 +75,32 @@ public class SummaryDetailFragment extends BaseFragment {
     private SharedPreferences sharedPref;
     private static ListPreferences sharedPreference;
     private Context context;
-
+    private CountDownTimer timer;
     public Launch detailLaunch;
     private RocketDetails launchVehicle;
+
     private boolean nightMode;
 
+    @BindView(R.id.content_TMinus_status)
+    TextView contentTMinusStatus;
+    @BindView(R.id.countdown_days)
+    TextView countdownDays;
+    @BindView(R.id.countdown_hours)
+    TextView countdownHours;
+    @BindView(R.id.countdown_minutes)
+    TextView countdownMinutes;
+    @BindView(R.id.countdown_seconds)
+    TextView countdownSeconds;
+    @BindView(R.id.countdown_layout)
+    LinearLayout countdownLayout;
+    @BindView(R.id.day_two)
+    LinearLayout dayTwo;
+    @BindView(R.id.day_three)
+    LinearLayout dayThree;
+    @BindView(R.id.day_four)
+    LinearLayout dayFour;
+    @BindView(R.id.launch_summary)
+    NestedScrollView launchSummary;
     @BindView(R.id.map_view_summary)
     ImageView staticMap;
     @BindView(R.id.launch_date_title)
@@ -205,9 +226,7 @@ public class SummaryDetailFragment extends BaseFragment {
 
     public void setLaunch(Launch launch) {
         detailLaunch = launch;
-        if (isVisible()) {
-            setUpViews(launch);
-        }
+        setUpViews(launch);
     }
 
     private void fetchPastWeather() {
@@ -232,7 +251,7 @@ public class SummaryDetailFragment extends BaseFragment {
                         public void onResponse(Call<Forecast> forecastCall, Response<Forecast> response) {
                             if (response.isSuccessful()) {
                                 Forecast forecast = response.body();
-                                if(SummaryDetailFragment.this.isVisible()) {
+                                if (SummaryDetailFragment.this.isVisible()) {
                                     Analytics.from(getActivity()).sendWeatherEvent(detailLaunch.getName(), true, "Success");
                                     updateWeatherView(forecast);
                                 }
@@ -274,7 +293,7 @@ public class SummaryDetailFragment extends BaseFragment {
                         public void onResponse(Call<Forecast> forecastCall, Response<Forecast> response) {
                             if (response.isSuccessful()) {
                                 Forecast forecast = response.body();
-                                if(SummaryDetailFragment.this.isVisible()) {
+                                if (SummaryDetailFragment.this.isVisible()) {
                                     updateWeatherView(forecast);
                                 }
                             } else {
@@ -347,7 +366,7 @@ public class SummaryDetailFragment extends BaseFragment {
 
                 DataPoint dayOne = forecast.getDaily().getDataPoints().get(1);
 
-                if (dayOne.getIcon()!= null && dayOne.getIcon().getText() != null) {
+                if (dayOne.getIcon() != null && dayOne.getIcon().getText() != null) {
                     //Day One!
                     setIconView(dayTwoWeatherIconView, dayOne.getIcon().getText());
                 }
@@ -427,7 +446,7 @@ public class SummaryDetailFragment extends BaseFragment {
 
         if (forecast.getDaily() != null && forecast.getDaily().getSummary() != null) {
             weatherSummaryDay.setText(forecast.getDaily().getSummary());
-        } else if (forecast.getCurrently() != null && forecast.getCurrently().getSummary() != null){
+        } else if (forecast.getCurrently() != null && forecast.getCurrently().getSummary() != null) {
             weatherSummaryDay.setText(forecast.getCurrently().getSummary());
         } else {
             weatherSummaryDay.setVisibility(View.GONE);
@@ -436,7 +455,7 @@ public class SummaryDetailFragment extends BaseFragment {
         weatherLocation.setText(detailLaunch.getLocation().getName());
         weatherCard.setVisibility(View.VISIBLE);
 
-        if (nightMode){
+        if (nightMode) {
             dayTwoWeatherWindIcon.setIconColor(Color.WHITE);
             dayTwoWeatherPrecipIcon.setIconColor(Color.WHITE);
             dayThreeWeatherWindIcon.setIconColor(Color.WHITE);
@@ -507,6 +526,8 @@ public class SummaryDetailFragment extends BaseFragment {
                 getLaunchVehicle(detailLaunch);
             }
 
+            setupCountdownTimer(launch);
+
             double dlat = 0;
             double dlon = 0;
             if (detailLaunch.getLocation() != null && detailLaunch.getLocation().getPads() != null) {
@@ -539,7 +560,8 @@ public class SummaryDetailFragment extends BaseFragment {
                         );
 
                         Timber.v("onPreDraw: %s", map.toString());
-                        Glide.with(context).load(map.toString())
+                        GlideApp.with(context)
+                                .load(map.toString())
                                 .error(R.drawable.placeholder)
                                 .centerCrop()
                                 .into(staticMap);
@@ -559,16 +581,28 @@ public class SummaryDetailFragment extends BaseFragment {
 
             switch (detailLaunch.getStatus()) {
                 case 1:
-                    launch_status.setText("Launch is GO");
+                    String go = context.getResources().getString(R.string.status_go);
+                    if (detailLaunch.getProbability() != null && detailLaunch.getProbability() > 0) {
+                        go = String.format("%s | Forecast - %s%%", go, detailLaunch.getProbability());
+                    }
+                    //GO for launch
+                    launch_status.setText(go);
+                    launch_status.setTextColor(ContextCompat.getColor(context, R.color.colorGo));
                     break;
                 case 2:
-                    launch_status.setText("Launch is NO-GO");
+                    //NO GO for launch
+                    launch_status.setText(R.string.status_nogo);
+                    launch_status.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
                     break;
                 case 3:
-                    launch_status.setText("Launch was successful.");
+                    //Success for launch
+                    launch_status.setText(R.string.status_success);
+                    launch_status.setTextColor(ContextCompat.getColor(context, R.color.colorGo));
                     break;
                 case 4:
-                    launch_status.setText("Launch failure occurred.");
+                    //Failure to launch
+                    launch_status.setText(R.string.status_failure);
+                    launch_status.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
                     break;
             }
 
@@ -588,7 +622,8 @@ public class SummaryDetailFragment extends BaseFragment {
                             Timber.v("Launch %s notifiable updated to %s", detailLaunch.getName(), detailLaunch.isNotifiable());
                         }
                     });
-                    LaunchDataService.startActionSyncNotifiers(context);
+                    LibraryDataManager libraryDataManager = new LibraryDataManager(context);
+                    libraryDataManager.syncNotifiers();
                 }
             });
 
@@ -619,8 +654,8 @@ public class SummaryDetailFragment extends BaseFragment {
                             for (RealmStr s : detailLaunch.getVidURLs()) {
                                 //Do your stuff here
                                 adapter.add(new MaterialSimpleListItem.Builder(context)
-                                                    .content(s.getVal())
-                                                    .build());
+                                        .content(s.getVal())
+                                        .build());
                             }
 
                             MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
@@ -651,8 +686,164 @@ public class SummaryDetailFragment extends BaseFragment {
                 launch_window_start.setVisibility(View.GONE);
                 launch_window_end.setVisibility(View.GONE);
             }
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             Timber.e(e);
+        }
+    }
+
+    private void setupCountdownTimer(Launch launch) {
+        //If timestamp is available calculate TMinus and date.
+        if (launch.getNetstamp() > 0) {
+            long longdate = launch.getNetstamp();
+            longdate = longdate * 1000;
+            final Date date = new Date(longdate);
+
+            Calendar future = Utils.DateToCalendar(date);
+            Calendar now = Calendar.getInstance();
+
+            now.setTimeInMillis(System.currentTimeMillis());
+            if (timer != null) {
+                Timber.v("Timer is not null, cancelling.");
+                timer.cancel();
+            }
+
+            final int status = launch.getStatus();
+            final String hold = launch.getHoldreason();
+
+            final int nightColor = ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color);
+            final int color = ContextCompat.getColor(context, R.color.colorTextSecondary);
+            final int accentColor = ContextCompat.getColor(context, R.color.colorAccent);
+
+            contentTMinusStatus.setTypeface(Typeface.SANS_SERIF);
+            contentTMinusStatus.setTextColor(accentColor);
+
+            countdownLayout.setVisibility(View.VISIBLE);
+            long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
+            timer = new CountDownTimer(timeToFinish, 1000) {
+                StringBuilder time = new StringBuilder();
+
+                @Override
+                public void onFinish() {
+                    Timber.v("Countdown finished.");
+                    contentTMinusStatus.setTypeface(Typeface.DEFAULT);
+                    if (sharedPreference.isNightModeActive(context)) {
+                        contentTMinusStatus.setTextColor(nightColor);
+                    } else {
+                        contentTMinusStatus.setTextColor(color);
+                    }
+                    if (status == 1) {
+                        contentTMinusStatus.setText("Watch Live webcast for up to date status.");
+
+                    } else {
+                        if (hold != null && hold.length() > 1) {
+                            contentTMinusStatus.setText(hold);
+                        } else {
+                            contentTMinusStatus.setText("Watch Live webcast for up to date status.");
+                        }
+                    }
+                    contentTMinusStatus.setVisibility(View.VISIBLE);
+                    countdownDays.setText("- -");
+                    countdownHours.setText("- -");
+                    countdownMinutes.setText("- -");
+                    countdownSeconds.setText("- -");
+                }
+
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    time.setLength(0);
+
+                    // Calculate the Days/Hours/Mins/Seconds numerically.
+                    long longDays = millisUntilFinished / 86400000;
+                    long longHours = (millisUntilFinished / 3600000) % 24;
+                    long longMins = (millisUntilFinished / 60000) % 60;
+                    long longSeconds = (millisUntilFinished / 1000) % 60;
+
+                    String days = String.valueOf(longDays);
+                    String hours;
+                    String minutes;
+                    String seconds;
+
+                    // Translate those numerical values to string values.
+                    if (longHours < 10) {
+                        hours = "0" + String.valueOf(longHours);
+                    } else {
+                        hours = String.valueOf(longHours);
+                    }
+
+                    if (longMins < 10) {
+                        minutes = "0" + String.valueOf(longMins);
+                    } else {
+                        minutes = String.valueOf(longMins);
+                    }
+
+                    if (longSeconds < 10) {
+                        seconds = "0" + String.valueOf(longSeconds);
+                    } else {
+                        seconds = String.valueOf(longSeconds);
+                    }
+
+
+                    // Update the views
+                    if (Integer.valueOf(days) > 0) {
+                        countdownDays.setText(days);
+                    } else {
+                        countdownDays.setText("- -");
+                    }
+
+                    if (Integer.valueOf(hours) > 0) {
+                        countdownHours.setText(hours);
+                    } else if (Integer.valueOf(days) > 0) {
+                        countdownHours.setText("00");
+                    } else {
+                        countdownHours.setText("- -");
+                    }
+
+                    if (Integer.valueOf(minutes) > 0) {
+                        countdownMinutes.setText(minutes);
+                    } else if (Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
+                        countdownMinutes.setText("00");
+                    } else {
+                        countdownMinutes.setText("- -");
+                    }
+
+                    if (Integer.valueOf(seconds) > 0) {
+                        countdownSeconds.setText(seconds);
+                    } else if (Integer.valueOf(minutes) > 0 || Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
+                        countdownSeconds.setText("00");
+                    } else {
+                        countdownSeconds.setText("- -");
+                    }
+
+                    // Hide status if countdown is active.
+                    contentTMinusStatus.setVisibility(View.GONE);
+                }
+            }.start();
+
+        } else {
+            countdownLayout.setVisibility(View.GONE);
+            contentTMinusStatus.setVisibility(View.VISIBLE);
+            contentTMinusStatus.setTypeface(Typeface.DEFAULT);
+            if (sharedPreference.isNightModeActive(context)) {
+                contentTMinusStatus.setTextColor(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color));
+            } else {
+                contentTMinusStatus.setTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary));
+            }
+            if (timer != null) {
+                timer.cancel();
+            }
+            if (launch.getStatus() != 1) {
+                if (launch.getRocket().getAgencies().size() > 0) {
+                    contentTMinusStatus.setText(String.format("Pending confirmed GO from %s", launch.getRocket().getAgencies().get(0).getName()));
+                } else {
+                    contentTMinusStatus.setText("Pending confirmed Go for Launch from launch agency");
+                }
+            } else {
+                if (launch.getRocket().getAgencies().size() > 0) {
+                    contentTMinusStatus.setText(String.format("Waiting on exact launch time from %s", launch.getRocket().getAgencies().first().getName()));
+                } else {
+                    contentTMinusStatus.setText("Waiting on exact launch time from launch provider");
+                }
+            }
         }
     }
 
@@ -675,7 +866,8 @@ public class SummaryDetailFragment extends BaseFragment {
             }, new Realm.Transaction.OnSuccess() {
                 @Override
                 public void onSuccess() {
-                    CalendarSyncService.startActionSyncAll(context);
+                    CalendarSyncManager calendarSyncManager = new CalendarSyncManager(context);
+                    calendarSyncManager.syncAllEevnts();
                 }
             });
         } else {
@@ -746,14 +938,14 @@ public class SummaryDetailFragment extends BaseFragment {
                 launch_window_end.setVisibility(View.INVISIBLE);
             } else {
                 launch_window_start.setText(String.format("Window Start: %s",
-                                                          detailLaunch.getWindowstart()));
+                        detailLaunch.getWindowstart()));
                 launch_window_end.setVisibility(View.VISIBLE);
                 launch_window_end.setText(String.format("Window End: %s",
-                                                        detailLaunch.getWindowend()));
+                        detailLaunch.getWindowend()));
             }
         } else {
             launch_window_start.setText(String.format("Launch Time: %s",
-                                                      detailLaunch.getWindowstart()));
+                    detailLaunch.getWindowstart()));
             launch_window_end.setVisibility(View.INVISIBLE);
         }
     }
@@ -765,5 +957,22 @@ public class SummaryDetailFragment extends BaseFragment {
 
     public static SummaryDetailFragment newInstance() {
         return new SummaryDetailFragment();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(LaunchEvent event) {
+        setLaunch(event.launch);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 }

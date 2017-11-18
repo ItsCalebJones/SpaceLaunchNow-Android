@@ -35,8 +35,12 @@
 
 
     <color name="slide_one">#448AFF</color>
-    <color name="slide_two">#61aabe</color>
-    <color name="slide_three">#b5bdb3</color>
+    <color name="slide_two">#4db6ac</color>
+    <color name="slide_three">#f44336</color>
+
+    <color name="slide_one_background">#186DFF</color>
+    <color name="slide_two_background">#00897b</color>wz
+    <color name="slide_three_background">#f44336</color>
 
     <color name="black_overlay">#66000000</color>
 </resources>

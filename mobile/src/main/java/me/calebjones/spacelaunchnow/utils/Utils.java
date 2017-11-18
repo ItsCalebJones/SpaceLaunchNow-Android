@@ -510,12 +510,11 @@ public class Utils {
 
     public static Bitmap getBitMapFromUrl(Context context, String imageURL) {
         try {
-            return Glide.
-                    with(context).
-                    load(imageURL).
-                    asBitmap().
-                    into(200, 200). // Width and height
-                    get();
+            return GlideApp.with(context)
+                    .asBitmap()
+                    .load(imageURL)
+                    .into(200, 200)
+                    .get();
         } catch (InterruptedException | ExecutionException e) {
             Timber.e(e);
             return null;

@@ -3,7 +3,9 @@ package me.calebjones.spacelaunchnow.ui.debug;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.FileProvider;
@@ -15,11 +17,10 @@ import java.io.IOException;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
-import me.calebjones.spacelaunchnow.content.DataRepositoryManager;
+import me.calebjones.spacelaunchnow.content.data.DataRepositoryManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.JobUtils;
-import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
-import me.calebjones.spacelaunchnow.data.models.Constants;
+import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.Products;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
@@ -33,11 +34,15 @@ public class DebugPresenter implements DebugContract.Presenter {
     private DebugContract.Navigator navigator;
     private ListPreferences sharedPreference;
     private Realm realm;
+    private LibraryDataManager libraryDataManager;
+    private Context context;
 
-    public DebugPresenter(DebugContract.View view, ListPreferences preferences) {
+    public DebugPresenter(Context context, DebugContract.View view, ListPreferences preferences) {
         debugView = view;
         debugView.setPresenter(this);
         sharedPreference = preferences;
+        libraryDataManager = new LibraryDataManager(context);
+        this.context = context;
     }
 
     @Override
@@ -62,6 +67,10 @@ public class DebugPresenter implements DebugContract.Presenter {
                     realm.copyToRealmOrUpdate(SupporterHelper.getProduct(SupporterHelper.SKU_TWO_DOLLAR));
                 }
             });
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean("weather", true);
+            editor.apply();
         } else {
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
@@ -69,6 +78,10 @@ public class DebugPresenter implements DebugContract.Presenter {
                     realm.delete(Products.class);
                 }
             });
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean("weather", false);
+            editor.apply();
         }
         realm.close();
     }
@@ -97,7 +110,7 @@ public class DebugPresenter implements DebugContract.Presenter {
         }, new Realm.Transaction.OnSuccess() {
             @Override
             public void onSuccess() {
-                context.startService(new Intent(context, LaunchDataService.class).setAction(Constants.ACTION_GET_ALL_DATA));
+                libraryDataManager.getAllData();
             }
         });
         realm.close();
@@ -106,7 +119,7 @@ public class DebugPresenter implements DebugContract.Presenter {
 
     @Override
     public void syncNextLaunchClicked(Context context) {
-        context.startService(new Intent(context, LaunchDataService.class).setAction(Constants.ACTION_GET_NEXT_LAUNCH_MINI));
+        libraryDataManager.updateNextLaunchMini();
     }
 
     @Override
@@ -125,7 +138,7 @@ public class DebugPresenter implements DebugContract.Presenter {
 
     @Override
     public void syncVehiclesClicked(Context context) {
-        context.startService(new Intent(context, LaunchDataService.class).setAction(Constants.ACTION_GET_VEHICLES_DETAIL));
+        libraryDataManager.getVehicleDetails();
     }
 
     @Override

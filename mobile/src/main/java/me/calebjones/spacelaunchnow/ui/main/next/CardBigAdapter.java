@@ -41,6 +41,7 @@ import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.CountDownTimer;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -181,7 +182,8 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                                     holder.map_view.getHeight() / 2);
 
                             Timber.v("onPreDraw: %s", map.toString());
-                            Glide.with(context).load(map.toString())
+                            GlideApp.with(context)
+                                    .load(map.toString())
                                     .error(R.drawable.placeholder)
                                     .into(holder.map_view);
                             holder.map_view.getViewTreeObserver().removeOnPreDrawListener(this);

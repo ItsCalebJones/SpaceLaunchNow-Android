@@ -20,13 +20,13 @@ public interface LibraryService {
     @Headers({
             "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
     })
-    @GET("launch/next/1000&mode=verbose&limit=100")
+    @GET("launch/next/100?mode=verbose")
     Call<LaunchResponse> getUpcomingLaunchesAll(@Query("offset") int offset);
 
     @Headers({
             "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
     })
-    @GET("launch/next/50&mode=verbose&limit=10")
+    @GET("launch/next/50?mode=verbose")
     Call<LaunchResponse> getUpcomingLaunches(@Query("offset") int offset);
 
     @Headers({
@@ -40,7 +40,7 @@ public interface LibraryService {
     @Headers({
             "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
     })
-    @GET("launch?fields=net,name,location,status&limit=1000")
+    @GET("launch?limit=100&mode=verbose")
     Call<LaunchResponse> getLaunchesByDate(@Query("startdate") String start_date,
                                            @Query("enddate") String end_date,
                                            @Query("offset") int offset);
@@ -66,7 +66,7 @@ public interface LibraryService {
     @Headers({
             "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
     })
-    @GET("mission?mode=verbose&limit=500")
+    @GET("mission?mode=verbose&limit=100")
     Call<MissionResponse> getAllMisisons(@Query("offset") int offset);
 
     @Headers({

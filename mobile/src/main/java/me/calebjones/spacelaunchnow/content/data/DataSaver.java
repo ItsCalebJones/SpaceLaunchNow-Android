@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.content;
+package me.calebjones.spacelaunchnow.content.data;
 
 import android.content.Context;
 import android.content.Intent;
@@ -30,13 +30,13 @@ import timber.log.Timber;
 public class DataSaver {
 
     private Context context;
-    private DataManager dataManager;
+    private DataClientManager dataClientManager;
     public boolean isSaving = false;
     public boolean isSyncing = false;
 
-    public DataSaver(Context context, DataManager dataManager) {
+    public DataSaver(Context context, DataClientManager dataClientManager) {
         this.context = context;
-        this.dataManager = dataManager;
+        this.dataClientManager = dataClientManager;
     }
 
     public DataSaver(Context context) {
@@ -69,7 +69,7 @@ public class DataSaver {
                         .findFirst();
                 if (previous != null) {
                     if (isLaunchTimeChanged(previous, item)) {
-                        Timber.v("%s status has changed.", item.getName());
+                        Timber.i("%s status has changed.", item.getName());
                         LaunchNotification notification = mRealm.where(LaunchNotification.class).equalTo("id", item.getId()).findFirst();
                         mRealm.beginTransaction();
                         if (notification != null) {
@@ -79,7 +79,7 @@ public class DataSaver {
                         previous.resetNotifiers();
                         mRealm.copyToRealmOrUpdate(previous);
                         mRealm.commitTransaction();
-                        dataManager.getLaunchById(item.getId());
+                        dataClientManager.getLaunchById(item.getId());
                     }
                 }
             }
@@ -150,7 +150,7 @@ public class DataSaver {
     private static boolean isLaunchTimeChanged(Launch previous, Launch item) {
         if ((Math.abs(previous.getNet().getTime() - item.getNet().getTime()) >= 3600)) {
             return true;
-        } else if (previous.getStatus().intValue() != item.getStatus().intValue()) {
+        } else if (previous.getStatus() != null && item.getStatus() != null && previous.getStatus().intValue() != item.getStatus().intValue()) {
             return true;
         }
         return false;

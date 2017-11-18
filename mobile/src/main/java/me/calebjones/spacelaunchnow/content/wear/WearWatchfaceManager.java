@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.content.services;
+package me.calebjones.spacelaunchnow.content.wear;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,7 +7,9 @@ import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -23,28 +25,29 @@ import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import jp.wasabeef.glide.transformations.BlurTransformation;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import jp.wasabeef.glide.transformations.gpu.BrightnessFilterTransformation;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.content.services.BaseManager;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.RocketDetails;
+import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.transformations.SaturationTransformation;
 import timber.log.Timber;
 
 import static me.calebjones.spacelaunchnow.data.models.Constants.*;
 
-public class UpdateWearService extends BaseService {
+public class WearWatchfaceManager extends BaseManager {
 
-    public UpdateWearService() {
-        super("UpdateWearService");
-    }
+    private Context context;
 
-    @Override
-    protected void onHandleIntent(Intent intent) {
-        sendToWear(this);
+    public WearWatchfaceManager(Context context) {
+        super(context);
+        this.context = context;
     }
 
     // Create a data map and put data in it
-    private void sendToWear(Context context) {
+    public void updateWear() {
         Realm realm = Realm.getDefaultInstance();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -59,7 +62,7 @@ public class UpdateWearService extends BaseService {
                 if (launch.getRocket().getName() != null) {
                     if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
                         Timber.v("Sending image %s", launch.getRocket().getImageURL());
-                        sendImageToWear(context, launch.getRocket().getImageURL(), launch, modify);
+                        sendImageToWear(launch.getRocket().getImageURL(), launch, modify);
                     } else {
                         String query;
                         if (launch.getRocket().getName().contains("Space Shuttle")) {
@@ -73,18 +76,18 @@ public class UpdateWearService extends BaseService {
                                 .findFirst();
                         if (launchVehicle != null && launchVehicle.getImageURL() != null && launchVehicle.getImageURL().length() > 0) {
                             Timber.v("Sending image %s", launchVehicle.getImageURL());
-                            sendImageToWear(context, launchVehicle.getImageURL(), launch, modify);
+                            sendImageToWear(launchVehicle.getImageURL(), launch, modify);
                             Timber.d("Glide Loading: %s %s", launchVehicle.getLV_Name(), launchVehicle.getImageURL());
 
                         } else {
-                            sendImageToWear(context, context.getString(R.string.default_wear_image), launch, modify);
+                            sendImageToWear(context.getString(R.string.default_wear_image), launch, modify);
                         }
                     }
                 } else {
-                    sendImageToWear(context, context.getString(R.string.default_wear_image), launch, modify);
+                    sendImageToWear(context.getString(R.string.default_wear_image), launch, modify);
                 }
             } else {
-                sendImageToWear(context, context.getString(R.string.default_wear_image), launch, modify);
+                sendImageToWear(context.getString(R.string.default_wear_image), launch, modify);
             }
         }
         } catch (IndexOutOfBoundsException error){
@@ -93,7 +96,7 @@ public class UpdateWearService extends BaseService {
         realm.close();
     }
 
-    public static void sendImageToWear(Context context, String image, final Launch launch, boolean modify) {
+    private void sendImageToWear(String image, final Launch launch, boolean modify) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         final GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(context)
                 .addApi(Wearable.API)
@@ -121,12 +124,15 @@ public class UpdateWearService extends BaseService {
 
             if (modify) {
                 try {
-                    Bitmap resource = Glide.with(context)
-                            .load(image)
+                    MultiTransformation multi = new MultiTransformation(new SaturationTransformation(context, satFloat),
+                            new BlurTransformation(radius, blur),
+                            new BrightnessFilterTransformation(dimFloat));
+                    Bitmap resource = GlideApp.with(context)
                             .asBitmap()
+                            .load(image)
                             .skipMemoryCache(true)
-                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                            .transform(new SaturationTransformation(context, satFloat), new BlurTransformation(context, radius, blur), new BrightnessFilterTransformation(context, dimFloat))
+                            .diskCacheStrategy(DiskCacheStrategy.DATA)
+                            .apply(RequestOptions.bitmapTransform(multi))
                             .into(300, 300)
                             .get();
 
@@ -148,9 +154,9 @@ public class UpdateWearService extends BaseService {
             } else {
                 try {
                     Bitmap resource = Glide.with(context)
-                            .load(image)
                             .asBitmap()
-                            .transform(new BrightnessFilterTransformation(context, -.1f))
+                            .load(image)
+                            .apply(RequestOptions.bitmapTransform(new BrightnessFilterTransformation(-.1f)))
                             .into(300, 300)
                             .get();
                     Asset asset = createAssetFromBitmap(resource);

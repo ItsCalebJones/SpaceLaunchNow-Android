@@ -20,11 +20,17 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.widget.RelativeLayout;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -36,16 +42,26 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.transitionseverywhere.TransitionManager;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.mrapp.android.preference.activity.PreferenceActivity;
 import io.fabric.sdk.android.Fabric;
+import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.content.events.FilterViewEvent;
+import me.calebjones.spacelaunchnow.ui.intro.OnboardingActivity;
 import me.calebjones.spacelaunchnow.ui.main.launches.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.main.missions.MissionFragment;
 import me.calebjones.spacelaunchnow.ui.main.next.NextLaunchFragment;
@@ -57,8 +73,6 @@ import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;
-import za.co.riggaroo.materialhelptutorial.TutorialItem;
-import za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity;
 
 public class MainActivity extends BaseActivity {
 
@@ -66,6 +80,10 @@ public class MainActivity extends BaseActivity {
     private static final int REQUEST_CODE_INTRO = 1837;
     private static ListPreferences listPreferences;
     private final Handler mDrawerActionHandler = new Handler();
+    @BindView(R.id.adView)
+    AdView adView;
+    @BindView(R.id.container)
+    RelativeLayout container;
     private LaunchesViewPager mlaunchesViewPager;
     private MissionFragment mMissionFragment;
     private NextLaunchFragment mUpcomingFragment;
@@ -73,12 +91,12 @@ public class MainActivity extends BaseActivity {
     private Toolbar toolbar;
     private Drawer result = null;
     private SharedPreferences sharedPref;
-    private NavigationView navigationView;
     private SwitchPreferences switchPreferences;
     private CustomTabActivityHelper customTabActivityHelper;
     private Context context;
+    private boolean adviewEnabled = false;
 
-    private static final int REQUEST_CODE = 5467;
+    static final int SHOW_INTRO = 1;
 
     private int mNavItemId;
 
@@ -98,10 +116,13 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Timber.d("onCreate");
         if (!Fabric.isInitialized()) {
             Fabric.with(this, new Crashlytics());
         }
-        Timber.d("onCreate");
+        if (!Once.beenDone(Once.THIS_APP_INSTALL, "showTutorial")) {
+            startActivityForResult(new Intent(this, OnboardingActivity.class), SHOW_INTRO);
+        }
 
         // Get intent, action and MIME type
         Intent intent = getIntent();
@@ -115,10 +136,7 @@ public class MainActivity extends BaseActivity {
         }
         listPreferences = ListPreferences.getInstance(this.context);
         switchPreferences = SwitchPreferences.getInstance(this.context);
-        if (listPreferences.getFirstBoot()) {
-            switchPreferences.setPrevFiltered(false);
-            loadTutorial();
-        }
+
         int m_theme;
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         this.context = getApplicationContext();
@@ -144,11 +162,33 @@ public class MainActivity extends BaseActivity {
         setTheme(m_theme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+
+        if (!SupporterHelper.isSupporter()) {
+            adView.loadAd(new AdRequest.Builder().build());
+            adView.setAdListener(new AdListener() {
+                @Override
+                public void onAdFailedToLoad(int i) {
+                    adviewEnabled = false;
+                    super.onAdFailedToLoad(i);
+                }
+
+                @Override
+                public void onAdLoaded() {
+                    adviewEnabled = true;
+                    showAd();
+                    super.onAdLoaded();
+                }
+            });
+        } else {
+            adviewEnabled = false;
+            hideAd();
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setupWindowAnimations();
         }
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // load saved navigation state if present
@@ -203,10 +243,16 @@ public class MainActivity extends BaseActivity {
                                 .withIdentifier(R.id.menu_feedback)
                                 .withSelectable(false),
                         new SecondaryDrawerItem()
-                                .withIcon(FontAwesome.Icon.faw_twitter)
+                                .withIcon(CommunityMaterial.Icon.cmd_twitter)
                                 .withName("Twitter")
-                                .withDescription("Stay Connected!")
+                                .withDescription("Stay connected on Twitter!")
                                 .withIdentifier(R.id.menu_twitter)
+                                .withSelectable(false),
+                        new SecondaryDrawerItem()
+                                .withIcon(CommunityMaterial.Icon.cmd_discord)
+                                .withName("Discord")
+                                .withDescription("Join us on Discord during launches!")
+                                .withIdentifier(R.id.menu_discord)
                                 .withSelectable(false)
                 ).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -218,16 +264,16 @@ public class MainActivity extends BaseActivity {
                     }
                 }).build();
 
-        if (!SupporterHelper.isSupporter()){
+        if (!SupporterHelper.isSupporter()) {
             result.addStickyFooterItem(
-                            new PrimaryDrawerItem().withName("Become a Supporter")
-                                    .withDescription("Get Pro Features")
-                                    .withIcon(GoogleMaterial.Icon.gmd_mood)
-                                    .withIdentifier(R.id.menu_support)
-                                    .withSelectable(false));
+                    new PrimaryDrawerItem().withName("Become a Supporter")
+                            .withDescription("Get Pro Features")
+                            .withIcon(GoogleMaterial.Icon.gmd_mood)
+                            .withIdentifier(R.id.menu_support)
+                            .withSelectable(false));
         }
 
-        if (SupporterHelper.isSupporter()){
+        if (SupporterHelper.isSupporter()) {
             result.addStickyFooterItem(
                     new PrimaryDrawerItem().withName("Thank you for the support!")
                             .withIcon(GoogleMaterial.Icon.gmd_mood)
@@ -235,11 +281,11 @@ public class MainActivity extends BaseActivity {
                             .withSelectable(false));
         }
 
-        checkFirstBoot();
+        navigate(mNavItemId);
     }
 
     private void setupWindowAnimations() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Slide slide = new Slide();
             slide.setDuration(1000);
             getWindow().setEnterTransition(slide);
@@ -247,34 +293,28 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    public int reverseNumber(int num, int min, int max) {
-        int number = (max + min) - num;
-        return number;
-    }
-
+    @Override
     public void onStart() {
         super.onStart();
         Timber.v("MainActivity onStart!");
         customTabActivityHelper.bindCustomTabsService(this);
         mayLaunchUrl(Uri.parse("https://launchlibrary.net/"));
+        EventBus.getDefault().register(this);
+
     }
 
+    @Override
     public void onStop() {
-        super.onStop();
         Timber.v("MainActivity onStop!");
         customTabActivityHelper.unbindCustomTabsService(this);
-    }
-
-    public void checkFirstBoot() {
-        if (!listPreferences.getFirstBoot()) {
-            navigate(mNavItemId);
-        }
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     public void showWhatsNew() {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View customView = inflater.inflate(R.layout.whats_new, null);
-        View nightView = inflater.inflate(R.layout.whats_new_night, null);
+
+
 
         MaterialStyledDialog.Builder dialog = new MaterialStyledDialog.Builder(this)
                 .withIconAnimation(false)
@@ -300,9 +340,11 @@ public class MainActivity extends BaseActivity {
 
         if (listPreferences.isNightModeActive(this)) {
             dialog.setHeaderColor(R.color.darkPrimary);
+            View nightView = inflater.inflate(R.layout.whats_new_night, null);
             dialog.setCustomView(nightView);
         } else {
             dialog.setHeaderColor(R.color.colorPrimary);
+            View customView = inflater.inflate(R.layout.whats_new, null);
             dialog.setCustomView(customView);
         }
         dialog.show();
@@ -445,7 +487,7 @@ public class MainActivity extends BaseActivity {
                 Utils.openCustomTab(this, getApplicationContext(), "https://launchlibrary.net/");
                 break;
             case R.id.menu_settings:
-                Intent settingsIntent = new Intent(this, me.calebjones.spacelaunchnow.ui.settings.SettingsActivity.class);
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
                 settingsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(settingsIntent);
                 break;
@@ -464,6 +506,12 @@ public class MainActivity extends BaseActivity {
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 startActivity(i);
+                break;
+            case R.id.menu_discord:
+                String discordUrl = "https://discord.gg/WVfzEDW";
+                Intent discordIntent = new Intent(Intent.ACTION_VIEW);
+                discordIntent.setData(Uri.parse(discordUrl));
+                startActivity(discordIntent);
             default:
                 // ignore
                 break;
@@ -491,7 +539,7 @@ public class MainActivity extends BaseActivity {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        String url = "https://www.reddit.com/r/spacelaunchnow/";
+                        String url = "https://discord.gg/WVfzEDW";
                         Intent i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(url));
                         startActivity(i);
@@ -505,42 +553,37 @@ public class MainActivity extends BaseActivity {
         outState.putInt(NAV_ITEM_ID, mNavItemId);
     }
 
-    public void loadTutorial() {
-        Intent mainAct = new Intent(this, MaterialTutorialActivity.class);
-        mainAct.putParcelableArrayListExtra(MaterialTutorialActivity.MATERIAL_TUTORIAL_ARG_TUTORIAL_ITEMS, getTutorialItems());
-        startActivityForResult(mainAct, REQUEST_CODE);
+    private void hideAd() {
+        adView.setVisibility(View.GONE);
     }
 
-    private ArrayList<TutorialItem> getTutorialItems() {
-        TutorialItem tutorialItem1 = new TutorialItem("Space Launch Now", "Keep up to date on all your favorite  orbital launches, missions, and launch vehicles.",
-                R.color.slide_one, R.drawable.intro_slide_one_foreground, R.drawable.intro_slide_background);
+    private void showAd() {
+        Timber.v("Showing Ad!");
+        if (adviewEnabled && adView.getVisibility() == View.GONE) {
+            adView.setVisibility(View.VISIBLE);
+        }
+    }
 
-        TutorialItem tutorialItem2 = new TutorialItem("Notification for Launches", "Get notifications for upcoming launches and look into the history of spaceflight",
-                R.color.slide_two, R.drawable.intro_slide_two_foreground, R.drawable.intro_slide_background);
-
-        TutorialItem tutorialItem4 = new TutorialItem("Find Launch Vehicles", "Get to know the vehicles that have taken us to orbit.",
-                R.color.slide_three, R.drawable.intro_slide_four_foreground, R.drawable.intro_slide_background);
-
-        ArrayList<TutorialItem> tutorialItems = new ArrayList<>();
-        tutorialItems.add(tutorialItem1);
-        tutorialItems.add(tutorialItem2);
-        tutorialItems.add(tutorialItem4);
-
-        return tutorialItems;
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(FilterViewEvent event) {
+        if (!SupporterHelper.isSupporter()){
+            if (event.isOpened){
+                hideAd();
+            } else {
+                showAd();
+            }
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE) {
+        // Check which request we're responding to
+        if (requestCode == SHOW_INTRO) {
+            // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-                if (listPreferences.getFirstBoot()) {
-                    listPreferences.setFirstBoot(false);
-                }
-            } else {
-                listPreferences.setFirstBoot(false);
+                Once.markDone("showTutorial");
+                navigate(mNavItemId);
             }
-            navigate(mNavItemId);
         }
     }
 }

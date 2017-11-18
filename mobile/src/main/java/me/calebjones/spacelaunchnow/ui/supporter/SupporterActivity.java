@@ -3,9 +3,11 @@ package me.calebjones.spacelaunchnow.ui.supporter;
 import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -204,6 +206,10 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         getRealm().beginTransaction();
         getRealm().copyToRealmOrUpdate(product);
         getRealm().commitTransaction();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("weather", true);
+        editor.apply();
         Analytics.from(this).sendPurchaseEvent(product, productId);
     }
 
@@ -212,6 +218,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         Timber.v("Purchase History restored.");
         if (bp != null && bp.listOwnedProducts().size() > 0) {
             animatePurchase();
+
             SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Purchase history restored.");
         }
     }

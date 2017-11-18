@@ -28,6 +28,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.Rocket;
 import me.calebjones.spacelaunchnow.data.models.RocketDetails;
 import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
+import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
 public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdapter.ViewHolder> {
@@ -131,9 +132,8 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
             holder.fab.setVisibility(View.VISIBLE);
         }
 
-        Glide.with(mContext)
+        GlideApp.with(mContext)
                 .load(item.getImageURL())
-                .centerCrop()
                 .placeholder(R.drawable.placeholder)
                 .error(R.drawable.placeholder)
                 .into(holder.item_icon);

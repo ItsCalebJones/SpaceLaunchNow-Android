@@ -14,6 +14,5 @@ public class OnUpgradeReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         SyncJob.schedulePeriodicJob(context);
         UpdateJob.scheduleJob(context);
-        context.startService(new Intent(context, NextLaunchTracker.class));
     }
 }
