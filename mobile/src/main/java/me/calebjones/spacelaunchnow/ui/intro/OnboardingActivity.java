@@ -48,7 +48,7 @@ public class OnboardingActivity extends AhoyOnboarderActivity {
         for (AhoyOnboarderCard page : pages) {
             page.setTitleColor(R.color.material_typography_primary_text_color_light);
             page.setDescriptionColor(R.color.material_typography_secondary_text_color_light);
-            page.setIconLayoutParams(1000, 1000, 16, 8, 8, 16);
+            page.setIconLayoutParams(750, 750, 16, 8, 8, 16);
         }
 
         setFinishButtonTitle("Done");
@@ -57,7 +57,7 @@ public class OnboardingActivity extends AhoyOnboarderActivity {
         List<Integer> colorList = new ArrayList<>();
         colorList.add(R.color.slide_one_background);
         colorList.add(R.color.slide_two_background);
-        colorList.add(R.color.slide_three);
+        colorList.add(R.color.slide_three_background);
 
         setColorBackground(colorList);
         setImageBackground(R.drawable.intro_slide_background);
