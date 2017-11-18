@@ -1,5 +1,6 @@
 package me.calebjones.spacelaunchnow.ui.intro;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -67,7 +68,8 @@ public class OnboardingActivity extends AhoyOnboarderActivity {
 
     @Override
     public void onFinishButtonPressed() {
-        Once.markDone("showTutorial");
-        startActivity(new Intent(this, MainActivity.class));
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
     }
 }

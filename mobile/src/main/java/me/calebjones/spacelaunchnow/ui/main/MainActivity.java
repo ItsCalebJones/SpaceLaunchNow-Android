@@ -96,6 +96,7 @@ public class MainActivity extends BaseActivity {
     private Context context;
     private boolean adviewEnabled = false;
 
+    static final int SHOW_INTRO = 1;
 
     private int mNavItemId;
 
@@ -115,10 +116,13 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Timber.d("onCreate");
         if (!Fabric.isInitialized()) {
             Fabric.with(this, new Crashlytics());
         }
-        Timber.d("onCreate");
+        if (!Once.beenDone(Once.THIS_APP_INSTALL, "showTutorial")) {
+            startActivityForResult(new Intent(this, OnboardingActivity.class), SHOW_INTRO);
+        }
 
         // Get intent, action and MIME type
         Intent intent = getIntent();
@@ -132,9 +136,6 @@ public class MainActivity extends BaseActivity {
         }
         listPreferences = ListPreferences.getInstance(this.context);
         switchPreferences = SwitchPreferences.getInstance(this.context);
-        if (!Once.beenDone(Once.THIS_APP_INSTALL, "showTutorial")) {
-            startActivity(new Intent(this, OnboardingActivity.class));
-        }
 
         int m_theme;
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -568,6 +569,18 @@ public class MainActivity extends BaseActivity {
                 hideAd();
             } else {
                 showAd();
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == SHOW_INTRO) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                Once.markDone("showTutorial");
+                navigate(mNavItemId);
             }
         }
     }
