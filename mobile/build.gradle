@@ -91,11 +91,11 @@ android {
             zipAlignEnabled true
             minifyEnabled true
             shrinkResources true
-            versionNameSuffix "-${defaultConfig.versionCode}"
+            versionNameSuffix "-b${defaultConfig.versionCode}"
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
-                    outputFileName = "SpaceLaunchNow-release-${variant.versionName}.${variant.versionCode}-${details.branchName}-${details.gitHash}.apk"
+                    outputFileName = "SpaceLaunchNow-release-${variant.versionName}-${details.branchName}-${details.gitHash}.apk"
                 }
             }
         }
