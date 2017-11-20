@@ -22,6 +22,8 @@ public final class Constants {
     public static final String ACTION_CHECK_NEXT_LAUNCH_TIMER = "CHECK_NEXT_LAUNCH_TIMER";
     public static final String SYNC_NOTIFIERS = "SYNC_LAUNCH_NOTIFIERS";
     public static final String ACTION_GET_UP_LAUNCHES_MINI = "GET_UP_LAUNCHES_MINI";
+    public static final String ACTION_UPDATE_LAUNCH_CARD = "UPDATE_LAUNCH_CARD";
+    public static final String ACTION_UPDATE_WORD_TIMER = "UPDATE_WORD_TIMER";
 
     public static int NOTIF_ID = 568975;
     public static int NOTIF_ID_DAY = 568985;
@@ -52,5 +54,4 @@ public final class Constants {
 
     private Constants() {
     }
-
 }

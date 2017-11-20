@@ -8,10 +8,11 @@ import android.content.Intent;
 import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.SyncJob;
+import me.calebjones.spacelaunchnow.content.jobs.UpdateLaunchCardJob;
+import me.calebjones.spacelaunchnow.content.jobs.UpdateWordTimerJob;
 import me.calebjones.spacelaunchnow.content.wear.WearWatchfaceManager;
-import me.calebjones.spacelaunchnow.widget.LaunchCardCompactWidgetProvider;
-import me.calebjones.spacelaunchnow.widget.LaunchTimerWidgetProvider;
-import me.calebjones.spacelaunchnow.widget.LaunchWordTimerWidgetProvider;
+import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactWidgetProvider;
+import me.calebjones.spacelaunchnow.widget.wordtimer.LaunchWordTimerWidgetProvider;
 import timber.log.Timber;
 
 public class NextLaunchTracker {
@@ -38,23 +39,17 @@ public NextLaunchTracker(Context context) {
     }
 
     private void updateWidgets() {
-        Intent cardIntent = new Intent(context, LaunchCardCompactWidgetProvider.class);
-        cardIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         int cardIds[] = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, LaunchCardCompactWidgetProvider.class));
-        cardIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, cardIds);
-        context.sendBroadcast(cardIntent);
 
-        Intent timerIntent = new Intent(context, LaunchTimerWidgetProvider.class);
-        timerIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        int timerIds[] = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, LaunchTimerWidgetProvider.class));
-        timerIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, timerIds);
-        context.sendBroadcast(timerIntent);
+        for (int id : cardIds){
+            UpdateLaunchCardJob.runJobImmediately(id);
+        }
 
-        Intent wordIntent = new Intent(context, LaunchWordTimerWidgetProvider.class);
-        wordIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        int wordIds[] = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, LaunchWordTimerWidgetProvider.class));
-        wordIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, wordIds);
-        context.sendBroadcast(wordIntent);
+        int timerIds[] = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, LaunchWordTimerWidgetProvider.class));
+
+        for (int id : timerIds){
+            UpdateWordTimerJob.runJobImmediately(id);
+        }
     }
 
     private void syncCalendar() {

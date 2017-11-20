@@ -77,8 +77,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:src="@drawable/ic_refresh_white"
-        android:layout_marginTop="4dp"
-        android:layout_marginRight="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
         android:id="@+id/widget_compact_card_refresh_button" />
 
 </RelativeLayout>

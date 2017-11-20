@@ -94,9 +94,6 @@
         </receiver>
 
         <activity
-            android:name="za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
             android:name=".ui.settings.AboutActivity"
             android:theme="@style/BaseAppTheme" />
 
@@ -124,9 +121,15 @@
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/BaseAppTheme" />
 
+        <activity android:name=".widget.launchcard.LaunchCardConfigurationActivity" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
         <receiver
-            android:name=".widget.LaunchCardCompactWidgetProvider"
-            android:label="Launch Card">
+            android:name=".widget.launchcard.LaunchCardCompactWidgetProvider"
+            android:label="Compact Card">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="me.calebjones.spacelaunchnow.widget.LaunchCardCompactWidgetProvider.ACTION_WIDGET_REFRESH" />
@@ -137,8 +140,8 @@
                 android:resource="@xml/widget_launch_card_compact_info" />
         </receiver>
         <receiver
-            android:name=".widget.LaunchWordTimerWidgetProvider"
-            android:label="Next Launch">
+            android:name=".widget.wordtimer.LaunchWordTimerWidgetProvider"
+            android:label="Launch Timer">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_REFRESH" />
@@ -176,6 +179,11 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <service android:name=".widget.WidgetJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <receiver android:name=".widget.WidgetBroadcastReceiver"/>
 
         <service
             android:name="com.evernote.android.job.gcm.PlatformGcmService"

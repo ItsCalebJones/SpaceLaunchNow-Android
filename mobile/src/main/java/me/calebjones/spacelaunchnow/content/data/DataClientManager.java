@@ -202,6 +202,8 @@ public class DataClientManager {
                         context.startService(new Intent(context, NextLaunchTracker.class));
                     }
                 } else {
+                    isUpcomingLaunch = false;
+
                     dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, false, call, ErrorUtil.parseLibraryError(response)));
                 }
             }
@@ -274,6 +276,7 @@ public class DataClientManager {
                         context.startService(new Intent(context, NextLaunchTracker.class));
                     }
                 } else {
+                    isUpcomingLaunchAll = false;
                     dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES, false, call, ErrorUtil.parseLibraryError(response)));
                 }
             }
@@ -311,6 +314,7 @@ public class DataClientManager {
                         context.startService(new Intent(context, NextLaunchTracker.class));
                     }
                 } else {
+                    isUpcomingLaunchAll = false;
                     dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_ALL, false, call, ErrorUtil.parseLibraryError(response)));
                 }
             }
@@ -349,6 +353,7 @@ public class DataClientManager {
                         context.startService(new Intent(context, NextLaunchTracker.class));
                     }
                 } else {
+                    isUpcomingLaunchAll = false;
                     dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_ALL, false, call, ErrorUtil.parseLibraryError(response)));
                 }
             }
@@ -373,6 +378,7 @@ public class DataClientManager {
             public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
 
                 if (response.isSuccessful()) {
+                    isNextLaunches = false;
                     dataSaver.saveLaunchesToRealm(response.body().getLaunches(), true);
 
                     dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_MINI, true, call));
