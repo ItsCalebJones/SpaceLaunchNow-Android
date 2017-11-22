@@ -1,85 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_compact_card_frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <LinearLayout
-        android:id="@+id/TitleCard"
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="8dp"
-        android:orientation="horizontal"
-        android:background="@drawable/layout_rounded_background_dark_transparent">
+        android:layout_gravity="center"
+        android:layout_weight="1">
 
         <ImageView
-            android:id="@+id/widget_categoryIcon"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_unknown_white"
-            android:scaleType="centerCrop"
-            android:padding="10dp"
-            android:layout_marginLeft="8dp" />
+            android:id="@+id/bgcolor"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scaleType="fitXY" />
 
         <LinearLayout
+            android:id="@+id/TitleCard"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:layout_gravity="center"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="8dp">
 
-            <TextView
-                android:id="@+id/widget_launch_rocket"
+            <ImageView
+                android:id="@+id/widget_categoryIcon"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:padding="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_unknown_white" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="2dp"
-                android:fontFamily="sans-serif-condensed"
-                android:gravity="left"
-                android:maxLines="2"
-                android:padding="2dp"
-                android:text="Unknown Launch Vehicle"
-                android:textColor="@color/dark_theme_primary_text_color"
-                android:textSize="24sp"
-                android:textStyle="normal" />
+                android:layout_gravity="center"
+                android:layout_marginLeft="4dp"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/widget_location"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:gravity="left"
-                android:maxLines="2"
-                android:padding="2dp"
-                android:singleLine="false"
-                android:textSize="18sp"
-                android:textColor="@color/dark_theme_secondary_text_color"
-                android:text="Unknown Launch Location" />
+                <TextView
+                    android:id="@+id/widget_launch_rocket"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="2dp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:gravity="left"
+                    android:maxLines="2"
+                    android:padding="2dp"
+                    android:text="Unknown Launch Vehicle"
+                    android:textColor="@color/dark_theme_primary_text_color"
+                    android:textSize="24sp"
+                    android:textStyle="normal" />
 
-            <TextView
-                android:id="@+id/widget_launch_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:gravity="left"
-                android:maxLines="2"
-                android:padding="2dp"
-                android:textSize="18sp"
-                android:singleLine="false"
-                android:textColor="@color/dark_theme_secondary_text_color"
-                android:text="Unknown Launch Date" />
+                <TextView
+                    android:id="@+id/widget_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:maxLines="3"
+                    android:padding="2dp"
+                    android:singleLine="false"
+                    android:text="Unknown Launch Location"
+                    android:textColor="@color/dark_theme_secondary_text_color"
+                    android:textSize="18sp" />
 
+                <TextView
+                    android:id="@+id/widget_launch_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:maxLines="1"
+                    android:padding="2dp"
+                    android:singleLine="false"
+                    android:text="Unknown Launch Date"
+                    android:textColor="@color/dark_theme_secondary_text_color"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
-    <ImageView
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:src="@drawable/ic_refresh_white"
-        android:layout_marginTop="4dp"
-        android:layout_marginRight="4dp"
-        android:id="@+id/widget_compact_card_refresh_button" />
+        <ImageView
+            android:id="@+id/widget_compact_card_refresh_button"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="top|right"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_refresh_white" />
 
-</RelativeLayout>
+    </FrameLayout>
+
+</LinearLayout>

@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.utils;
+package me.calebjones.spacelaunchnow.widget.wordtimer.util;
 
 import java.util.ArrayList;
 import java.util.List;

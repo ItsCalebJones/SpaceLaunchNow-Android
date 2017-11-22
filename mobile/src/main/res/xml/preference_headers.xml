@@ -17,7 +17,7 @@
         android:fragment="me.calebjones.spacelaunchnow.ui.settings.fragments.AppearanceFragment"
         android:icon="@drawable/ic_appearance"
         android:title="Appearance"
-        android:summary="Customize app theme and colors."
+        android:summary="Customize app theme, widgets and colors."
         android:breadCrumbTitle="Appearance"/>
     <header
         android:fragment="me.calebjones.spacelaunchnow.ui.settings.fragments.WearFragment"
