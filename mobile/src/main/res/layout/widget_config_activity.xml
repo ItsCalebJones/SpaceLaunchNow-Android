@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.main.MainActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="0dp">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:text="Select a Background Color"
+        android:layout_margin="@dimen/material_baseline_grid_2x"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="25dp">
+
+        <com.jaredrummler.android.colorpicker.ColorPickerView
+            android:id="@id/cpv_color_picker_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            app:cpv_alphaChannelVisible="true"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignLeft="@id/cpv_color_picker_view"
+            android:layout_alignRight="@id/cpv_color_picker_view"
+            android:layout_below="@id/cpv_color_picker_view"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+            <com.jaredrummler.android.colorpicker.ColorPanelView
+                android:id="@id/cpv_color_panel_old"
+                android:layout_width="0px"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.5"
+                app:cpv_borderColor="#0099cc"
+                app:cpv_colorShape="square"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:gravity="center"
+                android:text="→"
+                android:textSize="20sp"/>
+
+            <com.jaredrummler.android.colorpicker.ColorPanelView
+                android:id="@id/cpv_color_panel_new"
+                android:layout_width="0px"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.5"
+                app:cpv_colorShape="square"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/buttonbar"
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/cancelButton"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@android:string/cancel"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/okButton"
+            style="@style/Widget.AppCompat.Button.Colored"
+            app:backgroundTint="@color/colorPrimary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@android:string/ok"/>
+    </LinearLayout>
+
+</LinearLayout>

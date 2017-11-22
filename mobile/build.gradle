@@ -137,6 +137,7 @@ dependencies {
     compile('com.mikepenz:aboutlibraries:5.9.7@aar') {
         transitive = true
     }
+    compile 'com.jaredrummler:colorpicker:1.0.1'
     compile "com.andkulikov:transitionseverywhere:1.7.7"
     compile 'org.greenrobot:eventbus:3.1.1'
     compile 'com.afollestad.material-dialogs:core:0.9.4.3'
