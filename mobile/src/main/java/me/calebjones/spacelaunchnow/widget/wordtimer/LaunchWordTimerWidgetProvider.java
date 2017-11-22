@@ -7,8 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import me.calebjones.spacelaunchnow.content.jobs.UpdateLaunchCardJob;
-import me.calebjones.spacelaunchnow.content.jobs.UpdateWordTimerJob;
 import timber.log.Timber;
 
 
@@ -20,8 +18,9 @@ public class LaunchWordTimerWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         Timber.v("onUpdate");
-        for (int widgetId : appWidgetIds) {
-            UpdateWordTimerJob.runJobImmediately(widgetId);
+        LaunchWordTimerManager launchWordTimerManager = new LaunchWordTimerManager(context);
+        for (int appWidgetId : appWidgetIds) {
+            launchWordTimerManager.updateAppWidget(appWidgetId);
         }
     }
 
@@ -43,7 +42,8 @@ public class LaunchWordTimerWidgetProvider extends AppWidgetProvider {
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager,
                                           int appWidgetId, Bundle newOptions) {
-        UpdateWordTimerJob.runJobImmediately(appWidgetId);
+        LaunchWordTimerManager launchWordTimerManager = new LaunchWordTimerManager(context);
+        launchWordTimerManager.updateAppWidget(appWidgetId);
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
     }
 }

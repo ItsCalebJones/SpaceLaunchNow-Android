@@ -11,6 +11,7 @@ import android.preference.PreferenceCategory;
 import android.support.v7.app.AppCompatDelegate;
 import android.widget.Toast;
 
+import com.jaredrummler.android.colorpicker.ColorPreference;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -20,15 +21,25 @@ import com.karumi.dexter.listener.single.PermissionListener;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
+import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
+import me.calebjones.spacelaunchnow.widget.WidgetBroadcastReceiver;
 import timber.log.Timber;
 
 public class AppearanceFragment extends BaseSettingFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private SwitchPreferences switchPreferences;
     private Context context;
+    private Preference widgetPresets;
+    private ColorPreference widgetBackgroundColor;
+    private ColorPreference widgetTextColor;
+    private ColorPreference widgetSecondaryTextColor;
+    private ColorPreference widgetIconColor;
+    private boolean isCustomColor = false;
+    private int[] textPrimaryArray;
+    private int[] textSecondaryArray;
+    private int[] backgroundArray;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,6 +47,9 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
         addPreferencesFromResource(R.xml.appearance_preferences);
         switchPreferences = SwitchPreferences.getInstance(getActivity());
         context = getActivity();
+        textPrimaryArray = getResources().getIntArray(R.array.widget_presets_values_text_primary);
+        textSecondaryArray = getResources().getIntArray(R.array.widget_presets_values_text_secondary);
+        backgroundArray = getResources().getIntArray(R.array.widget_presets_values_background);
         setupPreferences();
         setName("Appearance Fragment");
     }
@@ -101,21 +115,80 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.setAction("me.calebjones.spacelaunchnow.NIGHTMODE");
             startActivity(intent);
-        }    else {
+        } else {
             Analytics.from(this).sendPreferenceEvent(key);
+        }
+
+        if (key.equals("widget_background_color") || key.equals("widget_text_color") || key.equals("widget_secondary_text_color") || key.equals("widget_icon_color")) {
+            Intent nextIntent = new Intent(context, WidgetBroadcastReceiver.class);
+            nextIntent.putExtra("updateUIOnly", true);
+            context.sendBroadcast(nextIntent);
+        }
+
+        if  (key.equals("widget_theme_round_corner")){
+            Intent nextIntent = new Intent(context, WidgetBroadcastReceiver.class);
+            nextIntent.putExtra("updateUIOnly", true);
+            context.sendBroadcast(nextIntent);
+        }
+
+        if (key.equals("widget_presets")) {
+
+            checkWidgetPreset(Integer.parseInt(sharedPreferences.getString("widget_presets", "2")));
+            Intent nextIntent = new Intent(context, WidgetBroadcastReceiver.class);
+            nextIntent.putExtra("updateUIOnly", true);
+            context.sendBroadcast(nextIntent);
+        }
+    }
+
+    private void checkWidgetPreset(Integer arrayPosition) {
+        int backgroundColor = backgroundArray[arrayPosition];
+        int primrayTextColor = textPrimaryArray[arrayPosition];
+        int secondaryTextColor = textSecondaryArray[arrayPosition];
+        Timber.v("Preset # %d", arrayPosition);
+        if (arrayPosition != 8) {
+            widgetBackgroundColor.saveValue(backgroundColor);
+            widgetTextColor.saveValue(primrayTextColor);
+            widgetSecondaryTextColor.saveValue(secondaryTextColor);
+            widgetIconColor.saveValue(primrayTextColor);
+            isCustomColor = false;
+            Timber.v("Applied widget colors");
+        } else {
+            isCustomColor = true;
         }
     }
 
     private void setupPreferences() {
+        widgetPresets = findPreference("widget_presets");
+        widgetBackgroundColor = (ColorPreference) findPreference("widget_background_color");
+        widgetTextColor = (ColorPreference) findPreference("widget_text_color");
+        widgetSecondaryTextColor = (ColorPreference) findPreference("widget_secondary_text_color");
+        widgetIconColor = (ColorPreference) findPreference("widget_icon_color");
         if (!SupporterHelper.isSupporter()) {
             Preference weather = findPreference("weather");
             weather.setEnabled(false);
             weather.setSelectable(false);
+
             PreferenceCategory prefCatWeather = (PreferenceCategory) findPreference("weather_category");
             prefCatWeather.setTitle(prefCatWeather.getTitle() + " (Supporter Feature)");
             Preference measurement = findPreference("weather_US_SI");
             measurement.setEnabled(false);
             measurement.setSelectable(false);
+
+            PreferenceCategory prefCatWidget = (PreferenceCategory) findPreference("widget_category");
+            prefCatWidget.setTitle(prefCatWidget.getTitle() + " (Supporter Feature)");
+
+
+            widgetPresets.setEnabled(false);
+            widgetPresets.setSelectable(false);
+
+            widgetBackgroundColor.setEnabled(false);
+            widgetBackgroundColor.setSelectable(false);
+
+            widgetTextColor.setEnabled(false);
+            widgetTextColor.setSelectable(false);
+
+            widgetSecondaryTextColor.setEnabled(false);
+            widgetSecondaryTextColor.setSelectable(false);
         }
         Preference localTime = findPreference("local_time");
         localTime.setOnPreferenceChangeListener(createLocalTimeListener());
@@ -142,7 +215,7 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
 
                 @Override
                 public void onPermissionDenied(PermissionDeniedResponse response) {
-                    if (response.isPermanentlyDenied()){
+                    if (response.isPermanentlyDenied()) {
                         Toast.makeText(context, "Location denied, please go to Android Settings -> Apps to enable.", Toast.LENGTH_LONG).show();
                     }
                 }

@@ -1,18 +1,14 @@
-package me.calebjones.spacelaunchnow.content.jobs;
+package me.calebjones.spacelaunchnow.widget.launchcard;
 
 import android.app.PendingIntent;
-import android.appwidget.AppWidgetHost;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
-
-import com.evernote.android.job.Job;
-import com.evernote.android.job.JobRequest;
-import com.evernote.android.job.util.support.PersistableBundleCompat;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -24,56 +20,29 @@ import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
-import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.widget.WidgetBroadcastReceiver;
 import timber.log.Timber;
 
+/**
+ * Created by Caleb on 11/21/2017.
+ */
 
-public class UpdateLaunchCardJob extends Job {
+public class LaunchCardCompactManager {
 
-    static final String TAG = Constants.ACTION_UPDATE_LAUNCH_CARD;
-    public SwitchPreferences switchPreferences;
+    private Context context;
+    private AppWidgetManager appWidgetManager;
+    private RemoteViews remoteViews;
+    private SwitchPreferences switchPreferences;
 
-    @NonNull
-    @Override
-    protected Result onRunJob(Params params) {
-        Context context = getContext();
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        PersistableBundleCompat extras = params.getExtras();
-        int appWidgetId = extras.getInt("appWidgetId", 0);
-        if (appWidgetId != 0) {
-            Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
-
-            int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
-            int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
-            int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
-            int maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
-
-            if (minWidth == 0 && maxWidth == 0 && minHeight == 0 && maxHeight == 0) {
-                AppWidgetHost host = new AppWidgetHost(context, 0);
-                host.deleteAppWidgetId(appWidgetId);
-            }
-
-            // Update The clock label using a shared method
-            updateAppWidget(context, appWidgetManager, appWidgetId, options);
-        }
-        return Result.SUCCESS;
+    public LaunchCardCompactManager(Context context){
+        this.context = context;
+        appWidgetManager = AppWidgetManager.getInstance(context);
     }
 
-    public static void runJobImmediately(int id) {
-        PersistableBundleCompat extras = new PersistableBundleCompat();
-        extras.putInt("appWidgetId", id);
-        new JobRequest.Builder(UpdateLaunchCardJob.TAG)
-                .addExtras(extras)
-                .startNow()
-                .build()
-                .schedule();
-    }
-
-    private Launch getLaunch(Context context) {
+    private Launch getLaunch() {
         Date date = new Date();
 
         switchPreferences = SwitchPreferences.getInstance(context);
@@ -99,9 +68,9 @@ public class UpdateLaunchCardJob extends Job {
         return null;
     }
 
-    private void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle options) {
+    public void updateAppWidget(int appWidgetId) {
         Timber.v("UpdateAppWidget");
-        RemoteViews remoteViews;
+        Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
         int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
         int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
         int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
@@ -109,7 +78,7 @@ public class UpdateLaunchCardJob extends Job {
 
         Timber.v("Size: [%s-%s] x [%s-%s]", minWidth, maxWidth, minHeight, maxHeight);
 
-        Launch launch = getLaunch(context);
+        Launch launch = getLaunch();
 
         if (minWidth <= 200 || minHeight <= 100) {
             remoteViews = new RemoteViews(context.getPackageName(),
@@ -123,12 +92,12 @@ public class UpdateLaunchCardJob extends Job {
         }
 
         if (launch != null) {
-            setLaunchName(context, launch, remoteViews, options);
-            setLocationName(context, launch, remoteViews, options);
-            setLaunchDate(context, launch, remoteViews);
-            setCategoryIcon(context, launch, remoteViews);
-            setRefreshIntent(context, launch, remoteViews);
-            setWidgetStyle(context, remoteViews);
+            setLaunchName(launch);
+            setLocationName(launch);
+            setLaunchDate(launch);
+            setCategoryIcon(launch);
+            setRefreshIntent(launch);
+            setWidgetStyle();
         } else {
             remoteViews.setTextViewText(R.id.widget_launch_name, "Unknown Launch");
             remoteViews.setTextViewText(R.id.widget_mission_name, "Unknown Mission");
@@ -137,8 +106,7 @@ public class UpdateLaunchCardJob extends Job {
 
     }
 
-    //TODO cannot call grom background thread - gotta figure this out
-    private void setRefreshIntent(Context context, Launch launch, RemoteViews remoteViews) {
+    private void setRefreshIntent(Launch launch) {
         Intent nextIntent = new Intent(context, WidgetBroadcastReceiver.class);
         PendingIntent refreshPending = PendingIntent.getBroadcast(context, 0, nextIntent, 0);
         remoteViews.setOnClickPendingIntent(R.id.widget_compact_card_refresh_button, refreshPending);
@@ -152,12 +120,31 @@ public class UpdateLaunchCardJob extends Job {
         remoteViews.setOnClickPendingIntent(R.id.widget_compact_card_frame, actionPendingIntent);
     }
 
+    private void setWidgetStyle() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean widgetRounderCorners = sharedPref.getBoolean("widget_theme_round_corner", false);
+        int widgetTextColor = sharedPref.getInt("widget_text_color",0);
+        int widgetSecondaryTextColor = sharedPref.getInt("widget_secondary_text_color",0);
+        int widgetBackgroundColor = sharedPref.getInt("widget_background_color",0);
+        int widgetIconColor = sharedPref.getInt("widget_icon_color",0);
 
+        if(widgetRounderCorners)
+            remoteViews.setImageViewResource(R.id.bgcolor, R.drawable.rounded);
+        else
+            remoteViews.setImageViewResource(R.id.bgcolor, R.drawable.squared);
 
-    private void setWidgetStyle(Context context, RemoteViews remoteViews) {
+        Timber.v("Configuring widget");
+        int widgetAlpha = Color.alpha(widgetBackgroundColor);
+        remoteViews.setInt(R.id.bgcolor, "setColorFilter", widgetBackgroundColor);
+        remoteViews.setInt(R.id.bgcolor, "setAlpha", widgetAlpha);
+        remoteViews.setTextColor(R.id.widget_launch_rocket, widgetTextColor);
+        remoteViews.setTextColor(R.id.widget_location, widgetSecondaryTextColor);
+        remoteViews.setTextColor(R.id.widget_launch_date, widgetSecondaryTextColor);
+        remoteViews.setInt(R.id.widget_categoryIcon, "setColorFilter", widgetIconColor);
+        remoteViews.setInt(R.id.widget_compact_card_refresh_button, "setColorFilter", widgetIconColor);
     }
 
-    private void setLocationName(Context context, Launch launchRealm, RemoteViews remoteViews, Bundle options) {
+    private void setLocationName(Launch launchRealm) {
         String locationName = null;
 
         if (launchRealm.getLocation() != null && launchRealm.getLocation().getName() != null) {
@@ -171,7 +158,7 @@ public class UpdateLaunchCardJob extends Job {
         }
     }
 
-    private void setLaunchName(Context context, Launch launchRealm, RemoteViews remoteViews, Bundle options) {
+    private void setLaunchName(Launch launchRealm) {
         String launchName = getLaunchName(launchRealm);
 
         if (launchName != null) {
@@ -181,7 +168,7 @@ public class UpdateLaunchCardJob extends Job {
         }
     }
 
-    private void setLaunchDate(Context context, Launch launch, RemoteViews remoteViews) {
+    private void setLaunchDate(Launch launch) {
         SimpleDateFormat sdf;
         if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("24_hour_mode", false)) {
             sdf = new SimpleDateFormat("MMMM dd, yyyy");
@@ -196,7 +183,7 @@ public class UpdateLaunchCardJob extends Job {
         }
     }
 
-    private void setCategoryIcon(Context context, Launch launch, RemoteViews remoteViews) {
+    private void setCategoryIcon(Launch launch) {
         if (launch.getMissions() != null && launch.getMissions().size() > 0) {
             Utils.setCategoryIcon(remoteViews, launch.getMissions().get(0).getTypeName(), true, R.id.widget_categoryIcon);
         } else {
@@ -214,7 +201,7 @@ public class UpdateLaunchCardJob extends Job {
         }
     }
 
-    public String getMissionName(Launch launchRealm) {
+    private String getMissionName(Launch launchRealm) {
 
         if (launchRealm.getMissions().size() > 0) {
             //Replace with mission name
@@ -224,7 +211,7 @@ public class UpdateLaunchCardJob extends Job {
         }
     }
 
-    public long getFutureMilli(Launch launchRealm) {
+    private long getFutureMilli(Launch launchRealm) {
         return getLaunchDate(launchRealm).getTimeInMillis();
     }
 

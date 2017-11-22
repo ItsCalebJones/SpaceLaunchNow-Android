@@ -1,18 +1,14 @@
-package me.calebjones.spacelaunchnow.content.jobs;
+package me.calebjones.spacelaunchnow.widget.wordtimer;
 
 import android.app.PendingIntent;
-import android.appwidget.AppWidgetHost;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
-
-import com.evernote.android.job.Job;
-import com.evernote.android.job.JobRequest;
-import com.evernote.android.job.util.support.PersistableBundleCompat;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -24,54 +20,64 @@ import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
-import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
-import me.calebjones.spacelaunchnow.widget.WidgetBroadcastReceiver;
-import me.calebjones.spacelaunchnow.widget.wordtimer.util.NumberToWords;
 import me.calebjones.spacelaunchnow.utils.Utils;
+import me.calebjones.spacelaunchnow.widget.WidgetBroadcastReceiver;
 import timber.log.Timber;
 
 
-public class UpdateWordTimerJob extends Job {
+public class LaunchWordTimerManager {
 
-    public static final String TAG = Constants.ACTION_UPDATE_WORD_TIMER;
-    public SwitchPreferences switchPreferences;
+    private Context context;
+    private AppWidgetManager appWidgetManager;
+    private RemoteViews remoteViews;
+    private SwitchPreferences switchPreferences;
 
-    @NonNull
-    @Override
-    protected Result onRunJob(Params params) {
-        Context context = getContext();
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        PersistableBundleCompat extras = params.getExtras();
-        int appWidgetId = extras.getInt("appWidgetId", 0);
-        if (appWidgetId != 0) {
-            Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
-
-            int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
-            int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
-            int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
-            int maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
-
-            if (minWidth == 0 && maxWidth == 0 && minHeight == 0 && maxHeight == 0) {
-                AppWidgetHost host = new AppWidgetHost(context, 0);
-                host.deleteAppWidgetId(appWidgetId);
-            }
-
-            // Update The clock label using a shared method
-            updateAppWidget(context, appWidgetManager, appWidgetId, options);
-        }
-        return Result.SUCCESS;
+    public LaunchWordTimerManager(Context context){
+        this.context = context;
+        appWidgetManager = AppWidgetManager.getInstance(context);
     }
 
-    public static void runJobImmediately(int id) {
-        PersistableBundleCompat extras = new PersistableBundleCompat();
-        extras.putInt("appWidgetId", id);
-        new JobRequest.Builder(UpdateWordTimerJob.TAG)
-                .addExtras(extras)
-                .startNow()
-                .build()
-                .schedule();
+    public void updateAppWidget(int appWidgetId) {
+        Timber.v("UpdateAppWidget");
+        Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
+        int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
+        int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
+        int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
+        int maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
+
+        Timber.v("Size: [%s-%s] x [%s-%s]", minWidth, maxWidth, minHeight, maxHeight);
+
+        Launch launch = getLaunch(context);
+
+        if (minWidth <= 200 || minHeight <= 100) {
+            remoteViews = new RemoteViews(context.getPackageName(),
+                    R.layout.widget_launch_word_timer_small_dark
+            );
+        } else if (minWidth <= 320) {
+            remoteViews = new RemoteViews(context.getPackageName(),
+                    R.layout.widget_launch_word_timer_dark
+            );
+        } else {
+            remoteViews = new RemoteViews(context.getPackageName(),
+                    R.layout.widget_launch_word_timer_large_dark
+            );
+        }
+
+
+        if (launch != null) {
+            setLaunchName(launch);
+            setMissionName(launch);
+            setRefreshIntent(launch);
+            setWidgetStyle();
+            setLaunchTimer(launch);
+        } else {
+            remoteViews.setTextViewText(R.id.widget_launch_name, "Unknown Launch");
+            remoteViews.setTextViewText(R.id.widget_mission_name, "Unknown Mission");
+        }
+        appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+
     }
 
     private Launch getLaunch(Context context) {
@@ -100,49 +106,7 @@ public class UpdateWordTimerJob extends Job {
         return null;
     }
 
-    public void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle options) {
-        Timber.v("UpdateAppWidget");
-        RemoteViews remoteViews;
-        int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
-        int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
-        int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
-        int maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
-
-        Timber.v("Size: [%s-%s] x [%s-%s]", minWidth, maxWidth, minHeight, maxHeight);
-
-        Launch launch = getLaunch(context);
-
-        if (minWidth <= 200 || minHeight <= 100) {
-            remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.widget_launch_word_timer_small_dark
-            );
-        } else if (minWidth <= 320) {
-            remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.widget_launch_word_timer_dark
-            );
-        } else {
-            remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.widget_launch_word_timer_large_dark
-            );
-        }
-
-
-        if (launch != null) {
-            setLaunchName(context, launch, remoteViews, options);
-            setMissionName(context, launch, remoteViews, options);
-            setRefreshIntent(context, launch, remoteViews);
-            setWidgetStyle(context, remoteViews);
-            setLaunchTimer(context, launch, remoteViews, appWidgetManager, appWidgetId, options);
-        } else {
-            remoteViews.setTextViewText(R.id.widget_launch_name, "Unknown Launch");
-            remoteViews.setTextViewText(R.id.widget_mission_name, "Unknown Mission");
-        }
-        appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
-
-    }
-
-    //TODO cannot call grom background thread - gotta figure this out
-    private void setRefreshIntent(Context context, Launch launch, RemoteViews remoteViews) {
+    private void setRefreshIntent(Launch launch) {
         Intent nextIntent = new Intent(context, WidgetBroadcastReceiver.class);
         PendingIntent refreshPending = PendingIntent.getBroadcast(context, 0, nextIntent, 0);
         remoteViews.setOnClickPendingIntent(R.id.widget_refresh_button, refreshPending);
@@ -156,8 +120,8 @@ public class UpdateWordTimerJob extends Job {
         remoteViews.setOnClickPendingIntent(R.id.widget_countdown_timer_frame, actionPendingIntent);
     }
 
-    private void setMissionName(Context context, Launch launchRealm, RemoteViews remoteViews, Bundle options) {
-        String missionName = getMissionName(launchRealm);
+    private void setMissionName(Launch launch) {
+        String missionName = getMissionName(launch);
 
         if (missionName != null) {
             remoteViews.setTextViewText(R.id.widget_mission_name, missionName);
@@ -166,31 +130,48 @@ public class UpdateWordTimerJob extends Job {
         }
     }
 
-    private void setLaunchTimer(Context context, Launch launchRealm, final RemoteViews remoteViews, final AppWidgetManager appWidgetManager, final int widgetId, final Bundle options) {
+    private void setLaunchTimer(Launch launch) {
 
-        long millisUntilFinished = getFutureMilli(launchRealm) - System.currentTimeMillis();
+        long millisUntilFinished = getFutureMilli(launch) - System.currentTimeMillis();
 
         // Calculate the Days/Hours/Mins/Seconds numerically.
         long longDays = millisUntilFinished / 86400000;
         long longHours = (millisUntilFinished / 3600000) % 24;
 
-        NumberToWords.DefaultProcessor processor = new NumberToWords.DefaultProcessor();
-
-        // Update the views
-        String days = processor.getName(longDays);
+        // Update the views=
         remoteViews.setTextViewText(R.id.countdown_days, String.valueOf(longDays));
 
-        String hours = processor.getName(longHours);
         remoteViews.setTextViewText(R.id.countdown_hours, String.valueOf(longHours));
 
     }
 
+    private void setWidgetStyle() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean widgetRounderCorners = sharedPref.getBoolean("widget_theme_round_corner", false);
+        int widgetTextColor = sharedPref.getInt("widget_text_color",0);
+        int widgetBackgroundColor = sharedPref.getInt("widget_background_color",0);
+        int widgetSecondaryTextColor = sharedPref.getInt("widget_secondary_text_color",0);
+        int widgetIconColor = sharedPref.getInt("widget_icon_color",0);
+        if(widgetRounderCorners)
+            remoteViews.setImageViewResource(R.id.bgcolor, R.drawable.rounded);
+        else
+            remoteViews.setImageViewResource(R.id.bgcolor, R.drawable.squared);
 
+        Timber.v("Configuring widget");
+        int widgetAlpha = Color.alpha(widgetBackgroundColor);
+        remoteViews.setInt(R.id.bgcolor, "setColorFilter", widgetBackgroundColor);
+        remoteViews.setInt(R.id.bgcolor, "setAlpha", widgetAlpha);
+        remoteViews.setTextColor(R.id.widget_launch_name, widgetTextColor);
+        remoteViews.setTextColor(R.id.widget_mission_name, widgetSecondaryTextColor);
+        remoteViews.setTextColor(R.id.countdown_days, widgetSecondaryTextColor);
+        remoteViews.setTextColor(R.id.countdown_days_label, widgetSecondaryTextColor);
+        remoteViews.setTextColor(R.id.countdown_hours, widgetSecondaryTextColor);
+        remoteViews.setTextColor(R.id.countdown_hours_label, widgetSecondaryTextColor);
+        remoteViews.setInt(R.id.widget_refresh_button, "setColorFilter", widgetIconColor);
 
-    private void setWidgetStyle(Context context, RemoteViews remoteViews) {
     }
 
-    private void setLaunchName(Context context, Launch launchRealm, RemoteViews remoteViews, Bundle options) {
+    private void setLaunchName(Launch launchRealm) {
         String launchName = getLaunchName(launchRealm);
 
         if (launchName != null) {
@@ -200,7 +181,7 @@ public class UpdateWordTimerJob extends Job {
         }
     }
 
-    private void setLaunchDate(Context context, Launch launch, RemoteViews remoteViews) {
+    private void setLaunchDate(Launch launch) {
         SimpleDateFormat sdf;
         if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("24_hour_mode", false)) {
             sdf = new SimpleDateFormat("MMMM dd, yyyy");

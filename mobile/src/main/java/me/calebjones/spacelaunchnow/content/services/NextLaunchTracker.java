@@ -3,13 +3,14 @@ package me.calebjones.spacelaunchnow.content.services;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 
 import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.SyncJob;
-import me.calebjones.spacelaunchnow.content.jobs.UpdateLaunchCardJob;
-import me.calebjones.spacelaunchnow.content.jobs.UpdateWordTimerJob;
+import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactManager;
+import me.calebjones.spacelaunchnow.widget.launchcard.UpdateLaunchCardJob;
+import me.calebjones.spacelaunchnow.widget.wordtimer.LaunchWordTimerManager;
+import me.calebjones.spacelaunchnow.widget.wordtimer.UpdateWordTimerJob;
 import me.calebjones.spacelaunchnow.content.wear.WearWatchfaceManager;
 import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactWidgetProvider;
 import me.calebjones.spacelaunchnow.widget.wordtimer.LaunchWordTimerWidgetProvider;
@@ -39,16 +40,22 @@ public NextLaunchTracker(Context context) {
     }
 
     private void updateWidgets() {
-        int cardIds[] = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, LaunchCardCompactWidgetProvider.class));
+        LaunchCardCompactManager launchCardCompactManager = new LaunchCardCompactManager(context);
+        LaunchWordTimerManager launchWordTimerManager = new LaunchWordTimerManager(context);
+        int cardIds[] = AppWidgetManager.getInstance(context)
+                .getAppWidgetIds(new ComponentName(context,
+                        LaunchCardCompactWidgetProvider.class));
 
         for (int id : cardIds){
-            UpdateLaunchCardJob.runJobImmediately(id);
+            launchCardCompactManager.updateAppWidget(id);
         }
 
-        int timerIds[] = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, LaunchWordTimerWidgetProvider.class));
+        int timerIds[] = AppWidgetManager.getInstance(context)
+                .getAppWidgetIds(new ComponentName(context,
+                        LaunchWordTimerWidgetProvider.class));
 
         for (int id : timerIds){
-            UpdateWordTimerJob.runJobImmediately(id);
+            launchWordTimerManager.updateAppWidget(id);
         }
     }
 

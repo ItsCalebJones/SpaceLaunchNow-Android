@@ -121,12 +121,6 @@
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/BaseAppTheme" />
 
-        <activity android:name=".widget.launchcard.LaunchCardConfigurationActivity" >
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
-
         <receiver
             android:name=".widget.launchcard.LaunchCardCompactWidgetProvider"
             android:label="Compact Card">

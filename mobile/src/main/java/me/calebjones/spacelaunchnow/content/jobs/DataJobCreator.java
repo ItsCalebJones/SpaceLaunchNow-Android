@@ -2,13 +2,9 @@ package me.calebjones.spacelaunchnow.content.jobs;
 
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobCreator;
-import com.evernote.android.job.JobManager;
-import com.evernote.android.job.JobRequest;
 
-import java.util.Date;
-import java.util.Set;
-
-import me.calebjones.spacelaunchnow.utils.Utils;
+import me.calebjones.spacelaunchnow.widget.launchcard.UpdateLaunchCardJob;
+import me.calebjones.spacelaunchnow.widget.wordtimer.UpdateWordTimerJob;
 import timber.log.Timber;
 
 public class DataJobCreator implements JobCreator {

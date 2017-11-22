@@ -414,6 +414,7 @@ public class DataClientManager {
                     dataSaver.saveLaunchesToRealm(response.body().getLaunches(), false);
 
                     dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_BY_ID, true, call));
+                    isLaunchById = false;
 
                 } else {
                     isLaunchById = false;

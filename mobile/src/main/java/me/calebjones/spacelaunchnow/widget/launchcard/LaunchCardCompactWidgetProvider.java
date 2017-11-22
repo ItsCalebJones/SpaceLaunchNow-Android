@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import me.calebjones.spacelaunchnow.content.jobs.UpdateLaunchCardJob;
 import timber.log.Timber;
 
 
@@ -19,8 +18,9 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         Timber.v("onUpdate");
+        LaunchCardCompactManager launchCardCompactManager = new LaunchCardCompactManager(context);
         for (int widgetId : appWidgetIds) {
-            UpdateLaunchCardJob.runJobImmediately(widgetId);
+            launchCardCompactManager.updateAppWidget(widgetId);
         }
 
     }
@@ -42,7 +42,8 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager,
                                           int appWidgetId, Bundle newOptions) {
-        UpdateLaunchCardJob.runJobImmediately(appWidgetId);
+        LaunchCardCompactManager launchCardCompactManager = new LaunchCardCompactManager(context);
+        launchCardCompactManager.updateAppWidget(appWidgetId);
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
     }
 }
