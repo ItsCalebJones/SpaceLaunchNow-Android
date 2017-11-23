@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import me.calebjones.spacelaunchnow.widget.WidgetBroadcastReceiver;
 import timber.log.Timber;
 
 
@@ -18,6 +19,9 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         // Enter relevant functionality for when the first widget is created
+        Intent nextIntent = new Intent(context, WidgetBroadcastReceiver.class);
+        nextIntent.putExtra("updateUIOnly", true);
+        context.sendBroadcast(nextIntent);
     }
 
 
