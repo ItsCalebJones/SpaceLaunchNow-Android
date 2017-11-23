@@ -34,6 +34,19 @@ def details = versionDetails()
 def versionPropsFile = file('version.properties')
 
 android {
+    splits {
+        abi {
+            enable true
+            universalApk true
+            exclude "arm64-v8a", "mips", "mips64"
+        }
+
+        density {
+            enable true
+            exclude "ldpi", "tvdpi", "400dpi", "560dpi"
+            compatibleScreens 'small', 'normal', 'large', 'xlarge'
+        }
+    }
     signingConfigs {
         config {
             keyAlias "${alias}"
@@ -95,7 +108,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
-                    outputFileName = "SpaceLaunchNow-release-${variant.versionName}-${details.branchName}-${details.gitHash}.apk"
+                    outputFileName = "SpaceLaunchNow-release-${variant.versionName}-${details.gitHash}.apk"
                 }
             }
         }
