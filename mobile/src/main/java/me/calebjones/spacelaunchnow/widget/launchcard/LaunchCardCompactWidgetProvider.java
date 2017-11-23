@@ -16,6 +16,12 @@ public class LaunchCardCompactWidgetProvider extends AppWidgetProvider {
     public static String ACTION_WIDGET_CLICK = "ActionReceiverClick";
 
     @Override
+    public void onEnabled(Context context) {
+        // Enter relevant functionality for when the first widget is created
+    }
+
+
+    @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         Timber.v("onUpdate");
         LaunchCardCompactManager launchCardCompactManager = new LaunchCardCompactManager(context);

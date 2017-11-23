@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
+import android.preference.SwitchPreference;
 import android.support.v7.app.AppCompatDelegate;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
     private ColorPreference widgetTextColor;
     private ColorPreference widgetSecondaryTextColor;
     private ColorPreference widgetIconColor;
+    private SwitchPreference widgetRoundCorners;
     private boolean isCustomColor = false;
     private int[] textPrimaryArray;
     private int[] textSecondaryArray;
@@ -163,6 +165,7 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
         widgetTextColor = (ColorPreference) findPreference("widget_text_color");
         widgetSecondaryTextColor = (ColorPreference) findPreference("widget_secondary_text_color");
         widgetIconColor = (ColorPreference) findPreference("widget_icon_color");
+        widgetRoundCorners = (SwitchPreference) findPreference("widget_theme_round_corner");
         if (!SupporterHelper.isSupporter()) {
             Preference weather = findPreference("weather");
             weather.setEnabled(false);
@@ -189,6 +192,14 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
 
             widgetSecondaryTextColor.setEnabled(false);
             widgetSecondaryTextColor.setSelectable(false);
+
+            widgetIconColor.setEnabled(false);
+            widgetIconColor.setSelectable(false);
+
+            widgetRoundCorners.setEnabled(false);
+            widgetRoundCorners.setSelectable(false);
+
+
         }
         Preference localTime = findPreference("local_time");
         localTime.setOnPreferenceChangeListener(createLocalTimeListener());
