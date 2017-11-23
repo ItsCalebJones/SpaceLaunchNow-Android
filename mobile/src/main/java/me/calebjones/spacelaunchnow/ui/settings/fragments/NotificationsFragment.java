@@ -89,5 +89,6 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
         long timeToFinish = now.getTimeInMillis() - future.getTimeInMillis();
 
         NotificationBuilder.notifyUser(context, launch, timeToFinish, false);
+        realm.close();
     }
 }

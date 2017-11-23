@@ -65,7 +65,7 @@ public class LibraryDataManager extends BaseManager {
     }
 
     public void syncNotifiers() {
-        dataClientManager.getDataSaver().syncNotifiers();
+        dataClientManager.getDataSaver().syncNotifiers(mRealm);
     }
 
     public void updateNextLaunchMini() {

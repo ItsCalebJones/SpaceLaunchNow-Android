@@ -154,7 +154,7 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
 
     @Override
     public void onRefresh() {
-        missionList.removeChangeListeners();
+        missionList.removeAllChangeListeners();
         fetchData();
     }
 

@@ -1,6 +1,8 @@
 package me.calebjones.spacelaunchnow.ui.supporter;
 
 
+import android.widget.RemoteViews;
+
 import io.realm.Realm;
 import me.calebjones.spacelaunchnow.data.models.Products;
 
@@ -39,6 +41,13 @@ public class SupporterHelper {
     }
 
     public static boolean isSupporter(){
-        return Realm.getDefaultInstance().where(Products.class).findFirst() != null;
+        Realm realm = Realm.getDefaultInstance();
+        if (realm.where(Products.class).findFirst() != null){
+            realm.close();
+            return true;
+        } else {
+            realm.close();
+            return false;
+        }
     }
 }

@@ -22,6 +22,13 @@ public abstract class BaseManager{
         this.listPreference = ListPreferences.getInstance(context);
         this.switchPreferences = SwitchPreferences.getInstance(context);
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        mRealm = Realm.getDefaultInstance();
+    }
+
+    public void onDestroy(){
+        if (mRealm != null) {
+            mRealm.close();
+        }
     }
 
 }

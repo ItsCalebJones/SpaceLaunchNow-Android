@@ -158,9 +158,6 @@ public class LaunchApplication extends Application implements Analytics.Provider
         } else {
             version = "1.3";
         }
-        DataClient.create(version);
-        LibraryDataManager libraryDataManager = new LibraryDataManager(this);
-        JobManager.create(this).addJobCreator(new DataJobCreator());
 
         Realm.init(this);
 
@@ -170,19 +167,24 @@ public class LaunchApplication extends Application implements Analytics.Provider
                 .migration(new Migration())
                 .build();
 
-
+        LibraryDataManager libraryDataManager;
         try {
             Realm.setDefaultConfiguration(config);
+            Realm.compactRealm(config);
             Realm realm = Realm.getDefaultInstance();
             realm.close();
+            libraryDataManager = new LibraryDataManager(this);
         } catch (RealmMigrationNeededException | NullPointerException e) {
             Realm.deleteRealm(config);
             Realm.setDefaultConfiguration(config);
-
+            libraryDataManager = new LibraryDataManager(this);
             libraryDataManager.getAllData();
-
             Crashlytics.logException(e);
         }
+
+        DataClient.create(version);
+
+        JobManager.create(this).addJobCreator(new DataJobCreator());
 
 
         if (sharedPreference.isNightThemeEnabled()) {

@@ -48,11 +48,11 @@ public class WearWatchfaceManager extends BaseManager {
 
     // Create a data map and put data in it
     public void updateWear() {
-        Realm realm = Realm.getDefaultInstance();
+        mRealm = Realm.getDefaultInstance();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
         try {
-            Launch launch = realm.where(Launch.class).greaterThan("net", new Date()).findAllSorted("net").first();
+            Launch launch = mRealm.where(Launch.class).greaterThan("net", new Date()).findAllSorted("net").first();
         if (launch != null && launch.getName() != null && launch.getNetstamp() != null) {
             Timber.v("Sending data to wear: %s", launch.getName());
 
@@ -71,7 +71,7 @@ public class WearWatchfaceManager extends BaseManager {
                             query = launch.getRocket().getName();
                         }
 
-                        RocketDetails launchVehicle = realm.where(RocketDetails.class)
+                        RocketDetails launchVehicle = mRealm.where(RocketDetails.class)
                                 .contains("name", query)
                                 .findFirst();
                         if (launchVehicle != null && launchVehicle.getImageURL() != null && launchVehicle.getImageURL().length() > 0) {
@@ -93,7 +93,6 @@ public class WearWatchfaceManager extends BaseManager {
         } catch (IndexOutOfBoundsException error){
             Crashlytics.logException(error);
         }
-        realm.close();
     }
 
     private void sendImageToWear(String image, final Launch launch, boolean modify) {
