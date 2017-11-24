@@ -81,7 +81,7 @@
             app:cpv_previewSize="large"
             app:cpv_showAlphaSlider="true"/>
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="widget_theme_round_corner"
             android:summary="Enable round corners for widgets."
             android:title="Round Corners" />

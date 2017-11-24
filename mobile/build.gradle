@@ -133,7 +133,7 @@ android {
 dependencies {
     wearApp project(':wear')
     compile('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
-        transitive = true;
+        transitive = true
     }
     compile('com.mikepenz:aboutlibraries:5.9.7@aar') {
         transitive = true
