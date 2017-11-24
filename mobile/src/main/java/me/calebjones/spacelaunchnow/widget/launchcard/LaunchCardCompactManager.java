@@ -122,12 +122,14 @@ public class LaunchCardCompactManager {
 
     private void setWidgetStyle() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean widgetRounderCorners = sharedPref.getBoolean("widget_theme_round_corner", false);
-        int widgetTextColor = sharedPref.getInt("widget_text_color",0);
-        int widgetSecondaryTextColor = sharedPref.getInt("widget_secondary_text_color",0);
-        int widgetBackgroundColor = sharedPref.getInt("widget_background_color",0);
-        int widgetIconColor = sharedPref.getInt("widget_icon_color",0);
-
+        int colorWhite = 0xFFFFFFFF;
+        int colorSecondaryWhite = 0xB3FFFFFF;
+        int colorBackground = 0xFF303030;
+        boolean widgetRounderCorners = sharedPref.getBoolean("widget_theme_round_corner", true);
+        int widgetTextColor = sharedPref.getInt("widget_text_color",colorWhite);
+        int widgetBackgroundColor = sharedPref.getInt("widget_background_color", colorBackground);
+        int widgetSecondaryTextColor = sharedPref.getInt("widget_secondary_text_color",colorSecondaryWhite);
+        int widgetIconColor = sharedPref.getInt("widget_icon_color",colorWhite);
         if(widgetRounderCorners)
             remoteViews.setImageViewResource(R.id.bgcolor, R.drawable.rounded);
         else
