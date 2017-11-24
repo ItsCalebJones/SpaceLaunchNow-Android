@@ -47,6 +47,16 @@ android {
     compileSdkVersion 26
     buildToolsVersion '26.0.2'
     defaultConfig {
+
+//        splits {
+//            abi {
+//                enable true
+//                reset()
+//                include 'x86_64', 'x86', 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'mips'
+//                universalApk false
+//            }
+//        }
+
         applicationId "me.calebjones.spacelaunchnow"
         manifestPlaceholders = [appNameLabel                   : "@string/application_name",
                                 manifestApplicationId          : "${applicationId}",
@@ -114,6 +124,7 @@ android {
     }
     lintOptions {
         abortOnError false
+        checkReleaseBuilds false
     }
     productFlavors {
         debugTesting {
@@ -129,6 +140,20 @@ android {
         }
     }
 }
+
+//// map for the version code that gives each ABI a value. make sure to list all ABIs mentioned in splits block, an keep the order.
+//ext.versionCodes = ['armeabi': 3, 'armeabi-v7a': 4, 'arm64-v8a': 5, mips: 6, 'x86': 7, 'x86_64': 8]
+//import com.android.build.OutputFile
+//
+//// For each APK output variant, override versionCode with a combination of
+//// ABI APK value * 1000 + defaultConfig.versionCode
+//android.applicationVariants.all { variant ->
+//    // assign different version code for each output
+//    variant.outputs.each { output ->
+//        output.versionCodeOverride =
+//                project.ext.versionCodes.get(output.getFilter(OutputFile.ABI)) * 1000 + android.defaultConfig.versionCode
+//    }
+//}
 
 dependencies {
     wearApp project(':wear')
