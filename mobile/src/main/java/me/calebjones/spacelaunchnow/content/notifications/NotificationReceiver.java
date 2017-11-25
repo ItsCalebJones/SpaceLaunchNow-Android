@@ -77,7 +77,7 @@ public class NotificationReceiver extends NotificationExtenderService {
     private boolean isNotificationEnabled(String notificationType, boolean webcastAvailable) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean notificationEnabled = prefs.getBoolean("notifications_new_message", true);
-        boolean netstampChanged = prefs.getBoolean("notifications_launch_imminent_updates", true);
+        boolean netstampChanged = prefs.getBoolean("notifications_launch_imminent_updates", false);
         boolean webcastOnly = prefs.getBoolean("notifications_new_message_webcast", false);
         boolean twentyFourHour = prefs.getBoolean("notifications_launch_day", true);
         boolean oneHour = prefs.getBoolean("notifications_launch_imminent", true);
