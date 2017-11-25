@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.data.models.Launch;
@@ -31,7 +32,7 @@ public class NotificationReceiver extends NotificationExtenderService {
         if (receivedResult.payload != null) {
             OSNotificationPayload payload = receivedResult.payload;
             JSONObject data = payload.additionalData;
-            SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy HH:mm:ss zzz");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy HH:mm:ss zzz", Locale.ENGLISH);
             try {
                 String background = data.getString("background");
                 Launch launch = new Launch();

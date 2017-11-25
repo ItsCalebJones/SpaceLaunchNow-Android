@@ -483,25 +483,32 @@ public class LaunchDetailActivity extends BaseActivity
 
     @OnClick(R.id.fab_share)
     public void onViewClicked() {
-        Date date = launch.getNet();
-        SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
-        df.toLocalizedPattern();
-        String launchDate = df.format(date);
-        String message;
-        if (launch.getLocation() != null && launch.getLocation().getPads() != null &&  launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().get(0).getAgencies() != null && launch.getLocation().getPads().
-                get(0).getAgencies().size() > 0) {
+        String launchDate = "";
+        String message = "";
+        try {
+            if (launch.getNet() != null) {
+                Date date = launch.getNet();
+                SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                df.toLocalizedPattern();
+                launchDate = df.format(date);
+            }
+            if (launch.getLocation() != null && launch.getLocation().getPads() != null && launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().get(0).getAgencies() != null && launch.getLocation().getPads().
+                    get(0).getAgencies().size() > 0) {
 
-            message = launch.getName() + " launching from "
-                    + launch.getLocation().getName() + "\n\n"
-                    + launchDate;
-        } else if (launch.getLocation() != null) {
-            message = launch.getName() + " launching from "
-                    + launch.getLocation().getName() + "\n\n"
-                    + launchDate;
-        } else {
-            message = launch.getName()
-                    + "\n\n"
-                    + launchDate;
+                message = launch.getName() + " launching from "
+                        + launch.getLocation().getName() + "\n\n"
+                        + launchDate;
+            } else if (launch.getLocation() != null) {
+                message = launch.getName() + " launching from "
+                        + launch.getLocation().getName() + "\n\n"
+                        + launchDate;
+            } else {
+                message = launch.getName()
+                        + "\n\n"
+                        + launchDate;
+            }
+        } catch (NullPointerException e){
+            Timber.e(e);
         }
         ShareCompat.IntentBuilder.from(this)
                 .setType("text/plain")

@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.format.DateFormat;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.zetterstrom.com.forecast.ForecastClient;
 import android.zetterstrom.com.forecast.ForecastConfiguration;
@@ -168,6 +169,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
                 .build();
 
         LibraryDataManager libraryDataManager;
+        JobManager.create(this).addJobCreator(new DataJobCreator());
         try {
             Realm.setDefaultConfiguration(config);
             Realm.compactRealm(config);
@@ -184,9 +186,13 @@ public class LaunchApplication extends Application implements Analytics.Provider
 
         DataClient.create(version);
 
-        JobManager.create(this).addJobCreator(new DataJobCreator());
 
 
+        try {
+            new WebView(getApplicationContext());
+        } catch (Exception e) {
+            Timber.e("Got exception while trying to instantiate WebView to avoid night mode issue. Ignoring problem.", e);
+        }
         if (sharedPreference.isNightThemeEnabled()) {
             if (sharedPreference.isDayNightAutoEnabled()) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);

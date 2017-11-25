@@ -55,8 +55,8 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        this.sharedPreference = ListPreferences.getInstance(getActivity().getApplicationContext());
-        adapter = new MissionAdapter(getActivity().getApplicationContext(), getActivity());
+        this.sharedPreference = ListPreferences.getInstance(getContext());
+        adapter = new MissionAdapter(getContext());
         setScreenName("Mission Fragment");
     }
 
@@ -82,6 +82,14 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
         layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(adapter);
+        // Adding ScrollListener to getting whether we're on First Item position or not
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                swipeRefreshLayout.setEnabled(layoutManager.findFirstCompletelyVisibleItemPosition() == 0); // 0 is for first item position
+            }
+        });
         return view;
     }
 
