@@ -9,24 +9,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
-import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -42,13 +38,10 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.transitionseverywhere.TransitionManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,6 +54,7 @@ import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.events.FilterViewEvent;
+import me.calebjones.spacelaunchnow.ui.changelog.ChangelogActivity;
 import me.calebjones.spacelaunchnow.ui.intro.OnboardingActivity;
 import me.calebjones.spacelaunchnow.ui.main.launches.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.main.missions.MissionFragment;
@@ -312,42 +306,8 @@ public class MainActivity extends BaseActivity {
     }
 
     public void showWhatsNew() {
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-
-
-        MaterialStyledDialog.Builder dialog = new MaterialStyledDialog.Builder(this)
-                .withIconAnimation(false)
-                .withDialogAnimation(true)
-                .withDivider(true)
-                .setIcon(R.drawable.ic_about)
-                .setTitle("Whats New? v" + Utils.getVersionName(this))
-                .setScrollable(true)
-                .setPositiveText("Okay")
-                .setNegativeText("Feedback")
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                        showFeedback();
-                    }
-                }).onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                    }
-                });
-
-        if (listPreferences.isNightModeActive(this)) {
-            dialog.setHeaderColor(R.color.darkPrimary);
-            View nightView = inflater.inflate(R.layout.whats_new_night, null);
-            dialog.setCustomView(nightView);
-        } else {
-            dialog.setHeaderColor(R.color.colorPrimary);
-            View customView = inflater.inflate(R.layout.whats_new, null);
-            dialog.setCustomView(customView);
-        }
-        dialog.show();
+        Intent whatsNew = new Intent(this, ChangelogActivity.class);
+        startActivity(whatsNew);
     }
 
     public void onResume() {

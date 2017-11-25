@@ -156,6 +156,7 @@ android {
 //}
 
 dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     wearApp project(':wear')
     compile('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
         transitive = true
@@ -163,6 +164,7 @@ dependencies {
     compile('com.mikepenz:aboutlibraries:5.9.7@aar') {
         transitive = true
     }
+    compile 'com.github.mukeshsolanki:MarkdownView-Android:1.0.4'
     compile 'com.jaredrummler:colorpicker:1.0.1'
     compile "com.andkulikov:transitionseverywhere:1.7.7"
     compile 'org.greenrobot:eventbus:3.1.1'

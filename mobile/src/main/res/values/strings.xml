@@ -33,7 +33,14 @@
   <string name="ariane_logo">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950133/yffq0aI_oyyhmj.jpg</string>
   <string name="title_activity_debug">DebugActivity</string>
   <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
-  <string name="whats_new_content">Android 8.0 Support\n\nThis release includes a few critical bugfixes for users on low end devices as well as full support for new Android 8.0 features. An additional release will be coming later next month to fully support Android 8.0s notification channels and other advanced features.\n\nYou may have noticed if you are a not a Supporter you may receive advertisements. Due to the changes required to support Android 8.0's removal of background services, notifications must be handled via my own backend servers. Thank you for continuing to support Space Launch Now and I hope these ads are non-intrusive, as you may expect becoming a Supporter removes ad's as well as unlocks other premium features. \n\nLastly, sharing from the Space Launch Now app includes a link to the new <a href="https://spacelaunchnow.me">Space Launch Now</a> website to better share the launch countdown experience with your friends and family.</string>
+  <string name="whats_new_content">Changelog\n
+\n· New ways to share launches with the official https://spacelaunchnow.me.
+\n· Fully reworked and customizable widgets for Supporters - more to come!
+\n· Remove all local alarms, services and wakelocks in favor of using Evernotes Job library.
+\n· Improved battery life with server-side notifications with Android 8.0 support.
+\n· Updated on-boarding and initial application configuration.
+\n· Reduced network and local storage (90% reduced - usage.
+\n· A plethora of bugfixes - crashes, UI, non-fatals… blah blah.</string>
   <string name="link_feedback">https://www.reddit.com/r/spacelaunchnow</string>
   <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>
 
