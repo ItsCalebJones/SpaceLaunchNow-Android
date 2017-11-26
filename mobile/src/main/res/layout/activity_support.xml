@@ -353,7 +353,6 @@
                   android:text="Dynamic pictures of launch vehicles as watch face background." />
 
               </LinearLayout>
-
             </LinearLayout>
           </android.support.v7.widget.CardView>
 
@@ -402,7 +401,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:lines="2"
-                    android:text="Remove all advertisements for ever!" />
+                    android:text="Remove all advertisements forever!" />
 
               </LinearLayout>
 

@@ -53,7 +53,7 @@
   <string name="title_activity_download">Download</string>
   <string name="title_activity_web_view_fallback">Space Launch Now</string>
   <string name="slide_one_title">Space Launch Now</string>
-  <string name="slide_one_description">Keep up to date on all your favorite  orbital launches, missions, and launch vehicles.</string>
+  <string name="slide_one_description">Keep up to date on all your favorite orbital launches, missions, and launch vehicles.</string>
   <string name="slide_two_title">Notification for Launches</string>
   <string name="slide_two_description">Get notifications for upcoming launches and look into the history of spaceflight</string>
   <string name="slide_three_title">Find Launch Vehicles</string>

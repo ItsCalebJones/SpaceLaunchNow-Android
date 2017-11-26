@@ -1,158 +1,75 @@
 package me.calebjones.spacelaunchnow.ui.settings;
 
+
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.text.InputType;
-import android.view.View;
-
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.mikepenz.aboutlibraries.Libs;
-import com.mikepenz.aboutlibraries.LibsBuilder;
-import com.mikepenz.aboutlibraries.LibsConfiguration;
-import com.mikepenz.aboutlibraries.entity.Library;
-import com.mikepenz.aboutlibraries.ui.LibsActivity;
-
+import android.support.v4.app.SupportActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.FrameLayout;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
+import me.calebjones.spacelaunchnow.ui.changelog.ChangelogActivity;
+import me.calebjones.spacelaunchnow.ui.intro.OnboardingActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity;
-import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
-public class AboutActivity extends LibsActivity {
+import com.mikepenz.community_material_typeface_library.CommunityMaterial;
+import com.mikepenz.iconics.Iconics;
+import com.mikepenz.iconics.IconicsDrawable;
+import com.vansuita.materialabout.builder.AboutBuilder;
+import com.vansuita.materialabout.views.AboutView;
 
-    private int clickCounter = 0;
-    private String name = "About Activity";
+public class AboutActivity extends AppCompatActivity {
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        int m_theme;
-
-        m_theme = R.style.AboutLibraries;
-
-        LibsConfiguration.LibsListener libsListener = new LibsConfiguration.LibsListener() {
-            @Override
-            public void onIconClicked(View v) {
-                clickCounter = clickCounter + 1;
-            }
-
-            @Override
-            public boolean onLibraryAuthorClicked(View v, Library library) {
-                return false;
-            }
-
-            @Override
-            public boolean onLibraryContentClicked(View v, Library library) {
-                return false;
-            }
-
-            @Override
-            public boolean onLibraryBottomClicked(View v, Library library) {
-                return false;
-            }
-
-            @Override
-            public boolean onExtraClicked(View v, Libs.SpecialButton specialButton) {
-                if(specialButton.ordinal() == 1){
-                    specialButtonOne();
-                } else if (specialButton.ordinal() == 2) {
-                    customTabCallback();
-                }
-                return false;
-            }
-
-            @Override
-            public boolean onIconLongClicked(View v) {
-                if (clickCounter > 5) {
-                    showInputDialog();
-                }
-                return false;
-            }
-
-            @Override
-            public boolean onLibraryAuthorLongClicked(View v, Library library) {
-                return false;
-            }
-
-            @Override
-            public boolean onLibraryContentLongClicked(View v, Library library) {
-                return false;
-            }
-
-            @Override
-            public boolean onLibraryBottomLongClicked(View v, Library library) {
-                return false;
-            }
-        };
-
-        setIntent(new LibsBuilder()
-                .withAutoDetect(true)
-                .withLicenseShown(true)
-                .withVersionShown(true)
-                .withListener(libsListener)
-                .withActivityTitle("About")
-                .withActivityTheme(m_theme)
-                .withAboutSpecial2("Support")
-                .withAboutSpecial3("Change Log")
-                .withFields(R.string.class.getFields())
-                .intent(this.getApplicationContext()));
-
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_about);
+        loadAbout();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Analytics.from(this).sendScreenView(name, "Activity destroyed.");
-    }
+    private void loadAbout() {
+        final FrameLayout flHolder = (FrameLayout) this.findViewById(R.id.about);
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        Analytics.from(this).sendScreenView(name, name + " started.");
-    }
+        AboutBuilder builder = AboutBuilder.with(this)
+                .setAppIcon(R.drawable.intro_slide_one_foreground)
+                .setAppName(R.string.app_name)
+                .setPhoto(R.drawable.ic_jones_logo)
+                .setCover(R.mipmap.profile_cover)
+                .setLinksAnimated(true)
+                .setName("Caleb Jones")
+                .setSubTitle("Amateur Imagineer")
+                .setLinksColumnsCount(3)
+                .setBrief("Gamer, Nerd, Developer, Tester.")
+                .addGooglePlayStoreLink("7111684947714289915")
+                .addGitHubLink("itscalebjones")
+                .addTwitterLink("spacelaunchnow")
+                .addFacebookLink("spacelaunchnow")
+                .addWebsiteLink("https://spacelaunchnow.me")
+                .addLink(new IconicsDrawable(this)
+                        .icon(CommunityMaterial.Icon.cmd_rocket)
+                        .sizeDp(24).toBitmap(),
+                        "Launch Library",
+                        "https//launchlibrary.net")
+                .setAppName("Space Launch Now")
+                .setAppTitle(Utils.getVersionName(this))
+                .addShareAction("Checkout " + R.string.app_name)
+                .addUpdateAction()
+                .setActionsColumnsCount(2)
+                .addChangeLogAction(new Intent(this, ChangelogActivity.class))
+                .addIntroduceAction(new Intent(this, OnboardingActivity.class))
+                .addDonateAction(new Intent(this, SupporterActivity.class))
+                .addAction(new IconicsDrawable(this)
+                        .icon(CommunityMaterial.Icon.cmd_discord)
+                        .sizeDp(24).toBitmap(),
+                        "Discord",
+                        "https://discord.gg/WVfzEDW")
+                .setWrapScrollView(true)
+                .setShowAsCard(true);
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Analytics.from(this).sendScreenView(name, name + " resumed.");
-    }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        Analytics.from(this).notifyGoneBackground();
-    }
+        AboutView view = builder.build();
 
-    private void showInputDialog() {
-        new MaterialDialog.Builder(this)
-                .title("Debug Password")
-                .content("Enter password from support.")
-                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)
-                .input(null, null, new MaterialDialog.InputCallback() {
-                    @Override
-                    public void onInput(MaterialDialog dialog, CharSequence input) {
-                        if (DebugAuthManager.getAuthResult(input)){
-                            goToDebug();
-                        }
-                    }
-                }).show();
+        flHolder.addView(view);
     }
-
-    private void goToDebug(){
-        Analytics.from(this).sendScreenView(name, "Debug Menu activated.");
-        Intent debugIntent = new Intent(this, DebugActivity.class);
-        startActivity(debugIntent);
-    }
-
-    private void specialButtonOne() {
-        Analytics.from(this).sendScreenView(name, "Go to Supporter Activity");
-        Intent intent = new Intent(this, SupporterActivity.class);
-        startActivity(intent);
-    }
-
-    public void customTabCallback(){
-        Analytics.from(this).sendScreenView(name, "Go to github release notes.");
-        Utils.openCustomTab(this, this, "https://github.com/caman9119/SpaceLaunchNow/releases");
-    }
-
 }
