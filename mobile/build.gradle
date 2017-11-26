@@ -34,6 +34,7 @@ def details = versionDetails()
 def versionPropsFile = file('version.properties')
 
 android {
+
     signingConfigs {
         config {
             keyAlias "${alias}"
@@ -43,9 +44,19 @@ android {
         }
     }
     flavorDimensions "release"
-    compileSdkVersion 26
+    compileSdkVersion 27
     buildToolsVersion '26.0.2'
     defaultConfig {
+
+//        splits {
+//            abi {
+//                enable true
+//                reset()
+//                include 'x86_64', 'x86', 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'mips'
+//                universalApk false
+//            }
+//        }
+
         applicationId "me.calebjones.spacelaunchnow"
         manifestPlaceholders = [appNameLabel                   : "@string/application_name",
                                 manifestApplicationId          : "${applicationId}",
@@ -92,10 +103,10 @@ android {
             minifyEnabled true
             shrinkResources true
             versionNameSuffix "-b${defaultConfig.versionCode}"
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
-                    outputFileName = "SpaceLaunchNow-release-${variant.versionName}-${details.branchName}-${details.gitHash}.apk"
+                    outputFileName = "SpaceLaunchNow-release-${variant.versionName}-${details.gitHash}.apk"
                 }
             }
         }
@@ -113,6 +124,7 @@ android {
     }
     lintOptions {
         abortOnError false
+        checkReleaseBuilds false
     }
     productFlavors {
         debugTesting {
@@ -129,14 +141,28 @@ android {
     }
 }
 
+//// map for the version code that gives each ABI a value. make sure to list all ABIs mentioned in splits block, an keep the order.
+//ext.versionCodes = ['armeabi': 3, 'armeabi-v7a': 4, 'arm64-v8a': 5, mips: 6, 'x86': 7, 'x86_64': 8]
+//import com.android.build.OutputFile
+//
+//// For each APK output variant, override versionCode with a combination of
+//// ABI APK value * 1000 + defaultConfig.versionCode
+//android.applicationVariants.all { variant ->
+//    // assign different version code for each output
+//    variant.outputs.each { output ->
+//        output.versionCodeOverride =
+//                project.ext.versionCodes.get(output.getFilter(OutputFile.ABI)) * 1000 + android.defaultConfig.versionCode
+//    }
+//}
+
 dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     wearApp project(':wear')
     compile('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
-        transitive = true;
-    }
-    compile('com.mikepenz:aboutlibraries:5.9.7@aar') {
         transitive = true
     }
+    compile 'com.github.jrvansuita:MaterialAbout:0.1.9'
+    compile 'com.github.mukeshsolanki:MarkdownView-Android:1.0.4'
     compile 'com.jaredrummler:colorpicker:1.0.1'
     compile "com.andkulikov:transitionseverywhere:1.7.7"
     compile 'org.greenrobot:eventbus:3.1.1'
@@ -170,7 +196,7 @@ dependencies {
     compile 'com.borax12.materialdaterangepicker:library:1.9'
     compile 'net.mediavrog:integrated-rating-request:1.1.2'
     compile 'com.jakewharton.timber:timber:4.5.1'
-    compile 'com.simplecityapps:recyclerview-fastscroll:1.0.14'
+    compile 'com.simplecityapps:recyclerview-fastscroll:1.0.16'
     compile 'com.github.javiersantos:MaterialStyledDialogs:2.1'
     compile 'com.karumi:dexter:4.1.0'
     compile 'com.anjlab.android.iab.v3:library:1.0.39'

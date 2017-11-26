@@ -24,11 +24,11 @@ public class UpdateWearJob extends Job {
         return Result.SUCCESS;
     }
 
-    public static void scheduleJob() {
+    public static void scheduleJobNow() {
         Timber.v("Scheduling UpdateWearJob...");
 
         JobRequest.Builder builder = new JobRequest.Builder(UpdateWearJob.TAG)
-                .setPeriodic(TimeUnit.HOURS.toMillis(12), TimeUnit.HOURS.toMillis(1))
+                .startNow()
                 .setUpdateCurrent(true);
 
         builder.build().schedule();

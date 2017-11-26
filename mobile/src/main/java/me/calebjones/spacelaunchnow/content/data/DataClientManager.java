@@ -199,7 +199,7 @@ public class DataClientManager {
 
                         dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, true, call));
 
-                        context.startService(new Intent(context, NextLaunchTracker.class));
+                        nextLaunchTracker.runUpdate();
                     }
                 } else {
                     isUpcomingLaunch = false;
@@ -248,7 +248,7 @@ public class DataClientManager {
 
                 dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES, false, call, t.getLocalizedMessage()));
 
-                context.startService(new Intent(context, NextLaunchTracker.class));
+                nextLaunchTracker.runUpdate();
 
             }
         });
@@ -273,7 +273,7 @@ public class DataClientManager {
 
                         dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES, true, call));
 
-                        context.startService(new Intent(context, NextLaunchTracker.class));
+                        nextLaunchTracker.runUpdate();
                     }
                 } else {
                     isUpcomingLaunchAll = false;
@@ -287,7 +287,7 @@ public class DataClientManager {
 
                 dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES, false, call, t.getLocalizedMessage()));
 
-                context.startService(new Intent(context, NextLaunchTracker.class));
+                nextLaunchTracker.runUpdate();
 
             }
         });
@@ -311,7 +311,7 @@ public class DataClientManager {
 
                         dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_ALL, true, call));
 
-                        context.startService(new Intent(context, NextLaunchTracker.class));
+                        nextLaunchTracker.runUpdate();
                     }
                 } else {
                     isUpcomingLaunchAll = false;
@@ -325,7 +325,7 @@ public class DataClientManager {
 
                 dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_ALL, false, call, t.getLocalizedMessage()));
 
-                context.startService(new Intent(context, NextLaunchTracker.class));
+                nextLaunchTracker.runUpdate();
 
             }
         });
@@ -350,7 +350,7 @@ public class DataClientManager {
 
                         dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_ALL, true, call));
 
-                        context.startService(new Intent(context, NextLaunchTracker.class));
+                        nextLaunchTracker.runUpdate();
                     }
                 } else {
                     isUpcomingLaunchAll = false;
@@ -364,7 +364,7 @@ public class DataClientManager {
 
                 dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_ALL, false, call, t.getLocalizedMessage()));
 
-                context.startService(new Intent(context, NextLaunchTracker.class));
+                nextLaunchTracker.runUpdate();
 
             }
         });
@@ -383,13 +383,13 @@ public class DataClientManager {
 
                     dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_MINI, true, call));
 
-                    context.startService(new Intent(context, NextLaunchTracker.class));
+                    nextLaunchTracker.runUpdate();
                 } else {
                     isNextLaunches = false;
 
                     dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_MINI, false, call, ErrorUtil.parseLibraryError(response)));
 
-                    context.startService(new Intent(context, NextLaunchTracker.class));
+                    nextLaunchTracker.runUpdate();
                 }
             }
 
@@ -399,7 +399,7 @@ public class DataClientManager {
 
                 dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_MINI, false, call, t.getLocalizedMessage()));
 
-                context.startService(new Intent(context, NextLaunchTracker.class));
+                nextLaunchTracker.runUpdate();
             }
         });
     }

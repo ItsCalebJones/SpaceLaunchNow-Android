@@ -74,16 +74,6 @@ public class VehiclesViewPager extends BaseFragment {
             }
         });
 
-        if (sharedPreference.isNightModeActive(context)){
-            tabLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.darkPrimary));
-            tabLayout.setTabTextColors(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color),
-                    ContextCompat.getColor(context, R.color.dark_theme_primary_text_color));
-        } else {
-            tabLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
-            tabLayout.setTabTextColors(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color),
-                    ContextCompat.getColor(context, R.color.dark_theme_primary_text_color));
-        }
-
         return inflatedView;
     }
 

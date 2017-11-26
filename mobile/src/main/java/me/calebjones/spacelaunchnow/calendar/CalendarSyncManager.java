@@ -33,7 +33,6 @@ public class CalendarSyncManager extends BaseManager {
 
     public CalendarSyncManager(Context context) {
         super(context);
-        mRealm = Realm.getDefaultInstance();
         calendarItem = mRealm.where(CalendarItem.class).findFirst();
         if (calendarItem != null) {
             calendarUtil = new CalendarUtility(calendarItem);

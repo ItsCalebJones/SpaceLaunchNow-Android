@@ -279,7 +279,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         if (!getRealm().isClosed()) {
             launchRealms.removeChangeListener(callback); // remove a particular listener
             // or
-            launchRealms.removeChangeListeners(); // remove all registered listeners
+            launchRealms.removeAllChangeListeners(); // remove all registered listeners
         }
     }
 
@@ -317,7 +317,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 }
             }
             hideLoading();
-            launchRealms.removeChangeListeners();
+            launchRealms.removeAllChangeListeners();
         }
     };
 

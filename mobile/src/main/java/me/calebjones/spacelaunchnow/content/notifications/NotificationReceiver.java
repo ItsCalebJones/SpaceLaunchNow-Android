@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.data.models.Launch;
@@ -31,7 +32,7 @@ public class NotificationReceiver extends NotificationExtenderService {
         if (receivedResult.payload != null) {
             OSNotificationPayload payload = receivedResult.payload;
             JSONObject data = payload.additionalData;
-            SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy HH:mm:ss zzz");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy HH:mm:ss zzz", Locale.ENGLISH);
             try {
                 String background = data.getString("background");
                 Launch launch = new Launch();
@@ -77,7 +78,7 @@ public class NotificationReceiver extends NotificationExtenderService {
     private boolean isNotificationEnabled(String notificationType, boolean webcastAvailable) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean notificationEnabled = prefs.getBoolean("notifications_new_message", true);
-        boolean netstampChanged = prefs.getBoolean("notifications_launch_imminent_updates", true);
+        boolean netstampChanged = prefs.getBoolean("notifications_launch_imminent_updates", false);
         boolean webcastOnly = prefs.getBoolean("notifications_new_message_webcast", false);
         boolean twentyFourHour = prefs.getBoolean("notifications_launch_day", true);
         boolean oneHour = prefs.getBoolean("notifications_launch_imminent", true);

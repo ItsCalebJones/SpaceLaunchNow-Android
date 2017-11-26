@@ -749,7 +749,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     public void onPause() {
         getActivity().unregisterReceiver(launchReceiver);
         if (launchRealms != null) {
-            launchRealms.removeChangeListeners();
+            launchRealms.removeAllChangeListeners();
         }
         super.onPause();
     }
@@ -773,7 +773,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     @Override
     public void onDetach() {
         if (launchRealms != null) {
-            launchRealms.removeChangeListeners();
+            launchRealms.removeAllChangeListeners();
         }
         super.onDetach();
     }

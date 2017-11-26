@@ -23,6 +23,7 @@ import java.util.Date;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.content.wear.WearWatchfaceManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
@@ -35,6 +36,7 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
 
     private GoogleApiClient mGoogleApiClient;
     private SwitchPreferences switchPreferences;
+    private WearWatchfaceManager wearWatchfaceManager;
     private static final String HOUR_KEY = "me.calebjones.spacelaunchnow.wear.hourmode";
     private static final String BACKGROUND_KEY = "me.calebjones.spacelaunchnow.wear.background";
 
@@ -97,7 +99,7 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
             Analytics.from(this).sendPreferenceEvent(key);
         }
 
-        getActivity().startService(new Intent(getActivity(), WearWatchfaceManager.class));
+        UpdateWearJob.scheduleJobNow();
     }
 
     //Google API client methods
@@ -178,7 +180,7 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
                         editor.apply();
 
 
-                        getActivity().startService(new Intent(getActivity(), WearWatchfaceManager.class));
+                        UpdateWearJob.scheduleJobNow();
                         dialog.dismiss();
                     }
                 });
@@ -199,6 +201,8 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
                         radiusSeekBar.setProgress(Constants.DEFAULT_RADIUS);
                         dimSeekBar.setProgress(Constants.DEFAULT_DIM);
                         greySeekBar.setProgress(Constants.DEFAULT_GREY);
+
+                        UpdateWearJob.scheduleJobNow();
                     }
                 });
 

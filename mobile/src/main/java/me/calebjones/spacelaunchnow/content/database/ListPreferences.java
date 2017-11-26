@@ -111,25 +111,31 @@ public class ListPreferences {
     public boolean isNightModeActive(Context context) {
 
         if (isDayNightAutoEnabled()) {
-            int currentNightMode = context.getResources().getConfiguration().uiMode
-                    & Configuration.UI_MODE_NIGHT_MASK;
+            int currentNightMode = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+            Timber.v("Configuration Key %s", currentNightMode);
 
             switch (currentNightMode) {
                 case Configuration.UI_MODE_NIGHT_NO:
                     // Night mode is not active, we're in day time
+                    Timber.v("Auto Theme: UI_MODE_NIGHT_NO");
                     return false;
                 case Configuration.UI_MODE_NIGHT_YES:
                     // Night mode is active, we're at night!
+                    Timber.v("Auto Theme: UI_MODE_NIGHT_YES");
                     return true;
                 case Configuration.UI_MODE_NIGHT_UNDEFINED:
                     // We don't know what mode we're in, assume notnight
+                    Timber.v("Auto Theme: UI_MODE_NIGHT_UNDEFINED");
                     return false;
                 default:
+                    Timber.e("Auto Theme: Unknown");
                     return false;
             }
         } else if (isNightThemeEnabled()){
+            Timber.v("Theme: UI_MODE_NIGHT_YES");
             return true;
         } else {
+            Timber.v("Theme: UI_MODE_NIGHT_NO");
             return false;
         }
     }
