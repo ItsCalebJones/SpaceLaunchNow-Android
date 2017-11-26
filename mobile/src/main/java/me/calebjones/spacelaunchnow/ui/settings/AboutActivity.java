@@ -50,7 +50,7 @@ public class AboutActivity extends AppCompatActivity {
                         .icon(CommunityMaterial.Icon.cmd_rocket)
                         .sizeDp(24).toBitmap(),
                         "Launch Library",
-                        "https//launchlibrary.net")
+                        "https://launchlibrary.net")
                 .setAppName("Space Launch Now")
                 .setAppTitle(Utils.getVersionName(this))
                 .addShareAction("Checkout " + R.string.app_name)
