@@ -22,7 +22,6 @@
 -keep class com.anjlab.android.iab.v3.** { *; }
 
 -dontwarn android.support.**
-
 -keep public class com.google.android.gms.* { public *; }
 -dontwarn com.google.android.gms.**
 -keep class * extends java.util.ListResourceBundle {
@@ -74,7 +73,8 @@
 
 # Configuration for Fabric Twitter Kit
 # See: https://dev.twitter.com/twitter-kit/android/integrate
-
+-dontwarn com.google.android.gms.**
+-dontwarn android.content.pm.**
 -dontwarn com.squareup.okhttp.**
 -dontwarn com.google.appengine.api.urlfetch.**
 -dontwarn rx.**

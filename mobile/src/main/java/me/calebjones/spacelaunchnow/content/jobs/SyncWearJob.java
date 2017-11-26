@@ -1,6 +1,5 @@
 package me.calebjones.spacelaunchnow.content.jobs;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import com.evernote.android.job.Job;
@@ -12,9 +11,9 @@ import me.calebjones.spacelaunchnow.content.wear.WearWatchfaceManager;
 import timber.log.Timber;
 
 
-public class UpdateWearJob extends Job {
+public class SyncWearJob extends Job {
 
-    public static final String TAG = "UPDATE_WEAR_JOB";
+    public static final String TAG = "SYNC_WEAR_JOB";
 
     @NonNull
     @Override
@@ -24,11 +23,11 @@ public class UpdateWearJob extends Job {
         return Result.SUCCESS;
     }
 
-    public static void scheduleJobNow() {
+    public static void scheduleJob() {
         Timber.v("Scheduling UpdateWearJob...");
 
-        JobRequest.Builder builder = new JobRequest.Builder(UpdateWearJob.TAG)
-                .startNow()
+        JobRequest.Builder builder = new JobRequest.Builder(SyncWearJob.TAG)
+                .setPeriodic(TimeUnit.HOURS.toMillis(1), TimeUnit.MINUTES.toMillis(30))
                 .setUpdateCurrent(true);
 
         builder.build().schedule();

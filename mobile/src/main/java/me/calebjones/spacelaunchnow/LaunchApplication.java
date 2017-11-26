@@ -43,7 +43,9 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.DataJobCreator;
 import me.calebjones.spacelaunchnow.content.jobs.SyncJob;
+import me.calebjones.spacelaunchnow.content.jobs.SyncWearJob;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateJob;
+import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
 import me.calebjones.spacelaunchnow.data.models.realm.Migration;
@@ -186,8 +188,6 @@ public class LaunchApplication extends Application implements Analytics.Provider
 
         DataClient.create(version);
 
-
-
         try {
             new WebView(getApplicationContext());
         } catch (Exception e) {
@@ -228,6 +228,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
             UpdateJob.scheduleJob(this);
         }
         SyncJob.schedulePeriodicJob(this);
+        SyncWearJob.scheduleJob();
 
         DefaultRuleEngine.trackAppStart(this);
 
