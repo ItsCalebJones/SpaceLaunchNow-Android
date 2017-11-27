@@ -49,18 +49,22 @@ public class Migration implements RealmMigration {
 
 
         if (oldVersion <= Constants.DB_SCHEMA_VERSION_1_8_0) {
-            RealmObjectSchema lsp = schema.create("LSP")
-                    .addField("id", Integer.class, FieldAttribute.PRIMARY_KEY)
-                    .addField("name", String.class)
-                    .addField("abbrev", String.class)
-                    .addField("countryCode", String.class)
-                    .addField("type", Integer.class)
-                    .addField("infoURL", String.class)
-                    .addField("wikiURL", String.class);
+            RealmObjectSchema LSP = schema.get("LSP");
+            if (LSP == null) {
+                RealmObjectSchema lsp = schema.create("LSP")
+                        .addField("id", Integer.class, FieldAttribute.PRIMARY_KEY)
+                        .addField("name", String.class)
+                        .addField("abbrev", String.class)
+                        .addField("countryCode", String.class)
+                        .addField("type", Integer.class)
+                        .addField("infoURL", String.class)
+                        .addField("wikiURL", String.class);
 
-            schema.get("Launch")
-                    .addRealmObjectField("lsp", lsp);
-
+                if (!schema.get("Launch").hasField("lsp")) {
+                    schema.get("Launch")
+                            .addRealmObjectField("lsp", lsp);
+                }
+            }
 
             oldVersion++;
         }
