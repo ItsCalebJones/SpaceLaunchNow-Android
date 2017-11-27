@@ -2,8 +2,6 @@ package me.calebjones.spacelaunchnow.utils;
 
 import android.content.Context;
 
-import net.vrallev.android.cat.Cat;
-
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +12,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import me.calebjones.spacelaunchnow.BuildConfig;
+import timber.log.Timber;
 
 /**
  * @author rwondratschek
@@ -86,7 +85,7 @@ public final class FileUtils {
             try {
                 closeable.close();
             } catch (Exception e) {
-                Cat.e(e);
+                Timber.e(e);
             }
         }
     }
@@ -98,7 +97,7 @@ public final class FileUtils {
             try {
                 FileUtils.writeFile(getSuccessFile(context), text, true);
             } catch (IOException e) {
-                Cat.e(e);
+                Timber.e(e);
             }
         }
     }
