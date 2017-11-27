@@ -16,11 +16,17 @@ def getGitHash = { ->
 }
 def versionPropsFile = file('version.properties')
 if (versionPropsFile.canRead()) {
-    def Properties versionProps = new Properties()
-
+    Properties versionProps = new Properties()
     versionProps.load(new FileInputStream(versionPropsFile))
-
-    def versionBuild = versionProps['VERSION_CODE'].toInteger() + 1
+    List<String> runTasks = gradle.startParameter.getTaskNames()
+    def versionBuild = versionProps['VERSION_CODE'].toInteger()
+    for (String item : runTasks) {
+        if (item.contains("assemble") && item.contains("Release")) {
+            versionBuild = versionBuild + 1
+            versionProps['VERSION_CODE'] = versionBuild.toString()
+            versionProps.store(versionPropsFile.newWriter(), null)
+        }
+    }
 
     versionProps['VERSION_CODE'] = versionBuild.toString()
     versionProps.store(versionPropsFile.newWriter(), null)
@@ -35,6 +41,7 @@ android {
     buildToolsVersion '26.0.2'
 
     defaultConfig {
+        flavorDimensions "release"
         manifestPlaceholders = [ applicationLabel:"@string/app_name"]
         applicationId "me.calebjones.spacelaunchnow"
         minSdkVersion 23
@@ -50,7 +57,22 @@ android {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
-            manifestPlaceholders = [ applicationLabel:"Launch Tracker - Debug"]
+            manifestPlaceholders = [ applicationLabel:"SLN - Debug"]
+        }
+    }
+
+    productFlavors {
+        debugTesting {
+
+        }
+        prod {
+
+        }
+
+        beta {
+            dimension "release"
+            applicationIdSuffix ".beta"
+            versionNameSuffix "-beta"
         }
     }
 }

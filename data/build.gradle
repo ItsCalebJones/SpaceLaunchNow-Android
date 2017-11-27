@@ -41,6 +41,12 @@ android {
             multiDexEnabled false
             dimension "release"
         }
+        beta {
+            // The actual minSdkVersion for the application.
+            minSdkVersion 16
+            multiDexEnabled false
+            dimension "release"
+        }
     }
 }
 

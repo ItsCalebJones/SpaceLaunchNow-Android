@@ -27,7 +27,7 @@ repositories {
 
 def versionMajor = 1
 def versionMinor = 8
-def versionPatch = 0
+def versionPatch = 1
 def appVersionCode = 0
 def appVersionName = ""
 def details = versionDetails()
@@ -63,15 +63,17 @@ android {
                                 onesignal_app_id               : "${app_id}",
                                 onesignal_google_project_number: "${google_project_number}"]
         if (versionPropsFile.canRead()) {
-            def Properties versionProps = new Properties()
-
+            Properties versionProps = new Properties()
             versionProps.load(new FileInputStream(versionPropsFile))
-
-            def versionBuild = versionProps['VERSION_CODE'].toInteger() + 1
-
-            versionProps['VERSION_CODE'] = versionBuild.toString()
-            versionProps.store(versionPropsFile.newWriter(), null)
-
+            List<String> runTasks = gradle.startParameter.getTaskNames()
+            def versionBuild = versionProps['VERSION_CODE'].toInteger()
+            for (String item : runTasks) {
+                if (item.contains("assemble") && item.contains("Release")) {
+                    versionBuild = versionBuild + 1
+                    versionProps['VERSION_CODE'] = versionBuild.toString()
+                    versionProps.store(versionPropsFile.newWriter(), null)
+                }
+            }
 
             minSdkVersion 16
             targetSdkVersion 26
@@ -138,6 +140,12 @@ android {
             multiDexEnabled false
             dimension "release"
         }
+        beta {
+            minSdkVersion 16
+            multiDexEnabled false
+            applicationIdSuffix ".beta"
+            versionNameSuffix "-beta"
+        }
     }
 }
 
@@ -158,13 +166,14 @@ android {
 dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     wearApp project(':wear')
+
     compile('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
         transitive = true
     }
     compile 'com.github.jrvansuita:MaterialAbout:0.1.9'
     compile 'com.github.mukeshsolanki:MarkdownView-Android:1.0.4'
     compile 'com.jaredrummler:colorpicker:1.0.1'
-    compile "com.andkulikov:transitionseverywhere:1.7.7"
+    compile 'com.andkulikov:transitionseverywhere:1.7.7'
     compile 'org.greenrobot:eventbus:3.1.1'
     compile 'com.afollestad.material-dialogs:core:0.9.4.3'
     compile 'com.afollestad.material-dialogs:commons:0.9.3.0'
@@ -223,5 +232,5 @@ dependencies {
     compile 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
     compile 'com.pavelsikun:material-seekbar-preference:2.3.0'
     compile 'com.android.support:multidex:1.0.2'
-    compile project(path: ':data')
+    implementation project(path: ':data')
 }
