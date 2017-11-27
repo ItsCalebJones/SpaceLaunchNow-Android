@@ -170,6 +170,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
                 .migration(new Migration())
                 .build();
 
+        DataClient.create(version);
         LibraryDataManager libraryDataManager;
         JobManager.create(this).addJobCreator(new DataJobCreator());
         try {
@@ -185,8 +186,6 @@ public class LaunchApplication extends Application implements Analytics.Provider
             libraryDataManager.getAllData();
             Crashlytics.logException(e);
         }
-
-        DataClient.create(version);
 
         try {
             new WebView(getApplicationContext());
