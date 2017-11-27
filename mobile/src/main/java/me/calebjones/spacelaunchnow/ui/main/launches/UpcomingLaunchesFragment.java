@@ -395,7 +395,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
                 adapter.addItems(results);
             }
             hideLoading();
-            launchRealms.removeChangeListeners();
+            launchRealms.removeAllChangeListeners();
         }
     };
 
@@ -515,7 +515,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     }
 
     public void onRefresh() {
-        launchRealms.removeChangeListeners();
+        launchRealms.removeAllChangeListeners();
         if (!switchPreferences.isUpFiltered()) {
             getUpcomingLaunchData();
         } else {

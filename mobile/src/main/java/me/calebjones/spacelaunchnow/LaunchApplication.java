@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.format.DateFormat;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.zetterstrom.com.forecast.ForecastClient;
 import android.zetterstrom.com.forecast.ForecastConfiguration;
@@ -42,7 +43,9 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.DataJobCreator;
 import me.calebjones.spacelaunchnow.content.jobs.SyncJob;
+import me.calebjones.spacelaunchnow.content.jobs.SyncWearJob;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateJob;
+import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
 import me.calebjones.spacelaunchnow.data.models.realm.Migration;
@@ -158,9 +161,6 @@ public class LaunchApplication extends Application implements Analytics.Provider
         } else {
             version = "1.3";
         }
-        DataClient.create(version);
-        LibraryDataManager libraryDataManager = new LibraryDataManager(this);
-        JobManager.create(this).addJobCreator(new DataJobCreator());
 
         Realm.init(this);
 
@@ -170,21 +170,28 @@ public class LaunchApplication extends Application implements Analytics.Provider
                 .migration(new Migration())
                 .build();
 
-
+        DataClient.create(version);
+        LibraryDataManager libraryDataManager;
+        JobManager.create(this).addJobCreator(new DataJobCreator());
         try {
             Realm.setDefaultConfiguration(config);
+            Realm.compactRealm(config);
             Realm realm = Realm.getDefaultInstance();
             realm.close();
+            libraryDataManager = new LibraryDataManager(this);
         } catch (RealmMigrationNeededException | NullPointerException e) {
             Realm.deleteRealm(config);
             Realm.setDefaultConfiguration(config);
-
+            libraryDataManager = new LibraryDataManager(this);
             libraryDataManager.getAllData();
-
             Crashlytics.logException(e);
         }
 
-
+        try {
+            new WebView(getApplicationContext());
+        } catch (Exception e) {
+            Timber.e("Got exception while trying to instantiate WebView to avoid night mode issue. Ignoring problem.", e);
+        }
         if (sharedPreference.isNightThemeEnabled()) {
             if (sharedPreference.isDayNightAutoEnabled()) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
@@ -220,6 +227,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
             UpdateJob.scheduleJob(this);
         }
         SyncJob.schedulePeriodicJob(this);
+        SyncWearJob.scheduleJob();
 
         DefaultRuleEngine.trackAppStart(this);
 

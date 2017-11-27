@@ -36,15 +36,13 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
     private RealmList<Mission> missionList;
 
     private Context mContext;
-    private Context aContext;
     private Boolean night;
     private static ListPreferences sharedPreference;
 
-    public MissionAdapter(Context context, Context aContext) {
+    public MissionAdapter(Context context) {
         missionList = new RealmList<>();
         sharedPreference = ListPreferences.getInstance(context);
         this.mContext = context;
-        this.aContext = aContext;
     }
 
     public void addItems(List<Mission> missionList) {
@@ -93,7 +91,7 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
         if (mission.getLaunch() != null && mission.getLaunch().getId() != null) {
 
             if (mission.getInfoURL() != null) {
-                ((MainActivity) aContext).mayLaunchUrl(Uri.parse(mission.getInfoURL()));
+                ((MainActivity) mContext).mayLaunchUrl(Uri.parse(mission.getInfoURL()));
             }
             //If there's no info on the launch hide the button and no need to check for launch date.
             if (mission.getLaunch().getId() == 0) {
@@ -142,7 +140,7 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
             if (mission.getInfoURL().length() == 0) {
                 holder.infoButton.setVisibility(View.INVISIBLE);
             } else {
-                ((MainActivity) aContext).mayLaunchUrl(Uri.parse(mission.getInfoURL()));
+                ((MainActivity) mContext).mayLaunchUrl(Uri.parse(mission.getInfoURL()));
                 holder.infoButton.setVisibility(View.VISIBLE);
             }
         } else {
@@ -195,21 +193,21 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
             switch (v.getId()) {
                 case R.id.launchButton:
                     Timber.v("Launch: %s", missionList.get(position).getLaunch());
-                    Intent exploreIntent = new Intent(aContext, LaunchDetailActivity.class);
+                    Intent exploreIntent = new Intent(mContext, LaunchDetailActivity.class);
                     exploreIntent.putExtra("TYPE", "launch");
                     exploreIntent.putExtra("launchID", missionList
                             .get(position)
                             .getLaunch()
                             .getId());
-                    aContext.startActivity(exploreIntent);
+                    mContext.startActivity(exploreIntent);
                     break;
                 case R.id.infoButton:
                     Timber.v("Info : %s", missionList
                             .get(position)
                             .getInfoURL());
-                    Activity activity = (Activity) aContext;
+                    Activity activity = (Activity) mContext;
 
-                    Utils.openCustomTab(activity, aContext, missionList
+                    Utils.openCustomTab(activity, mContext, missionList
                             .get(position)
                             .getInfoURL());
                     break;

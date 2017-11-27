@@ -31,14 +31,14 @@ if (versionPropsFile.canRead()) {
 }
 
 android {
-    compileSdkVersion 24
+    compileSdkVersion 27
     buildToolsVersion '26.0.2'
 
     defaultConfig {
         manifestPlaceholders = [ applicationLabel:"@string/app_name"]
         applicationId "me.calebjones.spacelaunchnow"
         minSdkVersion 23
-        targetSdkVersion 24
+        targetSdkVersion 27
         versionCode appVersionCode
         versionName appVersionName
     }
@@ -57,10 +57,10 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    provided 'com.google.android.wearable:wearable:1.0.0'
-    compile 'com.google.android.support:wearable:1.4.0'
+    provided 'com.google.android.wearable:wearable:2.1.0'
+    compile 'com.google.android.support:wearable:2.1.0'
     compile "com.google.android.gms:play-services-wearable:$rootProject.playServicesVersion"
-    compile 'com.jakewharton.timber:timber:4.5.1'
-    compile 'blue.aodev:material-values:1.1.0'
-    compile 'com.android.support:palette-v7:24.1.1'
+    compile 'com.jakewharton.timber:timber:4.6.0'
+    compile 'blue.aodev:material-values:1.1.1'
+    compile 'com.android.support:palette-v7:27.0.1'
 }

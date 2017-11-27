@@ -110,7 +110,8 @@ public class DataSaver {
                 mRealm.commitTransaction();
             }
         }
-        syncNotifiers();
+        syncNotifiers(mRealm);
+        mRealm.close();
         isSaving = false;
     }
 
@@ -143,8 +144,9 @@ public class DataSaver {
             mRealm.copyToRealmOrUpdate(item);
             mRealm.commitTransaction();
         }
-        syncNotifiers();
+        syncNotifiers(mRealm);
         isSaving = false;
+        mRealm.close();
     }
 
     private static boolean isLaunchTimeChanged(Launch previous, Launch item) {
@@ -156,13 +158,12 @@ public class DataSaver {
         return false;
     }
 
-    public void syncNotifiers() {
+    public void syncNotifiers(Realm mRealm) {
         isSyncing = true;
         RealmResults<Launch> launchRealms;
         Date date = new Date();
 
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
-        Realm mRealm = Realm.getDefaultInstance();
 
         if (switchPreferences.getAllSwitch()) {
             launchRealms = mRealm.where(Launch.class)
@@ -216,8 +217,8 @@ public class DataSaver {
         }
 
         context.sendBroadcast(broadcastIntent);
-
-        Realm.getDefaultInstance().executeTransaction(new Realm.Transaction() {
+        Realm mRealm = Realm.getDefaultInstance();
+        mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 UpdateRecord updateRecord = new UpdateRecord();
@@ -227,5 +228,6 @@ public class DataSaver {
                 realm.copyToRealmOrUpdate(updateRecord);
             }
         });
+        mRealm.close();
     }
 }

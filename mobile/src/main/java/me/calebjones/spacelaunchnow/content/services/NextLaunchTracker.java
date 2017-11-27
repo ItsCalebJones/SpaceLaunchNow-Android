@@ -8,9 +8,7 @@ import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.SyncJob;
 import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactManager;
-import me.calebjones.spacelaunchnow.widget.launchcard.UpdateLaunchCardJob;
 import me.calebjones.spacelaunchnow.widget.wordtimer.LaunchWordTimerManager;
-import me.calebjones.spacelaunchnow.widget.wordtimer.UpdateWordTimerJob;
 import me.calebjones.spacelaunchnow.content.wear.WearWatchfaceManager;
 import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactWidgetProvider;
 import me.calebjones.spacelaunchnow.widget.wordtimer.LaunchWordTimerWidgetProvider;
@@ -34,7 +32,7 @@ public NextLaunchTracker(Context context) {
             syncCalendar();
         }
 
-        scheduleWear();
+        updateWear();
         updateWidgets();
         SyncJob.schedulePeriodicJob(context);
     }
@@ -64,7 +62,7 @@ public NextLaunchTracker(Context context) {
         calendarSyncManager.syncAllEevnts();
     }
 
-    public void scheduleWear() {
+    public void updateWear() {
         WearWatchfaceManager watchfaceManager = new WearWatchfaceManager(context);
         watchfaceManager.updateWear();
     }

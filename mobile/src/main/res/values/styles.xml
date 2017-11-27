@@ -160,24 +160,6 @@
         <item name="android:background">@color/black_overlay</item>
     </style>
 
-    <style name="AboutLibraries" parent="BaseAppTheme">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <!-- Here we setting appcompat’s actionBarStyle -->
-        <item name="drawerArrowStyle">@style/AboutLibrariesTheme.DrawerArrowStyle</item>
-        <!-- AboutLibraries specific values -->
-        <item name="android:windowBackground">@color/white</item>
-        <item name="android:title">@color/white</item>
-        <item name="about_libraries_card">@color/about_libraries_card</item>
-        <item name="about_libraries_special_button_openSource">
-            @color/about_libraries_special_button_openSource
-        </item>
-        <item name="about_libraries_dividerDark_openSource">
-            @color/about_libraries_dividerDark_openSource
-        </item>
-        <item name="about_libraries_dividerLight_openSource">
-            @color/about_libraries_dividerLight_openSource
-        </item>
-    </style>
 
     <style name="CircularProgress" parent="Theme.AppCompat.Light">
         <item name="colorAccent">@color/colorAccent</item>

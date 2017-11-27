@@ -46,7 +46,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:lines="1"
-                        android:text="Launch Location Agencies"
+                        android:text="Mission Agency"
                         android:textAlignment="center"
                         android:textColor="?android:textColorPrimary"
                         android:textSize="@dimen/material_typography_regular_title_text_size"
@@ -60,7 +60,7 @@
                         android:gravity="center"
                         android:lines="1"
                         android:singleLine="false"
-                        android:text="Unknown Mission Agencies"
+                        android:text="Unknown"
                         android:textAlignment="center"
                         android:textColor="?android:textColorSecondary"
                         android:textSize="@dimen/material_typography_regular_subheading_text_size" />
@@ -262,12 +262,12 @@
                 android:paddingTop="@dimen/material_card_edge_margin">
 
                 <TextView
-                    android:id="@+id/launch_agency_title"
+                    android:id="@+id/vehicle_agency_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:lines="1"
-                    android:text="Vehicle Agencies"
+                    android:text="Vehicle Agency"
                     android:textAlignment="center"
                     android:textColor="?android:textColorPrimary"
                     android:textSize="@dimen/material_typography_regular_title_text_size"
@@ -281,7 +281,7 @@
                     android:gravity="center"
                     android:lines="1"
                     android:singleLine="false"
-                    android:text="Unknown Vehicle Agencies"
+                    android:text="Unknown"
                     android:textAlignment="center"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="@dimen/material_typography_regular_subheading_text_size" />
@@ -308,7 +308,7 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:gravity="start"
-                        android:lines="1"
+                        android:lines="2"
                         android:paddingBottom="@dimen/material_card_supporting_text_padding_bottom"
                         android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
                         android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"

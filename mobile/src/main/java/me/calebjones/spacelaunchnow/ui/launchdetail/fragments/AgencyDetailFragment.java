@@ -91,6 +91,10 @@ public class AgencyDetailFragment extends BaseFragment {
     TextView mission_agency_summary_one;
     @BindView(R.id.mission_agency_summary_two)
     TextView mission_agency_summary_two;
+    @BindView(R.id.mission_agency_title)
+    TextView mission_agency_title;
+    @BindView(R.id.vehicle_agency_title)
+    TextView vehicle_agency_title;
 
     @Nullable
     @Override
@@ -136,12 +140,25 @@ public class AgencyDetailFragment extends BaseFragment {
 
             Timber.v("Setting up views...");
 
-            int pads = detailLaunch.getLocation().getPads().size();
+            int pads = 0;
             int mission_agencies = 0;
-            if (pads > 0) {
+            int vehicle_agencies = 0;
+            if (detailLaunch.getLocation() != null
+                    && detailLaunch.getLocation().getPads() !=null) {
+                pads = detailLaunch.getLocation().getPads().size();
+            }
+            if (pads > 0 && detailLaunch.getLocation() != null
+                    && detailLaunch.getLocation().getPads() !=null
+                    && detailLaunch.getLocation().getPads().get(0).getAgencies() != null) {
                 mission_agencies = detailLaunch.getLocation().getPads().get(0).getAgencies().size();
             }
-            int vehicle_agencies = detailLaunch.getRocket().getAgencies().size();
+            if (detailLaunch.getRocket() != null && detailLaunch.getRocket().getAgencies() != null) {
+                vehicle_agencies = detailLaunch.getRocket().getAgencies().size();
+            }
+
+            if (detailLaunch.getMissions() !=null && detailLaunch.getMissions().size() > 0){
+                mission_agency_type.setText(detailLaunch.getMissions().get(0).getName());
+            }
 
             if (mission_agencies >= 2) {
                 setTwoMissionAgencies();
@@ -168,11 +185,11 @@ public class AgencyDetailFragment extends BaseFragment {
         mission_one.setVisibility(View.GONE);
         mission_two.setVisibility(View.GONE);
 
+        mission_agency_title.setText("Mission Agency");
     }
 
     private void setOneMissionAgencies() {
         mission_agency_type.setVisibility(View.VISIBLE);
-        mission_agency_type.setText(detailLaunch.getLocation().getPads().get(0).getName());
         String agencyTypeOne = getAgencyType(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getType());
         String agencyNameOne = detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getName();
         String agencyAbbrevOne = detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getAbbrev();
@@ -234,7 +251,7 @@ public class AgencyDetailFragment extends BaseFragment {
 
     private void setTwoMissionAgencies() {
         mission_agency_type.setVisibility(View.VISIBLE);
-        mission_agency_type.setText(detailLaunch.getLocation().getPads().get(0).getName());
+        mission_agency_title.setText("Mission Agencies");
 
         String agencyTypeOne = getAgencyType(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getType());
         String agencyNameOne = detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getName();
@@ -338,6 +355,9 @@ public class AgencyDetailFragment extends BaseFragment {
         launch_one.setVisibility(View.GONE);
         launch_two.setVisibility(View.GONE);
 
+        vehicle_agency_title.setText("Vehicle Agency");
+        launch_agency_type.setText("Unknown");
+
     }
 
     private void setOneVehicleAgencies() {
@@ -409,6 +429,8 @@ public class AgencyDetailFragment extends BaseFragment {
         String agencyOne = getAgencyType(detailLaunch.getRocket().getAgencies().get(0).getType());
         String agencyNameOne = detailLaunch.getRocket().getAgencies().get(0).getName();
         String agencyAbbrevOne = detailLaunch.getRocket().getAgencies().get(0).getAbbrev();
+
+        vehicle_agency_title.setText("Vehicle Agencies");
 
         checkLaunchSummary(agencyAbbrevOne, launch_agency_summary_one);
 

@@ -63,7 +63,7 @@
             app:cpv_previewSize="large"
             app:cpv_showAlphaSlider="true"/>
         <com.jaredrummler.android.colorpicker.ColorPreference
-            android:defaultValue="@color/white"
+            android:defaultValue="0xB3FFFFFF"
             android:key="widget_secondary_text_color"
             android:summary="Select the secondary text color for widgets."
             android:title="Secondary Text Color"
@@ -81,7 +81,7 @@
             app:cpv_previewSize="large"
             app:cpv_showAlphaSlider="true"/>
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="widget_theme_round_corner"
             android:summary="Enable round corners for widgets."
             android:title="Round Corners" />

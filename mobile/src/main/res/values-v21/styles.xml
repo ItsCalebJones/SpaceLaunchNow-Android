@@ -95,23 +95,4 @@
         <item name="android:layout_width">40dp</item>
     </style>
 
-    <style name="AboutLibraries" parent="BaseAppTheme">
-        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <!-- Here we setting appcompat’s actionBarStyle -->
-        <item name="drawerArrowStyle">@style/AboutLibrariesTheme.DrawerArrowStyle</item>
-        <item name="android:scrollbarStyle">@color/white</item>
-        <!-- AboutLibraries specific values -->
-        <item name="android:windowBackground">@color/white</item>
-        <item name="about_libraries_card">@color/about_libraries_card</item>
-        <item name="about_libraries_special_button_openSource">
-            @color/about_libraries_special_button_openSource
-        </item>
-        <item name="about_libraries_dividerDark_openSource">
-            @color/about_libraries_dividerDark_openSource
-        </item>
-        <item name="about_libraries_dividerLight_openSource">
-            @color/about_libraries_dividerLight_openSource
-        </item>
-    </style>
 </resources>

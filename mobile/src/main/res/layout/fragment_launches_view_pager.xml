@@ -12,6 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         app:tabGravity="fill"
+        app:tabBackground="@color/colorPrimary"
+        app:tabTextColor="@color/dark_theme_secondary_text_color"
+        app:tabSelectedTextColor="@color/dark_theme_primary_text_color"
         app:tabMode="fixed" />
 
     <android.support.v4.view.ViewPager
