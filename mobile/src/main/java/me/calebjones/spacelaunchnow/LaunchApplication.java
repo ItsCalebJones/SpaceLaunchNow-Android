@@ -15,11 +15,9 @@ import android.widget.ImageView;
 import android.zetterstrom.com.forecast.ForecastClient;
 import android.zetterstrom.com.forecast.ForecastConfiguration;
 
-import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.evernote.android.job.JobManager;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
@@ -45,8 +43,8 @@ import me.calebjones.spacelaunchnow.content.jobs.DataJobCreator;
 import me.calebjones.spacelaunchnow.content.jobs.SyncJob;
 import me.calebjones.spacelaunchnow.content.jobs.SyncWearJob;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateJob;
-import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
+import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
 import me.calebjones.spacelaunchnow.data.models.realm.Migration;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
@@ -59,7 +57,6 @@ import okhttp3.OkHttpClient;
 import timber.log.Timber;
 
 import static me.calebjones.spacelaunchnow.data.models.Constants.DB_SCHEMA_VERSION_1_5_6;
-import static me.calebjones.spacelaunchnow.data.models.Constants.TIME_KEY;
 
 public class LaunchApplication extends Application implements Analytics.Provider {
 
@@ -165,7 +162,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
         Realm.init(this);
 
         RealmConfiguration config = new RealmConfiguration.Builder()
-                .schemaVersion(DB_SCHEMA_VERSION_1_5_6)
+                .schemaVersion(Constants.DB_SCHEMA_VERSION_1_8_0)
                 .modules(Realm.getDefaultModule(), new LaunchDataModule())
                 .migration(new Migration())
                 .build();

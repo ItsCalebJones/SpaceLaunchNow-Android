@@ -6,9 +6,7 @@ import io.realm.FieldAttribute;
 import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
 import io.realm.RealmSchema;
-import me.calebjones.spacelaunchnow.data.models.Agency;
 import me.calebjones.spacelaunchnow.data.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.LSP;
 import timber.log.Timber;
 
 public class Migration implements RealmMigration {
@@ -50,7 +48,7 @@ public class Migration implements RealmMigration {
         }
 
 
-        if (oldVersion <= Constants.DB_SCHEMA_VERSION_1_7_1) {
+        if (oldVersion <= Constants.DB_SCHEMA_VERSION_1_8_0) {
             RealmObjectSchema lsp = schema.create("LSP")
                     .addField("id", Integer.class, FieldAttribute.PRIMARY_KEY)
                     .addField("name", String.class)
