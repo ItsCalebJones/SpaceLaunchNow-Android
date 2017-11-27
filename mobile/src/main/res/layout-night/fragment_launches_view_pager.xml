@@ -11,6 +11,7 @@
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:background="@color/darkPrimary"
         app:tabGravity="fill"
         app:tabBackground="@color/darkPrimary"
         app:tabTextColor="@color/dark_theme_secondary_text_color"
