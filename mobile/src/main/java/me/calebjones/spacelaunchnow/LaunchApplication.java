@@ -233,13 +233,8 @@ public class LaunchApplication extends Application implements Analytics.Provider
         Once.initialise(this);
 
         if (Once.beenDone(Once.THIS_APP_INSTALL, "loadInitialData")) {
-            Timber.i("Stored Version Code: %s", switchPreferences.getVersionCode());
-            if (switchPreferences.getVersionCode() <= DB_SCHEMA_VERSION_1_5_6) {
-                libraryDataManager.getAllData();
-            } else {
-                DataRepositoryManager dataRepositoryManager = new DataRepositoryManager(this);
-                dataRepositoryManager.syncBackground();
-            }
+            DataRepositoryManager dataRepositoryManager = new DataRepositoryManager(this);
+            dataRepositoryManager.syncBackground();
         } else {
             libraryDataManager.getAllData();
             Once.markDone("loadInitialData");

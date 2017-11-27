@@ -26,12 +26,14 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
@@ -47,6 +49,7 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
@@ -59,6 +62,7 @@ import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
+import me.calebjones.spacelaunchnow.ui.intro.OnboardingActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
@@ -127,15 +131,36 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         setScreenName("Next Launch Fragment");
     }
 
-    public void showCaseView() {
+    private void showCaseView() {
         if (NextLaunchFragment.this.isVisible()) {
             Button customButton = (Button) getLayoutInflater(null).inflate(R.layout.view_custom_button, null);
             ViewTarget pinMenuItem = new ViewTarget(R.id.action_alert, getActivity());
-            if (pinMenuItem != null && customButton != null) {
+            if (customButton != null) {
                 ShowcaseView.Builder builder = new ShowcaseView.Builder(getActivity())
                         .withNewStyleShowcase()
                         .setTarget(pinMenuItem)
                         .setContentTitle("Launch Filtering")
+                        .setShowcaseEventListener(new OnShowcaseEventListener() {
+                            @Override
+                            public void onShowcaseViewHide(ShowcaseView showcaseView) {
+                                showChangelogSnackbar();
+                            }
+
+                            @Override
+                            public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
+
+                            }
+
+                            @Override
+                            public void onShowcaseViewShow(ShowcaseView showcaseView) {
+
+                            }
+
+                            @Override
+                            public void onShowcaseViewTouchBlocked(MotionEvent motionEvent) {
+
+                            }
+                        })
                         .setContentText("Only receive notifications for launches that you care about.");
                 if (sharedPreference.isNightModeActive(context)) {
                     builder.setStyle(R.style.ShowCaseThemeDark).replaceEndButton(customButton).build();
@@ -481,10 +506,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         Timber.v("onResume");
         setTitle();
 
-        //First install
-        if (switchPreferences.getVersionCode() == 0) {
-            switchPreferences.setVersionCode(Utils.getVersionCode(context));
-            showCaseView();
+        if (Once.beenDone("showTutorial") && !Once.beenDone(Once.THIS_APP_INSTALL, "showChangelogAndIntro")) {
+            Once.markDone("showChangelogAndIntro");
+            Once.markDone("showChangelog");
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -492,13 +516,11 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     showCaseView();
                 }
             }, 1000);
+        }
 
-            //build 87 is where Realm change happened
-        } else if (switchPreferences.getVersionCode() <= 87) {
-            Toast.makeText(context, "Upgraded from a legacy build, might need to refresh data manually.", Toast.LENGTH_LONG).show();
 
-            //Upgrade post Realm change.
-        } else if (Utils.getVersionCode(context) != switchPreferences.getVersionCode()) {
+        if (!Once.beenDone(Once.THIS_APP_VERSION, "showChangelog")) {
+            Once.markDone("showChangelog");
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -506,7 +528,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     showChangelogSnackbar();
                 }
             }, 1000);
-            switchPreferences.setVersionCode(Utils.getVersionCode(context));
         }
 
         IntentFilter intentFilter = new IntentFilter();
@@ -548,22 +569,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         Snackbar snackbar = Snackbar
                 .make(coordinatorLayout, "Updated to version " + Utils.getVersionName(context), Snackbar.LENGTH_LONG)
                 .setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
-                .setCallback(new Snackbar.Callback() {
-                    @Override
-                    public void onDismissed(Snackbar snackbar, int event) {
-                        super.onDismissed(snackbar, event);
-                        Timber.v("Current Version code: %s", switchPreferences.getVersionCode());
-                        if (switchPreferences.getVersionCode() <= 43) {
-                            final Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    showCaseView();
-                                }
-                            }, 1000);
-                        }
-                    }
-                })
                 .setAction("Changelog", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
