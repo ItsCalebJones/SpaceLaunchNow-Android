@@ -55,8 +55,10 @@ public class NotificationReceiver extends NotificationExtenderService {
                         Calendar now = Calendar.getInstance();
                         long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
 
-                        boolean update = data.getString("notification_type").contains("netstampChanged");
-                        NotificationBuilder.notifyUser(getApplicationContext(), launch, timeToFinish, update);
+                        if (timeToFinish > 0) {
+                            boolean update = data.getString("notification_type").contains("netstampChanged");
+                            NotificationBuilder.notifyUser(getApplicationContext(), launch, timeToFinish, update);
+                        }
                     }
                     return true;
                 } else {
