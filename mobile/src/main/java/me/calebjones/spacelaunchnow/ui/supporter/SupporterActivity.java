@@ -29,6 +29,7 @@ import com.anjlab.android.iab.v3.TransactionDetails;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
+import com.transitionseverywhere.TransitionManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,7 +40,6 @@ import me.calebjones.spacelaunchnow.data.models.Products;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import timber.log.Timber;
-import xyz.hanks.library.SmallBang;
 
 public class SupporterActivity extends BaseActivity implements BillingProcessor.IBillingHandler {
 
@@ -55,7 +55,6 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     View supportThankYou;
 
     BillingProcessor bp;
-    SmallBang mSmallBang;
 
     private ImageView icon;
     private AppCompatSeekBar seekbar;
@@ -82,16 +81,15 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         setContentView(R.layout.activity_support);
         ButterKnife.bind(this);
 
-        if (SupporterHelper.isSupporter()){
+        if (SupporterHelper.isSupporter()) {
             purchaseButton.setText("You again? Sure!");
+            enterReveal(supportThankYou);
         } else {
             purchaseButton.setText("Upgrade to Supporter");
         }
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setTitle("");
-
-        mSmallBang = SmallBang.attach2Window(this);
 
         boolean isAvailable = BillingProcessor.isIabServiceAvailable(context);
         if (isAvailable) {
@@ -124,52 +122,48 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     }
 
     @OnClick(R.id.purchase)
-    public void checkClick(View v) {
-        switch (v.getId()) {
-            case R.id.purchase:
-                Analytics.from(this).sendButtonClicked("Supporter Button clicked.");
-                MaterialDialog dialog = new MaterialDialog.Builder(this)
-                        .title("Thanks for your Support!")
-                        .customView(R.layout.seekbar_dialog_supporter, true)
-                        .positiveText("Ok")
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                makePurchase(seekbar.getProgress());
-                            }
-                        })
-                        .show();
-
-                seekbar = (AppCompatSeekBar) dialog.getCustomView().findViewById(R.id.dialog_seekbar);
-                icon = (ImageView) dialog.getCustomView().findViewById(R.id.dialog_icon);
-                text = (TextView) dialog.getCustomView().findViewById(R.id.dialog_text);
-
-                setIconPosition(1);
-                seekbar.setProgress(1);
-
-                seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+    public void checkClick() {
+        Analytics.from(this).sendButtonClicked("Supporter Button clicked.");
+        MaterialDialog dialog = new MaterialDialog.Builder(this)
+                .title("Thanks for your Support!")
+                .customView(R.layout.seekbar_dialog_supporter, true)
+                .positiveText("Ok")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onProgressChanged(SeekBar seekBar, int position, boolean b) {
-                        setIconPosition(position);
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        makePurchase(seekbar.getProgress());
                     }
+                })
+                .show();
 
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
+        seekbar = (AppCompatSeekBar) dialog.getCustomView().findViewById(R.id.dialog_seekbar);
+        icon = (ImageView) dialog.getCustomView().findViewById(R.id.dialog_icon);
+        text = (TextView) dialog.getCustomView().findViewById(R.id.dialog_text);
 
-                    }
+        setIconPosition(1);
+        seekbar.setProgress(1);
 
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int position, boolean b) {
+                setIconPosition(position);
+            }
 
-                    }
-                });
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
 
-        }
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     private void makePurchase(int product) {
         String sku = null;
-        switch (product){
+        switch (product) {
             case 0:
                 sku = SupporterHelper.SKU_TWO_DOLLAR;
                 break;
@@ -267,61 +261,10 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
                 AppBarLayout.LayoutParams.MATCH_PARENT,
                 AppBarLayout.LayoutParams.WRAP_CONTENT
         ));
-
-        // get the center for the clipping circle
-        int cx = myView.getMeasuredWidth() / 2;
-        int cy = myView.getMeasuredHeight() / 2;
-
-        // get the final radius for the clipping circle
-        int finalRadius = Math.max(myView.getWidth(), myView.getHeight()) / 2;
-
-        // create the animator for this view (the start radius is zero)
-        Animator anim;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            anim = ViewAnimationUtils.createCircularReveal(myView, cx, cy, 0, finalRadius);
-            anim.setInterpolator(new AccelerateDecelerateInterpolator());
-            anim.setDuration(400);
-            anim.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                    delayedSmallBand(myView);
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-
-                }
-            });
-
-            // make the view visible and start the animation
-            myView.setVisibility(View.VISIBLE);
-            anim.start();
-        } else {
-            myView.setVisibility(View.VISIBLE);
-            delayedSmallBand(myView);
-        }
+        TransitionManager.beginDelayedTransition(coordinatorLayout);
+        myView.setVisibility(View.VISIBLE);
     }
 
-    private void delayedSmallBand(final View myView) {
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mSmallBang.bang(myView);
-            }
-        }, 250);
-
-    }
 
     public void setIconPosition(int iconPosition) {
 
@@ -329,23 +272,23 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
             case 0:
                 text.setText("Bronze - $1.99");
                 icon.setImageDrawable(new IconicsDrawable(this)
-                                              .icon(GoogleMaterial.Icon.gmd_local_drink)
-                                              .color(Color.BLACK)
-                                              .sizeDp(96));
+                        .icon(GoogleMaterial.Icon.gmd_local_drink)
+                        .color(Color.BLACK)
+                        .sizeDp(96));
                 break;
             case 1:
                 text.setText("Silver - $5.99");
                 icon.setImageDrawable(new IconicsDrawable(this)
-                                              .icon(GoogleMaterial.Icon.gmd_local_cafe)
-                                              .color(Color.BLACK)
-                                              .sizeDp(96));
+                        .icon(GoogleMaterial.Icon.gmd_local_cafe)
+                        .color(Color.BLACK)
+                        .sizeDp(96));
                 break;
             case 2:
                 text.setText("Gold - $11.99");
                 icon.setImageDrawable(new IconicsDrawable(this)
-                                              .icon(GoogleMaterial.Icon.gmd_local_dining)
-                                              .color(Color.BLACK)
-                                              .sizeDp(96));
+                        .icon(GoogleMaterial.Icon.gmd_local_dining)
+                        .color(Color.BLACK)
+                        .sizeDp(96));
                 break;
             case 3:
                 text.setText("Platinum - $29.99");

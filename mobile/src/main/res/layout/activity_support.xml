@@ -1,429 +1,430 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  android:id="@+id/coordinatorLayout"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent">
-
-  <android.support.design.widget.AppBarLayout
-    android:id="@+id/app_bar_layout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?attr/colorPrimary"
-    android:layout_marginBottom="@dimen/material_baseline_grid_2x"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    android:layout_height="match_parent">
 
-    <android.support.design.widget.CollapsingToolbarLayout
-      android:id="@+id/main.collapsing"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      app:contentScrim="?attr/colorPrimary"
-      app:expandedTitleMarginEnd="64dp"
-      app:expandedTitleMarginStart="48dp"
-      app:layout_scrollFlags="scroll">
-
-      <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        style="@style/ToolBarWithNavigationBack"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="?attr/actionBarSize"
-        app:layout_collapseMode="pin"
-        app:layout_scrollFlags="scroll"
+        android:layout_marginBottom="@dimen/material_baseline_grid_2x"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        app:theme="@style/ThemeOverlay.AppCompat.Dark" />
-
-        <FrameLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          app:layout_scrollFlags="scroll">
-
-          <ImageView
-            android:id="@+id/image_background"
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/main.collapsing"
             android:layout_width="match_parent"
-            android:layout_height="256dp"
-            android:fitsSystemWindows="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/intro_slide_background"
-            app:layout_collapseMode="parallax"
-            app:layout_scrollFlags="scroll" />
+            android:layout_height="wrap_content"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="scroll">
 
-          <ImageView
-            android:id="@+id/image"
-            android:layout_width="match_parent"
-            android:layout_height="256dp"
-            android:fitsSystemWindows="true"
-            android:scaleType="centerInside"
-            android:src="@drawable/intro_slide_one_foreground"
-            app:layout_collapseMode="parallax"
-            app:layout_scrollFlags="scroll" />
-        </FrameLayout>
-    </android.support.design.widget.CollapsingToolbarLayout>
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                style="@style/ToolBarWithNavigationBack"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:layout_scrollFlags="scroll"
+
+                app:theme="@style/ThemeOverlay.AppCompat.Dark" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll">
+
+                <ImageView
+                    android:id="@+id/image_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="256dp"
+                    android:fitsSystemWindows="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/intro_slide_background"
+                    app:layout_collapseMode="parallax"
+                    app:layout_scrollFlags="scroll" />
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="match_parent"
+                    android:layout_height="256dp"
+                    android:fitsSystemWindows="true"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/intro_slide_one_foreground"
+                    app:layout_collapseMode="parallax"
+                    app:layout_scrollFlags="scroll" />
+            </FrameLayout>
+        </android.support.design.widget.CollapsingToolbarLayout>
 
 
         <LinearLayout
-          android:id="@+id/detail.title_container"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:gravity="center"
-          android:orientation="vertical">
-
-          <TextView
-            android:id="@+id/detail_rocket"
-            style="@style/MaterialTypography.Regular.Title"
-            android:layout_width="wrap_content"
+            android:id="@+id/detail.title_container"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="32dp"
-            android:layout_marginRight="32dp"
-            android:maxLines="1"
-            android:paddingTop="8dp"
-            android:text="Become a Supporter"
-            android:textSize="26sp" />
+            android:gravity="center"
+            android:orientation="vertical">
 
-          <TextView
-            android:id="@+id/detail_mission_location"
-            style="@style/MaterialTypography.Regular.Subheading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="4dp"
-            android:maxLines="1"
-            android:text="Get Pro Features"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
+            <TextView
+                android:id="@+id/detail_rocket"
+                style="@style/MaterialTypography.Regular.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:maxLines="1"
+                android:paddingTop="8dp"
+                android:text="Become a Supporter"
+                android:textSize="26sp" />
+
+            <TextView
+                android:id="@+id/detail_mission_location"
+                style="@style/MaterialTypography.Regular.Subheading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="4dp"
+                android:maxLines="1"
+                android:text="Get Pro Features"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
         </LinearLayout>
 
-    <LinearLayout
-      android:id="@+id/support_thank_you"
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      android:padding="10dp"
-      android:orientation="vertical"
-      android:background="?attr/colorAccent"
-      android:visibility="invisible">
-
-      <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
-        android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
-        android:gravity="center"
-        android:text="Thank you for your continued support!"
-        android:textColor="@color/material_typography_primary_text_color_light"
-        android:textSize="@dimen/material_typography_regular_title_text_size" />
-
-      <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/material_baseline_grid_1.5x"
-        android:layout_marginRight="@dimen/material_baseline_grid_1.5x"
-        android:text="@string/thank_you"
-        android:textColor="@color/material_typography_secondary_text_color_light" />
-
-    </LinearLayout>
-
-  </android.support.design.widget.AppBarLayout>
-
-  <android.support.v4.widget.NestedScrollView
-    android:id="@+id/nested_scroll_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:scrollbars="none"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-    <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="vertical">
-
-      <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
         <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:orientation="vertical">
-
-          <android.support.v7.widget.CardView
+            android:id="@+id/support_thank_you"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
-            android:layout_marginLeft="@dimen/material_baseline_grid_1x"
-            android:layout_marginRight="@dimen/material_baseline_grid_1x"
-            android:layout_marginTop="@dimen/material_baseline_grid_0.5x">
+            android:layout_height="0dp"
+            android:background="?attr/colorAccent"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:visibility="invisible">
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:orientation="horizontal"
-              android:padding="10dp">
-
-              <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imgIcon"
-                android:layout_width="64dp"
-                android:layout_height="fill_parent"
-                android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
-                android:layout_marginRight="@dimen/material_baseline_grid_1x"
-                android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
-                android:gravity="center_vertical"
-                android:src="@drawable/ic_support"
-                app:civ_border_color="@color/colorAccent"
-                app:civ_border_width="4dp"
-                app:civ_fill_color="@color/colorAccent" />
-
-              <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                  android:id="@+id/txtTitle"
-                  android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
-                  android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
-                  android:gravity="center_vertical"
-                  android:text="Support Development"
-                  style="@style/MaterialTypography.Regular"
-                  android:textSize="@dimen/material_typography_regular_title_text_size" />
-
-                <TextView
-                  android:id="@+id/subString"
-                  android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
-                  android:lines="2"
-                  android:text="@string/supporter_description" />
-
-              </LinearLayout>
-
-            </LinearLayout>
-          </android.support.v7.widget.CardView>
-
-          <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
-            android:layout_marginLeft="@dimen/material_baseline_grid_1x"
-            android:layout_marginRight="@dimen/material_baseline_grid_1x"
-            android:layout_marginTop="@dimen/material_baseline_grid_0.5x">
-
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:orientation="horizontal"
-              android:padding="10dp">
-
-              <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="64dp"
-                android:layout_height="fill_parent"
-                android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
-                android:layout_marginRight="@dimen/material_baseline_grid_1x"
-                android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
-                android:gravity="center_vertical"
-                android:src="@drawable/ic_earth_96dp"
-                app:civ_border_color="@color/primary"
-                app:civ_border_width="4dp"
-                app:civ_fill_color="@color/primary" />
-
-              <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                  android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
-                  android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
-                  android:gravity="center_vertical"
-                  android:text="Weather Forecast"
-                  style="@style/MaterialTypography.Regular"
-                  android:textSize="20sp" />
-
-                <TextView
-                  android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
-                  android:lines="2"
-                  android:text="Get weather information from the launch pad for historical and upcoming launches." />
-
-              </LinearLayout>
-
-            </LinearLayout>
-          </android.support.v7.widget.CardView>
-
-          <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
-            android:layout_marginLeft="@dimen/material_baseline_grid_1x"
-            android:layout_marginRight="@dimen/material_baseline_grid_1x"
-            android:layout_marginTop="@dimen/material_baseline_grid_0.5x">
-
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:orientation="horizontal"
-              android:padding="10dp">
-
-              <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="64dp"
-                android:layout_height="fill_parent"
-                android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
-                android:layout_marginRight="@dimen/material_baseline_grid_1x"
-                android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
-                android:gravity="center_vertical"
-                android:src="@drawable/ic_sync_96dp"
-                app:civ_border_color="@color/material_color_amber_600"
-                app:civ_border_width="4dp"
-                app:civ_fill_color="@color/material_color_amber_600" />
-
-              <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                  android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
-                  android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
-                  android:gravity="center_vertical"
-                  android:text="Calendar Sync"
-                  style="@style/MaterialTypography.Regular"
-                  android:textSize="20sp" />
-
-                <TextView
-                  android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
-                  android:lines="2"
-                  android:text="Automatically sync upcoming launches to your calendar." />
-
-              </LinearLayout>
-
-            </LinearLayout>
-          </android.support.v7.widget.CardView>
-
-          <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
-            android:layout_marginLeft="@dimen/material_baseline_grid_1x"
-            android:layout_marginRight="@dimen/material_baseline_grid_1x"
-            android:layout_marginTop="@dimen/material_baseline_grid_0.5x">
-
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:orientation="horizontal"
-              android:padding="10dp">
-
-              <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="64dp"
-                android:layout_height="fill_parent"
-                android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
-                android:layout_marginRight="@dimen/material_baseline_grid_1x"
-                android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
-                android:gravity="center_vertical"
-                android:src="@drawable/ic_watch_96dp"
-                app:civ_border_color="@color/material_color_deep_orange_900"
-                app:civ_border_width="4dp"
-                app:civ_fill_color="@color/material_color_deep_orange_900" />
-
-              <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                  android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
-                  android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
-                  android:gravity="center_vertical"
-                  android:text="Dynamic Watch Face"
-                  style="@style/MaterialTypography.Regular"
-                  android:textSize="20sp" />
-
-                <TextView
-                  android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
-                  android:lines="2"
-                  android:text="Dynamic pictures of launch vehicles as watch face background." />
-
-              </LinearLayout>
-            </LinearLayout>
-          </android.support.v7.widget.CardView>
-
-          <android.support.v7.widget.CardView
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
-              android:layout_marginLeft="@dimen/material_baseline_grid_1x"
-              android:layout_marginRight="@dimen/material_baseline_grid_1x"
-              android:layout_marginTop="@dimen/material_baseline_grid_0.5x">
-
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            <TextView
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                android:gravity="center"
+                android:text="Thank you for your continued support!"
+                android:textColor="@color/material_typography_primary_text_color_light"
+                android:textSize="@dimen/material_typography_regular_title_text_size" />
 
-              <de.hdodenhof.circleimageview.CircleImageView
-                  android:layout_width="64dp"
-                  android:layout_height="fill_parent"
-                  android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
-                  android:layout_marginRight="@dimen/material_baseline_grid_1x"
-                  android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
-                  android:gravity="center_vertical"
-                  android:src="@drawable/ic_money_off"
-                  app:civ_border_color="@color/material_color_green_500"
-                  app:civ_border_width="4dp"
-                  app:civ_fill_color="@color/material_color_green_500" />
-
-              <LinearLayout
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
-                    android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
-                    android:gravity="center_vertical"
-                    android:text="Remove Ads"
-                    style="@style/MaterialTypography.Regular"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:lines="2"
-                    android:text="Remove all advertisements forever!" />
-
-              </LinearLayout>
-
-            </LinearLayout>
-          </android.support.v7.widget.CardView>
-
-          <android.support.v7.widget.AppCompatButton
-            android:id="@+id/purchase"
-            style="@style/Base.Widget.AppCompat.Button.Colored"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/material_baseline_grid_1x"
-            android:layout_marginLeft="@dimen/material_baseline_grid_1x"
-            android:layout_marginRight="@dimen/material_baseline_grid_1x"
-            android:lines="2"
-            android:padding="@dimen/material_baseline_grid_1x"
-            android:text="Upgrade Supporter" />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/material_baseline_grid_1.5x"
+                android:layout_marginRight="@dimen/material_baseline_grid_1.5x"
+                android:text="@string/thank_you"
+                android:textColor="@color/material_typography_secondary_text_color_light" />
 
         </LinearLayout>
-      </LinearLayout>
-    </LinearLayout>
-  </android.support.v4.widget.NestedScrollView>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                        android:layout_marginLeft="@dimen/material_baseline_grid_1x"
+                        android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                        android:layout_marginTop="@dimen/material_baseline_grid_0.5x">
+
+                        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/imgIcon"
+                                android:layout_width="64dp"
+                                android:layout_height="fill_parent"
+                                android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                                android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                                android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                                android:gravity="center_vertical"
+                                android:src="@drawable/ic_support"
+                                app:civ_border_color="@color/colorAccent"
+                                app:civ_border_width="4dp"
+                                app:civ_fill_color="@color/colorAccent" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/txtTitle"
+                                    style="@style/MaterialTypography.Regular"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                                    android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                                    android:gravity="center_vertical"
+                                    android:text="Support Development"
+                                    android:textSize="@dimen/material_typography_regular_title_text_size" />
+
+                                <TextView
+                                    android:id="@+id/subString"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:lines="2"
+                                    android:text="@string/supporter_description" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                        android:layout_marginLeft="@dimen/material_baseline_grid_1x"
+                        android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                        android:layout_marginTop="@dimen/material_baseline_grid_0.5x">
+
+                        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="64dp"
+                                android:layout_height="fill_parent"
+                                android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                                android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                                android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                                android:gravity="center_vertical"
+                                android:src="@drawable/ic_earth_96dp"
+                                app:civ_border_color="@color/primary"
+                                app:civ_border_width="4dp"
+                                app:civ_fill_color="@color/primary" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    style="@style/MaterialTypography.Regular"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                                    android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                                    android:gravity="center_vertical"
+                                    android:text="Weather Forecast"
+                                    android:textSize="20sp" />
+
+                                <TextView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:lines="2"
+                                    android:text="Get weather information from the launch pad for historical and upcoming launches." />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                        android:layout_marginLeft="@dimen/material_baseline_grid_1x"
+                        android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                        android:layout_marginTop="@dimen/material_baseline_grid_0.5x">
+
+                        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="64dp"
+                                android:layout_height="fill_parent"
+                                android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                                android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                                android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                                android:gravity="center_vertical"
+                                android:src="@drawable/ic_sync_96dp"
+                                app:civ_border_color="@color/material_color_amber_600"
+                                app:civ_border_width="4dp"
+                                app:civ_fill_color="@color/material_color_amber_600" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    style="@style/MaterialTypography.Regular"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                                    android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                                    android:gravity="center_vertical"
+                                    android:text="Calendar Sync"
+                                    android:textSize="20sp" />
+
+                                <TextView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:lines="2"
+                                    android:text="Automatically sync upcoming launches to your calendar." />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                        android:layout_marginLeft="@dimen/material_baseline_grid_1x"
+                        android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                        android:layout_marginTop="@dimen/material_baseline_grid_0.5x">
+
+                        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="64dp"
+                                android:layout_height="fill_parent"
+                                android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                                android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                                android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                                android:gravity="center_vertical"
+                                android:src="@drawable/ic_watch_96dp"
+                                app:civ_border_color="@color/material_color_deep_orange_900"
+                                app:civ_border_width="4dp"
+                                app:civ_fill_color="@color/material_color_deep_orange_900" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    style="@style/MaterialTypography.Regular"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                                    android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                                    android:gravity="center_vertical"
+                                    android:text="Dynamic Watch Face"
+                                    android:textSize="20sp" />
+
+                                <TextView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:lines="2"
+                                    android:text="Dynamic pictures of launch vehicles as watch face background." />
+
+                            </LinearLayout>
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                        android:layout_marginLeft="@dimen/material_baseline_grid_1x"
+                        android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                        android:layout_marginTop="@dimen/material_baseline_grid_0.5x">
+
+                        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="64dp"
+                                android:layout_height="fill_parent"
+                                android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                                android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                                android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                                android:gravity="center_vertical"
+                                android:src="@drawable/ic_money_off"
+                                app:civ_border_color="@color/material_color_green_500"
+                                app:civ_border_width="4dp"
+                                app:civ_fill_color="@color/material_color_green_500" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    style="@style/MaterialTypography.Regular"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                                    android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                                    android:gravity="center_vertical"
+                                    android:text="Remove Ads"
+                                    android:textSize="20sp" />
+
+                                <TextView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:lines="2"
+                                    android:text="Remove all advertisements forever!" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+
+
+                    <android.support.v7.widget.AppCompatButton
+                        android:id="@+id/purchase"
+                        style="@style/Base.Widget.AppCompat.Button.Colored"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/material_baseline_grid_1x"
+                        android:layout_marginLeft="@dimen/material_baseline_grid_1x"
+                        android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                        android:lines="2"
+                        android:padding="@dimen/material_baseline_grid_1x"
+                        android:text="Upgrade Supporter" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>
 
