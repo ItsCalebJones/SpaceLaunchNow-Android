@@ -40,41 +40,29 @@ import timber.log.Timber;
 
 public class LauncherFragment extends CustomFragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    private ListPreferences sharedPreference;
     private VehicleAdapter adapter;
-    private android.content.SharedPreferences SharedPreferences;
     private GridLayoutManager layoutManager;
     private List<Launcher> items = new ArrayList<>();
-    private static Context context;
+    private Context context;
     private View view;
     private RecyclerView mRecyclerView;
     private CoordinatorLayout coordinatorLayout;
     private SwipeRefreshLayout swipeRefreshLayout;
-    public SparseArray<Bitmap> photoCache = new SparseArray<Bitmap>(1);
-    // The singleton HTTP client.
-    public final OkHttpClient client = new OkHttpClient.Builder().build();
-    private int defaultBackgroundcolor;
-    private static final int SCALE_DELAY = 30;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        this.sharedPreference = ListPreferences.getInstance(getActivity().getApplication());
-        adapter = new VehicleAdapter(getActivity().getApplicationContext());
+        context = getActivity();
+        adapter = new VehicleAdapter(context);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        context = getActivity().getApplicationContext();
-
-        sharedPreference = ListPreferences.getInstance(context);
-
         super.onCreateView(inflater, container, savedInstanceState);
 
-        LayoutInflater lf = getActivity().getLayoutInflater();
-        view = lf.inflate(R.layout.fragment_launch_vehicles, container, false);
+        view = inflater.inflate(R.layout.fragment_launch_vehicles, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.vehicle_detail_list);
         coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.vehicle_coordinator);
@@ -82,11 +70,11 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
         swipeRefreshLayout.setOnRefreshListener(this);
 
         if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
-            layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 3);
+            layoutManager = new GridLayoutManager(context, 3);
         } else if (getResources().getBoolean(R.bool.landscape)  || getResources().getBoolean(R.bool.isTablet)) {
-            layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 2);
+            layoutManager = new GridLayoutManager(context, 2);
         } else {
-            layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 1);
+            layoutManager = new GridLayoutManager(context, 1);
         }
 
         mRecyclerView.setLayoutManager(layoutManager);
@@ -109,6 +97,8 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
         Timber.v("Returning view.");
         return view;
     }
+
+
 
     @Override
     public void onResume() {

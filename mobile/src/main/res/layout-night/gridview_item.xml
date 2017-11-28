@@ -29,10 +29,9 @@
             android:id="@+id/text_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorAccent"
+            android:background="@color/darkPrimary"
             android:orientation="vertical"
             android:padding="6dp">
-
 
             <TextView
                 android:id="@+id/text"
