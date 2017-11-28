@@ -187,7 +187,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
         try {
             new WebView(getApplicationContext());
         } catch (Exception e) {
-            Timber.e("Got exception while trying to instantiate WebView to avoid night mode issue. Ignoring problem.", e);
+            Timber.e(e);
         }
         if (sharedPreference.isNightThemeEnabled()) {
             if (sharedPreference.isDayNightAutoEnabled()) {
