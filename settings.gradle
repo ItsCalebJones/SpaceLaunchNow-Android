@@ -1,1 +1,3 @@
 include ':mobile', ':wear', ':data'
+include ':glidepalette'
+project(':glidepalette').projectDir = new File(settingsDir, '../GlidePalette/glidepalette')

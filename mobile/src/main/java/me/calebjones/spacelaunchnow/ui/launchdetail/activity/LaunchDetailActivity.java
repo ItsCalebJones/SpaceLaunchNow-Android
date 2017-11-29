@@ -385,7 +385,7 @@ public class LaunchDetailActivity extends BaseActivity
                         .load(launchVehicle.getImageURL())
                         .placeholder(R.drawable.placeholder)
                         .into(detail_profile_backdrop);
-                Timber.d("Glide Loading: %s %s", launchVehicle.getLV_Name(), launchVehicle.getImageURL());
+                Timber.d("Glide Loading: %s %s", launchVehicle.getName(), launchVehicle.getImageURL());
             }
         }
     }

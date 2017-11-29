@@ -175,7 +175,7 @@ public class MissionDetailFragment extends BaseFragment {
                 vehicleSpecView.setVisibility(View.VISIBLE);
                 launchVehicleSpecsHeight.setText(String.format("Height: %s Meters", launchVehicle.getLength()));
                 launchVehicleSpecsDiameter.setText(String.format("Diameter: %s Meters", launchVehicle.getDiameter()));
-                launchVehicleSpecsStages.setText(String.format("Stages: %d", launchVehicle.getMax_Stage()));
+                launchVehicleSpecsStages.setText(String.format("Stages: %d", launchVehicle.getMaxStage()));
                 launchVehicleSpecsLeo.setText(String.format("Payload to LEO: %s kg", launchVehicle.getLEOCapacity()));
                 launchVehicleSpecsGto.setText(String.format("Payload to GTO: %s kg", launchVehicle.getGTOCapacity()));
                 launchVehicleSpecsLaunchMass.setText(String.format("Mass at Launch: %s Tons", launchVehicle.getLaunchMass()));

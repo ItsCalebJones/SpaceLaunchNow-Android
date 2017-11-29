@@ -69,6 +69,37 @@ public class Migration implements RealmMigration {
             oldVersion++;
         }
 
+        if (oldVersion <= Constants.DB_SCHEMA_VERSION_1_8_1) {
+            RealmObjectSchema details = schema.get("RocketDetails");
+            if (details != null){
+                Timber.i("Migrating RocketDetails to new schema.");
+                details.removePrimaryKey()
+                        .addField("id", Integer.class, FieldAttribute.PRIMARY_KEY)
+                        .removeField("LV_Name")
+                        .renameField("InfoURL", "infoURL")
+                        .renameField("WikiURL", "wikiURL")
+                        .renameField("ImageURL", "imageURL")
+                        .renameField("Description", "description")
+                        .renameField("LV_Alias", "alias")
+                        .renameField("LV_Variant", "variant")
+                        .renameField("LV_Family", "family")
+                        .renameField("LV_SFamily", "sFamily")
+                        .renameField("LV_Manufacturer", "manufacturer")
+                        .renameField("Length", "length")
+                        .renameField("Diameter", "diameter")
+                        .renameField("Launch_Mass", "launchMass")
+                        .renameField("LEO_Capacity", "leoCapacity")
+                        .renameField("GTO_Capacity", "gtoCapacity")
+                        .renameField("TO_Thrust", "thrust")
+                        .renameField("Class", "vehicleClass")
+                        .renameField("Apogee", "apogee")
+                        .renameField("Range", "range")
+                        .renameField("Max_Stage", "maxStage")
+                        .renameField("Min_Stage", "minStage");
+            }
+            oldVersion++;
+        }
+
         Timber.i("Final Schema - Version %s", newVersion);
         for (RealmObjectSchema objectSchema : schema.getAll()) {
             Timber.d("Name: %s Fields: %s", objectSchema.getClassName(), objectSchema.getFieldNames());

@@ -77,7 +77,7 @@ public class WearWatchfaceManager extends BaseManager {
                         if (launchVehicle != null && launchVehicle.getImageURL() != null && launchVehicle.getImageURL().length() > 0) {
                             Timber.v("Sending image %s", launchVehicle.getImageURL());
                             sendImageToWear(launchVehicle.getImageURL(), launch, modify);
-                            Timber.d("Glide Loading: %s %s", launchVehicle.getLV_Name(), launchVehicle.getImageURL());
+                            Timber.d("Glide Loading: %s %s", launchVehicle.getName(), launchVehicle.getImageURL());
 
                         } else {
                             sendImageToWear(context.getString(R.string.default_wear_image), launch, modify);

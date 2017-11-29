@@ -5,10 +5,18 @@ import android.content.Intent;
 
 import com.crashlytics.android.Crashlytics;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.services.NextLaunchTracker;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Result;
+import me.calebjones.spacelaunchnow.data.models.RocketDetails;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
@@ -716,13 +724,25 @@ public class DataClientManager {
     public void getVehicles() {
         isVehicles = true;
         Timber.i("Running getVehicles");
-        DataClient.getInstance().getVehicles(new Callback<VehicleResponse>() {
+        DataClient.getInstance().getVehicles(1, new Callback<VehicleResponse>() {
             @Override
             public void onResponse(Call<VehicleResponse> call, Response<VehicleResponse> response) {
                 if (response.isSuccessful()) {
-                    dataSaver.saveObjectsToRealm(response.body().getVehicles());
-                    isVehicles = false;
-                    dataSaver.sendResult(new Result(Constants.ACTION_GET_VEHICLES_DETAIL, true, call));
+                    String next = response.body().getNextPage();
+                    RocketDetails[] details = response.body().getVehicles();
+                    dataSaver.saveObjectsToRealm(details);
+                    if (next != null) {
+                        try {
+                            URL url = new URL(next);
+                            String page = url.getQuery().split("=")[1];
+                            getVehicles(Integer.parseInt(page));
+                        } catch (MalformedURLException | NullPointerException | StringIndexOutOfBoundsException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        isVehicles = false;
+                        dataSaver.sendResult(new Result(Constants.ACTION_GET_VEHICLES_DETAIL, true, call));
+                    }
                 } else {
                     isVehicles = false;
 
@@ -737,6 +757,44 @@ public class DataClientManager {
             }
         });
     }
+
+    private void getVehicles(int id) {
+        isVehicles = true;
+        Timber.i("Running getVehicles");
+        DataClient.getInstance().getVehicles(id, new Callback<VehicleResponse>() {
+            @Override
+            public void onResponse(Call<VehicleResponse> call, Response<VehicleResponse> response) {
+                if (response.isSuccessful()) {
+                    String next = response.body().getNextPage();
+                    RocketDetails[] details = response.body().getVehicles();
+                    dataSaver.saveObjectsToRealm(details);
+                    if (next != null) {
+                        try {
+                            URL url = new URL(next);
+                            String page = url.getQuery().split("=")[1];
+                            getVehicles(Integer.parseInt(page));
+                        } catch (MalformedURLException | NullPointerException | StringIndexOutOfBoundsException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        isVehicles = false;
+                        dataSaver.sendResult(new Result(Constants.ACTION_GET_VEHICLES_DETAIL, true, call));
+                    }
+                } else {
+                    isVehicles = false;
+
+                    dataSaver.sendResult(new Result(Constants.ACTION_GET_VEHICLES_DETAIL, false, call, ErrorUtil.parseSpaceLaunchNowError(response)));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<VehicleResponse> call, Throwable t) {
+                isVehicles = false;
+                dataSaver.sendResult(new Result(Constants.ACTION_GET_VEHICLES_DETAIL, false, call, t.getLocalizedMessage()));
+            }
+        });
+    }
+
 
     public void getRockets() {
         isRockets = true;

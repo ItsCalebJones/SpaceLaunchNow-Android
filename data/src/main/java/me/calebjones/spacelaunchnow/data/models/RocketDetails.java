@@ -1,35 +1,56 @@
 package me.calebjones.spacelaunchnow.data.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 public class RocketDetails extends RealmObject {
 
-    private String InfoURL;
-    private String WikiURL;
-    private String Description;
-
     @PrimaryKey
+    private int id;
+    @SerializedName(value = "info_url")
+    private String infoURL;
+    @SerializedName(value = "wiki_url")
+    private String wikiURL;
+    @SerializedName(value = "description")
+    private String description;
+    @SerializedName(value = "name")
     private String name;
-
-    private String LV_Name;
-    private String LV_Family;
-    private String LV_SFamily;
-    private String LV_Manufacturer;
-    private String LV_Variant;
-    private String LV_Alias;
-    private Integer Min_Stage;
-    private Integer Max_Stage;
-    private String Length;
-    private String Diameter;
-    private String Launch_Mass;
-    private String LEO_Capacity;
-    private String GTO_Capacity;
-    private String TO_Thrust;
-    private String Class;
-    private String Apogee;
-    private String Range;
-    private String ImageURL;
+    @SerializedName(value = "family")
+    private String family;
+    @SerializedName(value = "s_family")
+    private String sFamily;
+    @SerializedName(value = "manufacturer")
+    private String manufacturer;
+    @SerializedName(value = "variant")
+    private String variant;
+    @SerializedName(value = "alias")
+    private String alias;
+    @SerializedName(value = "min_stage")
+    private Integer minStage;
+    @SerializedName(value = "max_stage")
+    private Integer maxStage;
+    @SerializedName(value = "length")
+    private String length;
+    @SerializedName(value = "diameter")
+    private String diameter;
+    @SerializedName(value = "launch_mass")
+    private String launchMass;
+    @SerializedName(value = "leo_capacity")
+    private String leoCapacity;
+    @SerializedName(value = "gto_capacity")
+    private String gtoCapacity;
+    @SerializedName(value = "to_thrust")
+    private String thrust;
+    @SerializedName(value = "vehicle_class")
+    private String vehicleClass;
+    @SerializedName(value = "apogee")
+    private String apogee;
+    @SerializedName(value = "vehicle_range")
+    private String range;
+    @SerializedName(value = "image_url")
+    private String imageURL;
 
     public String getName() {
         return name;
@@ -40,173 +61,171 @@ public class RocketDetails extends RealmObject {
     }
 
     public String getInfoURL() {
-        return InfoURL;
+        return infoURL;
     }
 
     public void setInfoURL(String InfoURL) {
-        this.InfoURL = InfoURL;
+        this.infoURL = InfoURL;
     }
 
     public String getWikiURL() {
-        return WikiURL;
+        return wikiURL;
     }
 
     public void setWikiURL(String WikiURL) {
-        this.WikiURL = WikiURL;
+        this.wikiURL = WikiURL;
     }
 
-    public String getLV_Name() {
-        return LV_Name;
+    public String getFamily() {
+        return family;
     }
 
-    public void setLV_Name(String LV_Name) {
-        this.LV_Name = LV_Name;
+    public void setFamily(String family) {
+        this.family = family;
     }
 
-    public String getLV_Family() {
-        return LV_Family;
+    public String getsFamily() {
+        return sFamily;
     }
 
-    public void setLV_Family(String LV_Family) {
-        this.LV_Family = LV_Family;
+    public void setsFamily(String sFamily) {
+        this.sFamily = sFamily;
     }
 
-    public String getLV_SFamily() {
-        return LV_SFamily;
+    public String getManufacturer() {
+        return manufacturer;
     }
 
-    public void setLV_SFamily(String LV_SFamily) {
-        this.LV_SFamily = LV_SFamily;
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
     }
 
-    public String getLV_Manufacturer() {
-        return LV_Manufacturer;
+    public String getVariant() {
+        return variant;
     }
 
-    public void setLV_Manufacturer(String LV_Manufacturer) {
-        this.LV_Manufacturer = LV_Manufacturer;
-    }
-
-    public String getLV_Variant() {
-        return LV_Variant;
-    }
-
-    public void setLV_Variant(String LV_Variant) {
-        this.LV_Variant = LV_Variant;
+    public void setVariant(String variant) {
+        this.variant = variant;
     }
 
     public String getLVAlias() {
-        return LV_Alias;
+        return alias;
     }
 
     public void setLVAlias(String LVAlias) {
-        this.LV_Alias = LVAlias;
+        this.alias = LVAlias;
     }
 
     public Integer getMinStage() {
-        return Min_Stage;
+        return minStage;
     }
 
     public void setMinStage(Integer MinStage) {
-        this.Min_Stage = MinStage;
+        this.minStage = MinStage;
     }
 
-    public Integer getMax_Stage() {
-        return Max_Stage;
+    public Integer getMaxStage() {
+        return maxStage;
     }
 
-    public void setMax_Stage(Integer MaxStage) {
-        this.Max_Stage = MaxStage;
+    public void setMaxStage(Integer MaxStage) {
+        this.maxStage = MaxStage;
     }
 
     public String getLength() {
-        return Length;
+        return length;
     }
 
     public void setLength(String Length) {
-        this.Length = Length;
+        this.length = Length;
     }
 
     public String getDiameter() {
-        return Diameter;
+        return diameter;
     }
 
     public void setDiameter(String Diameter) {
-        this.Diameter = Diameter;
+        this.diameter = Diameter;
     }
 
     public String getLaunchMass() {
-        return Launch_Mass;
+        return launchMass;
     }
 
     public void setLaunchMass(String LaunchMass) {
-        this.Launch_Mass = LaunchMass;
+        this.launchMass = LaunchMass;
     }
 
     public String getLEOCapacity() {
-        return LEO_Capacity;
+        return leoCapacity;
     }
 
     public void setLEOCapacity(String LEOCapacity) {
-        this.LEO_Capacity = LEOCapacity;
+        this.leoCapacity = LEOCapacity;
     }
 
     public String getGTOCapacity() {
-        return GTO_Capacity;
+        return gtoCapacity;
     }
 
     public void setGTOCapacity(String GTOCapacity) {
-        this.GTO_Capacity = GTOCapacity;
+        this.gtoCapacity = GTOCapacity;
     }
 
     public String getTOThrust() {
-        return TO_Thrust;
+        return thrust;
     }
 
     public void setTOThrust(String TOThrust) {
-        this.TO_Thrust = TOThrust;
+        this.thrust = TOThrust;
     }
 
     public String getClass_() {
-        return Class;
+        return vehicleClass;
     }
 
     public void setClass_(String Class) {
-        this.Class = Class;
+        this.vehicleClass = Class;
     }
 
     public String getApogee() {
-        return Apogee;
+        return apogee;
     }
 
     public void setDescription(String Description) {
-        this.Description = Description;
+        this.description = Description;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setApogee(String Apogee) {
-        this.Apogee = Apogee;
+        this.apogee = Apogee;
     }
 
     public String getRange() {
-        return Range;
+        return range;
     }
 
     public void setRange(String Range) {
-        this.Range = Range;
+        this.range = Range;
     }
 
     public String getImageURL() {
-        return ImageURL;
+        return imageURL;
     }
 
     public void setImageURL(String ImageURL) {
-        this.ImageURL = ImageURL;
+        this.imageURL = ImageURL;
     }
 
 
+    public String getVehicleClass() {
+        return vehicleClass;
+    }
 
+    public void setVehicleClass(String vehicleClass) {
+        this.vehicleClass = vehicleClass;
+    }
 }
