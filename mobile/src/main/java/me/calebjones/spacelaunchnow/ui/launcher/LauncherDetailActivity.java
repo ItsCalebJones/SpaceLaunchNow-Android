@@ -21,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -31,7 +30,6 @@ import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.Launcher;
 import me.calebjones.spacelaunchnow.data.models.Rocket;
-import me.calebjones.spacelaunchnow.ui.launchdetail.VehicleDetailAdapter;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
@@ -44,7 +42,6 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
     private boolean mIsAvatarShown = true;
 
     private ListPreferences sharedPreference;
-    private android.content.SharedPreferences SharedPreferences;
 
     private Context context;
     private RecyclerView mRecyclerView;
