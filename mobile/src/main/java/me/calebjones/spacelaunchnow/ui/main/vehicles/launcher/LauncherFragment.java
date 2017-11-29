@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ import me.calebjones.spacelaunchnow.data.networking.responses.base.LauncherRespo
 import me.calebjones.spacelaunchnow.ui.launcher.LauncherDetailActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
+import me.calebjones.spacelaunchnow.utils.views.GridViewItemDecorator;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -41,7 +43,7 @@ import timber.log.Timber;
 public class LauncherFragment extends CustomFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private VehicleAdapter adapter;
-    private GridLayoutManager layoutManager;
+    private RecyclerView.LayoutManager layoutManager;
     private List<Launcher> items = new ArrayList<>();
     private Context context;
     private View view;
@@ -74,7 +76,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
         } else if (getResources().getBoolean(R.bool.landscape)  || getResources().getBoolean(R.bool.isTablet)) {
             layoutManager = new GridLayoutManager(context, 2);
         } else {
-            layoutManager = new GridLayoutManager(context, 1);
+            layoutManager = new LinearLayoutManager(context);
         }
 
         mRecyclerView.setLayoutManager(layoutManager);

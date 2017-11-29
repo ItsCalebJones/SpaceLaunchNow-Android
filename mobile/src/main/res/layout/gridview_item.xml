@@ -4,7 +4,6 @@
     android:id="@+id/grid_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/material_baseline_grid_0.5x"
     android:animateLayoutChanges="true"
     android:orientation="vertical"
     app:cardCornerRadius="0dp"
