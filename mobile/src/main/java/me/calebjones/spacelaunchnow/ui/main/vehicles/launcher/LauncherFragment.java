@@ -124,7 +124,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
                     Timber.v("Success %s", response.message());
                     items = new ArrayList<>(Arrays.asList(jsonResponse.getLaunchers()));
                     adapter.addItems(items);
-                    Analytics.from(getContext()).sendNetworkEvent("LAUNCHER_INFORMATION", call.request().url().toString(), true);
+                    Analytics.from(context).sendNetworkEvent("LAUNCHER_INFORMATION", call.request().url().toString(), true);
 
                 } else {
                     Timber.e(ErrorUtil.parseSpaceLaunchNowError(response).message());
@@ -138,7 +138,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
                 Timber.e(t.getMessage());
                 hideLoading();
                 SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, t.getLocalizedMessage());
-                Analytics.from(getContext()).sendNetworkEvent("VEHICLE_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());
+                Analytics.from(context).sendNetworkEvent("VEHICLE_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());
             }
         });
     }
@@ -159,7 +159,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
 
         @Override
         public void onClick(View v, int position) {
-            Analytics.from(getActivity()).sendButtonClicked("Launcher clicked", items.get(position).getName());
+            Analytics.from(context).sendButtonClicked("Launcher clicked", items.get(position).getName());
             Gson gson = new Gson();
             String jsonItem = gson.toJson(items.get(position));
 

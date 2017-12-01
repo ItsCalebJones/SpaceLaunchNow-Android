@@ -21,9 +21,10 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.RocketDetails;
+import me.calebjones.spacelaunchnow.data.models.RocketDetail;
 import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -35,9 +36,9 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
     private Activity activity;
     private Calendar rightNow;
     private SharedPreferences sharedPref;
-    private RealmList<RocketDetails> items;
+    private RealmList<RocketDetail> items;
     private static ListPreferences sharedPreference;
-    private RocketDetails launchVehicle;
+    private RocketDetail launchVehicle;
     private int defaultBackgroundcolor;
     private static final int SCALE_DELAY = 30;
     private int lastPosition = -1;
@@ -54,7 +55,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
         this.activity = activity;
     }
 
-    public void addItems(List<RocketDetails> items) {
+    public void addItems(RealmResults<RocketDetail> items) {
         if (this.items != null) {
             this.items.addAll(items);
         } else {

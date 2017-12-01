@@ -19,8 +19,11 @@ public class Migration implements RealmMigration {
         RealmSchema schema = realm.getSchema();
 
         Timber.i("Current Schema - Version %s", oldVersion);
-        for(RealmObjectSchema objectSchema : schema.getAll()){
+        for (RealmObjectSchema objectSchema : schema.getAll()) {
             Timber.d("Name: %s Fields: %s", objectSchema.getClassName(), objectSchema.getFieldNames());
+            for (String field : objectSchema.getFieldNames()){
+                Timber.v("Field %s Type %s", field, objectSchema.getFieldType(field));
+            }
         }
         /*
          Migration for Version 1.6.0
@@ -70,32 +73,33 @@ public class Migration implements RealmMigration {
         }
 
         if (oldVersion <= Constants.DB_SCHEMA_VERSION_1_8_1) {
-            RealmObjectSchema details = schema.get("RocketDetails");
+            schema.remove("RocketDetails");
+            RealmObjectSchema details = schema.create("RocketDetail");
+
             if (details != null){
-                Timber.i("Migrating RocketDetails to new schema.");
-                details.removePrimaryKey()
-                        .addField("id", Integer.class, FieldAttribute.PRIMARY_KEY)
-                        .removeField("LV_Name")
-                        .renameField("InfoURL", "infoURL")
-                        .renameField("WikiURL", "wikiURL")
-                        .renameField("ImageURL", "imageURL")
-                        .renameField("Description", "description")
-                        .renameField("LV_Alias", "alias")
-                        .renameField("LV_Variant", "variant")
-                        .renameField("LV_Family", "family")
-                        .renameField("LV_SFamily", "sFamily")
-                        .renameField("LV_Manufacturer", "manufacturer")
-                        .renameField("Length", "length")
-                        .renameField("Diameter", "diameter")
-                        .renameField("Launch_Mass", "launchMass")
-                        .renameField("LEO_Capacity", "leoCapacity")
-                        .renameField("GTO_Capacity", "gtoCapacity")
-                        .renameField("TO_Thrust", "thrust")
-                        .renameField("Class", "vehicleClass")
-                        .renameField("Apogee", "apogee")
-                        .renameField("Range", "range")
-                        .renameField("Max_Stage", "maxStage")
-                        .renameField("Min_Stage", "minStage");
+                Timber.i("Migrating RocketDetail to new schema.");
+                details.addField("id", int.class, FieldAttribute.PRIMARY_KEY)
+                        .addField("name", String.class)
+                        .addField("infoURL", String.class)
+                        .addField("wikiURL", String.class)
+                        .addField("imageURL", String.class)
+                        .addField("description", String.class)
+                        .addField("alias", String.class)
+                        .addField("variant", String.class)
+                        .addField("family", String.class)
+                        .addField("sFamily", String.class)
+                        .addField("manufacturer", String.class)
+                        .addField("length", String.class)
+                        .addField("diameter", String.class)
+                        .addField("launchMass", String.class)
+                        .addField("leoCapacity", String.class)
+                        .addField("gtoCapacity", String.class)
+                        .addField("thrust", String.class)
+                        .addField("vehicleClass", String.class)
+                        .addField("apogee", String.class)
+                        .addField("range", String.class)
+                        .addField("maxStage", Integer.class)
+                        .addField("minStage", Integer.class);
             }
             oldVersion++;
         }
@@ -103,7 +107,9 @@ public class Migration implements RealmMigration {
         Timber.i("Final Schema - Version %s", newVersion);
         for (RealmObjectSchema objectSchema : schema.getAll()) {
             Timber.d("Name: %s Fields: %s", objectSchema.getClassName(), objectSchema.getFieldNames());
-
+            for (String field : objectSchema.getFieldNames()){
+                Timber.v("Field %s Type %s", field, objectSchema.getFieldType(field));
+            }
         }
     }
 }

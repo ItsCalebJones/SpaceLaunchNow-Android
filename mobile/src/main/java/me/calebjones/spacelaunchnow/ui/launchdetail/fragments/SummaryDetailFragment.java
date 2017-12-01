@@ -30,7 +30,6 @@ import android.zetterstrom.com.forecast.models.Unit;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
-import com.bumptech.glide.Glide;
 import com.github.pwittchen.weathericonview.WeatherIconView;
 import com.mypopsy.maps.StaticMap;
 
@@ -58,7 +57,7 @@ import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.Pad;
-import me.calebjones.spacelaunchnow.data.models.RocketDetails;
+import me.calebjones.spacelaunchnow.data.models.RocketDetail;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -77,7 +76,7 @@ public class SummaryDetailFragment extends BaseFragment {
     private Context context;
     private CountDownTimer timer;
     public Launch detailLaunch;
-    private RocketDetails launchVehicle;
+    private RocketDetail launchVehicle;
 
     private boolean nightMode;
 
@@ -884,7 +883,7 @@ public class SummaryDetailFragment extends BaseFragment {
             query = vehicle.getRocket().getName();
         }
 
-        launchVehicle = getRealm().where(RocketDetails.class).contains("name", query).findFirst();
+        launchVehicle = getRealm().where(RocketDetail.class).contains("name", query).findFirst();
     }
 
     private void setWindowStamp() {

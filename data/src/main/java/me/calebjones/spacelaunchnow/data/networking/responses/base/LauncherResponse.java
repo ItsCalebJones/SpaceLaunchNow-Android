@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import me.calebjones.spacelaunchnow.data.models.Launcher;
 
-public class LauncherResponse extends BaseSLNResponse {
+public class LauncherResponse {
     @SerializedName(value="results")
     private Launcher[] launchers;
 

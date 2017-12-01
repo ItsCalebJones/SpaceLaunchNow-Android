@@ -32,7 +32,7 @@ public final class Constants {
     public static int DB_SCHEMA_VERSION_1_5_5 = 188;
     public static int DB_SCHEMA_VERSION_1_5_6 = 189;
     public static int DB_SCHEMA_VERSION_1_8_0 = 320;
-    public static int DB_SCHEMA_VERSION_1_8_1 = 321;
+    public static int DB_SCHEMA_VERSION_1_8_1 = 322;
 
     public static String FORECAST_IO_BASE_URL = "https://api.forecast.io/";
     public static String API_BASE_URL = "https://api.spacelaunchnow.me/";

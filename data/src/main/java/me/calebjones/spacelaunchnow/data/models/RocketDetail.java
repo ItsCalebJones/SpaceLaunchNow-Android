@@ -5,9 +5,10 @@ import com.google.gson.annotations.SerializedName;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class RocketDetails extends RealmObject {
+public class RocketDetail extends RealmObject {
 
     @PrimaryKey
+    @SerializedName(value = "id")
     private int id;
     @SerializedName(value = "info_url")
     private String infoURL;
@@ -227,5 +228,13 @@ public class RocketDetails extends RealmObject {
 
     public void setVehicleClass(String vehicleClass) {
         this.vehicleClass = vehicleClass;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

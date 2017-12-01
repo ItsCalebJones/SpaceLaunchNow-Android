@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import me.calebjones.spacelaunchnow.data.models.Orbiter;
 
-public class OrbiterResponse extends BaseSLNResponse {
+public class OrbiterResponse {
     @SerializedName(value="results")
     private Orbiter[] orbiters;
 

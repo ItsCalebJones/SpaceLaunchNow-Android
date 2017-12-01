@@ -204,8 +204,8 @@ public class DataClient {
         return call;
     }
 
-    public Call<VehicleResponse> getVehicles(int page, Callback<VehicleResponse> callback) {
-        Call<VehicleResponse> call = spaceLaunchNowService.getVehicles(page);
+    public Call<VehicleResponse> getVehicles(String family, Callback<VehicleResponse> callback) {
+        Call<VehicleResponse> call = spaceLaunchNowService.getVehicles(family);
 
         call.enqueue(callback);
 
