@@ -39,6 +39,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Launcher;
 import me.calebjones.spacelaunchnow.data.models.Result;
+import me.calebjones.spacelaunchnow.data.models.Rocket;
 import me.calebjones.spacelaunchnow.data.models.RocketDetail;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
@@ -202,6 +203,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
                 if (response.isSuccessful()) {
                     RocketDetail[] details = response.body().getVehicles();
                     if (details.length > 0) {
+                        getRealm().where(RocketDetail.class).contains("family",name).findAll().deleteAllFromRealm();
                         dataSaver.saveObjectsToRealm(details);
                         rocketLaunches = getRealm().where(RocketDetail.class).contains("family", name).findAll();
                         adapter.clear();

@@ -29,6 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/material_baseline_grid_1x"
                 android:layout_marginEnd="@dimen/material_baseline_grid_1x"
+                android:layout_marginBottom="@dimen/material_baseline_grid_1x"
                 android:elevation="4dp"
                 android:orientation="horizontal">
 
@@ -38,41 +39,31 @@
                     android:layout_height="80dp"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
-                    android:layout_marginStart="@dimen/material_baseline_grid_3x"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:paddingRight="8dp"
+                    android:layout_marginStart="@dimen/material_baseline_grid_2x"
+                    android:layout_marginBottom="@dimen/material_baseline_grid_1x"
+                    android:layout_marginTop="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_1x"
                     android:src="@drawable/ic_unknown" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1x"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/mission_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:gravity="left"
                         android:lines="1"
                         android:paddingTop="8dp"
                         android:text="Unknown Launch Vehicle"
+                        android:textAlignment="textStart"
                         android:textColor="?android:textColorHighlight"
                         android:textSize="18sp"
                         android:textStyle="normal" />
-
-                    <TextView
-                        android:id="@+id/mission_vehicle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="left"
-                        android:layout_marginTop="2dp"
-                        android:padding="2dp"
-                        android:singleLine="true"
-                        android:textSize="16sp"
-                        android:text="Unknown Mission"
-                        android:textColor="?android:textColorSecondary" />
 
                     <TextView
                         android:id="@+id/mission_date"
@@ -82,9 +73,24 @@
                         android:gravity="left"
                         android:padding="2dp"
                         android:singleLine="true"
-                        android:textSize="16sp"
                         android:text="Unknown Mission Date"
-                        android:textColor="?android:textColorSecondary" />
+                        android:textColor="?android:textColorSecondary"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/mission_vehicle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="2dp"
+                        android:ellipsize="end"
+                        android:gravity="left"
+                        android:padding="2dp"
+                        android:singleLine="true"
+                        android:text="Unknown Mission"
+                        android:textAlignment="textStart"
+                        android:textColor="?android:textColorSecondary"
+                        android:textSize="16sp" />
 
 
                 </LinearLayout>
