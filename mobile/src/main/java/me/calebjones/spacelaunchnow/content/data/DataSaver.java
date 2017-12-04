@@ -5,6 +5,8 @@ import android.content.Intent;
 
 import com.crashlytics.android.Crashlytics;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 
@@ -58,13 +60,13 @@ public class DataSaver {
         }
     }
 
-    public void saveLaunchesToRealm(Launch[] launches, boolean mini) {
+    public void saveLaunchesToRealm(final Launch[] launches, boolean mini) {
         isSaving = true;
         Realm mRealm = Realm.getDefaultInstance();
 
         if (mini) {
             for (Launch item : launches) {
-                Launch previous = mRealm.where(Launch.class)
+                final Launch previous = mRealm.where(Launch.class)
                         .equalTo("id", item.getId())
                         .findFirst();
                 if (previous != null) {
@@ -77,24 +79,32 @@ public class DataSaver {
                             mRealm.copyToRealmOrUpdate(notification);
                         }
                         previous.resetNotifiers();
-                        mRealm.copyToRealmOrUpdate(previous);
-                        mRealm.commitTransaction();
+                        mRealm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                realm.copyToRealmOrUpdate(previous);
+                            }
+                        });
                         dataClientManager.getLaunchById(item.getId());
                     }
                 }
             }
         } else {
-            for (Launch item : launches) {
-                mRealm.beginTransaction();
-                Launch previous = mRealm.where(Launch.class)
+            for (final Launch item : launches) {
+                final Launch previous = mRealm.where(Launch.class)
                         .equalTo("id", item.getId())
                         .findFirst();
                 if (previous != null) {
                     if (isLaunchTimeChanged(previous, item)) {
-                        LaunchNotification notification = mRealm.where(LaunchNotification.class).equalTo("id", item.getId()).findFirst();
+                        final LaunchNotification notification = mRealm.where(LaunchNotification.class).equalTo("id", item.getId()).findFirst();
                         if (notification != null) {
                             notification.resetNotifiers();
-                            mRealm.copyToRealmOrUpdate(notification);
+                            mRealm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    realm.copyToRealmOrUpdate(notification);
+                                }
+                            });
                         }
                     }
                     item.setEventID(previous.getEventID());
@@ -106,30 +116,45 @@ public class DataSaver {
                     item.getLocation().setPrimaryID();
                 }
                 Timber.v("Saving item: %s", item.getName());
-                mRealm.copyToRealmOrUpdate(item);
-                mRealm.commitTransaction();
+                mRealm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.copyToRealmOrUpdate(item);
+                    }
+                });
             }
         }
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.copyToRealmOrUpdate(Arrays.asList(launches));
+            }
+        });
         syncNotifiers(mRealm);
         mRealm.close();
         isSaving = false;
     }
 
-    public void saveLaunchesToRealm(Launch[] launches) {
+    public void saveLaunchesToRealm(final Launch[] launches) {
         isSaving = true;
-        Realm mRealm = Realm.getDefaultInstance();
+        final Realm mRealm = Realm.getDefaultInstance();
 
         for (Launch item : launches) {
-            mRealm.beginTransaction();
+
             Launch previous = mRealm.where(Launch.class)
                     .equalTo("id", item.getId())
                     .findFirst();
             if (previous != null) {
                 if (isLaunchTimeChanged(previous, item)) {
-                    LaunchNotification notification = mRealm.where(LaunchNotification.class).equalTo("id", item.getId()).findFirst();
+                    final LaunchNotification notification = mRealm.where(LaunchNotification.class).equalTo("id", item.getId()).findFirst();
                     if (notification != null) {
                         notification.resetNotifiers();
-                        mRealm.copyToRealmOrUpdate(notification);
+                        mRealm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                realm.copyToRealmOrUpdate(notification);
+                            }
+                        });
                     }
                 }
                 item.setEventID(previous.getEventID());
@@ -141,9 +166,14 @@ public class DataSaver {
                 item.getLocation().setPrimaryID();
             }
             Timber.v("Saving item: %s", item.getName());
-            mRealm.copyToRealmOrUpdate(item);
-            mRealm.commitTransaction();
+
         }
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.copyToRealmOrUpdate(Arrays.asList(launches));
+            }
+        });
         syncNotifiers(mRealm);
         isSaving = false;
         mRealm.close();
@@ -228,6 +258,50 @@ public class DataSaver {
                 realm.copyToRealmOrUpdate(updateRecord);
             }
         });
+        mRealm.close();
+    }
+
+    public void saveLaunchesToRealm(final ArrayList<Launch> launches) {
+        isSaving = true;
+        Realm mRealm = Realm.getDefaultInstance();
+
+        for (Launch item : launches) {
+
+            Launch previous = mRealm.where(Launch.class)
+                    .equalTo("id", item.getId())
+                    .findFirst();
+            if (previous != null) {
+                if (isLaunchTimeChanged(previous, item)) {
+                    final LaunchNotification notification = mRealm.where(LaunchNotification.class).equalTo("id", item.getId()).findFirst();
+                    if (notification != null) {
+                        notification.resetNotifiers();
+                        mRealm.executeTransactionAsync(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                realm.copyToRealmOrUpdate(notification);
+                            }
+                        });
+                    }
+                }
+                item.setEventID(previous.getEventID());
+                item.setSyncCalendar(previous.syncCalendar());
+                item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
+                item.setNotifiable(previous.isNotifiable());
+            }
+            if (item.getLocation() != null) {
+                item.getLocation().setPrimaryID();
+            }
+            Timber.v("Saving item: %s", item.getName());
+
+        }
+        mRealm.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.copyToRealmOrUpdate(launches);
+            }
+        });
+        syncNotifiers(mRealm);
+        isSaving = false;
         mRealm.close();
     }
 }

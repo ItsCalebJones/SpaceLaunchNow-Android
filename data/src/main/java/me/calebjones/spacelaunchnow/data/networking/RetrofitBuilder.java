@@ -59,6 +59,29 @@ public class RetrofitBuilder {
         return retrofit;
     }
 
+    public static Retrofit getLibraryRetrofitLowestThreaded(String version) {
+        Executor httpExecutor = Executors.newCachedThreadPool(new ThreadFactory() {
+            @Override
+            public Thread newThread(final Runnable r) {
+                return new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        android.os.Process.setThreadPriority(THREAD_PRIORITY_LOWEST);
+                        r.run();
+                    }
+                }, "Retrofit-Idle-Background");
+            }
+        });
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constants.LIBRARY_BASE_URL + version + "/")
+                .client(defaultClient())
+                .addConverterFactory(GsonConverterFactory.create(getGson()))
+                .callbackExecutor(httpExecutor)
+                .build();
+        return retrofit;
+    }
+
     public static Retrofit getSpaceLaunchNowRetrofit() {
 
         Retrofit retrofit = new Retrofit.Builder()

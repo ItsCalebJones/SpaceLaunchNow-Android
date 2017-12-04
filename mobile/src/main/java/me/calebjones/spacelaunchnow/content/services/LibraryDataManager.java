@@ -39,9 +39,6 @@ public class LibraryDataManager extends BaseManager {
         dataClientManager.getAllMissions();
         dataClientManager.getAllLocations();
         dataClientManager.getAllPads();
-        dataClientManager.getVehicles(null);
-        dataClientManager.getRockets();
-        dataClientManager.getRocketFamily();
     }
 
     public void  getAgencies(){
@@ -99,14 +96,14 @@ public class LibraryDataManager extends BaseManager {
 
     public void getPreviousLaunches(String startDate, String endDate){
         if (startDate != null && endDate != null) {
-            dataClientManager.getLaunchesByDate(startDate, endDate, 0);
+            dataClientManager.getLaunchesByDate(startDate, endDate);
         } else {
             getPreviousLaunches();
         }
     }
 
     public void getPreviousLaunches(){
-        dataClientManager.getLaunchesByDate("1950-01-01", Utils.getEndDate(1), 0);
+        dataClientManager.getLaunchesByDate("1950-01-01", Utils.getEndDate(1));
     }
 
     public void scheduleLaunchUpdates() {
