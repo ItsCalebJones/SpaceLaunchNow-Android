@@ -56,7 +56,6 @@ android {
 
         beta {
             dimension "release"
-            applicationIdSuffix ".beta"
             versionNameSuffix "-beta"
         }
     }
