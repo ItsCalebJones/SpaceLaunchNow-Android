@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -26,7 +25,6 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.CustomFragment;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.Orbiter;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
@@ -126,7 +124,7 @@ public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayou
                 if (response.isSuccessful()) {
                     Timber.v("Success %s", response.message());
                     OrbiterResponse jsonResponse = response.body();
-                    items = new ArrayList<>(Arrays.asList(jsonResponse.getItem()));
+                    items = new ArrayList<>(Arrays.asList(jsonResponse.getOrbiters()));
                     adapter.addItems(items);
                     Analytics.from(getActivity()).sendNetworkEvent("ORBITER_INFORMATION", call.request().url().toString(), true);
                 } else {

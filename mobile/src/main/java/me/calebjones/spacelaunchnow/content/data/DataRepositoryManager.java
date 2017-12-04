@@ -29,6 +29,7 @@ public class DataRepositoryManager {
 
     private DataClientManager dataClientManager;
 
+
     public DataRepositoryManager(Context context, DataClientManager dataClientManager) {
         this.context = context;
         this.dataClientManager = dataClientManager;
@@ -62,32 +63,7 @@ public class DataRepositoryManager {
         Realm realm = Realm.getDefaultInstance();
         Timber.i("Checking full sync...");
         checkUpcomingLaunches(realm);
-        checkLibraryData(realm);
         realm.close();
-    }
-
-    private void checkLibraryData(Realm realm) {
-        UpdateRecord record = realm.where(UpdateRecord.class)
-                .equalTo("type", Constants.ACTION_GET_UP_LAUNCHES_ALL)
-                .findFirst();
-        if (record != null) {
-            Date currentDate = new Date();
-            Date lastUpdateDate = record.getDate();
-            long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
-            long daysMaxUpdate = TimeUnit.DAYS.toMillis(90);
-            Timber.d("Time since last library sync %s", timeSinceUpdate);
-            if (timeSinceUpdate > daysMaxUpdate) {
-                Timber.d("%s greater then %s - updating library data.", timeSinceUpdate, daysMaxUpdate);
-                Intent rocketIntent = new Intent(context, LibraryDataManager.class);
-                rocketIntent.setAction(Constants.ACTION_GET_ALL_LIBRARY_DATA);
-                context.startService(rocketIntent);
-            }
-        } else {
-            Timber.d("No record - checking library data.");
-            Intent rocketIntent = new Intent(context, LibraryDataManager.class);
-            rocketIntent.setAction(Constants.ACTION_GET_ALL_LIBRARY_DATA);
-            context.startService(rocketIntent);
-        }
     }
 
     private void checkUpcomingLaunches(Realm realm) {
@@ -105,52 +81,6 @@ public class DataRepositoryManager {
         } else {
             Timber.d("No record - getting all launches");
             dataClientManager.getUpcomingLaunchesAll();
-        }
-    }
-
-    //TODO move from LibraryDataManager to DataClientManager
-    private void checkMissions(Realm realm) {
-        UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Constants.ACTION_GET_MISSION).findFirst();
-        if (record != null) {
-            Date currentDate = new Date();
-            Date lastUpdateDate = record.getDate();
-            long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
-            long daysMaxUpdate = TimeUnit.DAYS.toMillis(90);
-            Timber.d("Time since last Mission sync %s", timeSinceUpdate);
-            if (timeSinceUpdate > daysMaxUpdate) {
-                Timber.d("%s greater then %s - updating mission data.", timeSinceUpdate, daysMaxUpdate);
-                Intent missionIntent = new Intent(context, LibraryDataManager.class);
-                missionIntent.setAction(Constants.ACTION_GET_MISSION);
-                context.startService(missionIntent);
-            }
-        } else {
-            Timber.d("No record - getting all missions.");
-            Intent missionIntent = new Intent(context, LibraryDataManager.class);
-            missionIntent.setAction(Constants.ACTION_GET_MISSION);
-            context.startService(missionIntent);
-        }
-    }
-
-    //TODO move from LibraryDataManager to DataClientManager
-    private void checkVehicles(Realm realm) {
-        UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Constants.ACTION_GET_VEHICLES_DETAIL).findFirst();
-        if (record != null) {
-            Date currentDate = new Date();
-            Date lastUpdateDate = record.getDate();
-            long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
-            long daysMaxUpdate = TimeUnit.DAYS.toMillis(90);
-            Timber.d("Time since last vehicle sync %s", timeSinceUpdate);
-            if (timeSinceUpdate > daysMaxUpdate) {
-                Timber.d("%s greater then %s - updating vehicle data.", timeSinceUpdate, daysMaxUpdate);
-                Intent rocketIntent = new Intent(context, LibraryDataManager.class);
-                rocketIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);
-                context.startService(rocketIntent);
-            }
-        } else {
-            Timber.d("No record - getting all vehicles.");
-            Intent rocketIntent = new Intent(context, LibraryDataManager.class);
-            rocketIntent.setAction(Constants.ACTION_GET_VEHICLES_DETAIL);
-            context.startService(rocketIntent);
         }
     }
 }

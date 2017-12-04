@@ -44,7 +44,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
         if (ListPreferences.getInstance(mContext).isNightModeActive(mContext)) {
             palette = GlidePalette.Profile.MUTED_DARK;
         } else {
-            palette = GlidePalette.Profile.VIBRANT_DARK;
+            palette = GlidePalette.Profile.VIBRANT;
         }
 
         requestOptions = new RequestOptions()
@@ -83,10 +83,10 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
         GlideApp.with(mContext)
                 .load(launcher.getImageURL())
                 .apply(requestOptions)
-//                .listener(GlidePalette.with(launcher.getImageURL())
-//                        .use(palette)
-//                        .intoBackground(holder.name, GlidePalette.Swatch.RGB)
-//                        .crossfade(true))
+                .listener(GlidePalette.with(launcher.getImageURL())
+                        .use(palette)
+                        .intoBackground(holder.textContainer, GlidePalette.Swatch.RGB)
+                        .crossfade(true))
                 .into(holder.picture);
         holder.name.setText(launcher.getName());
         holder.subTitle.setText(launcher.getAgency());
@@ -102,6 +102,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
         public ImageView picture;
         public TextView name;
         public TextView subTitle;
+        public View textContainer;
         private OnItemClickListener onItemClickListener;
 
         //Add content to the card
@@ -110,9 +111,10 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
 
             this.onItemClickListener = onItemClickListener;
             grid_root = view.findViewById(R.id.grid_root);
-            picture = (ImageView) view.findViewById(R.id.picture);
-            name = (TextView) view.findViewById(R.id.text);
-            subTitle = (TextView) view.findViewById(R.id.text_subtitle);
+            picture = view.findViewById(R.id.picture);
+            name = view.findViewById(R.id.text);
+            subTitle = view.findViewById(R.id.text_subtitle);
+            textContainer = view.findViewById(R.id.text_container);
             grid_root.setOnClickListener(this);
         }
 

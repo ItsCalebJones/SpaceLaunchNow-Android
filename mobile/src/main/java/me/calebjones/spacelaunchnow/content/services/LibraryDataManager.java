@@ -3,6 +3,7 @@ package me.calebjones.spacelaunchnow.content.services;
 import android.content.Context;
 
 import me.calebjones.spacelaunchnow.content.data.DataClientManager;
+import me.calebjones.spacelaunchnow.content.jobs.LibraryDataJob;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateJob;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
@@ -13,6 +14,10 @@ import timber.log.Timber;
 public class LibraryDataManager extends BaseManager {
 
     private DataClientManager dataClientManager;
+
+    public boolean isRunning(){
+        return dataClientManager.isRunning();
+    }
 
     public LibraryDataManager(Context context) {
         super(context);
@@ -30,12 +35,11 @@ public class LibraryDataManager extends BaseManager {
     }
 
     public void getAllLibraryData(){
-        listPreference.setLastVehicleUpdate(System.currentTimeMillis());
         dataClientManager.getAllAgencies();
         dataClientManager.getAllMissions();
         dataClientManager.getAllLocations();
         dataClientManager.getAllPads();
-        dataClientManager.getVehicles();
+        dataClientManager.getVehicles(null);
         dataClientManager.getRockets();
         dataClientManager.getRocketFamily();
     }
@@ -53,8 +57,7 @@ public class LibraryDataManager extends BaseManager {
     }
 
     public void getVehicleDetails(){
-        listPreference.setLastVehicleUpdate(System.currentTimeMillis());
-        dataClientManager.getVehicles();
+        dataClientManager.getVehicles(null);
         dataClientManager.getRockets();
         dataClientManager.getRocketFamily();
     }
@@ -109,5 +112,6 @@ public class LibraryDataManager extends BaseManager {
     public void scheduleLaunchUpdates() {
         Timber.d("scheduleLaunchUpdates");
         UpdateJob.scheduleJob(context);
+        LibraryDataJob.scheduleJob();
     }
 }

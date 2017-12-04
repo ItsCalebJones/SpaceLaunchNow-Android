@@ -75,6 +75,9 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         nightColor = ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color);
         color = ContextCompat.getColor(context, R.color.colorTextSecondary);
         accentColor = ContextCompat.getColor(context, R.color.colorAccent);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        sharedPreference = ListPreferences.getInstance(context);
+        night = sharedPreference.isNightModeActive(context);
     }
 
     public static Calendar DateToCalendar(Date date) {
@@ -102,14 +105,6 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-
-        int m_theme;
-
-        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        sharedPreference = ListPreferences.getInstance(context);
-
-        night = sharedPreference.isNightModeActive(context);
-
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.content_card_item, viewGroup, false);
 
         return new ViewHolder(v);

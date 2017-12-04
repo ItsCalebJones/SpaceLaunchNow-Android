@@ -41,7 +41,7 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
         if (ListPreferences.getInstance(mContext).isNightModeActive(mContext)) {
             palette = GlidePalette.Profile.MUTED_DARK;
         } else {
-            palette = GlidePalette.Profile.VIBRANT_DARK;
+            palette = GlidePalette.Profile.VIBRANT;
         }
 
         requestOptions = new RequestOptions()
@@ -80,10 +80,10 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
         GlideApp.with(mContext)
                 .load(orbiter.getImageURL())
                 .apply(requestOptions)
-//                .listener(GlidePalette.with(orbiter.getImageURL())
-//                        .use(palette)
-//                        .intoBackground(holder.name, GlidePalette.Swatch.RGB)
-//                        .crossfade(true))
+                .listener(GlidePalette.with(orbiter.getImageURL())
+                        .use(palette)
+                        .intoBackground(holder.textContainer, GlidePalette.Swatch.RGB)
+                        .crossfade(true))
                 .into(holder.picture);
         holder.name.setText(orbiter.getName());
         holder.subTitle.setText(orbiter.getAgency());
@@ -99,6 +99,7 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
         public ImageView picture;
         public TextView name;
         public TextView subTitle;
+        public View textContainer;
         private OnItemClickListener onItemClickListener;
         protected boolean animated = false;
 
@@ -108,9 +109,10 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
 
             this.onItemClickListener = onItemClickListener;
             grid_root = view.findViewById(R.id.grid_root);
-            picture = (ImageView) view.findViewById(R.id.picture);
-            name = (TextView) view.findViewById(R.id.text);
+            picture = view.findViewById(R.id.picture);
+            name = view.findViewById(R.id.text);
             subTitle = view.findViewById(R.id.text_subtitle);
+            textContainer = view.findViewById(R.id.text_container);
             grid_root.setOnClickListener(this);
         }
 

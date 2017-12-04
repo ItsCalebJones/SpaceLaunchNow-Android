@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -21,7 +20,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
@@ -48,7 +46,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.content.events.LaunchRequestEvent;
 import me.calebjones.spacelaunchnow.data.models.Launch;
-import me.calebjones.spacelaunchnow.data.models.RocketDetails;
+import me.calebjones.spacelaunchnow.data.models.RocketDetail;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
 import me.calebjones.spacelaunchnow.ui.launchdetail.TabsAdapter;
@@ -376,7 +374,7 @@ public class LaunchDetailActivity extends BaseActivity
         } else {
             query = result.getRocket().getName();
         }
-        RocketDetails launchVehicle = getRealm().where(RocketDetails.class)
+        RocketDetail launchVehicle = getRealm().where(RocketDetail.class)
                 .contains("name", query)
                 .findFirst();
         if (setImage) {
@@ -385,7 +383,7 @@ public class LaunchDetailActivity extends BaseActivity
                         .load(launchVehicle.getImageURL())
                         .placeholder(R.drawable.placeholder)
                         .into(detail_profile_backdrop);
-                Timber.d("Glide Loading: %s %s", launchVehicle.getLV_Name(), launchVehicle.getImageURL());
+                Timber.d("Glide Loading: %s %s", launchVehicle.getName(), launchVehicle.getImageURL());
             }
         }
     }

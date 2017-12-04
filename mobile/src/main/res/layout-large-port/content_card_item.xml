@@ -73,6 +73,7 @@
                         android:maxLines="2"
                         android:padding="2dp"
                         android:singleLine="false"
+                        android:textColor="?android:textColorSecondary"
                         android:text="Unknown Launch Location" />
 
                     <TextView
@@ -84,6 +85,7 @@
                         android:maxLines="2"
                         android:padding="2dp"
                         android:singleLine="false"
+                        android:textColor="?android:textColorSecondary"
                         android:text="Unknown Launch Date" />
 
                 </LinearLayout>
@@ -210,6 +212,7 @@
                     android:paddingLeft="28dp"
                     android:paddingRight="28dp"
                     android:text="Unknown Mission"
+                    android:textColor="?android:textColorPrimary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -221,6 +224,7 @@
                     android:paddingBottom="8dp"
                     android:paddingLeft="28dp"
                     android:paddingRight="28dp"
+                    android:textColor="?android:textColorSecondary"
                     android:textSize="14sp" />
             </LinearLayout>
 

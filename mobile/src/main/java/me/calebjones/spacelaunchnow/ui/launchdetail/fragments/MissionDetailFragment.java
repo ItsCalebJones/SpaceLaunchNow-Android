@@ -24,7 +24,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.Mission;
-import me.calebjones.spacelaunchnow.data.models.RocketDetails;
+import me.calebjones.spacelaunchnow.data.models.RocketDetail;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -36,7 +36,7 @@ public class MissionDetailFragment extends BaseFragment {
     private static ListPreferences sharedPreference;
     private Context context;
     public static Launch detailLaunch;
-    private RocketDetails launchVehicle;
+    private RocketDetail launchVehicle;
     @BindView(R.id.vehicle_spec_view)
     View vehicleSpecView;
     @BindView(R.id.payload_type)
@@ -175,7 +175,7 @@ public class MissionDetailFragment extends BaseFragment {
                 vehicleSpecView.setVisibility(View.VISIBLE);
                 launchVehicleSpecsHeight.setText(String.format("Height: %s Meters", launchVehicle.getLength()));
                 launchVehicleSpecsDiameter.setText(String.format("Diameter: %s Meters", launchVehicle.getDiameter()));
-                launchVehicleSpecsStages.setText(String.format("Stages: %d", launchVehicle.getMax_Stage()));
+                launchVehicleSpecsStages.setText(String.format("Stages: %d", launchVehicle.getMaxStage()));
                 launchVehicleSpecsLeo.setText(String.format("Payload to LEO: %s kg", launchVehicle.getLEOCapacity()));
                 launchVehicleSpecsGto.setText(String.format("Payload to GTO: %s kg", launchVehicle.getGTOCapacity()));
                 launchVehicleSpecsLaunchMass.setText(String.format("Mass at Launch: %s Tons", launchVehicle.getLaunchMass()));
@@ -196,7 +196,7 @@ public class MissionDetailFragment extends BaseFragment {
             query = vehicle.getRocket().getName();
         }
 
-        launchVehicle = getRealm().where(RocketDetails.class).contains("name", query).findFirst();
+        launchVehicle = getRealm().where(RocketDetail.class).contains("name", query).findFirst();
     }
 
     @Override

@@ -2,16 +2,13 @@ package me.calebjones.spacelaunchnow.ui.main.vehicles.launcher;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +21,6 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.CustomFragment;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.Launcher;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
@@ -32,9 +28,7 @@ import me.calebjones.spacelaunchnow.data.networking.responses.base.LauncherRespo
 import me.calebjones.spacelaunchnow.ui.launcher.LauncherDetailActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
-import me.calebjones.spacelaunchnow.utils.views.GridViewItemDecorator;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -128,9 +122,9 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
                 if (response.isSuccessful()) {
                     LauncherResponse jsonResponse = response.body();
                     Timber.v("Success %s", response.message());
-                    items = new ArrayList<>(Arrays.asList(jsonResponse.getItem()));
+                    items = new ArrayList<>(Arrays.asList(jsonResponse.getLaunchers()));
                     adapter.addItems(items);
-                    Analytics.from(getContext()).sendNetworkEvent("LAUNCHER_INFORMATION", call.request().url().toString(), true);
+                    Analytics.from(context).sendNetworkEvent("LAUNCHER_INFORMATION", call.request().url().toString(), true);
 
                 } else {
                     Timber.e(ErrorUtil.parseSpaceLaunchNowError(response).message());
@@ -144,7 +138,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
                 Timber.e(t.getMessage());
                 hideLoading();
                 SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, t.getLocalizedMessage());
-                Analytics.from(getContext()).sendNetworkEvent("VEHICLE_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());
+                Analytics.from(context).sendNetworkEvent("VEHICLE_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());
             }
         });
     }
@@ -165,7 +159,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
 
         @Override
         public void onClick(View v, int position) {
-            Analytics.from(getActivity()).sendButtonClicked("Launcher clicked", items.get(position).getName());
+            Analytics.from(context).sendButtonClicked("Launcher clicked", items.get(position).getName());
             Gson gson = new Gson();
             String jsonItem = gson.toJson(items.get(position));
 

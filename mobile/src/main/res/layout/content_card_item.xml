@@ -34,11 +34,10 @@
 
                 <ImageView
                     android:id="@+id/categoryIcon"
-                    android:layout_width="96dp"
-                    android:layout_height="96dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_gravity="center"
                     android:padding="16dp"
-                    android:scaleType="centerCrop"
                     app:srcCompat="@drawable/ic_unknown" />
 
                 <LinearLayout
@@ -71,6 +70,7 @@
                         android:gravity="left"
                         android:maxLines="2"
                         android:padding="2dp"
+                        android:textColor="?android:textColorSecondary"
                         android:singleLine="false"
                         android:text="Unknown Launch Location" />
 
@@ -82,6 +82,7 @@
                         android:gravity="left"
                         android:maxLines="2"
                         android:padding="2dp"
+                        android:textColor="?android:textColorSecondary"
                         android:singleLine="false"
                         android:text="Unknown Launch Date" />
 
@@ -218,8 +219,8 @@
                     android:paddingLeft="28dp"
                     android:paddingRight="28dp"
                     android:text="Unknown Mission"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/content_mission_description"
@@ -229,6 +230,7 @@
                     android:paddingLeft="28dp"
                     android:paddingRight="28dp"
                     android:paddingTop="8dp"
+                    android:textColor="?android:textColorSecondary"
                     android:textSize="14sp" />
             </LinearLayout>
 

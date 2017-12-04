@@ -96,18 +96,6 @@ public class ListPreferences {
         return this.sharedPrefs.getBoolean(PREFS_PREVIOUS_FIRST_BOOT, true);
     }
 
-    public long getLastVehicleUpdate() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getLong(PREFS_LAST_VEHICLE_UPDATE, 0);
-    }
-
-    public void setLastVehicleUpdate(long value) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putLong(PREFS_LAST_VEHICLE_UPDATE, value);
-        this.prefsEditor.apply();
-    }
-
     public boolean isNightModeActive(Context context) {
 
         if (isDayNightAutoEnabled()) {

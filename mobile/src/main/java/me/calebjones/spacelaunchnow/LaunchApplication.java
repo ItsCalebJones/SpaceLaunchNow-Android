@@ -34,6 +34,7 @@ import org.json.JSONObject;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmObjectSchema;
 import io.realm.exceptions.RealmMigrationNeededException;
 import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.content.data.DataRepositoryManager;
@@ -162,7 +163,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
         Realm.init(this);
 
         RealmConfiguration config = new RealmConfiguration.Builder()
-                .schemaVersion(Constants.DB_SCHEMA_VERSION_1_8_0)
+                .schemaVersion(Constants.DB_SCHEMA_VERSION_1_8_1)
                 .modules(Realm.getDefaultModule(), new LaunchDataModule())
                 .migration(new Migration())
                 .build();
@@ -172,11 +173,11 @@ public class LaunchApplication extends Application implements Analytics.Provider
         JobManager.create(this).addJobCreator(new DataJobCreator());
         try {
             Realm.setDefaultConfiguration(config);
-            Realm.compactRealm(config);
             Realm realm = Realm.getDefaultInstance();
             realm.close();
             libraryDataManager = new LibraryDataManager(this);
         } catch (RealmMigrationNeededException | NullPointerException e) {
+            Timber.e(e);
             Realm.deleteRealm(config);
             Realm.setDefaultConfiguration(config);
             libraryDataManager = new LibraryDataManager(this);

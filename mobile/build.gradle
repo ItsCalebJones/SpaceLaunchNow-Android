@@ -1,3 +1,5 @@
+import org.moallemi.gradle.internal.VersionCodeType
+
 buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
@@ -6,7 +8,7 @@ buildscript {
 
     dependencies {
         classpath 'io.fabric.tools:gradle:1.24.0'
-        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.1'
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.2'
     }
 }
 
@@ -14,10 +16,29 @@ plugins {
     id 'com.palantir.git-version' version '0.9.1'
 }
 
+apply plugin: 'org.moallemi.advanced-build-version'
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'realm-android'
 apply plugin: 'com.getkeepsafe.dexcount'
+
+advancedVersioning {
+    nameOptions {
+        versionMajor app.versionMajor
+        versionMinor app.versionMinor
+        versionPatch app.versionPatch
+        versionBuild versionCode
+    }
+    codeOptions {
+        versionCodeType VersionCodeType.AUTO_INCREMENT_ONE_STEP
+        dependsOnTasks 'release', 'beta'
+
+    }
+    outputOptions {
+        renameOutput true
+        nameFormat 'SpaceLaunchNow-${buildType}-${versionName}'
+    }
+}
 
 repositories {
     jcenter()
@@ -25,24 +46,8 @@ repositories {
     google()
 }
 
-def versionMajor = 1
-def versionMinor = 8
-def versionPatch = 1
-def appVersionCode = 0
-def appVersionName = ""
-def details = versionDetails()
-def versionPropsFile = file('version.properties')
-
 android {
-
-    signingConfigs {
-        config {
-            keyAlias "${alias}"
-            keyPassword "${password}"
-            storeFile file('/Users/cjones/Google Drive/Caleb/Development/BlogSite.keystore')
-            storePassword "${password}"
-        }
-    }
+    def appVersionCode = app.versionMajor * 10000 + app.versionMinor * 1000 + app.versionPatch * 100 + advancedVersioning.versionCode
     flavorDimensions "release"
     compileSdkVersion 27
     buildToolsVersion '26.0.2'
@@ -62,29 +67,13 @@ android {
                                 manifestApplicationId          : "${applicationId}",
                                 onesignal_app_id               : "${app_id}",
                                 onesignal_google_project_number: "${google_project_number}"]
-        if (versionPropsFile.canRead()) {
-            Properties versionProps = new Properties()
-            versionProps.load(new FileInputStream(versionPropsFile))
-            List<String> runTasks = gradle.startParameter.getTaskNames()
-            def versionBuild = versionProps['VERSION_CODE'].toInteger()
-            for (String item : runTasks) {
-                if (item.contains("assemble") && item.contains("Release")) {
-                    versionBuild = versionBuild + 1
-                    versionProps['VERSION_CODE'] = versionBuild.toString()
-                    versionProps.store(versionPropsFile.newWriter(), null)
-                }
-            }
 
-            minSdkVersion 16
-            targetSdkVersion 26
-            versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
-            versionName "${versionMajor}.${versionMinor}.${versionPatch}"
-            signingConfig signingConfigs.config
-            resConfigs "en"
-            multiDexEnabled true
-        } else {
-            throw new GradleException("Could not read version.properties!")
-        }
+        minSdkVersion 16
+        targetSdkVersion 27
+        versionCode appVersionCode
+        versionName advancedVersioning.versionName
+        resConfigs "en"
+        multiDexEnabled true
 
     }
     buildTypes {
@@ -104,13 +93,8 @@ android {
             zipAlignEnabled true
             minifyEnabled true
             shrinkResources true
-            versionNameSuffix "-b${defaultConfig.versionCode}"
+            versionNameSuffix "-b${appVersionCode}"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            android.applicationVariants.all { variant ->
-                variant.outputs.all {
-                    outputFileName = "SpaceLaunchNow-release-${variant.versionName}-${details.gitHash}.apk"
-                }
-            }
         }
 
         validation.initWith(debug)
@@ -122,6 +106,7 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
             testProguardFile('proguard-rules-test.pro')
+            matchingFallbacks = ['debug', 'release']
         }
     }
     lintOptions {
@@ -143,7 +128,6 @@ android {
         beta {
             minSdkVersion 16
             multiDexEnabled false
-            applicationIdSuffix ".beta"
             versionNameSuffix "-beta"
         }
     }
@@ -165,9 +149,8 @@ android {
 
 dependencies {
     wearApp project(':wear')
+    implementation project(':glidepalette')
     implementation project(path: ':data')
-
-
 
     // Android Official Libraries
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -201,7 +184,6 @@ dependencies {
     implementation 'com.evernote:android-job:1.2.1'
     implementation 'blue.aodev:material-values:1.1.1'
 
-
     // Views and Animations
     implementation 'com.afollestad.material-dialogs:core:0.9.4.3'
     implementation 'com.afollestad.material-dialogs:commons:0.9.3.0'
@@ -222,14 +204,11 @@ dependencies {
     implementation 'net.mediavrog:integrated-rating-request:1.1.2'
     implementation 'com.simplecityapps:recyclerview-fastscroll:1.0.16'
     implementation 'jp.wasabeef:glide-transformations:3.0.1'
-    implementation 'com.github.florent37:glidepalette:2.1.1'
     // If you want to use the GPU Filters
     implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
     implementation("com.mikepenz:materialdrawer:6.0.2@aar") {
         transitive = true
     }
-
-
 
     // HTTP Related libraries
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
