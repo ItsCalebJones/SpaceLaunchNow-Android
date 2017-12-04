@@ -193,35 +193,35 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
         if (rocketLaunches.size() > 0) {
             adapter.clear();
             adapter.addItems(rocketLaunches);
-        } else {
-            final DataSaver dataSaver = new DataSaver(context);
-            swipeRefreshLayout.setRefreshing(true);
-            DataClient.getInstance().getVehicles(name, new Callback<VehicleResponse>() {
-                @Override
-                public void onResponse(Call<VehicleResponse> call, Response<VehicleResponse> response) {
-                    if (response.isSuccessful()) {
-                        RocketDetail[] details = response.body().getVehicles();
-                        if (details.length > 0) {
-                            dataSaver.saveObjectsToRealm(details);
-                            rocketLaunches = getRealm().where(RocketDetail.class).contains("family", name).findAll();
-                            adapter.clear();
-                            adapter.addItems(rocketLaunches);
-                        } else {
-                            SnackbarHandler.showErrorSnackbar(context, coordinator, "Error no launch vehicles found.");
-                        }
-                    } else {
-                        SnackbarHandler.showErrorSnackbar(context, coordinator, "Error loading launch vehicles.");
-                    }
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-
-                @Override
-                public void onFailure(Call<VehicleResponse> call, Throwable t) {
-                    swipeRefreshLayout.setRefreshing(false);
-                    SnackbarHandler.showErrorSnackbar(context, coordinator, String.format("Error: %s", t.getLocalizedMessage()));
-                }
-            });
         }
+        final DataSaver dataSaver = new DataSaver(context);
+        swipeRefreshLayout.setRefreshing(true);
+        DataClient.getInstance().getVehicles(name, new Callback<VehicleResponse>() {
+            @Override
+            public void onResponse(Call<VehicleResponse> call, Response<VehicleResponse> response) {
+                if (response.isSuccessful()) {
+                    RocketDetail[] details = response.body().getVehicles();
+                    if (details.length > 0) {
+                        dataSaver.saveObjectsToRealm(details);
+                        rocketLaunches = getRealm().where(RocketDetail.class).contains("family", name).findAll();
+                        adapter.clear();
+                        adapter.addItems(rocketLaunches);
+                    } else {
+                        SnackbarHandler.showErrorSnackbar(context, coordinator, "Error no launch vehicles found.");
+                    }
+                } else {
+                    SnackbarHandler.showErrorSnackbar(context, coordinator, "Error loading launch vehicles.");
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(Call<VehicleResponse> call, Throwable t) {
+                swipeRefreshLayout.setRefreshing(false);
+                SnackbarHandler.showErrorSnackbar(context, coordinator, String.format("Error: %s", t.getLocalizedMessage()));
+            }
+        });
+
 
         applyProfileBackdrop(launcher.getImageURL());
         applyProfileLogo(launcher.getNationURL());
