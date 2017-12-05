@@ -62,7 +62,7 @@ public class DataSaver {
 
     public void saveLaunchesToRealm(final Launch[] launches, boolean mini) {
         isSaving = true;
-        Realm mRealm = Realm.getDefaultInstance();
+        final Realm mRealm = Realm.getDefaultInstance();
 
         if (mini) {
             for (Launch item : launches) {
@@ -72,16 +72,20 @@ public class DataSaver {
                 if (previous != null) {
                     if (isLaunchTimeChanged(previous, item)) {
                         Timber.i("%s status has changed.", item.getName());
-                        LaunchNotification notification = mRealm.where(LaunchNotification.class).equalTo("id", item.getId()).findFirst();
-                        mRealm.beginTransaction();
+                        final LaunchNotification notification = mRealm.where(LaunchNotification.class).equalTo("id", item.getId()).findFirst();
                         if (notification != null) {
-                            notification.resetNotifiers();
-                            mRealm.copyToRealmOrUpdate(notification);
+                            mRealm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    notification.resetNotifiers();
+                                    realm.copyToRealmOrUpdate(notification);
+                                }
+                            });
                         }
-                        previous.resetNotifiers();
                         mRealm.executeTransaction(new Realm.Transaction() {
                             @Override
                             public void execute(Realm realm) {
+                                previous.resetNotifiers();
                                 realm.copyToRealmOrUpdate(previous);
                             }
                         });
@@ -98,10 +102,10 @@ public class DataSaver {
                     if (isLaunchTimeChanged(previous, item)) {
                         final LaunchNotification notification = mRealm.where(LaunchNotification.class).equalTo("id", item.getId()).findFirst();
                         if (notification != null) {
-                            notification.resetNotifiers();
                             mRealm.executeTransaction(new Realm.Transaction() {
                                 @Override
                                 public void execute(Realm realm) {
+                                    notification.resetNotifiers();
                                     realm.copyToRealmOrUpdate(notification);
                                 }
                             });
