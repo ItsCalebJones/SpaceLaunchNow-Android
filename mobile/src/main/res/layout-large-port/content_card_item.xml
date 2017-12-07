@@ -109,26 +109,11 @@
                     android:scaleType="centerCrop"
                     android:contentDescription="A map view of launch location." />
 
-                <android.support.design.widget.FloatingActionButton
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/fab"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/map_view"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginBottom="-32dp"
-                    android:layout_marginRight="20dp"
-                    android:clickable="true"
-                    android:elevation="8dp"
-                    app:srcCompat="@drawable/ic_explore"
-                    app:backgroundTint="@color/colorAccentLight" />
-
                 <TextView
                     android:id="@+id/content_status"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/map_view"
-                    android:layout_marginRight="52dp"
                     android:elevation="0dp"
                     android:paddingLeft="28dp"
                     android:paddingRight="28dp"

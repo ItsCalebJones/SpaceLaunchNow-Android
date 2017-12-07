@@ -934,7 +934,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
 
     public boolean getNoGoSwitch() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_NO_GO_SWITCH, false);
+        return this.sharedPrefs.getBoolean(PREFS_NO_GO_SWITCH, true);
     }
 
     public void setNoGoSwitch(boolean key) {

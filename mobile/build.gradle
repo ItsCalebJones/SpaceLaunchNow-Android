@@ -93,7 +93,6 @@ android {
             zipAlignEnabled true
             minifyEnabled true
             shrinkResources true
-            versionNameSuffix "-b${appVersionCode}"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
