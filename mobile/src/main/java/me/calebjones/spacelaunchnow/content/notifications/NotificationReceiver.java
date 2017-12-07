@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.Location;
@@ -107,6 +108,10 @@ public class NotificationReceiver extends NotificationExtenderService {
             }
 
             if (notificationType.contains("tenMinute") && tenMinutes) {
+                return true;
+            }
+
+            if (BuildConfig.DEBUG && notificationType.contains("test")) {
                 return true;
             }
         }
