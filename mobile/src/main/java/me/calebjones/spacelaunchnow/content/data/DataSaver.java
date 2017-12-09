@@ -19,6 +19,7 @@ import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.LaunchNotification;
+import me.calebjones.spacelaunchnow.data.models.Mission;
 import me.calebjones.spacelaunchnow.data.models.Result;
 import me.calebjones.spacelaunchnow.data.models.UpdateRecord;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
@@ -92,6 +93,15 @@ public class DataSaver {
                         final Launch previous = mRealm.where(Launch.class)
                                 .equalTo("id", item.getId())
                                 .findFirst();
+                        if (item.getMissions() != null && item.getMissions().size() > 0){
+                            Mission newMisison = item.getMissions().get(0);
+                            RealmResults<Mission> missions = mRealm.where(Mission.class).equalTo("id", newMisison.getId()).findAll();
+                            if  (missions != null && missions.size() > 0){
+                                RealmList <Mission> results = new RealmList<Mission>();
+                                results.addAll(missions.subList(0, missions.size()));
+                                item.setMissions(results);
+                            }
+                        }
                         if (previous != null) {
                             if (isLaunchTimeChanged(previous, item)) {
                                 final LaunchNotification notification = mRealm.where(LaunchNotification.class).equalTo("id", item.getId()).findFirst();
@@ -221,6 +231,15 @@ public class DataSaver {
                             if (notification != null) {
                                 notification.resetNotifiers();
                                 realm.copyToRealmOrUpdate(notification);
+                            }
+                        }
+                        if (item.getMissions() != null && item.getMissions().size() > 0){
+                            Mission newMisison = item.getMissions().get(0);
+                            RealmResults<Mission> missions = realm.where(Mission.class).equalTo("id", newMisison.getId()).findAll();
+                            if  (missions != null && missions.size() > 0){
+                                RealmList <Mission> results = new RealmList<Mission>();
+                                results.addAll(missions.subList(0, missions.size()));
+                                item.setMissions(results);
                             }
                         }
                         item.setEventID(previous.getEventID());

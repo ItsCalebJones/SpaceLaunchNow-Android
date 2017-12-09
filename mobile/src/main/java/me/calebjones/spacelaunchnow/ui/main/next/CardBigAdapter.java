@@ -155,12 +155,10 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                 if (dlat == 0 && dlon == 0 || Double.isNaN(dlat) || Double.isNaN(dlon) || dlat == Double.NaN || dlon == Double.NaN) {
                     if (holder.map_view != null) {
                         holder.map_view.setVisibility(View.GONE);
-                        holder.exploreFab.setVisibility(View.GONE);
 
                     }
                 } else {
                     holder.map_view.setVisibility(View.VISIBLE);
-                    holder.exploreFab.setVisibility(View.VISIBLE);
                     final Resources res = context.getResources();
                     final StaticMap map = new StaticMap()
                             .center(dlat, dlon)
@@ -489,7 +487,6 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         public TextView countdownSeconds;
         public LinearLayout content_mission_description_view;
         public ImageView categoryIcon;
-        public FloatingActionButton exploreFab;
         public CountDownTimer timer;
         public View countdownView;
 
@@ -500,7 +497,6 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
             super(view);
 
             categoryIcon = view.findViewById(R.id.categoryIcon);
-            exploreFab = view.findViewById(R.id.fab);
             exploreButton = view.findViewById(R.id.exploreButton);
             shareButton = view.findViewById(R.id.shareButton);
             watchButton = view.findViewById(R.id.watchButton);
@@ -526,7 +522,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
             shareButton.setOnClickListener(this);
             exploreButton.setOnClickListener(this);
             watchButton.setOnClickListener(this);
-            exploreFab.setOnClickListener(this);
+            map_view.setOnClickListener(this);
         }
 
         //React to click events.
@@ -639,7 +635,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                             .startChooser();
                     Analytics.from(context).sendLaunchShared("Explore Button", launch.getName() + "-" + launch.getId().toString());
                     break;
-                case R.id.fab:
+                case R.id.map_view:
                     String location = launchList.get(position).getLocation().getName();
                     location = (location.substring(location.indexOf(",") + 1));
 

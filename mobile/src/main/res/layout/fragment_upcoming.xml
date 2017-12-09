@@ -22,6 +22,17 @@
                 android:layout_height="match_parent">
 
 
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/menu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginRight="16dp"
+                    app:srcCompat="@drawable/ic_filter">
+
+                </android.support.design.widget.FloatingActionButton>
+
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
@@ -274,7 +285,7 @@
                               android:layout_height="wrap_content"
                               android:layout_marginStart="12dp"
                               android:layout_marginEnd="@dimen/material_baseline_grid_4x"
-                              android:checked="false"
+                              android:checked="true"
                               android:text="Hide No-Go Launches"
                               android:textColor="@color/white"
                               app:buttonTint="@color/white" />
@@ -294,16 +305,6 @@
 
                     </android.support.v4.widget.NestedScrollView>
 
-                    <android.support.design.widget.FloatingActionButton
-                      android:id="@+id/menu"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_gravity="bottom|end"
-                      android:layout_marginBottom="16dp"
-                      android:layout_marginRight="16dp"
-                      app:srcCompat="@drawable/ic_add_alert">
-
-                    </android.support.design.widget.FloatingActionButton>
                 </FrameLayout>
 
             </FrameLayout>
