@@ -79,6 +79,7 @@
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -229,7 +230,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="bottom"
                 android:orientation="horizontal"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:id="@+id/button_layout">
 
                 <android.support.v7.widget.AppCompatButton
@@ -262,18 +263,4 @@
             </LinearLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>
-
-    <android.support.design.widget.FloatingActionButton
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/vehicle_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:elevation="8dp"
-        app:srcCompat="@drawable/ic_fullscreen"
-        app:backgroundTint="@color/colorPrimary"
-        app:layout_anchor="@id/item_icon"
-        app:layout_anchorGravity="bottom|right"
-        />
-
 </android.support.design.widget.CoordinatorLayout>

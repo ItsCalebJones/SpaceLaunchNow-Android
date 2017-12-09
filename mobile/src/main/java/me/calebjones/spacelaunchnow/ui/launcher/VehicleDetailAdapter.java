@@ -112,12 +112,6 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
             holder.vehicle_spec_view.setVisibility(View.GONE);
         }
 
-        if (launchVehicle.getImageURL().length() == 0) {
-            holder.fab.setVisibility(View.INVISIBLE);
-        } else {
-            holder.fab.setVisibility(View.VISIBLE);
-        }
-
         GlideApp.with(mContext)
                 .load(launchVehicle.getImageURL())
                 .placeholder(R.drawable.placeholder)
@@ -188,7 +182,6 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ImageView item_icon;
         public View vehicle_spec_view, vehicle_container, button_layout;
-        public FloatingActionButton fab;
         public TextView item_title;
         public TextView launch_vehicle_specs_height;
         public TextView launch_vehicle_specs_diameter;
@@ -206,7 +199,6 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
             super(view);
 
             view.setOnClickListener(this);
-            fab = (FloatingActionButton) view.findViewById(R.id.vehicle_fab);
             vehicle_container = view.findViewById(R.id.vehicle_container);
             vehicle_spec_view = view.findViewById(R.id.vehicle_spec_view);
             button_layout = view.findViewById(R.id.button_layout);
@@ -225,7 +217,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
 
             infoButton.setOnClickListener(this);
             wikiButton.setOnClickListener(this);
-            fab.setOnClickListener(this);
+            item_icon.setOnClickListener(this);
         }
 
         //React to click events.
@@ -239,7 +231,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
                 case R.id.wikiButton:
                     Utils.openCustomTab(activity, mContext, items.get(position).getWikiURL());
                     break;
-                case R.id.vehicle_fab:
+                case R.id.item_icon:
                     Intent animateIntent = new Intent(activity, FullscreenImageActivity.class);
                     animateIntent.putExtra("imageURL", items.get(position).getImageURL());
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

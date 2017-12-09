@@ -130,6 +130,11 @@ android {
             multiDexEnabled false
             versionNameSuffix "-beta"
         }
+        alpha {
+            minSdkVersion 16
+            multiDexEnabled false
+            versionNameSuffix "-alpha"
+        }
     }
 }
 

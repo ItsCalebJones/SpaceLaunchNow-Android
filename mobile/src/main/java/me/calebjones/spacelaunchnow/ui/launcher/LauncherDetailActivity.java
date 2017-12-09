@@ -30,6 +30,7 @@ import java.net.URL;
 import java.util.Collections;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
@@ -203,7 +204,12 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
                 if (response.isSuccessful()) {
                     RocketDetail[] details = response.body().getVehicles();
                     if (details.length > 0) {
-                        getRealm().where(RocketDetail.class).contains("family",name).findAll().deleteAllFromRealm();
+                        getRealm().executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                getRealm().where(RocketDetail.class).contains("family",name).findAll().deleteAllFromRealm();
+                            }
+                        });
                         dataSaver.saveObjectsToRealm(details);
                         rocketLaunches = getRealm().where(RocketDetail.class).contains("family", name).findAll();
                         adapter.clear();

@@ -58,6 +58,11 @@ android {
             dimension "release"
             versionNameSuffix "-beta"
         }
+
+        alpha {
+            dimension "release"
+            versionNameSuffix "-alpha"
+        }
     }
 }
 

@@ -40,6 +40,7 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
@@ -195,6 +196,7 @@ public class LaunchDetailActivity extends BaseActivity
                             updateViews(item);
                             Timber.v("Updated detailLaunch: %s", item.getId());
                         }
+
                     } else {
                         Launch item = realm.where(Launch.class)
                                 .equalTo("id", id)
@@ -505,7 +507,7 @@ public class LaunchDetailActivity extends BaseActivity
                         + "\n\n"
                         + launchDate;
             }
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             Timber.e(e);
         }
         ShareCompat.IntentBuilder.from(this)

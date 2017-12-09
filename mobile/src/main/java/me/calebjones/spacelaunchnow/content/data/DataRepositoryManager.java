@@ -9,8 +9,10 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
+import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.UpdateRecord;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
 import timber.log.Timber;
@@ -82,5 +84,21 @@ public class DataRepositoryManager {
             Timber.d("No record - getting all launches");
             dataClientManager.getUpcomingLaunchesAll();
         }
+    }
+
+    public void cleanDB() {
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<Launch> launches = realm.where(Launch.class).findAll();
+        for (final Launch launch: launches){
+            if (launch.getName() == null){
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        launch.deleteFromRealm();
+                    }
+                });
+            }
+        }
+
     }
 }
