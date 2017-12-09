@@ -36,6 +36,7 @@ public class UpdateJob extends Job {
                 Crashlytics.logException(e);
             }
         }
+        dataRepositoryManager.cleanDB();
         RealmConfiguration configuration = Realm.getDefaultConfiguration();
         if (configuration != null){
             Realm.compactRealm(configuration);
