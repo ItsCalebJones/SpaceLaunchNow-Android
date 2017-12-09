@@ -56,6 +56,7 @@ import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
+import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -510,12 +511,16 @@ public class LaunchDetailActivity extends BaseActivity
         } catch (NullPointerException e) {
             Timber.e(e);
         }
-        ShareCompat.IntentBuilder.from(this)
-                .setType("text/plain")
-                .setChooserTitle("Share: " + launch.getName())
-                .setText(String.format("%s\n\nWatch Live: %s", message, launch.getUrl()))
-                .startChooser();
-        Analytics.from(context).sendLaunchShared("Share FAB", launch.getName() + "-" + launch.getId().toString());
+        if (launch.getName() != null && launch.getUrl() != null) {
+            ShareCompat.IntentBuilder.from(this)
+                    .setType("text/plain")
+                    .setChooserTitle("Share: " + launch.getName())
+                    .setText(String.format("%s\n\nWatch Live: %s", message, launch.getUrl()))
+                    .startChooser();
+            Analytics.from(context).sendLaunchShared("Share FAB", launch.getName() + "-" + launch.getId().toString());
+        } else {
+            SnackbarHandler.showErrorSnackbar(this, rootview, "Error - unable to share this launch.");
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
