@@ -84,7 +84,7 @@ android {
                                     manifestApplicationId: "me.calebjones.spacelaunchnow.ui.debug"]
             debuggable true
             renderscriptOptimLevel 3
-            versionNameSuffix "-debug-${defaultConfig.versionCode}"
+            versionNameSuffix "-debug-b${appVersionCode}"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
 
@@ -93,7 +93,6 @@ android {
             zipAlignEnabled true
             minifyEnabled true
             shrinkResources true
-            versionNameSuffix "-b${appVersionCode}"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
