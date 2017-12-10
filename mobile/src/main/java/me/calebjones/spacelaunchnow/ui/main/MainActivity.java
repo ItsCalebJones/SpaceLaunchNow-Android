@@ -223,6 +223,10 @@ public class MainActivity extends BaseActivity {
                                 .withIcon(FontAwesome.Icon.faw_rocket)
                                 .withIdentifier(R.id.menu_vehicle)
                                 .withSelectable(true),
+                        new PrimaryDrawerItem().withName("Settings")
+                                .withIcon(GoogleMaterial.Icon.gmd_settings)
+                                .withIdentifier(R.id.menu_settings)
+                                .withSelectable(true),
                         new DividerDrawerItem(),
                         new SecondaryDrawerItem()
                                 .withIcon(GoogleMaterial.Icon.gmd_info_outline)
