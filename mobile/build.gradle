@@ -68,7 +68,7 @@ android {
                                 onesignal_app_id               : "${app_id}",
                                 onesignal_google_project_number: "${google_project_number}"]
 
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 27
         versionCode appVersionCode
         versionName advancedVersioning.versionName
@@ -120,17 +120,17 @@ android {
         }
         prod {
             // The actual minSdkVersion for the application.
-            minSdkVersion 16
+            minSdkVersion 19
             multiDexEnabled false
             dimension "release"
         }
         beta {
-            minSdkVersion 16
+            minSdkVersion 19
             multiDexEnabled false
             versionNameSuffix "-beta"
         }
         alpha {
-            minSdkVersion 16
+            minSdkVersion 19
             multiDexEnabled false
             versionNameSuffix "-alpha"
         }

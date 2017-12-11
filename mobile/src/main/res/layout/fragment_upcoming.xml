@@ -17,21 +17,9 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
-            <FrameLayout
+            <android.support.design.widget.CoordinatorLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
-
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/menu"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|end"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginRight="16dp"
-                    app:srcCompat="@drawable/ic_filter">
-
-                </android.support.design.widget.FloatingActionButton>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view"
@@ -307,7 +295,17 @@
 
                 </FrameLayout>
 
-            </FrameLayout>
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/menu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginRight="16dp"
+                    app:elevation="@dimen/material_elevation_fab_resting"
+                    app:srcCompat="@drawable/ic_filter"/>
+
+            </android.support.design.widget.CoordinatorLayout>
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
