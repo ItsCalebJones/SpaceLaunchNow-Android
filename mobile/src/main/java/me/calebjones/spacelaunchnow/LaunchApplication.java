@@ -34,7 +34,6 @@ import org.json.JSONObject;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.RealmObjectSchema;
 import io.realm.exceptions.RealmMigrationNeededException;
 import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.content.data.DataRepositoryManager;
@@ -56,8 +55,6 @@ import me.calebjones.spacelaunchnow.utils.analytics.CrashlyticsTree;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import okhttp3.OkHttpClient;
 import timber.log.Timber;
-
-import static me.calebjones.spacelaunchnow.data.models.Constants.DB_SCHEMA_VERSION_1_5_6;
 
 public class LaunchApplication extends Application implements Analytics.Provider {
 
@@ -181,7 +178,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
             Realm.deleteRealm(config);
             Realm.setDefaultConfiguration(config);
             libraryDataManager = new LibraryDataManager(this);
-            libraryDataManager.getAllData();
+            libraryDataManager.getFirstLaunchData();
             Crashlytics.logException(e);
         }
 
@@ -237,7 +234,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
             DataRepositoryManager dataRepositoryManager = new DataRepositoryManager(this);
             dataRepositoryManager.syncBackground();
         } else {
-            libraryDataManager.getAllData();
+            libraryDataManager.getFirstLaunchData();
             Once.markDone("loadInitialData");
         }
     }

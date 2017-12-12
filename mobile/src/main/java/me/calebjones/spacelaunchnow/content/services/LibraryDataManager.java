@@ -24,13 +24,13 @@ public class LibraryDataManager extends BaseManager {
         dataClientManager = new DataClientManager(context);
     }
 
-    public void getAllData(){
+    public void getFirstLaunchData(){
         if (sharedPref.getBoolean("background", true)) {
             scheduleLaunchUpdates();
         }
 
         dataClientManager.getUpcomingLaunchesAll();
-        dataClientManager.getLaunchesByDate("1950-01-01", Utils.getEndDate(1));
+//        dataClientManager.getLaunchesByDate("1950-01-01", Utils.getEndDate(1));
         getAllLibraryData();
     }
 

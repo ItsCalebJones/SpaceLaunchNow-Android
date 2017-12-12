@@ -171,6 +171,10 @@ public class LaunchDetailActivity extends BaseActivity
         if (type != null && type.equals("launch")) {
             final int id = mIntent.getIntExtra("launchID", 0);
             detailSwipeRefresh.setRefreshing(true);
+            Launch launch = getRealm().where(Launch.class).equalTo("id",id).findFirst();
+            if (launch != null){
+                updateViews(launch);
+            }
             DataClient.getInstance().getLaunchById(id, true, new Callback<LaunchResponse>() {
                 @Override
                 public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
