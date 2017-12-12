@@ -1,7 +1,5 @@
 package me.calebjones.spacelaunchnow.data.networking;
 
-import android.support.annotation.NonNull;
-
 import java.io.IOException;
 
 import me.calebjones.spacelaunchnow.data.helpers.Utils;
@@ -81,7 +79,7 @@ public class DataClient {
         return mInstance;
     }
 
-    public Call<LaunchResponse> getLaunchById(int launchID, boolean isUIThread, @NonNull Callback<LaunchResponse> callback) {
+    public Call<LaunchResponse> getLaunchById(int launchID, boolean isUIThread, Callback<LaunchResponse> callback) {
         Call<LaunchResponse> call;
         if (isUIThread) {
             call = libraryService.getLaunchByID(launchID);

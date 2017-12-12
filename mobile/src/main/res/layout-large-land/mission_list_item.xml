@@ -37,9 +37,12 @@
                     android:id="@+id/categoryIcon"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
-                    android:src="@drawable/ic_unknown"
-                    android:padding="@dimen/material_baseline_grid_2x"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_1x"
+                    android:layout_marginStart="@dimen/material_baseline_grid_2x"
+                    android:layout_marginTop="@dimen/material_baseline_grid_1x"
+                    android:src="@drawable/ic_unknown" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -87,7 +90,6 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="@dimen/material_baseline_grid_1x"
                 android:layout_marginBottom="@dimen/material_baseline_grid_1x"
                 android:layout_marginStart="@dimen/material_baseline_grid_3x"
                 android:layout_marginEnd="@dimen/material_baseline_grid_3x"
@@ -102,10 +104,9 @@
                 android:gravity="left"
                 android:singleLine="false"
                 android:text="Unknown Mission"
-                android:layout_marginTop="@dimen/material_baseline_grid_2x"
                 android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
-                android:layout_marginStart="@dimen/material_baseline_grid_3x"
                 android:layout_marginEnd="@dimen/material_baseline_grid_3x"
+                android:layout_marginStart="@dimen/material_baseline_grid_3x"
                 android:textColor="?android:textColorSecondary" />
 
             <LinearLayout
