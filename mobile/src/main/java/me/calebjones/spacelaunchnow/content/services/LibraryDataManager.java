@@ -31,14 +31,11 @@ public class LibraryDataManager extends BaseManager {
 
         dataClientManager.getUpcomingLaunchesAll();
 //        dataClientManager.getLaunchesByDate("1950-01-01", Utils.getEndDate(1));
-        getAllLibraryData();
+        dataClientManager.getAllMissions();
     }
 
     public void getAllLibraryData(){
-        dataClientManager.getAllAgencies();
-        dataClientManager.getAllMissions();
-        dataClientManager.getAllLocations();
-        dataClientManager.getAllPads();
+
     }
 
     public void  getAgencies(){
@@ -109,6 +106,6 @@ public class LibraryDataManager extends BaseManager {
     public void scheduleLaunchUpdates() {
         Timber.d("scheduleLaunchUpdates");
         UpdateJob.scheduleJob(context);
-        LibraryDataJob.scheduleJob();
+//        LibraryDataJob.scheduleJob();
     }
 }
