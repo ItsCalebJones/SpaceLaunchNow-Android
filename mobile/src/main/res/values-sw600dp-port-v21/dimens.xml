@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="product_bottom_text">96dp</dimen>
+    <dimen name="product_bottom_text">48dp</dimen>
 </resources>

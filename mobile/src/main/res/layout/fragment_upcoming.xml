@@ -47,7 +47,7 @@
                             android:layout_width="72dp"
                             android:layout_height="72dp"
                             android:layout_gravity="center"
-                            android:src="@drawable/launcher" />
+                            android:src="@mipmap/ic_launcher" />
 
                         <TextView
                             android:id="@+id/no_launches_text"

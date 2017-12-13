@@ -214,10 +214,10 @@ public class DataSaver {
         mRealm.close();
     }
 
-    public void saveLaunchesToRealm(final ArrayList<Launch> launches) {
+    public void saveLaunchesToRealm(final RealmList<Launch> launches) {
         isSaving = true;
         Realm mRealm = Realm.getDefaultInstance();
-        mRealm.executeTransaction(new Realm.Transaction() {
+        mRealm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 for (Launch item : launches) {
@@ -233,13 +233,48 @@ public class DataSaver {
                                 realm.copyToRealmOrUpdate(notification);
                             }
                         }
-                        if (item.getMissions() != null && item.getMissions().size() > 0){
-                            Mission newMisison = item.getMissions().get(0);
-                            RealmResults<Mission> missions = realm.where(Mission.class).equalTo("id", newMisison.getId()).findAll();
-                            if  (missions != null && missions.size() > 0){
-                                RealmList <Mission> results = new RealmList<Mission>();
-                                results.addAll(missions.subList(0, missions.size()));
-                                item.setMissions(results);
+
+                        item.setEventID(previous.getEventID());
+                        item.setSyncCalendar(previous.syncCalendar());
+                        item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
+                        item.setNotifiable(previous.isNotifiable());
+                    }
+                    if (item.getMissions() != null && item.getMissions().size() > 0){
+                        Mission newMisison = item.getMissions().get(0);
+                        RealmResults<Mission> missions = realm.where(Mission.class).equalTo("id", newMisison.getId()).findAll();
+                        if  (missions != null && missions.size() > 0){
+                            RealmList <Mission> results = new RealmList<Mission>();
+                            results.addAll(missions.subList(0, missions.size()));
+                            item.setMissions(results);
+                        }
+                    }
+                    Timber.v("Saving item: %s", item.getName());
+                    realm.copyToRealmOrUpdate(item);
+                }
+            }
+        });
+        syncNotifiers(mRealm);
+        isSaving = false;
+        mRealm.close();
+    }
+
+    public void saveLaunchesToRealmAsync(final RealmList<Launch> launches) {
+        isSaving = true;
+        Realm mRealm = Realm.getDefaultInstance();
+        mRealm.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                for (Launch item : launches) {
+
+                    Launch previous = realm.where(Launch.class)
+                            .equalTo("id", item.getId())
+                            .findFirst();
+                    if (previous != null) {
+                        if (isLaunchTimeChanged(previous, item)) {
+                            final LaunchNotification notification = realm.where(LaunchNotification.class).equalTo("id", item.getId()).findFirst();
+                            if (notification != null) {
+                                notification.resetNotifiers();
+                                realm.copyToRealmOrUpdate(notification);
                             }
                         }
                         item.setEventID(previous.getEventID());
@@ -247,14 +282,18 @@ public class DataSaver {
                         item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
                         item.setNotifiable(previous.isNotifiable());
                     }
-                    if (item.getLocation() != null) {
-                        realm.copyToRealmOrUpdate(launches);
-
+                    if (item.getMissions() != null && item.getMissions().size() > 0){
+                        Mission newMisison = item.getMissions().get(0);
+                        RealmResults<Mission> missions = realm.where(Mission.class).equalTo("id", newMisison.getId()).findAll();
+                        if  (missions != null && missions.size() > 0){
+                            RealmList <Mission> results = new RealmList<Mission>();
+                            results.addAll(missions.subList(0, missions.size()));
+                            item.setMissions(results);
+                        }
                     }
                     Timber.v("Saving item: %s", item.getName());
-
+                    realm.copyToRealmOrUpdate(item);
                 }
-                realm.copyToRealmOrUpdate(launches);
             }
         });
         syncNotifiers(mRealm);
