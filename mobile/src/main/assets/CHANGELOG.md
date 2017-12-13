@@ -14,6 +14,7 @@ Just a few bug-fixes and cleanups from the previous release.
 * Fixed a text issues with Day/Night theme.
 * Updated Vehicles section.
 * Removed old code and unnecessary background syncs.
+* Usability changes to make it easier to find various settings.
 ---
 ### Version 1.8.0
 #### Overview
