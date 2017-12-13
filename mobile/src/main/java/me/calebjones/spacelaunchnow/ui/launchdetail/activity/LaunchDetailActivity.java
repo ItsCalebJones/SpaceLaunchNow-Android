@@ -171,8 +171,8 @@ public class LaunchDetailActivity extends BaseActivity
         if (type != null && type.equals("launch")) {
             final int id = mIntent.getIntExtra("launchID", 0);
             detailSwipeRefresh.setRefreshing(true);
-            Launch launch = getRealm().where(Launch.class).equalTo("id",id).findFirst();
-            if (launch != null){
+            Launch launch = getRealm().where(Launch.class).equalTo("id", id).findFirst();
+            if (launch != null) {
                 updateViews(launch);
             }
             DataClient.getInstance().getLaunchById(id, true, new Callback<LaunchResponse>() {
@@ -180,33 +180,38 @@ public class LaunchDetailActivity extends BaseActivity
                 public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
                     Realm realm = Realm.getDefaultInstance();
                     if (response.isSuccessful()) {
-                        RealmList<Launch> items = new RealmList<>(response.body().getLaunches());
-                        for (Launch item : items) {
-                            Launch previous = realm.where(Launch.class)
-                                    .equalTo("id", item.getId())
-                                    .findFirst();
-                            if (previous != null) {
-                                item.setEventID(previous.getEventID());
-                                item.setSyncCalendar(previous.syncCalendar());
-                                item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
-                                item.setIsNotifiedDay(previous.getIsNotifiedDay());
-                                item.setIsNotifiedHour(previous.getIsNotifiedHour());
-                                item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
-                                item.setNotifiable(previous.isNotifiable());
-                            }
-                            realm.beginTransaction();
-                            item.getLocation().setPrimaryID();
-                            realm.copyToRealmOrUpdate(item);
-                            realm.commitTransaction();
-                            updateViews(item);
-                            Timber.v("Updated detailLaunch: %s", item.getId());
-                        }
+                        final RealmList<Launch> items = new RealmList<>(response.body().getLaunches());
+                        if (items.size() == 1) {
+                            final Launch item = items.first();
+                            realm.executeTransactionAsync(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm bgRealm) {
+                                    Launch previous = bgRealm.where(Launch.class)
+                                            .equalTo("id", item.getId())
+                                            .findFirst();
+                                    if (previous != null) {
+                                        item.setEventID(previous.getEventID());
+                                        item.setSyncCalendar(previous.syncCalendar());
+                                        item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
+                                        item.setIsNotifiedDay(previous.getIsNotifiedDay());
+                                        item.setIsNotifiedHour(previous.getIsNotifiedHour());
+                                        item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
+                                        item.setNotifiable(previous.isNotifiable());
+                                    }
+                                    item.getLocation().setPrimaryID();
+                                    bgRealm.copyToRealmOrUpdate(item);
+                                    Timber.v("Updated detailLaunch: %s", item.getId());
+                                }
 
+                            }, new Realm.Transaction.OnSuccess() {
+                                @Override
+                                public void onSuccess() {
+                                    sendUpdateView(id);
+                                }
+                            });
+                        }
                     } else {
-                        Launch item = realm.where(Launch.class)
-                                .equalTo("id", id)
-                                .findFirst();
-                        updateViews(item);
+                        sendUpdateView(id);
                     }
                     realm.close();
                     detailSwipeRefresh.setRefreshing(false);
@@ -247,6 +252,13 @@ public class LaunchDetailActivity extends BaseActivity
         viewPager.setOffscreenPageLimit(3);
 
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    private  void sendUpdateView(int id){
+        Launch item = getRealm().where(Launch.class)
+                .equalTo("id", id)
+                .findFirst();
+        updateViews(item);
     }
 
     private void updateViews(Launch launch) {

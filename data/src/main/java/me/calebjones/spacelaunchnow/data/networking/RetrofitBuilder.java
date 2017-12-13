@@ -21,8 +21,10 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
 import static android.os.Process.THREAD_PRIORITY_LESS_FAVORABLE;
 import static android.os.Process.THREAD_PRIORITY_LOWEST;
+import static android.os.Process.THREAD_PRIORITY_MORE_FAVORABLE;
 
 
 public class RetrofitBuilder {
@@ -43,7 +45,7 @@ public class RetrofitBuilder {
                 return new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        android.os.Process.setThreadPriority(THREAD_PRIORITY_LESS_FAVORABLE);
+                        android.os.Process.setThreadPriority(THREAD_PRIORITY_BACKGROUND);
                         r.run();
                     }
                 }, "Retrofit-Idle-Background");
@@ -66,7 +68,7 @@ public class RetrofitBuilder {
                 return new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        android.os.Process.setThreadPriority(THREAD_PRIORITY_LOWEST);
+                        android.os.Process.setThreadPriority(THREAD_PRIORITY_MORE_FAVORABLE);
                         r.run();
                     }
                 }, "Retrofit-Idle-Background");

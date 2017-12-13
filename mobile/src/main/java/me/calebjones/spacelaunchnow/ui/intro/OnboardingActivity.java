@@ -49,7 +49,7 @@ public class OnboardingActivity extends AhoyOnboarderActivity {
         for (AhoyOnboarderCard page : pages) {
             page.setTitleColor(R.color.material_typography_primary_text_color_light);
             page.setDescriptionColor(R.color.material_typography_secondary_text_color_light);
-            page.setIconLayoutParams(750, 750, 16, 8, 8, 16);
+//            page.setIconLayoutParams(500, 500, 0, 0, 0, 0);
         }
 
         setFinishButtonTitle("Done");
