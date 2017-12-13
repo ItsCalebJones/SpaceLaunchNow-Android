@@ -88,8 +88,8 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
                         .intoBackground(holder.textContainer, GlidePalette.Swatch.RGB)
                         .crossfade(true))
                 .into(holder.picture);
-        holder.name.setText(launcher.getName());
-        holder.subTitle.setText(launcher.getAgency());
+        holder.subTitle.setText(launcher.getName());
+        holder.name.setText(launcher.getAgency());
     }
 
     @Override

@@ -84,7 +84,7 @@
                     ​
 
                     <TextView
-                        android:id="@+id/detail_rocket"
+                        android:id="@+id/detail_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="32dp"
@@ -95,7 +95,7 @@
                     ​
 
                     <TextView
-                        android:id="@+id/detail_vehicle_agency"
+                        android:id="@+id/detail_sub_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"

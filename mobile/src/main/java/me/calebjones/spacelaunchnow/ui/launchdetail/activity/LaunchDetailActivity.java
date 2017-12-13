@@ -40,7 +40,6 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmList;
-import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
@@ -72,7 +71,7 @@ public class LaunchDetailActivity extends BaseActivity
     AdView adView;
     @BindView(R.id.detail_profile_image)
     CircleImageView detail_profile_image;
-    @BindView(R.id.detail_rocket)
+    @BindView(R.id.detail_title)
     TextView detail_rocket;
     @BindView(R.id.detail_mission_location)
     TextView detail_mission_location;

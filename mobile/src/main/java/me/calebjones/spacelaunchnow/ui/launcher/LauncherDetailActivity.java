@@ -25,25 +25,16 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Collections;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.data.DataSaver;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Launcher;
-import me.calebjones.spacelaunchnow.data.models.Result;
-import me.calebjones.spacelaunchnow.data.models.Rocket;
 import me.calebjones.spacelaunchnow.data.models.RocketDetail;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
-import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
@@ -101,8 +92,8 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         toolbarTitle = (TextView) findViewById(R.id.title_text);
-        detail_rocket = (TextView) findViewById(R.id.detail_rocket);
-        detail_vehicle_agency = (TextView) findViewById(R.id.detail_vehicle_agency);
+        detail_rocket = (TextView) findViewById(R.id.detail_sub_title);
+        detail_vehicle_agency = (TextView) findViewById(R.id.detail_title);
         detail_profile_image = (CircleImageView) findViewById(R.id.detail_profile_image);
         detail_profile_backdrop = (ImageView) findViewById(R.id.detail_profile_backdrop);
         appBarLayout = (AppBarLayout) findViewById(R.id.detail_appbar);
