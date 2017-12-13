@@ -2,12 +2,9 @@
     <!-- The background color, preferably the same as your normal theme -->
     <item android:drawable="@color/slide_one"/>
     <!-- Your product logo - 144dp color version of your app icon -->
-    <item android:bottom="@dimen/product_bottom" android:gravity="center">
+    <item android:gravity="center">
         <bitmap
-            android:src="@drawable/launcher"
+            android:src="@drawable/ic_splash"
             android:gravity="center"/>
-    </item>
-    <item android:bottom="@dimen/product_bottom_text">
-        <bitmap android:gravity="bottom|center_horizontal" android:src="@drawable/logo" />
     </item>
 </layer-list>
