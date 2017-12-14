@@ -75,7 +75,7 @@ public interface LibraryService {
     @GET("mission/{missionID}?mode=verbose")
     Call<MissionResponse> getMissionByID(@Path("missionID") int missionID);
 
-    //Get Agency Methods
+    //Get LauncherAgency Methods
     @Headers({
             "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
     })

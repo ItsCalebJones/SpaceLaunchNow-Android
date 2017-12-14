@@ -101,7 +101,7 @@ public class AgencyDetailFragment extends BaseFragment {
         View view;
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         this.context = getContext();
-        setScreenName("Agency Detail Fragment");
+        setScreenName("LauncherAgency Detail Fragment");
 
         sharedPreference = ListPreferences.getInstance(this.context);
 
@@ -185,7 +185,7 @@ public class AgencyDetailFragment extends BaseFragment {
         mission_one.setVisibility(View.GONE);
         mission_two.setVisibility(View.GONE);
 
-        mission_agency_title.setText("Mission Agency");
+        mission_agency_title.setText("Mission LauncherAgency");
     }
 
     private void setOneMissionAgencies() {
@@ -378,7 +378,7 @@ public class AgencyDetailFragment extends BaseFragment {
         launch_one.setVisibility(View.GONE);
         launch_two.setVisibility(View.GONE);
 
-        vehicle_agency_title.setText("Vehicle Agency");
+        vehicle_agency_title.setText("Vehicle LauncherAgency");
         launch_agency_type.setText("Unknown");
 
     }

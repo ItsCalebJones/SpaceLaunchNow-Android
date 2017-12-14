@@ -25,14 +25,15 @@ public final class Constants {
     public static final String ACTION_UPDATE_LAUNCH_CARD = "UPDATE_LAUNCH_CARD";
     public static final String ACTION_UPDATE_WORD_TIMER = "UPDATE_WORD_TIMER";
     public static int NOTIF_ID = 568975;
-
     public static int NOTIF_ID_DAY = 568985;
-    public static int NOTIF_ID_HOUR = 568995;
 
+    public static int NOTIF_ID_HOUR = 568995;
     public static int DB_SCHEMA_VERSION_1_5_5 = 188;
+
     public static int DB_SCHEMA_VERSION_1_5_6 = 189;
     public static int DB_SCHEMA_VERSION_1_8_0 = 320;
     public static int DB_SCHEMA_VERSION_1_8_1 = 322;
+    public static int DB_SCHEMA_VERSION_1_8_2 = 323;
 
     public static String FORECAST_IO_BASE_URL = "https://api.forecast.io/";
     public static String API_BASE_URL = "https://api.spacelaunchnow.me/";

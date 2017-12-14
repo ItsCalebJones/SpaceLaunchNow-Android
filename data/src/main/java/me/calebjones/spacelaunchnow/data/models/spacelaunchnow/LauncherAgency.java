@@ -2,21 +2,23 @@ package me.calebjones.spacelaunchnow.data.models.spacelaunchnow;
 
 import com.google.gson.annotations.SerializedName;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
-public class Agency extends RealmObject{
+public class LauncherAgency extends RealmObject{
 
+    @PrimaryKey
     @SerializedName(value = "agency")
-    String agency;
+    public String agency;
     @SerializedName(value = "launchers")
-    String launchers;
+    public String launchers;
     @SerializedName(value = "orbiters")
-    String orbiters;
+    public String orbiters;
     @SerializedName(value = "description")
-    String description;
-    @SerializedName(value = "image_url")
-    String imageURL;
+    public String description;
+     @SerializedName(value = "image_url")
+    public String imageURL;
     @SerializedName(value = "nation_url")
-    String nationURL;
+    public String nationURL;
 
     public String getAgency() {
         return agency;

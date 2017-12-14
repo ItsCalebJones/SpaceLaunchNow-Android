@@ -22,7 +22,7 @@ public interface SpaceLaunchNowService {
             "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
     })
     @GET(version + "/agency/")
-    Call<LauncherResponse> getAgencies();
+    Call<LauncherResponse> getVehicleAgencies();
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/launcher_details/")
