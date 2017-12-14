@@ -16,10 +16,9 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import me.calebjones.spacelaunchnow.BuildConfig;
-import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.data.models.Launch;
-import me.calebjones.spacelaunchnow.data.models.Location;
-import me.calebjones.spacelaunchnow.data.models.Rocket;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Location;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Rocket;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 

@@ -25,7 +25,7 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.CustomFragment;
-import me.calebjones.spacelaunchnow.data.models.Orbiter;
+import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.Orbiter;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.OrbiterResponse;

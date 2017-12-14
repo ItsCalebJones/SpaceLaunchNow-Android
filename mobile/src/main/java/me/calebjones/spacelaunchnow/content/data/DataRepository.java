@@ -11,9 +11,9 @@ import io.realm.RealmList;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
-import me.calebjones.spacelaunchnow.data.models.Launch;
-import me.calebjones.spacelaunchnow.data.models.Location;
-import me.calebjones.spacelaunchnow.data.models.Mission;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Location;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Mission;
 import timber.log.Timber;
 
 /**

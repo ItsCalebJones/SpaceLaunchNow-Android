@@ -1,19 +1,19 @@
-package me.calebjones.spacelaunchnow.data.models;
 
-import io.realm.RealmList;
+package me.calebjones.spacelaunchnow.data.models.launchlibrary;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 
-public class RocketFamily extends RealmObject {
+public class Agency extends RealmObject {
 
     @PrimaryKey
     private Integer id;
     private String name;
+    private String abbrev;
+    private String countryCode;
+    private Integer type;
     private String infoURL;
     private String wikiURL;
-    private String countrycode;
-    private RealmList<RealmStr> infoURLs;
 
     public Integer getId() {
         return id;
@@ -31,20 +31,28 @@ public class RocketFamily extends RealmObject {
         this.name = name;
     }
 
-    public String getCountrycode() {
-        return countrycode;
+    public String getAbbrev() {
+        return abbrev;
     }
 
-    public void setCountrycode(String countrycode) {
-        this.countrycode = countrycode;
+    public void setAbbrev(String abbrev) {
+        this.abbrev = abbrev;
     }
 
-    public RealmList<RealmStr> getInfoURLs() {
-        return infoURLs;
+    public String getCountryCode() {
+        return countryCode;
     }
 
-    public void setInfoURLs(RealmList<RealmStr> infoURLs) {
-        this.infoURLs = infoURLs;
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     public String getInfoURL() {

@@ -24,7 +24,7 @@ import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.data.models.VehicleDetails;
-import me.calebjones.spacelaunchnow.data.models.Launch;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -37,7 +37,6 @@ public class AgencyDetailFragment extends BaseFragment {
     private Context context;
 
     public static Launch detailLaunch;
-    private VehicleDetails launchVehicle;
 
     @BindView(R.id.mission_one)
     LinearLayout mission_one;

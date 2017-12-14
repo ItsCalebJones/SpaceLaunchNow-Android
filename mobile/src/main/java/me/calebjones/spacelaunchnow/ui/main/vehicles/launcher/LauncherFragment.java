@@ -21,7 +21,7 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.CustomFragment;
-import me.calebjones.spacelaunchnow.data.models.Launcher;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launcher;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LauncherResponse;
@@ -113,7 +113,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
         showLoading();
 
         SpaceLaunchNowService request = getSpaceLaunchNowRetrofit().create(SpaceLaunchNowService.class);
-        Call<LauncherResponse> call = request.getLaunchers();
+        Call<LauncherResponse> call = request.getAgencies();
 
         call.enqueue(new Callback<LauncherResponse>() {
             @Override

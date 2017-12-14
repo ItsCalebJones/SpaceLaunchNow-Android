@@ -1,7 +1,5 @@
 
-package me.calebjones.spacelaunchnow.data.models;
-
-import com.google.gson.annotations.SerializedName;
+package me.calebjones.spacelaunchnow.data.models.launchlibrary;
 
 import java.util.Date;
 

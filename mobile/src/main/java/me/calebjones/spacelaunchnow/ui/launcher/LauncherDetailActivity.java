@@ -32,8 +32,8 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.data.DataSaver;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.Launcher;
-import me.calebjones.spacelaunchnow.data.models.RocketDetail;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launcher;
+import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.RocketDetail;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
@@ -182,14 +182,14 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
         detail_rocket.setText(name);
         detail_vehicle_agency.setText(agency);
 
-        rocketLaunches = getRealm().where(RocketDetail.class).contains("family", name).findAll();
+        rocketLaunches = getRealm().where(RocketDetail.class).contains("manufacturer", agency).findAll();
         if (rocketLaunches.size() > 0) {
             adapter.clear();
             adapter.addItems(rocketLaunches);
         }
         final DataSaver dataSaver = new DataSaver(context);
         swipeRefreshLayout.setRefreshing(true);
-        DataClient.getInstance().getVehicles(name, new Callback<VehicleResponse>() {
+        DataClient.getInstance().getVehicles(agency, new Callback<VehicleResponse>() {
             @Override
             public void onResponse(Call<VehicleResponse> call, Response<VehicleResponse> response) {
                 if (response.isSuccessful()) {

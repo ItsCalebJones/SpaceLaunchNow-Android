@@ -1,6 +1,6 @@
 package me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary;
 
-import me.calebjones.spacelaunchnow.data.models.Pad;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Pad;
 
 public class PadResponse extends BaseResponse{
     private Pad[] pads;
