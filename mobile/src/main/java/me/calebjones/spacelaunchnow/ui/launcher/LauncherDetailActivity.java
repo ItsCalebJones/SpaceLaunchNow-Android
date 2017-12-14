@@ -6,10 +6,13 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +26,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.florent37.glidepalette.BitmapPalette;
+import com.github.florent37.glidepalette.GlidePalette;
 import com.google.gson.Gson;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -32,7 +37,8 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.data.DataSaver;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launcher;
+import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.Launcher;
+import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.LauncherAgency;
 import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.RocketDetail;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
@@ -63,6 +69,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
     private AppBarLayout appBarLayout;
     private SwipeRefreshLayout swipeRefreshLayout;
     private CoordinatorLayout coordinator;
+    private CollapsingToolbarLayout collapsingToolbar;
     private int mMaxScrollSize;
 
     public LauncherDetailActivity() {
@@ -96,6 +103,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
         detail_vehicle_agency = (TextView) findViewById(R.id.detail_title);
         detail_profile_image = (CircleImageView) findViewById(R.id.detail_profile_image);
         detail_profile_backdrop = (ImageView) findViewById(R.id.detail_profile_backdrop);
+        collapsingToolbar = findViewById(R.id.main_collapsing_bar);
         appBarLayout = (AppBarLayout) findViewById(R.id.detail_appbar);
         swipeRefreshLayout = findViewById(R.id.vehicle_swipe_refresh);
         coordinator = findViewById(R.id.coordinator_layout);
@@ -153,7 +161,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
             }
         }
-        adapter = new VehicleDetailAdapter(context, this, getRealm());
+        adapter = new VehicleDetailAdapter(context, this);
         mRecyclerView = (RecyclerView) findViewById(R.id.vehicle_detail_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(linearLayoutManager);
@@ -168,7 +176,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
     public void displayRockets() {
         Intent intent = getIntent();
         Gson gson = new Gson();
-        final Launcher launcher = gson.fromJson(intent.getStringExtra("json"), Launcher.class);
+        final LauncherAgency launcher = gson.fromJson(intent.getStringExtra("json"), LauncherAgency.class);
 
         if (launcher == null) {
             Toast.makeText(context, "Error - Unable to load launcher details.", Toast.LENGTH_SHORT).show();
@@ -177,18 +185,25 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
             startActivity(homeIntent);
         }
 
-        final String name = launcher.getName();
-        String agency = launcher.getAgency();
+        String name = "Unknown";
+        if (launcher != null) {
+            name = launcher.getLaunchers();
+        }
+        String agency = "Unknown";
+        if (launcher != null) {
+            agency = launcher.getAgency();
+        }
         detail_rocket.setText(name);
         detail_vehicle_agency.setText(agency);
 
-        rocketLaunches = getRealm().where(RocketDetail.class).contains("manufacturer", agency).findAll();
+        rocketLaunches = getRealm().where(RocketDetail.class).contains("agency", agency).findAll();
         if (rocketLaunches.size() > 0) {
             adapter.clear();
             adapter.addItems(rocketLaunches);
         }
         final DataSaver dataSaver = new DataSaver(context);
         swipeRefreshLayout.setRefreshing(true);
+        final String finalAgency = agency;
         DataClient.getInstance().getVehicles(agency, new Callback<VehicleResponse>() {
             @Override
             public void onResponse(Call<VehicleResponse> call, Response<VehicleResponse> response) {
@@ -198,11 +213,11 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
                         getRealm().executeTransaction(new Realm.Transaction() {
                             @Override
                             public void execute(Realm realm) {
-                                getRealm().where(RocketDetail.class).contains("family",name).findAll().deleteAllFromRealm();
+                                getRealm().where(RocketDetail.class).contains("agency", finalAgency).findAll().deleteAllFromRealm();
                             }
                         });
                         dataSaver.saveObjectsToRealm(details);
-                        rocketLaunches = getRealm().where(RocketDetail.class).contains("family", name).findAll();
+                        rocketLaunches = getRealm().where(RocketDetail.class).contains("agency", finalAgency).findAll();
                         adapter.clear();
                         adapter.addItems(rocketLaunches);
                     } else {
@@ -228,11 +243,37 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
 
     private void applyProfileBackdrop(String drawableURL) {
         Timber.d("LauncherDetailActivity - Loading Backdrop Image url: %s ", drawableURL);
+        int palette;
+        if (ListPreferences.getInstance(context).isNightModeActive(context)) {
+            palette = GlidePalette.Profile.MUTED_DARK;
+        } else {
+            palette = GlidePalette.Profile.VIBRANT;
+        }
         GlideApp.with(this)
                 .load(drawableURL)
                 .centerCrop()
-                .placeholder(R.drawable.icon_international)
+                .listener(GlidePalette.with(drawableURL)
+                        .use(palette)
+                        .intoCallBack(new BitmapPalette.CallBack() {
+                            @Override
+                            public void onPaletteLoaded(@Nullable Palette palette) {
+                                if (ListPreferences.getInstance(context).isNightModeActive(context)) {
+                                    if (palette != null) {
+                                        appBarLayout.setBackgroundColor(palette.getDarkMutedSwatch().getRgb());
+                                    }
+                                } else {
+                                    if (palette != null) {
+                                        appBarLayout.setBackgroundColor(palette.getVibrantSwatch().getRgb());
+                                    }
+                                }
+
+                                adapter.updateColor(palette);
+                                adapter.notifyDataSetChanged();
+                            }
+                        })
+                        .crossfade(true))
                 .into(detail_profile_backdrop);
+
     }
 
     private void applyProfileLogo(String url) {
