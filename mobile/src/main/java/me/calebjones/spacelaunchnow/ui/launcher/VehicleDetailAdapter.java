@@ -36,19 +36,13 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
     private Activity activity;
     private RealmList<RocketDetail> items;
     private RequestOptions requestOptions;
-    private int palette;
-    private Palette.Swatch backgroundColor;
+    private int backgroundColor = 0;
 
     public VehicleDetailAdapter(Context context, Activity activity) {
         items = new RealmList<>();
         requestOptions = new RequestOptions()
                 .placeholder(R.drawable.placeholder)
                 .centerCrop();
-        if (ListPreferences.getInstance(mContext).isNightModeActive(mContext)) {
-            palette = GlidePalette.Profile.MUTED_DARK;
-        } else {
-            palette = GlidePalette.Profile.VIBRANT_LIGHT;
-        }
         mContext = context;
         this.activity = activity;
     }
@@ -96,8 +90,8 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
             holder.vehicleSpecsThrust.setText(String.format("Thrust at Launch: %s kN", launchVehicle.getTOThrust()));
 
 
-            if (backgroundColor != null) {
-                holder.titleContainer.setBackgroundColor(backgroundColor.getRgb());
+            if (backgroundColor != 0) {
+                holder.titleContainer.setBackgroundColor(backgroundColor);
             }
             if (launchVehicle.getImageURL() != null && launchVehicle.getImageURL().length() > 0) {
                 holder.vehicleImage.setVisibility(View.VISIBLE);
@@ -147,13 +141,12 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
         return items.size();
     }
 
-    public void updateColor(Palette palette) {
+    public void updateColor(int color) {
 
-        if (ListPreferences.getInstance(mContext).isNightModeActive(mContext)) {
-            backgroundColor = palette.getDarkMutedSwatch();
-        } else {
-            backgroundColor = palette.getVibrantSwatch();
-        }
+            backgroundColor = color;
+
+            backgroundColor = color;
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

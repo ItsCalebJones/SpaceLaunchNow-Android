@@ -46,6 +46,7 @@ import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
+import me.calebjones.spacelaunchnow.utils.views.CustomOnOffsetChangedListener;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,9 +57,6 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
 
     private static final int PERCENTAGE_TO_ANIMATE_AVATAR = 20;
     private boolean mIsAvatarShown = true;
-
-    private ListPreferences sharedPreference;
-
     private Context context;
     private RecyclerView mRecyclerView;
     private TextView toolbarTitle, detail_rocket, detail_vehicle_agency;
@@ -67,10 +65,12 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
     private VehicleDetailAdapter adapter;
     private RealmResults<RocketDetail> rocketLaunches;
     private AppBarLayout appBarLayout;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private CoordinatorLayout coordinator;
     private CollapsingToolbarLayout collapsingToolbar;
     private int mMaxScrollSize;
+    private ListPreferences sharedPreference;
+    private int statusColor;
+    private CoordinatorLayout coordinatorLayout;
+    private CustomOnOffsetChangedListener customOnOffsetChangedListener;
 
     public LauncherDetailActivity() {
         super("Launcher Detail Activity");
@@ -78,9 +78,10 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        int m_theme;
-        final int statusColor;
         this.context = getApplicationContext();
+        setTheme(R.style.BaseAppTheme);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_vehicle_list);
 
         sharedPreference = ListPreferences.getInstance(this.context);
 
@@ -90,13 +91,6 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
         }
 
-        m_theme = R.style.BaseAppTheme;
-
-        setTheme(m_theme);
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_vehicle_list);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         toolbarTitle = (TextView) findViewById(R.id.title_text);
         detail_rocket = (TextView) findViewById(R.id.detail_sub_title);
@@ -104,10 +98,8 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
         detail_profile_image = (CircleImageView) findViewById(R.id.detail_profile_image);
         detail_profile_backdrop = (ImageView) findViewById(R.id.detail_profile_backdrop);
         collapsingToolbar = findViewById(R.id.main_collapsing_bar);
+        coordinatorLayout = findViewById(R.id.coordinatorLayout);
         appBarLayout = (AppBarLayout) findViewById(R.id.detail_appbar);
-        swipeRefreshLayout = findViewById(R.id.vehicle_swipe_refresh);
-        coordinator = findViewById(R.id.coordinator_layout);
-        swipeRefreshLayout.setEnabled(false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
@@ -121,37 +113,11 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
             detail_profile_image.setScaleX(1);
             detail_profile_image.setScaleY(1);
         }
-
+        customOnOffsetChangedListener = new CustomOnOffsetChangedListener(statusColor, getWindow());
         appBarLayout.addOnOffsetChangedListener(this);
+        appBarLayout.addOnOffsetChangedListener(customOnOffsetChangedListener);
         mMaxScrollSize = appBarLayout.getTotalScrollRange();
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                int totalScroll = appBarLayout.getTotalScrollRange();
-                int currentScroll = totalScroll + verticalOffset;
 
-
-                int color = statusColor;
-                int r = (color >> 16) & 0xFF;
-                int g = (color >> 8) & 0xFF;
-                int b = (color >> 0) & 0xFF;
-
-                if ((currentScroll) < 255) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-                        Window window = getWindow();
-                        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                        window.setStatusBarColor(Color.argb(reverseNumber(currentScroll, 0, 255), r, g, b));
-                    }
-                } else {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        Window window = getWindow();
-                        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                    }
-                }
-            }
-        });
 
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -167,10 +133,6 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(adapter);
         displayRockets();
-    }
-
-    public int reverseNumber(int num, int min, int max) {
-        return (max + min) - num;
     }
 
     public void displayRockets() {
@@ -202,7 +164,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
             adapter.addItems(rocketLaunches);
         }
         final DataSaver dataSaver = new DataSaver(context);
-        swipeRefreshLayout.setRefreshing(true);
+//        swipeRefreshLayout.setRefreshing(true);
         final String finalAgency = agency;
         DataClient.getInstance().getVehicles(agency, new Callback<VehicleResponse>() {
             @Override
@@ -221,18 +183,17 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
                         adapter.clear();
                         adapter.addItems(rocketLaunches);
                     } else {
-                        SnackbarHandler.showErrorSnackbar(context, coordinator, "Error no launch vehicles found.");
+                        SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, "Error no launch vehicles found.");
                     }
                 } else {
-                    SnackbarHandler.showErrorSnackbar(context, coordinator, "Error loading launch vehicles.");
+                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, "Error loading launch vehicles.");
                 }
-                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Call<VehicleResponse> call, Throwable t) {
-                swipeRefreshLayout.setRefreshing(false);
-                SnackbarHandler.showErrorSnackbar(context, coordinator, String.format("Error: %s", t.getLocalizedMessage()));
+//                swipeRefreshLayout.setRefreshing(false);
+                SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, String.format("Error: %s", t.getLocalizedMessage()));
             }
         });
 
@@ -259,16 +220,37 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
                             public void onPaletteLoaded(@Nullable Palette palette) {
                                 if (ListPreferences.getInstance(context).isNightModeActive(context)) {
                                     if (palette != null) {
-                                        appBarLayout.setBackgroundColor(palette.getDarkMutedSwatch().getRgb());
+                                        Palette.Swatch color = null;
+                                        if (palette.getDarkMutedSwatch() != null) {
+                                            color = palette.getDarkMutedSwatch();
+                                        } else if (palette.getDarkVibrantSwatch() != null){
+                                            color = palette.getDarkVibrantSwatch();
+                                        }
+                                        if (color != null) {
+                                            collapsingToolbar.setContentScrimColor(color.getRgb());
+                                            customOnOffsetChangedListener.updateStatusColor(color.getRgb());
+                                            appBarLayout.setBackgroundColor(color.getRgb());
+                                            adapter.updateColor(color.getRgb());
+                                            adapter.notifyDataSetChanged();
+                                        }
                                     }
                                 } else {
                                     if (palette != null) {
-                                        appBarLayout.setBackgroundColor(palette.getVibrantSwatch().getRgb());
+                                        Palette.Swatch color = null;
+                                        if (palette.getVibrantSwatch() != null) {
+                                            color = palette.getVibrantSwatch();
+                                        } else if (palette.getMutedSwatch() != null){
+                                            color = palette.getMutedSwatch();
+                                        }
+                                        if (color != null) {
+                                            collapsingToolbar.setContentScrimColor(color.getRgb());
+                                            customOnOffsetChangedListener.updateStatusColor(color.getRgb());
+                                            appBarLayout.setBackgroundColor(color.getRgb());
+                                            adapter.updateColor(color.getRgb());
+                                            adapter.notifyDataSetChanged();
+                                        }
                                     }
                                 }
-
-                                adapter.updateColor(palette);
-                                adapter.notifyDataSetChanged();
                             }
                         })
                         .crossfade(true))
@@ -286,19 +268,10 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
                 .into(detail_profile_image);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setupWindowAnimations() {
-        Slide slide = new Slide();
-        slide.setDuration(1000);
-        getWindow().setReturnTransition(slide);
-        getWindow().setEnterTransition(slide);
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 

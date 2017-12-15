@@ -1,6 +1,8 @@
 package me.calebjones.spacelaunchnow.ui.main.vehicles.launcher;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.request.RequestOptions;
+import com.github.florent37.glidepalette.BitmapPalette;
 import com.github.florent37.glidepalette.GlidePalette;
 
 import java.util.ArrayList;
@@ -31,14 +34,17 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
     private Context mContext;
     private List<LauncherAgency> launchers = new ArrayList<>();
     private OnItemClickListener onItemClickListener;
-    private int palette;
+    private boolean night = false;
     private RequestOptions requestOptions;
+    private int palette;
 
     public VehicleAdapter(Context context) {
         launchers = new ArrayList();
         this.mContext = context;
 
-        if (ListPreferences.getInstance(mContext).isNightModeActive(mContext)) {
+        night = ListPreferences.getInstance(mContext).isNightModeActive(mContext);
+
+        if (ListPreferences.getInstance(context).isNightModeActive(context)) {
             palette = GlidePalette.Profile.MUTED_DARK;
         } else {
             palette = GlidePalette.Profile.VIBRANT;
@@ -82,6 +88,30 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
                 .apply(requestOptions)
                 .listener(GlidePalette.with(launcher.getImageURL())
                         .use(palette)
+                        .intoCallBack(new BitmapPalette.CallBack() {
+                            @Override
+                            public void onPaletteLoaded(@Nullable Palette palette) {
+                                Palette.Swatch color = null;
+                                if (palette != null) {
+                                    if (night) {
+                                        if (palette.getDarkMutedSwatch() != null) {
+                                            color = palette.getDarkMutedSwatch();
+                                        } else if (palette.getDarkVibrantSwatch() != null) {
+                                            color = palette.getDarkVibrantSwatch();
+                                        }
+                                    } else {
+                                        if (palette.getVibrantSwatch() != null) {
+                                            color = palette.getVibrantSwatch();
+                                        } else if (palette.getMutedSwatch() != null) {
+                                            color = palette.getMutedSwatch();
+                                        }
+                                    }
+                                    if (color != null) {
+                                        holder.textContainer.setBackgroundColor(color.getRgb());
+                                    }
+                                }
+                            }
+                        })
                         .intoBackground(holder.textContainer, GlidePalette.Swatch.RGB)
                         .crossfade(true))
                 .into(holder.picture);
