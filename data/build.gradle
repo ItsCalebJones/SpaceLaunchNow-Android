@@ -2,14 +2,14 @@ apply plugin: 'com.android.library'
 apply plugin: 'realm-android'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     buildToolsVersion '26.0.2'
     flavorDimensions "release"
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 26
+        minSdkVersion 19
+        targetSdkVersion 27
         versionCode 1
-        versionName "1.0.1"
+        versionName "${app.versionMajor}.${app.versionMinor}.${app.versionPatch}"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -37,7 +37,20 @@ android {
         }
         prod {
             // The actual minSdkVersion for the application.
-            minSdkVersion 16
+            minSdkVersion 19
+            multiDexEnabled false
+            dimension "release"
+        }
+        beta {
+            // The actual minSdkVersion for the application.
+            minSdkVersion 19
+            multiDexEnabled false
+            dimension "release"
+        }
+
+        alpha {
+            // The actual minSdkVersion for the application.
+            minSdkVersion 19
             multiDexEnabled false
             dimension "release"
         }
@@ -49,11 +62,9 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:26.1.0'
-    testCompile 'junit:junit:4.12'
-    compile 'com.squareup.okhttp3:okhttp:3.8.0'
+    compile 'com.squareup.okhttp3:okhttp:3.9.1'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-    compile 'com.google.code.gson:gson:2.8.1'
-    compile 'com.jakewharton.timber:timber:4.5.1'
+    compile 'com.google.code.gson:gson:2.8.2'
+    compile 'com.jakewharton.timber:timber:4.6.0'
 }

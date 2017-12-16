@@ -7,7 +7,9 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -21,21 +23,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.realm.Realm;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
+import me.calebjones.spacelaunchnow.content.data.DataSaver;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.Launcher;
-import me.calebjones.spacelaunchnow.data.models.Rocket;
-import me.calebjones.spacelaunchnow.ui.launchdetail.VehicleDetailAdapter;
+import me.calebjones.spacelaunchnow.data.models.RocketDetail;
+import me.calebjones.spacelaunchnow.data.networking.DataClient;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
+import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import timber.log.Timber;
 
 public class LauncherDetailActivity extends BaseActivity implements AppBarLayout.OnOffsetChangedListener {
@@ -44,7 +52,6 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
     private boolean mIsAvatarShown = true;
 
     private ListPreferences sharedPreference;
-    private android.content.SharedPreferences SharedPreferences;
 
     private Context context;
     private RecyclerView mRecyclerView;
@@ -52,8 +59,10 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
     private ImageView detail_profile_backdrop;
     private CircleImageView detail_profile_image;
     private VehicleDetailAdapter adapter;
-    private RealmResults<Rocket> rocketLaunches;
+    private RealmResults<RocketDetail> rocketLaunches;
     private AppBarLayout appBarLayout;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private CoordinatorLayout coordinator;
     private int mMaxScrollSize;
 
     public LauncherDetailActivity() {
@@ -83,11 +92,14 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         toolbarTitle = (TextView) findViewById(R.id.title_text);
-        detail_rocket = (TextView) findViewById(R.id.detail_rocket);
-        detail_vehicle_agency = (TextView) findViewById(R.id.detail_vehicle_agency);
+        detail_rocket = (TextView) findViewById(R.id.detail_sub_title);
+        detail_vehicle_agency = (TextView) findViewById(R.id.detail_title);
         detail_profile_image = (CircleImageView) findViewById(R.id.detail_profile_image);
         detail_profile_backdrop = (ImageView) findViewById(R.id.detail_profile_backdrop);
         appBarLayout = (AppBarLayout) findViewById(R.id.detail_appbar);
+        swipeRefreshLayout = findViewById(R.id.vehicle_swipe_refresh);
+        coordinator = findViewById(R.id.coordinator_layout);
+        swipeRefreshLayout.setEnabled(false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
@@ -165,13 +177,50 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
             startActivity(homeIntent);
         }
 
-        String name = launcher.getName();
+        final String name = launcher.getName();
         String agency = launcher.getAgency();
-        rocketLaunches = getRealm().where(Rocket.class).contains("family.name", name).or().contains("familyname", name).findAll();
         detail_rocket.setText(name);
         detail_vehicle_agency.setText(agency);
-        adapter.clear();
-        adapter.addItems(rocketLaunches);
+
+        rocketLaunches = getRealm().where(RocketDetail.class).contains("family", name).findAll();
+        if (rocketLaunches.size() > 0) {
+            adapter.clear();
+            adapter.addItems(rocketLaunches);
+        }
+        final DataSaver dataSaver = new DataSaver(context);
+        swipeRefreshLayout.setRefreshing(true);
+        DataClient.getInstance().getVehicles(name, new Callback<VehicleResponse>() {
+            @Override
+            public void onResponse(Call<VehicleResponse> call, Response<VehicleResponse> response) {
+                if (response.isSuccessful()) {
+                    RocketDetail[] details = response.body().getVehicles();
+                    if (details.length > 0) {
+                        getRealm().executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                getRealm().where(RocketDetail.class).contains("family",name).findAll().deleteAllFromRealm();
+                            }
+                        });
+                        dataSaver.saveObjectsToRealm(details);
+                        rocketLaunches = getRealm().where(RocketDetail.class).contains("family", name).findAll();
+                        adapter.clear();
+                        adapter.addItems(rocketLaunches);
+                    } else {
+                        SnackbarHandler.showErrorSnackbar(context, coordinator, "Error no launch vehicles found.");
+                    }
+                } else {
+                    SnackbarHandler.showErrorSnackbar(context, coordinator, "Error loading launch vehicles.");
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(Call<VehicleResponse> call, Throwable t) {
+                swipeRefreshLayout.setRefreshing(false);
+                SnackbarHandler.showErrorSnackbar(context, coordinator, String.format("Error: %s", t.getLocalizedMessage()));
+            }
+        });
+
 
         applyProfileBackdrop(launcher.getImageURL());
         applyProfileLogo(launcher.getNationURL());

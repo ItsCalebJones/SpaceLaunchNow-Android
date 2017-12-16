@@ -9,8 +9,13 @@ import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
 
 import java.util.concurrent.TimeUnit;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.content.data.DataClientManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
+import me.calebjones.spacelaunchnow.data.models.Launch;
 import timber.log.Timber;
 
 public class SyncJob extends Job {
@@ -62,6 +67,12 @@ public class SyncJob extends Job {
                 Timber.e("ERROR - %s %s", TAG, e.getLocalizedMessage());
                 Crashlytics.logException(e);
             }
+        }
+        dataClientManager.getDataRepositoryManager().cleanDB();
+
+        RealmConfiguration configuration = Realm.getDefaultConfiguration();
+        if (configuration != null){
+            Realm.compactRealm(configuration);
         }
         Timber.i("%s complete...returning success after %s milliseconds.", TAG, count);
         return Result.SUCCESS;

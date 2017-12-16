@@ -48,6 +48,7 @@ import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
 import me.calebjones.spacelaunchnow.data.models.realm.Migration;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
+import me.calebjones.spacelaunchnow.data.networking.DataClientThreaded;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
@@ -55,8 +56,6 @@ import me.calebjones.spacelaunchnow.utils.analytics.CrashlyticsTree;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import okhttp3.OkHttpClient;
 import timber.log.Timber;
-
-import static me.calebjones.spacelaunchnow.data.models.Constants.DB_SCHEMA_VERSION_1_5_6;
 
 public class LaunchApplication extends Application implements Analytics.Provider {
 
@@ -162,7 +161,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
         Realm.init(this);
 
         RealmConfiguration config = new RealmConfiguration.Builder()
-                .schemaVersion(Constants.DB_SCHEMA_VERSION_1_8_0)
+                .schemaVersion(Constants.DB_SCHEMA_VERSION_1_8_1)
                 .modules(Realm.getDefaultModule(), new LaunchDataModule())
                 .migration(new Migration())
                 .build();
@@ -172,15 +171,15 @@ public class LaunchApplication extends Application implements Analytics.Provider
         JobManager.create(this).addJobCreator(new DataJobCreator());
         try {
             Realm.setDefaultConfiguration(config);
-            Realm.compactRealm(config);
             Realm realm = Realm.getDefaultInstance();
             realm.close();
             libraryDataManager = new LibraryDataManager(this);
         } catch (RealmMigrationNeededException | NullPointerException e) {
+            Timber.e(e);
             Realm.deleteRealm(config);
             Realm.setDefaultConfiguration(config);
             libraryDataManager = new LibraryDataManager(this);
-            libraryDataManager.getAllData();
+            libraryDataManager.getFirstLaunchData();
             Crashlytics.logException(e);
         }
 
@@ -236,7 +235,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
             DataRepositoryManager dataRepositoryManager = new DataRepositoryManager(this);
             dataRepositoryManager.syncBackground();
         } else {
-            libraryDataManager.getAllData();
+            libraryDataManager.getFirstLaunchData();
             Once.markDone("loadInitialData");
         }
     }

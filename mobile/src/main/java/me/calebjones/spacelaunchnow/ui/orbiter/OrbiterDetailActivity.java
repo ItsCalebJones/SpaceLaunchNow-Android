@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -80,8 +79,8 @@ public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         toolbarTitle = (TextView) findViewById(R.id.title_text);
-        detail_rocket = (TextView) findViewById(R.id.detail_rocket);
-        detail_vehicle_agency = (TextView) findViewById(R.id.detail_vehicle_agency);
+        detail_rocket = (TextView) findViewById(R.id.detail_title);
+        detail_vehicle_agency = (TextView) findViewById(R.id.detail_sub_title);
         detail_profile_image = (CircleImageView) findViewById(R.id.detail_profile_image);
         detail_profile_backdrop = (ImageView) findViewById(R.id.detail_profile_backdrop);
         orbiter_title = (TextView) findViewById(R.id.orbiter_title);

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -26,7 +25,6 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.CustomFragment;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.Orbiter;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
@@ -42,9 +40,7 @@ import timber.log.Timber;
 
 public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    private ListPreferences sharedPreference;
-    private android.content.SharedPreferences SharedPreferences;
-    private static Context context;
+    private Context context;
     private View view;
     private OrbiterAdapter adapter;
     private RecyclerView mRecyclerView;
@@ -58,23 +54,16 @@ public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayou
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        SharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        this.sharedPreference = ListPreferences.getInstance(getContext());
-        adapter = new OrbiterAdapter(getActivity().getApplicationContext());
-        context = getActivity().getApplicationContext();
+        context = getActivity();
+        adapter = new OrbiterAdapter(context);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        sharedPreference = ListPreferences.getInstance(context);
-
         super.onCreateView(inflater, container, savedInstanceState);
 
-        LayoutInflater lf = getActivity().getLayoutInflater();
-        view = lf.inflate(R.layout.fragment_launch_vehicles, container, false);
+        view = inflater.inflate(R.layout.fragment_launch_vehicles, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.vehicle_detail_list);
         coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.vehicle_coordinator);
@@ -135,7 +124,7 @@ public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayou
                 if (response.isSuccessful()) {
                     Timber.v("Success %s", response.message());
                     OrbiterResponse jsonResponse = response.body();
-                    items = new ArrayList<>(Arrays.asList(jsonResponse.getItem()));
+                    items = new ArrayList<>(Arrays.asList(jsonResponse.getOrbiters()));
                     adapter.addItems(items);
                     Analytics.from(getActivity()).sendNetworkEvent("ORBITER_INFORMATION", call.request().url().toString(), true);
                 } else {

@@ -1,15 +1,22 @@
 package me.calebjones.spacelaunchnow.content.data;
 
 import android.content.Context;
-import android.content.Intent;
 
 import com.crashlytics.android.Crashlytics;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import io.realm.RealmList;
+import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.services.NextLaunchTracker;
 import me.calebjones.spacelaunchnow.data.models.Constants;
+import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.Result;
+import me.calebjones.spacelaunchnow.data.models.RocketDetail;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
+import me.calebjones.spacelaunchnow.data.networking.DataClientThreaded;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.AgencyResponse;
@@ -86,13 +93,13 @@ public class DataClientManager {
                     int total = response.body().getTotal();
                     int count = response.body().getCount();
                     Timber.v("UpcomingLaunches Count: %s", count);
-                    dataSaver.saveLaunchesToRealm(response.body().getLaunches(), false);
+                    RealmList<Launch> launches = new RealmList<>(response.body().getLaunches());
+                    dataSaver.saveLaunchesToRealmAsync(launches);
                     if (count < total) {
                         getLaunchesByDate(startDate, endDate, count);
                     } else {
                         isLaunchByDate = false;
                         ListPreferences.getInstance(context).isFresh(true);
-
                         dataSaver.sendResult(new Result(Constants.ACTION_GET_PREV_LAUNCHES, true, call));
                     }
                 } else {
@@ -121,7 +128,8 @@ public class DataClientManager {
                     int total = response.body().getTotal();
                     int count = response.body().getCount() + offset;
                     Timber.i("getLaunchesByDate - Successful - Total: %s Offset: %s Count: %s", total, offset, count);
-                    dataSaver.saveLaunchesToRealm(response.body().getLaunches(), false);
+                    RealmList<Launch> launches = new RealmList<>(response.body().getLaunches());
+                    dataSaver.saveLaunchesToRealmAsync(launches);
                     if (count < total) {
                         getLaunchesByDate(startDate, endDate, count);
                     } else {
@@ -713,14 +721,15 @@ public class DataClientManager {
         });
     }
 
-    public void getVehicles() {
+    public void getVehicles(final String family) {
         isVehicles = true;
         Timber.i("Running getVehicles");
-        DataClient.getInstance().getVehicles(new Callback<VehicleResponse>() {
+        DataClient.getInstance().getVehicles(family, new Callback<VehicleResponse>() {
             @Override
             public void onResponse(Call<VehicleResponse> call, Response<VehicleResponse> response) {
                 if (response.isSuccessful()) {
-                    dataSaver.saveObjectsToRealm(response.body().getVehicles());
+                    RocketDetail[] details = response.body().getVehicles();
+                    dataSaver.saveObjectsToRealm(details);
                     isVehicles = false;
                     dataSaver.sendResult(new Result(Constants.ACTION_GET_VEHICLES_DETAIL, true, call));
                 } else {

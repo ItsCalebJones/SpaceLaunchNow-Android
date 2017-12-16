@@ -32,7 +32,7 @@ public class AboutActivity extends AppCompatActivity {
         final FrameLayout flHolder = (FrameLayout) this.findViewById(R.id.about);
 
         AboutBuilder builder = AboutBuilder.with(this)
-                .setAppIcon(R.drawable.intro_slide_one_foreground)
+                .setAppIcon(R.drawable.launcher)
                 .setAppName(R.string.app_name)
                 .setPhoto(R.drawable.ic_jones_logo)
                 .setCover(R.mipmap.profile_cover)

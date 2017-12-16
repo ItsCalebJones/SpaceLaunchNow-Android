@@ -1,7 +1,6 @@
 package me.calebjones.spacelaunchnow.content.wear;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
@@ -25,12 +24,11 @@ import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import jp.wasabeef.glide.transformations.BlurTransformation;
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import jp.wasabeef.glide.transformations.gpu.BrightnessFilterTransformation;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.services.BaseManager;
 import me.calebjones.spacelaunchnow.data.models.Launch;
-import me.calebjones.spacelaunchnow.data.models.RocketDetails;
+import me.calebjones.spacelaunchnow.data.models.RocketDetail;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.transformations.SaturationTransformation;
 import timber.log.Timber;
@@ -71,13 +69,13 @@ public class WearWatchfaceManager extends BaseManager {
                             query = launch.getRocket().getName();
                         }
 
-                        RocketDetails launchVehicle = mRealm.where(RocketDetails.class)
+                        RocketDetail launchVehicle = mRealm.where(RocketDetail.class)
                                 .contains("name", query)
                                 .findFirst();
                         if (launchVehicle != null && launchVehicle.getImageURL() != null && launchVehicle.getImageURL().length() > 0) {
                             Timber.v("Sending image %s", launchVehicle.getImageURL());
                             sendImageToWear(launchVehicle.getImageURL(), launch, modify);
-                            Timber.d("Glide Loading: %s %s", launchVehicle.getLV_Name(), launchVehicle.getImageURL());
+                            Timber.d("Glide Loading: %s %s", launchVehicle.getName(), launchVehicle.getImageURL());
 
                         } else {
                             sendImageToWear(context.getString(R.string.default_wear_image), launch, modify);

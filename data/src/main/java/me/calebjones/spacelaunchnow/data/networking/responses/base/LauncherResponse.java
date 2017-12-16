@@ -1,11 +1,14 @@
 package me.calebjones.spacelaunchnow.data.networking.responses.base;
 
+import com.google.gson.annotations.SerializedName;
+
 import me.calebjones.spacelaunchnow.data.models.Launcher;
 
 public class LauncherResponse {
-    private Launcher[] results;
+    @SerializedName(value="results")
+    private Launcher[] launchers;
 
-    public Launcher[] getItem() {
-        return results;
+    public Launcher[] getLaunchers() {
+        return launchers;
     }
 }

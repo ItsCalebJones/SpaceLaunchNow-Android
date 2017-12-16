@@ -1,11 +1,15 @@
 package me.calebjones.spacelaunchnow.data.networking.responses.base;
 
-import me.calebjones.spacelaunchnow.data.models.RocketDetails;
+import com.google.gson.annotations.SerializedName;
+
+import me.calebjones.spacelaunchnow.data.models.RocketDetail;
 
 public class VehicleResponse {
-    private RocketDetails[] vehicles;
 
-    public RocketDetails[] getVehicles() {
+    @SerializedName(value="results")
+    private RocketDetail[] vehicles;
+
+    public RocketDetail[] getVehicles() {
         return vehicles;
     }
 }

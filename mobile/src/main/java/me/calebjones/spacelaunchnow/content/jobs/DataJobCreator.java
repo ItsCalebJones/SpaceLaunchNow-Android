@@ -33,6 +33,9 @@ public class DataJobCreator implements JobCreator {
             case SyncWidgetJob.TAG:
                 Timber.v(SyncWidgetJob.TAG);
                 return new SyncWidgetJob();
+            case LibraryDataJob.TAG:
+                Timber.v(LibraryDataJob.TAG);
+                return new LibraryDataJob();
             default:
                 return null;
         }
