@@ -7,41 +7,14 @@
 /build
 /captures
 
-.idea/dictionaries/cjones.xml
-
-.idea/inspectionProfiles/profiles_settings.xml
-
-.idea/inspectionProfiles/Project_Default.xml
-
-.idea/encodings.xml
-
-.idea/gradle.xml
-
-.idea/vcs.xml
-
-.idea/gradle.xml
-
-.idea/vcs.xml
-
-.idea/gradle.xml
+.idea/
 
 gradle.properties
 
 app/src/main/res/values/api_keys.xml
 mobile/fabric.properties
 mobile/src/main/res/values/api_keys.xml
-
 mobile/fabric.properties
-
-.idea/misc.xml
-.idea/modules.xml
-
-.idea/modules.xml
-
 projectFilesBackup/.idea/workspace.xml
 
 *.apk
-
-.idea/workspace.xml___jb_tmp___
-.idea/dictionaries/Caleb.xml
-.idea/dictionaries/ALPCJONESM2.xml
