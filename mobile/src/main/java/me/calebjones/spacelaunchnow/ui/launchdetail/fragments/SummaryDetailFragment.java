@@ -587,22 +587,18 @@ public class SummaryDetailFragment extends BaseFragment {
                     }
                     //GO for launch
                     launch_status.setText(go);
-                    launch_status.setTextColor(ContextCompat.getColor(context, R.color.colorGo));
                     break;
                 case 2:
                     //NO GO for launch
                     launch_status.setText(R.string.status_nogo);
-                    launch_status.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
                     break;
                 case 3:
                     //Success for launch
                     launch_status.setText(R.string.status_success);
-                    launch_status.setTextColor(ContextCompat.getColor(context, R.color.colorGo));
                     break;
                 case 4:
                     //Failure to launch
                     launch_status.setText(R.string.status_failure);
-                    launch_status.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
                     break;
             }
 

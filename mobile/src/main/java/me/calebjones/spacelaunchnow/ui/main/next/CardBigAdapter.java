@@ -133,13 +133,9 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
                 //Retrieve missionType
                 if (launchItem.getMissions().size() != 0) {
-                    Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMissions().get(0).getTypeName(), night);
+                    Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMissions().get(0).getTypeName(), true);
                 } else {
-                    if (night) {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
-                    } else {
-                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown);
-                    }
+                    holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
                 }
 
                 double dlat = 0;
@@ -160,7 +156,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                     final Resources res = context.getResources();
                     final StaticMap map = new StaticMap()
                             .center(dlat, dlon)
-                            .scale(4)
+                            .scale(1)
                             .type(StaticMap.Type.ROADMAP)
                             .zoom(5)
                             .marker(dlat, dlon)
@@ -176,6 +172,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                             GlideApp.with(context)
                                     .load(map.toString())
                                     .error(R.drawable.placeholder)
+                                    .optionalCenterCrop()
                                     .into(holder.map_view);
                             holder.map_view.getViewTreeObserver().removeOnPreDrawListener(this);
                             return true;
@@ -183,30 +180,29 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                     });
                 }
 
+                if (launchItem.getProbability() != null && launchItem.getProbability() > 0) {
+                    holder.contentForecast.setText(String.format("%s%%", launchItem.getProbability()));
+                    holder.forecast_container.setVisibility(View.VISIBLE);
+                } else {
+                    holder.forecast_container.setVisibility(View.GONE);
+                }
+
                 switch (launchItem.getStatus()) {
                     case 1:
-                        String go = context.getResources().getString(R.string.status_go);
-                        if (launchItem.getProbability() != null && launchItem.getProbability() > 0) {
-                            go = String.format("%s | Forecast - %s%%", go, launchItem.getProbability());
-                        }
                         //GO for launch
-                        holder.content_status.setText(go);
-                        holder.content_status.setTextColor(ContextCompat.getColor(context, R.color.colorGo));
+                        holder.content_status.setText(R.string.status_go);
                         break;
                     case 2:
                         //NO GO for launch
                         holder.content_status.setText(R.string.status_nogo);
-                        holder.content_status.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
                         break;
                     case 3:
                         //Success for launch
                         holder.content_status.setText(R.string.status_success);
-                        holder.content_status.setTextColor(ContextCompat.getColor(context, R.color.colorGo));
                         break;
                     case 4:
                         //Failure to launch
                         holder.content_status.setText(R.string.status_failure);
-                        holder.content_status.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
                         break;
                 }
 
@@ -487,6 +483,8 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         public ImageView categoryIcon;
         public CountDownTimer timer;
         public View countdownView;
+        public View forecast_container;
+        public TextView contentForecast;
 
         public ImageView map_view;
 
@@ -513,6 +511,9 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
             countdownMinutes = view.findViewById(R.id.countdown_minutes);
             countdownSeconds = view.findViewById(R.id.countdown_seconds);
             countdownView = view.findViewById(R.id.countdown_layout);
+
+            forecast_container = view.findViewById(R.id.forecast_container);
+            contentForecast = view.findViewById(R.id.content_forecast);
 
             map_view = view.findViewById(R.id.map_view);
             map_view.setClickable(false);

@@ -92,7 +92,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     private View view;
     private RecyclerView mRecyclerView;
     private CardBigAdapter adapter;
-    private CardSmallAdapter smallAdapter;
     private StaggeredGridLayoutManager layoutManager;
     private LinearLayoutManager linearLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -109,7 +108,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     private boolean active;
     private boolean switchChanged;
-    private boolean cardSizeSmall;
     private CalendarSyncManager calendarSyncManager;
 
     @Override
@@ -129,14 +127,11 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         active = false;
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        cardSizeSmall = sharedPref.getBoolean("card_size_small", false);
-        if (cardSizeSmall) {
-            smallAdapter = new CardSmallAdapter(getActivity());
-        } else {
-            if (adapter == null) {
-                adapter = new CardBigAdapter(getActivity());
-            }
+
+        if (adapter == null) {
+            adapter = new CardBigAdapter(getActivity());
         }
+
 
         if (sharedPreference.isNightModeActive(context)) {
             color = R.color.darkPrimary;
@@ -210,24 +205,15 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         });
 
         //If preference is for small card, landscape tablets get three others get two.
-        if (cardSizeSmall) {
-            if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
-                layoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
-            } else {
-                layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-            }
+        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
+            layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
             mRecyclerView.setLayoutManager(layoutManager);
-            mRecyclerView.setAdapter(smallAdapter);
         } else {
-            if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
-                layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-                mRecyclerView.setLayoutManager(layoutManager);
-            } else {
-                linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-                mRecyclerView.setLayoutManager(linearLayoutManager);
-            }
-            mRecyclerView.setAdapter(adapter);
+            linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+            mRecyclerView.setLayoutManager(linearLayoutManager);
         }
+        mRecyclerView.setAdapter(adapter);
+
 
         coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.coordinatorLayout);
 
@@ -263,28 +249,18 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             Timber.v("Data changed - size: %s", results.size());
 
             int preferredCount = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
-            if (cardSizeSmall) {
-                smallAdapter.clear();
-            } else {
-                adapter.clear();
-            }
+            adapter.clear();
 
             if (results.size() >= preferredCount) {
                 no_data.setVisibility(View.GONE);
                 setLayoutManager(preferredCount);
-                if (cardSizeSmall) {
-                    smallAdapter.addItems(results.subList(0, preferredCount));
-                } else {
-                    adapter.addItems(results.subList(0, preferredCount));
-                }
+                adapter.addItems(results.subList(0, preferredCount));
+
             } else if (results.size() > 0) {
                 no_data.setVisibility(View.GONE);
                 setLayoutManager(preferredCount);
-                if (cardSizeSmall) {
-                    smallAdapter.addItems(results);
-                } else {
-                    adapter.addItems(results);
-                }
+                adapter.addItems(results);
+
             } else {
                 if (adapter != null) {
                     adapter.clear();
@@ -306,7 +282,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         if (switchPreferences.getAllSwitch()) {
             RealmQuery<Launch> query = getRealm().where(Launch.class)
                     .greaterThanOrEqualTo("net", date);
-            if(switchPreferences.getNoGoSwitch()){
+            if (switchPreferences.getNoGoSwitch()) {
                 query.equalTo("status", 1);
             }
             launchRealms = query.findAllSortedAsync("net", Sort.ASCENDING);
@@ -322,22 +298,14 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         if (!isDetached() && isAdded()) {
             if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && (launchRealms != null && launchRealms.size() == 1 || size == 1)) {
                 linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(),
-                                                              LinearLayoutManager.VERTICAL, false
+                        LinearLayoutManager.VERTICAL, false
                 );
                 mRecyclerView.setLayoutManager(linearLayoutManager);
-                if (cardSizeSmall) {
-                    mRecyclerView.setAdapter(smallAdapter);
-                } else {
-                    mRecyclerView.setAdapter(adapter);
-                }
+                mRecyclerView.setAdapter(adapter);
             } else if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
                 layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
                 mRecyclerView.setLayoutManager(layoutManager);
-                if (cardSizeSmall) {
-                    mRecyclerView.setAdapter(smallAdapter);
-                } else {
-                    mRecyclerView.setAdapter(adapter);
-                }
+                mRecyclerView.setAdapter(adapter);
             }
         } else if (isDetached()) {
             Timber.v("View is detached.");
