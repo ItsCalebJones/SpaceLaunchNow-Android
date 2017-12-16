@@ -11,7 +11,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.0.1'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
-        classpath 'org.moallemi.gradle.advanced-build-version:gradle-plugin:1.5.3'
+        classpath 'org.moallemi.gradle.advanced-build-version:gradle-plugin:1.6.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.4'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
 
@@ -32,6 +32,12 @@ task clean(type: Delete) {
 
 // Define versions in a single place
 ext {
+
+    app = [
+            versionMajor : 1,
+            versionMinor : 8,
+            versionPatch : 1
+    ]
     // Sdk and tools
     minSdkVersion = 15
     targetSdkVersion = 24
@@ -40,5 +46,14 @@ ext {
 
     // App dependencies
     supportLibraryVersion = '27.0.1'
-    playServicesVersion = '11.4.2'
+    playServicesVersion = '11.6.0'
+
+    sdk = 25
+    buildTools = "25.0.0" //keep 25.0.0 for Continuous Integration
+    minSdk = 14
+    libraryVersion = "2.1.1"
+    supportVersion = "25.3.1"
+
+    sourceCompatibilityVersion = JavaVersion.VERSION_1_7
+    targetCompatibilityVersion = JavaVersion.VERSION_1_7
 }

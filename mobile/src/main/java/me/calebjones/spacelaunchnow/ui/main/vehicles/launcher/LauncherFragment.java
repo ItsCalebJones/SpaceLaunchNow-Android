@@ -2,15 +2,13 @@ package me.calebjones.spacelaunchnow.ui.main.vehicles.launcher;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +21,6 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.CustomFragment;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.Launcher;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
@@ -32,7 +29,6 @@ import me.calebjones.spacelaunchnow.ui.launcher.LauncherDetailActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,41 +36,29 @@ import timber.log.Timber;
 
 public class LauncherFragment extends CustomFragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    private ListPreferences sharedPreference;
     private VehicleAdapter adapter;
-    private android.content.SharedPreferences SharedPreferences;
-    private GridLayoutManager layoutManager;
+    private RecyclerView.LayoutManager layoutManager;
     private List<Launcher> items = new ArrayList<>();
-    private static Context context;
+    private Context context;
     private View view;
     private RecyclerView mRecyclerView;
     private CoordinatorLayout coordinatorLayout;
     private SwipeRefreshLayout swipeRefreshLayout;
-    public SparseArray<Bitmap> photoCache = new SparseArray<Bitmap>(1);
-    // The singleton HTTP client.
-    public final OkHttpClient client = new OkHttpClient.Builder().build();
-    private int defaultBackgroundcolor;
-    private static final int SCALE_DELAY = 30;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        this.sharedPreference = ListPreferences.getInstance(getActivity().getApplication());
-        adapter = new VehicleAdapter(getActivity().getApplicationContext());
+        context = getActivity();
+        adapter = new VehicleAdapter(context);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        context = getActivity().getApplicationContext();
-
-        sharedPreference = ListPreferences.getInstance(context);
-
         super.onCreateView(inflater, container, savedInstanceState);
 
-        LayoutInflater lf = getActivity().getLayoutInflater();
-        view = lf.inflate(R.layout.fragment_launch_vehicles, container, false);
+        view = inflater.inflate(R.layout.fragment_launch_vehicles, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.vehicle_detail_list);
         coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.vehicle_coordinator);
@@ -82,11 +66,11 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
         swipeRefreshLayout.setOnRefreshListener(this);
 
         if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
-            layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 3);
+            layoutManager = new GridLayoutManager(context, 3);
         } else if (getResources().getBoolean(R.bool.landscape)  || getResources().getBoolean(R.bool.isTablet)) {
-            layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 2);
+            layoutManager = new GridLayoutManager(context, 2);
         } else {
-            layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 1);
+            layoutManager = new LinearLayoutManager(context);
         }
 
         mRecyclerView.setLayoutManager(layoutManager);
@@ -109,6 +93,8 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
         Timber.v("Returning view.");
         return view;
     }
+
+
 
     @Override
     public void onResume() {
@@ -136,9 +122,9 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
                 if (response.isSuccessful()) {
                     LauncherResponse jsonResponse = response.body();
                     Timber.v("Success %s", response.message());
-                    items = new ArrayList<>(Arrays.asList(jsonResponse.getItem()));
+                    items = new ArrayList<>(Arrays.asList(jsonResponse.getLaunchers()));
                     adapter.addItems(items);
-                    Analytics.from(getContext()).sendNetworkEvent("LAUNCHER_INFORMATION", call.request().url().toString(), true);
+                    Analytics.from(context).sendNetworkEvent("LAUNCHER_INFORMATION", call.request().url().toString(), true);
 
                 } else {
                     Timber.e(ErrorUtil.parseSpaceLaunchNowError(response).message());
@@ -152,7 +138,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
                 Timber.e(t.getMessage());
                 hideLoading();
                 SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, t.getLocalizedMessage());
-                Analytics.from(getContext()).sendNetworkEvent("VEHICLE_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());
+                Analytics.from(context).sendNetworkEvent("VEHICLE_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());
             }
         });
     }
@@ -173,7 +159,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
 
         @Override
         public void onClick(View v, int position) {
-            Analytics.from(getActivity()).sendButtonClicked("Launcher clicked", items.get(position).getName());
+            Analytics.from(context).sendButtonClicked("Launcher clicked", items.get(position).getName());
             Gson gson = new Gson();
             String jsonItem = gson.toJson(items.get(position));
 

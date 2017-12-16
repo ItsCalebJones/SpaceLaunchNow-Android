@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -21,7 +20,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
@@ -48,7 +46,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.content.events.LaunchRequestEvent;
 import me.calebjones.spacelaunchnow.data.models.Launch;
-import me.calebjones.spacelaunchnow.data.models.RocketDetails;
+import me.calebjones.spacelaunchnow.data.models.RocketDetail;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
 import me.calebjones.spacelaunchnow.ui.launchdetail.TabsAdapter;
@@ -57,6 +55,7 @@ import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
+import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -72,7 +71,7 @@ public class LaunchDetailActivity extends BaseActivity
     AdView adView;
     @BindView(R.id.detail_profile_image)
     CircleImageView detail_profile_image;
-    @BindView(R.id.detail_rocket)
+    @BindView(R.id.detail_title)
     TextView detail_rocket;
     @BindView(R.id.detail_mission_location)
     TextView detail_mission_location;
@@ -171,37 +170,47 @@ public class LaunchDetailActivity extends BaseActivity
         if (type != null && type.equals("launch")) {
             final int id = mIntent.getIntExtra("launchID", 0);
             detailSwipeRefresh.setRefreshing(true);
+            Launch launch = getRealm().where(Launch.class).equalTo("id", id).findFirst();
+            if (launch != null) {
+                updateViews(launch);
+            }
             DataClient.getInstance().getLaunchById(id, true, new Callback<LaunchResponse>() {
                 @Override
                 public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
                     Realm realm = Realm.getDefaultInstance();
                     if (response.isSuccessful()) {
-                        RealmList<Launch> items = new RealmList<>(response.body().getLaunches());
-                        for (Launch item : items) {
-                            Launch previous = realm.where(Launch.class)
-                                    .equalTo("id", item.getId())
-                                    .findFirst();
-                            if (previous != null) {
-                                item.setEventID(previous.getEventID());
-                                item.setSyncCalendar(previous.syncCalendar());
-                                item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
-                                item.setIsNotifiedDay(previous.getIsNotifiedDay());
-                                item.setIsNotifiedHour(previous.getIsNotifiedHour());
-                                item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
-                                item.setNotifiable(previous.isNotifiable());
-                            }
-                            realm.beginTransaction();
-                            item.getLocation().setPrimaryID();
-                            realm.copyToRealmOrUpdate(item);
-                            realm.commitTransaction();
-                            updateViews(item);
-                            Timber.v("Updated detailLaunch: %s", item.getId());
+                        final RealmList<Launch> items = new RealmList<>(response.body().getLaunches());
+                        if (items.size() == 1) {
+                            final Launch item = items.first();
+                            realm.executeTransactionAsync(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm bgRealm) {
+                                    Launch previous = bgRealm.where(Launch.class)
+                                            .equalTo("id", item.getId())
+                                            .findFirst();
+                                    if (previous != null) {
+                                        item.setEventID(previous.getEventID());
+                                        item.setSyncCalendar(previous.syncCalendar());
+                                        item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
+                                        item.setIsNotifiedDay(previous.getIsNotifiedDay());
+                                        item.setIsNotifiedHour(previous.getIsNotifiedHour());
+                                        item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
+                                        item.setNotifiable(previous.isNotifiable());
+                                    }
+                                    item.getLocation().setPrimaryID();
+                                    bgRealm.copyToRealmOrUpdate(item);
+                                    Timber.v("Updated detailLaunch: %s", item.getId());
+                                }
+
+                            }, new Realm.Transaction.OnSuccess() {
+                                @Override
+                                public void onSuccess() {
+                                    sendUpdateView(id);
+                                }
+                            });
                         }
                     } else {
-                        Launch item = realm.where(Launch.class)
-                                .equalTo("id", id)
-                                .findFirst();
-                        updateViews(item);
+                        sendUpdateView(id);
                     }
                     realm.close();
                     detailSwipeRefresh.setRefreshing(false);
@@ -242,6 +251,13 @@ public class LaunchDetailActivity extends BaseActivity
         viewPager.setOffscreenPageLimit(3);
 
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    private  void sendUpdateView(int id){
+        Launch item = getRealm().where(Launch.class)
+                .equalTo("id", id)
+                .findFirst();
+        updateViews(item);
     }
 
     private void updateViews(Launch launch) {
@@ -376,7 +392,7 @@ public class LaunchDetailActivity extends BaseActivity
         } else {
             query = result.getRocket().getName();
         }
-        RocketDetails launchVehicle = getRealm().where(RocketDetails.class)
+        RocketDetail launchVehicle = getRealm().where(RocketDetail.class)
                 .contains("name", query)
                 .findFirst();
         if (setImage) {
@@ -385,7 +401,7 @@ public class LaunchDetailActivity extends BaseActivity
                         .load(launchVehicle.getImageURL())
                         .placeholder(R.drawable.placeholder)
                         .into(detail_profile_backdrop);
-                Timber.d("Glide Loading: %s %s", launchVehicle.getLV_Name(), launchVehicle.getImageURL());
+                Timber.d("Glide Loading: %s %s", launchVehicle.getName(), launchVehicle.getImageURL());
             }
         }
     }
@@ -507,15 +523,19 @@ public class LaunchDetailActivity extends BaseActivity
                         + "\n\n"
                         + launchDate;
             }
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             Timber.e(e);
         }
-        ShareCompat.IntentBuilder.from(this)
-                .setType("text/plain")
-                .setChooserTitle("Share: " + launch.getName())
-                .setText(String.format("%s\n\nWatch Live: %s", message, launch.getUrl()))
-                .startChooser();
-        Analytics.from(context).sendLaunchShared("Share FAB", launch.getName() + "-" + launch.getId().toString());
+        if (launch.getName() != null && launch.getUrl() != null) {
+            ShareCompat.IntentBuilder.from(this)
+                    .setType("text/plain")
+                    .setChooserTitle("Share: " + launch.getName())
+                    .setText(String.format("%s\n\nWatch Live: %s", message, launch.getUrl()))
+                    .startChooser();
+            Analytics.from(context).sendLaunchShared("Share FAB", launch.getName() + "-" + launch.getId().toString());
+        } else {
+            SnackbarHandler.showErrorSnackbar(this, rootview, "Error - unable to share this launch.");
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

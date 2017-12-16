@@ -10,9 +10,11 @@
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
+        android:textColor="?android:textColorPrimary"
         app:showAsAction="never" />
     <item
         android:id="@+id/debug_menu"
+        android:textColor="?android:textColorPrimary"
         android:title="Debug"
         />
 </menu>

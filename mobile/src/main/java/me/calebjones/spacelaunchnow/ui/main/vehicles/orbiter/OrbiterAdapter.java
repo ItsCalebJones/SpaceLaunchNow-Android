@@ -1,13 +1,6 @@
 package me.calebjones.spacelaunchnow.ui.main.vehicles.orbiter;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.os.Build;
-import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.RequestOptions;
+import com.github.florent37.glidepalette.BitmapPalette;
+import com.github.florent37.glidepalette.GlidePalette;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
@@ -27,42 +20,43 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.Orbiter;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
-import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 /**
  * This adapter takes data from ListPreferences/LoaderService and applies it to the UpcomingLaunchesFragment
  */
-public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHolder>{
+public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHolder> {
 
     public int position;
     private Context mContext;
-    private Calendar rightNow;
-    private SharedPreferences sharedPref;
-    private List<Orbiter> items = new ArrayList<Orbiter>();
-    private static ListPreferences sharedPreference;
+    private List<Orbiter> orbiters = new ArrayList<Orbiter>();
     private OnItemClickListener onItemClickListener;
-    private int defaultBackgroundcolor;
-    private static final int SCALE_DELAY = 30;
-    private int lastPosition = -1;
-    private boolean night;
+    private int palette;
+    private RequestOptions requestOptions;
 
     public OrbiterAdapter(Context context) {
-        rightNow = Calendar.getInstance();
-        items = new ArrayList();
-        sharedPreference = ListPreferences.getInstance(context);
-        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        orbiters = new ArrayList();
         this.mContext = context;
+
+        if (ListPreferences.getInstance(mContext).isNightModeActive(mContext)) {
+            palette = GlidePalette.Profile.MUTED_DARK;
+        } else {
+            palette = GlidePalette.Profile.VIBRANT;
+        }
+
+        requestOptions = new RequestOptions()
+                .placeholder(R.drawable.placeholder)
+                .centerCrop();
     }
 
     public void addItems(List<Orbiter> items) {
-        if (this.items == null) {
-            this.items = items;
-        } else if (this.items.size() == 0) {
-            this.items.addAll(items);
+        if (this.orbiters == null) {
+            this.orbiters = items;
+        } else if (this.orbiters.size() == 0) {
+            this.orbiters.addAll(items);
         } else {
-            this.items.clear();
-            this.items.addAll(items);
+            this.orbiters.clear();
+            this.orbiters.addAll(items);
         }
         notifyDataSetChanged();
     }
@@ -72,114 +66,40 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
     }
 
 
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-
-        int m_theme;
-
-        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        sharedPreference = ListPreferences.getInstance(mContext);
-
-        if (sharedPreference.isNightModeActive(mContext)) {
-            night = true;
-            defaultBackgroundcolor = ContextCompat.getColor(mContext, R.color.colorAccent);
-
-        } else {
-            night = false;
-            defaultBackgroundcolor = ContextCompat.getColor(mContext, R.color.darkAccent);
-        }
-        m_theme = R.layout.gridview_item;
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(m_theme, viewGroup, false);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.gridview_item, viewGroup, false);
         return new ViewHolder(v, onItemClickListener);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        final Orbiter item = items.get(i);
+        final Orbiter orbiter = orbiters.get(i);
+        Timber.v("onBindViewHolder %s", orbiter.getName());
 
-        Timber.v("onBindViewHolder %s", item.getName());
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            GlideApp.with(mContext)
-                    .load(item.getImageURL())
-                    .placeholder(R.drawable.placeholder)
-                    .centerCrop()
-                    .into(holder.picture);
-            amimateCell(holder);
-        } else {
-            holder.grid_root.setScaleY(1);
-            holder.grid_root.setScaleX(1);
-
-            GlideApp.with(mContext)
-                    .load(item.getImageURL())
-                    .placeholder(R.drawable.placeholder)
-                    .into(holder.picture);
-        }
-
-        holder.name.setText(item.getName());
-    }
-
-    private void amimateCell(ViewHolder holder) {
-
-        int cellPosition = holder.getPosition();
-
-        if (!holder.animated) {
-
-            holder.animated = true;
-            holder.grid_root.setScaleY(0);
-            holder.grid_root.setScaleX(0);
-            holder.grid_root.animate()
-                    .scaleY(1).scaleX(1)
-                    .setDuration(200)
-                    .setStartDelay(SCALE_DELAY * Math.abs(cellPosition))
-                    .start();
-        }
-
-    }
-
-    public void setCellColors(Bitmap bitmap, final ViewHolder viewHolder, final int position) {
-
-        if (bitmap != null) {
-            Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
-
-                @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-                @Override
-                public void onGenerated(Palette palette) {
-
-                    Palette.Swatch swatch;
-                    if (night){
-                        swatch = palette.getDarkMutedSwatch();
-                    } else {
-                        swatch = palette.getVibrantSwatch();
-                    }
-
-                    if (swatch != null) {
-
-                        viewHolder.name.setTextColor(swatch.getTitleTextColor());
-                        viewHolder.picture.setTransitionName("cover" + position);
-
-                        Utils.animateViewColor(viewHolder.name, defaultBackgroundcolor,
-                                swatch.getRgb());
-
-                    } else {
-
-                        Timber.e("Adapter onGenerated - The VibrantSwatch were null at: " + position);
-                    }
-                }
-            });
-        }
+        GlideApp.with(mContext)
+                .load(orbiter.getImageURL())
+                .apply(requestOptions)
+                .listener(GlidePalette.with(orbiter.getImageURL())
+                        .use(palette)
+                        .intoBackground(holder.textContainer, GlidePalette.Swatch.RGB)
+                        .crossfade(true))
+                .into(holder.picture);
+        holder.name.setText(orbiter.getName());
+        holder.subTitle.setText(orbiter.getAgency());
     }
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return orbiters.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public View grid_root;
         public ImageView picture;
         public TextView name;
+        public TextView subTitle;
+        public View textContainer;
         private OnItemClickListener onItemClickListener;
         protected boolean animated = false;
 
@@ -189,8 +109,10 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
 
             this.onItemClickListener = onItemClickListener;
             grid_root = view.findViewById(R.id.grid_root);
-            picture = (ImageView) view.findViewById(R.id.picture);
-            name = (TextView) view.findViewById(R.id.text);
+            picture = view.findViewById(R.id.picture);
+            name = view.findViewById(R.id.text);
+            subTitle = view.findViewById(R.id.text_subtitle);
+            textContainer = view.findViewById(R.id.text_container);
             grid_root.setOnClickListener(this);
         }
 

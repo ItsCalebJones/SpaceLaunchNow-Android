@@ -9,11 +9,11 @@ import android.transition.Transition;
 import android.view.MenuItem;
 
 import com.bumptech.glide.Glide;
+import com.github.chrisbanes.photoview.PhotoView;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
-import uk.co.senab.photoview.PhotoView;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.

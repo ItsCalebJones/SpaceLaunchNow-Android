@@ -5,6 +5,17 @@ A space launch tracker for Android using data from the Launch Library API.
 ## Changelog
 #### Updated 11-25-2017
 ---
+### Version 1.8.1 (Latest)
+#### Overview
+Just a few bug-fixes and cleanups from the previous release.
+
+#### Changelog
+* Fixed an issue with receiving notification payload.
+* Fixed a text issues with Day/Night theme.
+* Updated Vehicles section.
+* Removed old code and unnecessary background syncs.
+* Usability changes to make it easier to find various settings.
+---
 ### Version 1.8.0
 #### Overview
 This release includes full support for new Android 8.0 features.

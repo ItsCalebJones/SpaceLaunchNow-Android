@@ -73,6 +73,7 @@
                         android:maxLines="2"
                         android:padding="2dp"
                         android:singleLine="false"
+                        android:textColor="?android:textColorSecondary"
                         android:text="Unknown Launch Location" />
 
                     <TextView
@@ -84,6 +85,7 @@
                         android:maxLines="2"
                         android:padding="2dp"
                         android:singleLine="false"
+                        android:textColor="?android:textColorSecondary"
                         android:text="Unknown Launch Date" />
 
                 </LinearLayout>
@@ -107,26 +109,11 @@
                     android:scaleType="centerCrop"
                     android:contentDescription="A map view of launch location." />
 
-                <android.support.design.widget.FloatingActionButton
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/fab"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/map_view"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginBottom="-32dp"
-                    android:layout_marginRight="20dp"
-                    android:clickable="true"
-                    android:elevation="8dp"
-                    app:srcCompat="@drawable/ic_explore"
-                    app:backgroundTint="@color/colorAccentLight" />
-
                 <TextView
                     android:id="@+id/content_status"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/map_view"
-                    android:layout_marginRight="52dp"
                     android:elevation="0dp"
                     android:paddingLeft="28dp"
                     android:paddingRight="28dp"
@@ -210,6 +197,7 @@
                     android:paddingLeft="28dp"
                     android:paddingRight="28dp"
                     android:text="Unknown Mission"
+                    android:textColor="?android:textColorPrimary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -221,6 +209,7 @@
                     android:paddingBottom="8dp"
                     android:paddingLeft="28dp"
                     android:paddingRight="28dp"
+                    android:textColor="?android:textColorSecondary"
                     android:textSize="14sp" />
             </LinearLayout>
 

@@ -1,33 +1,24 @@
+import org.moallemi.gradle.internal.VersionCodeType
+
 apply plugin: 'com.android.application'
+apply plugin: 'org.moallemi.advanced-build-version'
 
-
-def versionMajor = 1
-def versionMinor = 2
-def versionPatch = 0
-def appVersionCode = 0
-def appVersionName = ""
-def getGitHash = { ->
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'rev-parse', '--short', 'HEAD'
-        standardOutput = stdout
+advancedVersioning {
+    nameOptions {
+        versionMajor app.versionMajor
+        versionMinor app.versionMinor
+        versionPatch app.versionPatch
+        versionBuild versionCode
     }
-    return stdout.toString().trim()
-}
-def versionPropsFile = file('version.properties')
-if (versionPropsFile.canRead()) {
-    def Properties versionProps = new Properties()
+    codeOptions {
+        versionCodeType VersionCodeType.AUTO_INCREMENT_ONE_STEP
+        dependsOnTasks 'release', 'beta'
 
-    versionProps.load(new FileInputStream(versionPropsFile))
-
-    def versionBuild = versionProps['VERSION_CODE'].toInteger() + 1
-
-    versionProps['VERSION_CODE'] = versionBuild.toString()
-    versionProps.store(versionPropsFile.newWriter(), null)
-    appVersionCode = versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
-    appVersionName = "${versionMajor}.${versionMinor}.${versionPatch}"
-} else {
-    throw new GradleException("Could not read version.properties!")
+    }
+    outputOptions {
+        renameOutput true
+        nameFormat '${appName}-${buildType}-${versionName}'
+    }
 }
 
 android {
@@ -35,12 +26,13 @@ android {
     buildToolsVersion '26.0.2'
 
     defaultConfig {
+        flavorDimensions "release"
         manifestPlaceholders = [ applicationLabel:"@string/app_name"]
         applicationId "me.calebjones.spacelaunchnow"
         minSdkVersion 23
         targetSdkVersion 27
-        versionCode appVersionCode
-        versionName appVersionName
+        versionCode app.versionMajor * 10000 + app.versionMinor * 1000 + app.versionPatch * 100 + advancedVersioning.versionCode
+        versionName advancedVersioning.versionName
     }
     buildTypes {
         release {
@@ -50,7 +42,26 @@ android {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
-            manifestPlaceholders = [ applicationLabel:"Launch Tracker - Debug"]
+            manifestPlaceholders = [ applicationLabel:"SLN - Debug"]
+        }
+    }
+
+    productFlavors {
+        debugTesting {
+
+        }
+        prod {
+
+        }
+
+        beta {
+            dimension "release"
+            versionNameSuffix "-beta"
+        }
+
+        alpha {
+            dimension "release"
+            versionNameSuffix "-alpha"
         }
     }
 }

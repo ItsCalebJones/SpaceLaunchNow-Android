@@ -1,7 +1,5 @@
 package me.calebjones.spacelaunchnow.data.networking;
 
-import android.support.annotation.NonNull;
-
 import java.io.IOException;
 
 import me.calebjones.spacelaunchnow.data.helpers.Utils;
@@ -26,6 +24,7 @@ public class DataClient {
 
     //    private final String mCacheControl;
     private final LibraryService libraryServiceThreaded;
+    private final LibraryService libraryServiceThreadedLowPriority;
     private final LibraryService libraryService;
     private final SpaceLaunchNowService spaceLaunchNowService;
     private static DataClient mInstance;
@@ -47,6 +46,7 @@ public class DataClient {
         libraryService = libraryRetrofit.create(LibraryService.class);
         libraryServiceThreaded = libraryRetrofitThreaded.create(LibraryService.class);
         spaceLaunchNowService = spaceLaunchNowRetrofit.create(SpaceLaunchNowService.class);
+        libraryServiceThreadedLowPriority = RetrofitBuilder.getLibraryRetrofitLowestThreaded(version).create(LibraryService.class);
 
     }
 
@@ -79,7 +79,7 @@ public class DataClient {
         return mInstance;
     }
 
-    public Call<LaunchResponse> getLaunchById(int launchID, boolean isUIThread, @NonNull Callback<LaunchResponse> callback) {
+    public Call<LaunchResponse> getLaunchById(int launchID, boolean isUIThread, Callback<LaunchResponse> callback) {
         Call<LaunchResponse> call;
         if (isUIThread) {
             call = libraryService.getLaunchByID(launchID);
@@ -149,7 +149,7 @@ public class DataClient {
     }
 
     public Call<LaunchResponse> getLaunchesByDate(String startDate, String endDate, int offset, Callback<LaunchResponse> callback) {
-        Call<LaunchResponse> call = libraryServiceThreaded.getLaunchesByDate(startDate, endDate, offset);
+        Call<LaunchResponse> call = libraryServiceThreadedLowPriority.getLaunchesByDate(startDate, endDate, offset);
 
         call.enqueue(callback);
 
@@ -204,8 +204,8 @@ public class DataClient {
         return call;
     }
 
-    public Call<VehicleResponse> getVehicles(Callback<VehicleResponse> callback) {
-        Call<VehicleResponse> call = spaceLaunchNowService.getVehicles();
+    public Call<VehicleResponse> getVehicles(String family, Callback<VehicleResponse> callback) {
+        Call<VehicleResponse> call = spaceLaunchNowService.getVehicles(family);
 
         call.enqueue(callback);
 

@@ -149,6 +149,7 @@ public class AgencyDetailFragment extends BaseFragment {
             }
             if (pads > 0 && detailLaunch.getLocation() != null
                     && detailLaunch.getLocation().getPads() !=null
+                    && detailLaunch.getLocation().getPads().get(0) != null
                     && detailLaunch.getLocation().getPads().get(0).getAgencies() != null) {
                 mission_agencies = detailLaunch.getLocation().getPads().get(0).getAgencies().size();
             }
@@ -190,9 +191,16 @@ public class AgencyDetailFragment extends BaseFragment {
 
     private void setOneMissionAgencies() {
         mission_agency_type.setVisibility(View.VISIBLE);
-        String agencyTypeOne = getAgencyType(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getType());
-        String agencyNameOne = detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getName();
-        String agencyAbbrevOne = detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getAbbrev();
+        String agencyTypeOne = "";
+        String agencyNameOne = "";
+        String agencyAbbrevOne = "";
+        try {
+            agencyTypeOne = getAgencyType(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getType());
+            agencyNameOne = detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getName();
+            agencyAbbrevOne = detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getAbbrev();
+        } catch (NullPointerException e){
+            Timber.e(e);
+        }
 
         checkLaunchSummary(agencyAbbrevOne, mission_agency_summary_one);
 
@@ -201,7 +209,8 @@ public class AgencyDetailFragment extends BaseFragment {
         mission_agency_one.setText(String.format("%s (%s)", agencyNameOne, agencyAbbrevOne));
         mission_agency_type_one.setText("Type: " + agencyTypeOne);
 
-        if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL().length() > 0) {
+        if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL() != null  &&
+                detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL().length() > 0) {
             ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL()));
 
             mission_wikiButton_one.setVisibility(View.VISIBLE);
@@ -225,7 +234,8 @@ public class AgencyDetailFragment extends BaseFragment {
         }
 
 
-        if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL().length() > 0) {
+        if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL() != null &&
+                detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL().length() > 0) {
             ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(detailLaunch.getLocation()
                     .getPads().get(0).getAgencies().get(0).getInfoURL()));
 
@@ -253,12 +263,22 @@ public class AgencyDetailFragment extends BaseFragment {
         mission_agency_type.setVisibility(View.VISIBLE);
         mission_agency_title.setText("Mission Agencies");
 
-        String agencyTypeOne = getAgencyType(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getType());
-        String agencyNameOne = detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getName();
-        String agencyAbbrevOne = detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getAbbrev();
-        String agencyTypeTwo = getAgencyType(detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getType());
-        String agencyNameTwo = detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getName();
-        String agencyAbbrevTwo = detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getAbbrev();
+        String agencyTypeOne = "";
+        String agencyNameOne = "";
+        String agencyAbbrevOne = "";
+        String agencyAbbrevTwo = "";
+        String agencyTypeTwo = "";
+        String agencyNameTwo = "";
+        try {
+            agencyTypeOne = getAgencyType(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getType());
+            agencyNameOne = detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getName();
+            agencyAbbrevOne = detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getAbbrev();
+            agencyTypeTwo = getAgencyType(detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getType());
+            agencyNameTwo = detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getName();
+            agencyAbbrevTwo = detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getAbbrev();
+        } catch (NullPointerException e){
+            Timber.e(e);
+        }
 
         checkLaunchSummary(agencyAbbrevOne, mission_agency_summary_one);
         checkLaunchSummary(agencyAbbrevTwo, mission_agency_summary_two);
@@ -270,7 +290,8 @@ public class AgencyDetailFragment extends BaseFragment {
         mission_agency_one.setText(String.format("%s (%s)", agencyNameOne, agencyAbbrevOne));
         mission_agency_two.setText(String.format("%s (%s)", agencyNameTwo, agencyAbbrevTwo));
 
-        if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL().length() > 0) {
+        if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL() != null &&
+                detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL().length() > 0) {
             ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL()));
 
             mission_wikiButton_one.setVisibility(View.VISIBLE);
@@ -290,7 +311,8 @@ public class AgencyDetailFragment extends BaseFragment {
         }
 
 
-        if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL().length() > 0) {
+        if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL() != null &&
+                detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL().length() > 0) {
             ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL()));
 
             mission_infoButton_one.setVisibility(View.VISIBLE);
@@ -310,7 +332,8 @@ public class AgencyDetailFragment extends BaseFragment {
             mission_infoButton_one.setVisibility(View.GONE);
         }
 
-        if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getWikiURL().length() > 0) {
+        if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getWikiURL() != null &&
+                detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getWikiURL().length() > 0) {
             ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getWikiURL()));
 
             mission_wikiButton_two.setVisibility(View.VISIBLE);
@@ -330,7 +353,8 @@ public class AgencyDetailFragment extends BaseFragment {
         }
 
 
-        if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getInfoURL().length() > 0) {
+        if (detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getInfoURL() != null &&
+                detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getInfoURL().length() > 0) {
             ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getInfoURL()));
 
             mission_infoButton_two.setVisibility(View.VISIBLE);
@@ -363,10 +387,19 @@ public class AgencyDetailFragment extends BaseFragment {
     private void setOneVehicleAgencies() {
         launch_agency_type.setVisibility(View.VISIBLE);
         launch_agency_type.setText(detailLaunch.getRocket().getName());
-        String countryCode = detailLaunch.getRocket().getAgencies().get(0).getCountryCode();
-        String agencyType = getAgencyType(detailLaunch.getRocket().getAgencies().get(0).getType());
-        String agencyName = detailLaunch.getRocket().getAgencies().get(0).getName();
-        String agencyAbbrev = detailLaunch.getRocket().getAgencies().get(0).getAbbrev();
+
+        String countryCode = "";
+        String agencyType = "";
+        String agencyName = "";
+        String agencyAbbrev = "";
+        try {
+            countryCode = detailLaunch.getRocket().getAgencies().get(0).getCountryCode();
+            agencyType = getAgencyType(detailLaunch.getRocket().getAgencies().get(0).getType());
+            agencyName = detailLaunch.getRocket().getAgencies().get(0).getName();
+            agencyAbbrev = detailLaunch.getRocket().getAgencies().get(0).getAbbrev();
+        } catch (NullPointerException e){
+            Timber.e(e);
+        }
 
         checkLaunchSummary(agencyAbbrev, launch_agency_summary_one);
 
@@ -382,7 +415,8 @@ public class AgencyDetailFragment extends BaseFragment {
         launch_vehicle_agency_one.setText(String.format("%s (%s) %s", agencyName, agencyAbbrev, countryCode));
         launch_agency_type_one.setText("Type: " + agencyType);
 
-        if (detailLaunch.getRocket().getAgencies().get(0).getWikiURL().length() > 0) {
+        if (detailLaunch.getRocket().getAgencies().get(0).getWikiURL() != null &&
+                detailLaunch.getRocket().getAgencies().get(0).getWikiURL().length() > 0) {
             ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(0).getWikiURL()));
 
             wikiButton_one.setVisibility(View.VISIBLE);
@@ -403,7 +437,8 @@ public class AgencyDetailFragment extends BaseFragment {
         }
 
 
-        if (detailLaunch.getRocket().getAgencies().get(0).getInfoURL().length() > 0) {
+        if (detailLaunch.getRocket().getAgencies().get(0).getInfoURL() != null &&
+                detailLaunch.getRocket().getAgencies().get(0).getInfoURL().length() > 0) {
             ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(0).getInfoURL()));
 
             infoButton_one.setVisibility(View.VISIBLE);
@@ -425,10 +460,18 @@ public class AgencyDetailFragment extends BaseFragment {
     }
 
     private void setTwoVehicleAgencies() {
-        String countryCode = detailLaunch.getRocket().getAgencies().get(0).getCountryCode();
-        String agencyOne = getAgencyType(detailLaunch.getRocket().getAgencies().get(0).getType());
-        String agencyNameOne = detailLaunch.getRocket().getAgencies().get(0).getName();
-        String agencyAbbrevOne = detailLaunch.getRocket().getAgencies().get(0).getAbbrev();
+        String countryCode = "";
+        String agencyOne = "";
+        String agencyNameOne = "";
+        String agencyAbbrevOne = "";
+        try {
+            countryCode = detailLaunch.getRocket().getAgencies().get(0).getCountryCode();
+            agencyOne = getAgencyType(detailLaunch.getRocket().getAgencies().get(0).getType());
+            agencyNameOne = detailLaunch.getRocket().getAgencies().get(0).getName();
+            agencyAbbrevOne = detailLaunch.getRocket().getAgencies().get(0).getAbbrev();
+        } catch (NullPointerException e){
+            Timber.e(e);
+        }
 
         vehicle_agency_title.setText("Vehicle Agencies");
 
@@ -441,10 +484,19 @@ public class AgencyDetailFragment extends BaseFragment {
             countryCode = countryCode.substring(0, 3);
         }
 
-        String countryCodeTwo = detailLaunch.getRocket().getAgencies().get(1).getCountryCode();
-        String agencyTwo = getAgencyType(detailLaunch.getRocket().getAgencies().get(1).getType());
-        String agencyNameTwo = detailLaunch.getRocket().getAgencies().get(1).getName();
-        String agencyAbbrevTwo = detailLaunch.getRocket().getAgencies().get(1).getAbbrev();
+        String countryCodeTwo = "";
+        String agencyTwo = "";
+        String agencyNameTwo = "";
+        String agencyAbbrevTwo = "";
+
+        try {
+            countryCodeTwo = detailLaunch.getRocket().getAgencies().get(1).getCountryCode();
+            agencyTwo = getAgencyType(detailLaunch.getRocket().getAgencies().get(1).getType());
+            agencyNameTwo = detailLaunch.getRocket().getAgencies().get(1).getName();
+            agencyAbbrevTwo = detailLaunch.getRocket().getAgencies().get(1).getAbbrev();
+        } catch (NullPointerException e){
+            Timber.e(e);
+        }
 
         checkLaunchSummary(agencyAbbrevTwo, launch_agency_summary_two);
 
@@ -462,7 +514,8 @@ public class AgencyDetailFragment extends BaseFragment {
         launch_vehicle_agency_one.setText(String.format("%s (%s) %s", agencyNameOne, agencyAbbrevOne, countryCode));
         launch_vehicle_agency_two.setText(String.format("%s (%s) %s", agencyNameTwo, agencyAbbrevTwo, countryCodeTwo));
 
-        if (detailLaunch.getRocket().getAgencies().get(0).getInfoURL().length() > 0) {
+        if (detailLaunch.getRocket().getAgencies().get(0).getInfoURL() != null &&
+                detailLaunch.getRocket().getAgencies().get(0).getInfoURL().length() > 0) {
             ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(0).getWikiURL()));
             wikiButton_one.setVisibility(View.VISIBLE);
             wikiButton_one.setOnClickListener(new View.OnClickListener() {
@@ -482,7 +535,8 @@ public class AgencyDetailFragment extends BaseFragment {
         }
 
 
-        if (detailLaunch.getRocket().getAgencies().get(0).getInfoURL().length() > 0) {
+        if (detailLaunch.getRocket().getAgencies().get(0).getInfoURL() != null &&
+                detailLaunch.getRocket().getAgencies().get(0).getInfoURL().length() > 0) {
             ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(0).getInfoURL()));
 
             infoButton_one.setVisibility(View.VISIBLE);
@@ -502,7 +556,8 @@ public class AgencyDetailFragment extends BaseFragment {
             infoButton_one.setVisibility(View.GONE);
         }
 
-        if (detailLaunch.getRocket().getAgencies().get(1).getWikiURL().length() > 0) {
+        if (detailLaunch.getRocket().getAgencies().get(1).getWikiURL() != null &&
+                detailLaunch.getRocket().getAgencies().get(1).getWikiURL().length() > 0) {
             ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(1).getWikiURL()));
 
             wikiButton_two.setVisibility(View.VISIBLE);
@@ -522,7 +577,8 @@ public class AgencyDetailFragment extends BaseFragment {
             wikiButton_two.setVisibility(View.GONE);
         }
 
-        if (detailLaunch.getRocket().getAgencies().get(1).getInfoURL().length() > 1) {
+        if (detailLaunch.getRocket().getAgencies().get(1).getInfoURL() != null &&
+                detailLaunch.getRocket().getAgencies().get(1).getInfoURL().length() > 1) {
             ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(detailLaunch.getRocket().getAgencies().get(1).getInfoURL()));
 
             infoButton_two.setVisibility(View.VISIBLE);

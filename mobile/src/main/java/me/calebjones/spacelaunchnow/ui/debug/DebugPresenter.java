@@ -110,7 +110,7 @@ public class DebugPresenter implements DebugContract.Presenter {
         }, new Realm.Transaction.OnSuccess() {
             @Override
             public void onSuccess() {
-                libraryDataManager.getAllData();
+                libraryDataManager.getFirstLaunchData();
             }
         });
         realm.close();

@@ -151,23 +151,25 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
             holder.location.setText("Click for more information.");
         }
 
-        title = launchItem.getName().split("\\|");
-        try {
-            if (title.length > 0) {
-                holder.title.setText(title[1].trim());
-                holder.mission.setText(title[0].trim());
-            } else {
+        if (launchItem.getName() != null) {
+            title = launchItem.getName().split("\\|");
+            try {
+                if (title.length > 0) {
+                    holder.title.setText(title[1].trim());
+                    holder.mission.setText(title[0].trim());
+                } else {
+                    holder.title.setText(launchItem.getName());
+                    if (launchItem.getMissions().size() > 0) {
+                        holder.title.setText(launchItem.getMissions().get(0).getName());
+                    }
+                }
+            } catch (ArrayIndexOutOfBoundsException exception) {
                 holder.title.setText(launchItem.getName());
                 if (launchItem.getMissions().size() > 0) {
                     holder.title.setText(launchItem.getMissions().get(0).getName());
                 }
-            }
-        } catch (ArrayIndexOutOfBoundsException exception) {
-            holder.title.setText(launchItem.getName());
-            if (launchItem.getMissions().size() > 0) {
-                holder.title.setText(launchItem.getMissions().get(0).getName());
-            }
 
+            }
         }
     }
 

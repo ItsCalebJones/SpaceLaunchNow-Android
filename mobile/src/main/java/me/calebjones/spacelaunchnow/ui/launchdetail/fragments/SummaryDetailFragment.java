@@ -30,7 +30,6 @@ import android.zetterstrom.com.forecast.models.Unit;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
-import com.bumptech.glide.Glide;
 import com.github.pwittchen.weathericonview.WeatherIconView;
 import com.mypopsy.maps.StaticMap;
 
@@ -46,6 +45,7 @@ import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.realm.Realm;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
@@ -58,7 +58,7 @@ import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.data.models.Launch;
 import me.calebjones.spacelaunchnow.data.models.Pad;
-import me.calebjones.spacelaunchnow.data.models.RocketDetails;
+import me.calebjones.spacelaunchnow.data.models.RocketDetail;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -77,7 +77,7 @@ public class SummaryDetailFragment extends BaseFragment {
     private Context context;
     private CountDownTimer timer;
     public Launch detailLaunch;
-    private RocketDetails launchVehicle;
+    private RocketDetail launchVehicle;
 
     private boolean nightMode;
 
@@ -102,7 +102,7 @@ public class SummaryDetailFragment extends BaseFragment {
     @BindView(R.id.launch_summary)
     NestedScrollView launchSummary;
     @BindView(R.id.map_view_summary)
-    ImageView staticMap;
+    ImageView mapView;
     @BindView(R.id.launch_date_title)
     TextView launch_date_title;
     @BindView(R.id.date)
@@ -537,11 +537,11 @@ public class SummaryDetailFragment extends BaseFragment {
 
             // Getting status
             if (dlat == 0 && dlon == 0 || Double.isNaN(dlat) || Double.isNaN(dlon) || dlat == Double.NaN || dlon == Double.NaN) {
-                if (staticMap != null) {
-                    staticMap.setVisibility(View.GONE);
+                if (mapView != null) {
+                    mapView.setVisibility(View.GONE);
                 }
             } else {
-                staticMap.setVisibility(View.VISIBLE);
+                mapView.setVisibility(View.VISIBLE);
                 final Resources res = context.getResources();
                 final StaticMap map = new StaticMap()
                         .center(dlat, dlon)
@@ -552,11 +552,11 @@ public class SummaryDetailFragment extends BaseFragment {
                         .key(res.getString(R.string.GoogleMapsKey));
 
                 //Strange but necessary to calculate the height/width
-                staticMap.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                mapView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                     public boolean onPreDraw() {
                         map.size(
-                                staticMap.getWidth() / 2,
-                                staticMap.getHeight() / 2
+                                mapView.getWidth() / 2,
+                                mapView.getHeight() / 2
                         );
 
                         Timber.v("onPreDraw: %s", map.toString());
@@ -564,8 +564,8 @@ public class SummaryDetailFragment extends BaseFragment {
                                 .load(map.toString())
                                 .error(R.drawable.placeholder)
                                 .centerCrop()
-                                .into(staticMap);
-                        staticMap.getViewTreeObserver().removeOnPreDrawListener(this);
+                                .into(mapView);
+                        mapView.getViewTreeObserver().removeOnPreDrawListener(this);
                         return true;
                     }
                 });
@@ -884,7 +884,7 @@ public class SummaryDetailFragment extends BaseFragment {
             query = vehicle.getRocket().getName();
         }
 
-        launchVehicle = getRealm().where(RocketDetails.class).contains("name", query).findFirst();
+        launchVehicle = getRealm().where(RocketDetail.class).contains("name", query).findFirst();
     }
 
     private void setWindowStamp() {
@@ -974,5 +974,32 @@ public class SummaryDetailFragment extends BaseFragment {
     public void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
+    @OnClick(R.id.map_view_summary)
+    public void onViewClicked() {
+        String location = detailLaunch.getLocation().getName();
+        location = (location.substring(location.indexOf(",") + 1));
+
+        Timber.d("FAB: %s ", location);
+
+        double dlat = detailLaunch.getLocation().getPads().get(0).getLatitude();
+        double dlon = detailLaunch.getLocation().getPads().get(0).getLongitude();
+
+        Uri gmmIntentUri = Uri.parse("geo:" + dlat + ", " + dlon + "?z=12&q=" + dlat + ", " + dlon);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+
+        Analytics.from(context).sendLaunchMapClicked(detailLaunch.getName());
+
+        if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
+            Toast.makeText(context, "Loading " + detailLaunch.getLocation().getPads().get(0).getName(), Toast.LENGTH_LONG).show();
+            context.startActivity(mapIntent);
+        }
     }
 }

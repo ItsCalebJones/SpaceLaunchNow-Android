@@ -131,46 +131,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         setScreenName("Next Launch Fragment");
     }
 
-    private void showCaseView() {
-        if (NextLaunchFragment.this.isVisible()) {
-            Button customButton = (Button) getLayoutInflater(null).inflate(R.layout.view_custom_button, null);
-            ViewTarget pinMenuItem = new ViewTarget(R.id.action_alert, getActivity());
-            if (customButton != null) {
-                ShowcaseView.Builder builder = new ShowcaseView.Builder(getActivity())
-                        .withNewStyleShowcase()
-                        .setTarget(pinMenuItem)
-                        .setContentTitle("Launch Filtering")
-                        .setShowcaseEventListener(new OnShowcaseEventListener() {
-                            @Override
-                            public void onShowcaseViewHide(ShowcaseView showcaseView) {
-                                showChangelogSnackbar();
-                            }
-
-                            @Override
-                            public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
-
-                            }
-
-                            @Override
-                            public void onShowcaseViewShow(ShowcaseView showcaseView) {
-
-                            }
-
-                            @Override
-                            public void onShowcaseViewTouchBlocked(MotionEvent motionEvent) {
-
-                            }
-                        })
-                        .setContentText("Only receive notifications for launches that you care about.");
-                if (sharedPreference.isNightModeActive(context)) {
-                    builder.setStyle(R.style.ShowCaseThemeDark).replaceEndButton(customButton).build();
-                } else {
-                    builder.setStyle(R.style.ShowCaseThemeLight).replaceEndButton(customButton).build();
-                }
-            }
-        }
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -419,7 +379,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void hideView() {
-        EventBus.getDefault().post(new FilterViewEvent(false));
         // get the center for the clipping circle
         int x = (int) (FABMenu.getX() + FABMenu.getWidth() / 2);
         int y = (int) (FABMenu.getY() + FABMenu.getHeight() / 2);
@@ -446,7 +405,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void showView() {
-        EventBus.getDefault().post(new FilterViewEvent(true));
         // get the center for the clipping circle
         int x = (int) (FABMenu.getX() + FABMenu.getWidth() / 2);
         int y = (int) (FABMenu.getY() + FABMenu.getHeight() / 2);
@@ -505,19 +463,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         super.onResume();
         Timber.v("onResume");
         setTitle();
-
-        if (Once.beenDone("showTutorial") && !Once.beenDone(Once.THIS_APP_INSTALL, "showChangelogAndIntro")) {
-            Once.markDone("showChangelogAndIntro");
-            Once.markDone("showChangelog");
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    showCaseView();
-                }
-            }, 1000);
-        }
-
 
         if (!Once.beenDone(Once.THIS_APP_VERSION, "showChangelog")) {
             Once.markDone("showChangelog");
@@ -649,7 +594,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             } else {
                 Analytics.from(this).sendButtonClicked("Hide Launch filters.");
                 active = false;
-                FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_add_alert));
+                FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_filter));
                 mSwipeRefreshLayout.setEnabled(true);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     hideView();

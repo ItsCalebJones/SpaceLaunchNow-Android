@@ -7,6 +7,7 @@ import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleRespon
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.Query;
 
 public interface SpaceLaunchNowService {
 
@@ -23,9 +24,7 @@ public interface SpaceLaunchNowService {
     @GET(version + "/launchers/")
     Call<LauncherResponse> getLaunchers();
 
-    @Headers({
-            "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
-    })
+    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/launcher_details/")
-    Call<VehicleResponse> getVehicles();
+    Call<VehicleResponse> getVehicles(@Query("family") String family);
 }

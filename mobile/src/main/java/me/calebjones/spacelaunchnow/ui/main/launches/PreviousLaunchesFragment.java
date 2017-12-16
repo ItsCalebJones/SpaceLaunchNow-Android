@@ -45,6 +45,7 @@ import butterknife.ButterKnife;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecoration;
@@ -397,8 +398,8 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
 
     public void getPrevLaunchData() {
         new MaterialDialog.Builder(context)
-                .title("Refresh Launch Data?")
-                .content("This can take a bit to refresh, make sure you are on Wi-Fi to save data.")
+                .title("Launch History Data")
+                .content("Retrieve historical launch data? Typically around 2-3mb of data usage.")
                 .positiveText("Ok")
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
@@ -776,6 +777,15 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
             launchRealms.removeAllChangeListeners();
         }
         super.onDetach();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && !Once.beenDone("firstPrevious")) {
+            getPrevLaunchData();
+            Once.markDone("firstPrevious");
+        }
     }
 
 

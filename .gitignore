@@ -7,7 +7,7 @@
 /build
 /captures
 
-.idea/
+.idea/*
 
 gradle.properties
 
@@ -18,3 +18,4 @@ mobile/fabric.properties
 projectFilesBackup/.idea/workspace.xml
 
 *.apk
+
