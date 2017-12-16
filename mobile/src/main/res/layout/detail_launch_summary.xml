@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -40,6 +41,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="160dp"
                     android:clickable="true"
+                    android:elevation="4dp"
                     tools:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
                 <LinearLayout
@@ -55,13 +57,14 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:gravity="center"
+                        android:elevation="4dp"
                         android:paddingBottom="8dp"
                         android:paddingTop="4dp"
                         android:singleLine="false"
                         android:text="Unknown Launch Status"
                         android:textAlignment="center"
-                        android:background="@color/accent"
-                        android:textColor="?android:textColorPrimaryInverse"
+                        android:textColor="@color/dark_primary_text_color_selector"
+                        android:background="?attr/titleBarColor"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -112,9 +115,8 @@
                     android:paddingTop="8dp"
                     android:text="Estimated Launch Date"
                     android:textAlignment="center"
-                    android:textColor="?android:textColorPrimary"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/MaterialTypography.Regular.Subheading"/>
 
                 <TextView
                     android:id="@+id/date"

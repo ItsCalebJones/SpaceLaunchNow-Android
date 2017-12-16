@@ -34,9 +34,9 @@ task clean(type: Delete) {
 ext {
 
     app = [
-            versionMajor : 1,
-            versionMinor : 8,
-            versionPatch : 1
+            versionMajor : 2,
+            versionMinor : 0,
+            versionPatch : 0
     ]
     // Sdk and tools
     minSdkVersion = 15

@@ -34,7 +34,7 @@
                 android:id="@+id/TitleCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/accent"
+                android:background="?attr/titleBarColor"
                 android:elevation="4dp"
                 android:orientation="horizontal">
 
@@ -62,7 +62,7 @@
                         android:gravity="left"
                         android:maxLines="2"
                         android:text="Unknown Launch Vehicle"
-                        android:textColor="?android:textColorPrimaryInverse"
+                        android:textColor="@color/dark_primary_text_color_selector"
                         android:textSize="18sp"
                         android:textStyle="normal" />
 
@@ -76,7 +76,7 @@
                         android:maxLines="2"
                         android:singleLine="false"
                         android:text="Unknown Launch Location"
-                        android:textColor="?android:textColorSecondaryInverse" />
+                        android:textColor="@color/dark_secondary_text_color_selector" />
 
                     <TextView
                         android:id="@+id/launch_date"
@@ -88,7 +88,7 @@
                         android:paddingBottom="@dimen/material_baseline_grid_1x"
                         android:singleLine="false"
                         android:text="Unknown Launch Date"
-                        android:textColor="?android:textColorSecondaryInverse" />
+                        android:textColor="@color/dark_secondary_text_color_selector" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -100,29 +100,28 @@
                 android:layout_height="160dp"
                 android:contentDescription="A map view of launch location." />
 
+            <TextView
+                android:id="@+id/content_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:paddingBottom="8dp"
+                android:paddingTop="4dp"
+                android:singleLine="false"
+                android:text="Unknown Launch Status"
+                android:background="?attr/titleBarColor"
+                android:textAlignment="center"
+                android:elevation="4dp"
+                android:textColor="@color/dark_primary_text_color_selector"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:elevation="4dp"
                 android:orientation="vertical">
-
-
-                <TextView
-                    android:id="@+id/content_status"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:gravity="center"
-                    android:paddingBottom="8dp"
-                    android:paddingTop="4dp"
-                    android:singleLine="false"
-                    android:text="Unknown Launch Status"
-                    android:background="@color/accent"
-                    android:textAlignment="center"
-                    android:textColor="?android:textColorPrimaryInverse"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
 
 
 
@@ -161,7 +160,6 @@
                 android:id="@+id/content_mission_description_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:elevation="4dp"
                 android:orientation="vertical"
                 android:paddingBottom="8dp">
 

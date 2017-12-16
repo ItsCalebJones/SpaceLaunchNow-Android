@@ -5,7 +5,16 @@ A space launch tracker for Android using data from the Launch Library API.
 ## Changelog
 #### Updated 11-25-2017
 ---
-### Version 1.8.1 (Latest)
+### Version 2.0.0 (Latest)
+#### Overview
+Just a few bug-fixes and cleanups from the previous release.
+
+#### Changelog
+* Overhauled style of the main UI workflow's.
+* Used the Google Palette library to generate accent colors everywhere I could.
+* Reworked Vehicle launch data.
+---
+### Version 1.8.1
 #### Overview
 Just a few bug-fixes and cleanups from the previous release.
 
