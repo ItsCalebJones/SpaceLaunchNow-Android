@@ -36,7 +36,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:elevation="4dp"
                     android:background="?attr/titleBarColor">
 
                     <TextView
@@ -73,7 +72,6 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:padding="@dimen/material_baseline_grid_0.5x"
-                    android:elevation="2dp"
                     android:weightSum="1">
 
 
@@ -252,7 +250,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:elevation="4dp"
                     android:background="?attr/titleBarColor">
 
                     <TextView

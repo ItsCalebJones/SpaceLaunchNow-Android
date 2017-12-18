@@ -41,7 +41,6 @@
                     android:layout_width="fill_parent"
                     android:layout_height="160dp"
                     android:clickable="true"
-                    android:elevation="4dp"
                     tools:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
                 <LinearLayout
@@ -57,7 +56,6 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:gravity="center"
-                        android:elevation="4dp"
                         android:paddingBottom="8dp"
                         android:paddingTop="4dp"
                         android:singleLine="false"

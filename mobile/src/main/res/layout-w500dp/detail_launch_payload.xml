@@ -33,7 +33,6 @@
                     android:id="@+id/payload_status_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:elevation="4dp"
                     android:layout_gravity="center_horizontal"
                     android:gravity="center"
                     android:paddingTop="8dp"
@@ -46,7 +45,7 @@
 
                 <TextView
                     android:id="@+id/payload_status"
-                    android:elevation="4dp"
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -153,7 +152,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:lines="1"
-                    android:elevation="4dp"
+
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:paddingTop="8dp"
@@ -172,7 +171,6 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:gravity="center"
-                    android:elevation="4dp"
                     android:lines="1"
                     android:paddingBottom="8dp"
                     android:paddingLeft="8dp"
