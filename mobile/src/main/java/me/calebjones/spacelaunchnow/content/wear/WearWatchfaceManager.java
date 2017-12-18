@@ -91,6 +91,7 @@ public class WearWatchfaceManager extends BaseManager {
         } catch (IndexOutOfBoundsException error){
             Crashlytics.logException(error);
         }
+        mRealm.close();
     }
 
     private void sendImageToWear(String image, final Launch launch, boolean modify) {
