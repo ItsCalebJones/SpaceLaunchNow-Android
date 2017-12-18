@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.data.models;
+package me.calebjones.spacelaunchnow.data.models.spacelaunchnow;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -22,8 +22,8 @@ public class RocketDetail extends RealmObject {
     private String family;
     @SerializedName(value = "s_family")
     private String sFamily;
-    @SerializedName(value = "manufacturer")
-    private String manufacturer;
+    @SerializedName(value = "agency")
+    private String agency;
     @SerializedName(value = "variant")
     private String variant;
     @SerializedName(value = "alias")
@@ -93,12 +93,12 @@ public class RocketDetail extends RealmObject {
         this.sFamily = sFamily;
     }
 
-    public String getManufacturer() {
-        return manufacturer;
+    public String getAgency() {
+        return agency;
     }
 
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
+    public void setAgency(String agency) {
+        this.agency = agency;
     }
 
     public String getVariant() {

@@ -76,7 +76,7 @@
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/CustomPreferenceTheme" />
         <activity android:name=".ui.orbiter.OrbiterDetailActivity" />
-        <activity android:name=".ui.launcher.LauncherDetailActivity" />
+        <activity android:name=".ui.launcher.LauncherDetailActivity"/>
 
         <receiver android:name=".content.receivers.UpdateUpcomingLaunchesReceiver">
             <intent-filter>

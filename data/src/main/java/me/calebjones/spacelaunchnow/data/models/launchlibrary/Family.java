@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.data.models;
+package me.calebjones.spacelaunchnow.data.models.launchlibrary;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;

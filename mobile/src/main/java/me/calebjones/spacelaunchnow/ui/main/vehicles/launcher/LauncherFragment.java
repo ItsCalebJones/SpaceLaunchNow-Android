@@ -21,7 +21,7 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.CustomFragment;
-import me.calebjones.spacelaunchnow.data.models.Launcher;
+import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.LauncherAgency;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LauncherResponse;
@@ -38,7 +38,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
 
     private VehicleAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-    private List<Launcher> items = new ArrayList<>();
+    private List<LauncherAgency> items = new ArrayList<>();
     private Context context;
     private View view;
     private RecyclerView mRecyclerView;
@@ -113,7 +113,7 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
         showLoading();
 
         SpaceLaunchNowService request = getSpaceLaunchNowRetrofit().create(SpaceLaunchNowService.class);
-        Call<LauncherResponse> call = request.getLaunchers();
+        Call<LauncherResponse> call = request.getVehicleAgencies();
 
         call.enqueue(new Callback<LauncherResponse>() {
             @Override
@@ -159,12 +159,11 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
 
         @Override
         public void onClick(View v, int position) {
-            Analytics.from(context).sendButtonClicked("Launcher clicked", items.get(position).getName());
+            Analytics.from(context).sendButtonClicked("Launcher clicked", items.get(position).getAgency());
             Gson gson = new Gson();
             String jsonItem = gson.toJson(items.get(position));
 
             Intent intent = new Intent(getActivity(), LauncherDetailActivity.class);
-            intent.putExtra("family", items.get(position).getName());
             intent.putExtra("agency", items.get(position).getAgency());
             intent.putExtra("json", jsonItem);
             startActivity(intent);

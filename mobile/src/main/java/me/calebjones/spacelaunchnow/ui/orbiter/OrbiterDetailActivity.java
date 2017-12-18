@@ -6,8 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
 import android.view.Menu;
@@ -18,13 +22,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.florent37.glidepalette.BitmapPalette;
+import com.github.florent37.glidepalette.GlidePalette;
 import com.google.gson.Gson;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.Orbiter;
+import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.Orbiter;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
@@ -49,7 +55,9 @@ public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.
     private ImageView detail_profile_backdrop;
     private CircleImageView detail_profile_image;
     private AppBarLayout appBarLayout;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
     private int mMaxScrollSize;
+    private CustomOnOffsetChangedListener customOnOffsetChangedListener;
 
     public OrbiterDetailActivity() {
         super("Orbiter Detail Activity");
@@ -91,6 +99,7 @@ public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.
         orbiter_history_description = (TextView) findViewById(R.id.orbiter_history_description);
         orbiter_vehicle_card = findViewById(R.id.orbiter_vehicle_card);
         title_container = findViewById(R.id.detail_title_container);
+        collapsingToolbarLayout = findViewById(R.id.collapsing);
         gridview = findViewById(R.id.vehicle_detail_list);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -106,16 +115,16 @@ public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.
 
             // Add a listener to get noticed when the transition ends to animate the view
             ViewPropertyAnimator showTitleAnimator = Utils.showViewByScale(detail_profile_image);
-            showTitleAnimator.setStartDelay(750);
+            showTitleAnimator.setStartDelay(500);
         } else {
             detail_profile_image.setScaleX(1);
             detail_profile_image.setScaleY(1);
         }
 
-
+        customOnOffsetChangedListener = new CustomOnOffsetChangedListener(statusColor, getWindow());
         appBarLayout.addOnOffsetChangedListener(this);
+        appBarLayout.addOnOffsetChangedListener(customOnOffsetChangedListener);
         mMaxScrollSize = appBarLayout.getTotalScrollRange();
-        appBarLayout.addOnOffsetChangedListener(new CustomOnOffsetChangedListener(statusColor, getWindow()));
 
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -149,6 +158,55 @@ public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.
         GlideApp.with(this)
                 .load(orbiter.getImageURL())
                 .centerCrop()
+                .into(detail_profile_backdrop);
+
+        int palette;
+        if (ListPreferences.getInstance(context).isNightModeActive(context)) {
+            palette = GlidePalette.Profile.MUTED_DARK;
+        } else {
+            palette = GlidePalette.Profile.VIBRANT;
+        }
+
+        GlideApp.with(this)
+                .load(orbiter.getImageURL())
+                .centerCrop()
+                .listener(GlidePalette.with(orbiter.getImageURL())
+                        .use(palette)
+                        .intoCallBack(new BitmapPalette.CallBack() {
+                            @Override
+                            public void onPaletteLoaded(@Nullable Palette palette) {
+                                if (ListPreferences.getInstance(context).isNightModeActive(context)) {
+                                    if (palette != null) {
+                                        Palette.Swatch color = null;
+                                        if (palette.getDarkMutedSwatch() != null) {
+                                            color = palette.getDarkMutedSwatch();
+                                        } else if (palette.getDarkVibrantSwatch() != null){
+                                            color = palette.getDarkVibrantSwatch();
+                                        }
+                                        if (color != null) {
+                                            collapsingToolbarLayout.setContentScrimColor(color.getRgb());
+                                            customOnOffsetChangedListener.updateStatusColor(color.getRgb());
+                                            appBarLayout.setBackgroundColor(color.getRgb());
+                                        }
+                                    }
+                                } else {
+                                    if (palette != null) {
+                                        Palette.Swatch color = null;
+                                        if (palette.getVibrantSwatch() != null) {
+                                            color = palette.getVibrantSwatch();
+                                        } else if (palette.getMutedSwatch() != null){
+                                            color = palette.getMutedSwatch();
+                                        }
+                                        if (color != null) {
+                                            collapsingToolbarLayout.setContentScrimColor(color.getRgb());
+                                            customOnOffsetChangedListener.updateStatusColor(color.getRgb());
+                                            appBarLayout.setBackgroundColor(color.getRgb());
+                                        }
+                                    }
+                                }
+                            }
+                        })
+                        .crossfade(true))
                 .into(detail_profile_backdrop);
 
         GlideApp.with(this)

@@ -41,42 +41,23 @@
                     android:clickable="true"
                     tools:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_margin="8dp"
-                    android:background="@color/View_Separator" />
 
-                <LinearLayout
-
+                <TextView
+                    android:id="@+id/launch_status"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:orientation="vertical">
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="4dp"
+                    android:singleLine="false"
+                    android:text="Unknown Launch Status"
+                    android:textAlignment="center"
+                    android:background="?attr/titleBarColor"
+                    android:textColor="@color/dark_primary_text_color_selector"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-
-                    <TextView
-                        android:id="@+id/launch_status"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="center"
-                        android:paddingBottom="8dp"
-                        android:paddingTop="4dp"
-                        android:singleLine="false"
-                        android:text="Unknown Launch Status"
-                        android:textAlignment="center"
-                        android:textColor="?android:textColorSecondary"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_margin="8dp"
-                    android:background="@color/View_Separator" />
 
 
                 <TextView
@@ -93,8 +74,18 @@
 
                 <include
                     layout="@layout/countdown_layout_view"
+                    android:layout_marginStart="28dp"
+                    android:layout_marginEnd="28dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="28dp"
+                    android:layout_marginEnd="28dp"
+                    android:background="@color/View_Separator" />
 
                 <TextView
                     android:id="@+id/launch_date_title"
@@ -108,7 +99,7 @@
                     android:textAlignment="center"
                     android:textColor="?android:textColorPrimary"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/MaterialTypography.Regular.Subheading"/>
 
                 <TextView
                     android:id="@+id/date"
@@ -156,13 +147,13 @@
 
                 <android.support.v7.widget.SwitchCompat
                     android:id="@+id/notification_switch"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center|left"
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"
-                    android:text="Launch Notifications" />
+                    android:text="Launch Notifications"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

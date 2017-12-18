@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/darkPrimary</item>
         <item name="colorPrimaryDark">@color/darkPrimary_dark</item>
         <item name="colorAccent">@color/darkAccent</item>
+        <item name="titleBarColor">@color/darkPrimary</item>
         <item name="colorControlNormal">@color/darkIcons</item>
         <item name="colorControlHighlight">@color/cardview_dark_background</item>
 

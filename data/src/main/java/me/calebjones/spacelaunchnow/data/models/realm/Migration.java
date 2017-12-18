@@ -104,6 +104,22 @@ public class Migration implements RealmMigration {
             oldVersion++;
         }
 
+        if (oldVersion <= Constants.DB_SCHEMA_VERSION_1_8_2) {
+            RealmObjectSchema details = schema.get("RocketDetail");
+            if (details != null){
+                details.renameField("manufacturer", "agency");
+            }
+
+            RealmObjectSchema launcherAgency = schema.create("LauncherAgency");
+            launcherAgency.addField("agency", String.class, FieldAttribute.PRIMARY_KEY)
+                    .addField("launchers", String.class)
+                    .addField("orbiters", String.class)
+                    .addField("description", String.class)
+                    .addField("imageURL", String.class)
+                    .addField("nationURL", String.class);
+            oldVersion++;
+        }
+
         Timber.i("Final Schema - Version %s", newVersion);
         for (RealmObjectSchema objectSchema : schema.getAll()) {
             Timber.d("Name: %s Fields: %s", objectSchema.getClassName(), objectSchema.getFieldNames());

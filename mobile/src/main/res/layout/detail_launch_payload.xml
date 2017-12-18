@@ -28,8 +28,8 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="8dp">
+                android:orientation="vertical">
+
 
                 <TextView
                     android:id="@+id/payload_status_title"
@@ -40,13 +40,13 @@
                     android:paddingTop="8dp"
                     android:text="Mission Details"
                     android:textAlignment="center"
-                    android:textColor="?android:textColorPrimary"
+                    android:textColor="@color/dark_primary_text_color_selector"
+                    android:background="?attr/titleBarColor"
                     android:textSize="@dimen/material_typography_regular_title_text_size"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/payload_status"
-
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -56,7 +56,8 @@
                     android:singleLine="false"
                     android:text="Unknown Payload"
                     android:textAlignment="center"
-                    android:textColor="?android:textColorSecondary"
+                    android:textColor="@color/dark_secondary_text_color_selector"
+                    android:background="?attr/titleBarColor"
                     android:textSize="@dimen/material_typography_regular_subheading_text_size" />
 
                 <TextView
@@ -146,9 +147,7 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/launch_vehicle_title"
@@ -160,14 +159,16 @@
                     android:paddingRight="8dp"
                     android:paddingTop="8dp"
                     android:text="Launch Vehicle Summary"
-                    android:textColor="?android:textColorPrimary"
+                    android:textColor="@color/dark_primary_text_color_selector"
+                    android:background="?attr/titleBarColor"
                     android:textAlignment="center"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/launch_vehicle"
-
+                    android:textColor="@color/dark_primary_text_color_selector"
+                    android:background="?attr/titleBarColor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -181,13 +182,6 @@
                     android:text="Unknown Launch Vehicle"
                     android:textAlignment="center" />
 
-                <View
-
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_margin="8dp"
-                    android:background="@color/View_Separator"
-                    android:padding="12dp" />
 
                 <TextView
                     android:id="@+id/launch_configuration"

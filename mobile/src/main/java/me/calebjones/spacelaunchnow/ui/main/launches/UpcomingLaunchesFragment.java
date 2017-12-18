@@ -51,7 +51,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.Launch;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
@@ -273,9 +273,9 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     }
 
     private void showAgencyDialog() {
-        Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - Agency");
+        Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - LauncherAgency");
         new MaterialDialog.Builder(getContext())
-                .title("Select an Agency")
+                .title("Select an LauncherAgency")
                 .content("Check an agency below, to remove all filters use reset icon in the toolbar.")
                 .items(R.array.agencies)
                 .buttonRippleColorRes(R.color.colorAccentLight)
@@ -287,7 +287,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
                         for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
-                        Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - Agency Selection", keyArray.toString());
+                        Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - LauncherAgency Selection", keyArray.toString());
                         if (keyArray.size() > 0) {
                             switchPreferences.setUpAgencyFilterArray(keyArray);
                             switchPreferences.setUpFiltered(true);

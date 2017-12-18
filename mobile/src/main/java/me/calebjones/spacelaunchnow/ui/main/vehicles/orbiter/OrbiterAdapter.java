@@ -1,6 +1,8 @@
 package me.calebjones.spacelaunchnow.ui.main.vehicles.orbiter;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +19,7 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.Orbiter;
+import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.Orbiter;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
 import timber.log.Timber;
@@ -31,14 +33,17 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
     private Context mContext;
     private List<Orbiter> orbiters = new ArrayList<Orbiter>();
     private OnItemClickListener onItemClickListener;
-    private int palette;
+    private boolean night = false;
     private RequestOptions requestOptions;
+    private int palette;
 
     public OrbiterAdapter(Context context) {
         orbiters = new ArrayList();
         this.mContext = context;
 
-        if (ListPreferences.getInstance(mContext).isNightModeActive(mContext)) {
+        night = ListPreferences.getInstance(mContext).isNightModeActive(mContext);
+
+        if (ListPreferences.getInstance(context).isNightModeActive(context)) {
             palette = GlidePalette.Profile.MUTED_DARK;
         } else {
             palette = GlidePalette.Profile.VIBRANT;
@@ -82,7 +87,30 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
                 .apply(requestOptions)
                 .listener(GlidePalette.with(orbiter.getImageURL())
                         .use(palette)
-                        .intoBackground(holder.textContainer, GlidePalette.Swatch.RGB)
+                        .intoCallBack(new BitmapPalette.CallBack() {
+                            @Override
+                            public void onPaletteLoaded(@Nullable Palette palette) {
+                                Palette.Swatch color = null;
+                                if (palette != null) {
+                                    if (night) {
+                                        if (palette.getDarkMutedSwatch() != null) {
+                                            color = palette.getDarkMutedSwatch();
+                                        } else if (palette.getDarkVibrantSwatch() != null) {
+                                            color = palette.getDarkVibrantSwatch();
+                                        }
+                                    } else {
+                                        if (palette.getVibrantSwatch() != null) {
+                                            color = palette.getVibrantSwatch();
+                                        } else if (palette.getMutedSwatch() != null) {
+                                            color = palette.getMutedSwatch();
+                                        }
+                                    }
+                                    if (color != null) {
+                                        holder.textContainer.setBackgroundColor(color.getRgb());
+                                    }
+                                }
+                            }
+                        })
                         .crossfade(true))
                 .into(holder.picture);
         holder.name.setText(orbiter.getName());

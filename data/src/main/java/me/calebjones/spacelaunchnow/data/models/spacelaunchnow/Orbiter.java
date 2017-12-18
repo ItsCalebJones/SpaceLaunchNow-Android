@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.data.models;
+package me.calebjones.spacelaunchnow.data.models.spacelaunchnow;
 
 import com.google.gson.annotations.SerializedName;
 

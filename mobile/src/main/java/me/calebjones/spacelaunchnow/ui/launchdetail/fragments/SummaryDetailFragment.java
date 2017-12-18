@@ -56,9 +56,9 @@ import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
-import me.calebjones.spacelaunchnow.data.models.Launch;
-import me.calebjones.spacelaunchnow.data.models.Pad;
-import me.calebjones.spacelaunchnow.data.models.RocketDetail;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Pad;
+import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.RocketDetail;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -587,22 +587,18 @@ public class SummaryDetailFragment extends BaseFragment {
                     }
                     //GO for launch
                     launch_status.setText(go);
-                    launch_status.setTextColor(ContextCompat.getColor(context, R.color.colorGo));
                     break;
                 case 2:
                     //NO GO for launch
                     launch_status.setText(R.string.status_nogo);
-                    launch_status.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
                     break;
                 case 3:
                     //Success for launch
                     launch_status.setText(R.string.status_success);
-                    launch_status.setTextColor(ContextCompat.getColor(context, R.color.colorGo));
                     break;
                 case 4:
                     //Failure to launch
                     launch_status.setText(R.string.status_failure);
-                    launch_status.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
                     break;
             }
 

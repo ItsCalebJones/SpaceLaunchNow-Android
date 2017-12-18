@@ -41,14 +41,9 @@ import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -57,7 +52,7 @@ import java.util.concurrent.ExecutionException;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.Launch;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.utils.customtab.WebViewFallback;
 import timber.log.Timber;

@@ -17,7 +17,7 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.data.models.Launch;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import timber.log.Timber;
 
 public class QueryBuilder {
@@ -167,8 +167,8 @@ public class QueryBuilder {
         }
 
         if (agencyArray != null && agencyFilter != null && agencyArray.size() != agencyFilter.length) {
-            Crashlytics.log("Agency Array: " + agencyArray + " Agency Filter " + agencyFilter);
-            Toast.makeText(context, "UNKNOWN ERROR - Resetting Agency filter.", Toast.LENGTH_SHORT).show();
+            Crashlytics.log("LauncherAgency Array: " + agencyArray + " LauncherAgency Filter " + agencyFilter);
+            Toast.makeText(context, "UNKNOWN ERROR - Resetting LauncherAgency filter.", Toast.LENGTH_SHORT).show();
             switchPreferences.resetAllUpFilters();
             if (switchPreferences.isUpFiltered()) {
                 switchPreferences.setUpFiltered(false);
@@ -271,7 +271,7 @@ public class QueryBuilder {
     private static RealmQuery<Launch> filterAgency(RealmQuery<Launch> query, ArrayList<String> agencyFilter) {
         boolean firstGroup = true;
         for (String key : agencyFilter) {
-            Timber.v("Agency key: %s", key);
+            Timber.v("LauncherAgency key: %s", key);
             if (key.contains("NASA")) {
                 if (!firstGroup) {
                     query.or();

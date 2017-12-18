@@ -45,8 +45,8 @@ import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.content.events.LaunchRequestEvent;
-import me.calebjones.spacelaunchnow.data.models.Launch;
-import me.calebjones.spacelaunchnow.data.models.RocketDetail;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.RocketDetail;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
 import me.calebjones.spacelaunchnow.ui.launchdetail.TabsAdapter;
@@ -298,11 +298,6 @@ public class LaunchDetailActivity extends BaseActivity
         super.onDestroy();
     }
 
-    public int reverseNumber(int num, int min, int max) {
-        int number = (max + min) - num;
-        return number;
-    }
-
     private void findProfileLogo() {
 
         //Default location, mission is unknown.
@@ -424,13 +419,6 @@ public class LaunchDetailActivity extends BaseActivity
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-        int totalScroll = appBarLayout.getTotalScrollRange();
-        int currentScroll = totalScroll + verticalOffset;
-
-        int color = statusColor;
-        int r = (color >> 16) & 0xFF;
-        int g = (color >> 8) & 0xFF;
-        int b = (color >> 0) & 0xFF;
 
         if (mMaxScrollSize == 0) {
             mMaxScrollSize = appBarLayout.getTotalScrollRange();
@@ -456,21 +444,6 @@ public class LaunchDetailActivity extends BaseActivity
 
             fabShare.show();
         }
-
-//        if ((currentScroll) < 100) {
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//
-//                Window window = getWindow();
-//                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-//                window.setStatusBarColor(Color.argb(reverseNumber(currentScroll, 0, 255), r, g, b));
-//            }
-//        } else {
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                Window window = getWindow();
-//                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//            }
-//        }
     }
 
     @Override

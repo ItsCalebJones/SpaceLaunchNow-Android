@@ -3,10 +3,10 @@
   <string name="navigation_drawer_open">Open navigation drawer</string>
   <string name="navigation_drawer_close">Close navigation drawer</string>
   <string name="action_settings">Settings</string>
-  <string name="status_go">"Launch is GO"</string>
+  <string name="status_go">"Go for Launch"</string>
   <string name="status_nogo">"Launch is NO GO"</string>
-  <string name="status_success">"Successful Launch"</string>
-  <string name="status_failure">"Launch Failure"</string>
+  <string name="status_success">"Launch was Successful"</string>
+  <string name="status_failure">"Launch Failure Occurred"</string>
   <string name="title_activity_settings">Settings</string>
   <string name="settings">Settings</string>
   <string name="spacex_summary">SpaceX designs, manufactures and launches advanced rockets and spacecraft. The company was founded in 2002 to revolutionize space technology, with the ultimate goal of enabling people to live on other planets.</string>
