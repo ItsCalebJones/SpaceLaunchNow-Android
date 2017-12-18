@@ -101,10 +101,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
         Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
         Crashlytics.setBool("is24", DateFormat.is24HourFormat(getApplicationContext()));
         Crashlytics.setBool("Network State", Utils.isNetworkAvailable(this));
-
-        if (Connectivity.getNetworkInfo(this) != null) {
-            Crashlytics.setString("Network Info", Connectivity.getNetworkInfo(this).toString());
-        }
+        Crashlytics.setString("Network Info", Connectivity.getNetworkStatus(this));
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 

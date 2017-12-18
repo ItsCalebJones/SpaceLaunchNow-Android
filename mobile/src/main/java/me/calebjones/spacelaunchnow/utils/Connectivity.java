@@ -3,6 +3,7 @@ package me.calebjones.spacelaunchnow.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.telephony.TelephonyManager;
 
 /**
@@ -20,6 +21,16 @@ public class Connectivity {
     public static NetworkInfo getNetworkInfo(Context context){
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo();
+    }
+
+    public static String getNetworkStatus(Context context){
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null && cm.getActiveNetworkInfo() != null){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                return cm.getActiveNetwork().toString();
+            }
+        }
+        return "Unknown";
     }
 
     /**
