@@ -52,7 +52,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
     private static ListPreferences sharedPreference;
     public int position;
-    private String launchDate;
+    private String launchTime;
     private RealmList<Launch> launchList;
     private Context context;
     private Calendar rightNow;
@@ -361,39 +361,49 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
 
                     if (launchItem.getNet() != null) {
                         //Get launch date
-                        SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy.");
+                        SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy");
                         sdf.toLocalizedPattern();
                         Date date = launchItem.getNet();
-                        launchDate = sdf.format(date);
-                        holder.launch_date.setText("To be determined... " + launchDate);
+                        String launchTime = sdf.format(date);
+                        if (launchItem.getTbddate() == 1){
+                            launchTime = launchTime + " (Unconfirmed)";
+                        }
+                        holder.launch_date_compact.setText(launchTime);
+                        holder.launch_time.setVisibility(View.GONE);
                     }
                 } else {
                     if (launchItem.getNet() != null) {
                         if (sharedPref.getBoolean("local_time", true)) {
                             SimpleDateFormat sdf;
                             if (sharedPref.getBoolean("24_hour_mode", false)) {
-                                sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - HH:mm zzz");
+                                sdf = new SimpleDateFormat("HH:mm zzz");
                             } else {
-                                sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                                sdf = new SimpleDateFormat("h:mm a zzz");
                             }
                             sdf.toLocalizedPattern();
                             Date date = launchItem.getNet();
-                            launchDate = sdf.format(date);
+                            launchTime = sdf.format(date);
                         } else {
                             SimpleDateFormat sdf;
                             if (sharedPref.getBoolean("24_hour_mode", false)) {
-                                sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - HH:mm zzz");
+                                sdf = new SimpleDateFormat("HH:mm zzz");
                             } else {
-                                sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                                sdf = new SimpleDateFormat("h:mm a zzz");
                             }
                             Date date = launchItem.getNet();
                             sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                            launchDate = sdf.format(date);
+                            launchTime = sdf.format(date);
                         }
                     } else {
-                        launchDate = "To be determined... ";
+                        launchTime = "To be determined... ";
                     }
-                    holder.launch_date.setText(launchDate);
+                    SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy");
+                    sdf.toLocalizedPattern();
+                    Date date = launchItem.getNet();
+                    holder.launch_date_compact.setText(sdf.format(date));
+                    holder.launch_time.setVisibility(View.GONE);
+                    holder.launch_time.setText("NET: " + launchTime);
+                    holder.launch_time.setVisibility(View.VISIBLE);
                 }
 
                 if (launchItem.getVidURLs() != null) {
@@ -469,7 +479,8 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
         public TextView location;
         public TextView content_mission;
         public TextView content_mission_description;
-        public TextView launch_date;
+        public TextView launch_date_compact;
+        public TextView launch_time;
         public TextView content_status;
         public TextView content_TMinus_status;
         public TextView watchButton;
@@ -501,7 +512,8 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
             content_mission = view.findViewById(R.id.content_mission);
             content_mission_description = view.findViewById(
                     R.id.content_mission_description);
-            launch_date = view.findViewById(R.id.launch_date);
+            launch_date_compact = view.findViewById(R.id.launch_date_compact);
+            launch_time = view.findViewById(R.id.launch_date_full);
             content_status = view.findViewById(R.id.content_status);
             content_TMinus_status = view.findViewById(R.id.content_TMinus_status);
             content_mission_description_view = view.findViewById(R.id.content_mission_description_view);

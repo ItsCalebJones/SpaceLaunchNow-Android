@@ -125,6 +125,10 @@ public class Migration implements RealmMigration {
             if (details != null){
                 details.addField("fullName", String.class);
             }
+            RealmObjectSchema launch = schema.get("Launch");
+            if (launch != null){
+                launch.addField("tbddate", Integer.class);
+            }
             oldVersion++;
         }
 

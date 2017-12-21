@@ -36,6 +36,7 @@ public class Launch extends RealmObject {
 
     private Integer inhold;
     private Integer tbdtime;
+    private Integer tbddate;
     private Integer eventID;
 
     private Location location;
@@ -365,4 +366,11 @@ public class Launch extends RealmObject {
         this.lsp = lsp;
     }
 
+    public Integer getTbddate() {
+        return tbddate;
+    }
+
+    public void setTbddate(Integer tbddate) {
+        this.tbddate = tbddate;
+    }
 }

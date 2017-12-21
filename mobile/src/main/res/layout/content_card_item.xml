@@ -60,10 +60,11 @@
                         android:fontFamily="sans-serif-condensed"
                         android:gravity="left"
                         android:maxLines="2"
-                        android:text="Unknown Launch Vehicle"
+                        android:text="Unknown Launch"
                         android:textColor="@color/dark_primary_text_color_selector"
-                        android:textSize="18sp"
-                        android:textStyle="normal" />
+                        android:textAppearance="@style/MaterialTypography.Tall.Title"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/location"
@@ -75,10 +76,11 @@
                         android:maxLines="2"
                         android:singleLine="false"
                         android:text="Unknown Launch Location"
-                        android:textColor="@color/dark_secondary_text_color_selector" />
+                        android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+                        android:textColor="@color/dark_primary_text_color_selector" />
 
                     <TextView
-                        android:id="@+id/launch_date"
+                        android:id="@+id/launch_date_compact"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -87,7 +89,8 @@
                         android:paddingBottom="@dimen/material_baseline_grid_1x"
                         android:singleLine="false"
                         android:text="Unknown Launch Date"
-                        android:textColor="@color/dark_secondary_text_color_selector" />
+                        android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+                        android:textColor="@color/dark_primary_text_color_selector" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -152,6 +155,19 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/launch_date_full"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="2"
+                android:paddingBottom="@dimen/material_baseline_grid_0.5x"
+                android:singleLine="false"
+                android:text="Unknown Launch Date"
+                android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+                android:textColor="?android:textColorSecondary" />
 
 
             <LinearLayout

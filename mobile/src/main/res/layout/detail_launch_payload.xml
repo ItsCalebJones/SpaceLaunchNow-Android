@@ -51,12 +51,14 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:gravity="center"
-                    android:paddingBottom="2dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
                     android:paddingTop="4dp"
                     android:singleLine="false"
                     android:text="Unknown Payload"
                     android:textAlignment="center"
-                    android:textColor="@color/dark_secondary_text_color_selector"
+                    android:textColor="@color/dark_primary_text_color_selector"
                     android:background="?attr/titleBarColor"
                     android:textSize="@dimen/material_typography_regular_subheading_text_size" />
 
@@ -180,6 +182,7 @@
                     android:paddingTop="4dp"
                     android:singleLine="false"
                     android:text="Unknown Launch Vehicle"
+                    android:textSize="16sp"
                     android:textAlignment="center" />
 
 

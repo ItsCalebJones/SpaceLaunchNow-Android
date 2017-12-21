@@ -61,7 +61,11 @@
                         android:lines="1"
                         android:singleLine="false"
                         android:textAlignment="center"
-                        android:textColor="@color/dark_secondary_text_color_selector"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="4dp"
+                        android:textColor="@color/dark_primary_text_color_selector"
                         android:textSize="@dimen/material_typography_regular_subheading_text_size" />
                 </LinearLayout>
 
@@ -70,6 +74,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
+                    android:padding="@dimen/material_baseline_grid_0.5x"
                     android:weightSum="1">
 
 
@@ -275,12 +280,15 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:gravity="center"
-                        android:paddingBottom="2dp"
                         android:lines="1"
                         android:singleLine="false"
                         android:text=""
                         android:textAlignment="center"
-                        android:textColor="@color/dark_secondary_text_color_selector"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="4dp"
+                        android:textColor="@color/dark_primary_text_color_selector"
                         android:textSize="@dimen/material_typography_regular_subheading_text_size" />
 
                 </LinearLayout>
