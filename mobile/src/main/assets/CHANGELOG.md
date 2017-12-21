@@ -5,7 +5,12 @@ A space launch tracker for Android using data from the Launch Library API.
 ## Changelog
 #### Updated 11-25-2017
 ---
-### Version 1.8.1 (Latest)
+### Version 1.8.2 (Beta)
+#### Overview
+Fix a bug with refreshing from widget.
+
+---
+### Version 1.8.1
 #### Overview
 Just a few bug-fixes and cleanups from the previous release.
 
