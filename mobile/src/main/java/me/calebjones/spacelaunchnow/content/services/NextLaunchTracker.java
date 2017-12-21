@@ -37,7 +37,7 @@ public NextLaunchTracker(Context context) {
         SyncJob.schedulePeriodicJob(context);
     }
 
-    private void updateWidgets() {
+    public void updateWidgets() {
         LaunchCardCompactManager launchCardCompactManager = new LaunchCardCompactManager(context);
         LaunchWordTimerManager launchWordTimerManager = new LaunchWordTimerManager(context);
         int cardIds[] = AppWidgetManager.getInstance(context)
@@ -57,7 +57,7 @@ public NextLaunchTracker(Context context) {
         }
     }
 
-    private void syncCalendar() {
+    public void syncCalendar() {
         CalendarSyncManager calendarSyncManager = new CalendarSyncManager(context);
         calendarSyncManager.syncAllEevnts();
     }

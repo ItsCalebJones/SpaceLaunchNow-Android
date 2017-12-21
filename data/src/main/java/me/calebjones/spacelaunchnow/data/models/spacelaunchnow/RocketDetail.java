@@ -52,6 +52,8 @@ public class RocketDetail extends RealmObject {
     private String range;
     @SerializedName(value = "image_url")
     private String imageURL;
+    @SerializedName(value = "full_name")
+    private String fullName;
 
     public String getName() {
         return name;
@@ -236,5 +238,13 @@ public class RocketDetail extends RealmObject {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName() {
+        this.fullName = this.name + " " + this.getVariant();
     }
 }

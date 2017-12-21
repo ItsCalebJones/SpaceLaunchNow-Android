@@ -121,12 +121,10 @@ public class DataSaver {
                         Timber.v("Saving item: %s", item.getName());
                         mRealm.copyToRealmOrUpdate(item);
                     }
+                    mRealm.copyToRealmOrUpdate(Arrays.asList(launches));
                 }
-
-                mRealm.copyToRealmOrUpdate(Arrays.asList(launches));
             }
         });
-        syncNotifiers(mRealm);
         mRealm.close();
         isSaving = false;
     }
@@ -138,35 +136,6 @@ public class DataSaver {
             return true;
         }
         return false;
-    }
-
-    public void syncNotifiers(Realm mRealm) {
-        isSyncing = true;
-        RealmResults<Launch> launchRealms;
-        Date date = new Date();
-
-        SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
-
-        if (switchPreferences.getAllSwitch()) {
-            launchRealms = mRealm.where(Launch.class)
-                    .greaterThanOrEqualTo("net", date)
-                    .findAllSorted("net", Sort.ASCENDING);
-        } else {
-            launchRealms = QueryBuilder.buildSwitchQuery(context, mRealm);
-        }
-
-        for (final Launch launchRealm : launchRealms) {
-            if (!launchRealm.isUserToggledNotifiable() && !launchRealm.isNotifiable()) {
-                mRealm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        launchRealm.setNotifiable(true);
-                    }
-                });
-            }
-        }
-        mRealm.close();
-        isSyncing = false;
     }
 
     public void sendResult(final Result result) {
@@ -252,7 +221,6 @@ public class DataSaver {
                 }
             }
         });
-        syncNotifiers(mRealm);
         isSaving = false;
         mRealm.close();
     }
@@ -295,7 +263,6 @@ public class DataSaver {
                 }
             }
         });
-        syncNotifiers(mRealm);
         isSaving = false;
         mRealm.close();
     }

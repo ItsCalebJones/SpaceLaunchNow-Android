@@ -618,8 +618,6 @@ public class SummaryDetailFragment extends BaseFragment {
                             Timber.v("Launch %s notifiable updated to %s", detailLaunch.getName(), detailLaunch.isNotifiable());
                         }
                     });
-                    LibraryDataManager libraryDataManager = new LibraryDataManager(context);
-                    libraryDataManager.syncNotifiers();
                 }
             });
 

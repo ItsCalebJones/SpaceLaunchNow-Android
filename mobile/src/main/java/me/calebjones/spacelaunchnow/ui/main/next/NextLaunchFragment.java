@@ -3,7 +3,9 @@ package me.calebjones.spacelaunchnow.ui.main.next;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -47,7 +49,9 @@ import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
+import me.calebjones.spacelaunchnow.content.services.NextLaunchTracker;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
@@ -56,6 +60,10 @@ import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import me.calebjones.spacelaunchnow.utils.Utils;
+import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactManager;
+import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactWidgetProvider;
+import me.calebjones.spacelaunchnow.widget.wordtimer.LaunchWordTimerManager;
+import me.calebjones.spacelaunchnow.widget.wordtimer.LaunchWordTimerWidgetProvider;
 import timber.log.Timber;
 
 public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -157,34 +165,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         FABMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setUpSwitches();
-                if (!active) {
-                    switchChanged = false;
-                    active = true;
-
-                    mSwipeRefreshLayout.setEnabled(false);
-                    FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_close));
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        showView();
-                    } else {
-                        color_reveal.setVisibility(View.VISIBLE);
-                    }
-                } else {
-                    active = false;
-                    FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_filter));
-                    mSwipeRefreshLayout.setEnabled(true);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        hideView();
-                    } else {
-                        color_reveal.setVisibility(View.INVISIBLE);
-                    }
-                    if (switchChanged) {
-                        displayLaunches();
-                        if (switchPreferences.getCalendarStatus()) {
-                            calendarSyncManager.resyncAllEvents();
-                        }
-                    }
-                }
+                checkFilter();
             }
         });
 
@@ -537,36 +518,59 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             startActivity(debugIntent);
 
         } else if (id == R.id.action_alert) {
-            if (!active) {
-                Analytics.from(this).sendButtonClicked("Show Launch filters.");
-                switchChanged = false;
-                active = true;
-                mSwipeRefreshLayout.setEnabled(false);
-                FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_close));
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    showView();
-                } else {
-                    color_reveal.setVisibility(View.VISIBLE);
-                }
+            checkFilter();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void checkFilter() {
+
+        if (!active) {
+            Analytics.from(this).sendButtonClicked("Show Launch filters.");
+            switchChanged = false;
+            active = true;
+            mSwipeRefreshLayout.setEnabled(false);
+            FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_close));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                showView();
             } else {
-                Analytics.from(this).sendButtonClicked("Hide Launch filters.");
-                active = false;
-                FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_filter));
-                mSwipeRefreshLayout.setEnabled(true);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    hideView();
-                } else {
-                    color_reveal.setVisibility(View.INVISIBLE);
+                color_reveal.setVisibility(View.VISIBLE);
+            }
+        } else {
+            Analytics.from(this).sendButtonClicked("Hide Launch filters.");
+            active = false;
+            FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_filter));
+            mSwipeRefreshLayout.setEnabled(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                hideView();
+            } else {
+                color_reveal.setVisibility(View.INVISIBLE);
+            }
+            if (switchChanged) {
+                LaunchCardCompactManager launchCardCompactManager = new LaunchCardCompactManager(context);
+                LaunchWordTimerManager launchWordTimerManager = new LaunchWordTimerManager(context);
+                int cardIds[] = AppWidgetManager.getInstance(context)
+                        .getAppWidgetIds(new ComponentName(context,
+                                LaunchCardCompactWidgetProvider.class));
+
+                for (int id : cardIds){
+                    launchCardCompactManager.updateAppWidget(id);
                 }
-                if (switchChanged) {
-                    displayLaunches();
-                    if (switchPreferences.getCalendarStatus()) {
-                        calendarSyncManager.resyncAllEvents();
-                    }
+
+                int timerIds[] = AppWidgetManager.getInstance(context)
+                        .getAppWidgetIds(new ComponentName(context,
+                                LaunchWordTimerWidgetProvider.class));
+
+                for (int id : timerIds){
+                    launchWordTimerManager.updateAppWidget(id);
+                }
+                UpdateWearJob.scheduleJobNow();
+                displayLaunches();
+                if (switchPreferences.getCalendarStatus()) {
+                    calendarSyncManager.resyncAllEvents();
                 }
             }
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

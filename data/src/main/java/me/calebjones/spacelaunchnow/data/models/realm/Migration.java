@@ -120,6 +120,14 @@ public class Migration implements RealmMigration {
             oldVersion++;
         }
 
+        if (oldVersion <= Constants.DB_SCHEMA_VERSION_2_0_0) {
+            RealmObjectSchema details = schema.get("RocketDetail");
+            if (details != null){
+                details.addField("fullName", String.class);
+            }
+            oldVersion++;
+        }
+
         Timber.i("Final Schema - Version %s", newVersion);
         for (RealmObjectSchema objectSchema : schema.getAll()) {
             Timber.d("Name: %s Fields: %s", objectSchema.getClassName(), objectSchema.getFieldNames());

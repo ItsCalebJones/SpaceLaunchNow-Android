@@ -32,8 +32,6 @@ import timber.log.Timber;
 
 public class MissionDetailFragment extends BaseFragment {
 
-    private SharedPreferences sharedPref;
-    private static ListPreferences sharedPreference;
     private Context context;
     public static Launch detailLaunch;
     private RocketDetail launchVehicle;
@@ -80,11 +78,7 @@ public class MissionDetailFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view;
-        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-        this.context = getContext();
-
-        sharedPreference = ListPreferences.getInstance(this.context);
-
+        context = getContext();
         view = inflater.inflate(R.layout.detail_launch_payload, container, false);
 
         detailLaunch = ((LaunchDetailActivity) getActivity()).getLaunch();
@@ -196,6 +190,7 @@ public class MissionDetailFragment extends BaseFragment {
             query = vehicle.getRocket().getName();
         }
 
+        // TODO change to pulling alias - if not exist check SLN API
         launchVehicle = getRealm().where(RocketDetail.class).contains("name", query).findFirst();
     }
 

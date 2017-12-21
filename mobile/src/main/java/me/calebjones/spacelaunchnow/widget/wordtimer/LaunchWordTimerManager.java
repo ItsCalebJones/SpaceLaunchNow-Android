@@ -167,9 +167,9 @@ public class LaunchWordTimerManager {
         remoteViews.setInt(R.id.bgcolor, "setAlpha", widgetAlpha);
         remoteViews.setTextColor(R.id.widget_launch_name, widgetTextColor);
         remoteViews.setTextColor(R.id.widget_mission_name, widgetSecondaryTextColor);
-        remoteViews.setTextColor(R.id.countdown_days, widgetSecondaryTextColor);
+        remoteViews.setTextColor(R.id.countdown_days, widgetTextColor);
         remoteViews.setTextColor(R.id.countdown_days_label, widgetSecondaryTextColor);
-        remoteViews.setTextColor(R.id.countdown_hours, widgetSecondaryTextColor);
+        remoteViews.setTextColor(R.id.countdown_hours, widgetTextColor);
         remoteViews.setTextColor(R.id.countdown_hours_label, widgetSecondaryTextColor);
         remoteViews.setInt(R.id.widget_refresh_button, "setColorFilter", widgetIconColor);
 
