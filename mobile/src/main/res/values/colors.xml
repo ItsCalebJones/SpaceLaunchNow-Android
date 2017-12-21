@@ -11,6 +11,7 @@
     <color name="colorPrimaryLight">#2962ff</color>
     <color name="colorPrimaryAlt">#bbdefb</color>
     <color name="colorAccent">#f44336</color>
+    <color name="colorAccentAlt">#05A8AA</color>
     <color name="colorAccentLight">#f44336</color>
     <color name="colorTextPrimary">#212121</color>
     <color name="colorTextSecondary">#727272</color>
