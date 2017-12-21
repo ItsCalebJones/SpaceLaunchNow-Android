@@ -121,9 +121,8 @@ public class DataSaver {
                         Timber.v("Saving item: %s", item.getName());
                         mRealm.copyToRealmOrUpdate(item);
                     }
+                    mRealm.copyToRealmOrUpdate(Arrays.asList(launches));
                 }
-
-                mRealm.copyToRealmOrUpdate(Arrays.asList(launches));
             }
         });
         syncNotifiers(mRealm);
