@@ -158,7 +158,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
         Realm.init(this);
 
         RealmConfiguration config = new RealmConfiguration.Builder()
-                .schemaVersion(Constants.DB_SCHEMA_VERSION_1_8_1)
+                .schemaVersion(Constants.DB_SCHEMA_VERSION_2_0_0)
                 .modules(Realm.getDefaultModule(), new LaunchDataModule())
                 .migration(new Migration())
                 .build();
