@@ -79,8 +79,6 @@ public class LaunchDetailActivity extends BaseActivity
     ViewPager viewPager;
     @BindView(R.id.rootview)
     CoordinatorLayout rootview;
-    @BindView(R.id.content)
-    FrameLayout content;
     @BindView(R.id.detail_swipe_refresh)
     SwipeRefreshLayout detailSwipeRefresh;
     @BindView(R.id.detail_tabs)
@@ -394,7 +392,6 @@ public class LaunchDetailActivity extends BaseActivity
             if (launchVehicle != null && launchVehicle.getImageURL().length() > 0 && !launchVehicle.getImageURL().contains("placeholder")) {
                 GlideApp.with(this)
                         .load(launchVehicle.getImageURL())
-                        .placeholder(R.drawable.placeholder)
                         .into(detail_profile_backdrop);
                 Timber.d("Glide Loading: %s %s", launchVehicle.getName(), launchVehicle.getImageURL());
             }

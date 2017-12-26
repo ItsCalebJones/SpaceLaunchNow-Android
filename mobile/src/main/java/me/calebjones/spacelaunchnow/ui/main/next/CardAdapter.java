@@ -48,7 +48,7 @@ import timber.log.Timber;
 /**
  * Adapts UpcomingLaunch data to the LaunchFragment
  */
-public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHolder> implements SectionIndexer {
+public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> implements SectionIndexer {
 
     private static ListPreferences sharedPreference;
     public int position;
@@ -63,7 +63,7 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
     private int color;
     private int accentColor;
 
-    public CardBigAdapter(Context context) {
+    public CardAdapter(Context context) {
         rightNow = Calendar.getInstance();
         launchList = new RealmList<>();
         this.context = context;
@@ -191,18 +191,22 @@ public class CardBigAdapter extends RecyclerView.Adapter<CardBigAdapter.ViewHold
                     case 1:
                         //GO for launch
                         holder.content_status.setText(R.string.status_go);
+//                        holder.content_status.setBackgroundColor(ContextCompat.getColor(context, R.color.colorStatusGo));
                         break;
                     case 2:
                         //NO GO for launch
                         holder.content_status.setText(R.string.status_nogo);
+//                        holder.content_status.setBackgroundColor(ContextCompat.getColor(context, R.color.colorStatusNoGo));
                         break;
                     case 3:
                         //Success for launch
                         holder.content_status.setText(R.string.status_success);
+//                        holder.content_status.setBackgroundColor(ContextCompat.getColor(context, R.color.colorStatusGo));
                         break;
                     case 4:
                         //Failure to launch
                         holder.content_status.setText(R.string.status_failure);
+//                        holder.content_status.setBackgroundColor(ContextCompat.getColor(context, R.color.colorStatusNoGo));
                         break;
                 }
 

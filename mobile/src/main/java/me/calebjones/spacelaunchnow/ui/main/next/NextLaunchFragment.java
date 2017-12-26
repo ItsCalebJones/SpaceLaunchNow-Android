@@ -51,7 +51,6 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
-import me.calebjones.spacelaunchnow.content.services.NextLaunchTracker;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
@@ -99,7 +98,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     private View view;
     private RecyclerView mRecyclerView;
-    private CardBigAdapter adapter;
+    private CardAdapter adapter;
     private StaggeredGridLayoutManager layoutManager;
     private LinearLayoutManager linearLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -137,7 +136,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
         if (adapter == null) {
-            adapter = new CardBigAdapter(getActivity());
+            adapter = new CardAdapter(getActivity());
         }
 
 
