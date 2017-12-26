@@ -73,33 +73,35 @@ public class Migration implements RealmMigration {
         }
 
         if (oldVersion <= Constants.DB_SCHEMA_VERSION_1_8_1) {
-            schema.remove("RocketDetails");
-            RealmObjectSchema details = schema.create("RocketDetail");
+            if (schema.get("RocketDetails") != null){
+                schema.remove("RocketDetails");
+                RealmObjectSchema details = schema.create("RocketDetail");
 
-            if (details != null){
-                Timber.i("Migrating RocketDetail to new schema.");
-                details.addField("id", int.class, FieldAttribute.PRIMARY_KEY)
-                        .addField("name", String.class)
-                        .addField("infoURL", String.class)
-                        .addField("wikiURL", String.class)
-                        .addField("imageURL", String.class)
-                        .addField("description", String.class)
-                        .addField("alias", String.class)
-                        .addField("variant", String.class)
-                        .addField("family", String.class)
-                        .addField("sFamily", String.class)
-                        .addField("manufacturer", String.class)
-                        .addField("length", String.class)
-                        .addField("diameter", String.class)
-                        .addField("launchMass", String.class)
-                        .addField("leoCapacity", String.class)
-                        .addField("gtoCapacity", String.class)
-                        .addField("thrust", String.class)
-                        .addField("vehicleClass", String.class)
-                        .addField("apogee", String.class)
-                        .addField("range", String.class)
-                        .addField("maxStage", Integer.class)
-                        .addField("minStage", Integer.class);
+                if (details != null){
+                    Timber.i("Migrating RocketDetail to new schema.");
+                    details.addField("id", int.class, FieldAttribute.PRIMARY_KEY)
+                            .addField("name", String.class)
+                            .addField("infoURL", String.class)
+                            .addField("wikiURL", String.class)
+                            .addField("imageURL", String.class)
+                            .addField("description", String.class)
+                            .addField("alias", String.class)
+                            .addField("variant", String.class)
+                            .addField("family", String.class)
+                            .addField("sFamily", String.class)
+                            .addField("manufacturer", String.class)
+                            .addField("length", String.class)
+                            .addField("diameter", String.class)
+                            .addField("launchMass", String.class)
+                            .addField("leoCapacity", String.class)
+                            .addField("gtoCapacity", String.class)
+                            .addField("thrust", String.class)
+                            .addField("vehicleClass", String.class)
+                            .addField("apogee", String.class)
+                            .addField("range", String.class)
+                            .addField("maxStage", Integer.class)
+                            .addField("minStage", Integer.class);
+                }
             }
             oldVersion++;
         }
