@@ -15,6 +15,8 @@
     <color name="colorAccentLight">#f44336</color>
     <color name="colorTextPrimary">#212121</color>
     <color name="colorTextSecondary">#727272</color>
+    <color name="colorStatusGo">#4CAF50</color>
+    <color name="colorStatusNoGo">#d32f2f</color>
     <color name="materialGrey">#607D8B</color>
 
     <color name="colorGo">#81c784</color>
