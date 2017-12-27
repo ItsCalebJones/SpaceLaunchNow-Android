@@ -18,7 +18,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -55,6 +54,7 @@ import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
+import me.calebjones.spacelaunchnow.utils.views.CustomOnOffsetChangedListener;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -239,7 +239,7 @@ public class LaunchDetailActivity extends BaseActivity
                 }
 
         );
-
+        appBarLayout.addOnOffsetChangedListener(new CustomOnOffsetChangedListener(statusColor, getWindow()));
         appBarLayout.addOnOffsetChangedListener(this);
         mMaxScrollSize = appBarLayout.getTotalScrollRange();
 
@@ -440,6 +440,8 @@ public class LaunchDetailActivity extends BaseActivity
                     .start();
 
             fabShare.show();
+
+
         }
     }
 
