@@ -4,6 +4,7 @@ import com.evernote.android.job.Job;
 import com.evernote.android.job.JobCreator;
 
 import me.calebjones.spacelaunchnow.widget.launchcard.UpdateLaunchCardJob;
+import me.calebjones.spacelaunchnow.widget.launchlist.UpdateLaunchListJob;
 import me.calebjones.spacelaunchnow.widget.wordtimer.UpdateWordTimerJob;
 import timber.log.Timber;
 
@@ -36,6 +37,9 @@ public class DataJobCreator implements JobCreator {
             case LibraryDataJob.TAG:
                 Timber.v(LibraryDataJob.TAG);
                 return new LibraryDataJob();
+            case UpdateLaunchListJob.TAG:
+                Timber.v(UpdateLaunchListJob.TAG);
+                return new UpdateLaunchListJob();
             default:
                 return null;
         }

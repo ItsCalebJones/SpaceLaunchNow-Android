@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import io.realm.Realm;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
@@ -22,6 +23,7 @@ import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.utils.UniqueIdentifier;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.widget.WidgetBroadcastReceiver;
 import timber.log.Timber;
@@ -51,9 +53,12 @@ public class LaunchCardCompactManager {
 
         RealmResults<Launch> launchRealms;
         if (switchPreferences.getAllSwitch()) {
-            launchRealms = mRealm.where(Launch.class)
-                    .greaterThanOrEqualTo("net", date)
-                    .findAllSorted("net", Sort.ASCENDING);
+            RealmQuery<Launch> query = mRealm.where(Launch.class)
+                    .greaterThanOrEqualTo("net", date);
+            if (switchPreferences.getNoGoSwitch()) {
+                query.equalTo("status", 1);
+            }
+            launchRealms = query.findAllSorted("net", Sort.ASCENDING);
             Timber.v("loadLaunches - Realm query created.");
         } else {
             launchRealms = QueryBuilder.buildSwitchQuery(context, mRealm);
@@ -61,7 +66,7 @@ public class LaunchCardCompactManager {
         }
 
         for (Launch launch : launchRealms) {
-            if (launch.getNetstamp() != null && launch.getNetstamp() != 0) {
+            if (launch.getNet() != null) {
                 return launch;
             }
         }
@@ -69,7 +74,7 @@ public class LaunchCardCompactManager {
     }
 
     public void updateAppWidget(int appWidgetId) {
-        Timber.v("UpdateAppWidget");
+        Timber.v("UpdateAppWidget %s", appWidgetId);
         Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
         int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
         int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
@@ -80,7 +85,7 @@ public class LaunchCardCompactManager {
 
         Launch launch = getLaunch();
 
-        if (minWidth <= 200 || minHeight <= 100) {
+        if (minWidth <= 220 || minHeight <= 100) {
             remoteViews = new RemoteViews(context.getPackageName(),
                     R.layout.widget_launch_card_compact_small_dark);
         } else if (minWidth <= 320) {
@@ -114,8 +119,7 @@ public class LaunchCardCompactManager {
         Intent exploreIntent = new Intent(context, LaunchDetailActivity.class);
         exploreIntent.putExtra("TYPE", "launch");
         exploreIntent.putExtra("launchID", launch.getId());
-        exploreIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent actionPendingIntent = PendingIntent.getActivity(context, 0, exploreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent actionPendingIntent = PendingIntent.getActivity(context, UniqueIdentifier.getID(), exploreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         remoteViews.setOnClickPendingIntent(R.id.widget_compact_card_frame, actionPendingIntent);
     }
@@ -125,21 +129,25 @@ public class LaunchCardCompactManager {
         int colorWhite = 0xFFFFFFFF;
         int colorSecondaryWhite = 0xB3FFFFFF;
         int colorBackground = 0xFF303030;
-        boolean widgetRounderCorners = sharedPref.getBoolean("widget_theme_round_corner", true);
         int widgetTextColor = sharedPref.getInt("widget_text_color",colorWhite);
         int widgetBackgroundColor = sharedPref.getInt("widget_background_color", colorBackground);
         int widgetSecondaryTextColor = sharedPref.getInt("widget_secondary_text_color",colorSecondaryWhite);
-        int widgetIconColor = sharedPref.getInt("widget_icon_color",colorWhite);
-        if(widgetRounderCorners)
+        int widgetIconColor = sharedPref.getInt("widget_icon_color", colorWhite);
+
+        if(sharedPref.getBoolean("widget_theme_round_corner", true))
             remoteViews.setImageViewResource(R.id.bgcolor, R.drawable.rounded);
         else
             remoteViews.setImageViewResource(R.id.bgcolor, R.drawable.squared);
 
         Timber.v("Configuring widget");
         int widgetAlpha = Color.alpha(widgetBackgroundColor);
-        remoteViews.setInt(R.id.bgcolor, "setColorFilter", widgetBackgroundColor);
+        int red = Color.red(widgetBackgroundColor);
+        int green = Color.green(widgetBackgroundColor);
+        int blue = Color.blue(widgetBackgroundColor);
+        remoteViews.setInt(R.id.bgcolor, "setColorFilter", Color.rgb(red,green,blue));
         remoteViews.setInt(R.id.bgcolor, "setAlpha", widgetAlpha);
-        remoteViews.setTextColor(R.id.widget_launch_rocket, widgetTextColor);
+        remoteViews.setTextColor(R.id.widget_launch_mission, widgetTextColor);
+        remoteViews.setTextColor(R.id.widget_launch_rocket, widgetSecondaryTextColor);
         remoteViews.setTextColor(R.id.widget_location, widgetSecondaryTextColor);
         remoteViews.setTextColor(R.id.widget_launch_date, widgetSecondaryTextColor);
         remoteViews.setInt(R.id.widget_categoryIcon, "setColorFilter", widgetIconColor);
@@ -161,12 +169,26 @@ public class LaunchCardCompactManager {
     }
 
     private void setLaunchName(Launch launchRealm) {
-        String launchName = getLaunchName(launchRealm);
+        String title[];
+        if (launchRealm.getName() != null) {
+            title = launchRealm.getName().split("\\|");
+            try {
+                if (title.length > 0) {
+                    remoteViews.setTextViewText(R.id.widget_launch_rocket, title[0].trim());
+                    remoteViews.setTextViewText(R.id.widget_launch_mission, title[1].trim());
+                } else {
+                    remoteViews.setTextViewText(R.id.widget_launch_rocket, launchRealm.getName());
+                    if (launchRealm.getMissions().size() > 0) {
+                        remoteViews.setTextViewText(R.id.widget_launch_mission, launchRealm.getMissions().get(0).getName());
+                    }
+                }
+            } catch (ArrayIndexOutOfBoundsException exception) {
+                remoteViews.setTextViewText(R.id.widget_launch_rocket, launchRealm.getName());
+                if (launchRealm.getMissions().size() > 0) {
+                    remoteViews.setTextViewText(R.id.widget_launch_mission, launchRealm.getMissions().get(0).getName());
+                }
 
-        if (launchName != null) {
-            remoteViews.setTextViewText(R.id.widget_launch_rocket, launchName);
-        } else {
-            remoteViews.setTextViewText(R.id.widget_launch_rocket, "Unknown Launch");
+            }
         }
     }
 
@@ -193,16 +215,6 @@ public class LaunchCardCompactManager {
         }
     }
 
-    private String getLaunchName(Launch launchRealm) {
-        //Replace with launch
-        if (launchRealm.getRocket() != null && launchRealm.getRocket().getName() != null) {
-            //Replace with mission name
-            return launchRealm.getRocket().getName();
-        } else {
-            return null;
-        }
-    }
-
     private String getMissionName(Launch launchRealm) {
 
         if (launchRealm.getMissions().size() > 0) {
@@ -218,11 +230,6 @@ public class LaunchCardCompactManager {
     }
 
     private Calendar getLaunchDate(Launch launchRealm) {
-
-        //Replace with launchData
-        long longdate = launchRealm.getNetstamp();
-        longdate = longdate * 1000;
-        final Date date = new Date(longdate);
-        return Utils.DateToCalendar(date);
+        return Utils.DateToCalendar(launchRealm.getNet());
     }
 }

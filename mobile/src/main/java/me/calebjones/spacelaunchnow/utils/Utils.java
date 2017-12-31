@@ -49,6 +49,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
@@ -303,6 +304,94 @@ public class Utils {
         return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
     }
 
+    public static int getCategoryIcon(String type, Boolean night) {
+        if (type != null) {
+            switch (type) {
+                case "Earth Science":
+                    if (night) {
+                        return R.drawable.ic_earth_white;
+                    } else {
+                        return R.drawable.ic_earth;
+                    }
+                case "Planetary Science":
+                    if (night) {
+                        return R.drawable.ic_planetary_white;
+                    } else {
+                        return R.drawable.ic_planetary;
+                    }
+
+                case "Astrophysics":
+                    if (night) {
+                        return R.drawable.ic_astrophysics_white;
+                    } else {
+                        return R.drawable.ic_astrophysics;
+                    }
+
+                case "Heliophysics":
+                    if (night) {
+                        return R.drawable.ic_heliophysics_alt_white;
+                    } else {
+                        return R.drawable.ic_heliophysics_alt;
+                    }
+
+                case "Human Exploration":
+                    if (night) {
+                        return R.drawable.ic_human_explore_white;
+                    } else {
+                        return R.drawable.ic_human_explore;
+                    }
+                case "Robotic Exploration":
+                    if (night) {
+                        return R.drawable.ic_robotic_explore_white;
+                    } else {
+                        return R.drawable.ic_robotic_explore;
+                    }
+                case "Government/Top Secret":
+                    if (night) {
+                        return R.drawable.ic_top_secret_white;
+                    } else {
+                        return R.drawable.ic_top_secret;
+                    }
+                case "Tourism":
+                    if (night) {
+                        return R.drawable.ic_tourism_white;
+                    } else {
+                        return R.drawable.ic_tourism;
+                    }
+                case "Unknown":
+                    if (night) {
+                        return R.drawable.ic_unknown_white;
+                    } else {
+                        return R.drawable.ic_unknown;
+                    }
+                case "Communications":
+                    if (night) {
+                        return R.drawable.ic_satellite_white;
+                    } else {
+                        return R.drawable.ic_satellite;
+                    }
+                case "Resupply":
+                    if (night) {
+                        return R.drawable.ic_resupply_white;
+                    } else {
+                        return R.drawable.ic_resupply;
+                    }
+                default:
+                    if (night) {
+                        return R.drawable.ic_unknown_white;
+                    } else {
+                        return R.drawable.ic_unknown;
+                    }
+            }
+        } else {
+            if (night) {
+                return R.drawable.ic_unknown_white;
+            } else {
+                return R.drawable.ic_unknown;
+            }
+        }
+    }
+
     public static void setCategoryIcon(ImageView imageView, String type, Boolean night) {
         if (type != null) {
             switch (type) {
@@ -516,3 +605,4 @@ public class Utils {
         }
     }
 }
+

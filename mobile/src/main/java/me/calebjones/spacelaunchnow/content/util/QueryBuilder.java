@@ -641,7 +641,9 @@ public class QueryBuilder {
             query.equalTo("location.id", 18);
         }
 
-        return query.endGroup().findAllSorted("net", Sort.ASCENDING);
+        query.endGroup();
+
+        return query.findAllSorted("net", Sort.ASCENDING);
     }
 
     public static RealmResults<Launch> buildSwitchQuery(Context context, Realm realm, boolean calendarState) {

@@ -57,4 +57,26 @@
         <item>0xFFFF9800</item>
         <item>0x00000000</item>
     </integer-array>
+    <integer-array name="widget_presets_values_accent">
+        <item>0xFF42a5f5</item>
+        <item>0xFF455a64</item>
+        <item>0x4042a5f5</item>
+        <item>0x40455a64</item>
+        <item>0xFF2196F3</item>
+        <item>0xFFF44336</item>
+        <item>0xFF009688</item>
+        <item>0xFFFF9800</item>
+        <item>0x00000000</item>
+    </integer-array>
+    <integer-array name="widget_presets_values_title_text">
+        <item>0xFFFFFFFF</item>
+        <item>0xFFFFFFFF</item>
+        <item>0xFFFFFFFF</item>
+        <item>0xDE000000</item>
+        <item>0xFFFFFFFF</item>
+        <item>0xFFFFFFFF</item>
+        <item>0xFFFFFFFF</item>
+        <item>0xFFFFFFFF</item>
+        <item>0x00000000</item>
+    </integer-array>
 </resources>

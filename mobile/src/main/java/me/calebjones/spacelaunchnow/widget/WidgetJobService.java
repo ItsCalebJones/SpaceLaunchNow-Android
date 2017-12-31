@@ -10,6 +10,8 @@ import android.support.v4.app.JobIntentService;
 import me.calebjones.spacelaunchnow.content.jobs.SyncWidgetJob;
 import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactManager;
 import me.calebjones.spacelaunchnow.widget.launchcard.UpdateLaunchCardJob;
+import me.calebjones.spacelaunchnow.widget.launchlist.LaunchListManager;
+import me.calebjones.spacelaunchnow.widget.launchlist.LaunchListWidgetProvider;
 import me.calebjones.spacelaunchnow.widget.wordtimer.LaunchWordTimerManager;
 import me.calebjones.spacelaunchnow.widget.wordtimer.UpdateWordTimerJob;
 import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactWidgetProvider;
@@ -31,6 +33,7 @@ public class WidgetJobService extends JobIntentService {
         Context context = getApplicationContext();
         LaunchCardCompactManager launchCardCompactManager = new LaunchCardCompactManager(context);
         LaunchWordTimerManager launchWordTimerManager = new LaunchWordTimerManager(context);
+        LaunchListManager launchListManager = new LaunchListManager(context);
         if (intent.hasExtra("updateUIOnly") && intent.getBooleanExtra("updateUIOnly", false)){
             int cardIds[] = AppWidgetManager.getInstance(context)
                     .getAppWidgetIds(new ComponentName(context,
@@ -46,6 +49,14 @@ public class WidgetJobService extends JobIntentService {
 
             for (int id : timerIds){
                 launchWordTimerManager.updateAppWidget(id);
+            }
+
+            int listIds[] = AppWidgetManager.getInstance(context)
+                    .getAppWidgetIds(new ComponentName(context,
+                            LaunchListWidgetProvider.class));
+
+            for (int id : listIds){
+                launchListManager.updateAppWidget(id);
             }
         } else {
             SyncWidgetJob.scheduleImmediately();

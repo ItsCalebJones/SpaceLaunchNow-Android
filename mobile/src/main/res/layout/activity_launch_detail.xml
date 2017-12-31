@@ -108,25 +108,32 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/detail_viewpager"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="50dp"
-            android:paddingBottom="50dp"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            android:layout_height="match_parent">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/detail_viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/adView"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+            <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/adView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center|top"
+                android:visibility="gone"
+                ads:adSize="SMART_BANNER"
+                ads:adUnitId="ca-app-pub-9824528399164059/9713798255"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+        </RelativeLayout>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/adView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="center|bottom"
-        android:visibility="gone"
-        ads:adSize="SMART_BANNER"
-        ads:adUnitId="ca-app-pub-9824528399164059/9713798255" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_share"

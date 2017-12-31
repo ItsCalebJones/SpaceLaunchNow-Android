@@ -1,18 +1,25 @@
 package me.calebjones.spacelaunchnow.ui.settings;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.SupportActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
+
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.ui.changelog.ChangelogActivity;
+import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
 import me.calebjones.spacelaunchnow.ui.intro.OnboardingActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.iconics.Iconics;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -20,10 +27,13 @@ import com.vansuita.materialabout.builder.AboutBuilder;
 import com.vansuita.materialabout.views.AboutView;
 
 public class AboutActivity extends AppCompatActivity {
+    
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.context = this;
         setContentView(R.layout.activity_about);
         loadAbout();
     }
@@ -64,6 +74,30 @@ public class AboutActivity extends AppCompatActivity {
                         .sizeDp(24).toBitmap(),
                         "Discord",
                         "https://discord.gg/WVfzEDW")
+                .addAction(new IconicsDrawable(this)
+                                .icon(CommunityMaterial.Icon.cmd_android_debug_bridge)
+                                .sizeDp(24).toBitmap(),
+                        "Debug", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                new MaterialDialog.Builder(context)
+                                        .title("Enter Support Code")
+                                        .content("To debug the application - please enter the code from support.")
+                                        .inputType(InputType.TYPE_CLASS_NUMBER)
+                                        .input("Support Code", null, new MaterialDialog.InputCallback() {
+                                            @Override
+                                            public void onInput(MaterialDialog dialog, CharSequence input) {
+                                                // Do something
+                                                if(DebugAuthManager.getAuthResult(input)){
+                                                    goToDebug();
+                                                } else {
+                                                    Toast.makeText(context, "Error - Support code was not correct.", Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+                                        }).show();
+                            }
+                        }
+                )
                 .setWrapScrollView(true)
                 .setShowAsCard(true);
 
@@ -71,5 +105,10 @@ public class AboutActivity extends AppCompatActivity {
         AboutView view = builder.build();
 
         flHolder.addView(view);
+    }
+
+    private void goToDebug() {
+        Intent i = new Intent(AboutActivity.this, DebugActivity.class);
+        startActivity(i);
     }
 }

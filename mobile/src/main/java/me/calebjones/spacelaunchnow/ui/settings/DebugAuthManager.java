@@ -9,7 +9,7 @@ public class DebugAuthManager {
 
     public static boolean getAuthResult(CharSequence input){
         Date date = Calendar.getInstance().getTime();
-        DateFormat formatter = new SimpleDateFormat("ddMMyyyy");
+        DateFormat formatter = new SimpleDateFormat("MMddyyyy");
         String today = formatter.format(date);
 
         int factor = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);

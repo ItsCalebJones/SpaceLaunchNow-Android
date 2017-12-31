@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.ads.AdListener;
@@ -35,6 +36,7 @@ import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.holder.ImageHolder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.ExpandableDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
@@ -228,6 +230,37 @@ public class MainActivity extends BaseActivity {
                                 .withIdentifier(R.id.menu_settings)
                                 .withSelectable(true),
                         new DividerDrawerItem(),
+                        new ExpandableDrawerItem().withName("Stay Connected").withIcon(CommunityMaterial.Icon.cmd_account).withDescription("Connect with the Community").withIdentifier(19).withSelectable(false).withSubItems(
+                                new SecondaryDrawerItem()
+                                        .withIcon(CommunityMaterial.Icon.cmd_discord)
+                                        .withLevel(2)
+                                        .withName("Discord")
+                                        .withDescription("Hop on Discord during launches!")
+                                        .withIdentifier(R.id.menu_discord)
+                                        .withSelectable(false),
+                                new SecondaryDrawerItem()
+                                        .withIcon(CommunityMaterial.Icon.cmd_twitter)
+                                        .withLevel(2)
+                                        .withName("Twitter")
+                                        .withDescription("Connect on Twitter!")
+                                        .withIdentifier(R.id.menu_twitter)
+                                        .withSelectable(false),
+                                new SecondaryDrawerItem()
+                                        .withIcon(CommunityMaterial.Icon.cmd_facebook)
+                                        .withLevel(2)
+                                        .withName("Facebook")
+                                        .withDescription("Follow on Facebook")
+                                        .withIdentifier(R.id.menu_facebook)
+                                        .withSelectable(false),
+                                new SecondaryDrawerItem()
+                                        .withIcon(CommunityMaterial.Icon.cmd_web)
+                                        .withLevel(2)
+                                        .withName("On the Web")
+                                        .withDescription("Bookmark spacelaunchnow.me")
+                                        .withIdentifier(R.id.menu_website)
+                                        .withSelectable(false)
+                        ),
+                        new DividerDrawerItem(),
                         new SecondaryDrawerItem()
                                 .withIcon(GoogleMaterial.Icon.gmd_info_outline)
                                 .withName("What's New?")
@@ -239,18 +272,6 @@ public class MainActivity extends BaseActivity {
                                 .withName("Feedback")
                                 .withDescription("Found a bug?")
                                 .withIdentifier(R.id.menu_feedback)
-                                .withSelectable(false),
-                        new SecondaryDrawerItem()
-                                .withIcon(CommunityMaterial.Icon.cmd_twitter)
-                                .withName("Twitter")
-                                .withDescription("Stay connected on Twitter!")
-                                .withIdentifier(R.id.menu_twitter)
-                                .withSelectable(false),
-                        new SecondaryDrawerItem()
-                                .withIcon(CommunityMaterial.Icon.cmd_discord)
-                                .withName("Discord")
-                                .withDescription("Join us on Discord during launches!")
-                                .withIdentifier(R.id.menu_discord)
                                 .withSelectable(false)
                 ).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -476,6 +497,19 @@ public class MainActivity extends BaseActivity {
                 Intent discordIntent = new Intent(Intent.ACTION_VIEW);
                 discordIntent.setData(Uri.parse(discordUrl));
                 startActivity(discordIntent);
+                break;
+            case R.id.menu_facebook:
+                String facebookUrl = "https://www.facebook.com/spacelaunchnow/";
+                Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
+                facebookIntent.setData(Uri.parse(facebookUrl));
+                startActivity(facebookIntent);
+                break;
+            case R.id.menu_website:
+                String websiteUrl = "https://spacelaunchnow.me/";
+                Intent websiteIntent = new Intent(Intent.ACTION_VIEW);
+                websiteIntent.setData(Uri.parse(websiteUrl));
+                startActivity(websiteIntent);
+                break;
             default:
                 // ignore
                 break;
@@ -487,7 +521,7 @@ public class MainActivity extends BaseActivity {
                 .title("Submit Feedback")
                 .autoDismiss(true)
                 .content("Feel free to submit bugs or feature requests for anything related to the app. If you found an issue with the launch data, the libraries at Launch Library that provide the data can be contacted via Discord or Reddit.")
-                .positiveColor(ContextCompat.getColor(this, R.color.colorAccent))
+                .neutralColor(ContextCompat.getColor(this, R.color.colorPrimary))
                 .negativeText("Launch Data")
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
@@ -503,10 +537,39 @@ public class MainActivity extends BaseActivity {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        String url = "https://discord.gg/WVfzEDW";
-                        Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(url));
-                        startActivity(i);
+                        dialog.getBuilder()
+                                .title("Need Support?")
+                                .content("The fastest and most reliable way to get support is through Discord. If thats not an option feel free to email me directly.")
+                                .neutralText("Email")
+                                .negativeText("Cancel")
+                                .positiveText("Discord")
+                                .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(MaterialDialog dialog, DialogAction which) {
+                                        Intent intent = new Intent(Intent.ACTION_SENDTO);
+                                        intent.setData(Uri.parse("mailto:"));
+                                        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@calebjones.me"});
+                                        intent.putExtra(Intent.EXTRA_SUBJECT, "Space Launch Now - Feedback");
+
+                                        startActivity(Intent.createChooser(intent, "Email via..."));
+                                    }
+                                })
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(MaterialDialog dialog, DialogAction which) {
+                                        String url = "https://discord.gg/WVfzEDW";
+                                        Intent i = new Intent(Intent.ACTION_VIEW);
+                                        i.setData(Uri.parse(url));
+                                        startActivity(i);
+                                    }
+                                })
+                                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
                     }
                 })
                 .show();
@@ -530,8 +593,8 @@ public class MainActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(FilterViewEvent event) {
-        if (!SupporterHelper.isSupporter()){
-            if (event.isOpened){
+        if (!SupporterHelper.isSupporter()) {
+            if (event.isOpened) {
                 hideAd();
             } else {
                 showAd();

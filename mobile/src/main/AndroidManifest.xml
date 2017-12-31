@@ -130,6 +130,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_launch_card_compact_info" />
         </receiver>
+
         <receiver
             android:name=".widget.wordtimer.LaunchWordTimerWidgetProvider"
             android:label="Launch Timer">
@@ -143,6 +144,22 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_launch_word_timer_info" />
         </receiver>
+
+        <receiver
+            android:name=".widget.launchlist.LaunchListWidgetProvider"
+            android:label="Launch List (Supporters)">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="me.calebjones.spacelaunchnow.widget.LaunchListWidgetProvider.ACTION_WIDGET_REFRESH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_launch_list_info" />
+        </receiver>
+
+        <service android:name=".widget.launchlist.LaunchListWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <service
             android:name="com.evernote.android.job.v21.PlatformJobService"

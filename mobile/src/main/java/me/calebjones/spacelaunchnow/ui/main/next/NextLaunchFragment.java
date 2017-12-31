@@ -61,6 +61,8 @@ import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactManager;
 import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactWidgetProvider;
+import me.calebjones.spacelaunchnow.widget.launchlist.LaunchListManager;
+import me.calebjones.spacelaunchnow.widget.launchlist.LaunchListWidgetProvider;
 import me.calebjones.spacelaunchnow.widget.wordtimer.LaunchWordTimerManager;
 import me.calebjones.spacelaunchnow.widget.wordtimer.LaunchWordTimerWidgetProvider;
 import timber.log.Timber;
@@ -548,6 +550,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             if (switchChanged) {
                 LaunchCardCompactManager launchCardCompactManager = new LaunchCardCompactManager(context);
                 LaunchWordTimerManager launchWordTimerManager = new LaunchWordTimerManager(context);
+                LaunchListManager launchListManager = new LaunchListManager(context);
+
                 int cardIds[] = AppWidgetManager.getInstance(context)
                         .getAppWidgetIds(new ComponentName(context,
                                 LaunchCardCompactWidgetProvider.class));
@@ -563,6 +567,15 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 for (int id : timerIds){
                     launchWordTimerManager.updateAppWidget(id);
                 }
+
+                int listIds[] = AppWidgetManager.getInstance(context)
+                        .getAppWidgetIds(new ComponentName(context,
+                                LaunchListWidgetProvider.class));
+
+                for (int id : listIds){
+                    launchListManager.updateAppWidget(id);
+                }
+
                 UpdateWearJob.scheduleJobNow();
                 displayLaunches();
                 if (switchPreferences.getCalendarStatus()) {
@@ -678,6 +691,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     @OnClick(R.id.no_go_launch)
     public void noGoSwitch() {
+        confirm();
         switchPreferences.setNoGoSwitch(noGoSwitch.isChecked());
         displayLaunches();
 
@@ -686,6 +700,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     @OnClick(R.id.persist_last_launch)
     public void setPersistLastSwitch() {
+        confirm();
         switchPreferences.setPersistLastSwitch(persistLastSwitch.isChecked());
         displayLaunches();
     }

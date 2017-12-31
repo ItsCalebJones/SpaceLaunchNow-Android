@@ -46,7 +46,30 @@ repositories {
     google()
 }
 
+// Create a variable called keystorePropertiesFile, and initialize it to your
+// keystore.properties file, in the rootProject folder.
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+
+// Initialize a new Properties() object called keystoreProperties.
+def keystoreProperties = new Properties()
+
+if (keystorePropertiesFile.canRead()) {
+// Load your keystore.properties file into the keystoreProperties object.
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+} else {
+    throw new GradleException("Could not read keystore.properties!")
+}
+
 android {
+    signingConfigs {
+        releaseConfig {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
     def appVersionCode = app.versionMajor * 10000 + app.versionMinor * 1000 + app.versionPatch * 100 + advancedVersioning.versionCode
     flavorDimensions "release"
     compileSdkVersion 27
@@ -94,6 +117,7 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.releaseConfig
         }
 
         validation.initWith(debug)
@@ -184,7 +208,10 @@ dependencies {
     }
     implementation 'com.jakewharton.timber:timber:4.6.0'
     implementation 'com.karumi:dexter:4.2.0'
+
+    // Billing
     implementation 'com.anjlab.android.iab.v3:library:1.0.44'
+
     implementation 'com.evernote:android-job:1.2.1'
     implementation 'blue.aodev:material-values:1.1.1'
 
@@ -208,9 +235,10 @@ dependencies {
     implementation 'net.mediavrog:integrated-rating-request:1.1.2'
     implementation 'com.simplecityapps:recyclerview-fastscroll:1.0.16'
     implementation 'jp.wasabeef:glide-transformations:3.0.1'
+
     // If you want to use the GPU Filters
     implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
-    implementation("com.mikepenz:materialdrawer:6.0.2@aar") {
+    implementation('com.mikepenz:materialdrawer:6.0.2@aar') {
         transitive = true
     }
 
@@ -220,7 +248,6 @@ dependencies {
     implementation 'com.github.renaudcerrato:static-maps-api:1.0.4'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.squareup.okhttp3:okhttp:3.9.1'
-
     implementation 'android.zetterstrom.com.forecast:forecast:1.2.0'
     implementation 'it.macisamuele:calendarprovider-lib:0.0.1'
 

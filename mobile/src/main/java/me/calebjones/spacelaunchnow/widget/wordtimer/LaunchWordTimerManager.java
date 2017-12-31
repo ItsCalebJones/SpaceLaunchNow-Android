@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import io.realm.Realm;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
@@ -22,6 +23,7 @@ import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.utils.UniqueIdentifier;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.widget.WidgetBroadcastReceiver;
 import timber.log.Timber;
@@ -40,7 +42,7 @@ public class LaunchWordTimerManager {
     }
 
     public void updateAppWidget(int appWidgetId) {
-        Timber.v("UpdateAppWidget");
+        Timber.v("UpdateAppWidget %s", appWidgetId);
         Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
         int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
         int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
@@ -90,9 +92,12 @@ public class LaunchWordTimerManager {
 
         RealmResults<Launch> launchRealms;
         if (switchPreferences.getAllSwitch()) {
-            launchRealms = mRealm.where(Launch.class)
-                    .greaterThanOrEqualTo("net", date)
-                    .findAllSorted("net", Sort.ASCENDING);
+            RealmQuery<Launch> query = mRealm.where(Launch.class)
+                    .greaterThanOrEqualTo("net", date);
+            if (switchPreferences.getNoGoSwitch()) {
+                query.equalTo("status", 1);
+            }
+            launchRealms = query.findAllSorted("net", Sort.ASCENDING);
             Timber.v("loadLaunches - Realm query created.");
         } else {
             launchRealms = QueryBuilder.buildSwitchQuery(context, mRealm);
@@ -100,7 +105,7 @@ public class LaunchWordTimerManager {
         }
 
         for (Launch launch : launchRealms) {
-            if (launch.getNetstamp() != null && launch.getNetstamp() != 0) {
+            if (launch.getNet() != null) {
                 return launch;
             }
         }
@@ -116,7 +121,7 @@ public class LaunchWordTimerManager {
         exploreIntent.putExtra("TYPE", "launch");
         exploreIntent.putExtra("launchID", launch.getId());
         exploreIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent actionPendingIntent = PendingIntent.getActivity(context, 0, exploreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent actionPendingIntent = PendingIntent.getActivity(context, UniqueIdentifier.getID(), exploreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         remoteViews.setOnClickPendingIntent(R.id.widget_countdown_timer_frame, actionPendingIntent);
     }
@@ -163,7 +168,10 @@ public class LaunchWordTimerManager {
 
         Timber.v("Configuring widget");
         int widgetAlpha = Color.alpha(widgetBackgroundColor);
-        remoteViews.setInt(R.id.bgcolor, "setColorFilter", widgetBackgroundColor);
+        int red = Color.red(widgetBackgroundColor);
+        int green = Color.green(widgetBackgroundColor);
+        int blue = Color.blue(widgetBackgroundColor);
+        remoteViews.setInt(R.id.bgcolor, "setColorFilter", Color.rgb(red,green,blue));
         remoteViews.setInt(R.id.bgcolor, "setAlpha", widgetAlpha);
         remoteViews.setTextColor(R.id.widget_launch_name, widgetTextColor);
         remoteViews.setTextColor(R.id.widget_mission_name, widgetSecondaryTextColor);
@@ -225,11 +233,6 @@ public class LaunchWordTimerManager {
     }
 
     private Calendar getLaunchDate(Launch launchRealm) {
-
-        //Replace with launchData
-        long longdate = launchRealm.getNetstamp();
-        longdate = longdate * 1000;
-        final Date date = new Date(longdate);
-        return Utils.DateToCalendar(date);
+        return Utils.DateToCalendar(launchRealm.getNet());
     }
 }
