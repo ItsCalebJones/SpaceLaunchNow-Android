@@ -28,22 +28,6 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         realm = Realm.getDefaultInstance();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-            TypedValue typedValue = new TypedValue();
-            Resources.Theme theme = getTheme();
-            theme.resolveAttribute(R.attr.recentBarColor, typedValue, true);
-            int color = typedValue.data;
-
-            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_round);
-            ActivityManager.TaskDescription td = new ActivityManager.TaskDescription(null, bm, color);
-
-            setTaskDescription(td);
-            if (bm != null) {
-                bm.recycle();
-            }
-        }
     }
 
     @Override

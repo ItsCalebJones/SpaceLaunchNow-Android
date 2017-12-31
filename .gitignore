@@ -20,3 +20,4 @@ projectFilesBackup/.idea/workspace.xml
 *.apk
 
 keystore.properties
+mobile/keystore.properties
