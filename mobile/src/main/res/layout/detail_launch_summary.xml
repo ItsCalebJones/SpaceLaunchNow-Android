@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -17,6 +16,26 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/youtube_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/material_card_edge_margin"
+            android:animateLayoutChanges="true"
+            android:padding="@dimen/material_card_edge_margin"
+            android:visibility="visible"
+            card_view:cardCornerRadius="@dimen/card_view_corner_radius"
+            card_view:cardElevation="@dimen/material_card_elevation_resting"
+            card_view:cardPreventCornerOverlap="true"
+            card_view:cardUseCompatPadding="true">
+
+            <FrameLayout
+                android:id="@+id/youtube_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -54,6 +73,7 @@
                         android:id="@+id/launch_status"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="?attr/titleBarColor"
                         android:ellipsize="end"
                         android:gravity="center"
                         android:paddingBottom="8dp"
@@ -62,7 +82,6 @@
                         android:text="Unknown Launch Status"
                         android:textAlignment="center"
                         android:textColor="@color/dark_primary_text_color_selector"
-                        android:background="?attr/titleBarColor"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -113,8 +132,8 @@
                     android:paddingTop="8dp"
                     android:text="Estimated Launch Date"
                     android:textAlignment="center"
-                    android:textSize="18sp"
-                    android:textAppearance="@style/MaterialTypography.Regular.Subheading"/>
+                    android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/date"

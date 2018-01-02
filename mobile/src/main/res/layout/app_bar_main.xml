@@ -26,8 +26,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
         <net.mediavrog.irr.IrrLayout xmlns:irr="http://schemas.android.com/apk/res-auto"
             android:id="@+id/irr_layout"
@@ -47,6 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:elevation="8dp"
                 tools:visibility="visible">
 
                 <TextView
@@ -70,6 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:elevation="8dp"
                 tools:visibility="gone">
 
                 <TextView
@@ -93,6 +94,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:elevation="8dp"
                 tools:visibility="visible">
 
                 <TextView

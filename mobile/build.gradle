@@ -263,4 +263,5 @@ dependencies {
     implementation 'com.mikepenz:community-material-typeface:2.0.46.1@aar'
     implementation 'com.github.pwittchen:weathericonview:1.1.0'
     implementation 'com.mikepenz:fontawesome-typeface:4.7.0.0@aar'
+    implementation files('libs/YouTubeAndroidPlayerApi.jar')
 }

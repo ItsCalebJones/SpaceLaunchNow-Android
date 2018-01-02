@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.AppCompatButton;
@@ -31,6 +32,10 @@ import android.zetterstrom.com.forecast.models.Unit;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.github.pwittchen.weathericonview.WeatherIconView;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerFragment;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.mypopsy.maps.StaticMap;
 
 import org.greenrobot.eventbus.EventBus;
@@ -59,8 +64,8 @@ import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Pad;
-import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.RocketDetail;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
+import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.RocketDetail;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
@@ -71,15 +76,17 @@ import retrofit2.Response;
 import timber.log.Timber;
 
 
-public class SummaryDetailFragment extends BaseFragment {
+public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer.OnInitializedListener {
 
+    @BindView(R.id.youtube_card)
+    CardView youtubeCard;
     private SharedPreferences sharedPref;
     private static ListPreferences sharedPreference;
     private Context context;
     private CountDownTimer timer;
     public Launch detailLaunch;
     private RocketDetail launchVehicle;
-
+    private YouTubePlayerSupportFragment youTubePlayerFragment;
     private boolean nightMode;
 
     @BindView(R.id.content_TMinus_status)
@@ -207,6 +214,11 @@ public class SummaryDetailFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.detail_launch_summary, container, false);
 
         ButterKnife.bind(this, view);
+        YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.add(R.id.youtube_view, youTubePlayerFragment).commit();
+        youTubePlayerFragment.initialize(context.getResources().getString(R.string.GoogleMapsKey), this);
+
 
         return view;
     }
@@ -891,9 +903,9 @@ public class SummaryDetailFragment extends BaseFragment {
         boolean twentyFourHourMode = sharedPref.getBoolean("24_hour_mode", false);
         DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault());
 
-        if (windowStart.equals(windowEnd)){
+        if (windowStart.equals(windowEnd)) {
             // Window Start and Window End match - meaning instantaneous.
-            if (twentyFourHourMode){
+            if (twentyFourHourMode) {
                 dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             }
 
@@ -904,7 +916,7 @@ public class SummaryDetailFragment extends BaseFragment {
                     timeZone.getDisplayName(false, TimeZone.SHORT)));
         } else if (windowStart.after(windowEnd)) {
             // Launch data is not trustworthy - start is after end.
-            if (twentyFourHourMode){
+            if (twentyFourHourMode) {
                 dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             }
 
@@ -913,9 +925,9 @@ public class SummaryDetailFragment extends BaseFragment {
             launchWindowText.setText(String.format("%s %s",
                     dateFormat.format(windowStart),
                     timeZone.getDisplayName(false, TimeZone.SHORT)));
-        } else if (windowStart.before(windowEnd)){
+        } else if (windowStart.before(windowEnd)) {
             // Launch Window is properly configured
-            if (twentyFourHourMode){
+            if (twentyFourHourMode) {
                 dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             }
 
@@ -954,11 +966,6 @@ public class SummaryDetailFragment extends BaseFragment {
         super.onStop();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
     @OnClick(R.id.map_view_summary)
     public void onViewClicked() {
         String location = detailLaunch.getLocation().getName();
@@ -978,6 +985,23 @@ public class SummaryDetailFragment extends BaseFragment {
         if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
             Toast.makeText(context, "Loading " + detailLaunch.getLocation().getPads().get(0).getName(), Toast.LENGTH_LONG).show();
             context.startActivity(mapIntent);
+        }
+    }
+
+    @Override
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean restored) {
+        if (!restored) {
+            youTubePlayer.cueVideo("fhWaJi1Hsfo"); // Plays https://www.youtube.com/watch?v=fhWaJi1Hsfo
+        }
+    }
+
+    @Override
+    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+        if (youTubeInitializationResult.isUserRecoverableError()) {
+            youTubeInitializationResult.getErrorDialog(getActivity(), 1).show();
+        } else {
+            String error = String.format(getString(R.string.player_error), youTubeInitializationResult.toString());
+            Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
         }
     }
 }
