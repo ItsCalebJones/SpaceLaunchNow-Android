@@ -107,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:gravity="center"
-                    android:paddingBottom="8dp"
+                    android:paddingBottom="4dp"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:paddingTop="4dp"
@@ -117,31 +117,33 @@
                     android:textColor="?android:textColorSecondary" />
 
                 <TextView
-                    android:id="@+id/launch_window_start"
+                    android:id="@+id/launch_window_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
                     android:ellipsize="end"
-                    android:gravity="left"
+                    android:gravity="center"
                     android:paddingBottom="2dp"
                     android:paddingLeft="8dp"
-                    android:paddingTop="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="4dp"
                     android:singleLine="false"
-                    android:text="Launch Window Start: "
-                    android:textColor="?android:textColorSecondary" />
+                    android:text="Launch Window"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/MaterialTypography.Regular.Subheading" />
 
                 <TextView
-                    android:id="@+id/launch_window_end"
+                    android:id="@+id/launch_window_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
                     android:ellipsize="end"
-                    android:gravity="left"
-                    android:paddingBottom="12dp"
+                    android:gravity="center"
+                    android:paddingBottom="4dp"
                     android:paddingLeft="8dp"
-                    android:paddingTop="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="2dp"
                     android:singleLine="false"
-                    android:text="Launch Window End: "
+                    android:text="Unknown Launch Date"
+                    android:textAlignment="center"
                     android:textColor="?android:textColorSecondary" />
 
 

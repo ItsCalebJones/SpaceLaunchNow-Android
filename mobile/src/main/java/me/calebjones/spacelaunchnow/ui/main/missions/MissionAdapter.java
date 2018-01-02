@@ -114,7 +114,7 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
 
                     //If we can find the date of the launch add it to the card.
                     if (mission.getLaunch().getNet() != null) {
-                        SimpleDateFormat outformat = new SimpleDateFormat("MMMM dd, yyyy");
+                        SimpleDateFormat outformat = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy");
                         outformat.toLocalizedPattern();
 
                         Date date;

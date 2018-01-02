@@ -46,8 +46,8 @@ ext {
     buildToolsVersion = '23.0.3'
 
     // App dependencies
-    supportLibraryVersion = '27.0.1'
-    playServicesVersion = '11.6.0'
+    supportLibraryVersion = '27.0.2'
+    playServicesVersion = '11.8.0'
 
     sdk = 25
     buildTools = "25.0.0" //keep 25.0.0 for Continuous Integration

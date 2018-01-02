@@ -61,8 +61,8 @@
                         android:gravity="left"
                         android:maxLines="2"
                         android:text="Unknown Launch"
-                        android:textColor="@color/dark_primary_text_color_selector"
                         android:textAppearance="@style/MaterialTypography.Locale.Title"
+                        android:textColor="@color/dark_primary_text_color_selector"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -106,13 +106,13 @@
                 android:id="@+id/content_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?attr/titleBarColor"
                 android:ellipsize="end"
                 android:gravity="center"
                 android:paddingBottom="8dp"
                 android:paddingTop="4dp"
                 android:singleLine="false"
                 android:text="Unknown Launch Status"
-                android:background="?attr/titleBarColor"
                 android:textAlignment="center"
                 android:textColor="@color/dark_primary_text_color_selector"
                 android:textSize="20sp"
@@ -123,7 +123,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
 
 
                 <LinearLayout
@@ -169,6 +168,17 @@
                 android:textAppearance="@style/MaterialTypography.Regular.Subheading"
                 android:textColor="?android:textColorSecondary" />
 
+            <TextView
+                android:id="@+id/content_forecast"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Unknown"
+                android:textAlignment="center"
+                android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+                android:textColor="?android:textColorSecondary"
+                android:textIsSelectable="false" />
+
 
             <LinearLayout
                 android:id="@+id/content_mission_description_view"
@@ -187,36 +197,6 @@
                     android:background="@color/View_Separator"
                     android:padding="12dp"
                     android:paddingBottom="8dp" />
-
-                <LinearLayout
-                    android:id="@+id/forecast_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:visibility="visible">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="28dp"
-                        android:text="Forecast: "
-                        android:textAppearance="@style/MaterialTypography.Regular.Title"
-                        android:textColor="?android:textColorSecondary"
-                        android:textIsSelectable="false"
-                        android:textSize="20dp" />
-
-                    <TextView
-                        android:id="@+id/content_forecast"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingRight="8dp"
-                        android:text="Unknown"
-                        android:textAppearance="@style/MaterialTypography.Regular.Subheading"
-                        android:textColor="?android:textColorSecondary"
-                        android:textIsSelectable="false"
-                        android:textSize="20dp" />
-
-                </LinearLayout>
 
                 <TextView
                     android:id="@+id/content_mission"

@@ -73,5 +73,5 @@ dependencies {
     compile "com.google.android.gms:play-services-wearable:$rootProject.playServicesVersion"
     compile 'com.jakewharton.timber:timber:4.6.0'
     compile 'blue.aodev:material-values:1.1.1'
-    compile 'com.android.support:palette-v7:27.0.1'
+    compile 'com.android.support:palette-v7:27.0.2'
 }

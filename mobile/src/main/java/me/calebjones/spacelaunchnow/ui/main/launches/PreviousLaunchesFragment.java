@@ -56,6 +56,7 @@ import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import timber.log.Timber;
@@ -356,7 +357,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
 
     private String formatDatesForTitle(String start_date) {
         SimpleDateFormat in = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat out = new SimpleDateFormat("LLL yyyy");
+        SimpleDateFormat out = Utils.getSimpleDateFormatForUI("LLL yyyy");
 
         Date sDate;
 

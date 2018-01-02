@@ -73,11 +73,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
         sharedPreference = ListPreferences.getInstance(mContext);
 
-        if (sharedPreference.isNightModeActive(mContext)) {
-            night = true;
-        } else {
-            night = false;
-        }
+        night = sharedPreference.isNightModeActive(mContext);
 
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.launch_list_item, viewGroup, false);
         return new ViewHolder(v);
@@ -107,12 +103,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
         if (launchItem.getStatus() != null && launchItem.getStatus() == 2) {
             //Get launch date
             if (sharedPref.getBoolean("local_time", true)) {
-                SimpleDateFormat df = new SimpleDateFormat("MMMM dd, yyyy.");
+                SimpleDateFormat df = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy.");
                 df.toLocalizedPattern();
                 Date date = launchItem.getNet();
                 launchDate = df.format(date);
             } else {
-                SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy zzz");
+                SimpleDateFormat sdf = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy zzz");
                 sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
                 Date date = launchItem.getNet();
                 launchDate = sdf.format(date);
@@ -123,9 +119,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
             if (sharedPref.getBoolean("local_time", true)) {
                 SimpleDateFormat df;
                 if (sharedPref.getBoolean("24_hour_mode", false)) {
-                    df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - HH:mm zzz");
+                    df = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy - HH:mm zzz");
                 } else {
-                    df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                    df = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy - hh:mm a zzz");
                 }
                 df.toLocalizedPattern();
                 Date date = launchItem.getNet();
@@ -133,9 +129,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
             } else {
                 SimpleDateFormat sdf;
                 if (sharedPref.getBoolean("24_hour_mode", false)) {
-                    sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - HH:mm zzz");
+                    sdf = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy - HH:mm zzz");
                 } else {
-                    sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                    sdf = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy - hh:mm a zzz");
                 }
                 sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
                 Date date = launchItem.getNet();
@@ -173,22 +169,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
         }
     }
 
-    public String parseDateToMMyyyy(String time) {
-        String inputPattern = "EEEE, MMM dd yyyy hh:mm a zzz";
-        String outputPattern = "MMM yyyy";
-        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
-        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
-
-        Date date = null;
-        String str = null;
-
-        try {
-            date = inputFormat.parse(time);
-            str = outputFormat.format(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return str;
+    public String parseDateToMMyyyy(Date date) {
+        SimpleDateFormat outputFormat = new SimpleDateFormat("MMM yyyy");
+        return new SimpleDateFormat("MMM yyyy").format(date);
     }
 
     @Override
@@ -199,12 +182,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
     @NonNull
     @Override
     public String getSectionName(int position) {
-        SimpleDateFormat df = new SimpleDateFormat("EEEE, MMM dd yyyy hh:mm a zzz");
-        df.toLocalizedPattern();
-
         Date date = launchList.get(position).getNet();
 
-        return parseDateToMMyyyy(df.format(date));
+        return parseDateToMMyyyy(date);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -215,11 +195,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
         public ViewHolder(View view) {
             super(view);
 
-            categoryIcon = (ImageView) view.findViewById(R.id.categoryIcon);
-            title = (TextView) view.findViewById(R.id.launch_rocket);
-            location = (TextView) view.findViewById(R.id.location);
-            launch_date = (TextView) view.findViewById(R.id.launch_date);
-            mission = (TextView) view.findViewById(R.id.mission);
+            categoryIcon = view.findViewById(R.id.categoryIcon);
+            title = view.findViewById(R.id.launch_rocket);
+            location = view.findViewById(R.id.location);
+            launch_date = view.findViewById(R.id.launch_date);
+            mission = view.findViewById(R.id.mission);
 
             title.setOnClickListener(this);
             location.setOnClickListener(this);

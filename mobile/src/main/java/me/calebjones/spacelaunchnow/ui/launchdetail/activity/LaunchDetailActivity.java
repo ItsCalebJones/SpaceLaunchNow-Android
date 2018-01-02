@@ -52,6 +52,7 @@ import me.calebjones.spacelaunchnow.ui.launchdetail.TabsAdapter;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.utils.views.CustomOnOffsetChangedListener;
@@ -476,7 +477,7 @@ public class LaunchDetailActivity extends BaseActivity
         try {
             if (launch.getNet() != null) {
                 Date date = launch.getNet();
-                SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                SimpleDateFormat df = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy - hh:mm a zzz");
                 df.toLocalizedPattern();
                 launchDate = df.format(date);
             }

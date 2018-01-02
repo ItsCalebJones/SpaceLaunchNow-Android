@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.view.View;
 import android.widget.RemoteViews;
 
 import me.calebjones.spacelaunchnow.R;
@@ -156,6 +157,12 @@ public class LaunchListManager {
         Intent nextIntent = new Intent(context, WidgetBroadcastReceiver.class);
         PendingIntent refreshPending = PendingIntent.getBroadcast(context, 0, nextIntent, 0);
         remoteViews.setOnClickPendingIntent(R.id.widget_refresh_button, refreshPending);
+
+        if (sharedPref.getBoolean("widget_refresh_enabled", false)) {
+            remoteViews.setViewVisibility(R.id.widget_refresh_button, View.GONE);
+        } else if (!sharedPref.getBoolean("widget_refresh_enabled", false)) {
+            remoteViews.setViewVisibility(R.id.widget_refresh_button, View.VISIBLE);
+        }
 
         Intent openAppIntent = new Intent(context, MainActivity.class);
         openAppIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

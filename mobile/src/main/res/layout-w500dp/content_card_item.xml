@@ -170,6 +170,16 @@
                 android:textAppearance="@style/MaterialTypography.Regular.Subheading"
                 android:textColor="?android:textColorSecondary" />
 
+            <TextView
+                android:id="@+id/content_forecast"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Unknown"
+                android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+                android:textColor="?android:textColorSecondary"
+                android:textIsSelectable="false" />
+
             <LinearLayout
                 android:id="@+id/content_mission_description_view"
                 android:layout_width="match_parent"
@@ -188,35 +198,6 @@
                     android:padding="12dp"
                     android:paddingBottom="8dp" />
 
-                <LinearLayout
-                    android:id="@+id/forecast_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:visibility="visible">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="28dp"
-                        android:text="Forecast: "
-                        android:textAppearance="@style/MaterialTypography.Regular.Title"
-                        android:textColor="?android:textColorSecondary"
-                        android:textIsSelectable="false"
-                        android:textSize="20dp" />
-
-                    <TextView
-                        android:id="@+id/content_forecast"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingRight="8dp"
-                        android:text="Unknown"
-                        android:textAppearance="@style/MaterialTypography.Regular.Subheading"
-                        android:textColor="?android:textColorSecondary"
-                        android:textIsSelectable="false"
-                        android:textSize="20dp" />
-
-                </LinearLayout>
 
                 <TextView
                     android:id="@+id/content_mission"
