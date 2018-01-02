@@ -37,10 +37,12 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import butterknife.BindView;
@@ -54,7 +56,6 @@ import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
-import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Pad;
@@ -107,10 +108,6 @@ public class SummaryDetailFragment extends BaseFragment {
     TextView launch_date_title;
     @BindView(R.id.date)
     TextView date;
-    @BindView(R.id.launch_window_start)
-    TextView launch_window_start;
-    @BindView(R.id.launch_window_end)
-    TextView launch_window_end;
     @BindView(R.id.launch_status)
     TextView launch_status;
     @BindView(R.id.watchButton)
@@ -183,6 +180,10 @@ public class SummaryDetailFragment extends BaseFragment {
     WeatherIconView weatherPrecipIcon;
     @BindView(R.id.weather_wind_speed_icon)
     WeatherIconView weatherSpeedIcon;
+    @BindView(R.id.launch_window_title)
+    TextView launchWindowTitle;
+    @BindView(R.id.launch_window_text)
+    TextView launchWindowText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -573,7 +574,7 @@ public class SummaryDetailFragment extends BaseFragment {
 
             //Setup SimpleDateFormat to parse out getNet date.
             SimpleDateFormat input = new SimpleDateFormat("MMMM dd, yyyy hh:mm:ss zzz");
-            SimpleDateFormat output = new SimpleDateFormat("MMMM dd, yyyy");
+            SimpleDateFormat output = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy");
             input.toLocalizedPattern();
 
             Date mDate;
@@ -674,11 +675,11 @@ public class SummaryDetailFragment extends BaseFragment {
 
             date.setText(dateText);
 
-            if (detailLaunch.getWsstamp() > 0 && detailLaunch.getWestamp() > 0) {
+            if (detailLaunch.getWindowstart() != null && detailLaunch.getWindowstart() != null) {
                 setWindowStamp();
             } else {
-                launch_window_start.setVisibility(View.GONE);
-                launch_window_end.setVisibility(View.GONE);
+                launchWindowTitle.setVisibility(View.GONE);
+                launchWindowText.setVisibility(View.GONE);
             }
         } catch (NullPointerException e) {
             Timber.e(e);
@@ -883,64 +884,47 @@ public class SummaryDetailFragment extends BaseFragment {
 
     private void setWindowStamp() {
         // Create a DateFormatter object for displaying date in specified format.
-        SimpleDateFormat formatter;
-        if (sharedPref.getBoolean("24_hour_mode", false)) {
-            formatter = new SimpleDateFormat("HH:mm zzz");
-        } else {
-            formatter = new SimpleDateFormat("hh:mm a zzz");
-        }
 
-        // Create a calendar object that will convert the date and time value in milliseconds to date.
-        Calendar calendarStart = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        long startDate = detailLaunch.getWsstamp();
-        startDate = startDate * 1000;
-        calendarStart.setTimeInMillis(startDate);
-        String start = formatter.format(calendarStart.getTime());
+        Date windowStart = detailLaunch.getWindowstart();
+        Date windowEnd = detailLaunch.getWindowend();
 
-        // Create a calendar object that will convert the date and time value in milliseconds to date.
-        Calendar calendarEnd = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        long endDate = detailLaunch.getWestamp();
-        endDate = endDate * 1000;
-        calendarEnd.setTimeInMillis(endDate);
-        String end = formatter.format(calendarEnd.getTime());
+        boolean twentyFourHourMode = sharedPref.getBoolean("24_hour_mode", false);
+        DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault());
 
-        if (!start.equals(end)) {
-            if (start.length() == 0
-                    || end.length() == 0) {
-                launch_window_start.setText(String.format("Launch Time: %s",
-                        start));
-                launch_window_end.setVisibility(View.GONE);
-            } else {
-                launch_window_start.setText(String.format("Window Start: %s",
-                        start));
-                launch_window_end.setVisibility(View.VISIBLE);
-                launch_window_end.setText(String.format("Window End: %s",
-                        end));
+        if (windowStart.equals(windowEnd)){
+            // Window Start and Window End match - meaning instantaneous.
+            if (twentyFourHourMode){
+                dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             }
-        } else {
-            launch_window_start.setText(String.format("Launch Time: %s",
-                    start));
-            launch_window_end.setVisibility(View.GONE);
-        }
-    }
 
-    private void setWindowStartEnd() {
-        if (!detailLaunch.getWindowstart().equals(detailLaunch.getWindowend())) {
-            if (detailLaunch.getWindowstart().toString().length() > 0
-                    || detailLaunch.getWindowend().toString().length() > 0) {
-                launch_window_start.setText("Launch Window unavailable.");
-                launch_window_end.setVisibility(View.INVISIBLE);
-            } else {
-                launch_window_start.setText(String.format("Window Start: %s",
-                        detailLaunch.getWindowstart()));
-                launch_window_end.setVisibility(View.VISIBLE);
-                launch_window_end.setText(String.format("Window End: %s",
-                        detailLaunch.getWindowend()));
+            TimeZone timeZone = dateFormat.getTimeZone();
+            launchWindowTitle.setText("Launch Window");
+            launchWindowText.setText(String.format("%s %s",
+                    dateFormat.format(windowStart),
+                    timeZone.getDisplayName(false, TimeZone.SHORT)));
+        } else if (windowStart.after(windowEnd)) {
+            // Launch data is not trustworthy - start is after end.
+            if (twentyFourHourMode){
+                dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             }
-        } else {
-            launch_window_start.setText(String.format("Launch Time: %s",
-                    detailLaunch.getWindowstart()));
-            launch_window_end.setVisibility(View.INVISIBLE);
+
+            TimeZone timeZone = dateFormat.getTimeZone();
+            launchWindowTitle.setText("Launch Window");
+            launchWindowText.setText(String.format("%s %s",
+                    dateFormat.format(windowStart),
+                    timeZone.getDisplayName(false, TimeZone.SHORT)));
+        } else if (windowStart.before(windowEnd)){
+            // Launch Window is properly configured
+            if (twentyFourHourMode){
+                dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            }
+
+            TimeZone timeZone = dateFormat.getTimeZone();
+            launchWindowTitle.setText("Launch Window");
+            launchWindowText.setText(String.format("%s - %s %s",
+                    dateFormat.format(windowStart),
+                    dateFormat.format(windowEnd),
+                    timeZone.getDisplayName(false, TimeZone.SHORT)));
         }
     }
 
