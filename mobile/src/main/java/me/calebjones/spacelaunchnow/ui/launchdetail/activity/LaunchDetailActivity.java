@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.youtube.player.YouTubePlayer;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -52,6 +53,7 @@ import me.calebjones.spacelaunchnow.ui.launchdetail.TabsAdapter;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.utils.views.CustomOnOffsetChangedListener;
@@ -100,7 +102,8 @@ public class LaunchDetailActivity extends BaseActivity
     private Context context;
     private TabsAdapter tabAdapter;
     private int statusColor;
-
+    public YouTubePlayer youTubePlayer;
+    public boolean isYouTubePlayerFullScreen;
     public String response;
     public Launch launch;
 
@@ -167,64 +170,67 @@ public class LaunchDetailActivity extends BaseActivity
 
         if (type != null && type.equals("launch")) {
             final int id = mIntent.getIntExtra("launchID", 0);
-            detailSwipeRefresh.setRefreshing(true);
+
             Launch launch = getRealm().where(Launch.class).equalTo("id", id).findFirst();
             if (launch != null) {
                 updateViews(launch);
             }
-            DataClient.getInstance().getLaunchById(id, true, new Callback<LaunchResponse>() {
-                @Override
-                public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
-                    Realm realm = Realm.getDefaultInstance();
-                    if (response.isSuccessful()) {
-                        final RealmList<Launch> items = new RealmList<>(response.body().getLaunches());
-                        if (items.size() == 1) {
-                            final Launch item = items.first();
-                            realm.executeTransactionAsync(new Realm.Transaction() {
-                                @Override
-                                public void execute(Realm bgRealm) {
-                                    Launch previous = bgRealm.where(Launch.class)
-                                            .equalTo("id", item.getId())
-                                            .findFirst();
-                                    if (previous != null) {
-                                        item.setEventID(previous.getEventID());
-                                        item.setSyncCalendar(previous.syncCalendar());
-                                        item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
-                                        item.setIsNotifiedDay(previous.getIsNotifiedDay());
-                                        item.setIsNotifiedHour(previous.getIsNotifiedHour());
-                                        item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
-                                        item.setNotifiable(previous.isNotifiable());
+            if (launch != null && savedInstanceState == null) {
+                detailSwipeRefresh.setRefreshing(true);
+                DataClient.getInstance().getLaunchById(id, true, new Callback<LaunchResponse>() {
+                    @Override
+                    public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
+                        Realm realm = Realm.getDefaultInstance();
+                        if (response.isSuccessful()) {
+                            final RealmList<Launch> items = new RealmList<>(response.body().getLaunches());
+                            if (items.size() == 1) {
+                                final Launch item = items.first();
+                                realm.executeTransactionAsync(new Realm.Transaction() {
+                                    @Override
+                                    public void execute(Realm bgRealm) {
+                                        Launch previous = bgRealm.where(Launch.class)
+                                                .equalTo("id", item.getId())
+                                                .findFirst();
+                                        if (previous != null) {
+                                            item.setEventID(previous.getEventID());
+                                            item.setSyncCalendar(previous.syncCalendar());
+                                            item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
+                                            item.setIsNotifiedDay(previous.getIsNotifiedDay());
+                                            item.setIsNotifiedHour(previous.getIsNotifiedHour());
+                                            item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
+                                            item.setNotifiable(previous.isNotifiable());
+                                        }
+                                        item.getLocation().setPrimaryID();
+                                        bgRealm.copyToRealmOrUpdate(item);
+                                        Timber.v("Updated detailLaunch: %s", item.getId());
                                     }
-                                    item.getLocation().setPrimaryID();
-                                    bgRealm.copyToRealmOrUpdate(item);
-                                    Timber.v("Updated detailLaunch: %s", item.getId());
-                                }
 
-                            }, new Realm.Transaction.OnSuccess() {
-                                @Override
-                                public void onSuccess() {
-                                    sendUpdateView(id);
-                                }
-                            });
+                                }, new Realm.Transaction.OnSuccess() {
+                                    @Override
+                                    public void onSuccess() {
+                                        sendUpdateView(id);
+                                    }
+                                });
+                            }
+                        } else {
+                            sendUpdateView(id);
                         }
-                    } else {
-                        sendUpdateView(id);
+                        realm.close();
+                        detailSwipeRefresh.setRefreshing(false);
                     }
-                    realm.close();
-                    detailSwipeRefresh.setRefreshing(false);
-                }
 
-                @Override
-                public void onFailure(Call<LaunchResponse> call, Throwable t) {
-                    Realm realm = Realm.getDefaultInstance();
-                    Launch item = realm.where(Launch.class)
-                            .equalTo("id", id)
-                            .findFirst();
-                    updateViews(item);
-                    realm.close();
-                    detailSwipeRefresh.setRefreshing(false);
-                }
-            });
+                    @Override
+                    public void onFailure(Call<LaunchResponse> call, Throwable t) {
+                        Realm realm = Realm.getDefaultInstance();
+                        Launch item = realm.where(Launch.class)
+                                .equalTo("id", id)
+                                .findFirst();
+                        updateViews(item);
+                        realm.close();
+                        detailSwipeRefresh.setRefreshing(false);
+                    }
+                });
+            }
 
         }
 
@@ -250,6 +256,7 @@ public class LaunchDetailActivity extends BaseActivity
 
         tabLayout.setupWithViewPager(viewPager);
     }
+
 
     private  void sendUpdateView(int id){
         Launch item = getRealm().where(Launch.class)
@@ -476,7 +483,7 @@ public class LaunchDetailActivity extends BaseActivity
         try {
             if (launch.getNet() != null) {
                 Date date = launch.getNet();
-                SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                SimpleDateFormat df = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy - hh:mm a zzz");
                 df.toLocalizedPattern();
                 launchDate = df.format(date);
             }
@@ -513,6 +520,27 @@ public class LaunchDetailActivity extends BaseActivity
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(LaunchRequestEvent event) {
         EventBus.getDefault().post(new LaunchEvent(launch));
+    }
+
+    @Override
+    protected void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(final Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (youTubePlayer != null && isYouTubePlayerFullScreen){
+            youTubePlayer.setFullscreen(false);
+        } else {
+            super.onBackPressed();
+        }
     }
 
 }

@@ -11,14 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
-        app:elevation="0dp">
+        android:elevation="8dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:elevation="8dp"
+            app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -31,6 +32,7 @@
             android:id="@+id/irr_layout"
             style="@style/SPL.SnackBar.Layout"
             android:visibility="gone"
+            android:elevation="8dp"
             irr:autoEvaluateDefaultRuleEngine="true"
             irr:defaultRuleAppStartCount="10"
             irr:defaultRuleDismissMaxCount="3"
@@ -44,6 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:elevation="8dp"
                 tools:visibility="visible">
 
                 <TextView
@@ -67,6 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:elevation="8dp"
                 tools:visibility="gone">
 
                 <TextView
@@ -90,6 +94,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:elevation="8dp"
                 tools:visibility="visible">
 
                 <TextView

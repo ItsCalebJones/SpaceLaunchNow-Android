@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.View;
 import android.widget.RemoteViews;
 
 import java.text.SimpleDateFormat;
@@ -119,6 +121,8 @@ public class LaunchCardCompactManager {
         Intent exploreIntent = new Intent(context, LaunchDetailActivity.class);
         exploreIntent.putExtra("TYPE", "launch");
         exploreIntent.putExtra("launchID", launch.getId());
+        exploreIntent.setData(Uri.parse(exploreIntent.toUri(Intent.URI_INTENT_SCHEME)));
+        exploreIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent actionPendingIntent = PendingIntent.getActivity(context, UniqueIdentifier.getID(), exploreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         remoteViews.setOnClickPendingIntent(R.id.widget_compact_card_frame, actionPendingIntent);
@@ -152,6 +156,11 @@ public class LaunchCardCompactManager {
         remoteViews.setTextColor(R.id.widget_launch_date, widgetSecondaryTextColor);
         remoteViews.setInt(R.id.widget_categoryIcon, "setColorFilter", widgetIconColor);
         remoteViews.setInt(R.id.widget_compact_card_refresh_button, "setColorFilter", widgetIconColor);
+        if (sharedPref.getBoolean("widget_refresh_enabled", false)) {
+            remoteViews.setViewVisibility(R.id.widget_compact_card_refresh_button, View.GONE);
+        } else if (!sharedPref.getBoolean("widget_refresh_enabled", false)) {
+            remoteViews.setViewVisibility(R.id.widget_compact_card_refresh_button, View.VISIBLE);
+        }
     }
 
     private void setLocationName(Launch launchRealm) {
@@ -195,9 +204,9 @@ public class LaunchCardCompactManager {
     private void setLaunchDate(Launch launch) {
         SimpleDateFormat sdf;
         if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("24_hour_mode", false)) {
-            sdf = new SimpleDateFormat("MMMM dd, yyyy");
+            sdf = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy");
         } else {
-            sdf = new SimpleDateFormat("MMMM dd, yyyy");
+            sdf = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy");
         }
         sdf.toLocalizedPattern();
         if (launch.getNet() != null) {

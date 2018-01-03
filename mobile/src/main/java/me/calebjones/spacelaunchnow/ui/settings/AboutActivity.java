@@ -88,7 +88,7 @@ public class AboutActivity extends AppCompatActivity {
                                             @Override
                                             public void onInput(MaterialDialog dialog, CharSequence input) {
                                                 // Do something
-                                                if(DebugAuthManager.getAuthResult(input)){
+                                                if(!input.equals("") && DebugAuthManager.getAuthResult(input)){
                                                     goToDebug();
                                                 } else {
                                                     Toast.makeText(context, "Error - Support code was not correct.", Toast.LENGTH_LONG).show();

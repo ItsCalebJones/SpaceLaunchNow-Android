@@ -72,6 +72,8 @@ public class MissionDetailFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setScreenName("Mission Detail Fragment");
+        // retain this fragment
+        setRetainInstance(true);
     }
 
     @Nullable

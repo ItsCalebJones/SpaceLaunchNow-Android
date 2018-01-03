@@ -40,6 +40,7 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
     private ColorPreference widgetAccentColor;
     private ColorPreference widgetTitleColor;
     private SwitchPreference widgetRoundCorners;
+    private SwitchPreference widgetHideSettings;
     private boolean isCustomColor = false;
     private int[] textPrimaryArray;
     private int[] textSecondaryArray;
@@ -127,7 +128,7 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
             Analytics.from(this).sendPreferenceEvent(key);
         }
 
-        if (key.equals("widget_background_color") || key.equals("widget_text_color") || key.equals("widget_secondary_text_color") || key.equals("widget_icon_color") || key.equals("widget_title_text_color") || key.equals("widget_list_accent_color")) {
+        if (key.equals("widget_background_color") || key.equals("widget_text_color") || key.equals("widget_secondary_text_color") || key.equals("widget_icon_color") || key.equals("widget_title_text_color") || key.equals("widget_list_accent_color") || key.equals("widget_refresh_enabled")) {
             Intent nextIntent = new Intent(context, WidgetBroadcastReceiver.class);
             nextIntent.putExtra("updateUIOnly", true);
             context.sendBroadcast(nextIntent);
@@ -178,6 +179,7 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
         widgetRoundCorners = (SwitchPreference) findPreference("widget_theme_round_corner");
         widgetAccentColor = (ColorPreference) findPreference("widget_list_accent_color");
         widgetTitleColor = (ColorPreference) findPreference("widget_title_text_color");
+        widgetHideSettings = (SwitchPreference) findPreference("widget_refresh_enabled");
         if (!SupporterHelper.isSupporter()) {
             Preference weather = findPreference("weather");
             weather.setEnabled(false);
@@ -216,6 +218,9 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
 
             widgetTitleColor.setEnabled(false);
             widgetTitleColor.setSelectable(false);
+
+            widgetHideSettings.setEnabled(false);
+            widgetHideSettings.setSelectable(false);
         }
         Preference localTime = findPreference("local_time");
         localTime.setOnPreferenceChangeListener(createLocalTimeListener());

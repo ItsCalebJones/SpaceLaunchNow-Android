@@ -9,9 +9,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 
+import java.util.TimeZone;
+
 import io.realm.Realm;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
+import timber.log.Timber;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -27,28 +30,14 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Timber.d("onCreate");
         realm = Realm.getDefaultInstance();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-            TypedValue typedValue = new TypedValue();
-            Resources.Theme theme = getTheme();
-            theme.resolveAttribute(R.attr.recentBarColor, typedValue, true);
-            int color = typedValue.data;
-
-            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_round);
-            ActivityManager.TaskDescription td = new ActivityManager.TaskDescription(null, bm, color);
-
-            setTaskDescription(td);
-            if (bm != null) {
-                bm.recycle();
-            }
-        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Timber.d("onDestroy");
         Analytics.from(this).sendScreenView(name, "Activity destroyed.");
         realm.close();
     }
@@ -56,20 +45,24 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+        Timber.d("onStart");
         Analytics.from(this).sendScreenView(name, name + " started.");
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Timber.d("onResume");
         Analytics.from(this).sendScreenView(name, name + " resumed.");
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        Timber.d("onPause");
         Analytics.from(this).notifyGoneBackground();
     }
+
 
     public Realm getRealm() {
         return realm;

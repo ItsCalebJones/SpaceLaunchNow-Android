@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import io.realm.RealmList;
@@ -181,10 +183,10 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 }
 
                 if (launchItem.getProbability() != null && launchItem.getProbability() > 0) {
-                    holder.contentForecast.setText(String.format("%s%%", launchItem.getProbability()));
-                    holder.forecast_container.setVisibility(View.VISIBLE);
+                    holder.contentForecast.setText(String.format("Weather Favorable: %s%%", launchItem.getProbability()));
+                    holder.contentForecast.setVisibility(View.VISIBLE);
                 } else {
-                    holder.forecast_container.setVisibility(View.GONE);
+                    holder.contentForecast.setVisibility(View.GONE);
                 }
 
                 switch (launchItem.getStatus()) {
@@ -365,7 +367,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
 
                     if (launchItem.getNet() != null) {
                         //Get launch date
-                        SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy");
+
+                        SimpleDateFormat sdf = Utils.getSimpleDateFormatForUI("MMMM d, yyyy");
                         sdf.toLocalizedPattern();
                         Date date = launchItem.getNet();
                         String launchTime = sdf.format(date);
@@ -401,7 +404,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     } else {
                         launchTime = "To be determined... ";
                     }
-                    SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy");
+                    SimpleDateFormat sdf = Utils.getSimpleDateFormatForUI("MMMM d, yyyy");
                     sdf.toLocalizedPattern();
                     Date date = launchItem.getNet();
                     holder.launch_date_compact.setText(sdf.format(date));
@@ -498,7 +501,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         public ImageView categoryIcon;
         public CountDownTimer timer;
         public View countdownView;
-        public View forecast_container;
         public TextView contentForecast;
 
         public ImageView map_view;
@@ -528,7 +530,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
             countdownSeconds = view.findViewById(R.id.countdown_seconds);
             countdownView = view.findViewById(R.id.countdown_layout);
 
-            forecast_container = view.findViewById(R.id.forecast_container);
             contentForecast = view.findViewById(R.id.content_forecast);
 
             map_view = view.findViewById(R.id.map_view);
@@ -549,7 +550,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
             final Launch launch = launchList.get(position);
             Intent sendIntent = new Intent();
 
-            SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+            SimpleDateFormat df = Utils.getSimpleDateFormatForUI("EEEE, MMMM d, yyyy - hh:mm a zzz");
             df.toLocalizedPattern();
 
             Date date = launch.getNet();

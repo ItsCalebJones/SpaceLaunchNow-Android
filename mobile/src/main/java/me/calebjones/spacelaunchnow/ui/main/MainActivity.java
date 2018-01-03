@@ -235,14 +235,14 @@ public class MainActivity extends BaseActivity {
                                         .withIcon(CommunityMaterial.Icon.cmd_discord)
                                         .withLevel(2)
                                         .withName("Discord")
-                                        .withDescription("Hop on Discord during launches!")
+                                        .withDescription("Join the Community")
                                         .withIdentifier(R.id.menu_discord)
                                         .withSelectable(false),
                                 new SecondaryDrawerItem()
                                         .withIcon(CommunityMaterial.Icon.cmd_twitter)
                                         .withLevel(2)
                                         .withName("Twitter")
-                                        .withDescription("Connect on Twitter!")
+                                        .withDescription("Connect on Twitter")
                                         .withIdentifier(R.id.menu_twitter)
                                         .withSelectable(false),
                                 new SecondaryDrawerItem()
@@ -256,7 +256,7 @@ public class MainActivity extends BaseActivity {
                                         .withIcon(CommunityMaterial.Icon.cmd_web)
                                         .withLevel(2)
                                         .withName("On the Web")
-                                        .withDescription("Bookmark spacelaunchnow.me")
+                                        .withDescription("Space Launch Now - Official Site")
                                         .withIdentifier(R.id.menu_website)
                                         .withSelectable(false)
                         ),

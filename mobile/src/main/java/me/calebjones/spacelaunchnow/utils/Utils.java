@@ -33,6 +33,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.content.ContextCompat;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.PathInterpolator;
@@ -603,6 +604,11 @@ public class Utils {
             Timber.e(e);
             return null;
         }
+    }
+
+    public static SimpleDateFormat getSimpleDateFormatForUI(String pattern) {
+        String format =  DateFormat.getBestDateTimePattern(Locale.getDefault(), pattern);
+        return new SimpleDateFormat(format, Locale.getDefault());
     }
 }
 

@@ -8,11 +8,13 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.view.View;
 import android.widget.RemoteViews;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
+import me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.UniqueIdentifier;
 import me.calebjones.spacelaunchnow.widget.WidgetBroadcastReceiver;
@@ -55,7 +57,7 @@ public class LaunchListManager {
         int widgetIconsColor = sharedPref.getInt("widget_icon_color", colorWhite);
 
         if (sharedPref.getBoolean("widget_theme_round_corner", true)) {
-            remoteViews.setImageViewResource(R.id.bgcolor, R.drawable.rounded);
+            remoteViews.setImageViewResource(R.id.bgcolor, R.drawable.rounded_bottom);
             remoteViews.setImageViewResource(R.id.title_background, R.drawable.rounded_top);
         } else {
             remoteViews.setImageViewResource(R.id.bgcolor, R.drawable.squared);
@@ -70,6 +72,7 @@ public class LaunchListManager {
         remoteViews.setInt(R.id.bgcolor, "setColorFilter", Color.rgb(red,green,blue));
         remoteViews.setInt(R.id.bgcolor, "setAlpha", widgetAlpha);
 
+        widgetAlpha = Color.alpha(widgetAccentColor);
         red = Color.red(widgetAccentColor);
         green = Color.green(widgetAccentColor);
         blue = Color.blue(widgetAccentColor);
@@ -91,6 +94,12 @@ public class LaunchListManager {
         PendingIntent actionPendingIntent = PendingIntent.getActivity(context, 0, openAppIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         remoteViews.setOnClickPendingIntent(R.id.title, actionPendingIntent);
+
+        Intent supportIntent = new Intent(context, SupporterActivity.class);
+        supportIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent supportPendingIntent = PendingIntent.getActivity(context, 0, supportIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        remoteViews.setOnClickPendingIntent(R.id.supporter_message, supportPendingIntent);
 
         appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
     }
@@ -114,7 +123,7 @@ public class LaunchListManager {
         int widgetIconsColor = sharedPref.getInt("widget_icon_color", colorWhite);
 
         if (sharedPref.getBoolean("widget_theme_round_corner", true)) {
-            remoteViews.setImageViewResource(R.id.bgcolor, R.drawable.rounded);
+            remoteViews.setImageViewResource(R.id.bgcolor, R.drawable.rounded_bottom);
             remoteViews.setImageViewResource(R.id.title_background, R.drawable.rounded_top);
         } else {
             remoteViews.setImageViewResource(R.id.bgcolor, R.drawable.squared);
@@ -129,6 +138,7 @@ public class LaunchListManager {
         remoteViews.setInt(R.id.bgcolor, "setColorFilter", Color.rgb(red,green,blue));
         remoteViews.setInt(R.id.bgcolor, "setAlpha", widgetAlpha);
 
+        widgetAlpha = Color.alpha(widgetAccentColor);
         red = Color.red(widgetAccentColor);
         green = Color.green(widgetAccentColor);
         blue = Color.blue(widgetAccentColor);
@@ -147,6 +157,12 @@ public class LaunchListManager {
         Intent nextIntent = new Intent(context, WidgetBroadcastReceiver.class);
         PendingIntent refreshPending = PendingIntent.getBroadcast(context, 0, nextIntent, 0);
         remoteViews.setOnClickPendingIntent(R.id.widget_refresh_button, refreshPending);
+
+        if (sharedPref.getBoolean("widget_refresh_enabled", false)) {
+            remoteViews.setViewVisibility(R.id.widget_refresh_button, View.GONE);
+        } else if (!sharedPref.getBoolean("widget_refresh_enabled", false)) {
+            remoteViews.setViewVisibility(R.id.widget_refresh_button, View.VISIBLE);
+        }
 
         Intent openAppIntent = new Intent(context, MainActivity.class);
         openAppIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

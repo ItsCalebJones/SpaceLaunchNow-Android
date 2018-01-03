@@ -76,14 +76,7 @@ android {
     buildToolsVersion '26.0.2'
     defaultConfig {
 
-//        splits {
-//            abi {
-//                enable true
-//                reset()
-//                include 'x86_64', 'x86', 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'mips'
-//                universalApk false
-//            }
-//        }
+
 
         applicationId "me.calebjones.spacelaunchnow"
         manifestPlaceholders = [appNameLabel                   : "@string/application_name",
@@ -113,6 +106,14 @@ android {
 
         }
         release {
+//        splits {
+//            abi {
+//                enable true
+//                reset()
+//                include 'x86_64', 'x86', 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'mips'
+//                universalApk false
+//            }
+//        }
             zipAlignEnabled true
             minifyEnabled true
             shrinkResources true
@@ -179,6 +180,7 @@ dependencies {
     wearApp project(':wear')
     implementation project(':glidepalette')
     implementation project(path: ':data')
+    implementation files('libs/YouTubeAndroidPlayerApi.jar')
 
     // Android Official Libraries
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'

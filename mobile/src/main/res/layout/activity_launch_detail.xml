@@ -10,6 +10,7 @@
         android:id="@+id/detail.appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:elevation="8dp"
         android:fitsSystemWindows="true">
 
         <android.support.design.widget.CollapsingToolbarLayout
@@ -94,7 +95,6 @@
             android:id="@+id/detail.tabs"
             android:layout_width="fill_parent"
             android:layout_height="?attr/actionBarSize"
-            android:visibility="gone"
             app:tabIndicatorColor="@color/colorAccentLight"
             app:tabIndicatorHeight="4dp"
             app:tabSelectedTextColor="@color/white"
@@ -125,6 +125,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_gravity="center|top"
+                android:elevation="6dp"
                 android:visibility="gone"
                 ads:adSize="SMART_BANNER"
                 ads:adUnitId="ca-app-pub-9824528399164059/9713798255"
@@ -139,7 +140,7 @@
         android:id="@+id/fab_share"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="58dp"
+        android:layout_marginBottom="@dimen/material_baseline_grid_1x"
         android:layout_marginEnd="@dimen/material_baseline_grid_1x"
         android:src="@drawable/ic_menu_share_white"
         app:layout_anchor="@id/detail_viewpager"
