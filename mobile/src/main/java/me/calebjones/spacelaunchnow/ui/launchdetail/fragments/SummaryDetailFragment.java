@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.AppCompatButton;
@@ -30,18 +31,28 @@ import android.zetterstrom.com.forecast.models.Unit;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
+import com.crashlytics.android.Crashlytics;
 import com.github.pwittchen.weathericonview.WeatherIconView;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.mypopsy.maps.StaticMap;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.w3c.dom.Text;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,15 +65,16 @@ import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
-import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Pad;
-import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.RocketDetail;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
+import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.RocketDetail;
+import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
+import me.calebjones.spacelaunchnow.utils.analytics.CrashlyticsTree;
 import me.calebjones.spacelaunchnow.utils.views.CountDownTimer;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -78,8 +90,9 @@ public class SummaryDetailFragment extends BaseFragment {
     private CountDownTimer timer;
     public Launch detailLaunch;
     private RocketDetail launchVehicle;
-
+    private YouTubePlayerSupportFragment youTubePlayerFragment;
     private boolean nightMode;
+    private String youTubeURL;
 
     @BindView(R.id.content_TMinus_status)
     TextView contentTMinusStatus;
@@ -107,10 +120,6 @@ public class SummaryDetailFragment extends BaseFragment {
     TextView launch_date_title;
     @BindView(R.id.date)
     TextView date;
-    @BindView(R.id.launch_window_start)
-    TextView launch_window_start;
-    @BindView(R.id.launch_window_end)
-    TextView launch_window_end;
     @BindView(R.id.launch_status)
     TextView launch_status;
     @BindView(R.id.watchButton)
@@ -183,11 +192,21 @@ public class SummaryDetailFragment extends BaseFragment {
     WeatherIconView weatherPrecipIcon;
     @BindView(R.id.weather_wind_speed_icon)
     WeatherIconView weatherSpeedIcon;
+    @BindView(R.id.launch_window_title)
+    TextView launchWindowTitle;
+    @BindView(R.id.launch_window_text)
+    TextView launchWindowText;
+    @BindView(R.id.youtube_card)
+    CardView youtubeCard;
+    @BindView(R.id.error_message)
+    TextView errorMessage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setScreenName("Summary Detail Fragment");
+        // retain this fragment
+        setRetainInstance(true);
     }
 
     @Override
@@ -206,6 +225,10 @@ public class SummaryDetailFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.detail_launch_summary, container, false);
 
         ButterKnife.bind(this, view);
+        youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.add(R.id.youtube_view, youTubePlayerFragment).commit();
+
 
         return view;
     }
@@ -573,7 +596,7 @@ public class SummaryDetailFragment extends BaseFragment {
 
             //Setup SimpleDateFormat to parse out getNet date.
             SimpleDateFormat input = new SimpleDateFormat("MMMM dd, yyyy hh:mm:ss zzz");
-            SimpleDateFormat output = new SimpleDateFormat("MMMM dd, yyyy");
+            SimpleDateFormat output = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy");
             input.toLocalizedPattern();
 
             Date mDate;
@@ -622,6 +645,130 @@ public class SummaryDetailFragment extends BaseFragment {
             });
 
             if (detailLaunch.getVidURLs() != null && detailLaunch.getVidURLs().size() > 0) {
+
+                final String regex = "(youtu\\.be\\/|youtube\\.com\\/(watch\\?(.*&)?v=|(embed|v)\\/|c\\/))([^\\?&\"'>].*)";
+                final Pattern pattern = Pattern.compile(regex);
+
+                for (RealmStr url: detailLaunch.getVidURLs()){
+                    Matcher matcher = pattern.matcher(url.getVal());
+                    Timber.v("Checking for match of %s", url.getVal());
+                    if (matcher.find() && (matcher.group(1) != null || matcher.group(2) != null) && matcher.group(5) != null) {
+                        youTubeURL = matcher.group(5);
+                        break;
+                    }
+                }
+
+                if (youTubeURL != null) {
+                    youtubeCard.setVisibility(View.VISIBLE);
+                    final LaunchDetailActivity mainActivity = (LaunchDetailActivity) getActivity();
+                    youTubePlayerFragment.initialize(context.getResources().getString(R.string.GoogleMapsKey), new YouTubePlayer.OnInitializedListener() {
+                        @Override
+                        public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean restored) {
+                            mainActivity.youTubePlayer = youTubePlayer;
+                            youTubePlayer.cueVideo(youTubeURL);
+                            youTubePlayer.setOnFullscreenListener(new YouTubePlayer.OnFullscreenListener() {
+                                @Override
+                                public void onFullscreen(boolean b) {
+                                    mainActivity.isYouTubePlayerFullScreen = b;
+                                }
+                            });
+                            youTubePlayer.setPlaybackEventListener(new YouTubePlayer.PlaybackEventListener() {
+                                @Override
+                                public void onPlaying() {
+                                    Timber.v("onPlaying");
+                                }
+
+                                @Override
+                                public void onPaused() {
+                                    Timber.v("onPaused");
+                                }
+
+                                @Override
+                                public void onStopped() {
+                                    Timber.v("onStopped");
+                                }
+
+                                @Override
+                                public void onBuffering(boolean b) {
+                                    Timber.v("onBuffering %s", b);
+                                }
+
+                                @Override
+                                public void onSeekTo(int i) {
+                                    Timber.v("onSeekTo %s", i);
+                                }
+                            });
+                            youTubePlayer.setPlaylistEventListener(new YouTubePlayer.PlaylistEventListener() {
+                                @Override
+                                public void onPrevious() {
+                                    Timber.v("onPrevious");
+                                }
+
+                                @Override
+                                public void onNext() {
+                                    Timber.v("onNext");
+                                }
+
+                                @Override
+                                public void onPlaylistEnded() {
+                                    Timber.v("onPlaylistEnded");
+                                }
+                            });
+                            youTubePlayer.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
+                                @Override
+                                public void onLoading() {
+                                    Timber.v("onLoading");
+                                }
+
+                                @Override
+                                public void onLoaded(String s) {
+                                    Timber.v("onLoaded %s", s);
+                                    if (youTubeURL.contains("live")) {
+                                        errorMessage.setVisibility(View.VISIBLE);
+                                        errorMessage.setText(String.format("Live Broadcast %s", s));
+                                    }
+                                }
+
+                                @Override
+                                public void onAdStarted() {
+                                    Timber.v("onAdStarted");
+                                }
+
+                                @Override
+                                public void onVideoStarted() {
+                                    Timber.v("onVideoStarted");
+                                }
+
+                                @Override
+                                public void onVideoEnded() {
+                                    Timber.v("onVideoEnded");
+                                }
+
+                                @Override
+                                public void onError(YouTubePlayer.ErrorReason errorReason) {
+                                    Timber.v("onError - %s", errorReason.name());
+                                    if (youTubeURL.contains("live")) {
+                                        errorMessage.setVisibility(View.VISIBLE);
+                                        errorMessage.setText("Broadcast may not be live.");
+                                    }
+                                    Crashlytics.log(errorReason.name());
+                                }
+                            });
+
+                        }
+
+                        @Override
+                        public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+                            if (youTubeInitializationResult.isUserRecoverableError()) {
+                                youTubeInitializationResult.getErrorDialog(getActivity(), 1).show();
+                            } else {
+                                String error = String.format(getString(R.string.player_error), youTubeInitializationResult.toString());
+                                Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                }
+
                 watchButton.setVisibility(View.VISIBLE);
                 watchButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -674,11 +821,11 @@ public class SummaryDetailFragment extends BaseFragment {
 
             date.setText(dateText);
 
-            if (detailLaunch.getWsstamp() > 0 && detailLaunch.getWestamp() > 0) {
+            if (detailLaunch.getWindowstart() != null && detailLaunch.getWindowstart() != null) {
                 setWindowStamp();
             } else {
-                launch_window_start.setVisibility(View.GONE);
-                launch_window_end.setVisibility(View.GONE);
+                launchWindowTitle.setVisibility(View.GONE);
+                launchWindowText.setVisibility(View.GONE);
             }
         } catch (NullPointerException e) {
             Timber.e(e);
@@ -883,64 +1030,47 @@ public class SummaryDetailFragment extends BaseFragment {
 
     private void setWindowStamp() {
         // Create a DateFormatter object for displaying date in specified format.
-        SimpleDateFormat formatter;
-        if (sharedPref.getBoolean("24_hour_mode", false)) {
-            formatter = new SimpleDateFormat("HH:mm zzz");
-        } else {
-            formatter = new SimpleDateFormat("hh:mm a zzz");
-        }
 
-        // Create a calendar object that will convert the date and time value in milliseconds to date.
-        Calendar calendarStart = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        long startDate = detailLaunch.getWsstamp();
-        startDate = startDate * 1000;
-        calendarStart.setTimeInMillis(startDate);
-        String start = formatter.format(calendarStart.getTime());
+        Date windowStart = detailLaunch.getWindowstart();
+        Date windowEnd = detailLaunch.getWindowend();
 
-        // Create a calendar object that will convert the date and time value in milliseconds to date.
-        Calendar calendarEnd = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        long endDate = detailLaunch.getWestamp();
-        endDate = endDate * 1000;
-        calendarEnd.setTimeInMillis(endDate);
-        String end = formatter.format(calendarEnd.getTime());
+        boolean twentyFourHourMode = sharedPref.getBoolean("24_hour_mode", false);
+        DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault());
 
-        if (!start.equals(end)) {
-            if (start.length() == 0
-                    || end.length() == 0) {
-                launch_window_start.setText(String.format("Launch Time: %s",
-                        start));
-                launch_window_end.setVisibility(View.GONE);
-            } else {
-                launch_window_start.setText(String.format("Window Start: %s",
-                        start));
-                launch_window_end.setVisibility(View.VISIBLE);
-                launch_window_end.setText(String.format("Window End: %s",
-                        end));
+        if (windowStart.equals(windowEnd)) {
+            // Window Start and Window End match - meaning instantaneous.
+            if (twentyFourHourMode) {
+                dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             }
-        } else {
-            launch_window_start.setText(String.format("Launch Time: %s",
-                    start));
-            launch_window_end.setVisibility(View.GONE);
-        }
-    }
 
-    private void setWindowStartEnd() {
-        if (!detailLaunch.getWindowstart().equals(detailLaunch.getWindowend())) {
-            if (detailLaunch.getWindowstart().toString().length() > 0
-                    || detailLaunch.getWindowend().toString().length() > 0) {
-                launch_window_start.setText("Launch Window unavailable.");
-                launch_window_end.setVisibility(View.INVISIBLE);
-            } else {
-                launch_window_start.setText(String.format("Window Start: %s",
-                        detailLaunch.getWindowstart()));
-                launch_window_end.setVisibility(View.VISIBLE);
-                launch_window_end.setText(String.format("Window End: %s",
-                        detailLaunch.getWindowend()));
+            TimeZone timeZone = dateFormat.getTimeZone();
+            launchWindowTitle.setText("Launch Window");
+            launchWindowText.setText(String.format("%s %s",
+                    dateFormat.format(windowStart),
+                    timeZone.getDisplayName(false, TimeZone.SHORT)));
+        } else if (windowStart.after(windowEnd)) {
+            // Launch data is not trustworthy - start is after end.
+            if (twentyFourHourMode) {
+                dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             }
-        } else {
-            launch_window_start.setText(String.format("Launch Time: %s",
-                    detailLaunch.getWindowstart()));
-            launch_window_end.setVisibility(View.INVISIBLE);
+
+            TimeZone timeZone = dateFormat.getTimeZone();
+            launchWindowTitle.setText("Launch Window");
+            launchWindowText.setText(String.format("%s %s",
+                    dateFormat.format(windowStart),
+                    timeZone.getDisplayName(false, TimeZone.SHORT)));
+        } else if (windowStart.before(windowEnd)) {
+            // Launch Window is properly configured
+            if (twentyFourHourMode) {
+                dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            }
+
+            TimeZone timeZone = dateFormat.getTimeZone();
+            launchWindowTitle.setText("Launch Window");
+            launchWindowText.setText(String.format("%s - %s %s",
+                    dateFormat.format(windowStart),
+                    dateFormat.format(windowEnd),
+                    timeZone.getDisplayName(false, TimeZone.SHORT)));
         }
     }
 
@@ -968,11 +1098,6 @@ public class SummaryDetailFragment extends BaseFragment {
     public void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
     }
 
     @OnClick(R.id.map_view_summary)
