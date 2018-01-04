@@ -19,6 +19,7 @@ package me.calebjones.spacelaunchnow.common.customviews.generate;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -42,6 +43,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.concurrent.TimeUnit;
 
@@ -76,9 +78,9 @@ public final class Rate {
     private static final String KEY_BOOL_ASKED = "asked";
     private static final String KEY_LONG_FIRST_LAUNCH = "first_launch";
     private static final int DEFAULT_COUNT = 6;
-    private static final int DEFAULT_REPEAT_COUNT = 30;
+    private static final int DEFAULT_REPEAT_COUNT = 15;
     private static final long DEFAULT_INSTALL_TIME = TimeUnit.DAYS.toMillis(3);
-    private static final boolean DEFAULT_CHECKED = true;
+    private static final boolean DEFAULT_CHECKED = false;
 
     private final SharedPreferences mPrefs;
     private final String mPackageName;
@@ -89,6 +91,7 @@ public final class Rate {
     private ViewGroup mParentView;
     private OnFeedbackListener mFeedbackAction;
     private boolean mSnackBarSwipeToDismiss = true;
+    private Snackbar snackbar;
 
     private Rate(@NonNull Context context) {
         mContext = context;
@@ -200,7 +203,7 @@ public final class Rate {
                 getRemainingCount() == 0
                         && !asked
                         && System.currentTimeMillis() > firstLaunch + mMinInstallTime;
-        if (shouldShowRequest && canRateApp()) {
+        if (shouldShowRequest) {
             showRatingRequest();
         }
         return shouldShowRequest;
@@ -252,7 +255,7 @@ public final class Rate {
 
     private void showRatingSnackbar() {
         // Wie is hier nou de snackbar?
-        final Snackbar snackbar = Snackbar.make(mParentView, mMessage,
+        snackbar = Snackbar.make(mParentView, mMessage,
                 mSnackBarSwipeToDismiss ? Snackbar.LENGTH_INDEFINITE : Snackbar.LENGTH_LONG);
         Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout) snackbar.getView();
 
@@ -323,8 +326,16 @@ public final class Rate {
 
         // Add the view to the Snackbar's layout
         layout.addView(snackView, 0);
+
         // Show the Snackbar
         snackbar.show();
+    }
+
+    public boolean isShown(){
+        if (snackbar != null){
+            return snackbar.isShown();
+        }
+        return false;
     }
 
     private void showRatingDialog() {
@@ -410,7 +421,11 @@ public final class Rate {
         if (!(mContext instanceof Activity)) {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
-        mContext.startActivity(intent);
+        try {
+            mContext.startActivity(intent);
+        } catch (ActivityNotFoundException e){
+            Toast.makeText(mContext, "Unable to launch the Play Store", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -474,7 +489,7 @@ public final class Rate {
          * @return The current {@link Builder}
          */
         @NonNull
-        public Builder setMinimumInstallTime(int millis) {
+        public Builder setMinimumInstallTime(long millis) {
             mRate.mMinInstallTime = millis;
             return this;
         }

@@ -403,17 +403,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         Timber.v("onResume");
         setTitle();
 
-        if (!Once.beenDone(Once.THIS_APP_VERSION, "showChangelog")) {
-            Once.markDone("showChangelog");
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    showChangelogSnackbar();
-                }
-            }, 1000);
-        }
-
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.ACTION_GET_UP_LAUNCHES);
 
@@ -447,19 +436,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-    }
-
-    private void showChangelogSnackbar() {
-        Snackbar snackbar = Snackbar
-                .make(coordinatorLayout, "Updated to version " + Utils.getVersionName(context), Snackbar.LENGTH_LONG)
-                .setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
-                .setAction("Changelog", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        ((MainActivity) getActivity()).showWhatsNew();
-                    }
-                });
-        snackbar.show();
     }
 
     private final BroadcastReceiver launchReceiver = new BroadcastReceiver() {

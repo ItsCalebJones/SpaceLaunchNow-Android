@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -23,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -35,6 +38,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,8 +46,11 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmList;
+import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
+import me.calebjones.spacelaunchnow.common.customviews.generate.OnFeedbackListener;
+import me.calebjones.spacelaunchnow.common.customviews.generate.Rate;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.content.events.LaunchRequestEvent;
@@ -109,6 +116,7 @@ public class LaunchDetailActivity extends BaseActivity
     public String response;
     public Launch launch;
     private boolean fabShowable = true;
+    private Rate rate;
 
     public LaunchDetailActivity() {
         super("Launch Detail Activity");
@@ -139,10 +147,26 @@ public class LaunchDetailActivity extends BaseActivity
             recreate();
         }
 
+
         setTheme(m_theme);
         setContentView(R.layout.activity_launch_detail);
         ButterKnife.bind(this);
         detailSwipeRefresh.setEnabled(false);
+
+        rate = new Rate.Builder(context)
+                .setTriggerCount(10)
+                .setMinimumInstallTime(TimeUnit.DAYS.toMillis(3))
+                .setMessage(R.string.please_rate_short)
+                .setFeedbackAction(new OnFeedbackListener() {
+                    @Override
+                    public void onFeedbackTapped() {
+                        showFeedback();
+                    }
+                })
+                .setSnackBarParent(rootview)
+                .build();
+
+        rate.showRequest();
 
         if (!SupporterHelper.isSupporter()) {
             AdRequest adRequest = new AdRequest.Builder().build();
@@ -258,6 +282,65 @@ public class LaunchDetailActivity extends BaseActivity
         viewPager.setOffscreenPageLimit(3);
 
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    private void showFeedback() {
+        new MaterialDialog.Builder(this)
+                .title("Submit Feedback")
+                .autoDismiss(true)
+                .content("Feel free to submit bugs or feature requests for anything related to the app. If you found an issue with the launch data, the libraries at Launch Library that provide the data can be contacted via Discord or Reddit.")
+                .neutralColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                .negativeText("Launch Data")
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        String url = "https://www.reddit.com/r/LaunchLibrary/";
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                    }
+                })
+                .positiveColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                .positiveText("App Feedback")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.getBuilder()
+                                .title("Need Support?")
+                                .content("The fastest and most reliable way to get support is through Discord. If thats not an option feel free to email me directly.")
+                                .neutralText("Email")
+                                .negativeText("Cancel")
+                                .positiveText("Discord")
+                                .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(MaterialDialog dialog, DialogAction which) {
+                                        Intent intent = new Intent(Intent.ACTION_SENDTO);
+                                        intent.setData(Uri.parse("mailto:"));
+                                        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@calebjones.me"});
+                                        intent.putExtra(Intent.EXTRA_SUBJECT, "Space Launch Now - Feedback");
+
+                                        startActivity(Intent.createChooser(intent, "Email via..."));
+                                    }
+                                })
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(MaterialDialog dialog, DialogAction which) {
+                                        String url = "https://discord.gg/WVfzEDW";
+                                        Intent i = new Intent(Intent.ACTION_VIEW);
+                                        i.setData(Uri.parse(url));
+                                        startActivity(i);
+                                    }
+                                })
+                                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
+                    }
+                })
+                .show();
     }
 
     @Override

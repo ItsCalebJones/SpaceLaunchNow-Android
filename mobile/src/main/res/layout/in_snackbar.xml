@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2017    Mathijs Lagerberg, Pixplicity BV
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,16 +14,16 @@
   ~ limitations under the License.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_gravity="center"
-              android:gravity="center_vertical"
-              android:orientation="vertical"
-              android:padding="12dp"
-              android:theme="@style/ThemeOverlay.AppCompat.Dark"
-              tools:background="#000000">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:theme="@style/BaseAppTheme">
 
     <TextView
         android:id="@+id/tv_swipe"
@@ -32,17 +31,16 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/swipe_to_dismiss"
-        android:textColor="#90ffffff"
-        android:textSize="12sp"/>
+        android:textColor="?android:attr/textColorPrimaryInverse"
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault"
         android:textColor="?android:attr/textColorSecondary"
-        tools:text="@string/please_rate_short"/>
+        tools:text="@string/please_rate_short" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -69,16 +67,16 @@
                 android:text="@string/button_feedback"
                 android:textColor="?android:attr/textColorSecondary"
                 android:visibility="gone"
-                tools:visibility="visible"/>
+                tools:visibility="visible" />
 
             <CheckBox
                 android:id="@+id/cb_never"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:checked="true"
+                android:checked="false"
                 android:text="@string/button_dont_ask"
-                android:textColor="?android:attr/textColorSecondary"/>
+                android:textColor="?android:attr/textColorSecondary" />
 
         </LinearLayout>
 
@@ -89,6 +87,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|bottom"
             android:layout_weight="1"
-            android:text="@string/button_yes"/>
+            android:text="@string/button_yes" />
     </LinearLayout>
 </LinearLayout>

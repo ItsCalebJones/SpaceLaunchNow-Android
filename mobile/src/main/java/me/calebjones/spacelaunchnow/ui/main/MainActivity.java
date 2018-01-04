@@ -1,5 +1,6 @@
 package me.calebjones.spacelaunchnow.ui.main;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +11,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -58,6 +60,8 @@ import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
+import me.calebjones.spacelaunchnow.common.customviews.generate.OnFeedbackListener;
+import me.calebjones.spacelaunchnow.common.customviews.generate.Rate;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.events.FilterViewEvent;
@@ -98,7 +102,7 @@ public class MainActivity extends BaseActivity {
     private CustomTabActivityHelper customTabActivityHelper;
     private Context context;
     private boolean adviewEnabled = false;
-//    private Rate rate;
+    private Rate rate;
 
     static final int SHOW_INTRO = 1;
 
@@ -209,20 +213,19 @@ public class MainActivity extends BaseActivity {
                 .withSavedInstance(savedInstanceState)
                 .build();
 
-//        rate = new Rate.Builder(context)                            // Optional, defaults to 6
-//                .setMinimumInstallTime(0)   // Optional, defaults to 7 days
-//                .setFeedbackAction(new OnFeedbackListener() {       // Optional
-//                    @Override
-//                    public void onFeedbackTapped() {
-//                        Toast.makeText(MainActivity.this, "Meh", Toast.LENGTH_SHORT).show();
-//                    }
-//                })
-//                .setSnackBarParent(coordinatorLayout)                            // Optional, shows dialog by default
-//                .setMessage("Hello")                // Optional
-//                .setPositiveButton("Sure!")                         // Optional
-//                .setCancelButton("Maybe later")                     // Optional
-//                .setNegativeButton("Nope!")                         // Optional
-//                .build();
+        rate = new Rate.Builder(context)
+                .setTriggerCount(10)
+                .setMinimumInstallTime(TimeUnit.DAYS.toMillis(3))
+                .setMessage(R.string.please_rate_short)
+                .setFeedbackAction(new OnFeedbackListener() {
+                    @Override
+                    public void onFeedbackTapped() {
+                        showFeedback();
+                    }
+                })
+                .setSnackBarParent(coordinatorLayout)
+                .build();
+
 
         result = new DrawerBuilder()
                 .withActivity(this)
@@ -342,7 +345,6 @@ public class MainActivity extends BaseActivity {
         customTabActivityHelper.bindCustomTabsService(this);
         mayLaunchUrl(Uri.parse("https://launchlibrary.net/"));
         EventBus.getDefault().register(this);
-
     }
 
     @Override
@@ -360,6 +362,25 @@ public class MainActivity extends BaseActivity {
 
     public void onResume() {
         super.onResume();
+        if (rate != null) {
+            rate.count();
+        }
+        if (BuildConfig.DEBUG) {
+            showRemainingCount();
+        }
+
+        if (!Once.beenDone(Once.THIS_APP_VERSION, "showChangelog")) {
+            if (!rate.isShown()) {
+                Once.markDone("showChangelog");
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        showChangelogSnackbar();
+                    }
+                }, 1000);
+            }
+        }
         if (getSharedPreferences("theme_changed", 0).getBoolean("recreate", false)) {
             SharedPreferences.Editor editor = getSharedPreferences("theme_changed", 0).edit();
             editor.putBoolean("recreate", false);
@@ -374,6 +395,28 @@ public class MainActivity extends BaseActivity {
             switchPreferences.setNightModeStatus(false);
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
         }
+    }
+
+    private void showChangelogSnackbar() {
+        Snackbar snackbar = Snackbar
+                .make(coordinatorLayout, "Updated to version " + Utils.getVersionName(context), Snackbar.LENGTH_LONG)
+                .setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
+                .setAction("Changelog", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        showWhatsNew();
+                    }
+                });
+        snackbar.show();
+    }
+
+    @SuppressLint("ShowToast")
+    private synchronized void showRemainingCount() {
+        int count = (int) rate.getRemainingCount();
+        String message = String.format("%s more times until rate pop-up", count);
+        Toast mToast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        mToast.setText(message);
+        mToast.show();
     }
 
     public void setActionBarTitle(String title) {
@@ -464,6 +507,10 @@ public class MainActivity extends BaseActivity {
                     // Tell it who it is working with.
                     fm.beginTransaction().replace(R.id.flContent, mlaunchesViewPager, "LAUNCH_VIEWPAGER").commit();
                 }
+                if (rate != null) {
+                    rate.showRequest();
+                }
+
                 break;
             case R.id.menu_missions:
                 mNavItemId = R.id.menu_missions;
@@ -477,6 +524,10 @@ public class MainActivity extends BaseActivity {
                     // Tell it who it is working with.
                     fm.beginTransaction().replace(R.id.flContent, mMissionFragment, "MISSION_FRAGMENT").commit();
                 }
+                if (rate != null) {
+                    rate.showRequest();
+                }
+
                 break;
             case R.id.menu_vehicle:
                 mNavItemId = R.id.menu_vehicle;
@@ -490,6 +541,10 @@ public class MainActivity extends BaseActivity {
                     // Tell it who it is working with.
                     fm.beginTransaction().replace(R.id.flContent, mVehicleViewPager, "VEHICLE_VIEWPAGER").commit();
                 }
+                if (rate != null) {
+                    rate.showRequest();
+                }
+
                 break;
             case R.id.menu_launch:
                 Utils.openCustomTab(this, getApplicationContext(), "https://launchlibrary.net/");
