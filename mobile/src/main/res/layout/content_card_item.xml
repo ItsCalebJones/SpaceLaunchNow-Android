@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/material_baseline_grid_1x"
     android:paddingTop="@dimen/material_baseline_grid_1x"
+    android:elevation="0dp"
     android:textAlignment="center"
     android:transitionGroup="true">
 
@@ -19,6 +20,7 @@
         android:animateLayoutChanges="true"
         android:paddingBottom="@dimen/material_baseline_grid_0.5x"
         android:paddingTop="@dimen/material_baseline_grid_0.5x"
+        android:elevation="4dp"
         card_view:cardCornerRadius="4dp"
         card_view:cardElevation="4dp"
         card_view:cardPreventCornerOverlap="true"
@@ -35,6 +37,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/titleBarColor"
+                android:elevation="4dp"
+                android:clipToPadding="false"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -113,6 +117,8 @@
                 android:paddingTop="4dp"
                 android:singleLine="false"
                 android:text="Unknown Launch Status"
+                android:elevation="4dp"
+                android:clipToPadding="false"
                 android:textAlignment="center"
                 android:textColor="@color/dark_primary_text_color_selector"
                 android:textSize="20sp"
@@ -122,6 +128,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:elevation="4dp"
+                android:clipToPadding="false"
                 android:orientation="vertical">
 
 

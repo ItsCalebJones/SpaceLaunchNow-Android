@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -19,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.GravityEnum;
@@ -41,9 +43,12 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -80,6 +85,8 @@ public class MainActivity extends BaseActivity {
     AdView adView;
     @BindView(R.id.container)
     RelativeLayout container;
+    @BindView(R.id.coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
     private LaunchesViewPager mlaunchesViewPager;
     private MissionFragment mMissionFragment;
     private NextLaunchFragment mUpcomingFragment;
@@ -91,6 +98,7 @@ public class MainActivity extends BaseActivity {
     private CustomTabActivityHelper customTabActivityHelper;
     private Context context;
     private boolean adviewEnabled = false;
+//    private Rate rate;
 
     static final int SHOW_INTRO = 1;
 
@@ -200,6 +208,21 @@ public class MainActivity extends BaseActivity {
                 .withHeaderBackground(new ImageHolder("http://res.cloudinary.com/dnkkbfy3m/image/upload/v1462465326/navbar_one_sqfhes.png"))
                 .withSavedInstance(savedInstanceState)
                 .build();
+
+//        rate = new Rate.Builder(context)                            // Optional, defaults to 6
+//                .setMinimumInstallTime(0)   // Optional, defaults to 7 days
+//                .setFeedbackAction(new OnFeedbackListener() {       // Optional
+//                    @Override
+//                    public void onFeedbackTapped() {
+//                        Toast.makeText(MainActivity.this, "Meh", Toast.LENGTH_SHORT).show();
+//                    }
+//                })
+//                .setSnackBarParent(coordinatorLayout)                            // Optional, shows dialog by default
+//                .setMessage("Hello")                // Optional
+//                .setPositiveButton("Sure!")                         // Optional
+//                .setCancelButton("Maybe later")                     // Optional
+//                .setNegativeButton("Nope!")                         // Optional
+//                .build();
 
         result = new DrawerBuilder()
                 .withActivity(this)

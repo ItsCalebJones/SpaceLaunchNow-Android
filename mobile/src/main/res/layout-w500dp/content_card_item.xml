@@ -36,6 +36,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/titleBarColor"
+                android:elevation="4dp"
+                android:clipToPadding="false"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -113,6 +115,8 @@
                 android:paddingTop="4dp"
                 android:singleLine="false"
                 android:text="Unknown Launch Status"
+                android:elevation="4dp"
+                android:clipToPadding="false"
                 android:background="?attr/titleBarColor"
                 android:textAlignment="center"
                 android:textColor="@color/dark_primary_text_color_selector"
