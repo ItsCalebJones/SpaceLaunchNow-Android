@@ -58,6 +58,7 @@
         </activity>
         <activity
             android:name=".ui.launchdetail.activity.LaunchDetailActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:theme="@style/BaseAppTheme" />
         <activity
             android:name=".ui.intro.OnboardingActivity"

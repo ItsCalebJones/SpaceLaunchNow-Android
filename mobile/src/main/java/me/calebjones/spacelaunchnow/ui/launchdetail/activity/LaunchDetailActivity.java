@@ -3,6 +3,7 @@ package me.calebjones.spacelaunchnow.ui.launchdetail.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -20,6 +21,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -106,6 +108,7 @@ public class LaunchDetailActivity extends BaseActivity
     public boolean isYouTubePlayerFullScreen;
     public String response;
     public Launch launch;
+    private boolean fabShowable = true;
 
     public LaunchDetailActivity() {
         super("Launch Detail Activity");
@@ -255,6 +258,18 @@ public class LaunchDetailActivity extends BaseActivity
         viewPager.setOffscreenPageLimit(3);
 
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -446,9 +461,9 @@ public class LaunchDetailActivity extends BaseActivity
                     .scaleY(1).scaleX(1)
                     .start();
 
-            fabShare.show();
-
-
+            if(fabShowable) {
+                fabShare.show();
+            }
         }
     }
 
@@ -525,13 +540,11 @@ public class LaunchDetailActivity extends BaseActivity
     @Override
     protected void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
-
     }
 
     @Override
     protected void onRestoreInstanceState(final Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-
     }
 
     @Override
@@ -543,4 +556,13 @@ public class LaunchDetailActivity extends BaseActivity
         }
     }
 
+    public void videoPlaying() {
+        fabShowable = false;
+        fabShare.hide();
+    }
+
+    public void videoStopped() {
+        fabShowable = true;
+        fabShare.show();
+    }
 }
