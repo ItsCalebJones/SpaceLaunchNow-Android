@@ -80,7 +80,8 @@ import retrofit2.Response;
 import timber.log.Timber;
 
 
-public class SummaryDetailFragment extends BaseFragment {
+public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer.OnInitializedListener {
+
 
     @BindView(R.id.youTube_viewHolder)
     LinearLayout youTubeViewHolder;
@@ -1052,6 +1053,7 @@ public class SummaryDetailFragment extends BaseFragment {
             }
 
             TimeZone timeZone = dateFormat.getTimeZone();
+
             launchWindowText.setText(String.format("%s %s",
                     dateFormat.format(windowStart),
                     timeZone.getDisplayName(false, TimeZone.SHORT)));
@@ -1062,6 +1064,7 @@ public class SummaryDetailFragment extends BaseFragment {
             }
 
             TimeZone timeZone = dateFormat.getTimeZone();
+
             launchWindowText.setText(String.format("%s %s",
                     dateFormat.format(windowStart),
                     timeZone.getDisplayName(false, TimeZone.SHORT)));
@@ -1124,6 +1127,23 @@ public class SummaryDetailFragment extends BaseFragment {
         if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
             Toast.makeText(context, "Loading " + detailLaunch.getLocation().getPads().get(0).getName(), Toast.LENGTH_LONG).show();
             context.startActivity(mapIntent);
+        }
+    }
+
+    @Override
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean restored) {
+        if (!restored) {
+            youTubePlayer.cueVideo("fhWaJi1Hsfo"); // Plays https://www.youtube.com/watch?v=fhWaJi1Hsfo
+        }
+    }
+
+    @Override
+    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+        if (youTubeInitializationResult.isUserRecoverableError()) {
+            youTubeInitializationResult.getErrorDialog(getActivity(), 1).show();
+        } else {
+            String error = String.format(getString(R.string.player_error), youTubeInitializationResult.toString());
+            Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
         }
     }
 }

@@ -7,7 +7,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.24.0'
+        classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.2'
     }
 }
@@ -31,7 +31,7 @@ advancedVersioning {
     }
     codeOptions {
         versionCodeType VersionCodeType.AUTO_INCREMENT_ONE_STEP
-        dependsOnTasks 'release', 'beta'
+        dependsOnTasks 'release', 'beta', 'alpha'
 
     }
     outputOptions {
@@ -76,8 +76,6 @@ android {
     buildToolsVersion '26.0.2'
     defaultConfig {
 
-
-
         applicationId "me.calebjones.spacelaunchnow"
         manifestPlaceholders = [appNameLabel                   : "@string/application_name",
                                 manifestApplicationId          : "${applicationId}",
@@ -102,6 +100,7 @@ android {
             renderscriptOptimLevel 3
             versionNameSuffix "-debug-b${appVersionCode}"
             minifyEnabled true
+            useProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
 
         }
@@ -117,6 +116,7 @@ android {
             zipAlignEnabled true
             minifyEnabled true
             shrinkResources true
+            useProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.releaseConfig
         }
@@ -128,6 +128,7 @@ android {
             applicationIdSuffix ".test"
             versionNameSuffix "-test"
             minifyEnabled true
+            useProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
             testProguardFile('proguard-rules-test.pro')
             matchingFallbacks = ['debug', 'release']
@@ -205,7 +206,7 @@ dependencies {
     // Architecture and Tools
     implementation 'com.jonathanfinerty.once:once:1.2.2'
     implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
         transitive = true
     }
     implementation 'com.jakewharton.timber:timber:4.6.0'
@@ -234,7 +235,6 @@ dependencies {
     implementation 'com.codemybrainsout.onboarding:onboarder:1.0.4'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.borax12.materialdaterangepicker:library:1.9'
-    implementation 'net.mediavrog:integrated-rating-request:1.1.2'
     implementation 'com.simplecityapps:recyclerview-fastscroll:1.0.16'
     implementation 'jp.wasabeef:glide-transformations:3.0.1'
 
@@ -262,4 +262,5 @@ dependencies {
     implementation 'com.mikepenz:community-material-typeface:2.0.46.1@aar'
     implementation 'com.github.pwittchen:weathericonview:1.1.0'
     implementation 'com.mikepenz:fontawesome-typeface:4.7.0.0@aar'
+    implementation files('libs/YouTubeAndroidPlayerApi.jar')
 }
