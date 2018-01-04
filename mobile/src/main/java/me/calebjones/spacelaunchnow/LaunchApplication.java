@@ -26,8 +26,6 @@ import com.onesignal.OneSignal;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import net.mediavrog.irr.DefaultRuleEngine;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -220,8 +218,6 @@ public class LaunchApplication extends Application implements Analytics.Provider
         }
         SyncJob.schedulePeriodicJob(this);
         SyncWearJob.scheduleJob();
-
-        DefaultRuleEngine.trackAppStart(this);
 
         MobileAds.initialize(this, "ca-app-pub-9824528399164059~9700152528");
 
