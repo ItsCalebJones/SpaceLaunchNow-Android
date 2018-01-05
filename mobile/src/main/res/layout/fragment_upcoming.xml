@@ -1,16 +1,9 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/fragment_feed_content"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        tools:context="${relativePackage}.${activityClass}">
-
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/activity_main_swipe_refresh_layout"
@@ -25,7 +18,6 @@
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:clipToPadding="false"
                     android:columnWidth="320dp"
                     android:visibility="visible" />
 
@@ -309,5 +301,4 @@
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
-    </FrameLayout>
 </android.support.design.widget.CoordinatorLayout>

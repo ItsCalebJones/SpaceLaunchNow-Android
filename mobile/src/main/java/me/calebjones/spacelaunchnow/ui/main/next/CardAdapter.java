@@ -7,11 +7,12 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
 
 import io.realm.RealmList;
@@ -106,7 +106,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.content_card_item, viewGroup, false);
-
         return new ViewHolder(v);
     }
 
@@ -114,7 +113,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
     public void onBindViewHolder(final ViewHolder holder, int i) {
         Launch launchItem = launchList.get(i);
         Timber.i("Binding %s", launchItem.getName());
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            holder.cardView.setElevation(7);
+        }
         String title;
         try {
             if (launchItem.isValid()) {
@@ -502,6 +503,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         public CountDownTimer timer;
         public View countdownView;
         public TextView contentForecast;
+        public CardView cardView;
 
         public ImageView map_view;
 
@@ -529,6 +531,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
             countdownMinutes = view.findViewById(R.id.countdown_minutes);
             countdownSeconds = view.findViewById(R.id.countdown_seconds);
             countdownView = view.findViewById(R.id.countdown_layout);
+            cardView = view.findViewById(R.id.card_view);
 
             contentForecast = view.findViewById(R.id.content_forecast);
 
