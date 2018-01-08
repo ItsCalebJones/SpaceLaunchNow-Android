@@ -11,6 +11,7 @@ Took a lot of time to refine the current UI design, adding color and tightening 
 
 #### Changelog
 * Added a new Launch List widget for Supporters.
+* Embedded YouTube videos in Launch Details screen.
 * Added links to Discord, Twitter, Facebook, and Website.
 * Improved feedback mechanism - now have the option to email from the app.
 * Improved general UI with colors and better layouts.

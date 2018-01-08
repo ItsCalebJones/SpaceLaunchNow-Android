@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.data.models.UpdateRecord;
@@ -67,8 +68,16 @@ public class DataRepositoryManager {
     }
 
     private void checkUpcomingLaunches(Realm realm) {
-        UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Constants.ACTION_GET_UP_LAUNCHES_ALL).findFirst();
-        if (record != null) {
+        RealmResults<UpdateRecord> records = realm.where(UpdateRecord.class)
+                .equalTo("type", Constants.ACTION_GET_UP_LAUNCHES_ALL)
+                .or()
+                .equalTo("type", Constants.ACTION_GET_UP_LAUNCHES)
+                .or()
+                .equalTo("type", Constants.ACTION_GET_NEXT_LAUNCHES)
+                .sort("date", Sort.DESCENDING)
+                .findAll();
+        if (records != null && records.size() > 0){
+            UpdateRecord record = records.first();
             Date currentDate = new Date();
             Date lastUpdateDate = record.getDate();
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
@@ -87,8 +96,8 @@ public class DataRepositoryManager {
     public void cleanDB() {
         Realm realm = Realm.getDefaultInstance();
         RealmResults<Launch> launches = realm.where(Launch.class).findAll();
-        for (final Launch launch: launches){
-            if (launch.getName() == null){
+        for (final Launch launch : launches) {
+            if (launch.getName() == null) {
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {

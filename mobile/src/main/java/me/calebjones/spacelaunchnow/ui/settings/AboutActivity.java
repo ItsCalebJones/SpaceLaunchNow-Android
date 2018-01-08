@@ -84,6 +84,7 @@ public class AboutActivity extends AppCompatActivity {
                                         .title("Enter Support Code")
                                         .content("To debug the application - please enter the code from support.")
                                         .inputType(InputType.TYPE_CLASS_NUMBER)
+                                        .inputRangeRes(1,100, R.color.accent)
                                         .input("Support Code", null, new MaterialDialog.InputCallback() {
                                             @Override
                                             public void onInput(MaterialDialog dialog, CharSequence input) {
@@ -91,7 +92,7 @@ public class AboutActivity extends AppCompatActivity {
                                                 if(!input.equals("") && DebugAuthManager.getAuthResult(input)){
                                                     goToDebug();
                                                 } else {
-                                                    Toast.makeText(context, "Error - Support code was not correct.", Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(context, "Error - code was invalid.", Toast.LENGTH_LONG).show();
                                                 }
                                             }
                                         }).show();

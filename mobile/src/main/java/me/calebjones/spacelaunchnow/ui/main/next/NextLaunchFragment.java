@@ -34,6 +34,7 @@ import android.view.ViewGroup;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,12 +48,14 @@ import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
+import me.calebjones.spacelaunchnow.content.data.DataClientManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.Constants;
+import me.calebjones.spacelaunchnow.data.models.UpdateRecord;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
@@ -369,6 +372,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     public void fetchData() {
         Timber.v("Sending GET_UP_LAUNCHES");
+        showLoading();
         LibraryDataManager libraryDataManager = new LibraryDataManager(context);
         libraryDataManager.getUpcomingLaunches();
     }
@@ -409,6 +413,27 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         getActivity().registerReceiver(launchReceiver, intentFilter);
 
         displayLaunches();
+
+        RealmResults<UpdateRecord> records = getRealm().where(UpdateRecord.class)
+                .equalTo("type", Constants.ACTION_GET_UP_LAUNCHES_ALL)
+                .or()
+                .equalTo("type", Constants.ACTION_GET_UP_LAUNCHES)
+                .or()
+                .equalTo("type", Constants.ACTION_GET_NEXT_LAUNCHES)
+                .sort("date", Sort.DESCENDING)
+                .findAll();
+        if (records != null && records.size() > 0) {
+            UpdateRecord record = records.first();
+            Date currentDate = new Date();
+            Date lastUpdateDate = record.getDate();
+            long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
+            long timeMaxUpdate = TimeUnit.HOURS.toMillis(1);
+            Timber.d("Time since last upcoming launches sync %s", timeSinceUpdate);
+            if (timeSinceUpdate > timeMaxUpdate) {
+                Timber.d("%s greater then %s - updating library data.", timeSinceUpdate, timeMaxUpdate);
+                fetchData();
+            }
+        }
     }
 
     @Override

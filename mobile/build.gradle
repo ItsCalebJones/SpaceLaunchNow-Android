@@ -31,7 +31,7 @@ advancedVersioning {
     }
     codeOptions {
         versionCodeType VersionCodeType.AUTO_INCREMENT_ONE_STEP
-        dependsOnTasks 'release', 'beta', 'alpha'
+        dependsOnTasks 'release' // defaultValue
 
     }
     outputOptions {

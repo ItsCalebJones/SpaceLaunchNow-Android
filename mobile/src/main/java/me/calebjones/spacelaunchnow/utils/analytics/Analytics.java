@@ -4,6 +4,7 @@ import android.content.Context;
 import android.preference.PreferenceFragment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 
 import com.crashlytics.android.answers.AddToCartEvent;
 import com.crashlytics.android.answers.Answers;
@@ -17,6 +18,7 @@ import java.math.BigDecimal;
 import java.util.Currency;
 
 import me.calebjones.spacelaunchnow.data.models.Products;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import timber.log.Timber;
 
 public class Analytics {
@@ -36,6 +38,10 @@ public class Analytics {
 
     public static Analytics from(PreferenceFragment fragment) {
         return from(fragment.getActivity());
+    }
+
+    public void sendNotificationEvent(String launchName, String content) {
+        Answers.getInstance().logCustom(new NotificationEvent().putLaunchName(launchName).putContent(content));
     }
 
     public interface Provider {
@@ -248,6 +254,24 @@ public class Analytics {
             this.putCustomAttribute("result", String.valueOf(result));
             return this;
         }
+    }
+
+    private class NotificationEvent extends CustomEvent {
+
+        NotificationEvent() {
+            super("Launch Notification Event");
+        }
+
+        NotificationEvent putLaunchName(@NonNull String launchName) {
+            this.putCustomAttribute("launchName", launchName);
+            return this;
+        }
+
+        NotificationEvent putContent(@NonNull String content) {
+            this.putCustomAttribute("content", content);
+            return this;
+        }
+
     }
 
     private class ButtonClicked extends CustomEvent {

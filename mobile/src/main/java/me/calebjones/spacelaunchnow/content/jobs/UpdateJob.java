@@ -61,8 +61,8 @@ public class UpdateJob extends Job {
             builder.setPeriodic(TimeUnit.DAYS.toMillis(7));
             Timber.v("DataSaver enabled - Scheduling periodic at seven days.");
         } else {
-            builder.setPeriodic(TimeUnit.DAYS.toMillis(1));
-            Timber.v("DataSaver not enabled - Scheduling periodic at default every day.");
+            builder.setPeriodic(TimeUnit.DAYS.toMillis(3));
+            Timber.v("DataSaver not enabled - Scheduling periodic at default every three day.");
         }
 
         if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("wifi_only", false)) {

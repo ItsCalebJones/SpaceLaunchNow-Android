@@ -502,6 +502,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         public ImageView categoryIcon;
         public CountDownTimer timer;
         public View countdownView;
+        public View titleCard;
         public TextView contentForecast;
         public CardView cardView;
 
@@ -532,12 +533,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
             countdownSeconds = view.findViewById(R.id.countdown_seconds);
             countdownView = view.findViewById(R.id.countdown_layout);
             cardView = view.findViewById(R.id.card_view);
+            titleCard = view.findViewById(R.id.TitleCard);
 
             contentForecast = view.findViewById(R.id.content_forecast);
 
             map_view = view.findViewById(R.id.map_view);
             map_view.setClickable(false);
 
+            titleCard.setOnClickListener(this);
             shareButton.setOnClickListener(this);
             exploreButton.setOnClickListener(this);
             watchButton.setOnClickListener(this);
@@ -673,6 +676,15 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                         Toast.makeText(context, "Loading " + launchList.get(position).getLocation().getPads().get(0).getName(), Toast.LENGTH_LONG).show();
                         context.startActivity(mapIntent);
                     }
+                    break;
+                case R.id.TitleCard:
+                    Timber.d("Explore: %s", launchList.get(position).getId());
+                    Analytics.from(context).sendButtonClicked("Title Card", launch.getName());
+
+                    Intent titleIntent = new Intent(context, LaunchDetailActivity.class);
+                    titleIntent.putExtra("TYPE", "launch");
+                    titleIntent.putExtra("launchID", launch.getId());
+                    context.startActivity(titleIntent);
                     break;
             }
         }

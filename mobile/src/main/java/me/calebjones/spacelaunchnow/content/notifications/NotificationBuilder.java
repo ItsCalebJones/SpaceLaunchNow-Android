@@ -22,6 +22,7 @@ import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 
 import static me.calebjones.spacelaunchnow.content.notifications.NotificationHelper.CHANNEL_LAUNCH_IMMINENT;
 
@@ -116,6 +117,7 @@ public class NotificationBuilder {
             mBuilder.setLights(Color.GREEN, 3000, 3000);
         }
 
+        Analytics.from(context).sendNotificationEvent(launch.getName(), expandedText);
         mNotifyManager.notify(Constants.NOTIF_ID_HOUR + launch.getId(), mBuilder.build());
     }
 

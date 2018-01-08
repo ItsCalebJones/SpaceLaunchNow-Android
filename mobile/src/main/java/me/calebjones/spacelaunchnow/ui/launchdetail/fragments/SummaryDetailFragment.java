@@ -732,11 +732,12 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                                         errorMessage.setText("Broadcast may not be live.");
                                     }
                                     if (errorReason.ordinal() == 4){
-                                        Toast.makeText(mainActivity, "YouTube API is weird - pauses video when a view overlaps it.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(mainActivity, "Playback paused by YouTube while view is obstructed.", Toast.LENGTH_SHORT).show();
                                     }
                                     Crashlytics.log(errorReason.name());
                                 }
                             });
+                            youTubePlayer.setFullscreenControlFlags(YouTubePlayer.FULLSCREEN_FLAG_CONTROL_SYSTEM_UI);
 
                         }
 

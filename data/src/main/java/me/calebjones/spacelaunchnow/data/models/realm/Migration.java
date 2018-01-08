@@ -108,7 +108,7 @@ public class Migration implements RealmMigration {
 
         if (oldVersion <= Constants.DB_SCHEMA_VERSION_1_8_2) {
             RealmObjectSchema details = schema.get("RocketDetail");
-            if (details != null){
+            if (details != null ){
                 details.renameField("manufacturer", "agency");
             }
 

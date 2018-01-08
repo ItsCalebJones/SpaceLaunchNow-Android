@@ -23,8 +23,10 @@ import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.onesignal.OneSignal;
 
+import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,8 +34,10 @@ import org.json.JSONObject;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.Sort;
 import io.realm.exceptions.RealmMigrationNeededException;
 import jonathanfinerty.once.Once;
+import me.calebjones.spacelaunchnow.content.data.DataClientManager;
 import me.calebjones.spacelaunchnow.content.data.DataRepositoryManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
@@ -43,6 +47,7 @@ import me.calebjones.spacelaunchnow.content.jobs.SyncWearJob;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateJob;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
+import me.calebjones.spacelaunchnow.data.models.UpdateRecord;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
 import me.calebjones.spacelaunchnow.data.models.realm.Migration;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
@@ -223,10 +228,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
 
         Once.initialise(this);
 
-        if (Once.beenDone(Once.THIS_APP_INSTALL, "loadInitialData")) {
-            DataRepositoryManager dataRepositoryManager = new DataRepositoryManager(this);
-            dataRepositoryManager.syncBackground();
-        } else {
+        if (!Once.beenDone(Once.THIS_APP_INSTALL, "loadInitialData")) {
             libraryDataManager.getFirstLaunchData();
             Once.markDone("loadInitialData");
         }
