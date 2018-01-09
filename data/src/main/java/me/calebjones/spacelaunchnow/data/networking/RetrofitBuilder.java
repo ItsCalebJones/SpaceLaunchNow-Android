@@ -102,7 +102,7 @@ public class RetrofitBuilder {
         return client.build();
     }
 
-    private static Gson getGson(){
+    public static Gson getGson(){
         return new GsonBuilder()
                 .setDateFormat("MMMM dd, yyyy HH:mm:ss zzz")
                 .setExclusionStrategies(new ExclusionStrategy() {

@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.CustomFragment;
+import me.calebjones.spacelaunchnow.common.RetroFitFragment;
 import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.LauncherAgency;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
@@ -34,7 +34,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class LauncherFragment extends CustomFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private VehicleAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -119,6 +119,14 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
             @Override
             public void onResponse(Call<LauncherResponse> call, Response<LauncherResponse> response) {
                 Timber.v("onResponse");
+                if (response.raw().cacheResponse() != null) {
+                    Timber.v("Response pulled from cache.");
+                }
+
+                if (response.raw().networkResponse() != null) {
+                    Timber.v("Response pulled from network.");
+                }
+
                 if (response.isSuccessful()) {
                     LauncherResponse jsonResponse = response.body();
                     Timber.v("Success %s", response.message());

@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.CustomFragment;
+import me.calebjones.spacelaunchnow.common.RetroFitFragment;
 import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.Orbiter;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
@@ -38,7 +38,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class OrbiterFragment extends CustomFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private Context context;
     private View view;

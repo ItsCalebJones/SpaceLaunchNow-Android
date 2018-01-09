@@ -9,14 +9,18 @@ import java.io.File;
 import java.io.IOException;
 
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.networking.RetrofitBuilder;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
-abstract public class CustomFragment extends BaseFragment {
+import static me.calebjones.spacelaunchnow.data.networking.RetrofitBuilder.getGson;
+
+abstract public class RetroFitFragment extends BaseFragment {
 
     private OkHttpClient client;
     private Retrofit libraryRetrofit;
@@ -27,7 +31,7 @@ abstract public class CustomFragment extends BaseFragment {
         @Override public okhttp3.Response intercept(Chain chain) throws IOException {
             okhttp3.Response originalResponse = chain.proceed(chain.request());
             if (Utils.isNetworkAvailable(context)) {
-                int maxAge = 60 * 60 * 24 * 7; // Seven day cache
+                int maxAge = 60 * 60 * 24 * 3; // Three day cache
                 return originalResponse.newBuilder()
                         .header("Cache-Control", "public, max-age=" + maxAge)
                         .build();
@@ -67,7 +71,11 @@ abstract public class CustomFragment extends BaseFragment {
         }
 
         libraryRetrofit = RetrofitBuilder.getLibraryRetrofit(version);
-        spaceLaunchNowRetrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit();
+        spaceLaunchNowRetrofit = new Retrofit.Builder()
+                .baseUrl(Constants.API_BASE_URL)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create(getGson()))
+                .build();
     }
 
     public void startActivity(Intent intent, Bundle bundle) {
