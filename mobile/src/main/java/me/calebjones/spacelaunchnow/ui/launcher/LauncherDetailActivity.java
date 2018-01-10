@@ -1,9 +1,7 @@
 package me.calebjones.spacelaunchnow.ui.launcher;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,17 +9,13 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.transition.Slide;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewPropertyAnimator;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +31,6 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.data.DataSaver;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.Launcher;
 import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.LauncherAgency;
 import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.RocketDetail;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
@@ -166,7 +159,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
         final DataSaver dataSaver = new DataSaver(context);
 //        swipeRefreshLayout.setRefreshing(true);
         final String finalAgency = agency;
-        DataClient.getInstance().getVehicles(agency, new Callback<VehicleResponse>() {
+        DataClient.getInstance().getVehiclesByAgency(agency, new Callback<VehicleResponse>() {
             @Override
             public void onResponse(Call<VehicleResponse> call, Response<VehicleResponse> response) {
                 if (response.isSuccessful()) {

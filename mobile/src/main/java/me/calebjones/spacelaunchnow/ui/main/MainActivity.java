@@ -416,7 +416,9 @@ public class MainActivity extends BaseActivity {
         String message = String.format("%s more times until rate pop-up", count);
         Toast mToast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
         mToast.setText(message);
-        mToast.show();
+        if (BuildConfig.DEBUG){
+            mToast.show();
+        }
     }
 
     public void setActionBarTitle(String title) {

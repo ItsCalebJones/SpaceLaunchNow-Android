@@ -718,8 +718,8 @@ public class DataClientManager {
 
     public void getVehicles(final String family) {
         isVehicles = true;
-        Timber.i("Running getVehicles");
-        DataClient.getInstance().getVehicles(family, new Callback<VehicleResponse>() {
+        Timber.i("Running getVehiclesByAgency");
+        DataClient.getInstance().getVehiclesByAgency(family, new Callback<VehicleResponse>() {
             @Override
             public void onResponse(Call<VehicleResponse> call, Response<VehicleResponse> response) {
                 if (response.isSuccessful()) {

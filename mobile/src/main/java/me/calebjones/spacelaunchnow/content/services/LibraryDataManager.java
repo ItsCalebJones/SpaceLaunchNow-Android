@@ -80,6 +80,10 @@ public class LibraryDataManager extends BaseManager {
         dataClientManager.getUpcomingLaunches();
     }
 
+    public void getNextUpcomingLaunches(){
+        dataClientManager.getNextUpcomingLaunches();
+    }
+
     public void getAllUpcomingLaunches(){
         if (sharedPref.getBoolean("background", true)) {
             scheduleLaunchUpdates();

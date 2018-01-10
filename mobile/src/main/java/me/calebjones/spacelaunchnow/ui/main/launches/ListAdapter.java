@@ -3,6 +3,7 @@ package me.calebjones.spacelaunchnow.ui.main.launches;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -40,13 +41,31 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
     private SharedPreferences sharedPref;
     private Boolean night;
     private static ListPreferences sharedPreference;
+    private SimpleDateFormat sdf;
+    private SimpleDateFormat df;
 
     public ListAdapter(Context context) {
         rightNow = Calendar.getInstance();
         launchList = new RealmList<>();
         sharedPreference = ListPreferences.getInstance(context);
-        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        this.mContext = context;
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        mContext = context;
+        if (!sharedPref.getBoolean("local_time", true)) {
+            sdf = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy ");
+            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        } else {
+            sdf = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy zzz");
+            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        }
+
+        if (sharedPref.getBoolean("24_hour_mode", false)) {
+            df = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy - HH:mm zzz");
+        } else {
+            df = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+            df.setTimeZone(TimeZone.getTimeZone("UTC"));
+        }
+
+        night = sharedPreference.isNightModeActive(mContext);
     }
 
     public void addItems(List<Launch> launchList) {
@@ -67,14 +86,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-
-        int m_theme;
-
-        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        sharedPreference = ListPreferences.getInstance(mContext);
-
-        night = sharedPreference.isNightModeActive(mContext);
-
+        Timber.v("onCreate ViewHolder.");
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.launch_list_item, viewGroup, false);
         return new ViewHolder(v);
     }
@@ -102,41 +114,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
 
         if (launchItem.getStatus() != null && launchItem.getStatus() == 2) {
             //Get launch date
-            if (sharedPref.getBoolean("local_time", true)) {
-                SimpleDateFormat df = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy.");
-                df.toLocalizedPattern();
-                Date date = launchItem.getNet();
-                launchDate = df.format(date);
-            } else {
-                SimpleDateFormat sdf = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy zzz");
-                sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                Date date = launchItem.getNet();
-                launchDate = sdf.format(date);
-            }
+            launchDate = sdf.format(launchItem.getNet());
+
             holder.launch_date.setText(String.format("To be determined... %s", launchDate));
         } else {
-            //Get launch date
-            if (sharedPref.getBoolean("local_time", true)) {
-                SimpleDateFormat df;
-                if (sharedPref.getBoolean("24_hour_mode", false)) {
-                    df = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy - HH:mm zzz");
-                } else {
-                    df = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy - hh:mm a zzz");
-                }
-                df.toLocalizedPattern();
-                Date date = launchItem.getNet();
-                launchDate = df.format(date);
-            } else {
-                SimpleDateFormat sdf;
-                if (sharedPref.getBoolean("24_hour_mode", false)) {
-                    sdf = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy - HH:mm zzz");
-                } else {
-                    sdf = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy - hh:mm a zzz");
-                }
-                sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                Date date = launchItem.getNet();
-                launchDate = sdf.format(date);
-            }
+            launchDate = sdf.format(launchItem.getNet());
             holder.launch_date.setText(launchDate);
         }
 
@@ -170,7 +152,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
     }
 
     public String parseDateToMMyyyy(Date date) {
-        SimpleDateFormat outputFormat = new SimpleDateFormat("MMM yyyy");
         return new SimpleDateFormat("MMM yyyy").format(date);
     }
 

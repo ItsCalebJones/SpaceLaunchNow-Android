@@ -205,7 +205,7 @@ public class DataClientThreaded {
     }
 
     public Call<VehicleResponse> getVehicles(String family, Callback<VehicleResponse> callback) {
-        Call<VehicleResponse> call = spaceLaunchNowService.getVehicles(family);
+        Call<VehicleResponse> call = spaceLaunchNowService.getVehiclesByAgency(family);
 
         call.enqueue(callback);
 

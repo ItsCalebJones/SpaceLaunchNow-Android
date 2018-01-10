@@ -49,8 +49,7 @@ public class NotificationReceiver extends NotificationExtenderService {
                 launch.setLocation(location);
 
                 if (background.contains("true")) {
-                    if (isNotificationEnabled(data.getString("notification_type"),
-                            data.getString("webcast").contains("true"))) {
+                    if (isNotificationEnabled(data.getString("notification_type"), data.getString("webcast").contains("true"))) {
                         Calendar future = Utils.DateToCalendar(launch.getNet());
                         Calendar now = Calendar.getInstance();
                         long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();

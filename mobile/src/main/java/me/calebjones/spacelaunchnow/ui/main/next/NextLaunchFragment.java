@@ -43,12 +43,10 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
-import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
-import me.calebjones.spacelaunchnow.content.data.DataClientManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
@@ -61,7 +59,6 @@ import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
-import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactManager;
 import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactWidgetProvider;
 import me.calebjones.spacelaunchnow.widget.launchlist.LaunchListManager;
@@ -374,7 +371,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         Timber.v("Sending GET_UP_LAUNCHES");
         showLoading();
         LibraryDataManager libraryDataManager = new LibraryDataManager(context);
-        libraryDataManager.getUpcomingLaunches();
+        libraryDataManager.getNextUpcomingLaunches();
     }
 
     private void showLoading() {
@@ -408,7 +405,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         setTitle();
 
         IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.ACTION_GET_UP_LAUNCHES_ALL);
         intentFilter.addAction(Constants.ACTION_GET_UP_LAUNCHES);
+        intentFilter.addAction(Constants.ACTION_GET_NEXT_LAUNCHES);
 
         getActivity().registerReceiver(launchReceiver, intentFilter);
 
@@ -468,7 +467,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         public void onReceive(Context context, Intent intent) {
             Timber.v("Received: %s", intent.getAction());
             hideLoading();
-            if (intent.getAction().equals(Constants.ACTION_GET_UP_LAUNCHES)) {
+            if (intent.getAction().equals(Constants.ACTION_GET_UP_LAUNCHES) || intent.getAction().equals(Constants.ACTION_GET_NEXT_LAUNCHES)) {
                 if (intent.getExtras().getBoolean("result")) {
                     onFinishedRefreshing();
                 } else {

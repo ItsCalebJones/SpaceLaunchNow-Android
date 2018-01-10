@@ -22,10 +22,7 @@ public class LaunchesViewPager extends Fragment {
 
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
-    private int current_tab;
     private TabLayout tabLayout;
-    private UpcomingLaunchesFragment launchesFragment;
-    private PreviousLaunchesFragment previousLaunchesFragment;
     private static ListPreferences sharedPreference;
     private Context context;
 
@@ -39,10 +36,10 @@ public class LaunchesViewPager extends Fragment {
 
         View inflatedView = inflater.inflate(R.layout.fragment_launches_view_pager, container, false);
 
-        TabLayout tabLayout = (TabLayout) inflatedView.findViewById(R.id.tabLayout);
+        tabLayout = inflatedView.findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText("Upcoming"));
         tabLayout.addTab(tabLayout.newTab().setText("Previous"));
-        viewPager = (ViewPager) inflatedView.findViewById(R.id.viewpager);
+        viewPager = inflatedView.findViewById(R.id.viewpager);
 
         pagerAdapter = new PagerAdapter
                 (getChildFragmentManager(), tabLayout.getTabCount());
@@ -53,7 +50,6 @@ public class LaunchesViewPager extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                current_tab = tab.getPosition();
                 if (tab.getPosition() == 0) {
                     ((MainActivity) getActivity()).setActionBarTitle(sharedPreference.getUpTitle());
                 } else {
@@ -72,15 +68,6 @@ public class LaunchesViewPager extends Fragment {
             }
         });
 
-//        if (sharedPreference.isNightModeActive(context)){
-//            tabLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.darkPrimary));
-//            tabLayout.setTabTextColors(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color),
-//                    ContextCompat.getColor(context, R.color.dark_theme_primary_text_color));
-//        } else {
-//            tabLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
-//            tabLayout.setTabTextColors(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color),
-//                    ContextCompat.getColor(context, R.color.dark_theme_primary_text_color));
-//        }
 
         return inflatedView;
     }

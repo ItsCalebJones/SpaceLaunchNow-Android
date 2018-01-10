@@ -632,6 +632,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                 }
 
                 if (youTubeURL != null) {
+                    Timber.v("Loading %s", youTubeURL);
                     mapView.setVisibility(View.GONE);
                     youTubeViewHolder.setVisibility(View.VISIBLE);
                     final LaunchDetailActivity mainActivity = (LaunchDetailActivity) getActivity();
@@ -825,7 +826,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     }
 
     private String getYouTubeID(String vidURL) {
-        final String regex = "(youtu\\.be\\/|youtube\\.com\\/(watch\\?(.*&)?v=|(embed|v)\\/|c\\/))([^\\?&\"'>].*)";
+        final String regex = "(youtu\\.be\\/|youtube\\.com\\/(watch\\?(.*&)?v=|(embed|v)\\/|c\\/))([a-zA-Z0-9_-]{11}|[a-zA-Z].*)";
         final Pattern pattern = Pattern.compile(regex);
 
         Matcher matcher = pattern.matcher(vidURL);
@@ -1111,23 +1112,25 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
     @OnClick(R.id.map_view_summary)
     public void onViewClicked() {
-        String location = detailLaunch.getLocation().getName();
-        location = (location.substring(location.indexOf(",") + 1));
+        if (detailLaunch != null && detailLaunch.getLocation() != null) {
+            String location = detailLaunch.getLocation().getName();
+            location = (location.substring(location.indexOf(",") + 1));
 
-        Timber.d("FAB: %s ", location);
+            Timber.d("FAB: %s ", location);
 
-        double dlat = detailLaunch.getLocation().getPads().get(0).getLatitude();
-        double dlon = detailLaunch.getLocation().getPads().get(0).getLongitude();
+            double dlat = detailLaunch.getLocation().getPads().get(0).getLatitude();
+            double dlon = detailLaunch.getLocation().getPads().get(0).getLongitude();
 
-        Uri gmmIntentUri = Uri.parse("geo:" + dlat + ", " + dlon + "?z=12&q=" + dlat + ", " + dlon);
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-        mapIntent.setPackage("com.google.android.apps.maps");
+            Uri gmmIntentUri = Uri.parse("geo:" + dlat + ", " + dlon + "?z=12&q=" + dlat + ", " + dlon);
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+            mapIntent.setPackage("com.google.android.apps.maps");
 
-        Analytics.from(context).sendLaunchMapClicked(detailLaunch.getName());
+            Analytics.from(context).sendLaunchMapClicked(detailLaunch.getName());
 
-        if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
-            Toast.makeText(context, "Loading " + detailLaunch.getLocation().getPads().get(0).getName(), Toast.LENGTH_LONG).show();
-            context.startActivity(mapIntent);
+            if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
+                Toast.makeText(context, "Loading " + detailLaunch.getLocation().getPads().get(0).getName(), Toast.LENGTH_LONG).show();
+                context.startActivity(mapIntent);
+            }
         }
     }
 

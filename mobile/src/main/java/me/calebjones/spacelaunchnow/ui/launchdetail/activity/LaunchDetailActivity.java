@@ -1,10 +1,12 @@
 package me.calebjones.spacelaunchnow.ui.launchdetail.activity;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -58,6 +60,7 @@ import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.RocketDetail;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
+import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.ui.launchdetail.TabsAdapter;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
@@ -98,7 +101,6 @@ public class LaunchDetailActivity extends BaseActivity
     ImageView detail_profile_backdrop;
     @BindView(R.id.detail_appbar)
     AppBarLayout appBarLayout;
-
     @BindView(R.id.detail_toolbar)
     Toolbar toolbar;
 
@@ -360,7 +362,11 @@ public class LaunchDetailActivity extends BaseActivity
         Launch item = getRealm().where(Launch.class)
                 .equalTo("id", id)
                 .findFirst();
-        updateViews(item);
+        if (item != null) {
+            updateViews(item);
+        } else {
+            fabShare.hide();
+        }
     }
 
     private void updateViews(Launch launch) {
@@ -375,11 +381,17 @@ public class LaunchDetailActivity extends BaseActivity
                     if (launch.getRocket().getImageURL() != null
                             && launch.getRocket().getImageURL().length() > 0
                             && !launch.getRocket().getImageURL().contains("placeholder")) {
-
+                        final String image =  launch.getRocket().getImageURL();
                         GlideApp.with(this)
-                                .load(launch.getRocket().getImageURL())
+                                .load(image)
                                 .placeholder(R.drawable.placeholder)
                                 .into(detail_profile_backdrop);
+                        detail_profile_backdrop.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                showImageFullscreen(image);
+                            }
+                        });
                         getLaunchVehicle(launch, false);
                     } else {
                         getLaunchVehicle(launch, true);
@@ -391,6 +403,7 @@ public class LaunchDetailActivity extends BaseActivity
 
             //Assign the title and mission location data
             detail_rocket.setText(launch.getName());
+            fabShare.show();
         } catch (NoSuchMethodError e) {
             Timber.e(e);
         }
@@ -647,5 +660,18 @@ public class LaunchDetailActivity extends BaseActivity
     public void videoStopped() {
         fabShowable = true;
         fabShare.show();
+    }
+
+
+    public void showImageFullscreen(String backdropImage){
+        if (backdropImage != null) {
+            Intent animateIntent = new Intent(this, FullscreenImageActivity.class);
+            animateIntent.putExtra("imageURL", backdropImage);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                this.startActivity(animateIntent, ActivityOptions.makeSceneTransitionAnimation(this, detail_profile_backdrop, "imageCover").toBundle());
+            } else {
+                this.startActivity(animateIntent);
+            }
+        }
     }
 }

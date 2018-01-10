@@ -82,11 +82,11 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
                 .greaterThanOrEqualTo("net", new Date())
                 .findAllSorted("net", Sort.ASCENDING).first();
 
-        Calendar future = Utils.DateToCalendar(new Date(launch.getNetstamp() * 1000));
+        Calendar future = Utils.DateToCalendar(launch.getNet());
         Calendar now = Calendar.getInstance();
 
         now.setTimeInMillis(System.currentTimeMillis());
-        long timeToFinish = now.getTimeInMillis() - future.getTimeInMillis();
+        long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
 
         NotificationBuilder.notifyUser(context, launch, timeToFinish, false);
         realm.close();

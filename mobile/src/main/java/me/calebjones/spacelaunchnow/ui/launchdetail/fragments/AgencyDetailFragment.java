@@ -192,7 +192,8 @@ public class AgencyDetailFragment extends BaseFragment {
         mission_one.setVisibility(View.GONE);
         mission_two.setVisibility(View.GONE);
 
-        mission_agency_title.setText("Mission LauncherAgency");
+        mission_agency_title.setText("Mission Agency");
+        mission_agency_type.setText("Unknown Mission Agency");
     }
 
     private void setOneMissionAgencies() {
@@ -291,6 +292,7 @@ public class AgencyDetailFragment extends BaseFragment {
 
         mission_one.setVisibility(View.VISIBLE);
         mission_two.setVisibility(View.VISIBLE);
+        mission_agency_type.setText(String.format("%s | %s", agencyTypeOne, agencyTypeTwo));
         mission_agency_type_one.setText(String.format("Type: %s", agencyTypeOne));
         mission_agency_type_two.setText(String.format("Type: %s", agencyTypeTwo));
         mission_agency_one.setText(String.format("%s (%s)", agencyNameOne, agencyAbbrevOne));
