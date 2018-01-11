@@ -12,6 +12,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.Toolbar;
@@ -31,12 +32,15 @@ import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
 import com.transitionseverywhere.TransitionManager;
 
+import java.util.concurrent.TimeUnit;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.data.models.Products;
+import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import timber.log.Timber;
@@ -55,6 +59,8 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     View supportThankYou;
     @BindView(R.id.fab_supporter)
     FloatingActionButton fabSupporter;
+    @BindView(R.id.nested_scroll_view)
+    NestedScrollView nestedScrollView;
 
     private BillingProcessor bp;
     private ImageView icon;
@@ -101,6 +107,19 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         } else {
             SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, "Google Play billing services not available.");
         }
+
+        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
+                    fabSupporter.hide();
+                } else {
+                    if (!fabSupporter.isShown()){
+                        fabSupporter.show();
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -184,6 +203,14 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
                 .title("Thanks for your Support!")
                 .customView(R.layout.seekbar_dialog_supporter, true)
                 .positiveText("Ok")
+                .neutralText("BTC | ETH | LTC")
+                .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                        showCryptoDialog();
+                    }
+                })
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -213,6 +240,50 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
+            }
+        });
+    }
+
+    private void showCryptoDialog(){
+        MaterialDialog dialog = new MaterialDialog.Builder(this)
+                .title("Thanks for your Support!")
+                .customView(R.layout.dialog_crypto, true)
+                .positiveText("Ok")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+        ImageView ltcIcon = dialog.getCustomView().findViewById(R.id.ltc_icon);
+        ImageView btcIcon = dialog.getCustomView().findViewById(R.id.btc_icon);
+        ImageView ethIcon = dialog.getCustomView().findViewById(R.id.eth_icon);
+
+        ltcIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent animateIntent = new Intent(getApplicationContext(), FullscreenImageActivity.class);
+                animateIntent.putExtra("image", "ltc");
+                getApplicationContext().startActivity(animateIntent);
+            }
+        });
+
+        btcIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent animateIntent = new Intent(getApplicationContext(), FullscreenImageActivity.class);
+                animateIntent.putExtra("image", "btc");
+                getApplicationContext().startActivity(animateIntent);
+            }
+        });
+
+        ethIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent animateIntent = new Intent(getApplicationContext(), FullscreenImageActivity.class);
+                animateIntent.putExtra("image", "eth");
+                getApplicationContext().startActivity(animateIntent);
             }
         });
     }

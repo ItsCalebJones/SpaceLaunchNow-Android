@@ -37,45 +37,61 @@ public class FullscreenImageActivity extends BaseActivity {
         setContentView(R.layout.activity_fullscreen_image);
 
         photoView = (PhotoView) findViewById(R.id.image);
-        imageURL = getIntent().getStringExtra("imageURL");
+        if (getIntent().getStringExtra("imageURL") != null) {
+            imageURL = getIntent().getStringExtra("imageURL");
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().getEnterTransition().addListener(new Transition.TransitionListener() {
-                @Override
-                public void onTransitionStart(Transition transition) {
-                }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().getEnterTransition().addListener(new Transition.TransitionListener() {
+                    @Override
+                    public void onTransitionStart(Transition transition) {
+                    }
 
-                @Override
-                public void onTransitionCancel(Transition transition) {
-                }
+                    @Override
+                    public void onTransitionCancel(Transition transition) {
+                    }
 
-                @Override
-                public void onTransitionPause(Transition transition) {
-                }
+                    @Override
+                    public void onTransitionPause(Transition transition) {
+                    }
 
-                @Override
-                public void onTransitionResume(Transition transition) {
-                }
+                    @Override
+                    public void onTransitionResume(Transition transition) {
+                    }
 
-                @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-                @Override
-                public void onTransitionEnd(Transition transition) {
-                    getWindow().getEnterTransition().removeListener(this);
+                    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+                    @Override
+                    public void onTransitionEnd(Transition transition) {
+                        getWindow().getEnterTransition().removeListener(this);
 
-                    // load the full version, crossfading from the thumbnail image
-                    Glide.with(getApplicationContext())
-                            .load(imageURL)
-                            .into(photoView);
+                        // load the full version, crossfading from the thumbnail image
+                        Glide.with(getApplicationContext())
+                                .load(imageURL)
+                                .into(photoView);
 
-                }
-            });
-        } else {
-            // load the full version, crossfading from the thumbnail image
-            GlideApp.with(getApplicationContext())
-                    .load(imageURL)
-                    .into(photoView);
+                    }
+                });
+            } else {
+                // load the full version, crossfading from the thumbnail image
+                GlideApp.with(getApplicationContext())
+                        .load(imageURL)
+                        .into(photoView);
+            }
+        } else if (getIntent().getStringExtra("image") != null){
+            String image = getIntent().getStringExtra("image");
+            if (image.contains("btc")){
+                GlideApp.with(getApplicationContext())
+                        .load(R.drawable.btc_wallet)
+                        .into(photoView);
+            } else if (image.contains("ltc")){
+                GlideApp.with(getApplicationContext())
+                        .load(R.drawable.ltc_wallet)
+                        .into(photoView);
+            } else if (image.contains("eth")){
+                GlideApp.with(getApplicationContext())
+                        .load(R.drawable.eth_wallet)
+                        .into(photoView);
+            }
         }
-
     }
 
     @Override
