@@ -1,5 +1,7 @@
 package me.calebjones.spacelaunchnow.data.networking;
 
+import android.content.Context;
+
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -8,6 +10,9 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -17,6 +22,8 @@ import io.realm.RealmList;
 import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
+import okhttp3.Cache;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -28,6 +35,17 @@ import static android.os.Process.THREAD_PRIORITY_MORE_FAVORABLE;
 
 
 public class RetrofitBuilder {
+
+    private static Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
+        @Override public okhttp3.Response intercept(Chain chain) throws IOException {
+            okhttp3.Response originalResponse = chain.proceed(chain.request());
+                int maxAge = 60 * 60 * 24 * 3; // Three day cache
+                return originalResponse.newBuilder()
+                        .header("Cache-Control", "public, max-age=" + maxAge)
+                        .build();
+        }
+    };
+
     public static Retrofit getLibraryRetrofit(String version) {
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -84,6 +102,7 @@ public class RetrofitBuilder {
         return retrofit;
     }
 
+
     public static Retrofit getSpaceLaunchNowRetrofit() {
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -102,7 +121,7 @@ public class RetrofitBuilder {
         return client.build();
     }
 
-    private static Gson getGson(){
+    public static Gson getGson(){
         return new GsonBuilder()
                 .setDateFormat("MMMM dd, yyyy HH:mm:ss zzz")
                 .setExclusionStrategies(new ExclusionStrategy() {

@@ -23,10 +23,10 @@ import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.onesignal.OneSignal;
 
+import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
-
-import net.mediavrog.irr.DefaultRuleEngine;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,8 +34,10 @@ import org.json.JSONObject;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.Sort;
 import io.realm.exceptions.RealmMigrationNeededException;
 import jonathanfinerty.once.Once;
+import me.calebjones.spacelaunchnow.content.data.DataClientManager;
 import me.calebjones.spacelaunchnow.content.data.DataRepositoryManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
@@ -45,10 +47,10 @@ import me.calebjones.spacelaunchnow.content.jobs.SyncWearJob;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateJob;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
+import me.calebjones.spacelaunchnow.data.models.UpdateRecord;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
 import me.calebjones.spacelaunchnow.data.models.realm.Migration;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
-import me.calebjones.spacelaunchnow.data.networking.DataClientThreaded;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
@@ -101,10 +103,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
         Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
         Crashlytics.setBool("is24", DateFormat.is24HourFormat(getApplicationContext()));
         Crashlytics.setBool("Network State", Utils.isNetworkAvailable(this));
-
-        if (Connectivity.getNetworkInfo(this) != null) {
-            Crashlytics.setString("Network Info", Connectivity.getNetworkInfo(this).toString());
-        }
+        Crashlytics.setString("Network Info", Connectivity.getNetworkStatus(this));
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -161,7 +160,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
         Realm.init(this);
 
         RealmConfiguration config = new RealmConfiguration.Builder()
-                .schemaVersion(Constants.DB_SCHEMA_VERSION_1_8_1)
+                .schemaVersion(Constants.DB_SCHEMA_VERSION_2_0_0)
                 .modules(Realm.getDefaultModule(), new LaunchDataModule())
                 .migration(new Migration())
                 .build();
@@ -225,16 +224,11 @@ public class LaunchApplication extends Application implements Analytics.Provider
         SyncJob.schedulePeriodicJob(this);
         SyncWearJob.scheduleJob();
 
-        DefaultRuleEngine.trackAppStart(this);
-
         MobileAds.initialize(this, "ca-app-pub-9824528399164059~9700152528");
 
         Once.initialise(this);
 
-        if (Once.beenDone(Once.THIS_APP_INSTALL, "loadInitialData")) {
-            DataRepositoryManager dataRepositoryManager = new DataRepositoryManager(this);
-            dataRepositoryManager.syncBackground();
-        } else {
+        if (!Once.beenDone(Once.THIS_APP_INSTALL, "loadInitialData")) {
             libraryDataManager.getFirstLaunchData();
             Once.markDone("loadInitialData");
         }

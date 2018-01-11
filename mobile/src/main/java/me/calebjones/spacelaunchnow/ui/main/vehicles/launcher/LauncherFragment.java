@@ -20,8 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.CustomFragment;
-import me.calebjones.spacelaunchnow.data.models.Launcher;
+import me.calebjones.spacelaunchnow.common.RetroFitFragment;
+import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.LauncherAgency;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LauncherResponse;
@@ -34,11 +34,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class LauncherFragment extends CustomFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private VehicleAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-    private List<Launcher> items = new ArrayList<>();
+    private List<LauncherAgency> items = new ArrayList<>();
     private Context context;
     private View view;
     private RecyclerView mRecyclerView;
@@ -113,12 +113,20 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
         showLoading();
 
         SpaceLaunchNowService request = getSpaceLaunchNowRetrofit().create(SpaceLaunchNowService.class);
-        Call<LauncherResponse> call = request.getLaunchers();
+        Call<LauncherResponse> call = request.getVehicleAgencies();
 
         call.enqueue(new Callback<LauncherResponse>() {
             @Override
             public void onResponse(Call<LauncherResponse> call, Response<LauncherResponse> response) {
                 Timber.v("onResponse");
+                if (response.raw().cacheResponse() != null) {
+                    Timber.v("Response pulled from cache.");
+                }
+
+                if (response.raw().networkResponse() != null) {
+                    Timber.v("Response pulled from network.");
+                }
+
                 if (response.isSuccessful()) {
                     LauncherResponse jsonResponse = response.body();
                     Timber.v("Success %s", response.message());
@@ -159,12 +167,11 @@ public class LauncherFragment extends CustomFragment implements SwipeRefreshLayo
 
         @Override
         public void onClick(View v, int position) {
-            Analytics.from(context).sendButtonClicked("Launcher clicked", items.get(position).getName());
+            Analytics.from(context).sendButtonClicked("Launcher clicked", items.get(position).getAgency());
             Gson gson = new Gson();
             String jsonItem = gson.toJson(items.get(position));
 
             Intent intent = new Intent(getActivity(), LauncherDetailActivity.class);
-            intent.putExtra("family", items.get(position).getName());
             intent.putExtra("agency", items.get(position).getAgency());
             intent.putExtra("json", jsonItem);
             startActivity(intent);

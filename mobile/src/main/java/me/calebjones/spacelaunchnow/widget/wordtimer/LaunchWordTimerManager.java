@@ -6,9 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
+import android.view.View;
 import android.widget.RemoteViews;
 
 import java.text.SimpleDateFormat;
@@ -16,13 +17,15 @@ import java.util.Calendar;
 import java.util.Date;
 
 import io.realm.Realm;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
-import me.calebjones.spacelaunchnow.data.models.Launch;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.utils.UniqueIdentifier;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.widget.WidgetBroadcastReceiver;
 import timber.log.Timber;
@@ -41,7 +44,7 @@ public class LaunchWordTimerManager {
     }
 
     public void updateAppWidget(int appWidgetId) {
-        Timber.v("UpdateAppWidget");
+        Timber.v("UpdateAppWidget %s", appWidgetId);
         Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
         int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
         int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
@@ -91,9 +94,12 @@ public class LaunchWordTimerManager {
 
         RealmResults<Launch> launchRealms;
         if (switchPreferences.getAllSwitch()) {
-            launchRealms = mRealm.where(Launch.class)
-                    .greaterThanOrEqualTo("net", date)
-                    .findAllSorted("net", Sort.ASCENDING);
+            RealmQuery<Launch> query = mRealm.where(Launch.class)
+                    .greaterThanOrEqualTo("net", date);
+            if (switchPreferences.getNoGoSwitch()) {
+                query.equalTo("status", 1);
+            }
+            launchRealms = query.findAllSorted("net", Sort.ASCENDING);
             Timber.v("loadLaunches - Realm query created.");
         } else {
             launchRealms = QueryBuilder.buildSwitchQuery(context, mRealm);
@@ -101,7 +107,7 @@ public class LaunchWordTimerManager {
         }
 
         for (Launch launch : launchRealms) {
-            if (launch.getNetstamp() != null && launch.getNetstamp() != 0) {
+            if (launch.getNet() != null) {
                 return launch;
             }
         }
@@ -116,8 +122,9 @@ public class LaunchWordTimerManager {
         Intent exploreIntent = new Intent(context, LaunchDetailActivity.class);
         exploreIntent.putExtra("TYPE", "launch");
         exploreIntent.putExtra("launchID", launch.getId());
-        exploreIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent actionPendingIntent = PendingIntent.getActivity(context, 0, exploreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        exploreIntent.setData(Uri.parse(exploreIntent.toUri(Intent.URI_INTENT_SCHEME)));
+        exploreIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent actionPendingIntent = PendingIntent.getActivity(context, UniqueIdentifier.getID(), exploreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         remoteViews.setOnClickPendingIntent(R.id.widget_countdown_timer_frame, actionPendingIntent);
     }
@@ -164,16 +171,24 @@ public class LaunchWordTimerManager {
 
         Timber.v("Configuring widget");
         int widgetAlpha = Color.alpha(widgetBackgroundColor);
-        remoteViews.setInt(R.id.bgcolor, "setColorFilter", widgetBackgroundColor);
+        int red = Color.red(widgetBackgroundColor);
+        int green = Color.green(widgetBackgroundColor);
+        int blue = Color.blue(widgetBackgroundColor);
+        remoteViews.setInt(R.id.bgcolor, "setColorFilter", Color.rgb(red,green,blue));
         remoteViews.setInt(R.id.bgcolor, "setAlpha", widgetAlpha);
         remoteViews.setTextColor(R.id.widget_launch_name, widgetTextColor);
         remoteViews.setTextColor(R.id.widget_mission_name, widgetSecondaryTextColor);
-        remoteViews.setTextColor(R.id.countdown_days, widgetSecondaryTextColor);
+        remoteViews.setTextColor(R.id.countdown_days, widgetTextColor);
         remoteViews.setTextColor(R.id.countdown_days_label, widgetSecondaryTextColor);
-        remoteViews.setTextColor(R.id.countdown_hours, widgetSecondaryTextColor);
+        remoteViews.setTextColor(R.id.countdown_hours, widgetTextColor);
         remoteViews.setTextColor(R.id.countdown_hours_label, widgetSecondaryTextColor);
         remoteViews.setInt(R.id.widget_refresh_button, "setColorFilter", widgetIconColor);
 
+        if (sharedPref.getBoolean("widget_refresh_enabled", false)) {
+            remoteViews.setViewVisibility(R.id.widget_refresh_button, View.GONE);
+        } else if (!sharedPref.getBoolean("widget_refresh_enabled", false)) {
+            remoteViews.setViewVisibility(R.id.widget_refresh_button, View.VISIBLE);
+        }
     }
 
     private void setLaunchName(Launch launchRealm) {
@@ -183,21 +198,6 @@ public class LaunchWordTimerManager {
             remoteViews.setTextViewText(R.id.widget_launch_name, launchName);
         } else {
             remoteViews.setTextViewText(R.id.widget_launch_name, "Unknown Launch");
-        }
-    }
-
-    private void setLaunchDate(Launch launch) {
-        SimpleDateFormat sdf;
-        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("24_hour_mode", false)) {
-            sdf = new SimpleDateFormat("MMMM dd, yyyy");
-        } else {
-            sdf = new SimpleDateFormat("MMMM dd, yyyy");
-        }
-        sdf.toLocalizedPattern();
-        if (launch.getNet() != null) {
-            remoteViews.setTextViewText(R.id.widget_launch_date, sdf.format(launch.getNet()));
-        } else {
-            remoteViews.setTextViewText(R.id.widget_launch_date, "Unknown Launch Date");
         }
     }
 
@@ -226,11 +226,6 @@ public class LaunchWordTimerManager {
     }
 
     private Calendar getLaunchDate(Launch launchRealm) {
-
-        //Replace with launchData
-        long longdate = launchRealm.getNetstamp();
-        longdate = longdate * 1000;
-        final Date date = new Date(longdate);
-        return Utils.DateToCalendar(date);
+        return Utils.DateToCalendar(launchRealm.getNet());
     }
 }

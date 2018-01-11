@@ -2,7 +2,7 @@ package me.calebjones.spacelaunchnow.data.networking.responses.base;
 
 import com.google.gson.annotations.SerializedName;
 
-import me.calebjones.spacelaunchnow.data.models.RocketDetail;
+import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.RocketDetail;
 
 public class VehicleResponse {
 

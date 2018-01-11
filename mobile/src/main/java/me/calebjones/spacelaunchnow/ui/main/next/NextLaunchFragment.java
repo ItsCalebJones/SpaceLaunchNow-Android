@@ -3,7 +3,9 @@ package me.calebjones.spacelaunchnow.ui.main.next;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -26,21 +28,13 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
-
-import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
-import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.ViewTarget;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,24 +43,28 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
-import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.events.FilterViewEvent;
+import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.Launch;
+import me.calebjones.spacelaunchnow.data.models.UpdateRecord;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
-import me.calebjones.spacelaunchnow.ui.intro.OnboardingActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
-import me.calebjones.spacelaunchnow.utils.Utils;
+import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactManager;
+import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactWidgetProvider;
+import me.calebjones.spacelaunchnow.widget.launchlist.LaunchListManager;
+import me.calebjones.spacelaunchnow.widget.launchlist.LaunchListWidgetProvider;
+import me.calebjones.spacelaunchnow.widget.wordtimer.LaunchWordTimerManager;
+import me.calebjones.spacelaunchnow.widget.wordtimer.LaunchWordTimerWidgetProvider;
 import timber.log.Timber;
 
 public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -102,8 +100,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     private View view;
     private RecyclerView mRecyclerView;
-    private CardBigAdapter adapter;
-    private CardSmallAdapter smallAdapter;
+    private CardAdapter adapter;
     private StaggeredGridLayoutManager layoutManager;
     private LinearLayoutManager linearLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -120,7 +117,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     private boolean active;
     private boolean switchChanged;
-    private boolean cardSizeSmall;
     private CalendarSyncManager calendarSyncManager;
 
     @Override
@@ -140,14 +136,11 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         active = false;
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        cardSizeSmall = sharedPref.getBoolean("card_size_small", false);
-        if (cardSizeSmall) {
-            smallAdapter = new CardSmallAdapter(getActivity());
-        } else {
-            if (adapter == null) {
-                adapter = new CardBigAdapter(getActivity());
-            }
+
+        if (adapter == null) {
+            adapter = new CardAdapter(getActivity());
         }
+
 
         if (sharedPreference.isNightModeActive(context)) {
             color = R.color.darkPrimary;
@@ -173,34 +166,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         FABMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setUpSwitches();
-                if (!active) {
-                    switchChanged = false;
-                    active = true;
-
-                    mSwipeRefreshLayout.setEnabled(false);
-                    FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_close));
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        showView();
-                    } else {
-                        color_reveal.setVisibility(View.VISIBLE);
-                    }
-                } else {
-                    active = false;
-                    FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_filter));
-                    mSwipeRefreshLayout.setEnabled(true);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        hideView();
-                    } else {
-                        color_reveal.setVisibility(View.INVISIBLE);
-                    }
-                    if (switchChanged) {
-                        displayLaunches();
-                        if (switchPreferences.getCalendarStatus()) {
-                            calendarSyncManager.resyncAllEvents();
-                        }
-                    }
-                }
+                checkFilter();
             }
         });
 
@@ -221,24 +187,15 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         });
 
         //If preference is for small card, landscape tablets get three others get two.
-        if (cardSizeSmall) {
-            if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
-                layoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
-            } else {
-                layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-            }
+        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
+            layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
             mRecyclerView.setLayoutManager(layoutManager);
-            mRecyclerView.setAdapter(smallAdapter);
         } else {
-            if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
-                layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-                mRecyclerView.setLayoutManager(layoutManager);
-            } else {
-                linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-                mRecyclerView.setLayoutManager(linearLayoutManager);
-            }
-            mRecyclerView.setAdapter(adapter);
+            linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+            mRecyclerView.setLayoutManager(linearLayoutManager);
         }
+        mRecyclerView.setAdapter(adapter);
+
 
         coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.coordinatorLayout);
 
@@ -274,28 +231,18 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             Timber.v("Data changed - size: %s", results.size());
 
             int preferredCount = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
-            if (cardSizeSmall) {
-                smallAdapter.clear();
-            } else {
-                adapter.clear();
-            }
+            adapter.clear();
 
             if (results.size() >= preferredCount) {
                 no_data.setVisibility(View.GONE);
                 setLayoutManager(preferredCount);
-                if (cardSizeSmall) {
-                    smallAdapter.addItems(results.subList(0, preferredCount));
-                } else {
-                    adapter.addItems(results.subList(0, preferredCount));
-                }
+                adapter.addItems(results.subList(0, preferredCount));
+
             } else if (results.size() > 0) {
                 no_data.setVisibility(View.GONE);
                 setLayoutManager(preferredCount);
-                if (cardSizeSmall) {
-                    smallAdapter.addItems(results);
-                } else {
-                    adapter.addItems(results);
-                }
+                adapter.addItems(results);
+
             } else {
                 if (adapter != null) {
                     adapter.clear();
@@ -317,7 +264,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         if (switchPreferences.getAllSwitch()) {
             RealmQuery<Launch> query = getRealm().where(Launch.class)
                     .greaterThanOrEqualTo("net", date);
-            if(switchPreferences.getNoGoSwitch()){
+            if (switchPreferences.getNoGoSwitch()) {
                 query.equalTo("status", 1);
             }
             launchRealms = query.findAllSortedAsync("net", Sort.ASCENDING);
@@ -333,22 +280,14 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         if (!isDetached() && isAdded()) {
             if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && (launchRealms != null && launchRealms.size() == 1 || size == 1)) {
                 linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(),
-                                                              LinearLayoutManager.VERTICAL, false
+                        LinearLayoutManager.VERTICAL, false
                 );
                 mRecyclerView.setLayoutManager(linearLayoutManager);
-                if (cardSizeSmall) {
-                    mRecyclerView.setAdapter(smallAdapter);
-                } else {
-                    mRecyclerView.setAdapter(adapter);
-                }
+                mRecyclerView.setAdapter(adapter);
             } else if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
                 layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
                 mRecyclerView.setLayoutManager(layoutManager);
-                if (cardSizeSmall) {
-                    mRecyclerView.setAdapter(smallAdapter);
-                } else {
-                    mRecyclerView.setAdapter(adapter);
-                }
+                mRecyclerView.setAdapter(adapter);
             }
         } else if (isDetached()) {
             Timber.v("View is detached.");
@@ -430,8 +369,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     public void fetchData() {
         Timber.v("Sending GET_UP_LAUNCHES");
+        showLoading();
         LibraryDataManager libraryDataManager = new LibraryDataManager(context);
-        libraryDataManager.getUpcomingLaunches();
+        libraryDataManager.getNextUpcomingLaunches();
     }
 
     private void showLoading() {
@@ -464,23 +404,35 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         Timber.v("onResume");
         setTitle();
 
-        if (!Once.beenDone(Once.THIS_APP_VERSION, "showChangelog")) {
-            Once.markDone("showChangelog");
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    showChangelogSnackbar();
-                }
-            }, 1000);
-        }
-
         IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.ACTION_GET_UP_LAUNCHES_ALL);
         intentFilter.addAction(Constants.ACTION_GET_UP_LAUNCHES);
+        intentFilter.addAction(Constants.ACTION_GET_NEXT_LAUNCHES);
 
         getActivity().registerReceiver(launchReceiver, intentFilter);
 
         displayLaunches();
+
+        RealmResults<UpdateRecord> records = getRealm().where(UpdateRecord.class)
+                .equalTo("type", Constants.ACTION_GET_UP_LAUNCHES_ALL)
+                .or()
+                .equalTo("type", Constants.ACTION_GET_UP_LAUNCHES)
+                .or()
+                .equalTo("type", Constants.ACTION_GET_NEXT_LAUNCHES)
+                .sort("date", Sort.DESCENDING)
+                .findAll();
+        if (records != null && records.size() > 0) {
+            UpdateRecord record = records.first();
+            Date currentDate = new Date();
+            Date lastUpdateDate = record.getDate();
+            long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
+            long timeMaxUpdate = TimeUnit.HOURS.toMillis(1);
+            Timber.d("Time since last upcoming launches sync %s", timeSinceUpdate);
+            if (timeSinceUpdate > timeMaxUpdate) {
+                Timber.d("%s greater then %s - updating library data.", timeSinceUpdate, timeMaxUpdate);
+                fetchData();
+            }
+        }
     }
 
     @Override
@@ -510,25 +462,12 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         super.onSaveInstanceState(outState);
     }
 
-    private void showChangelogSnackbar() {
-        Snackbar snackbar = Snackbar
-                .make(coordinatorLayout, "Updated to version " + Utils.getVersionName(context), Snackbar.LENGTH_LONG)
-                .setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
-                .setAction("Changelog", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        ((MainActivity) getActivity()).showWhatsNew();
-                    }
-                });
-        snackbar.show();
-    }
-
     private final BroadcastReceiver launchReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Timber.v("Received: %s", intent.getAction());
             hideLoading();
-            if (intent.getAction().equals(Constants.ACTION_GET_UP_LAUNCHES)) {
+            if (intent.getAction().equals(Constants.ACTION_GET_UP_LAUNCHES) || intent.getAction().equals(Constants.ACTION_GET_NEXT_LAUNCHES)) {
                 if (intent.getExtras().getBoolean("result")) {
                     onFinishedRefreshing();
                 } else {
@@ -580,36 +519,70 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             startActivity(debugIntent);
 
         } else if (id == R.id.action_alert) {
-            if (!active) {
-                Analytics.from(this).sendButtonClicked("Show Launch filters.");
-                switchChanged = false;
-                active = true;
-                mSwipeRefreshLayout.setEnabled(false);
-                FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_close));
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    showView();
-                } else {
-                    color_reveal.setVisibility(View.VISIBLE);
-                }
+            checkFilter();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void checkFilter() {
+
+        if (!active) {
+            Analytics.from(this).sendButtonClicked("Show Launch filters.");
+            switchChanged = false;
+            active = true;
+            mSwipeRefreshLayout.setEnabled(false);
+            FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_close));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                showView();
             } else {
-                Analytics.from(this).sendButtonClicked("Hide Launch filters.");
-                active = false;
-                FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_filter));
-                mSwipeRefreshLayout.setEnabled(true);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    hideView();
-                } else {
-                    color_reveal.setVisibility(View.INVISIBLE);
+                color_reveal.setVisibility(View.VISIBLE);
+            }
+        } else {
+            Analytics.from(this).sendButtonClicked("Hide Launch filters.");
+            active = false;
+            FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_filter));
+            mSwipeRefreshLayout.setEnabled(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                hideView();
+            } else {
+                color_reveal.setVisibility(View.INVISIBLE);
+            }
+            if (switchChanged) {
+                LaunchCardCompactManager launchCardCompactManager = new LaunchCardCompactManager(context);
+                LaunchWordTimerManager launchWordTimerManager = new LaunchWordTimerManager(context);
+                LaunchListManager launchListManager = new LaunchListManager(context);
+
+                int cardIds[] = AppWidgetManager.getInstance(context)
+                        .getAppWidgetIds(new ComponentName(context,
+                                LaunchCardCompactWidgetProvider.class));
+
+                for (int id : cardIds){
+                    launchCardCompactManager.updateAppWidget(id);
                 }
-                if (switchChanged) {
-                    displayLaunches();
-                    if (switchPreferences.getCalendarStatus()) {
-                        calendarSyncManager.resyncAllEvents();
-                    }
+
+                int timerIds[] = AppWidgetManager.getInstance(context)
+                        .getAppWidgetIds(new ComponentName(context,
+                                LaunchWordTimerWidgetProvider.class));
+
+                for (int id : timerIds){
+                    launchWordTimerManager.updateAppWidget(id);
+                }
+
+                int listIds[] = AppWidgetManager.getInstance(context)
+                        .getAppWidgetIds(new ComponentName(context,
+                                LaunchListWidgetProvider.class));
+
+                for (int id : listIds){
+                    launchListManager.updateAppWidget(id);
+                }
+
+                UpdateWearJob.scheduleJobNow();
+                displayLaunches();
+                if (switchPreferences.getCalendarStatus()) {
+                    calendarSyncManager.resyncAllEvents();
                 }
             }
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -718,6 +691,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     @OnClick(R.id.no_go_launch)
     public void noGoSwitch() {
+        confirm();
         switchPreferences.setNoGoSwitch(noGoSwitch.isChecked());
         displayLaunches();
 
@@ -726,6 +700,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     @OnClick(R.id.persist_last_launch)
     public void setPersistLastSwitch() {
+        confirm();
         switchPreferences.setPersistLastSwitch(persistLastSwitch.isChecked());
         displayLaunches();
     }

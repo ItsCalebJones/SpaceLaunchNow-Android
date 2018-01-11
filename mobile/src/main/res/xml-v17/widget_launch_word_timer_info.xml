@@ -6,8 +6,8 @@
     android:minWidth="250dp"
     android:minHeight="110dp"
     android:updatePeriodMillis="1800000"
-    android:initialLayout="@layout/widget_launch_word_timer_dark"
+    android:initialLayout="@layout/widget_launch_word_timer_large_dark"
     android:resizeMode="vertical|horizontal"
     android:widgetCategory="home_screen"
-    android:previewImage="@drawable/word_timer_preview">
+    android:previewImage="@drawable/launch_timer_preview">
 </appwidget-provider>

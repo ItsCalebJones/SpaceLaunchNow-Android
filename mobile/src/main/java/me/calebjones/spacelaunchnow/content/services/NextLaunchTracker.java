@@ -8,6 +8,8 @@ import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.SyncJob;
 import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactManager;
+import me.calebjones.spacelaunchnow.widget.launchlist.LaunchListManager;
+import me.calebjones.spacelaunchnow.widget.launchlist.LaunchListWidgetProvider;
 import me.calebjones.spacelaunchnow.widget.wordtimer.LaunchWordTimerManager;
 import me.calebjones.spacelaunchnow.content.wear.WearWatchfaceManager;
 import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactWidgetProvider;
@@ -37,9 +39,11 @@ public NextLaunchTracker(Context context) {
         SyncJob.schedulePeriodicJob(context);
     }
 
-    private void updateWidgets() {
+    public void updateWidgets() {
         LaunchCardCompactManager launchCardCompactManager = new LaunchCardCompactManager(context);
         LaunchWordTimerManager launchWordTimerManager = new LaunchWordTimerManager(context);
+        LaunchListManager launchListManager = new LaunchListManager(context);
+
         int cardIds[] = AppWidgetManager.getInstance(context)
                 .getAppWidgetIds(new ComponentName(context,
                         LaunchCardCompactWidgetProvider.class));
@@ -55,9 +59,17 @@ public NextLaunchTracker(Context context) {
         for (int id : timerIds){
             launchWordTimerManager.updateAppWidget(id);
         }
+
+        int listIds[] = AppWidgetManager.getInstance(context)
+                .getAppWidgetIds(new ComponentName(context,
+                        LaunchListWidgetProvider.class));
+
+        for (int id : listIds){
+            launchListManager.updateAppWidget(id);
+        }
     }
 
-    private void syncCalendar() {
+    public void syncCalendar() {
         CalendarSyncManager calendarSyncManager = new CalendarSyncManager(context);
         calendarSyncManager.syncAllEevnts();
     }

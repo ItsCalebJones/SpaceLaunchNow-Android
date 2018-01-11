@@ -1,5 +1,6 @@
 package me.calebjones.spacelaunchnow.ui.main;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +10,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -19,8 +22,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.ads.AdListener;
@@ -35,13 +40,17 @@ import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.holder.ImageHolder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.ExpandableDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,6 +60,8 @@ import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
+import me.calebjones.spacelaunchnow.common.customviews.generate.OnFeedbackListener;
+import me.calebjones.spacelaunchnow.common.customviews.generate.Rate;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.events.FilterViewEvent;
@@ -78,6 +89,8 @@ public class MainActivity extends BaseActivity {
     AdView adView;
     @BindView(R.id.container)
     RelativeLayout container;
+    @BindView(R.id.coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
     private LaunchesViewPager mlaunchesViewPager;
     private MissionFragment mMissionFragment;
     private NextLaunchFragment mUpcomingFragment;
@@ -89,6 +102,7 @@ public class MainActivity extends BaseActivity {
     private CustomTabActivityHelper customTabActivityHelper;
     private Context context;
     private boolean adviewEnabled = false;
+    private Rate rate;
 
     static final int SHOW_INTRO = 1;
 
@@ -199,6 +213,20 @@ public class MainActivity extends BaseActivity {
                 .withSavedInstance(savedInstanceState)
                 .build();
 
+        rate = new Rate.Builder(context)
+                .setTriggerCount(10)
+                .setMinimumInstallTime(TimeUnit.DAYS.toMillis(3))
+                .setMessage(R.string.please_rate_short)
+                .setFeedbackAction(new OnFeedbackListener() {
+                    @Override
+                    public void onFeedbackTapped() {
+                        showFeedback();
+                    }
+                })
+                .setSnackBarParent(coordinatorLayout)
+                .build();
+
+
         result = new DrawerBuilder()
                 .withActivity(this)
                 .withTranslucentStatusBar(true)
@@ -228,6 +256,37 @@ public class MainActivity extends BaseActivity {
                                 .withIdentifier(R.id.menu_settings)
                                 .withSelectable(true),
                         new DividerDrawerItem(),
+                        new ExpandableDrawerItem().withName("Stay Connected").withIcon(CommunityMaterial.Icon.cmd_account).withDescription("Connect with the Community").withIdentifier(19).withSelectable(false).withSubItems(
+                                new SecondaryDrawerItem()
+                                        .withIcon(CommunityMaterial.Icon.cmd_discord)
+                                        .withLevel(2)
+                                        .withName("Discord")
+                                        .withDescription("Join the Community")
+                                        .withIdentifier(R.id.menu_discord)
+                                        .withSelectable(false),
+                                new SecondaryDrawerItem()
+                                        .withIcon(CommunityMaterial.Icon.cmd_twitter)
+                                        .withLevel(2)
+                                        .withName("Twitter")
+                                        .withDescription("Connect on Twitter")
+                                        .withIdentifier(R.id.menu_twitter)
+                                        .withSelectable(false),
+                                new SecondaryDrawerItem()
+                                        .withIcon(CommunityMaterial.Icon.cmd_facebook)
+                                        .withLevel(2)
+                                        .withName("Facebook")
+                                        .withDescription("Follow on Facebook")
+                                        .withIdentifier(R.id.menu_facebook)
+                                        .withSelectable(false),
+                                new SecondaryDrawerItem()
+                                        .withIcon(CommunityMaterial.Icon.cmd_web)
+                                        .withLevel(2)
+                                        .withName("On the Web")
+                                        .withDescription("Space Launch Now - Official Site")
+                                        .withIdentifier(R.id.menu_website)
+                                        .withSelectable(false)
+                        ),
+                        new DividerDrawerItem(),
                         new SecondaryDrawerItem()
                                 .withIcon(GoogleMaterial.Icon.gmd_info_outline)
                                 .withName("What's New?")
@@ -239,18 +298,6 @@ public class MainActivity extends BaseActivity {
                                 .withName("Feedback")
                                 .withDescription("Found a bug?")
                                 .withIdentifier(R.id.menu_feedback)
-                                .withSelectable(false),
-                        new SecondaryDrawerItem()
-                                .withIcon(CommunityMaterial.Icon.cmd_twitter)
-                                .withName("Twitter")
-                                .withDescription("Stay connected on Twitter!")
-                                .withIdentifier(R.id.menu_twitter)
-                                .withSelectable(false),
-                        new SecondaryDrawerItem()
-                                .withIcon(CommunityMaterial.Icon.cmd_discord)
-                                .withName("Discord")
-                                .withDescription("Join us on Discord during launches!")
-                                .withIdentifier(R.id.menu_discord)
                                 .withSelectable(false)
                 ).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -298,7 +345,6 @@ public class MainActivity extends BaseActivity {
         customTabActivityHelper.bindCustomTabsService(this);
         mayLaunchUrl(Uri.parse("https://launchlibrary.net/"));
         EventBus.getDefault().register(this);
-
     }
 
     @Override
@@ -316,6 +362,25 @@ public class MainActivity extends BaseActivity {
 
     public void onResume() {
         super.onResume();
+        if (rate != null) {
+            rate.count();
+        }
+        if (BuildConfig.DEBUG) {
+            showRemainingCount();
+        }
+
+        if (!Once.beenDone(Once.THIS_APP_VERSION, "showChangelog")) {
+            if (!rate.isShown()) {
+                Once.markDone("showChangelog");
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        showChangelogSnackbar();
+                    }
+                }, 1000);
+            }
+        }
         if (getSharedPreferences("theme_changed", 0).getBoolean("recreate", false)) {
             SharedPreferences.Editor editor = getSharedPreferences("theme_changed", 0).edit();
             editor.putBoolean("recreate", false);
@@ -329,6 +394,30 @@ public class MainActivity extends BaseActivity {
         } else {
             switchPreferences.setNightModeStatus(false);
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
+        }
+    }
+
+    private void showChangelogSnackbar() {
+        Snackbar snackbar = Snackbar
+                .make(coordinatorLayout, "Updated to version " + Utils.getVersionName(context), Snackbar.LENGTH_LONG)
+                .setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
+                .setAction("Changelog", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        showWhatsNew();
+                    }
+                });
+        snackbar.show();
+    }
+
+    @SuppressLint("ShowToast")
+    private synchronized void showRemainingCount() {
+        int count = (int) rate.getRemainingCount();
+        String message = String.format("%s more times until rate pop-up", count);
+        Toast mToast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        mToast.setText(message);
+        if (BuildConfig.DEBUG){
+            mToast.show();
         }
     }
 
@@ -420,6 +509,10 @@ public class MainActivity extends BaseActivity {
                     // Tell it who it is working with.
                     fm.beginTransaction().replace(R.id.flContent, mlaunchesViewPager, "LAUNCH_VIEWPAGER").commit();
                 }
+                if (rate != null) {
+                    rate.showRequest();
+                }
+
                 break;
             case R.id.menu_missions:
                 mNavItemId = R.id.menu_missions;
@@ -433,6 +526,10 @@ public class MainActivity extends BaseActivity {
                     // Tell it who it is working with.
                     fm.beginTransaction().replace(R.id.flContent, mMissionFragment, "MISSION_FRAGMENT").commit();
                 }
+                if (rate != null) {
+                    rate.showRequest();
+                }
+
                 break;
             case R.id.menu_vehicle:
                 mNavItemId = R.id.menu_vehicle;
@@ -446,6 +543,10 @@ public class MainActivity extends BaseActivity {
                     // Tell it who it is working with.
                     fm.beginTransaction().replace(R.id.flContent, mVehicleViewPager, "VEHICLE_VIEWPAGER").commit();
                 }
+                if (rate != null) {
+                    rate.showRequest();
+                }
+
                 break;
             case R.id.menu_launch:
                 Utils.openCustomTab(this, getApplicationContext(), "https://launchlibrary.net/");
@@ -476,6 +577,19 @@ public class MainActivity extends BaseActivity {
                 Intent discordIntent = new Intent(Intent.ACTION_VIEW);
                 discordIntent.setData(Uri.parse(discordUrl));
                 startActivity(discordIntent);
+                break;
+            case R.id.menu_facebook:
+                String facebookUrl = "https://www.facebook.com/spacelaunchnow/";
+                Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
+                facebookIntent.setData(Uri.parse(facebookUrl));
+                startActivity(facebookIntent);
+                break;
+            case R.id.menu_website:
+                String websiteUrl = "https://spacelaunchnow.me/";
+                Intent websiteIntent = new Intent(Intent.ACTION_VIEW);
+                websiteIntent.setData(Uri.parse(websiteUrl));
+                startActivity(websiteIntent);
+                break;
             default:
                 // ignore
                 break;
@@ -487,7 +601,7 @@ public class MainActivity extends BaseActivity {
                 .title("Submit Feedback")
                 .autoDismiss(true)
                 .content("Feel free to submit bugs or feature requests for anything related to the app. If you found an issue with the launch data, the libraries at Launch Library that provide the data can be contacted via Discord or Reddit.")
-                .positiveColor(ContextCompat.getColor(this, R.color.colorAccent))
+                .neutralColor(ContextCompat.getColor(this, R.color.colorPrimary))
                 .negativeText("Launch Data")
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
@@ -503,10 +617,39 @@ public class MainActivity extends BaseActivity {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        String url = "https://discord.gg/WVfzEDW";
-                        Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(url));
-                        startActivity(i);
+                        dialog.getBuilder()
+                                .title("Need Support?")
+                                .content("The fastest and most reliable way to get support is through Discord. If thats not an option feel free to email me directly.")
+                                .neutralText("Email")
+                                .negativeText("Cancel")
+                                .positiveText("Discord")
+                                .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(MaterialDialog dialog, DialogAction which) {
+                                        Intent intent = new Intent(Intent.ACTION_SENDTO);
+                                        intent.setData(Uri.parse("mailto:"));
+                                        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@calebjones.me"});
+                                        intent.putExtra(Intent.EXTRA_SUBJECT, "Space Launch Now - Feedback");
+
+                                        startActivity(Intent.createChooser(intent, "Email via..."));
+                                    }
+                                })
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(MaterialDialog dialog, DialogAction which) {
+                                        String url = "https://discord.gg/WVfzEDW";
+                                        Intent i = new Intent(Intent.ACTION_VIEW);
+                                        i.setData(Uri.parse(url));
+                                        startActivity(i);
+                                    }
+                                })
+                                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
                     }
                 })
                 .show();
@@ -530,8 +673,8 @@ public class MainActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(FilterViewEvent event) {
-        if (!SupporterHelper.isSupporter()){
-            if (event.isOpened){
+        if (!SupporterHelper.isSupporter()) {
+            if (event.isOpened) {
                 hideAd();
             } else {
                 showAd();

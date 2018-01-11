@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import timber.log.Timber;
 
@@ -251,39 +252,7 @@ public class ListPreferences {
         return this.sharedPrefs.getString(PREFS_CURRENT_END_DATE, "2016-05-04");
     }
 
-    public class GsonDateDeSerializer implements JsonDeserializer<Date> {
 
-        private SimpleDateFormat format1 = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss a", Locale.US);
-        private SimpleDateFormat format2 = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss", Locale.US);
-
-        @Override
-        public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            try {
-                String j = json.getAsJsonPrimitive().getAsString();
-                Date date = parseDate(j);
-                return date;
-            } catch (ParseException e) {
-                Crashlytics.setString("Timezone", String.valueOf(TimeZone.getDefault()));
-                Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
-                Crashlytics.setBool("is24", DateFormat.is24HourFormat(appContext));
-                Crashlytics.logException(new JsonParseException(e.getMessage(), e));
-                return null;
-            }
-        }
-
-        private Date parseDate(String dateString) throws ParseException {
-            if (dateString != null && dateString.trim().length() > 0) {
-                try {
-                    return format1.parse(dateString);
-                } catch (ParseException pe) {
-                    return format2.parse(dateString);
-                }
-            } else {
-                return null;
-            }
-        }
-
-    }
 
     public void isFresh(boolean bool) {
         Timber.v("Changing isFresh: %s", bool);

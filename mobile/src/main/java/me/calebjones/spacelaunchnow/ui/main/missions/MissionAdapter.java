@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.Mission;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Mission;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -114,7 +114,7 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
 
                     //If we can find the date of the launch add it to the card.
                     if (mission.getLaunch().getNet() != null) {
-                        SimpleDateFormat outformat = new SimpleDateFormat("MMMM dd, yyyy");
+                        SimpleDateFormat outformat = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy");
                         outformat.toLocalizedPattern();
 
                         Date date;

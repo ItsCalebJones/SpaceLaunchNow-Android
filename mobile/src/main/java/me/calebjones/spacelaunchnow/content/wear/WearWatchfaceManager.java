@@ -27,8 +27,8 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.gpu.BrightnessFilterTransformation;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.services.BaseManager;
-import me.calebjones.spacelaunchnow.data.models.Launch;
-import me.calebjones.spacelaunchnow.data.models.RocketDetail;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.RocketDetail;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.transformations.SaturationTransformation;
 import timber.log.Timber;
@@ -91,6 +91,7 @@ public class WearWatchfaceManager extends BaseManager {
         } catch (IndexOutOfBoundsException error){
             Crashlytics.logException(error);
         }
+        mRealm.close();
     }
 
     private void sendImageToWear(String image, final Launch launch, boolean modify) {

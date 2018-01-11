@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--<color name="colorPrimary">#F44336</color>-->
-    <!--<color name="colorPrimaryDark">#D32F2F</color>-->
-    <!--<color name="colorPrimaryLight">#FF5252</color>-->
-    <!--<color name="colorAccent">#448AFF</color>-->
-    <!--<color name="colorAccentDark">#1976D2</color>-->
-    <!--<color name="colorAccentLight">#03A9F4</color>-->
-    <color name="colorPrimary">#448AFF</color>
-    <color name="colorPrimaryDark">#1565c0</color>
-    <color name="colorPrimaryLight">#2962ff</color>
-    <color name="colorPrimaryAlt">#bbdefb</color>
-    <color name="colorAccent">#f44336</color>
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorRecentPrimary">#1976D2</color>
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorPrimaryLight">#BBDEFB</color>
+    <color name="colorPrimaryAlt">#42a5f5</color>
+    <color name="colorAccent">#FF5252</color>
+    <color name="colorAccentAlt">#05A8AA</color>
     <color name="colorAccentLight">#f44336</color>
     <color name="colorTextPrimary">#212121</color>
     <color name="colorTextSecondary">#727272</color>
+    <color name="colorStatusGo">#4CAF50</color>
+    <color name="colorStatusNoGo">#d32f2f</color>
     <color name="materialGrey">#607D8B</color>
 
     <color name="colorGo">#81c784</color>
@@ -28,7 +26,7 @@
     <color name="dark_theme_secondary_text_color">#b3ffffff</color>
     <color name="dark_theme_background">#ff303030</color>
     <color name="dark_card_background">#424242</color>
-    <color name="darkPrimary">#ff455a64</color>
+    <color name="darkPrimary">#455a64</color>
     <color name="darkPrimary_dark">#ff37474f</color>
     <color name="darkAccent">#F44336</color>
     <color name="darkIcons">#ffffffff</color>
@@ -39,7 +37,7 @@
     <color name="slide_three">#f44336</color>
 
     <color name="slide_one_background">#186DFF</color>
-    <color name="slide_two_background">#00897b</color>wz
+    <color name="slide_two_background">#00897b</color>
     <color name="slide_three_background">#f44336</color>
 
     <color name="black_overlay">#66000000</color>

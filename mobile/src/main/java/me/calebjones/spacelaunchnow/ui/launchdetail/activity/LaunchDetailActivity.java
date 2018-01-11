@@ -1,11 +1,15 @@
 package me.calebjones.spacelaunchnow.ui.launchdetail.activity;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -18,13 +22,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.youtube.player.YouTubePlayer;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -33,6 +40,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,21 +48,27 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmList;
+import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
+import me.calebjones.spacelaunchnow.common.customviews.generate.OnFeedbackListener;
+import me.calebjones.spacelaunchnow.common.customviews.generate.Rate;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.content.events.LaunchRequestEvent;
-import me.calebjones.spacelaunchnow.data.models.Launch;
-import me.calebjones.spacelaunchnow.data.models.RocketDetail;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.RocketDetail;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
+import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.ui.launchdetail.TabsAdapter;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
+import me.calebjones.spacelaunchnow.utils.views.CustomOnOffsetChangedListener;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -79,8 +93,6 @@ public class LaunchDetailActivity extends BaseActivity
     ViewPager viewPager;
     @BindView(R.id.rootview)
     CoordinatorLayout rootview;
-    @BindView(R.id.content)
-    FrameLayout content;
     @BindView(R.id.detail_swipe_refresh)
     SwipeRefreshLayout detailSwipeRefresh;
     @BindView(R.id.detail_tabs)
@@ -89,7 +101,6 @@ public class LaunchDetailActivity extends BaseActivity
     ImageView detail_profile_backdrop;
     @BindView(R.id.detail_appbar)
     AppBarLayout appBarLayout;
-
     @BindView(R.id.detail_toolbar)
     Toolbar toolbar;
 
@@ -102,9 +113,12 @@ public class LaunchDetailActivity extends BaseActivity
     private Context context;
     private TabsAdapter tabAdapter;
     private int statusColor;
-
+    public YouTubePlayer youTubePlayer;
+    public boolean isYouTubePlayerFullScreen;
     public String response;
     public Launch launch;
+    private boolean fabShowable = true;
+    private Rate rate;
 
     public LaunchDetailActivity() {
         super("Launch Detail Activity");
@@ -135,10 +149,26 @@ public class LaunchDetailActivity extends BaseActivity
             recreate();
         }
 
+
         setTheme(m_theme);
         setContentView(R.layout.activity_launch_detail);
         ButterKnife.bind(this);
         detailSwipeRefresh.setEnabled(false);
+
+        rate = new Rate.Builder(context)
+                .setTriggerCount(10)
+                .setMinimumInstallTime(TimeUnit.DAYS.toMillis(3))
+                .setMessage(R.string.please_rate_short)
+                .setFeedbackAction(new OnFeedbackListener() {
+                    @Override
+                    public void onFeedbackTapped() {
+                        showFeedback();
+                    }
+                })
+                .setSnackBarParent(rootview)
+                .build();
+
+        rate.showRequest();
 
         if (!SupporterHelper.isSupporter()) {
             AdRequest adRequest = new AdRequest.Builder().build();
@@ -169,64 +199,67 @@ public class LaunchDetailActivity extends BaseActivity
 
         if (type != null && type.equals("launch")) {
             final int id = mIntent.getIntExtra("launchID", 0);
-            detailSwipeRefresh.setRefreshing(true);
+
             Launch launch = getRealm().where(Launch.class).equalTo("id", id).findFirst();
             if (launch != null) {
                 updateViews(launch);
             }
-            DataClient.getInstance().getLaunchById(id, true, new Callback<LaunchResponse>() {
-                @Override
-                public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
-                    Realm realm = Realm.getDefaultInstance();
-                    if (response.isSuccessful()) {
-                        final RealmList<Launch> items = new RealmList<>(response.body().getLaunches());
-                        if (items.size() == 1) {
-                            final Launch item = items.first();
-                            realm.executeTransactionAsync(new Realm.Transaction() {
-                                @Override
-                                public void execute(Realm bgRealm) {
-                                    Launch previous = bgRealm.where(Launch.class)
-                                            .equalTo("id", item.getId())
-                                            .findFirst();
-                                    if (previous != null) {
-                                        item.setEventID(previous.getEventID());
-                                        item.setSyncCalendar(previous.syncCalendar());
-                                        item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
-                                        item.setIsNotifiedDay(previous.getIsNotifiedDay());
-                                        item.setIsNotifiedHour(previous.getIsNotifiedHour());
-                                        item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
-                                        item.setNotifiable(previous.isNotifiable());
+            if (launch != null && savedInstanceState == null) {
+                detailSwipeRefresh.setRefreshing(true);
+                DataClient.getInstance().getLaunchById(id, true, new Callback<LaunchResponse>() {
+                    @Override
+                    public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
+                        Realm realm = Realm.getDefaultInstance();
+                        if (response.isSuccessful()) {
+                            final RealmList<Launch> items = new RealmList<>(response.body().getLaunches());
+                            if (items.size() == 1) {
+                                final Launch item = items.first();
+                                realm.executeTransactionAsync(new Realm.Transaction() {
+                                    @Override
+                                    public void execute(Realm bgRealm) {
+                                        Launch previous = bgRealm.where(Launch.class)
+                                                .equalTo("id", item.getId())
+                                                .findFirst();
+                                        if (previous != null) {
+                                            item.setEventID(previous.getEventID());
+                                            item.setSyncCalendar(previous.syncCalendar());
+                                            item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
+                                            item.setIsNotifiedDay(previous.getIsNotifiedDay());
+                                            item.setIsNotifiedHour(previous.getIsNotifiedHour());
+                                            item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
+                                            item.setNotifiable(previous.isNotifiable());
+                                        }
+                                        item.getLocation().setPrimaryID();
+                                        bgRealm.copyToRealmOrUpdate(item);
+                                        Timber.v("Updated detailLaunch: %s", item.getId());
                                     }
-                                    item.getLocation().setPrimaryID();
-                                    bgRealm.copyToRealmOrUpdate(item);
-                                    Timber.v("Updated detailLaunch: %s", item.getId());
-                                }
 
-                            }, new Realm.Transaction.OnSuccess() {
-                                @Override
-                                public void onSuccess() {
-                                    sendUpdateView(id);
-                                }
-                            });
+                                }, new Realm.Transaction.OnSuccess() {
+                                    @Override
+                                    public void onSuccess() {
+                                        sendUpdateView(id);
+                                    }
+                                });
+                            }
+                        } else {
+                            sendUpdateView(id);
                         }
-                    } else {
-                        sendUpdateView(id);
+                        realm.close();
+                        detailSwipeRefresh.setRefreshing(false);
                     }
-                    realm.close();
-                    detailSwipeRefresh.setRefreshing(false);
-                }
 
-                @Override
-                public void onFailure(Call<LaunchResponse> call, Throwable t) {
-                    Realm realm = Realm.getDefaultInstance();
-                    Launch item = realm.where(Launch.class)
-                            .equalTo("id", id)
-                            .findFirst();
-                    updateViews(item);
-                    realm.close();
-                    detailSwipeRefresh.setRefreshing(false);
-                }
-            });
+                    @Override
+                    public void onFailure(Call<LaunchResponse> call, Throwable t) {
+                        Realm realm = Realm.getDefaultInstance();
+                        Launch item = realm.where(Launch.class)
+                                .equalTo("id", id)
+                                .findFirst();
+                        updateViews(item);
+                        realm.close();
+                        detailSwipeRefresh.setRefreshing(false);
+                    }
+                });
+            }
 
         }
 
@@ -241,7 +274,7 @@ public class LaunchDetailActivity extends BaseActivity
                 }
 
         );
-
+        appBarLayout.addOnOffsetChangedListener(new CustomOnOffsetChangedListener(statusColor, getWindow()));
         appBarLayout.addOnOffsetChangedListener(this);
         mMaxScrollSize = appBarLayout.getTotalScrollRange();
 
@@ -253,11 +286,87 @@ public class LaunchDetailActivity extends BaseActivity
         tabLayout.setupWithViewPager(viewPager);
     }
 
+    private void showFeedback() {
+        new MaterialDialog.Builder(this)
+                .title("Submit Feedback")
+                .autoDismiss(true)
+                .content("Feel free to submit bugs or feature requests for anything related to the app. If you found an issue with the launch data, the libraries at Launch Library that provide the data can be contacted via Discord or Reddit.")
+                .neutralColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                .negativeText("Launch Data")
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        String url = "https://www.reddit.com/r/LaunchLibrary/";
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                    }
+                })
+                .positiveColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                .positiveText("App Feedback")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.getBuilder()
+                                .title("Need Support?")
+                                .content("The fastest and most reliable way to get support is through Discord. If thats not an option feel free to email me directly.")
+                                .neutralText("Email")
+                                .negativeText("Cancel")
+                                .positiveText("Discord")
+                                .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(MaterialDialog dialog, DialogAction which) {
+                                        Intent intent = new Intent(Intent.ACTION_SENDTO);
+                                        intent.setData(Uri.parse("mailto:"));
+                                        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@calebjones.me"});
+                                        intent.putExtra(Intent.EXTRA_SUBJECT, "Space Launch Now - Feedback");
+
+                                        startActivity(Intent.createChooser(intent, "Email via..."));
+                                    }
+                                })
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(MaterialDialog dialog, DialogAction which) {
+                                        String url = "https://discord.gg/WVfzEDW";
+                                        Intent i = new Intent(Intent.ACTION_VIEW);
+                                        i.setData(Uri.parse(url));
+                                        startActivity(i);
+                                    }
+                                })
+                                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
+                    }
+                })
+                .show();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
     private  void sendUpdateView(int id){
         Launch item = getRealm().where(Launch.class)
                 .equalTo("id", id)
                 .findFirst();
-        updateViews(item);
+        if (item != null) {
+            updateViews(item);
+        } else {
+            fabShare.hide();
+        }
     }
 
     private void updateViews(Launch launch) {
@@ -272,11 +381,17 @@ public class LaunchDetailActivity extends BaseActivity
                     if (launch.getRocket().getImageURL() != null
                             && launch.getRocket().getImageURL().length() > 0
                             && !launch.getRocket().getImageURL().contains("placeholder")) {
-
+                        final String image =  launch.getRocket().getImageURL();
                         GlideApp.with(this)
-                                .load(launch.getRocket().getImageURL())
+                                .load(image)
                                 .placeholder(R.drawable.placeholder)
                                 .into(detail_profile_backdrop);
+                        detail_profile_backdrop.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                showImageFullscreen(image);
+                            }
+                        });
                         getLaunchVehicle(launch, false);
                     } else {
                         getLaunchVehicle(launch, true);
@@ -288,6 +403,7 @@ public class LaunchDetailActivity extends BaseActivity
 
             //Assign the title and mission location data
             detail_rocket.setText(launch.getName());
+            fabShare.show();
         } catch (NoSuchMethodError e) {
             Timber.e(e);
         }
@@ -296,11 +412,6 @@ public class LaunchDetailActivity extends BaseActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    public int reverseNumber(int num, int min, int max) {
-        int number = (max + min) - num;
-        return number;
     }
 
     private void findProfileLogo() {
@@ -399,7 +510,6 @@ public class LaunchDetailActivity extends BaseActivity
             if (launchVehicle != null && launchVehicle.getImageURL().length() > 0 && !launchVehicle.getImageURL().contains("placeholder")) {
                 GlideApp.with(this)
                         .load(launchVehicle.getImageURL())
-                        .placeholder(R.drawable.placeholder)
                         .into(detail_profile_backdrop);
                 Timber.d("Glide Loading: %s %s", launchVehicle.getName(), launchVehicle.getImageURL());
             }
@@ -424,13 +534,6 @@ public class LaunchDetailActivity extends BaseActivity
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-        int totalScroll = appBarLayout.getTotalScrollRange();
-        int currentScroll = totalScroll + verticalOffset;
-
-        int color = statusColor;
-        int r = (color >> 16) & 0xFF;
-        int g = (color >> 8) & 0xFF;
-        int b = (color >> 0) & 0xFF;
 
         if (mMaxScrollSize == 0) {
             mMaxScrollSize = appBarLayout.getTotalScrollRange();
@@ -454,23 +557,10 @@ public class LaunchDetailActivity extends BaseActivity
                     .scaleY(1).scaleX(1)
                     .start();
 
-            fabShare.show();
+            if(fabShowable) {
+                fabShare.show();
+            }
         }
-
-//        if ((currentScroll) < 100) {
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//
-//                Window window = getWindow();
-//                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-//                window.setStatusBarColor(Color.argb(reverseNumber(currentScroll, 0, 255), r, g, b));
-//            }
-//        } else {
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                Window window = getWindow();
-//                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//            }
-//        }
     }
 
     @Override
@@ -504,7 +594,7 @@ public class LaunchDetailActivity extends BaseActivity
         try {
             if (launch.getNet() != null) {
                 Date date = launch.getNet();
-                SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+                SimpleDateFormat df = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy - hh:mm a zzz");
                 df.toLocalizedPattern();
                 launchDate = df.format(date);
             }
@@ -543,4 +633,45 @@ public class LaunchDetailActivity extends BaseActivity
         EventBus.getDefault().post(new LaunchEvent(launch));
     }
 
+    @Override
+    protected void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(final Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (youTubePlayer != null && isYouTubePlayerFullScreen){
+            youTubePlayer.setFullscreen(false);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    public void videoPlaying() {
+        fabShowable = false;
+        fabShare.hide();
+    }
+
+    public void videoStopped() {
+        fabShowable = true;
+        fabShare.show();
+    }
+
+
+    public void showImageFullscreen(String backdropImage){
+        if (backdropImage != null) {
+            Intent animateIntent = new Intent(this, FullscreenImageActivity.class);
+            animateIntent.putExtra("imageURL", backdropImage);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                this.startActivity(animateIntent, ActivityOptions.makeSceneTransitionAnimation(this, detail_profile_backdrop, "imageCover").toBundle());
+            } else {
+                this.startActivity(animateIntent);
+            }
+        }
+    }
 }

@@ -3,7 +3,7 @@ package me.calebjones.spacelaunchnow.data.networking;
 import java.io.IOException;
 
 import me.calebjones.spacelaunchnow.data.helpers.Utils;
-import me.calebjones.spacelaunchnow.data.models.Launch;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryService;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
@@ -32,6 +32,8 @@ public class DataClient {
     private Retrofit libraryRetrofitThreaded;
     private Retrofit spaceLaunchNowRetrofit;
 
+
+
     private DataClient(String version) {
 
         //TODO figure out caching strategy
@@ -42,7 +44,6 @@ public class DataClient {
         libraryRetrofit = RetrofitBuilder.getLibraryRetrofit(version);
         libraryRetrofitThreaded = RetrofitBuilder.getLibraryRetrofitThreaded(version);
         spaceLaunchNowRetrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit();
-
         libraryService = libraryRetrofit.create(LibraryService.class);
         libraryServiceThreaded = libraryRetrofitThreaded.create(LibraryService.class);
         spaceLaunchNowService = spaceLaunchNowRetrofit.create(SpaceLaunchNowService.class);
@@ -125,7 +126,7 @@ public class DataClient {
     }
 
     public Call<LaunchResponse> getNextUpcomingLaunches(int offset, Callback<LaunchResponse> callback) {
-        Call<LaunchResponse> call = libraryServiceThreaded.getNextUpcomingLaunches(Utils.getStartDate(-1), Utils.getEndDate(10), offset);
+        Call<LaunchResponse> call = libraryServiceThreaded.getNextUpcomingLaunches(Utils.getStartDate(-2), Utils.getEndDate(10), offset);
 
         call.enqueue(callback);
 
@@ -204,8 +205,16 @@ public class DataClient {
         return call;
     }
 
-    public Call<VehicleResponse> getVehicles(String family, Callback<VehicleResponse> callback) {
-        Call<VehicleResponse> call = spaceLaunchNowService.getVehicles(family);
+    public Call<VehicleResponse> getVehiclesByAgency(String agency, Callback<VehicleResponse> callback) {
+        Call<VehicleResponse> call = spaceLaunchNowService.getVehiclesByAgency(agency);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<VehicleResponse> getVehicles(String vehicle, Callback<VehicleResponse> callback){
+        Call<VehicleResponse> call = spaceLaunchNowService.getVehicle(vehicle);
 
         call.enqueue(callback);
 

@@ -33,6 +33,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.content.ContextCompat;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.PathInterpolator;
@@ -41,23 +42,19 @@ import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.Launch;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.utils.customtab.WebViewFallback;
 import timber.log.Timber;
@@ -308,6 +305,94 @@ public class Utils {
         return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
     }
 
+    public static int getCategoryIcon(String type, Boolean night) {
+        if (type != null) {
+            switch (type) {
+                case "Earth Science":
+                    if (night) {
+                        return R.drawable.ic_earth_white;
+                    } else {
+                        return R.drawable.ic_earth;
+                    }
+                case "Planetary Science":
+                    if (night) {
+                        return R.drawable.ic_planetary_white;
+                    } else {
+                        return R.drawable.ic_planetary;
+                    }
+
+                case "Astrophysics":
+                    if (night) {
+                        return R.drawable.ic_astrophysics_white;
+                    } else {
+                        return R.drawable.ic_astrophysics;
+                    }
+
+                case "Heliophysics":
+                    if (night) {
+                        return R.drawable.ic_heliophysics_alt_white;
+                    } else {
+                        return R.drawable.ic_heliophysics_alt;
+                    }
+
+                case "Human Exploration":
+                    if (night) {
+                        return R.drawable.ic_human_explore_white;
+                    } else {
+                        return R.drawable.ic_human_explore;
+                    }
+                case "Robotic Exploration":
+                    if (night) {
+                        return R.drawable.ic_robotic_explore_white;
+                    } else {
+                        return R.drawable.ic_robotic_explore;
+                    }
+                case "Government/Top Secret":
+                    if (night) {
+                        return R.drawable.ic_top_secret_white;
+                    } else {
+                        return R.drawable.ic_top_secret;
+                    }
+                case "Tourism":
+                    if (night) {
+                        return R.drawable.ic_tourism_white;
+                    } else {
+                        return R.drawable.ic_tourism;
+                    }
+                case "Unknown":
+                    if (night) {
+                        return R.drawable.ic_unknown_white;
+                    } else {
+                        return R.drawable.ic_unknown;
+                    }
+                case "Communications":
+                    if (night) {
+                        return R.drawable.ic_satellite_white;
+                    } else {
+                        return R.drawable.ic_satellite;
+                    }
+                case "Resupply":
+                    if (night) {
+                        return R.drawable.ic_resupply_white;
+                    } else {
+                        return R.drawable.ic_resupply;
+                    }
+                default:
+                    if (night) {
+                        return R.drawable.ic_unknown_white;
+                    } else {
+                        return R.drawable.ic_unknown;
+                    }
+            }
+        } else {
+            if (night) {
+                return R.drawable.ic_unknown_white;
+            } else {
+                return R.drawable.ic_unknown;
+            }
+        }
+    }
+
     public static void setCategoryIcon(ImageView imageView, String type, Boolean night) {
         if (type != null) {
             switch (type) {
@@ -520,4 +605,10 @@ public class Utils {
             return null;
         }
     }
+
+    public static SimpleDateFormat getSimpleDateFormatForUI(String pattern) {
+        String format =  DateFormat.getBestDateTimePattern(Locale.getDefault(), pattern);
+        return new SimpleDateFormat(format, Locale.getDefault());
+    }
 }
+

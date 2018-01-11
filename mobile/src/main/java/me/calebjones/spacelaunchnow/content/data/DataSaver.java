@@ -5,7 +5,6 @@ import android.content.Intent;
 
 import com.crashlytics.android.Crashlytics;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -17,9 +16,9 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
-import me.calebjones.spacelaunchnow.data.models.Launch;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.data.models.LaunchNotification;
-import me.calebjones.spacelaunchnow.data.models.Mission;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Mission;
 import me.calebjones.spacelaunchnow.data.models.Result;
 import me.calebjones.spacelaunchnow.data.models.UpdateRecord;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
@@ -126,7 +125,6 @@ public class DataSaver {
                 }
             }
         });
-        syncNotifiers(mRealm);
         mRealm.close();
         isSaving = false;
     }
@@ -138,35 +136,6 @@ public class DataSaver {
             return true;
         }
         return false;
-    }
-
-    public void syncNotifiers(Realm mRealm) {
-        isSyncing = true;
-        RealmResults<Launch> launchRealms;
-        Date date = new Date();
-
-        SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
-
-        if (switchPreferences.getAllSwitch()) {
-            launchRealms = mRealm.where(Launch.class)
-                    .greaterThanOrEqualTo("net", date)
-                    .findAllSorted("net", Sort.ASCENDING);
-        } else {
-            launchRealms = QueryBuilder.buildSwitchQuery(context, mRealm);
-        }
-
-        for (final Launch launchRealm : launchRealms) {
-            if (!launchRealm.isUserToggledNotifiable() && !launchRealm.isNotifiable()) {
-                mRealm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        launchRealm.setNotifiable(true);
-                    }
-                });
-            }
-        }
-        mRealm.close();
-        isSyncing = false;
     }
 
     public void sendResult(final Result result) {
@@ -252,7 +221,6 @@ public class DataSaver {
                 }
             }
         });
-        syncNotifiers(mRealm);
         isSaving = false;
         mRealm.close();
     }
@@ -295,7 +263,6 @@ public class DataSaver {
                 }
             }
         });
-        syncNotifiers(mRealm);
         isSaving = false;
         mRealm.close();
     }

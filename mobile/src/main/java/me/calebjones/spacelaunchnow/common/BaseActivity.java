@@ -1,10 +1,20 @@
 package me.calebjones.spacelaunchnow.common;
 
+import android.app.ActivityManager;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
+
+import java.util.TimeZone;
 
 import io.realm.Realm;
+import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
+import timber.log.Timber;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -20,12 +30,14 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Timber.d("onCreate");
         realm = Realm.getDefaultInstance();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Timber.d("onDestroy");
         Analytics.from(this).sendScreenView(name, "Activity destroyed.");
         realm.close();
     }
@@ -33,20 +45,24 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+        Timber.d("onStart");
         Analytics.from(this).sendScreenView(name, name + " started.");
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Timber.d("onResume");
         Analytics.from(this).sendScreenView(name, name + " resumed.");
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        Timber.d("onPause");
         Analytics.from(this).notifyGoneBackground();
     }
+
 
     public Realm getRealm() {
         return realm;

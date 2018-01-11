@@ -31,21 +31,21 @@ class NotificationHelper extends ContextWrapper {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void createChannels() {
 
-        NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_LAUNCH_IMMINENT,
+        NotificationChannel launchImminent = new NotificationChannel(CHANNEL_LAUNCH_IMMINENT,
                 CHANNEL_LAUNCH_IMMINENT_NAME, NotificationManager.IMPORTANCE_HIGH);
-        notificationChannel.enableLights(true);
-        notificationChannel.setLightColor(ContextCompat.getColor(this, R.color.primary));
-        notificationChannel.setShowBadge(true);
-        notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-        getManager().createNotificationChannel(notificationChannel);
+        launchImminent.enableLights(true);
+        launchImminent.setLightColor(ContextCompat.getColor(this, R.color.primary));
+        launchImminent.setShowBadge(true);
+        launchImminent.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+        getManager().createNotificationChannel(launchImminent);
 
-        NotificationChannel notificationChannel2 = new NotificationChannel(CHANNEL_LAUNCH_UPDATE,
+        NotificationChannel statusChanged = new NotificationChannel(CHANNEL_LAUNCH_UPDATE,
                 CHANNEL_LAUNCH_UPDATE_NAME, NotificationManager.IMPORTANCE_DEFAULT);
-        notificationChannel2.enableLights(false);
-        notificationChannel2.enableVibration(true);
-        notificationChannel2.setLightColor(Color.RED);
-        notificationChannel2.setShowBadge(false);
-        getManager().createNotificationChannel(notificationChannel2);
+        statusChanged.enableLights(false);
+        statusChanged.enableVibration(true);
+        statusChanged.setLightColor(Color.RED);
+        statusChanged.setShowBadge(true);
+        getManager().createNotificationChannel(statusChanged);
 
     }
 

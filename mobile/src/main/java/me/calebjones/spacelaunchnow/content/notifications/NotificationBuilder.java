@@ -16,15 +16,18 @@ import android.support.v4.app.NotificationCompat;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.Launch;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
-import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
+import timber.log.Timber;
 
 import static me.calebjones.spacelaunchnow.content.notifications.NotificationHelper.CHANNEL_LAUNCH_IMMINENT;
+import static me.calebjones.spacelaunchnow.content.notifications.NotificationHelper.CHANNEL_LAUNCH_UPDATE;
 
 public class NotificationBuilder {
     public static void notifyUser(Context context, Launch launch, long timeToFinish, boolean update) {
@@ -55,15 +58,19 @@ public class NotificationBuilder {
         PendingIntent pending = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         if (launch.getNet() != null) {
+            SimpleDateFormat sdf;
+            if (sharedPref.getBoolean("24_hour_mode", false)) {
+                sdf = Utils.getSimpleDateFormatForUI("k:mm a zzz");
+            } else {
+                sdf = Utils.getSimpleDateFormatForUI("h:mm a zzz");
+            }
             //Get launch date
             if (sharedPref.getBoolean("local_time", true)) {
-                SimpleDateFormat df = new SimpleDateFormat("hh:mm a zzz");
-                df.toLocalizedPattern();
                 Date date = launch.getNet();
-                launchDate = df.format(date);
+                launchDate = sdf.format(date);
             } else {
-                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a zzz");
                 Date date = launch.getNet();
+                sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
                 launchDate = sdf.format(date);
             }
             expandedText = getContentText(timeToFinish, launchDate, update);
@@ -92,9 +99,14 @@ public class NotificationBuilder {
                 .setAutoCancel(true)
                 .setContentText(expandedText)
                 .extend(wearableExtender)
-                .setContentIntent(pending)
-                .setSound(alarmSound)
-                .setChannelId(CHANNEL_LAUNCH_IMMINENT);
+                .setContentIntent(pending);
+
+        if (update){
+            mBuilder.setChannelId(CHANNEL_LAUNCH_UPDATE);
+        } else {
+            mBuilder.setChannelId(CHANNEL_LAUNCH_IMMINENT).setSound(alarmSound);
+        }
+
 
 
         if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
@@ -104,9 +116,13 @@ public class NotificationBuilder {
             }
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
-                sharedPref.getBoolean("notifications_new_message_heads_up", true)) {
-            mBuilder.setPriority(Notification.PRIORITY_HIGH);
+        if (update){
+            mBuilder.setPriority(Notification.PRIORITY_LOW);
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
+                    sharedPref.getBoolean("notifications_new_message_heads_up", true)) {
+                mBuilder.setPriority(Notification.PRIORITY_HIGH);
+            }
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN &&
                 sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
@@ -117,6 +133,7 @@ public class NotificationBuilder {
             mBuilder.setLights(Color.GREEN, 3000, 3000);
         }
 
+        Analytics.from(context).sendNotificationEvent(launch.getName(), expandedText);
         mNotifyManager.notify(Constants.NOTIF_ID_HOUR + launch.getId(), mBuilder.build());
     }
 
@@ -136,12 +153,26 @@ public class NotificationBuilder {
             } else {
                 return header + " in " + minutes + " minutes.";
             }
-        } else {
+        } else if (timeToFinish < 8.64e+7) {
             int hours = (int) ((timeToFinish / (1000 * 60 * 60)) % 24);
             if (hours == 23) {
                 return header + " in twenty-four hours.";
             } else {
                 return header + " in " + hours + " hours.";
+            }
+        } else {
+            int days = (int) (timeToFinish / (1000 * 60 * 60 * 24));
+            int hours = (int) ((timeToFinish / (1000 * 60 * 60)) % 24);
+            if (hours > 0){
+                if (days == 1) {
+                    return header + " tomorrow.";
+                } else {
+                    return header + " in " + days + " day(s).";
+                }
+            } else if (days == 1) {
+                return header + " in one day " + hours + "hours.";
+            } else {
+                return header + " in " + days + " day(s) " + hours + "hours.";
             }
         }
     }
@@ -162,12 +193,26 @@ public class NotificationBuilder {
             } else {
                 return header + " in " + minutes + " minutes at " + launchDate;
             }
-        } else {
+        } else if (timeToFinish < 8.64e+7) {
             int hours = (int) ((timeToFinish / (1000 * 60 * 60)) % 24);
             if (hours == 23) {
                 return header + " in twenty-four hours at " + launchDate;
             } else {
                 return header + " in " + hours + " hours at " + launchDate;
+            }
+        } else {
+            int days = (int) (timeToFinish / (1000 * 60 * 60 * 24));
+            int hours = (int) ((timeToFinish / (1000 * 60 * 60)) % 24);
+            if (hours > 0){
+                if (days == 1) {
+                    return header + " tomorrow at " + launchDate;
+                } else {
+                    return header + " in " + days + " day(s) at " + launchDate;
+                }
+            } else if (days == 1) {
+                return header + " in one day " + hours + "hours at " + launchDate;
+            } else {
+                return header + " in " + days + " day(s) " + hours + "hours at " + launchDate;
             }
         }
     }

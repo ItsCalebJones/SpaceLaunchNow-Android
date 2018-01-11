@@ -1,23 +1,24 @@
 package me.calebjones.spacelaunchnow.ui.supporter;
 
-import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -31,12 +32,15 @@ import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
 import com.transitionseverywhere.TransitionManager;
 
+import java.util.concurrent.TimeUnit;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.data.models.Products;
+import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import timber.log.Timber;
@@ -53,12 +57,17 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     AppBarLayout appBarLayout;
     @BindView(R.id.support_thank_you)
     View supportThankYou;
+    @BindView(R.id.fab_supporter)
+    FloatingActionButton fabSupporter;
+    @BindView(R.id.nested_scroll_view)
+    NestedScrollView nestedScrollView;
 
-    BillingProcessor bp;
-
+    private BillingProcessor bp;
     private ImageView icon;
     private AppCompatSeekBar seekbar;
     private TextView text;
+    private boolean isAvailable;
+    private boolean isRefreshable = true;
 
     public SupporterActivity() {
         super("Supporter Activity");
@@ -85,17 +94,32 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
             purchaseButton.setText("You again? Sure!");
             enterReveal(supportThankYou);
         } else {
-            purchaseButton.setText("Upgrade to Supporter");
+            purchaseButton.setText("Become a Supporter");
         }
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setTitle("");
 
-        boolean isAvailable = BillingProcessor.isIabServiceAvailable(context);
+        isAvailable = BillingProcessor.isIabServiceAvailable(context);
         if (isAvailable) {
             // continue
             bp = new BillingProcessor(this, getResources().getString(R.string.rsa_key), this);
+        } else {
+            SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, "Google Play billing services not available.");
         }
+
+        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
+                    fabSupporter.hide();
+                } else {
+                    if (!fabSupporter.isShown()){
+                        fabSupporter.show();
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -110,6 +134,50 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
             onBackPressed();
         }
 
+        if (id == R.id.action_restore) {
+            isRefreshable = true;
+            restorePurchaseHistory();
+        }
+
+        if (id == R.id.action_support) {
+            new MaterialDialog.Builder(this)
+                    .title("Need Support?")
+                    .content("The fastest and most reliable way to get support is through Discord. If thats not an option feel free to email me directly.")
+                    .neutralText("Email")
+                    .positiveColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                    .neutralColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                    .negativeText("Cancel")
+                    .positiveText("Discord")
+                    .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(MaterialDialog dialog, DialogAction which) {
+                            Intent intent = new Intent(Intent.ACTION_SENDTO);
+                            intent.setData(Uri.parse("mailto:"));
+                            intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@calebjones.me"});
+                            intent.putExtra(Intent.EXTRA_SUBJECT, "Space Launch Now - Feedback");
+
+                            startActivity(Intent.createChooser(intent, "Email via..."));
+                        }
+                    })
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(MaterialDialog dialog, DialogAction which) {
+                            String url = "https://discord.gg/WVfzEDW";
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(url));
+                            startActivity(i);
+                        }
+                    })
+                    .onNegative(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
+
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -121,13 +189,28 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         }
     }
 
-    @OnClick(R.id.purchase)
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_support, menu);
+        return true;
+    }
+
+    @OnClick({R.id.purchase, R.id.fab_supporter})
     public void checkClick() {
         Analytics.from(this).sendButtonClicked("Supporter Button clicked.");
         MaterialDialog dialog = new MaterialDialog.Builder(this)
                 .title("Thanks for your Support!")
                 .customView(R.layout.seekbar_dialog_supporter, true)
                 .positiveText("Ok")
+                .neutralText("BTC | ETH | LTC")
+                .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                        showCryptoDialog();
+                    }
+                })
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -136,9 +219,9 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
                 })
                 .show();
 
-        seekbar = (AppCompatSeekBar) dialog.getCustomView().findViewById(R.id.dialog_seekbar);
-        icon = (ImageView) dialog.getCustomView().findViewById(R.id.dialog_icon);
-        text = (TextView) dialog.getCustomView().findViewById(R.id.dialog_text);
+        seekbar = dialog.getCustomView().findViewById(R.id.dialog_seekbar);
+        icon = dialog.getCustomView().findViewById(R.id.dialog_icon);
+        text = dialog.getCustomView().findViewById(R.id.dialog_text);
 
         setIconPosition(1);
         seekbar.setProgress(1);
@@ -157,6 +240,50 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
+            }
+        });
+    }
+
+    private void showCryptoDialog(){
+        MaterialDialog dialog = new MaterialDialog.Builder(this)
+                .title("Thanks for your Support!")
+                .customView(R.layout.dialog_crypto, true)
+                .positiveText("Ok")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+        ImageView ltcIcon = dialog.getCustomView().findViewById(R.id.ltc_icon);
+        ImageView btcIcon = dialog.getCustomView().findViewById(R.id.btc_icon);
+        ImageView ethIcon = dialog.getCustomView().findViewById(R.id.eth_icon);
+
+        ltcIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent animateIntent = new Intent(getApplicationContext(), FullscreenImageActivity.class);
+                animateIntent.putExtra("image", "ltc");
+                getApplicationContext().startActivity(animateIntent);
+            }
+        });
+
+        btcIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent animateIntent = new Intent(getApplicationContext(), FullscreenImageActivity.class);
+                animateIntent.putExtra("image", "btc");
+                getApplicationContext().startActivity(animateIntent);
+            }
+        });
+
+        ethIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent animateIntent = new Intent(getApplicationContext(), FullscreenImageActivity.class);
+                animateIntent.putExtra("image", "eth");
+                getApplicationContext().startActivity(animateIntent);
             }
         });
     }
@@ -209,12 +336,8 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
 
     @Override
     public void onPurchaseHistoryRestored() {
-        Timber.v("Purchase History restored.");
-        if (bp != null && bp.listOwnedProducts().size() > 0) {
-            animatePurchase();
-
-            SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Purchase history restored.");
-        }
+        Timber.d("Purchase History restored.");
+        restorePurchaseHistory();
     }
 
     @Override
@@ -229,13 +352,36 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     @Override
     public void onBillingInitialized() {
         Timber.v("Billing initialized.");
-        bp.loadOwnedPurchasesFromGoogle();
-        for (final String sku : bp.listOwnedProducts()) {
-            Products product = SupporterHelper.getProduct(sku);
-            getRealm().beginTransaction();
-            getRealm().copyToRealmOrUpdate(product);
-            getRealm().commitTransaction();
+        restorePurchaseHistory();
+    }
+
+    private void restorePurchaseHistory() {
+        if (isAvailable) {
+            if (isRefreshable) {
+                isRefreshable = false;
+                if (bp == null) {
+                    bp = new BillingProcessor(this, getResources().getString(R.string.rsa_key), this);
+                }
+                bp.loadOwnedPurchasesFromGoogle();
+                if (bp != null && bp.listOwnedProducts().size() > 0) {
+                    animatePurchase();
+                    Timber.d("Purchase History - Number of items purchased: %s", bp.listOwnedProducts().size());
+                    for (final String sku : bp.listOwnedProducts()) {
+                        Timber.v("Purchase History - SKU: %s", sku);
+                        Products product = SupporterHelper.getProduct(sku);
+                        getRealm().beginTransaction();
+                        getRealm().copyToRealmOrUpdate(product);
+                        getRealm().commitTransaction();
+                    }
+                    SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Purchase history restored.");
+                } else {
+                    Timber.d("Purchase History - None purchased.");
+                }
+            }
+        } else {
+            SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, "Google Play billing services not available.");
         }
+
     }
 
     @Override

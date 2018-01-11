@@ -54,8 +54,9 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.Launch;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import timber.log.Timber;
@@ -281,9 +282,9 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     }
 
     private void showAgencyDialog() {
-        Analytics.from(getActivity()).sendButtonClicked("Previous Filter - Agency");
+        Analytics.from(getActivity()).sendButtonClicked("Previous Filter - LauncherAgency");
         new MaterialDialog.Builder(getContext())
-                .title("Select an Agency")
+                .title("Select an LauncherAgency")
                 .content("Check an agency below, to remove all filters use reset icon in the toolbar.")
                 .items(R.array.agencies)
                 .buttonRippleColorRes(R.color.colorAccentLight)
@@ -295,7 +296,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
                         for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
-                        Analytics.from(getActivity()).sendButtonClicked("Previous Filter - Agency Selection", keyArray.toString());
+                        Analytics.from(getActivity()).sendButtonClicked("Previous Filter - LauncherAgency Selection", keyArray.toString());
                         if (keyArray.size() > 0) {
                             switchPreferences.setPrevAgencyFilterArray(keyArray);
                             switchPreferences.setPrevFiltered(true);
@@ -356,7 +357,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
 
     private String formatDatesForTitle(String start_date) {
         SimpleDateFormat in = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat out = new SimpleDateFormat("LLL yyyy");
+        SimpleDateFormat out = Utils.getSimpleDateFormatForUI("LLL yyyy");
 
         Date sDate;
 

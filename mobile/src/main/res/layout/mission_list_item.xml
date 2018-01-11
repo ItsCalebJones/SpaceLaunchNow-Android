@@ -11,11 +11,11 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/card_margin"
         android:layout_marginRight="@dimen/card_margin"
-        android:animateLayoutChanges="true"
-        card_view:cardCornerRadius="0dp"
+        android:layout_marginTop="@dimen/material_baseline_grid_1x"
+        android:layout_marginBottom="@dimen/material_baseline_grid_1x"
+        card_view:cardCornerRadius="4dp"
         card_view:cardElevation="4dp"
-        card_view:cardPreventCornerOverlap="true"
-        card_view:cardUseCompatPadding="true">
+        card_view:cardPreventCornerOverlap="true">
 
         <LinearLayout
             android:id="@+id/lnrLayout"
@@ -60,7 +60,7 @@
                         android:paddingTop="8dp"
                         android:text="Unknown Launch Vehicle"
                         android:textAlignment="textStart"
-                        android:textColor="?android:textColorHighlight"
+                        android:textColor="?android:textColorPrimary"
                         android:textSize="18sp"
                         android:textStyle="normal" />
 
@@ -73,7 +73,7 @@
                         android:paddingTop="2dp"
                         android:singleLine="true"
                         android:text="Unknown Mission Date"
-                        android:textColor="?android:textColorSecondary"
+                        android:textColor="?android:textColorPrimary"
                         android:textSize="16sp" />
 
                     <TextView

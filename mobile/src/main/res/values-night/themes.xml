@@ -5,6 +5,8 @@
         <item name="colorPrimary">@color/darkPrimary</item>
         <item name="colorPrimaryDark">@color/darkPrimary_dark</item>
         <item name="colorAccent">@color/darkAccent</item>
+        <item name="titleBarColor">@color/darkPrimary</item>
+        <item name="recentBarColor">@color/darkPrimary</item>
         <item name="colorControlNormal">@color/darkIcons</item>
         <item name="colorControlHighlight">@color/cardview_dark_background</item>
 
@@ -37,6 +39,14 @@
         <item name="sv_showcaseColor">@color/darkAccent</item>
         <item name="sv_buttonText">Hide</item>
         <item name="sv_tintButtonColor">true</item>
+    </style>
+
+    <style name="ToolBarWithNavigationBack" parent="AppTheme.AppBarOverlay">
+        <item name="navigationIcon">@drawable/ic_arrow_back</item>
+    </style>
+
+    <style name="PrimaryButtonTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorAccent">@color/darkPrimary</item>
     </style>
 
     <style name="CustomPreferenceTheme" parent="@style/PreferenceActivity">

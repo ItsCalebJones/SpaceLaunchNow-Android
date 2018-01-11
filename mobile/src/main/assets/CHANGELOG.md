@@ -3,9 +3,24 @@ A space launch tracker for Android using data from the Launch Library API.
 
 [View the latest releases here.](https://github.com/ItsCalebJones/SpaceLaunchNow-Android/releases)
 ## Changelog
-#### Updated 11-25-2017
+#### Updated 12-31-2017
 ---
-### Version 1.8.2 (Beta)
+### Version 2.0.0 (Latest)
+#### Overview
+Took a lot of time to refine the current UI design, adding color and tightening up keylines wherever I could. Also added a new widget for Supporters - a list of upcoming launches.
+
+#### Changelog
+* Added a new Launch List widget for Supporters.
+* Embedded YouTube videos in Launch Details screen.
+* Added option to donate via BTC, ETH, and LTC.
+* Added links to Discord, Twitter, Facebook, and Website.
+* Improved feedback mechanism - now have the option to email from the app.
+* Improved general UI with colors and better layouts.
+* Refined layouts and function of existing widgets.
+* Fixed a bug with not displaying the time in 24-hour mode on Android wear.
+
+---
+### Version 1.8.2
 #### Overview
 Fix a bug with refreshing from widget.
 

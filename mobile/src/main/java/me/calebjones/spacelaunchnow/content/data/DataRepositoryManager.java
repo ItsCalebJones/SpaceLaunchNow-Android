@@ -1,7 +1,6 @@
 package me.calebjones.spacelaunchnow.content.data;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -10,9 +9,9 @@ import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
-import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
+import io.realm.Sort;
 import me.calebjones.spacelaunchnow.data.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.Launch;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.data.models.UpdateRecord;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
 import timber.log.Timber;
@@ -69,8 +68,16 @@ public class DataRepositoryManager {
     }
 
     private void checkUpcomingLaunches(Realm realm) {
-        UpdateRecord record = realm.where(UpdateRecord.class).equalTo("type", Constants.ACTION_GET_UP_LAUNCHES_ALL).findFirst();
-        if (record != null) {
+        RealmResults<UpdateRecord> records = realm.where(UpdateRecord.class)
+                .equalTo("type", Constants.ACTION_GET_UP_LAUNCHES_ALL)
+                .or()
+                .equalTo("type", Constants.ACTION_GET_UP_LAUNCHES)
+                .or()
+                .equalTo("type", Constants.ACTION_GET_NEXT_LAUNCHES)
+                .sort("date", Sort.DESCENDING)
+                .findAll();
+        if (records != null && records.size() > 0){
+            UpdateRecord record = records.first();
             Date currentDate = new Date();
             Date lastUpdateDate = record.getDate();
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
@@ -89,8 +96,8 @@ public class DataRepositoryManager {
     public void cleanDB() {
         Realm realm = Realm.getDefaultInstance();
         RealmResults<Launch> launches = realm.where(Launch.class).findAll();
-        for (final Launch launch: launches){
-            if (launch.getName() == null){
+        for (final Launch launch : launches) {
+            if (launch.getName() == null) {
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {

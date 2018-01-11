@@ -34,7 +34,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
+        <item name="titleBarColor">@color/colorPrimary</item>
+        <item name="recentBarColor">@color/colorRecentPrimary</item>
         <item name="android:textColorPrimary">#212121</item>
         <item name="android:textColorSecondary">#757575</item>
 
@@ -83,7 +84,11 @@
 
     <style name="AppTheme.ActionBar.Transparent" parent="BaseAppTheme" />
 
-    <style name="ToolBarWithNavigationBack">
+    <style name="PrimaryButtonTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
+    <style name="ToolBarWithNavigationBack" parent="AppTheme.AppBarOverlay">
         <item name="navigationIcon">@drawable/ic_arrow_back</item>
     </style>
 

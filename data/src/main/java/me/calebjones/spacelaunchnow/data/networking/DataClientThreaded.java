@@ -3,7 +3,7 @@ package me.calebjones.spacelaunchnow.data.networking;
 import java.io.IOException;
 
 import me.calebjones.spacelaunchnow.data.helpers.Utils;
-import me.calebjones.spacelaunchnow.data.models.Launch;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryService;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
@@ -205,7 +205,7 @@ public class DataClientThreaded {
     }
 
     public Call<VehicleResponse> getVehicles(String family, Callback<VehicleResponse> callback) {
-        Call<VehicleResponse> call = spaceLaunchNowService.getVehicles(family);
+        Call<VehicleResponse> call = spaceLaunchNowService.getVehiclesByAgency(family);
 
         call.enqueue(callback);
 

@@ -1,140 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:textAlignment="center"
-    android:transitionGroup="true">
+    android:layout_marginTop="@dimen/material_baseline_grid_1x"
+    android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+    android:layout_marginLeft="@dimen/card_margin"
+    android:layout_marginRight="@dimen/card_margin"
+    android:paddingTop="4dp"
+    android:elevation="2dp"
+    card_view:cardCornerRadius="4dp"
+    card_view:cardPreventCornerOverlap="true">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_view"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:id="@+id/lnrLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/card_margin"
-        android:layout_marginRight="@dimen/card_margin"
-        android:animateLayoutChanges="true"
-        card_view:cardCornerRadius="0dp"
-        card_view:cardElevation="4dp"
-        card_view:cardPreventCornerOverlap="true"
-        card_view:cardUseCompatPadding="true">
+        android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/lnrLayout"
+            android:id="@+id/TitleCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:background="?attr/titleBarColor"
+            android:clipToPadding="false"
+            android:elevation="4dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/categoryIcon"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:padding="16dp"
+                app:srcCompat="@drawable/ic_unknown_white" />
 
             <LinearLayout
-                android:id="@+id/TitleCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:elevation="4dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/categoryIcon"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center"
-                    android:padding="16dp"
-                    app:srcCompat="@drawable/ic_unknown" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/launch_rocket"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginTop="8dp"
-                        android:fontFamily="sans-serif-condensed"
-                        android:gravity="left"
-                        android:maxLines="2"
-                        android:padding="2dp"
-                        android:text="Unknown Launch Vehicle"
-                        android:textColor="?android:textColorPrimary"
-                        android:textSize="18sp"
-                        android:textStyle="normal" />
-
-                    <TextView
-                        android:id="@+id/location"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:ellipsize="end"
-                        android:gravity="left"
-                        android:maxLines="2"
-                        android:padding="2dp"
-                        android:textColor="?android:textColorSecondary"
-                        android:singleLine="false"
-                        android:text="Unknown Launch Location" />
-
-                    <TextView
-                        android:id="@+id/launch_date"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="left"
-                        android:maxLines="2"
-                        android:padding="2dp"
-                        android:textColor="?android:textColorSecondary"
-                        android:singleLine="false"
-                        android:text="Unknown Launch Date" />
-
-                </LinearLayout>
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:elevation="0dp">
-
-                <View
-                    android:id="@+id/separator"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/View_Separator"
-                    android:padding="32dp" />
-
-                <ImageView
-                    android:id="@+id/map_view"
-                    android:layout_width="fill_parent"
-                    android:layout_height="160dp"
-                    android:contentDescription="A map view of launch location."
-                    android:scaleType="centerCrop" />
-
+                android:layout_marginLeft="4dp"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/content_status"
+                    android:id="@+id/launch_rocket"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/map_view"
-                    android:elevation="0dp"
-                    android:paddingLeft="28dp"
-                    android:paddingRight="28dp"
-                    android:paddingTop="16dp"
-                    android:text="Unknown Launch Status"
-                    android:textColor="?android:textColorSecondary"
-                    android:textIsSelectable="false"
-                    android:textSize="20dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:gravity="left"
+                    android:maxLines="2"
+                    android:text="Unknown Launch"
+                    android:textAppearance="@style/MaterialTypography.Locale.Title"
+                    android:textColor="@color/dark_primary_text_color_selector"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
-            </RelativeLayout>
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:maxLines="2"
+                    android:singleLine="false"
+                    android:text="Unknown Launch Location"
+                    android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+                    android:textColor="@color/dark_primary_text_color_selector" />
 
-            <View
-                android:id="@+id/separator_mission"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
-                android:layout_marginTop="8dp"
-                android:background="@color/View_Separator"
-                android:padding="12dp" />
+                <TextView
+                    android:id="@+id/launch_date_compact"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:maxLines="2"
+                    android:paddingBottom="@dimen/material_baseline_grid_1x"
+                    android:singleLine="false"
+                    android:text="Unknown Launch Date"
+                    android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+                    android:textColor="@color/dark_primary_text_color_selector" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/map_view"
+            android:layout_width="fill_parent"
+            android:layout_height="160dp"
+            android:contentDescription="A map view of launch location." />
+
+        <TextView
+            android:id="@+id/content_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/titleBarColor"
+            android:clipToPadding="false"
+            android:elevation="4dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:paddingBottom="8dp"
+            android:paddingTop="4dp"
+            android:singleLine="false"
+            android:text="Unknown Launch Status"
+            android:textAlignment="center"
+            android:textColor="@color/dark_primary_text_color_selector"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:elevation="4dp"
+            android:orientation="vertical">
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -145,126 +130,124 @@
                 android:paddingRight="28dp"
                 android:paddingTop="8dp">
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/content_TMinus_status"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:singleLine="false"
+                    android:text="Unknown CountDown Status"
+                    android:textAlignment="center"
+                    android:textColor="?android:textColorSecondary"
+                    android:textSize="16sp" />
 
-                </LinearLayout>
-
-                <LinearLayout
+                <include
+                    layout="@layout/countdown_layout_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/content_TMinus_status"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="left"
-                        android:singleLine="false"
-                        android:text="Unknown CountDown Status"
-                        android:textAlignment="center"
-                        android:textColor="?android:textColorSecondary"
-                        android:textSize="16sp" />
-
-                    <include
-                        layout="@layout/countdown_layout_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-
-                </LinearLayout>
+                    android:layout_height="match_parent" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/content_mission_description_view"
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/launch_date_full"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="2"
+            android:paddingBottom="@dimen/material_baseline_grid_0.5x"
+            android:singleLine="false"
+            android:text="Unknown Launch Date"
+            android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+            android:textColor="?android:textColorSecondary" />
+
+        <TextView
+            android:id="@+id/content_forecast"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Unknown"
+            android:textAlignment="center"
+            android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+            android:textColor="?android:textColorSecondary"
+            android:textIsSelectable="false" />
+
+
+        <LinearLayout
+            android:id="@+id/content_mission_description_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="@dimen/material_baseline_grid_2x"
+                android:layout_marginStart="@dimen/material_baseline_grid_2x"
+                android:layout_marginTop="8dp"
+                android:background="@color/View_Separator"
+                android:paddingBottom="8dp" />
+
+            <TextView
+                android:id="@+id/content_mission"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/material_baseline_grid_2.5x"
+                android:layout_marginStart="@dimen/material_baseline_grid_2.5x"
+                android:text="Unknown Mission"
+                android:textAppearance="@style/MaterialTypography.Regular.Caption"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/content_mission_description"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingBottom="8dp">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginLeft="24dp"
-                    android:layout_marginRight="24dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/View_Separator"
-                    android:padding="12dp"
-                    android:paddingBottom="8dp" />
-
-                <TextView
-                    android:id="@+id/content_mission"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:elevation="0dp"
-                    android:paddingLeft="28dp"
-                    android:paddingRight="28dp"
-                    android:text="Unknown Mission"
-                    android:textColor="?android:textColorPrimary"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/content_mission_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingBottom="8dp"
-                    android:paddingLeft="28dp"
-                    android:paddingRight="28dp"
-                    android:paddingTop="8dp"
-                    android:textColor="?android:textColorSecondary"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="58dp"
-                android:orientation="horizontal">
-
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/watchButton"
-                    style="@style/Base.Widget.AppCompat.Button.Colored"
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:layout_alignParentBottom="false"
-                    android:layout_alignParentLeft="false"
-                    android:layout_alignParentTop="false"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="2dp"
-                    android:gravity="center"
-                    android:text="Watch Live"
-                    android:textColor="@color/white"
-                    android:textSize="12sp" />
-
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/shareButton"
-                    style="@style/Base.Widget.AppCompat.Button.Borderless"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_gravity="right"
-                    android:layout_marginRight="10dp"
-                    android:padding="10dp"
-                    android:text="Share"
-                    android:textColor="?android:textColorHighlight" />
-
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/exploreButton"
-                    style="@style/Base.Widget.AppCompat.Button.Borderless"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentBottom="true"
-                    android:layout_gravity="right"
-                    android:layout_toLeftOf="@id/shareButton"
-                    android:text="Explore"
-                    android:textColor="?android:textColorHighlight" />
-            </RelativeLayout>
+                android:layout_marginEnd="@dimen/material_baseline_grid_2.5x"
+                android:layout_marginStart="@dimen/material_baseline_grid_2.5x"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:textColor="?android:textColorSecondary"
+                android:textSize="14sp" />
         </LinearLayout>
-    </android.support.v7.widget.CardView>
-</android.support.design.widget.CoordinatorLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_marginBottom="@dimen/material_baseline_grid_1x"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/watchButton"
+                style="@style/Base.Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="@dimen/material_baseline_grid_2x"
+
+                android:gravity="center"
+                android:text="Watch Live" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/shareButton"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/material_baseline_grid_2x"
+                android:text="Share" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/exploreButton"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_toLeftOf="@id/shareButton"
+                android:text="Explore" />
+        </RelativeLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

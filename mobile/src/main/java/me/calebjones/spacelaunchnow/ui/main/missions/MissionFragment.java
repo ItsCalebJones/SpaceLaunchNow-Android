@@ -34,7 +34,7 @@ import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.data.DataClientManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.Mission;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Mission;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import timber.log.Timber;

@@ -21,4 +21,7 @@
         <attr name="finalHeight" format="dimension" />
     </declare-styleable>
 
+    <attr name="titleBarColor" format="reference" />
+    <attr name="recentBarColor" format="reference" />
+
 </resources>

@@ -18,6 +18,10 @@ public class CustomOnOffsetChangedListener implements AppBarLayout.OnOffsetChang
         this.window = window;
     }
 
+    public void updateStatusColor(int statusColor){
+        this.statusColor = statusColor;
+    }
+
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         int totalScroll = appBarLayout.getTotalScrollRange();

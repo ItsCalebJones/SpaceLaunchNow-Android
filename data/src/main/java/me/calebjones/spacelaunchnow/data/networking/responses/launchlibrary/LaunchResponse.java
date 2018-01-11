@@ -1,6 +1,6 @@
 package me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary;
 
-import me.calebjones.spacelaunchnow.data.models.Launch;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 
 public class LaunchResponse extends BaseResponse {
     private Launch[] launches;

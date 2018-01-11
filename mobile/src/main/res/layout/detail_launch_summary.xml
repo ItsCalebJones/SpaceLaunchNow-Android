@@ -17,6 +17,7 @@
         android:layout_height="fill_parent"
         android:orientation="vertical">
 
+
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -35,6 +36,36 @@
                 android:orientation="vertical"
                 android:weightSum="1">
 
+                <LinearLayout
+                    android:id="@+id/youTube_viewHolder"
+                    android:layout_width="match_parent"
+                    android:visibility="gone"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/error_message"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/titleBarColor"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:paddingBottom="8dp"
+                        android:paddingTop="4dp"
+                        android:singleLine="false"
+                        android:textAlignment="center"
+                        android:textColor="@color/dark_primary_text_color_selector"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <FrameLayout
+                        android:id="@+id/youtube_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
                 <ImageView
                     android:id="@+id/map_view_summary"
                     android:layout_width="fill_parent"
@@ -42,26 +73,17 @@
                     android:clickable="true"
                     tools:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_margin="8dp"
-                    android:background="@color/View_Separator" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingBottom="4dp"
-                    android:paddingLeft="28dp"
-                    android:paddingRight="28dp"
-                    android:paddingTop="8dp">
+                    android:orientation="vertical">
 
 
                     <TextView
                         android:id="@+id/launch_status"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="?attr/titleBarColor"
                         android:ellipsize="end"
                         android:gravity="center"
                         android:paddingBottom="8dp"
@@ -69,39 +91,45 @@
                         android:singleLine="false"
                         android:text="Unknown Launch Status"
                         android:textAlignment="center"
-                        android:textColor="?android:textColorSecondary"
+                        android:textColor="@color/dark_primary_text_color_selector"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_margin="8dp"
-                        android:background="@color/View_Separator"
-                        android:padding="12dp" />
-
-                    <TextView
-                        android:id="@+id/content_TMinus_status"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="left"
-                        android:singleLine="false"
-                        android:text="Unknown CountDown Status"
-                        android:textAlignment="center"
-                        android:textColor="?android:textColorSecondary"
-                        android:textSize="16sp" />
+                        android:orientation="vertical"
+                        android:layout_marginBottom="4dp"
+                        android:paddingLeft="28dp"
+                        android:paddingRight="28dp"
+                        android:layout_marginTop="4dp">
 
-                    <include
-                        layout="@layout/countdown_layout_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        <TextView
+                            android:id="@+id/content_TMinus_status"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:gravity="left"
+                            android:singleLine="false"
+                            android:text="Unknown CountDown Status"
+                            android:textAlignment="center"
+                            android:textColor="?android:textColorSecondary"
+                            android:textSize="16sp" />
+
+                        <include
+                            layout="@layout/countdown_layout_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <View
+                    android:id="@+id/countdown_separator"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_margin="8dp"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="24dp"
+                    android:layout_marginTop="2dp"
                     android:background="@color/View_Separator" />
 
 
@@ -112,12 +140,11 @@
                     android:gravity="center"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
-                    android:paddingTop="8dp"
+                    android:paddingTop="4dp"
                     android:text="Estimated Launch Date"
                     android:textAlignment="center"
-                    android:textColor="?android:textColorPrimary"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/date"
@@ -125,7 +152,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:gravity="center"
-                    android:paddingBottom="8dp"
+                    android:paddingBottom="2dp"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:paddingTop="4dp"
@@ -133,55 +160,27 @@
                     android:text="Unknown Launch Date"
                     android:textAlignment="center"
                     android:textColor="?android:textColorSecondary" />
-
                 <TextView
-                    android:id="@+id/launch_window_start"
+                    android:id="@+id/launch_window_text"
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
                     android:ellipsize="end"
-                    android:gravity="left"
+                    android:gravity="center"
                     android:paddingBottom="2dp"
                     android:paddingLeft="8dp"
-                    android:paddingTop="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="2dp"
                     android:singleLine="false"
-                    android:text="Launch Window Start: "
+                    android:text="Unknown Launch Date"
+                    android:textAlignment="center"
                     android:textColor="?android:textColorSecondary" />
-
-                <TextView
-                    android:id="@+id/launch_window_end"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:ellipsize="end"
-                    android:gravity="left"
-                    android:paddingBottom="12dp"
-                    android:paddingLeft="8dp"
-                    android:paddingTop="8dp"
-                    android:singleLine="false"
-                    android:text="Launch Window End: "
-                    android:textColor="?android:textColorSecondary" />
-
-
-                <android.support.v7.widget.SwitchCompat
-                    android:id="@+id/notification_switch"
-                    android:visibility="gone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center|left"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
-                    android:text="Launch Notifications" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="8dp">
 
                     <RelativeLayout
 
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
                         android:orientation="horizontal">
 
                         <android.support.v7.widget.AppCompatButton
@@ -201,18 +200,17 @@
                             android:textSize="12sp" />
 
                     </RelativeLayout>
-                </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
             android:id="@+id/weather_card"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/material_card_edge_margin"
             android:animateLayoutChanges="true"
             android:padding="@dimen/material_card_edge_margin"
+            android:visibility="gone"
             card_view:cardCornerRadius="@dimen/card_view_corner_radius"
             card_view:cardElevation="@dimen/material_card_elevation_resting"
             card_view:cardPreventCornerOverlap="true"

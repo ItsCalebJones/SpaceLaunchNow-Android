@@ -61,9 +61,6 @@ public class LibraryDataManager extends BaseManager {
         dataClientManager.getRocketFamily();
     }
 
-    public void syncNotifiers() {
-        dataClientManager.getDataSaver().syncNotifiers(mRealm);
-    }
 
     public void updateNextLaunchMini() {
         Timber.v("Sending Update Next Launch intent.");
@@ -81,6 +78,10 @@ public class LibraryDataManager extends BaseManager {
 
     public void getUpcomingLaunches(){
         dataClientManager.getUpcomingLaunches();
+    }
+
+    public void getNextUpcomingLaunches(){
+        dataClientManager.getNextUpcomingLaunches();
     }
 
     public void getAllUpcomingLaunches(){

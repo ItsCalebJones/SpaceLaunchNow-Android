@@ -24,25 +24,24 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
-                style="@style/ToolBarWithNavigationBack"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:layout_scrollFlags="scroll"
-
-                app:theme="@style/ThemeOverlay.AppCompat.Dark" />
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/material_baseline_grid_2x"
                 app:layout_scrollFlags="scroll">
 
                 <ImageView
                     android:id="@+id/image_background"
                     android:layout_width="match_parent"
                     android:layout_height="256dp"
-                    android:fitsSystemWindows="true"
+
                     android:scaleType="centerCrop"
                     android:src="@drawable/intro_slide_background"
                     app:layout_collapseMode="parallax"
@@ -52,7 +51,7 @@
                     android:id="@+id/image"
                     android:layout_width="match_parent"
                     android:layout_height="256dp"
-                    android:fitsSystemWindows="true"
+                    android:foregroundGravity="center"
                     android:scaleType="centerInside"
                     android:src="@drawable/launcher"
                     app:layout_collapseMode="parallax"
@@ -152,7 +151,7 @@
                         android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
                         android:layout_marginLeft="@dimen/material_baseline_grid_1x"
                         android:layout_marginRight="@dimen/material_baseline_grid_1x"
-                        android:layout_marginTop="@dimen/material_baseline_grid_0.5x">
+                        android:layout_marginTop="@dimen/material_baseline_grid_1x">
 
                         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                             android:layout_width="fill_parent"
@@ -408,24 +407,136 @@
                         </LinearLayout>
                     </android.support.v7.widget.CardView>
 
+                    <android.support.v7.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                        android:layout_marginLeft="@dimen/material_baseline_grid_1x"
+                        android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                        android:layout_marginTop="@dimen/material_baseline_grid_0.5x">
+
+                        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="64dp"
+                                android:layout_height="fill_parent"
+                                android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                                android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                                android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                                android:gravity="center_vertical"
+                                android:src="@drawable/ic_about"
+                                app:civ_border_color="@color/material_color_cyan_500"
+                                app:civ_border_width="4dp"
+                                app:civ_fill_color="@color/material_color_cyan_500" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    style="@style/MaterialTypography.Regular"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                                    android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                                    android:gravity="center_vertical"
+                                    android:text="Discord"
+                                    android:textSize="20sp" />
+
+                                <TextView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:lines="2"
+                                    android:text="Receive an exclusive Supporter role in the Space Launch Now Discord chat server." />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                        android:layout_marginLeft="@dimen/material_baseline_grid_1x"
+                        android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                        android:layout_marginTop="@dimen/material_baseline_grid_0.5x">
+
+                        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="64dp"
+                                android:layout_height="fill_parent"
+                                android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                                android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                                android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                                android:gravity="center_vertical"
+                                android:src="@drawable/ic_appearance_white"
+                                app:civ_border_color="@color/material_color_teal_500"
+                                app:civ_border_width="4dp"
+                                app:civ_fill_color="@color/material_color_teal_500" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    style="@style/MaterialTypography.Regular"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                                    android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                                    android:gravity="center_vertical"
+                                    android:text="Exclusive Customizable Widgets"
+                                    android:textSize="20sp" />
+
+                                <TextView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:lines="2"
+                                    android:text="Get access to an additional widget and the ability to customize them." />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+
 
                     <android.support.v7.widget.AppCompatButton
                         android:id="@+id/purchase"
                         style="@style/Base.Widget.AppCompat.Button.Colored"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/material_baseline_grid_1x"
-                        android:layout_marginLeft="@dimen/material_baseline_grid_1x"
-                        android:layout_marginRight="@dimen/material_baseline_grid_1x"
-                        android:lines="2"
-                        android:padding="@dimen/material_baseline_grid_1x"
-                        android:text="Upgrade Supporter" />
+                        android:layout_margin="@dimen/material_baseline_grid_0.5x"
+                        android:text="Become a Supporter"
+                        android:theme="@style/PrimaryButtonTheme" />
 
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_supporter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/material_baseline_grid_1x"
+        android:layout_marginEnd="@dimen/material_baseline_grid_1x"
+        android:src="@drawable/ic_money"
+        app:fab_elevationCompat="@dimen/material_baseline_grid_1x"
+        app:fab_size="normal"
+        app:layout_anchor="@id/nested_scroll_view"
+        app:layout_anchorGravity="bottom|right|end" />​
 </android.support.design.widget.CoordinatorLayout>
 
 

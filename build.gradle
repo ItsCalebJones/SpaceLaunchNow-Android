@@ -7,12 +7,12 @@ buildscript {
         google()
     }
     dependencies {
-        classpath "io.realm:realm-gradle-plugin:4.2.0"
+        classpath "io.realm:realm-gradle-plugin:4.3.1"
         classpath 'com.android.tools.build:gradle:3.0.1'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
         classpath 'org.moallemi.gradle.advanced-build-version:gradle-plugin:1.6.0'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.4'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
 
     }
@@ -34,9 +34,10 @@ task clean(type: Delete) {
 ext {
 
     app = [
-            versionMajor : 1,
-            versionMinor : 8,
-            versionPatch : 2
+            versionMajor : 2,
+            versionMinor : 0,
+            versionPatch : 0
+
     ]
     // Sdk and tools
     minSdkVersion = 15
@@ -45,8 +46,8 @@ ext {
     buildToolsVersion = '23.0.3'
 
     // App dependencies
-    supportLibraryVersion = '27.0.1'
-    playServicesVersion = '11.6.0'
+    supportLibraryVersion = '27.0.2'
+    playServicesVersion = '11.8.0'
 
     sdk = 25
     buildTools = "25.0.0" //keep 25.0.0 for Continuous Integration

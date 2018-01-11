@@ -6,8 +6,8 @@
     android:minWidth="250dp"
     android:minHeight="110dp"
     android:updatePeriodMillis="1800000"
-    android:initialLayout="@layout/widget_launch_card_compact_dark"
+    android:initialLayout="@layout/widget_launch_card_compact_large_dark"
     android:resizeMode="vertical|horizontal"
     android:widgetCategory="home_screen"
-    android:previewImage="@drawable/launch_card_compact_preview">
+    android:previewImage="@drawable/launch_card_preview">
 </appwidget-provider>

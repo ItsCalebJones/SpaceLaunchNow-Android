@@ -4,17 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
-    ​
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/detail.appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true">
-        ​
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/main.collapsing"
+            android:id="@+id/collapsing"
             android:layout_width="match_parent"
             android:layout_height="224dp"
             android:fitsSystemWindows="true"
@@ -22,7 +20,6 @@
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll">
-            ​
 
             <ImageView
                 android:id="@+id/detail_profile_backdrop"
@@ -42,11 +39,10 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="-48dp"
             android:elevation="8dp"
-            app:srcCompat="@drawable/icon_international"
             app:civ_border_color="#FFF"
             app:civ_border_width="4dp"
-            app:layout_scrollFlags="scroll" />
-        ​
+            app:layout_scrollFlags="scroll"
+            app:srcCompat="@drawable/icon_international" />
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/detail.toolbar"
@@ -76,7 +72,7 @@
                 android:singleLine="true"
                 android:text="Unknown Orbiter"
                 android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white" />
             ​
 
             <TextView
@@ -146,7 +142,6 @@
 
                     <android.support.v7.widget.AppCompatButton
                         android:id="@+id/wikiButton"
-                        android:visibility="visible"
                         style="@style/Base.Widget.AppCompat.Button.Colored"
                         android:layout_width="wrap_content"
                         android:layout_height="50dp"
@@ -154,7 +149,8 @@
                         android:gravity="center"
                         android:text="WIKI"
                         android:textColor="@color/white"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        android:visibility="visible" />
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
@@ -197,8 +193,8 @@
                         android:id="@+id/orbiter_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
                         android:layout_marginBottom="8dp"
+                        android:layout_marginTop="4dp"
                         android:text="Unknown Orbiter - Description unavailable." />
                 </LinearLayout>
             </android.support.v7.widget.CardView>

@@ -350,7 +350,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
 
             Date now = new Date();
             mTime = Calendar.getInstance();
-            SimpleDateFormat twentyFourHourMode = new SimpleDateFormat("kk:mm");
+            SimpleDateFormat twentyFourHourMode = new SimpleDateFormat("HH:mm");
             SimpleDateFormat twelveHourMode = new SimpleDateFormat("h:mm");
             if (twentyfourhourmode) {
                 // Draw H:MM in ambient mode or H:MM:SS in interactive mode.
