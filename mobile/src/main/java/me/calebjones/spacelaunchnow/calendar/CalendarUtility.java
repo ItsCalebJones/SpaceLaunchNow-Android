@@ -28,19 +28,12 @@ import it.macisamuele.calendarprovider.EventInfo;
 import me.calebjones.spacelaunchnow.calendar.model.Calendar;
 import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
 import me.calebjones.spacelaunchnow.calendar.model.Event;
-import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import timber.log.Timber;
 
 // these imports are used in the following code
 
 public class CalendarUtility {
-
-    private SharedPreferences sharedPrefs;
-    private CalendarItem calendarItem;
-
-    public CalendarUtility(CalendarItem calendarItem) {
-        this.calendarItem = calendarItem;
-    }
 
     final static String[] CALENDAR_QUERY_COLUMNS = {
             CalendarContract.Calendars._ID,
@@ -48,8 +41,14 @@ public class CalendarUtility {
             CalendarContract.Calendars.VISIBLE,
             CalendarContract.Calendars.OWNER_ACCOUNT
     };
+    private SharedPreferences sharedPrefs;
+    private CalendarItem calendarItem;
 
-    public Integer addEvent(Context context, LaunchRealm launch) {
+    public CalendarUtility(CalendarItem calendarItem) {
+        this.calendarItem = calendarItem;
+    }
+
+    public Integer addEvent(Context context, Launch launch) {
         Timber.v("Adding launch event: %s", launch.getName());
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
@@ -95,14 +94,14 @@ public class CalendarUtility {
         }
         event.timezone = TimeZone.getDefault().getDisplayName();
 
-        int id =  event.create(context.getContentResolver());
-        for (int time: prefSelected) {
+        int id = event.create(context.getContentResolver());
+        for (int time : prefSelected) {
             setReminder(context, id, time);
         }
         return id;
     }
 
-    public boolean updateEvent(Context context, LaunchRealm launch) {
+    public boolean updateEvent(Context context, Launch launch) {
         Timber.v("Updating launch event: %s", launch.getName());
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
 
@@ -152,9 +151,6 @@ public class CalendarUtility {
 
             Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, launch.getEventID());
 
-            for (int time : prefSelected) {
-                setReminder(context, Long.parseLong(updateUri.getLastPathSegment()), time);
-            }
             try {
                 return updateUri != null && cr.update(updateUri, calEvent, null, null) > 0;
             } catch (SQLiteException error) {
@@ -169,14 +165,15 @@ public class CalendarUtility {
                 Crashlytics.logException(error);
                 return false;
             }
-        } return false;
+        }
+        return false;
     }
 
-    public int deleteEvent(Context context, LaunchRealm launch) {
+    public int deleteEvent(Context context, Launch launch) {
         Timber.v("Deleting launch event: %s", launch.getName());
         int iNumRowsDeleted = 0;
 
-        if (launch.getEventID() > 0) {
+        if (launch.getEventID() != null && launch.getEventID() > 0) {
             Uri eventUri = ContentUris
                     .withAppendedId(CalendarContract.Events.CONTENT_URI, launch.getEventID());
             iNumRowsDeleted = context.getContentResolver().delete(eventUri, null, null);
@@ -196,11 +193,13 @@ public class CalendarUtility {
 
     private int deleteEvent(Context context, Long id) {
         Timber.v("Deleting launch event: %s", id);
-        int iNumRowsDeleted;
+        int iNumRowsDeleted = 0;
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
 
-        Uri eventUri = ContentUris
-                .withAppendedId(CalendarContract.Events.CONTENT_URI, id);
-        iNumRowsDeleted = context.getContentResolver().delete(eventUri, null, null);
+            Uri eventUri = ContentUris
+                    .withAppendedId(CalendarContract.Events.CONTENT_URI, id);
+            iNumRowsDeleted = context.getContentResolver().delete(eventUri, null, null);
+        }
         return iNumRowsDeleted;
     }
 
@@ -216,6 +215,7 @@ public class CalendarUtility {
             values.put(CalendarContract.Reminders.MINUTES, timeBefore);
             values.put(CalendarContract.Reminders.EVENT_ID, eventID);
             values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+
             Uri uri = contentResolver.insert(CalendarContract.Reminders.CONTENT_URI, values);
             Cursor c = CalendarContract.Reminders.query(contentResolver, eventID, new String[]{CalendarContract.Reminders.MINUTES});
             c.close();
@@ -231,12 +231,15 @@ public class CalendarUtility {
 
     public void deleteDuplicates(Context context, Realm realm, String queryStr, String type) {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
-            for (EventInfo eventInfo : EventInfo.getAllEvents(context)) {
-                if (eventInfo != null & eventInfo.getDescription() !=null && eventInfo.getDescription().contains(queryStr)) {
-                    if (eventInfo.getId() != null) {
-                        LaunchRealm launchRealm = realm.where(LaunchRealm.class).equalTo("eventID", eventInfo.getId()).findFirst();
-                        if (launchRealm == null) {
-                            deleteEvent(context, eventInfo.getId());
+            List<EventInfo> eventInfos = EventInfo.getAllEvents(context);
+            if (eventInfos != null) {
+                for (EventInfo eventInfo : eventInfos) {
+                    if (eventInfo != null & eventInfo.getDescription() != null && eventInfo.getDescription().contains(queryStr)) {
+                        if (eventInfo.getId() != null) {
+                            Launch launchRealm = realm.where(Launch.class).equalTo("eventID", eventInfo.getId()).findFirst();
+                            if (launchRealm == null) {
+                                deleteEvent(context, eventInfo.getId());
+                            }
                         }
                     }
                 }

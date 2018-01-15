@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
+
     ​
 
     <android.support.design.widget.AppBarLayout
@@ -31,13 +35,14 @@
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
-                app:srcCompat="@drawable/placeholder"
                 android:transitionName="imageCover"
-                app:layout_collapseMode="parallax" />
+                app:layout_collapseMode="parallax"
+                app:srcCompat="@drawable/placeholder" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
         ​
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/detail_profile_image"
             android:layout_width="126dp"
@@ -45,10 +50,11 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="-48dp"
             android:elevation="8dp"
-            app:srcCompat="@drawable/icon_international"
+            android:fitsSystemWindows="true"
             app:civ_border_color="#FFF"
             app:civ_border_width="4dp"
-            app:layout_scrollFlags="scroll" />
+            app:layout_scrollFlags="scroll"
+            app:srcCompat="@drawable/icon_international" />
 
 
         <android.support.v7.widget.Toolbar
@@ -57,6 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="-48dp"
+            android:fitsSystemWindows="true"
             android:minHeight="?attr/actionBarSize"
             app:theme="@style/ThemeOverlay.AppCompat.Dark" />
         ​
@@ -65,13 +72,14 @@
             android:id="@+id/detail.title_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
             android:gravity="center"
             android:orientation="vertical"
             android:paddingBottom="8dp">
             ​
 
             <TextView
-                android:id="@+id/detail_rocket"
+                android:id="@+id/detail_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="32dp"
@@ -82,7 +90,7 @@
             ​
 
             <TextView
-                android:id="@+id/detail_vehicle_agency"
+                android:id="@+id/detail_sub_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -96,11 +104,10 @@
         </LinearLayout>
     </android.support.design.widget.AppBarLayout>
 
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/vehicle_detail_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-
-
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 </android.support.design.widget.CoordinatorLayout>

@@ -12,7 +12,7 @@
         android:id="@+id/launcher"
         android:layout_width="wrap_content"
         android:layout_height="400dp"
-        app:srcCompat="@drawable/intro_slide_one_foreground"
+        app:srcCompat="@drawable/launcher"
         android:layout_centerHorizontal="true"/>
 
     <TextView

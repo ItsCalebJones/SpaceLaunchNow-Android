@@ -1,11 +1,14 @@
 package me.calebjones.spacelaunchnow.data.networking.responses.base;
 
-import me.calebjones.spacelaunchnow.data.models.natives.Orbiter;
+import com.google.gson.annotations.SerializedName;
+
+import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.Orbiter;
 
 public class OrbiterResponse {
-    private Orbiter[] items;
+    @SerializedName(value="results")
+    private Orbiter[] orbiters;
 
-    public Orbiter[] getItem() {
-        return items;
+    public Orbiter[] getOrbiters() {
+        return orbiters;
     }
 }

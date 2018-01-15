@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Space Launch Now</string>
-    <string name="my_digital_name">Launch Tracker</string>
     <string name="notification_posted">Notification posted</string>
     <string name="title_activity_main">Space Launch Now</string>
 </resources>

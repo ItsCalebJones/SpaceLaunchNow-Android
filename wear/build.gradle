@@ -1,37 +1,38 @@
+import org.moallemi.gradle.internal.VersionCodeType
+
 apply plugin: 'com.android.application'
 apply plugin: 'org.moallemi.advanced-build-version'
 
 advancedVersioning {
     nameOptions {
-        versionMajor 1
-        versionMinor 2
-        versionPatch 0
-
+        versionMajor app.versionMajor
+        versionMinor app.versionMinor
+        versionPatch app.versionPatch
+        versionBuild versionCode
     }
     codeOptions {
-        versionCodeType org.moallemi.gradle.internal.VersionCodeType.AUTO_INCREMENT_ONE_STEP
-        dependsOnTasks 'release'
+        versionCodeType VersionCodeType.AUTO_INCREMENT_ONE_STEP
+        dependsOnTasks 'release', 'beta'
+
     }
     outputOptions {
         renameOutput true
-        nameFormat '${projectName}-${appName}-${buildType}-${versionName}.${versionCode}'
+        nameFormat '${appName}-${buildType}-${versionName}'
     }
 }
 
-def appVersionName = advancedVersioning.versionName
-def appVersionCode = advancedVersioning.versionCode
-
 android {
-    compileSdkVersion 24
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 27
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
+        flavorDimensions "release"
         manifestPlaceholders = [ applicationLabel:"@string/app_name"]
         applicationId "me.calebjones.spacelaunchnow"
         minSdkVersion 23
-        targetSdkVersion 24
-        versionCode appVersionCode
-        versionName appVersionName
+        targetSdkVersion 27
+        versionCode app.versionMajor * 10000 + app.versionMinor * 1000 + app.versionPatch * 100 + advancedVersioning.versionCode
+        versionName advancedVersioning.versionName
     }
     buildTypes {
         release {
@@ -41,24 +42,39 @@ android {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
-            manifestPlaceholders = [ applicationLabel:"LaunchCategory Tracker - Debug"]
+            manifestPlaceholders = [ applicationLabel:"SLN - Debug"]
+        }
+    }
+
+    productFlavors {
+        debugTesting {
+
+        }
+        prod {
+
+        }
+
+        beta {
+            dimension "release"
+            versionNameSuffix "-beta"
+        }
+
+        alpha {
+            dimension "release"
+            versionNameSuffix "-alpha"
         }
     }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    provided 'com.google.android.wearable:wearable:1.0.0'
-    compile "com.google.android.gms:play-services-wearable:$rootProject.playServicesVersion"
-    compile 'com.jakewharton.timber:timber:4.3.1'
-    compile 'blue.aodev:material-values:1.1.0'
-    compile 'com.android.support:palette-v7:24.1.1'
     compile 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
-    compile 'com.google.android.support:wearable:2.0.0-beta1'
     compile project(path: ':data')
-    compile 'com.squareup.okhttp3:okhttp:3.4.1'
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'com.google.code.gson:gson:2.7'
+    provided 'com.google.android.wearable:wearable:2.1.0'
+    compile 'com.google.android.support:wearable:2.1.0'
+    compile "com.google.android.gms:play-services-wearable:$rootProject.playServicesVersion"
+    compile 'com.jakewharton.timber:timber:4.6.0'
+    compile 'blue.aodev:material-values:1.1.1'
+    compile 'com.android.support:palette-v7:27.0.2'
 }

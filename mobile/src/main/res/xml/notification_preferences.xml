@@ -10,11 +10,11 @@
             android:summaryOn="Notifications are on for upcoming launches."
             android:title="Enable Notifications" />
         <SwitchPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:dependency="notifications_new_message"
             android:key="notifications_launch_imminent_updates"
-            android:summaryOff="Do not update when a launchCategory status changes."
-            android:summaryOn="Receive update notification for launchCategory status changes."
+            android:summaryOff="Do not update when a launch successful changes."
+            android:summaryOn="Receive update notification for launch status changes."
             android:title="Status Updates" />
         <SwitchPreference
             android:defaultValue="false"

@@ -22,6 +22,25 @@
 -keep class com.anjlab.android.iab.v3.** { *; }
 
 -dontwarn android.support.**
+-dontwarn com.google.android.gms.internal.**
+-keep public class com.google.android.gms.* { public *; }
+-dontwarn com.google.android.gms.**
+-keep class * extends java.util.ListResourceBundle {
+    protected Object[][] getContents();
+}
+
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+-keepnames @com.google.android.gms.common.annotation.KeepName class *
+-keepclassmembernames class * {
+    @com.google.android.gms.common.annotation.KeepName *;
+}
+
+-keepnames class * implements android.os.Parcelable {
+    public static final ** CREATOR;
+}
 
 -keep public class com.google.ads.** {
    public *;
@@ -55,7 +74,8 @@
 
 # Configuration for Fabric Twitter Kit
 # See: https://dev.twitter.com/twitter-kit/android/integrate
-
+-dontwarn com.google.android.gms.**
+-dontwarn android.content.pm.**
 -dontwarn com.squareup.okhttp.**
 -dontwarn com.google.appengine.api.urlfetch.**
 -dontwarn rx.**
@@ -73,10 +93,23 @@
     @retrofit.http.* *;
 }
 
+# EventBus
+-keepattributes *Annotation*
+-keepclassmembers class ** {
+    @org.greenrobot.eventbus.Subscribe <methods>;
+}
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
+
+# Only required if you use AsyncExecutor
+-keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
+    <init>(java.lang.Throwable);
+}
+
 # Glide specific rules #
 # https://github.com/bumptech/glide
 
 -keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public class * extends com.bumptech.glide.GeneratedAppGlideModule
 -keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
     **[] $VALUES;
     public *;

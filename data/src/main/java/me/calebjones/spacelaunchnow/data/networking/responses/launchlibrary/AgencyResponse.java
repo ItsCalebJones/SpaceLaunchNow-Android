@@ -1,11 +1,11 @@
 package me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary;
 
-import me.calebjones.spacelaunchnow.data.models.realm.AgencyRealm;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Agency;
 
 public class AgencyResponse extends BaseResponse {
-    private AgencyRealm[] agencies;
+    private Agency[] agencies;
 
-    public AgencyRealm[] getAgencies() {
+    public Agency[] getAgencies() {
         return agencies;
     }
 }

@@ -14,6 +14,19 @@
         <item name="android:textColor">#8affffff</item>
     </style>
 
+    <style name="expandedappbar"
+      parent="@android:style/TextAppearance.Medium">//Change Medium to Small
+        <item name="android:textSize">28sp</item>  <!--Or Change the font size -->
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="collapsedappbar"
+      parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
     <!-- Base application theme. -->
     <style name="BaseAppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
@@ -21,9 +34,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
-        <item name="android:textColorPrimary">@color/primary_text_color_selector</item>
-        <item name="android:textColorSecondary">@color/secondary_text_color_selector</item>
+        <item name="titleBarColor">@color/colorPrimary</item>
+        <item name="recentBarColor">@color/colorRecentPrimary</item>
+        <item name="android:textColorPrimary">#212121</item>
+        <item name="android:textColorSecondary">#757575</item>
 
         <item name="cardStyle">@style/CardView.Light</item>
         <item name="android:textColorHighlight">@color/colorPrimaryLight</item>
@@ -39,6 +53,11 @@
         <item name="material_drawer_selected_text">@color/material_drawer_selected_text</item>
         <item name="material_drawer_header_selection_text">@color/material_drawer_header_selection_text</item>
     </style>
+
+    <style name="BaseAppTheme.TranslucentStatus" parent="BaseAppTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
     <style name="CustomPreferenceTheme" parent="@style/PreferenceActivity.Light">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -65,7 +84,11 @@
 
     <style name="AppTheme.ActionBar.Transparent" parent="BaseAppTheme" />
 
-    <style name="ToolBarWithNavigationBack">
+    <style name="PrimaryButtonTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
+    <style name="ToolBarWithNavigationBack" parent="AppTheme.AppBarOverlay">
         <item name="navigationIcon">@drawable/ic_arrow_back</item>
     </style>
 
@@ -142,24 +165,6 @@
         <item name="android:background">@color/black_overlay</item>
     </style>
 
-    <style name="AboutLibraries" parent="BaseAppTheme">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <!-- Here we setting appcompat’s actionBarStyle -->
-        <item name="drawerArrowStyle">@style/AboutLibrariesTheme.DrawerArrowStyle</item>
-        <!-- AboutLibraries specific values -->
-        <item name="android:windowBackground">@color/white</item>
-        <item name="android:title">@color/white</item>
-        <item name="about_libraries_card">@color/about_libraries_card</item>
-        <item name="about_libraries_special_button_openSource">
-            @color/about_libraries_special_button_openSource
-        </item>
-        <item name="about_libraries_dividerDark_openSource">
-            @color/about_libraries_dividerDark_openSource
-        </item>
-        <item name="about_libraries_dividerLight_openSource">
-            @color/about_libraries_dividerLight_openSource
-        </item>
-    </style>
 
     <style name="CircularProgress" parent="Theme.AppCompat.Light">
         <item name="colorAccent">@color/colorAccent</item>

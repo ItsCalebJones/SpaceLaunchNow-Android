@@ -1,11 +1,11 @@
 package me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary;
 
-import me.calebjones.spacelaunchnow.data.models.realm.RocketFamilyRealm;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.RocketFamily;
 
 public class RocketFamilyResponse extends BaseResponse {
-    private RocketFamilyRealm[] RocketFamilies;
+    private RocketFamily[] RocketFamilies;
 
-    public RocketFamilyRealm[] getRocketFamilies() {
+    public RocketFamily[] getRocketFamilies() {
         return RocketFamilies;
     }
 }

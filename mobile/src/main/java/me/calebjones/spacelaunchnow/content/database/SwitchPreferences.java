@@ -8,12 +8,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.onesignal.OneSignal;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -24,46 +24,48 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
     private Context appContext;
     SharedPreferences.Editor prefsEditor;
 
-    public static String PREFS_NAME;
-    public static String PREFS_NIGHT_MODE_STATUS;
-    public static String PREFS_NIGHT_MODE_START;
-    public static String PREFS_NIGHT_MODE_END;
-    public static String PREFS_PREV_FILTERED_DATE;
-    public static String PREFS_PREV_FILTERED;
-    public static String PREFS_UP_FILTERED;
-    public static String PREFS_PREV_VEHICLE_FILTERED_WHICH;
-    public static String PREFS_UP_VEHICLE_FILTERED_WHICH;
-    public static String PREFS_UP_AGENCY_FILTERED_WHICH;
-    public static String PREFS_PREV_AGENCY_FILTERED_WHICH;
-    public static String PREFS_UP_LOCATION_FILTERED_WHICH;
-    public static String PREFS_PREV_LOCATION_FILTERED_WHICH;
-    public static String PREFS_UP_COUNTRY_FILTERED_WHICH;
-    public static String PREFS_PREV_COUNTRY_FILTERED_WHICH;
-    public static String PREFS_PREV_VEHICLE_FILTERED_ARRAY;
-    public static String PREFS_UP_VEHICLE_FILTERED_ARRAY;
-    public static String PREFS_UP_AGENCY_FILTERED_ARRAY;
-    public static String PREFS_PREV_AGENCY_FILTERED_ARRAY;
-    public static String PREFS_UP_LOCATION_FILTERED_ARRAY;
-    public static String PREFS_PREV_LOCATION_FILTERED_ARRAY;
-    public static String PREFS_UP_COUNTRY_FILTERED_ARRAY;
-    public static String PREFS_PREV_COUNTRY_FILTERED_ARRAY;
-    public static String PREFS_FILTER_VEHICLE;
-    public static String PREFS_FILTER_AGENCY;
-    public static String PREFS_FILTER_COUNTRY;
-    public static String PREFS_SWITCH_NASA;
-    public static String PREFS_SWITCH_SPACEX;
-    public static String PREFS_SWITCH_ROSCOSMOS;
-    public static String PREFS_SWITCH_ULA;
-    public static String PREFS_SWITCH_ARIANE;
-    public static String PREFS_SWITCH_CASC;
-    public static String PREFS_SWITCH_ISRO;
-    public static String PREFS_SWITCH_PLES;
-    public static String PREFS_SWITCH_VAN;
-    public static String PREFS_SWITCH_CAPE;
-    public static String PREFS_SWITCH_KSC;
-    public static String PREFS_SWITCH_ALL;
-    public static String PREFS_CALENDAR_STATUS;
-    public static String PREFS_VERSION_CODE;
+    private static String PREFS_NAME;
+    private static String PREFS_NIGHT_MODE_STATUS;
+    private static String PREFS_NIGHT_MODE_START;
+    private static String PREFS_NIGHT_MODE_END;
+    private static String PREFS_PREV_FILTERED_DATE;
+    private static String PREFS_PREV_FILTERED;
+    private static String PREFS_UP_FILTERED;
+    private static String PREFS_PREV_VEHICLE_FILTERED_WHICH;
+    private static String PREFS_UP_VEHICLE_FILTERED_WHICH;
+    private static String PREFS_UP_AGENCY_FILTERED_WHICH;
+    private static String PREFS_PREV_AGENCY_FILTERED_WHICH;
+    private static String PREFS_UP_LOCATION_FILTERED_WHICH;
+    private static String PREFS_PREV_LOCATION_FILTERED_WHICH;
+    private static String PREFS_UP_COUNTRY_FILTERED_WHICH;
+    private static String PREFS_PREV_COUNTRY_FILTERED_WHICH;
+    private static String PREFS_PREV_VEHICLE_FILTERED_ARRAY;
+    private static String PREFS_UP_VEHICLE_FILTERED_ARRAY;
+    private static String PREFS_UP_AGENCY_FILTERED_ARRAY;
+    private static String PREFS_PREV_AGENCY_FILTERED_ARRAY;
+    private static String PREFS_UP_LOCATION_FILTERED_ARRAY;
+    private static String PREFS_PREV_LOCATION_FILTERED_ARRAY;
+    private static String PREFS_UP_COUNTRY_FILTERED_ARRAY;
+    private static String PREFS_PREV_COUNTRY_FILTERED_ARRAY;
+    private static String PREFS_FILTER_VEHICLE;
+    private static String PREFS_FILTER_AGENCY;
+    private static String PREFS_FILTER_COUNTRY;
+    private static String PREFS_SWITCH_NASA;
+    private static String PREFS_SWITCH_SPACEX;
+    private static String PREFS_SWITCH_ROSCOSMOS;
+    private static String PREFS_SWITCH_ULA;
+    private static String PREFS_SWITCH_ARIANE;
+    private static String PREFS_SWITCH_CASC;
+    private static String PREFS_SWITCH_ISRO;
+    private static String PREFS_SWITCH_PLES;
+    private static String PREFS_SWITCH_VAN;
+    private static String PREFS_SWITCH_CAPE;
+    private static String PREFS_SWITCH_KSC;
+    private static String PREFS_SWITCH_ALL;
+    private static String PREFS_CALENDAR_STATUS;
+    private static String PREFS_NO_GO_SWITCH;
+    private static String PREFS_PERSIST_LAST_SWITCH;
+    private static String PREFS_VERSION_CODE;
 
 
     static {
@@ -108,6 +110,8 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         PREFS_UP_AGENCY_FILTERED_ARRAY = "UP_AGENCY_FILTERED_ARRAY";
         PREFS_UP_LOCATION_FILTERED_ARRAY = "UP_LOCATION_FILTERED_ARRAY";
         PREFS_CALENDAR_STATUS = "CALENDAR_STATUS";
+        PREFS_NO_GO_SWITCH = "NO_GO_SWITCH";
+        PREFS_PERSIST_LAST_SWITCH = "PERSIST_LAST_SWITCH";
         INSTANCE = null;
     }
 
@@ -377,7 +381,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor.putString(PREFS_PREV_VEHICLE_FILTERED_ARRAY, "");
         this.prefsEditor.putString(PREFS_PREV_COUNTRY_FILTERED_ARRAY, "");
         this.prefsEditor.apply();
-        if(listPreferences == null){
+        if (listPreferences == null) {
             listPreferences = ListPreferences.getInstance(context);
         }
         listPreferences.setStartDate("1900-01-01");
@@ -409,8 +413,8 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
     }
 
     public void setUpFiltered(boolean value) {
-        if (!value){
-            if(listPreferences == null){
+        if (!value) {
+            if (listPreferences == null) {
                 listPreferences = ListPreferences.getInstance(appContext);
             }
             listPreferences.resetUpTitle();
@@ -479,18 +483,10 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor.putBoolean(PREFS_SWITCH_VAN, key);
         this.prefsEditor.apply();
         JSONObject tags = new JSONObject();
-        if (key) {
-            try {
-                tags.put("Van", 1);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                tags.put("Van", 0);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        try {
+            tags.put("Van", key);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         OneSignal.sendTags(tags);
     }
@@ -507,18 +503,10 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor.putBoolean(PREFS_SWITCH_KSC, key);
         this.prefsEditor.apply();
         JSONObject tags = new JSONObject();
-        if (key) {
-            try {
-                tags.put("KSC", 1);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                tags.put("KSC", 0);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        try {
+            tags.put("KSC", key);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         OneSignal.sendTags(tags);
     }
@@ -536,18 +524,10 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor.putBoolean(PREFS_SWITCH_PLES, key);
         this.prefsEditor.apply();
         JSONObject tags = new JSONObject();
-        if (key) {
-            try {
-                tags.put("Ples", 1);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                tags.put("Ples", 0);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        try {
+            tags.put("Ples", key);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         OneSignal.sendTags(tags);
     }
@@ -564,18 +544,10 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor.putBoolean(PREFS_SWITCH_CAPE, key);
         this.prefsEditor.apply();
         JSONObject tags = new JSONObject();
-        if (key) {
-            try {
-                tags.put("Cape", 1);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                tags.put("Cape", 0);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        try {
+            tags.put("Cape", key);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         OneSignal.sendTags(tags);
     }
@@ -592,18 +564,11 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor.putBoolean(PREFS_SWITCH_NASA, key);
         this.prefsEditor.apply();
         JSONObject tags = new JSONObject();
-        if (key) {
-            try {
-                tags.put("Nasa", 1);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                tags.put("Nasa", 0);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+
+        try {
+            tags.put("Nasa", key);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         OneSignal.sendTags(tags);
     }
@@ -620,18 +585,10 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor.putBoolean(PREFS_SWITCH_SPACEX, key);
         this.prefsEditor.apply();
         JSONObject tags = new JSONObject();
-        if (key) {
-            try {
-                tags.put("SpaceX", 1);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                tags.put("SpaceX", 0);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        try {
+            tags.put("SpaceX", key);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         OneSignal.sendTags(tags);
     }
@@ -648,18 +605,10 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor.putBoolean(PREFS_SWITCH_ROSCOSMOS, key);
         this.prefsEditor.apply();
         JSONObject tags = new JSONObject();
-        if (key) {
-            try {
-                tags.put("Roscosmos", 1);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                tags.put("Roscosmos", 0);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        try {
+            tags.put("Roscosmos", key);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         OneSignal.sendTags(tags);
     }
@@ -676,18 +625,11 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor.putBoolean(PREFS_SWITCH_ULA, key);
         this.prefsEditor.apply();
         JSONObject tags = new JSONObject();
-        if (key) {
-            try {
-                tags.put("ULA", 1);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                tags.put("ULA", 0);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+
+        try {
+            tags.put("ULA", key);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         OneSignal.sendTags(tags);
     }
@@ -704,18 +646,10 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor.putBoolean(PREFS_SWITCH_ARIANE, key);
         this.prefsEditor.apply();
         JSONObject tags = new JSONObject();
-        if (key) {
-            try {
-                tags.put("Arianespace", 1);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                tags.put("Arianespace", 0);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        try {
+            tags.put("Arianespace", key);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         OneSignal.sendTags(tags);
     }
@@ -732,18 +666,11 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor.putBoolean(PREFS_SWITCH_CASC, key);
         this.prefsEditor.apply();
         JSONObject tags = new JSONObject();
-        if (key) {
-            try {
-                tags.put("CASC", 1);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                tags.put("CASC", 0);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+
+        try {
+            tags.put("CASC", key);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         OneSignal.sendTags(tags);
     }
@@ -760,19 +687,13 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor.putBoolean(PREFS_SWITCH_ISRO, key);
         this.prefsEditor.apply();
         JSONObject tags = new JSONObject();
-        if (key) {
-            try {
-                tags.put("ISRO", 1);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                tags.put("ISRO", 0);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+
+        try {
+            tags.put("ISRO", key);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+
         OneSignal.sendTags(tags);
     }
 
@@ -792,7 +713,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         } else {
             JSONObject tags = new JSONObject();
             try {
-                tags.put("all", 0);
+                tags.put("ALL-Filter", false);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -814,16 +735,18 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         setSwitchVan(true);
         JSONObject tags = new JSONObject();
         try {
-            tags.put("Nasa", 1);
-            tags.put("ISRO", 1);
-            tags.put("Roscosmos", 1);
-            tags.put("ULA", 1);
-            tags.put("Arianespace", 1);
-            tags.put("KSC", 1);
-            tags.put("Ples", 1);
-            tags.put("Van", 1);
-            tags.put("SpaceX", 1);
-            tags.put("all", 1);
+            tags.put("Nasa", true);
+            tags.put("ISRO", true);
+            tags.put("Roscosmos", true);
+            tags.put("ULA", true);
+            tags.put("Arianespace", true);
+            tags.put("KSC", true);
+            tags.put("Ples", true);
+            tags.put("Van", true);
+            tags.put("SpaceX", true);
+            tags.put("Cape", true);
+            tags.put("CASC", true);
+            tags.put("ALL-Filter", true);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -836,7 +759,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
             if (key.equals(PREFS_CALENDAR_STATUS) && !getCalendarStatus()) {
                 //Delete Events
             } else {
-                
+
             }
         }
     }
@@ -879,36 +802,43 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor.apply();
     }
 
-    public ArrayList<String> getPrevCountryFilteredArray(){
+    public ArrayList<String> getPrevCountryFilteredArray() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         Gson gson = new Gson();
         String json = sharedPrefs.getString(PREFS_PREV_COUNTRY_FILTERED_ARRAY, null);
-        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        Type type = new TypeToken<ArrayList<String>>() {
+        }.getType();
         return gson.fromJson(json, type);
     }
-    public ArrayList<String> getPrevAgencyFilteredArray(){
+
+    public ArrayList<String> getPrevAgencyFilteredArray() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         Gson gson = new Gson();
         String json = sharedPrefs.getString(PREFS_PREV_AGENCY_FILTERED_ARRAY, null);
-        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        Type type = new TypeToken<ArrayList<String>>() {
+        }.getType();
         return gson.fromJson(json, type);
     }
-    public ArrayList<String> getPrevLocationFilteredArray(){
+
+    public ArrayList<String> getPrevLocationFilteredArray() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         Gson gson = new Gson();
         String json = sharedPrefs.getString(PREFS_PREV_LOCATION_FILTERED_ARRAY, null);
-        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        Type type = new TypeToken<ArrayList<String>>() {
+        }.getType();
         return gson.fromJson(json, type);
     }
-    public ArrayList<String> getPrevVehicleFilteredArray(){
+
+    public ArrayList<String> getPrevVehicleFilteredArray() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         Gson gson = new Gson();
         String json = sharedPrefs.getString(PREFS_PREV_VEHICLE_FILTERED_ARRAY, null);
-        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        Type type = new TypeToken<ArrayList<String>>() {
+        }.getType();
         return gson.fromJson(json, type);
     }
 
@@ -950,39 +880,79 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor.apply();
     }
 
-    public ArrayList<String> getUpCountryFilteredArray(){
+    public ArrayList<String> getUpCountryFilteredArray() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         Gson gson = new Gson();
         String json = sharedPrefs.getString(PREFS_UP_COUNTRY_FILTERED_ARRAY, null);
-        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        Type type = new TypeToken<ArrayList<String>>() {
+        }.getType();
         return gson.fromJson(json, type);
     }
-    public ArrayList<String> getUpAgencyFilteredArray(){
+
+    public ArrayList<String> getUpAgencyFilteredArray() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         Gson gson = new Gson();
         String json = sharedPrefs.getString(PREFS_UP_AGENCY_FILTERED_ARRAY, null);
-        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        Type type = new TypeToken<ArrayList<String>>() {
+        }.getType();
         return gson.fromJson(json, type);
     }
-    public ArrayList<String> getUpLocationFilteredArray(){
+
+    public ArrayList<String> getUpLocationFilteredArray() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         Gson gson = new Gson();
         String json = sharedPrefs.getString(PREFS_UP_LOCATION_FILTERED_ARRAY, null);
-        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        Type type = new TypeToken<ArrayList<String>>() {
+        }.getType();
         return gson.fromJson(json, type);
     }
-    public ArrayList<String> getUpVehicleFilteredArray(){
+
+    public ArrayList<String> getUpVehicleFilteredArray() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         Gson gson = new Gson();
         String json = sharedPrefs.getString(PREFS_UP_VEHICLE_FILTERED_ARRAY, null);
-        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        Type type = new TypeToken<ArrayList<String>>() {
+        }.getType();
         return gson.fromJson(json, type);
     }
 
+    public int getWidgetID() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getInt("WIDGET_ID", 0);
+    }
 
-    
+    public void setWidgetID(int key) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putInt("WIDGET_ID", key);
+        this.prefsEditor.apply();
+    }
+
+    public boolean getNoGoSwitch() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getBoolean(PREFS_NO_GO_SWITCH, true);
+    }
+
+    public void setNoGoSwitch(boolean key) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean(PREFS_NO_GO_SWITCH, key);
+        this.prefsEditor.apply();
+    }
+
+    public boolean getPersistSwitch() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getBoolean(PREFS_PERSIST_LAST_SWITCH, true);
+    }
+
+    public void setPersistLastSwitch(boolean key) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean(PREFS_PERSIST_LAST_SWITCH, key);
+        this.prefsEditor.apply();
+    }
 }

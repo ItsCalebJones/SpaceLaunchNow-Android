@@ -10,7 +10,11 @@
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:background="@color/colorPrimaryAlt"
         app:tabGravity="fill"
+        app:tabBackground="@color/colorPrimaryAlt"
+        app:tabTextColor="@color/dark_theme_secondary_text_color"
+        app:tabSelectedTextColor="@color/dark_theme_primary_text_color"
         app:tabMode="fixed" />
 
     <android.support.v4.view.ViewPager

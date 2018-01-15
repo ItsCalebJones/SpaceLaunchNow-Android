@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import timber.log.Timber;
 
@@ -96,40 +97,34 @@ public class ListPreferences {
         return this.sharedPrefs.getBoolean(PREFS_PREVIOUS_FIRST_BOOT, true);
     }
 
-    public long getLastVehicleUpdate() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getLong(PREFS_LAST_VEHICLE_UPDATE, 0);
-    }
-
-    public void setLastVehicleUpdate(long value) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putLong(PREFS_LAST_VEHICLE_UPDATE, value);
-        this.prefsEditor.apply();
-    }
-
     public boolean isNightModeActive(Context context) {
 
         if (isDayNightAutoEnabled()) {
-            int currentNightMode = context.getResources().getConfiguration().uiMode
-                    & Configuration.UI_MODE_NIGHT_MASK;
+            int currentNightMode = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+            Timber.v("Configuration Key %s", currentNightMode);
 
             switch (currentNightMode) {
                 case Configuration.UI_MODE_NIGHT_NO:
                     // Night mode is not active, we're in day time
+                    Timber.v("Auto Theme: UI_MODE_NIGHT_NO");
                     return false;
                 case Configuration.UI_MODE_NIGHT_YES:
                     // Night mode is active, we're at night!
+                    Timber.v("Auto Theme: UI_MODE_NIGHT_YES");
                     return true;
                 case Configuration.UI_MODE_NIGHT_UNDEFINED:
                     // We don't know what mode we're in, assume notnight
+                    Timber.v("Auto Theme: UI_MODE_NIGHT_UNDEFINED");
                     return false;
                 default:
+                    Timber.e("Auto Theme: Unknown");
                     return false;
             }
         } else if (isNightThemeEnabled()){
+            Timber.v("Theme: UI_MODE_NIGHT_YES");
             return true;
         } else {
+            Timber.v("Theme: UI_MODE_NIGHT_NO");
             return false;
         }
     }
@@ -257,50 +252,18 @@ public class ListPreferences {
         return this.sharedPrefs.getString(PREFS_CURRENT_END_DATE, "2016-05-04");
     }
 
-    public class GsonDateDeSerializer implements JsonDeserializer<Date> {
 
-        private SimpleDateFormat format1 = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss a", Locale.US);
-        private SimpleDateFormat format2 = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss", Locale.US);
 
-        @Override
-        public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            try {
-                String j = json.getAsJsonPrimitive().getAsString();
-                Date date = parseDate(j);
-                return date;
-            } catch (ParseException e) {
-                Crashlytics.setString("Timezone", String.valueOf(TimeZone.getDefault()));
-                Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
-                Crashlytics.setBool("is24", DateFormat.is24HourFormat(appContext));
-                Crashlytics.logException(new JsonParseException(e.getMessage(), e));
-                return null;
-            }
-        }
-
-        private Date parseDate(String dateString) throws ParseException {
-            if (dateString != null && dateString.trim().length() > 0) {
-                try {
-                    return format1.parse(dateString);
-                } catch (ParseException pe) {
-                    return format2.parse(dateString);
-                }
-            } else {
-                return null;
-            }
-        }
-
-    }
-
-    public void isUpdating(boolean bool) {
-        Timber.v("Changing to updating: %s", bool);
+    public void isFresh(boolean bool) {
+        Timber.v("Changing isFresh: %s", bool);
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putBoolean("isUpdating", bool);
+        this.prefsEditor.putBoolean("isFresh", bool);
         this.prefsEditor.apply();
     }
 
-    public boolean getIsUpdating() {
+    public boolean isFresh() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean("isUpdating", false);
+        return this.sharedPrefs.getBoolean("isFresh", false);
     }
 }

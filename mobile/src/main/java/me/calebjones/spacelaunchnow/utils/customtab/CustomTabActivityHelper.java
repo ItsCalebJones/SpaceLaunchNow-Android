@@ -127,13 +127,13 @@ public class CustomTabActivityHelper {
      */
     public boolean mayLaunchUrl(Uri uri, Bundle extras, List<Bundle> otherLikelyBundles) {
         if (mClient == null){
-            Timber.e("mClient is null");
+            Timber.d("mClient is null");
             return false;
         }
 
         CustomTabsSession session = getSession();
         if (session == null){
-            Timber.e("Session is null");
+            Timber.d("Session is null");
             return false;
         }
 

@@ -71,8 +71,8 @@ import java.util.concurrent.TimeUnit;
 import me.calebjones.spacelaunchnow.wear.R;
 import timber.log.Timber;
 
-import static me.calebjones.spacelaunchnow.wear.Constants.LIGHT;
-import static me.calebjones.spacelaunchnow.wear.Constants.NEUTRAL;
+import static me.calebjones.spacelaunchnow.wear.WearConstants.LIGHT;
+import static me.calebjones.spacelaunchnow.wear.WearConstants.NEUTRAL;
 
 /**
  * Digital watch face with seconds. In ambient mode, the seconds aren't displayed. On devices with
@@ -351,7 +351,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
 
             Date now = new Date();
             mTime = Calendar.getInstance();
-            SimpleDateFormat twentyFourHourMode = new SimpleDateFormat("kk:mm");
+            SimpleDateFormat twentyFourHourMode = new SimpleDateFormat("HH:mm");
             SimpleDateFormat twelveHourMode = new SimpleDateFormat("h:mm");
             if (twentyfourhourmode) {
                 // Draw H:MM in ambient mode or H:MM:SS in interactive mode.

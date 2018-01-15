@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootview"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content">
 
@@ -19,11 +21,10 @@
 
             <ImageView
                 android:id="@+id/categoryIcon"
-                android:layout_width="64dp"
+                android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="4dp"
-                android:padding="8dp"
+                android:padding="@dimen/material_baseline_grid_2x"
                 app:srcCompat="@drawable/ic_unknown" />
 
             <LinearLayout
@@ -35,7 +36,6 @@
                     android:id="@+id/launch_rocket"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="16dp"
                     android:fontFamily="sans-serif-condensed"
                     android:gravity="left"
                     android:maxLines="2"
@@ -56,6 +56,7 @@
                     android:paddingRight="16dp"
                     android:paddingTop="4dp"
                     android:singleLine="false"
+                    android:textColor="?android:textColorSecondary"
                     android:text="Unknown Mission" />
 
                 <TextView
@@ -68,6 +69,7 @@
                     android:paddingBottom="2dp"
                     android:paddingRight="16dp"
                     android:singleLine="false"
+                    android:textColor="?android:textColorSecondary"
                     android:text="Unknown Launch Location" />
 
                 <TextView
@@ -80,6 +82,7 @@
                     android:paddingBottom="4dp"
                     android:paddingRight="16dp"
                     android:singleLine="false"
+                    android:textColor="?android:textColorSecondary"
                     android:text="Unknown Launch Date" />
             </LinearLayout>
 

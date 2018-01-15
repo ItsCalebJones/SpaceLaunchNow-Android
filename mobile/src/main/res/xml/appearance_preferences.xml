@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen android:title="Appearance"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <SwitchPreference
         android:defaultValue="true"
         android:key="local_time"
@@ -13,12 +14,6 @@
         android:summaryOff="Launch times in AM/PM."
         android:summaryOn="Launch times in 24 hour."
         android:title="Time Format" />
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="card_size_small"
-        android:summaryOff="Use full-size content card."
-        android:summaryOn="Use compact content card. (EXPERIMENTAL)"
-        android:title="Compact Launch Card" />
     <PreferenceCategory android:title="NightMode"
         android:key="night_category">
         <SwitchPreference
@@ -34,6 +29,80 @@
             android:summary="Automatically switch between Day and Night themes based on location."
             android:title="Automatic Day/Night" />
         </PreferenceCategory>
+    <PreferenceCategory android:title="Widgets"
+        android:key="widget_category">
+        <ListPreference
+            android:key="widget_presets"
+            android:defaultValue="1"
+            android:title="Widget Themes"
+            android:summary="Select from a few default widget themes."
+            android:entries="@array/widget_presets"
+            android:entryValues="@array/widget_presets_values"/>
+        <com.jaredrummler.android.colorpicker.ColorPreference
+            android:defaultValue="0xFF303030"
+            android:key="widget_background_color"
+            android:summary="Select background color for widgets."
+            android:title="Widget Background"
+            app:cpv_allowPresets="true"
+            app:cpv_showColorShades="false"
+            app:cpv_previewSize="large"
+            app:cpv_showAlphaSlider="true"/>
+        <com.jaredrummler.android.colorpicker.ColorPreference
+            android:defaultValue="@color/white"
+            android:key="widget_text_color"
+            android:summary="Select the primary text color for widgets."
+            android:title="Primary Text Color"
+            app:cpv_allowPresets="true"
+            app:cpv_showColorShades="false"
+            app:cpv_previewSize="large"
+            app:cpv_showAlphaSlider="true"/>
+        <com.jaredrummler.android.colorpicker.ColorPreference
+            android:defaultValue="0xB3FFFFFF"
+            android:key="widget_secondary_text_color"
+            android:summary="Select the secondary text color for widgets."
+            android:title="Secondary Text Color"
+            app:cpv_allowPresets="true"
+            app:cpv_showColorShades="false"
+            app:cpv_previewSize="large"
+            app:cpv_showAlphaSlider="true"/>
+        <com.jaredrummler.android.colorpicker.ColorPreference
+            android:defaultValue="0xFF455A64"
+            android:key="widget_list_accent_color"
+            android:summary="Select the accent color for the Launch List widgets."
+            android:title="Launch List Widget - Accent Color"
+            app:cpv_allowPresets="true"
+            app:cpv_showColorShades="false"
+            app:cpv_previewSize="large"
+            app:cpv_showAlphaSlider="true"/>
+        <com.jaredrummler.android.colorpicker.ColorPreference
+            android:defaultValue="@color/white"
+            android:key="widget_title_text_color"
+            android:summary="Select the text color for the Launch List widgets Title Text."
+            android:title="Launch List Widget - Title Text Color"
+            app:cpv_allowPresets="true"
+            app:cpv_showColorShades="false"
+            app:cpv_previewSize="large"
+            app:cpv_showAlphaSlider="true"/>
+        <com.jaredrummler.android.colorpicker.ColorPreference
+            android:defaultValue="@color/white"
+            android:key="widget_icon_color"
+            android:summary="Select the Icon color for the Launch Card widget."
+            android:title="Icon Color"
+            app:cpv_allowPresets="true"
+            app:cpv_showColorShades="false"
+            app:cpv_previewSize="large"
+            app:cpv_showAlphaSlider="true"/>
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="widget_refresh_enabled"
+            android:summary="Hide the refresh button."
+            android:title="Hide Refresh" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="widget_theme_round_corner"
+            android:summary="Enable round corners for widgets."
+            android:title="Round Corners" />
+    </PreferenceCategory>
     <PreferenceCategory android:title="Weather"
         android:key="weather_category">
         <CheckBoxPreference

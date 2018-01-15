@@ -4,14 +4,15 @@ buildscript {
     repositories {
         jcenter()
         maven { url "https://jitpack.io" }
+        google()
     }
     dependencies {
-        classpath "io.realm:realm-gradle-plugin:2.3.0"
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath "io.realm:realm-gradle-plugin:4.3.1"
+        classpath 'com.android.tools.build:gradle:3.0.1'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
-        classpath 'org.moallemi.gradle.advanced-build-version:gradle-plugin:1.5.3'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.4'
+        classpath 'org.moallemi.gradle.advanced-build-version:gradle-plugin:1.6.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
 
     }
@@ -21,6 +22,7 @@ allprojects {
     repositories {
         jcenter()
         maven { url "https://jitpack.io" }
+        google()
     }
 }
 
@@ -30,6 +32,13 @@ task clean(type: Delete) {
 
 // Define versions in a single place
 ext {
+
+    app = [
+            versionMajor : 2,
+            versionMinor : 0,
+            versionPatch : 0
+
+    ]
     // Sdk and tools
     minSdkVersion = 15
     targetSdkVersion = 24
@@ -37,6 +46,15 @@ ext {
     buildToolsVersion = '23.0.3'
 
     // App dependencies
-    supportLibraryVersion = '25.1.0'
-    playServicesVersion = '10.0.1'
+    supportLibraryVersion = '27.0.2'
+    playServicesVersion = '11.8.0'
+
+    sdk = 25
+    buildTools = "25.0.0" //keep 25.0.0 for Continuous Integration
+    minSdk = 14
+    libraryVersion = "2.1.1"
+    supportVersion = "25.3.1"
+
+    sourceCompatibilityVersion = JavaVersion.VERSION_1_7
+    targetCompatibilityVersion = JavaVersion.VERSION_1_7
 }

@@ -1,12 +1,14 @@
 package me.calebjones.spacelaunchnow.content.util;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import io.realm.Realm;
@@ -15,13 +17,13 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import timber.log.Timber;
 
 public class QueryBuilder {
     public static boolean first = true;
 
-    public static RealmResults<LaunchRealm> buildPrevQueryAsync(Context context, Realm realm) throws ParseException {
+    public static RealmResults<Launch> buildPrevQueryAsync(Context context, Realm realm) throws ParseException {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
         ListPreferences listPreferences = ListPreferences.getInstance(context);
 
@@ -36,13 +38,12 @@ public class QueryBuilder {
         sDate = df.parse(start);
         eDate = df.parse(end);
 
-        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class).between("net", sDate, eDate).findAll().where();
+        RealmQuery<Launch> query = realm.where(Launch.class).between("net", sDate, eDate).findAll().where();
 
         Integer[] countryFilter = switchPreferences.getPrevCountryFiltered();
         Integer[] agencyFilter = switchPreferences.getPrevAgencyFiltered();
         Integer[] locationFilter = switchPreferences.getPrevLocationFiltered();
         Integer[] vehicleFilter = switchPreferences.getPrevVehicleFiltered();
-
 
         if (countryFilter != null && countryFilter.length > 0) {
             query = filterCountry(query, switchPreferences.getPrevCountryFilteredArray()).findAll().where();
@@ -64,7 +65,7 @@ public class QueryBuilder {
         return query.findAllSortedAsync("net", Sort.DESCENDING);
     }
 
-    public static RealmResults<LaunchRealm> buildPrevQuery(Context context, Realm realm) throws ParseException {
+    public static RealmResults<Launch> buildPrevQuery(Context context, Realm realm) throws ParseException {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
         ListPreferences listPreferences = ListPreferences.getInstance(context);
 
@@ -79,13 +80,12 @@ public class QueryBuilder {
         sDate = df.parse(start);
         eDate = df.parse(end);
 
-        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class).between("net", sDate, eDate).findAll().where();
+        RealmQuery<Launch> query = realm.where(Launch.class).between("net", sDate, eDate).findAll().where();
 
         Integer[] countryFilter = switchPreferences.getPrevCountryFiltered();
         Integer[] agencyFilter = switchPreferences.getPrevAgencyFiltered();
         Integer[] locationFilter = switchPreferences.getPrevLocationFiltered();
         Integer[] vehicleFilter = switchPreferences.getPrevVehicleFiltered();
-
 
         if (countryFilter != null && countryFilter.length > 0) {
             query = filterCountry(query, switchPreferences.getPrevCountryFilteredArray()).findAll().where();
@@ -107,12 +107,14 @@ public class QueryBuilder {
         return query.findAllSorted("net", Sort.DESCENDING);
     }
 
-    public static RealmResults<LaunchRealm> buildUpQueryAsync(Context context, Realm realm) {
+    public static RealmResults<Launch> buildUpQueryAsync(Context context, Realm realm) {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
 
         Date date = new Date();
 
-        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class).greaterThanOrEqualTo("net", date).findAll().where();
+        RealmQuery<Launch> query = realm.where(Launch.class).greaterThanOrEqualTo("net", date).findAll().where();
+
+        verifyUpSwitches(context, switchPreferences);
 
         Integer[] countryFilter = switchPreferences.getUpCountryFiltered();
         Integer[] agencyFilter = switchPreferences.getUpAgencyFiltered();
@@ -145,12 +147,59 @@ public class QueryBuilder {
         return query.findAllSortedAsync("net", Sort.ASCENDING);
     }
 
-    public static RealmResults<LaunchRealm> buildUpQuery(Context context, Realm realm) {
+    private static void verifyUpSwitches(Context context, SwitchPreferences switchPreferences) {
+        Integer[] countryFilter = switchPreferences.getUpCountryFiltered();
+        Integer[] agencyFilter = switchPreferences.getUpAgencyFiltered();
+        Integer[] locationFilter = switchPreferences.getUpLocationFiltered();
+        Integer[] vehicleFilter = switchPreferences.getUpVehicleFiltered();
+        ArrayList<String> agencyArray = switchPreferences.getUpAgencyFilteredArray();
+        ArrayList<String> countryArray = switchPreferences.getUpCountryFilteredArray();
+        ArrayList<String> locationArray = switchPreferences.getUpLocationFilteredArray();
+        ArrayList<String> vehicleArray = switchPreferences.getUpVehicleFilteredArray();
+
+        if (countryArray != null && countryFilter != null && countryArray.size() != countryFilter.length){
+            Crashlytics.log("Country Array: " + countryArray + " Country Filter " + countryFilter);
+            Toast.makeText(context, "UNKNOWN ERROR - Resetting Country filter.", Toast.LENGTH_SHORT).show();
+            switchPreferences.resetAllUpFilters();
+            if (switchPreferences.isUpFiltered()) {
+                switchPreferences.setUpFiltered(false);
+            }
+        }
+
+        if (agencyArray != null && agencyFilter != null && agencyArray.size() != agencyFilter.length) {
+            Crashlytics.log("LauncherAgency Array: " + agencyArray + " LauncherAgency Filter " + agencyFilter);
+            Toast.makeText(context, "UNKNOWN ERROR - Resetting LauncherAgency filter.", Toast.LENGTH_SHORT).show();
+            switchPreferences.resetAllUpFilters();
+            if (switchPreferences.isUpFiltered()) {
+                switchPreferences.setUpFiltered(false);
+            }
+        }
+
+        if (locationArray != null && locationFilter != null && locationArray.size() != locationFilter.length) {
+            Crashlytics.log("Location Array: " + locationArray + " Location Filter " + locationFilter);
+            Toast.makeText(context, "UNKNOWN ERROR - Resetting Location filter.", Toast.LENGTH_SHORT).show();
+            switchPreferences.resetAllUpFilters();
+            if (switchPreferences.isUpFiltered()) {
+                switchPreferences.setUpFiltered(false);
+            }
+        }
+
+        if (vehicleArray != null && vehicleFilter != null && vehicleArray.size() != vehicleFilter.length) {
+            Crashlytics.log("Vehicle Array: " + vehicleArray + " Vehicle Filter " + vehicleFilter);
+            Toast.makeText(context, "UNKNOWN ERROR - Resetting Vehicle filter.", Toast.LENGTH_SHORT).show();
+            switchPreferences.resetAllUpFilters();
+            if (switchPreferences.isUpFiltered()) {
+                switchPreferences.setUpFiltered(false);
+            }
+        }
+    }
+
+    public static RealmResults<Launch> buildUpQuery(Context context, Realm realm) {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
 
         Date date = new Date();
 
-        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class).greaterThanOrEqualTo("net", date).findAll().where();
+        RealmQuery<Launch> query = realm.where(Launch.class).greaterThanOrEqualTo("net", date).findAll().where();
 
         Integer[] countryFilter = switchPreferences.getUpCountryFiltered();
         Integer[] agencyFilter = switchPreferences.getUpAgencyFiltered();
@@ -183,7 +232,7 @@ public class QueryBuilder {
         return query.findAllSorted("net", Sort.ASCENDING);
     }
 
-    private static RealmQuery<LaunchRealm> filterVehicle(RealmQuery<LaunchRealm> query, ArrayList<String> vehicleFilter) {
+    private static RealmQuery<Launch> filterVehicle(RealmQuery<Launch> query, ArrayList<String> vehicleFilter) {
         boolean firstGroup = true;
         for (String key : vehicleFilter) {
             if (key.contains("SLV")) {
@@ -200,7 +249,7 @@ public class QueryBuilder {
         return query;
     }
 
-    private static RealmQuery<LaunchRealm> filterLocation(RealmQuery<LaunchRealm> query, ArrayList<String> locationFilter) {
+    private static RealmQuery<Launch> filterLocation(RealmQuery<Launch> query, ArrayList<String> locationFilter) {
         boolean firstGroup = true;
         for (String key : locationFilter) {
             String[] parts = key.split(",");
@@ -219,10 +268,10 @@ public class QueryBuilder {
         return query;
     }
 
-    private static RealmQuery<LaunchRealm> filterAgency(RealmQuery<LaunchRealm> query, ArrayList<String> agencyFilter) {
+    private static RealmQuery<Launch> filterAgency(RealmQuery<Launch> query, ArrayList<String> agencyFilter) {
         boolean firstGroup = true;
         for (String key : agencyFilter) {
-            Timber.v("Agency key: %s", key);
+            Timber.v("LauncherAgency key: %s", key);
             if (key.contains("NASA")) {
                 if (!firstGroup) {
                     query.or();
@@ -238,7 +287,7 @@ public class QueryBuilder {
                 } else {
                     firstGroup = false;
                 }
-                query.equalTo("rocket.agencies.id", 121);
+                query.equalTo("rocket.agencies.id", 121).or().contains("name", "Falcon");
 
             } else if (key.contains("ROSCOSMOS")) {
                 if (!firstGroup) {
@@ -302,17 +351,17 @@ public class QueryBuilder {
         return query;
     }
 
-    private static RealmQuery<LaunchRealm> filterCountry(RealmQuery<LaunchRealm> query, ArrayList<String> countryFilter) {
+    private static RealmQuery<Launch> filterCountry(RealmQuery<Launch> query, ArrayList<String> countryFilter) {
         boolean firstGroup = true;
         for (String key : countryFilter) {
             Timber.v("Country key: %s", key);
-            if (key.contains("China")){
+            if (key.contains("China")) {
                 key = "CHN";
-            } else if (key.contains("Russia")){
+            } else if (key.contains("Russia")) {
                 key = "RUS";
-            } else if (key.contains("India")){
+            } else if (key.contains("India")) {
                 key = "IND";
-            } else if (key.contains("Multi")){
+            } else if (key.contains("Multi")) {
                 key = ",";
             }
             if (!firstGroup) {
@@ -327,12 +376,24 @@ public class QueryBuilder {
         return query;
     }
 
-    public static RealmResults<LaunchRealm> buildSwitchQueryAsync(Context context, Realm realm) {
+    public static RealmResults<Launch> buildUpcomingSwitchQueryAsync(Context context, Realm realm) {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
         boolean first = true;
-        Date date = new Date();
-        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class)
-                .greaterThanOrEqualTo("net", date).beginGroup();
+        Calendar calendar = Calendar.getInstance();
+        if(switchPreferences.getPersistSwitch()) {
+            calendar.add(Calendar.HOUR_OF_DAY, -24);
+        }
+
+        Date date = calendar.getTime();
+        RealmQuery<Launch> query = realm.where(Launch.class)
+                .greaterThanOrEqualTo("net", date);
+
+        if (switchPreferences.getNoGoSwitch()) {
+            query.equalTo("status", 1).findAll();
+        }
+
+        query.beginGroup();
+
         if (switchPreferences.getSwitchNasa()) {
             first = false;
             query.equalTo("rocket.agencies.id", 44)
@@ -447,15 +508,24 @@ public class QueryBuilder {
             query.equalTo("location.id", 18);
         }
 
-        return query.endGroup().findAllSortedAsync("net", Sort.ASCENDING);
+        query.endGroup();
+
+        return query.findAllSortedAsync("net", Sort.ASCENDING);
     }
 
-    public static RealmResults<LaunchRealm> buildSwitchQuery(Context context, Realm realm) {
+    public static RealmResults<Launch> buildSwitchQuery(Context context, Realm realm) {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
         boolean first = true;
         Date date = new Date();
-        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class)
-                .greaterThanOrEqualTo("net", date).beginGroup();
+        RealmQuery<Launch> query = realm.where(Launch.class)
+                .greaterThanOrEqualTo("net", date);
+
+        if (switchPreferences.getNoGoSwitch()) {
+            query.equalTo("status", 1).findAll();
+        }
+
+        query.beginGroup();
+
         if (switchPreferences.getSwitchNasa()) {
             first = false;
             query.equalTo("rocket.agencies.id", 44)
@@ -484,6 +554,7 @@ public class QueryBuilder {
                     .or()
                     .equalTo("location.pads.agencies.id", 121);
         }
+
 
         if (switchPreferences.getSwitchULA()) {
             if (!first) {
@@ -570,15 +641,24 @@ public class QueryBuilder {
             query.equalTo("location.id", 18);
         }
 
-        return query.endGroup().findAllSorted("net", Sort.ASCENDING);
+        query.endGroup();
+
+        return query.findAllSorted("net", Sort.ASCENDING);
     }
 
-    public static RealmResults<LaunchRealm> buildSwitchQuery(Context context, Realm realm, boolean calendarState) {
+    public static RealmResults<Launch> buildSwitchQuery(Context context, Realm realm, boolean calendarState) {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
         boolean first = true;
         Date date = new Date();
-        RealmQuery<LaunchRealm> query = realm.where(LaunchRealm.class)
-                .greaterThanOrEqualTo("net", date).equalTo("syncCalendar", true).beginGroup();
+        RealmQuery<Launch> query = realm.where(Launch.class)
+                .greaterThanOrEqualTo("net", date).equalTo("syncCalendar", calendarState);
+
+        if (switchPreferences.getNoGoSwitch()) {
+            query.equalTo("status", 1).findAll();
+        }
+
+        query.beginGroup();
+
         if (switchPreferences.getSwitchNasa()) {
             first = false;
             query.equalTo("rocket.agencies.id", 44)

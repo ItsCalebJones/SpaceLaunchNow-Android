@@ -5,6 +5,8 @@
         <item name="colorPrimary">@color/darkPrimary</item>
         <item name="colorPrimaryDark">@color/darkPrimary_dark</item>
         <item name="colorAccent">@color/darkAccent</item>
+        <item name="titleBarColor">@color/darkPrimary</item>
+        <item name="recentBarColor">@color/darkPrimary</item>
         <item name="colorControlNormal">@color/darkIcons</item>
         <item name="colorControlHighlight">@color/cardview_dark_background</item>
 
@@ -28,11 +30,23 @@
         <item name="material_drawer_header_selection_text">@color/material_drawer_header_selection_text</item>
     </style>
 
+    <style name="BaseAppTheme.TranslucentStatus" parent="BaseAppTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
     <style name="ShowCaseThemeDark" parent="ShowCaseThemeDark">
         <item name="sv_backgroundColor">@color/darkPrimary</item>
         <item name="sv_showcaseColor">@color/darkAccent</item>
         <item name="sv_buttonText">Hide</item>
         <item name="sv_tintButtonColor">true</item>
+    </style>
+
+    <style name="ToolBarWithNavigationBack" parent="AppTheme.AppBarOverlay">
+        <item name="navigationIcon">@drawable/ic_arrow_back</item>
+    </style>
+
+    <style name="PrimaryButtonTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorAccent">@color/darkPrimary</item>
     </style>
 
     <style name="CustomPreferenceTheme" parent="@style/PreferenceActivity">
@@ -77,32 +91,4 @@
         <item name="android:layout_width">40dp</item>
     </style>
 
-    <style name="AboutLibraries" parent="BaseAppTheme">
-        <item name="colorPrimary">@color/darkPrimary</item>
-        <!-- Here we setting appcompat’s actionBarStyle -->
-        <item name="drawerArrowStyle">@style/AboutLibrariesTheme.DrawerArrowStyle</item>
-
-        <!-- AboutLibraries specific values -->
-        <item name="about_libraries_window_background">
-            @color/about_libraries_window_background_dark
-        </item>
-        <item name="about_libraries_card">
-            @color/about_libraries_card_dark
-        </item>
-        <item name="about_libraries_title_openSource">
-            @color/about_libraries_title_openSource_dark
-        </item>
-        <item name="about_libraries_text_openSource">
-            @color/about_libraries_text_openSource_dark
-        </item>
-        <item name="about_libraries_special_button_openSource">
-            @color/about_libraries_special_button_openSource_dark
-        </item>
-        <item name="about_libraries_dividerDark_openSource">
-            @color/about_libraries_dividerDark_openSource_dark
-        </item>
-        <item name="about_libraries_dividerLight_openSource">
-        @color/about_libraries_dividerLight_openSource_dark
-        </item>
-    </style>
 </resources>

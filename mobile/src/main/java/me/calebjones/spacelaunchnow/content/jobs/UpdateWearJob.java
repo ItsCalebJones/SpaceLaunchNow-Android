@@ -8,7 +8,7 @@ import com.evernote.android.job.JobRequest;
 
 import java.util.concurrent.TimeUnit;
 
-import me.calebjones.spacelaunchnow.content.services.UpdateWearService;
+import me.calebjones.spacelaunchnow.content.wear.WearWatchfaceManager;
 import timber.log.Timber;
 
 
@@ -19,21 +19,16 @@ public class UpdateWearJob extends Job {
     @NonNull
     @Override
     protected Result onRunJob(Params params) {
-        getContext().startService(new Intent(getContext(), UpdateWearService.class));
+         WearWatchfaceManager wearWatchfaceManager = new WearWatchfaceManager(getContext());
+         wearWatchfaceManager.updateWear();
         return Result.SUCCESS;
     }
 
-    @Override
-    protected void onReschedule(int newJobId) {
-        // the rescheduled job has a new ID
-    }
-
-    public static void scheduleJob() {
+    public static void scheduleJobNow() {
         Timber.v("Scheduling UpdateWearJob...");
 
         JobRequest.Builder builder = new JobRequest.Builder(UpdateWearJob.TAG)
-                .setPeriodic(TimeUnit.HOURS.toMillis(12), TimeUnit.HOURS.toMillis(1))
-                .setPersisted(true)
+                .startNow()
                 .setUpdateCurrent(true);
 
         builder.build().schedule();

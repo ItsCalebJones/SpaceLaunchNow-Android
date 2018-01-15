@@ -33,8 +33,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.content.ContextCompat;
+import android.text.format.DateFormat;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.PathInterpolator;
 import android.webkit.URLUtil;
@@ -45,63 +45,25 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
+import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.realm.LaunchRealm;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.utils.customtab.WebViewFallback;
-import okhttp3.Interceptor;
-import okhttp3.Response;
+import timber.log.Timber;
 
 public class Utils {
 
     public final static int COLOR_ANIMATION_DURATION = 1000;
     public final static int DEFAULT_DELAY = 0;
 
-    public static final Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-            Response originalResponse = chain.proceed(chain.request());
-            return originalResponse.newBuilder()
-                    .header("Cache-Control", "public, max-age=178200")
-                    .build();
-        }
-    };
-
-    public static int randInt(int min, int max) {
-        Random rand = new Random();
-        return rand.nextInt((max - min) + 1) + min;
-    }
-
-    public static boolean isLollopopUp() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
-    }
-
-    public static boolean isNumeric(String input) {
-        try {
-            int num = Integer.parseInt(input);
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return true;
-    }
-
-    public static void setMargins(View v, int l, int t, int r, int b) {
-        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-            p.setMargins(l, t, r, b);
-            v.requestLayout();
-        }
-    }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void animateViewColor(View v, int startColor, int endColor) {
@@ -112,20 +74,6 @@ public class Utils {
         animator.setInterpolator(new PathInterpolator(0.4f, 0f, 1f, 1f));
         animator.setDuration(COLOR_ANIMATION_DURATION);
         animator.start();
-    }
-
-    public Bitmap getBitmapFromURL(String strURL) {
-        try {
-            URL url = new URL(strURL);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            return BitmapFactory.decodeStream(input);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     /**
@@ -159,9 +107,19 @@ public class Utils {
         return propertyAnimator;
     }
 
-    public static String getEndDate(Context context) {
+    public static String getEndDate(int days) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DATE, 1);
+        c.add(Calendar.DATE, days);
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = df.format(c.getTime());
+
+        return String.valueOf(formattedDate);
+    }
+
+    public static String getStartDate(int days) {
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, days);
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = df.format(c.getTime());
@@ -200,7 +158,7 @@ public class Utils {
         intentBuilder.setExitAnimations(activity,
                 android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 
-        if(URLUtil.isValidUrl(url) ) {
+        if (URLUtil.isValidUrl(url)) {
             CustomTabActivityHelper.openCustomTab(activity, intentBuilder.build(), Uri.parse(url), new WebViewFallback());
         } else {
             Toast.makeText(activity, "ERROR: URL is malformed - sorry! " + url, Toast.LENGTH_SHORT);
@@ -214,7 +172,7 @@ public class Utils {
         return PendingIntent.getActivity(context, 0, actionIntent, 0);
     }
 
-    public static Intent buildShareIntent(LaunchRealm launch) {
+    public static Intent buildShareIntent(Launch launch) {
         SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy hh:mm a zzz");
         df.toLocalizedPattern();
 
@@ -318,6 +276,10 @@ public class Utils {
         }
     }
 
+    public static int reverseNumber(int num, int min, int max) {
+        return (max + min) - num;
+    }
+
     public static int getVersionCode(Context context) {
         try {
             ComponentName comp = new ComponentName(context, context.getClass());
@@ -333,7 +295,7 @@ public class Utils {
             ComponentName comp = new ComponentName(context, context.getClass());
             return context.getPackageManager().getPackageInfo(comp.getPackageName(), 0).versionName;
         } catch (android.content.pm.PackageManager.NameNotFoundException e) {
-            return null;
+            return "Unknown";
         }
     }
 
@@ -341,6 +303,94 @@ public class Utils {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
+
+    public static int getCategoryIcon(String type, Boolean night) {
+        if (type != null) {
+            switch (type) {
+                case "Earth Science":
+                    if (night) {
+                        return R.drawable.ic_earth_white;
+                    } else {
+                        return R.drawable.ic_earth;
+                    }
+                case "Planetary Science":
+                    if (night) {
+                        return R.drawable.ic_planetary_white;
+                    } else {
+                        return R.drawable.ic_planetary;
+                    }
+
+                case "Astrophysics":
+                    if (night) {
+                        return R.drawable.ic_astrophysics_white;
+                    } else {
+                        return R.drawable.ic_astrophysics;
+                    }
+
+                case "Heliophysics":
+                    if (night) {
+                        return R.drawable.ic_heliophysics_alt_white;
+                    } else {
+                        return R.drawable.ic_heliophysics_alt;
+                    }
+
+                case "Human Exploration":
+                    if (night) {
+                        return R.drawable.ic_human_explore_white;
+                    } else {
+                        return R.drawable.ic_human_explore;
+                    }
+                case "Robotic Exploration":
+                    if (night) {
+                        return R.drawable.ic_robotic_explore_white;
+                    } else {
+                        return R.drawable.ic_robotic_explore;
+                    }
+                case "Government/Top Secret":
+                    if (night) {
+                        return R.drawable.ic_top_secret_white;
+                    } else {
+                        return R.drawable.ic_top_secret;
+                    }
+                case "Tourism":
+                    if (night) {
+                        return R.drawable.ic_tourism_white;
+                    } else {
+                        return R.drawable.ic_tourism;
+                    }
+                case "Unknown":
+                    if (night) {
+                        return R.drawable.ic_unknown_white;
+                    } else {
+                        return R.drawable.ic_unknown;
+                    }
+                case "Communications":
+                    if (night) {
+                        return R.drawable.ic_satellite_white;
+                    } else {
+                        return R.drawable.ic_satellite;
+                    }
+                case "Resupply":
+                    if (night) {
+                        return R.drawable.ic_resupply_white;
+                    } else {
+                        return R.drawable.ic_resupply;
+                    }
+                default:
+                    if (night) {
+                        return R.drawable.ic_unknown_white;
+                    } else {
+                        return R.drawable.ic_unknown;
+                    }
+            }
+        } else {
+            if (night) {
+                return R.drawable.ic_unknown_white;
+            } else {
+                return R.drawable.ic_unknown;
+            }
+        }
     }
 
     public static void setCategoryIcon(ImageView imageView, String type, Boolean night) {
@@ -536,4 +586,29 @@ public class Utils {
             }
         }
     }
+
+    public static String getFormattedDateFromTimestamp(long timestampInMilliSeconds) {
+        Date date = new Date();
+        date.setTime(timestampInMilliSeconds);
+        return new SimpleDateFormat("h:mm a z - MMM d, yyyy ", Locale.US).format(date);
+    }
+
+    public static Bitmap getBitMapFromUrl(Context context, String imageURL) {
+        try {
+            return GlideApp.with(context)
+                    .asBitmap()
+                    .load(imageURL)
+                    .into(200, 200)
+                    .get();
+        } catch (InterruptedException | ExecutionException e) {
+            Timber.e(e);
+            return null;
+        }
+    }
+
+    public static SimpleDateFormat getSimpleDateFormatForUI(String pattern) {
+        String format =  DateFormat.getBestDateTimePattern(Locale.getDefault(), pattern);
+        return new SimpleDateFormat(format, Locale.getDefault());
+    }
 }
+

@@ -19,8 +19,8 @@
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
             android:layout_margin="@dimen/material_card_edge_margin"
+            android:animateLayoutChanges="true"
             android:padding="@dimen/material_card_edge_margin"
             card_view:cardCornerRadius="@dimen/card_view_corner_radius"
             card_view:cardElevation="@dimen/material_card_elevation_resting"
@@ -36,19 +36,18 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingBottom="@dimen/material_card_edge_margin"
-                    android:paddingTop="@dimen/material_card_edge_margin">
+                    android:background="?attr/titleBarColor"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/mission_agency_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
+                        android:gravity="center_horizontal"
                         android:lines="1"
-                        android:text="Launch Location Agencies"
+                        android:text="Mission Agency"
                         android:textAlignment="center"
-                        android:textColor="?android:textColorPrimary"
+                        android:textColor="@color/dark_primary_text_color_selector"
                         android:textSize="@dimen/material_typography_regular_title_text_size"
                         android:textStyle="bold" />
 
@@ -56,13 +55,17 @@
                         android:id="@+id/mission_agency_type"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="?attr/titleBarColor"
                         android:ellipsize="end"
                         android:gravity="center"
                         android:lines="1"
                         android:singleLine="false"
-                        android:text="Unknown Mission Agencies"
                         android:textAlignment="center"
-                        android:textColor="?android:textColorSecondary"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="4dp"
+                        android:textColor="@color/dark_primary_text_color_selector"
                         android:textSize="@dimen/material_typography_regular_subheading_text_size" />
                 </LinearLayout>
 
@@ -74,13 +77,6 @@
                     android:padding="@dimen/material_baseline_grid_0.5x"
                     android:weightSum="1">
 
-                    <View
-
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/View_Separator"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp" />
 
                     <TextView
                         android:id="@+id/mission_vehicle_agency_one"
@@ -88,13 +84,14 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:gravity="start"
-                        android:lines="1"
-                        android:paddingBottom="@dimen/material_card_supporting_text_padding_bottom"
+                        android:maxLines="2"
+                        android:paddingBottom="@dimen/material_baseline_grid_0.5x"
                         android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
                         android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:paddingTop="@dimen/material_card_supporting_text_padding_top"
+                        android:layout_marginTop="@dimen/material_baseline_grid_1x"
                         android:text="Agency One"
                         android:textColor="?android:textColorSecondary"
+                        android:textAppearance="@style/MaterialTypography.Regular.Title"
                         android:textSize="@dimen/material_typography_regular_subheading_text_size" />
 
                     <TextView
@@ -109,7 +106,7 @@
                         android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
                         android:text="Unknown Agency Type"
                         android:textColor="?android:textColorSecondary"
-                        android:textSize="@dimen/material_typography_regular_body_1_text_size" />
+                        android:textAppearance="@style/MaterialTypography.Regular.Caption" />
 
                     <TextView
                         android:id="@+id/mission_agency_summary_one"
@@ -120,14 +117,15 @@
                         android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
                         android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
                         android:textColor="?android:textColorSecondary"
+                        android:textAppearance="@style/MaterialTypography.Regular.Body1"
                         android:visibility="gone" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_weight="0.21"
                         android:orientation="horizontal"
-                        android:padding="@dimen/material_baseline_grid_0.5x"
-                        android:layout_weight="0.21">
+                        android:padding="@dimen/material_baseline_grid_0.5x">
 
                         <android.support.v7.widget.AppCompatButton
                             android:id="@+id/mission_infoButton_one"
@@ -161,9 +159,11 @@
 
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
                         android:background="@color/View_Separator"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp" />
+                        android:padding="12dp" />
+
 
                     <TextView
                         android:id="@+id/mission_vehicle_agency_two"
@@ -172,11 +172,12 @@
                         android:ellipsize="end"
                         android:gravity="start"
                         android:lines="1"
-                        android:paddingBottom="@dimen/material_card_supporting_text_padding_bottom"
+                        android:paddingBottom="@dimen/material_baseline_grid_0.5x"
                         android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
                         android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:paddingTop="@dimen/material_card_supporting_text_padding_top"
-                        android:text="Unknown Agency"
+                        android:paddingTop="@dimen/material_baseline_grid_1x"
+                        android:text="Agency Two"
+                        android:textAppearance="@style/MaterialTypography.Regular.Title"
                         android:textColor="?android:textColorSecondary"
                         android:textSize="@dimen/material_typography_regular_subheading_text_size" />
 
@@ -191,8 +192,8 @@
                         android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
                         android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
                         android:text="Unknown Agency Type"
-                        android:textColor="?android:textColorSecondary"
-                        android:textSize="@dimen/material_typography_regular_body_1_text_size" />
+                        android:textAppearance="@style/MaterialTypography.Regular.Caption"
+                        android:textColor="?android:textColorSecondary" />
 
                     <TextView
                         android:id="@+id/mission_agency_summary_two"
@@ -204,14 +205,15 @@
                         android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
                         android:text="@string/TsSKB_summary"
                         android:textColor="?android:textColorSecondary"
+                        android:textAppearance="@style/MaterialTypography.Regular.Body1"
                         android:visibility="gone" />
 
                     <LinearLayout
 
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/material_baseline_grid_0.5x"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:padding="@dimen/material_baseline_grid_0.5x">
 
                         <android.support.v7.widget.AppCompatButton
                             android:id="@+id/mission_infoButton_two"
@@ -240,8 +242,8 @@
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
             android:layout_margin="@dimen/material_card_edge_margin"
+            android:animateLayoutChanges="true"
             android:padding="@dimen/material_card_edge_margin"
             card_view:cardCornerRadius="@dimen/card_view_corner_radius"
             card_view:cardElevation="@dimen/material_card_elevation_resting"
@@ -254,53 +256,49 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="@dimen/material_card_edge_margin"
-                android:paddingTop="@dimen/material_card_edge_margin">
-
-                <TextView
-                    android:id="@+id/launch_agency_title"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:lines="1"
-                    android:text="Launch Location Agencies"
-                    android:textAlignment="center"
-                    android:textColor="?android:textColorPrimary"
-                    android:textSize="@dimen/material_typography_regular_title_text_size"
-                    android:textStyle="bold" />
+                    android:orientation="vertical"
+                    android:background="?attr/titleBarColor">
 
-                <TextView
-                    android:id="@+id/launch_agency_type"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:gravity="center"
-                    android:lines="1"
-                    android:singleLine="false"
-                    android:text="Unknown Mission Agencies"
-                    android:textAlignment="center"
-                    android:textColor="?android:textColorSecondary"
-                    android:textSize="@dimen/material_typography_regular_subheading_text_size" />
+                    <TextView
+                        android:id="@+id/vehicle_agency_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:lines="1"
+                        android:text="Vehicle Agency"
+                        android:textAlignment="center"
+                        android:textColor="@color/dark_primary_text_color_selector"
+                        android:textSize="@dimen/material_typography_regular_title_text_size"
+                        android:textStyle="bold" />
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/launch_agency_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:lines="1"
+                        android:singleLine="false"
+                        android:text=""
+                        android:textAlignment="center"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="4dp"
+                        android:textColor="@color/dark_primary_text_color_selector"
+                        android:textSize="@dimen/material_typography_regular_subheading_text_size" />
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/agency_one"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="@dimen/material_baseline_grid_0.5x"
                     android:orientation="vertical">
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_margin="8dp"
-                        android:background="@color/View_Separator"
-                        android:padding="12dp" />
 
                     <TextView
                         android:id="@+id/launch_vehicle_agency_one"
@@ -308,13 +306,14 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:gravity="start"
-                        android:lines="1"
-                        android:paddingBottom="@dimen/material_card_supporting_text_padding_bottom"
+                        android:maxLines="2"
+                        android:paddingBottom="@dimen/material_baseline_grid_0.5x"
                         android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
                         android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:paddingTop="@dimen/material_card_supporting_text_padding_top"
+                        android:layout_marginTop="@dimen/material_card_supporting_text_padding_top"
                         android:text="Agency One"
                         android:textColor="?android:textColorSecondary"
+                        android:textAppearance="@style/MaterialTypography.Regular.Title"
                         android:textSize="@dimen/material_typography_regular_subheading_text_size" />
 
                     <TextView
@@ -324,12 +323,12 @@
                         android:ellipsize="end"
                         android:gravity="start"
                         android:lines="1"
-                        android:paddingBottom="@dimen/material_card_supporting_text_padding_bottom"
+                        android:paddingBottom="@dimen/material_baseline_grid_0.5x"
                         android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
                         android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
                         android:text="Unknown Agency Type"
                         android:textColor="?android:textColorSecondary"
-                        android:textSize="@dimen/material_typography_regular_body_1_text_size" />
+                        android:textAppearance="@style/MaterialTypography.Regular.Caption" />
 
                     <TextView
                         android:id="@+id/launch_agency_summary_one"
@@ -341,6 +340,7 @@
                         android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
                         android:text="@string/TsSKB_summary"
                         android:textColor="?android:textColorSecondary"
+                        android:textAppearance="@style/MaterialTypography.Regular.Body1"
                         android:visibility="gone" />
 
                     <LinearLayout
@@ -381,7 +381,8 @@
 
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_margin="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
                         android:background="@color/View_Separator"
                         android:padding="12dp" />
 
@@ -391,13 +392,14 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:gravity="start"
-                        android:lines="1"
-                        android:paddingBottom="@dimen/material_card_supporting_text_padding_bottom"
+                        android:maxLines="2"
+                        android:paddingBottom="@dimen/material_baseline_grid_0.5x"
                         android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
                         android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:paddingTop="@dimen/material_card_supporting_text_padding_top"
+                        android:paddingTop="@dimen/material_baseline_grid_1x"
                         android:text="Agency Two"
                         android:textColor="?android:textColorSecondary"
+                        android:textAppearance="@style/MaterialTypography.Regular.Title"
                         android:textSize="@dimen/material_typography_regular_subheading_text_size" />
 
                     <TextView
@@ -407,12 +409,13 @@
                         android:ellipsize="end"
                         android:gravity="start"
                         android:lines="1"
-                        android:paddingBottom="@dimen/material_card_supporting_text_padding_bottom"
+                        android:paddingBottom="@dimen/material_baseline_grid_0.5x"
                         android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
                         android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
                         android:text="Unknown Agency Type"
                         android:textColor="?android:textColorSecondary"
-                        android:textSize="@dimen/material_typography_regular_body_1_text_size" />
+                        android:textAppearance="@style/MaterialTypography.Regular.Caption"
+                        />
 
                     <TextView
                         android:id="@+id/launch_agency_summary_two"
@@ -424,6 +427,7 @@
                         android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
                         android:text="@string/TsSKB_summary"
                         android:textColor="?android:textColorSecondary"
+                        android:textAppearance="@style/MaterialTypography.Regular.Body1"
                         android:visibility="gone" />
 
                     <LinearLayout

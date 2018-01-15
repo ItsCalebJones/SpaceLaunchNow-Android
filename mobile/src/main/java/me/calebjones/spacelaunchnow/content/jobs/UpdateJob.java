@@ -1,16 +1,20 @@
 package me.calebjones.spacelaunchnow.content.jobs;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
+import com.crashlytics.android.Crashlytics;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
 
-import me.calebjones.spacelaunchnow.content.models.Constants;
-import me.calebjones.spacelaunchnow.content.services.LaunchDataService;
+import java.util.concurrent.TimeUnit;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import me.calebjones.spacelaunchnow.content.data.DataRepositoryManager;
+import me.calebjones.spacelaunchnow.data.models.Constants;
+import timber.log.Timber;
 
 public class UpdateJob extends Job {
 
@@ -19,41 +23,58 @@ public class UpdateJob extends Job {
     @NonNull
     @Override
     protected Result onRunJob(Params params) {
-            return LaunchDataService.syncBackground(getContext()) ? Result.SUCCESS : Result.FAILURE;
+        Timber.d("Running job ID: %s Tag: %s", params.getId(), params.getTag());
+        DataRepositoryManager dataRepositoryManager = new DataRepositoryManager(getContext());
+        dataRepositoryManager.syncBackground();
+        int count = 0;
+        while (dataRepositoryManager.getDataClientManager().isRunning()) {
+            try {
+                count += 100;
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Timber.e("ERROR - %s %s", TAG, e.getLocalizedMessage());
+                Crashlytics.logException(e);
+            }
+        }
+        dataRepositoryManager.cleanDB();
+        RealmConfiguration configuration = Realm.getDefaultConfiguration();
+        if (configuration != null){
+            Realm.compactRealm(configuration);
+        }
+        Timber.i("%s complete...returning success after %s milliseconds.", TAG, count);
+        return Result.SUCCESS;
     }
 
     @Override
     protected void onReschedule(int newJobId) {
         // the rescheduled job has a new ID
+        super.onReschedule(newJobId);
+        JobUtils.logJobRequest();
     }
 
     public static void scheduleJob(Context context) {
-
-
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-
-        //Get sync period.
-        boolean dataSaver = sharedPref.getBoolean("data_saver", false);
-
-        long interval;
-
-        if (dataSaver){
-            interval = 168 * 60 * 60 * 1000;
-        } else {
-            interval = 24 * 60 * 60 * 1000;
-        }
-
         JobRequest.Builder builder = new JobRequest.Builder(UpdateJob.TAG)
-                .setPeriodic(interval, 3600000)
-                .setPersisted(true)
                 .setUpdateCurrent(true);
 
-        if (sharedPref.getBoolean("wifi_only", false)){
-            builder.setRequiredNetworkType(JobRequest.NetworkType.UNMETERED);
+
+        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("data_saver", false)) {
+            builder.setPeriodic(TimeUnit.DAYS.toMillis(7));
+            Timber.v("DataSaver enabled - Scheduling periodic at seven days.");
         } else {
-            builder.setRequiredNetworkType(JobRequest.NetworkType.CONNECTED);
+            builder.setPeriodic(TimeUnit.DAYS.toMillis(3));
+            Timber.v("DataSaver not enabled - Scheduling periodic at default every three day.");
         }
 
+        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("wifi_only", false)) {
+            builder.setRequiredNetworkType(JobRequest.NetworkType.UNMETERED);
+            Timber.v("WiFi Only enabled");
+        } else {
+            builder.setRequiredNetworkType(JobRequest.NetworkType.CONNECTED);
+            Timber.v("WiFi Only not-enabled");
+        }
+
+        Timber.i("Scheduling JobRequests for %s", TAG);
         builder.build().schedule();
+        JobUtils.logJobRequest();
     }
 }

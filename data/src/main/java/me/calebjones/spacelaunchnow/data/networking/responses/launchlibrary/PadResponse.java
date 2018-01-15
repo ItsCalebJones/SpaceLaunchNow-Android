@@ -1,11 +1,11 @@
 package me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary;
 
-import me.calebjones.spacelaunchnow.data.models.realm.PadRealm;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Pad;
 
 public class PadResponse extends BaseResponse{
-    private PadRealm[] pads;
+    private Pad[] pads;
 
-    public PadRealm[] getPads() {
+    public Pad[] getPads() {
         return pads;
     }
 }

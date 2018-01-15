@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="me.calebjones.spacelaunchnow.ui.activity.WebViewFallbackActivity">
+    tools:context=".ui.webview.WebViewFallbackActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="me.calebjones.spacelaunchnow.ui.activity.WebViewFallbackActivity"
+        tools:context=".ui.webview.WebViewFallbackActivity"
         tools:showIn="@layout/activity_web_view_fallback">
 
         <WebView
@@ -39,13 +39,5 @@
             android:layout_height="5dp"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal" />
     </RelativeLayout>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_menu_share_white" />
 
 </android.support.design.widget.CoordinatorLayout>
