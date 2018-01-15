@@ -18,6 +18,7 @@ public class SyncWearJob extends Job {
     @NonNull
     @Override
     protected Result onRunJob(Params params) {
+        Timber.v("Run UpdateWearJob...");
          WearWatchfaceManager wearWatchfaceManager = new WearWatchfaceManager(getContext());
          wearWatchfaceManager.updateWear();
         return Result.SUCCESS;

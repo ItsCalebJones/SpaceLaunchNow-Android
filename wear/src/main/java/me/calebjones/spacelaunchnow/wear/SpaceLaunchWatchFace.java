@@ -35,6 +35,7 @@ import android.support.v7.graphics.Palette;
 import android.support.wearable.watchface.CanvasWatchFaceService;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.text.Html;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -50,8 +51,12 @@ import android.widget.TextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.DataClient;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.DataItem;
@@ -60,12 +65,15 @@ import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.Wearable;
 
+import java.io.File;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import timber.log.Timber;
@@ -130,8 +138,12 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
         }
     }
 
-    private class Engine extends CanvasWatchFaceService.Engine implements
-            GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+    public static SimpleDateFormat getSimpleDateFormatForUI(String pattern) {
+        String format =  DateFormat.getBestDateTimePattern(Locale.getDefault(), pattern);
+        return new SimpleDateFormat(format, Locale.getDefault());
+    }
+
+    private class Engine extends CanvasWatchFaceService.Engine implements DataClient.OnDataChangedListener {
         final Handler mUpdateTimeHandler = new EngineHandler(this);
         boolean mRegisteredTimeZoneReceiver = false;
         Paint mTextPaint;
@@ -139,7 +151,6 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
         boolean isRound;
         private  boolean textDynamic;
         Calendar mTime;
-        private GoogleApiClient googleApiClient;
         private WatchFaceStyle watchFaceStyle;
         private Asset asset;
         String launchName;
@@ -168,6 +179,8 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
         private TextView launchCountdownView;
         private final Point displaySize = new Point();
         private int apiConnectedRefresh;
+        private Bitmap bitmap;
+        private DataClient dataClient;
 
 
         /**
@@ -217,16 +230,25 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             countdownSecondary = (TextView) myLayout.findViewById(R.id.countdown_secondary);
             countdownSecondaryLabel = (TextView) myLayout.findViewById(R.id.countdown_secondary_label);
 
-            googleApiClient = new GoogleApiClient.Builder(SpaceLaunchWatchFace.this)
-                    .addApi(Wearable.API)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .build();
+            dataClient = Wearable.getDataClient(getApplicationContext());
+            dataClient.addListener(this);
+            dataClient.getDataItems().addOnCompleteListener(new OnCompleteListener<DataItemBuffer>() {
+                @Override
+                public void onComplete(@NonNull Task<DataItemBuffer> task) {
+                    if (task.isSuccessful()) {
+                        DataItemBuffer dataItems = task.getResult();
+                        for (DataItem item: dataItems){
+                            processConfigurationFor(item);
+                        }
+                    }
+                }
+            });
         }
 
         @Override
         public void onDestroy() {
             mUpdateTimeHandler.removeMessages(MSG_UPDATE_TIME);
+            dataClient.removeListener(this);
             super.onDestroy();
         }
 
@@ -237,10 +259,6 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             Timber.v("onVisibilityChanged");
             if (visible) {
                 registerReceiver();
-                if (!googleApiClient.isConnected()) {
-                    Timber.v("Reconnecting");
-                    googleApiClient.connect();
-                }
             } else {
                 unregisterReceiver();
             }
@@ -273,17 +291,17 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             if (insets.isRound()) {
                 Timber.v("Watch is Round");
                 mXOffset = mYOffset = 0;
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) launchInfoContainer.getLayoutParams();
-                params.setMargins(0, 0, 0, 24);
-
-                launchInfoContainer.setLayoutParams(params);
+//                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) launchInfoContainer.getLayoutParams();
+//                params.setMargins(0, 0, 0, 24);
+//
+//                launchInfoContainer.setLayoutParams(params);
 
             } else if (insets.getSystemWindowInsetBottom() > 0) {
                 Timber.v("Watch has chin.");
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) launchInfoContainer.getLayoutParams();
-                params.setMargins(0, 0, 0, 24);
+//                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) launchInfoContainer.getLayoutParams();
+//                params.setMargins(0, 0, 0, 24);
 
-                launchInfoContainer.setLayoutParams(params);
+//                launchInfoContainer.setLayoutParams(params);
             } else {
                 Timber.v("Watch is square");
                 mXOffset = mYOffset = 0;
@@ -333,21 +351,6 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
         @Override
         public void onDraw(Canvas canvas, Rect bounds) {
 
-            if (!googleApiClient.isConnected() || googleApiClient.isConnecting()) {
-                Timber.v("Connecting: %s Connected: %s Count %s", googleApiClient.isConnecting(), googleApiClient.isConnected(), apiConnectedRefresh);
-            }
-
-            if (googleApiClient.isConnected()){
-                apiConnectedRefresh = 0;
-            } else {
-                if (apiConnectedRefresh > 60){
-                    Timber.v("Connecting...");
-                    googleApiClient.connect();
-                } else {
-                    apiConnectedRefresh = apiConnectedRefresh + 1;
-                }
-            }
-
             Date now = new Date();
             mTime = Calendar.getInstance();
             SimpleDateFormat twentyFourHourMode = new SimpleDateFormat("HH:mm");
@@ -368,7 +371,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
 
             Date date = new Date(mTime.getTimeInMillis());
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, MMMM d'" + getDayNumberSuffix(mTime.get(Calendar.DAY_OF_MONTH)) + "'");
+            SimpleDateFormat dateFormat = getSimpleDateFormatForUI("EEEE, MMMM d'" + getDayNumberSuffix(mTime.get(Calendar.DAY_OF_MONTH)) + "'");
             String dateText = dateFormat.format(date);
             twentyFourHourMode.setTimeZone(TimeZone.getTimeZone("UTC"));
             String utcText = twentyFourHourMode.format(utcDate) + " UTC";
@@ -443,7 +446,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
                 //Launch Countdown/Status
                 if (launchTime == 0 && launchDate != null) {
                     String dayNumberSuffix = getDayNumberSuffix(utcDate.getDate());
-                    SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d'" + dayNumberSuffix + "'");
+                    SimpleDateFormat formatter = getSimpleDateFormatForUI("EEEE, MMMM d'" + dayNumberSuffix + "'");
                     launchCountdownView.setText(Html.fromHtml(formatter.format(launchDate)));
                 }
             }
@@ -475,6 +478,13 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             // Update the layout
             myLayout.measure(specW, specH);
             myLayout.layout(0, 0, myLayout.getMeasuredWidth(), myLayout.getMeasuredHeight());
+
+            if (bitmap != null){
+                imageView.setImageBitmap(bitmap);
+            } else {
+                imageView.setImageResource(R.drawable.nav_header);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            }
 
             // Draw it to the Canvas
             canvas.drawColor(Color.BLACK);
@@ -529,41 +539,6 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
                 mUpdateTimeHandler.sendEmptyMessageDelayed(MSG_UPDATE_TIME, delayMs);
             }
         }
-
-        @Override
-        public void onConnected(@Nullable Bundle bundle) {
-            Timber.v("onConnected");
-
-            Wearable.DataApi.addListener(googleApiClient, onDataChangedListener);
-            Wearable.DataApi.getDataItems(googleApiClient).setResultCallback(onConnectedResultCallback);
-        }
-
-        @Override
-        public void onConnectionSuspended(int i) {
-            Timber.v("onConnectedSuspended");
-        }
-
-        @Override
-        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-            Timber.e("onConnectionFailed - %s %s", connectionResult.getErrorCode(), connectionResult.getErrorMessage());
-
-        }
-
-        private final DataApi.DataListener onDataChangedListener = new DataApi.DataListener() {
-            @Override
-            public void onDataChanged(DataEventBuffer dataEvents) {
-                Timber.v("onDataChanged");
-                for (DataEvent event : dataEvents) {
-                    if (event.getType() == DataEvent.TYPE_CHANGED) {
-                        DataItem item = event.getDataItem();
-                        processConfigurationFor(item);
-                    }
-                }
-
-                dataEvents.release();
-                invalidateIfNecessary();
-            }
-        };
 
         private void processConfigurationFor(DataItem item) {
             Timber.v("processConfigurationFor: %s", item.toString());
@@ -622,9 +597,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
                             } else {
                                 applyDefault();
                             }
-                            imageView.setImageBitmap(bitmap);
-                            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                            invalidate();
+                            setBitmap(bitmap);
                         }
                     }).start();
                 }
@@ -694,15 +667,15 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             if (asset == null) {
                 throw new IllegalArgumentException("Asset must be non-null");
             }
-            ConnectionResult result =
-                    googleApiClient.blockingConnect(5000, TimeUnit.MILLISECONDS);
-            if (!result.isSuccess()) {
-                return null;
-            }
-            // convert asset into a file descriptor and block until it's ready
-            InputStream assetInputStream = Wearable.DataApi.getFdForAsset(
-                    googleApiClient, asset).await().getInputStream();
 
+            // convert asset into a file descriptor and block until it's ready
+            InputStream assetInputStream = null;
+            try {
+                assetInputStream = Tasks.await(Wearable.getDataClient(getApplicationContext()).getFdForAsset(asset)).getInputStream();
+            } catch (ExecutionException | InterruptedException e) {
+                Timber.e(e);
+                e.printStackTrace();
+            }
             if (assetInputStream == null) {
                 Timber.e("Requested an unknown Asset.");
                 return null;
@@ -710,19 +683,6 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             // decode the stream into a bitmap
             return BitmapFactory.decodeStream(assetInputStream);
         }
-
-        private final ResultCallback<DataItemBuffer> onConnectedResultCallback = new ResultCallback<DataItemBuffer>() {
-            @Override
-            public void onResult(DataItemBuffer dataItems) {
-                Log.v("Space Launch Wear", "onResult");
-                for (DataItem item : dataItems) {
-                    processConfigurationFor(item);
-                }
-
-                dataItems.release();
-                invalidateIfNecessary();
-            }
-        };
 
         private void invalidateIfNecessary() {
             if (isVisible() && !isInAmbientMode()) {
@@ -734,6 +694,27 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             Calendar cal = Calendar.getInstance();
             cal.setTime(date);
             return cal;
+        }
+
+        @Override
+        public void onDataChanged(@NonNull DataEventBuffer dataEventBuffer) {
+            Timber.v("onDataChanged");
+            for (DataEvent event : dataEventBuffer) {
+                if (event.getType() == DataEvent.TYPE_CHANGED) {
+                    DataItem item = event.getDataItem();
+                    processConfigurationFor(item);
+                }
+            }
+
+            dataEventBuffer.release();
+            invalidateIfNecessary();
+        }
+
+        public void setBitmap(Bitmap bitmap) {
+            this.bitmap = bitmap;
+            imageView.setImageBitmap(bitmap);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            invalidate();
         }
     }
 }
