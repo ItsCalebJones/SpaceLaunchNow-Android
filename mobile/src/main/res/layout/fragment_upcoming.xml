@@ -301,8 +301,4 @@
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
-<<<<<<< HEAD
-    </FrameLayout>
-=======
->>>>>>> master
 </android.support.design.widget.CoordinatorLayout>

@@ -1,24 +1,15 @@
-package me.calebjones.spacelaunchnow.wear;
+package me.calebjones.spacelaunchnow.wear.model;
 
 import android.support.v7.graphics.Target;
 
-<<<<<<< HEAD:wear/src/main/java/me/calebjones/spacelaunchnow/wear/Constants.java
-public final class Constants {
-=======
-public class WearConstants {
->>>>>>> master:wear/src/main/java/me/calebjones/spacelaunchnow/wear/WearConstants.java
+public final class WearConstants {
+
     public static final Target DARK;
     public static final Target LIGHT;
     public static final Target NEUTRAL;
     public static final Target DOMINANT;
 
     public static String LIBRARY_BASE_URL = "https://launchlibrary.net/";
-    public static String LAUNCH_URL = "https://launchlibrary.net/1.2/launch/next/1000&mode=verbose";
-    public static String MISSION_URL = "https://launchlibrary.net/1.2/mission?limit=1000&mode=verbose";
-    public static String AGENCY_URL = "https://launchlibrary.net/1.2/agency?mode=verbose&limit=1000";
-    public static String VEHICLE_URL = "https://launchlibrary.net/1.2/rocket?mode=verbose&limit=1000";
-    public static String NEXT_URL = "https://launchlibrary.net/1.2/launch?next=10&mode=verbose";
-    public static String NEXT_URL_BY_ID = "https://launchlibrary.net/1.2/launch/%s?mode=verbose";
 
     static {
         DOMINANT = new Target.Builder().setPopulationWeight(1f)
@@ -64,6 +55,6 @@ public class WearConstants {
                 .build();
     }
 
-    private Constants() {
+    private WearConstants() {
     }
 }

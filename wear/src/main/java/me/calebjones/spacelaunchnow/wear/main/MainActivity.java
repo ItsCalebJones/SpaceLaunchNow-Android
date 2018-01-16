@@ -83,8 +83,8 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
 
         setAmbientEnabled();
 
-        mInformationTextView = (TextView) findViewById(R.id.information_text_view);
-        mRemoteOpenButton = (Button) findViewById(R.id.remote_open_button);
+        mInformationTextView = findViewById(R.id.information_text_view);
+        mRemoteOpenButton =  findViewById(R.id.remote_open_button);
 
         mInformationTextView.setText(CHECKING_MESSAGE);
 

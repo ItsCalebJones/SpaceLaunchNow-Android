@@ -32,13 +32,6 @@
   <string name="jpn_logo">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950129/QOdDYa5_dhdlct.png</string>
   <string name="ariane_logo">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950133/yffq0aI_oyyhmj.jpg</string>
   <string name="title_activity_debug">DebugActivity</string>
-<<<<<<< HEAD
-  <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launchCategory tracking and application behavior</string>
-
-    <string name="whats_new_content">1.5.3 - HotFix!\n\n
-        \u2022Squash a few bugs!\n
-    </string>
-=======
   <string name="general_settings_for_launch_tracking_and_application_behavior">General settings for launch tracking and application behavior</string>
   <string name="whats_new_content">Changelog\n
 \n· New ways to share launches with the official https://spacelaunchnow.me.
@@ -48,29 +41,23 @@
 \n· Updated on-boarding and initial application configuration.
 \n· Reduced network and local storage (90% reduced - usage.
 \n· A plethora of bugfixes - crashes, UI, non-fatals… blah blah.</string>
->>>>>>> master
   <string name="link_feedback">https://www.reddit.com/r/spacelaunchnow</string>
   <string name="link_store">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>
 
   <string name="title_activity_fullscreen_image">Image Viewer</string>
 
   <string name="supporter_title">Become a Supporter</string>
-<<<<<<< HEAD
-  <string name="supporter_description">Help ensure continued updates and timely bug fixes. Get access to supporter only features. Pay what you want, you\'ll get the same value.</string>
-  <string name="supporter_features">\u2022Current weather forecast for launchCategory pads.\n\u2022Historical weather forecast for past launches.\n\u2022Automatically sync upcoming launches to your calendar.\n\u2022Dynamic pictures of launchCategory vehicles as watch face background.\n</string>
-=======
+
   <string name="supporter_description">Help ensure continued support, timely bug fixes, and new features.</string>
   <string name="supporter_features">\u2022Current weather forecast for launch pads.\n\u2022Historical weather forecast for past launches.\n\u2022Automatically sync upcoming launches to your calendar.\n\u2022Dynamic pictures of launch vehicles as watch face background.\n</string>
->>>>>>> master
+
   <string name="hello_blank_fragment">Hello blank fragment</string>
   <string name="title_activity_download">Download</string>
   <string name="title_activity_web_view_fallback">Space Launch Now</string>
   <string name="slide_one_title">Space Launch Now</string>
-<<<<<<< HEAD
-  <string name="slide_one_description">Keep up to date on all your favorite  orbital launches, missions, and launchCategory vehicles.</string>
-=======
+
   <string name="slide_one_description">Keep up to date on all your favorite orbital launches, missions, and launch vehicles.</string>
->>>>>>> master
+
   <string name="slide_two_title">Notification for Launches</string>
   <string name="slide_two_description">Get notifications for upcoming launches and look into the history of spaceflight</string>
   <string name="slide_three_title">Find Launch Vehicles</string>

@@ -4,7 +4,7 @@ import android.app.Application;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import me.calebjones.spacelaunchnow.data.models.LaunchDataModule;
+import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
 import timber.log.Timber;
 
 

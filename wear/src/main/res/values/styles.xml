@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="BaseAppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/darkPrimary</item>
+        <item name="colorPrimaryDark">@color/darkPrimary_dark</item>
+        <item name="colorAccent">@color/darkAccent</item>
+        <item name="colorControlNormal">@color/darkIcons</item>
+        <item name="android:background">@color/dark_theme_background</item>
+
+        <item name="android:textColorHighlight">@color/dark_primary_text_color_selector</item>
+        <item name="android:textColorPrimary">@color/dark_primary_text_color_selector</item>
+        <item name="android:textColor">@color/dark_secondary_text_color_selector</item>
+        <item name="android:textColorSecondary">@color/dark_secondary_text_color_selector</item>
+    </style>
+
+    <style name="AppTheme.Button" parent="Base.Widget.AppCompat.Button">
+        <item name="android:colorButtonNormal">@color/darkAccent</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+</resources>

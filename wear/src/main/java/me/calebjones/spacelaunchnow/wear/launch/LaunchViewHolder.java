@@ -14,12 +14,18 @@ public class LaunchViewHolder extends RecyclerView.ViewHolder {
 
     private LaunchAdapter launchAdapter;
 
-    @BindView(R.id.launch_icon)
+    @BindView(R.id.categoryIcon)
     ImageView launchIcon;
-    @BindView(R.id.launch_name)
-    TextView launchName;
-    @BindView(R.id.launch_parent)
-    View launchParent;
+    @BindView(R.id.launch_rocket)
+    TextView launchRocket;
+    @BindView(R.id.mission)
+    TextView launchMission;
+    @BindView(R.id.location)
+    TextView launchLocation;
+    @BindView(R.id.launch_date)
+    TextView launchDate;
+    @BindView(R.id.rootview)
+    View rootView;
 
     public LaunchViewHolder(View view, LaunchAdapter launchAdapter) {
         super(view);
@@ -27,7 +33,7 @@ public class LaunchViewHolder extends RecyclerView.ViewHolder {
         this.launchAdapter = launchAdapter;
     }
 
-    @OnClick(R.id.launch_parent)
+    @OnClick(R.id.rootview)
     void launchClicked(){
         launchAdapter.onClick(getAdapterPosition());
     }

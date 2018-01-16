@@ -1,6 +1,7 @@
 package me.calebjones.spacelaunchnow.wear.launch;
 
 import android.graphics.drawable.Drawable;
+import android.support.wear.widget.drawer.WearableNavigationDrawerView;
 import android.support.wearable.view.drawer.WearableNavigationDrawer;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import timber.log.Timber;
 
 import static me.calebjones.spacelaunchnow.wear.model.Constants.*;
 
-public class NavigationAdapter extends WearableNavigationDrawer.WearableNavigationDrawerAdapter {
+public class NavigationAdapter extends WearableNavigationDrawerView.WearableNavigationDrawerAdapter implements WearableNavigationDrawerView.OnItemSelectedListener{
 
     private ArrayList<LaunchCategory> launchCategoryList = new ArrayList<>();
     private int mSelectedCategory = 1;

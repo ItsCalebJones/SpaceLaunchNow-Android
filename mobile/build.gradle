@@ -60,6 +60,7 @@ if (keystorePropertiesFile.canRead()) {
     throw new GradleException("Could not read keystore.properties!")
 }
 
+
 android {
     signingConfigs {
         releaseConfig {

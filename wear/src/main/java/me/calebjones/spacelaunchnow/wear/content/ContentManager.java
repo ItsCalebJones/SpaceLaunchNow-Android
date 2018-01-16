@@ -19,11 +19,12 @@ import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
-import me.calebjones.spacelaunchnow.data.models.realm.LaunchWear;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
-import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryRequestInterface;
+import me.calebjones.spacelaunchnow.data.networking.RetrofitBuilder;
+import me.calebjones.spacelaunchnow.data.networking.interfaces.WearService;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchWearResponse;
-import me.calebjones.spacelaunchnow.wear.Constants;
+import me.calebjones.spacelaunchnow.wear.model.WearConstants;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,7 +45,7 @@ public class ContentManager {
 
     public ContentManager(Context context, ContentCallback callback, int category) {
         realm = Realm.getDefaultInstance();
-        retrofit = getRetrofit();
+        retrofit = RetrofitBuilder.getWearRetrofit();
         this.contentCallback = callback;
 
         mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -65,11 +66,11 @@ public class ContentManager {
         }
     }
 
-    public RealmResults<LaunchWear> getLaunchList(int category) {
+    public RealmResults<Launch> getLaunchList(int category) {
         if (category > 0 ) {
-            return realm.where(LaunchWear.class).equalTo("agency", category).findAllSorted("net");
+            return realm.where(Launch.class).equalTo("lsp.id", category).sort("net").findAll();
         } else {
-            return realm.where(LaunchWear.class).findAllSorted("net");
+            return realm.where(Launch.class).sort("net").findAll();
         }
     }
 
@@ -77,57 +78,31 @@ public class ContentManager {
         realm.close();
     }
 
-    private static Retrofit getRetrofit() {
-        // Note there is a bug in GSON 2.5 that can cause it to StackOverflow when working with RealmObjects.
-        // To work around this, use the ExclusionStrategy below or downgrade to 1.7.1
-        // See more here: https://code.google.com/p/google-gson/issues/detail?id=440
-        Type token = new TypeToken<RealmList<RealmStr>>() {}.getType();
-
-        Gson gson = new GsonBuilder()
-                .setDateFormat("MMMM dd, yyyy HH:mm:ss zzz")
-                .setExclusionStrategies(new ExclusionStrategy() {
-                    @Override
-                    public boolean shouldSkipField(FieldAttributes f) {
-                        return f.getDeclaringClass().equals(RealmObject.class);
-                    }
-
-                    @Override
-                    public boolean shouldSkipClass(Class<?> clazz) {
-                        return false;
-                    }
-                })
-                .create();
-
-        return new Builder()
-                .baseUrl(Constants.LIBRARY_BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-    }
-
     private void getFreshData() {
-        final LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
+        final WearService request = retrofit.create(WearService.class);
         Call<LaunchWearResponse> call;
-        final RealmList<LaunchWear> items = new RealmList<>();
+        final RealmList<Launch> items = new RealmList<>();
 
         //Get Date String
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
 
         call = request.getWearNextLaunch(fmt.format(date), 5);
-
+        Timber.v("Calling - %s", call.request().url().url().toString());
         call.enqueue(new Callback<LaunchWearResponse>() {
 
             @Override
             public void onResponse(Call<LaunchWearResponse> call, Response<LaunchWearResponse> response) {
                 if (response.isSuccessful()) {
-                    Timber.v("Successful!");
+                    Timber.v("Successful - %s", call.request().url().url().toString());
                     Collections.addAll(items, response.body().getLaunches());
                     realm.beginTransaction();
                     realm.copyToRealmOrUpdate(items);
                     realm.commitTransaction();
                     contentCallback.dataLoaded();
+                } else {
+                    Timber.e("Error: %s", response.errorBody());
                 }
-                Timber.e("Error: %s", response.errorBody());
             }
 
             @Override
@@ -139,32 +114,33 @@ public class ContentManager {
     }
 
     private void getFreshData(final int category) {
-        final LibraryRequestInterface request = retrofit.create(LibraryRequestInterface.class);
+        final WearService request = retrofit.create(WearService.class);
         Call<LaunchWearResponse> call;
-        final RealmList<LaunchWear> items = new RealmList<>();
+        final RealmList<Launch> items = new RealmList<>();
 
         //Get Date String
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
 
         call = request.getWearNextLaunch(fmt.format(date), category, 5);
-
+        Timber.v("Calling - %s", call.request().url().url().toString());
         call.enqueue(new Callback<LaunchWearResponse>() {
 
             @Override
             public void onResponse(Call<LaunchWearResponse> call, Response<LaunchWearResponse> response) {
                 if (response.isSuccessful()) {
-                    Timber.v("Successful!");
+                    Timber.v("Successful! - %s", call.request().url().url().toString());
                     Collections.addAll(items, response.body().getLaunches());
-                    realm.beginTransaction();
-                    for (LaunchWear item: items){
-                        item.setAgency(category);
-                        realm.copyToRealmOrUpdate(item);
-                    }
-                    realm.commitTransaction();
+                    realm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            realm.copyToRealmOrUpdate(items);
+                        }
+                    });
                     contentCallback.dataLoaded();
+                } else {
+                    Timber.e("Error: %s", response.errorBody());
                 }
-                Timber.e("Error: %s", response.errorBody());
             }
 
             @Override

@@ -2,10 +2,9 @@ package me.calebjones.spacelaunchnow.wear.launch;
 
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.wear.widget.drawer.WearableDrawerLayout;
+import android.support.wear.widget.drawer.WearableNavigationDrawerView;
 import android.support.wearable.activity.WearableActivity;
-import android.support.wearable.view.drawer.WearableDrawerLayout;
-import android.support.wearable.view.drawer.WearableNavigationDrawer;
-import android.view.Gravity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -16,9 +15,10 @@ public class LaunchActivity extends WearableActivity implements NavigationAdapte
     @BindView(R.id.drawer_layout)
     WearableDrawerLayout wearableDrawerLayout;
     @BindView(R.id.top_navigation_drawer)
-    WearableNavigationDrawer wearableNavigationDrawer;
+    WearableNavigationDrawerView wearableNavigationDrawer;
 
     private LaunchFragment launchFragment;
+    private NavigationAdapter navigationAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +35,13 @@ public class LaunchActivity extends WearableActivity implements NavigationAdapte
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, launchFragment).commit();
 
-        // Main Wearable Drawer Layout that wraps all content
-        wearableDrawerLayout.peekDrawer(Gravity.BOTTOM);
-        wearableDrawerLayout.peekDrawer(Gravity.TOP);
+        navigationAdapter = new NavigationAdapter(this);
 
         // Top Navigation Drawer
-        wearableNavigationDrawer = (WearableNavigationDrawer) findViewById(R.id.top_navigation_drawer);
-        wearableNavigationDrawer.setAdapter(new NavigationAdapter(this));
+        wearableNavigationDrawer = findViewById(R.id.top_navigation_drawer);
+        wearableNavigationDrawer.setAdapter(navigationAdapter);
+        wearableNavigationDrawer.getController().peekDrawer();
+        wearableNavigationDrawer.addOnItemSelectedListener(navigationAdapter);
 
     }
 
