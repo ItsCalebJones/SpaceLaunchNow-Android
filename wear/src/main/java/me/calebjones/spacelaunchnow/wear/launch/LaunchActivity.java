@@ -35,7 +35,7 @@ public class LaunchActivity extends WearableActivity implements NavigationAdapte
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, launchFragment).commit();
 
-        navigationAdapter = new NavigationAdapter(this);
+        navigationAdapter = new NavigationAdapter(this, this);
 
         // Top Navigation Drawer
         wearableNavigationDrawer = findViewById(R.id.top_navigation_drawer);

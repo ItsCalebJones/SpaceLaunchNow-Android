@@ -109,7 +109,7 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchViewHolder> implem
 
     public void setCategory(int category) {
         this.category = category;
-        loadData();
+        contentManager.setCategory(this.category);
     }
 
     public void onClick(int position) {

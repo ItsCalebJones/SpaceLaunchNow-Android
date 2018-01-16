@@ -1,6 +1,8 @@
 package me.calebjones.spacelaunchnow.wear.content;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Network;
 
@@ -14,6 +16,7 @@ import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Map;
 
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -24,6 +27,7 @@ import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.data.networking.RetrofitBuilder;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.WearService;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchWearResponse;
+import me.calebjones.spacelaunchnow.wear.model.LaunchCategories;
 import me.calebjones.spacelaunchnow.wear.model.WearConstants;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,10 +46,13 @@ public class ContentManager {
     private ConnectivityManager.NetworkCallback mNetworkCallback;
     private Retrofit retrofit;
     private ContentCallback contentCallback;
+    private SharedPreferences sharedPreferences;
+    SharedPreferences.Editor prefsEditor;
 
     public ContentManager(Context context, ContentCallback callback, int category) {
         realm = Realm.getDefaultInstance();
         retrofit = RetrofitBuilder.getWearRetrofit();
+        sharedPreferences = context.getSharedPreferences("timestamp", 0);
         this.contentCallback = callback;
 
         mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -55,11 +62,6 @@ public class ContentManager {
             int bandwidth = mConnectivityManager.getNetworkCapabilities(activeNetwork).getLinkDownstreamBandwidthKbps();
             Timber.v("Network available - Bandwidth: %s/kbps", bandwidth);
             getFreshData();
-            getFreshData(AGENCY_SPACEX);
-            getFreshData(AGENCY_ROSCOSMOS);
-            getFreshData(AGENCY_ULA);
-            getFreshData(AGENCY_NASA);
-            getFreshData(AGENCY_CASC);
         } else {
             // request high-bandwidth network
             Timber.v("Network unavailable.");
@@ -78,7 +80,7 @@ public class ContentManager {
         realm.close();
     }
 
-    private void getFreshData() {
+    public void getFreshData() {
         final WearService request = retrofit.create(WearService.class);
         Call<LaunchWearResponse> call;
         final RealmList<Launch> items = new RealmList<>();
@@ -96,9 +98,13 @@ public class ContentManager {
                 if (response.isSuccessful()) {
                     Timber.v("Successful - %s", call.request().url().url().toString());
                     Collections.addAll(items, response.body().getLaunches());
-                    realm.beginTransaction();
-                    realm.copyToRealmOrUpdate(items);
-                    realm.commitTransaction();
+                    realm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            realm.copyToRealmOrUpdate(items);
+                        }
+                    });
+                    updateLastSync(0);
                     contentCallback.dataLoaded();
                 } else {
                     Timber.e("Error: %s", response.errorBody());
@@ -113,7 +119,7 @@ public class ContentManager {
         });
     }
 
-    private void getFreshData(final int category) {
+    public void getFreshData(final int category) {
         final WearService request = retrofit.create(WearService.class);
         Call<LaunchWearResponse> call;
         final RealmList<Launch> items = new RealmList<>();
@@ -137,6 +143,7 @@ public class ContentManager {
                             realm.copyToRealmOrUpdate(items);
                         }
                     });
+                    updateLastSync(category);
                     contentCallback.dataLoaded();
                 } else {
                     Timber.e("Error: %s", response.errorBody());
@@ -151,9 +158,35 @@ public class ContentManager {
         });
     }
 
+    public void setCategory(int category) {
+        if (shouldGetFresh(category)){
+            Timber.v("Data is stale for %s - refreshing.", LaunchCategories.findByKey(category));
+            getFreshData(category);
+        } else {
+            Timber.v("Data is still fresh for %s.", LaunchCategories.findByKey(category));
+            contentCallback.dataLoaded();
+        }
+    }
+
     public interface ContentCallback {
         void dataLoaded();
     }
 
+    private void updateLastSync(int category){
+        this.prefsEditor = this.sharedPreferences.edit();
+        this.prefsEditor.putLong(LaunchCategories.findByKey(category), System.currentTimeMillis());
+        this.prefsEditor.apply();
+    }
 
+    private boolean shouldGetFresh(int category){
+        long lastSync = sharedPreferences.getLong(LaunchCategories.findByKey(category), 0);
+        long timeSinceSync = System.currentTimeMillis() - lastSync;
+        Timber.v("Time since last update %d", timeSinceSync);
+        Map<String, ?> test = sharedPreferences.getAll();
+        if (timeSinceSync > 36000000){
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

@@ -1,34 +1,33 @@
 package me.calebjones.spacelaunchnow.wear.launch;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.wear.widget.drawer.WearableNavigationDrawerView;
-import android.support.wearable.view.drawer.WearableNavigationDrawer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import me.calebjones.spacelaunchnow.wear.model.LaunchCategory;
+import me.calebjones.spacelaunchnow.wear.model.LaunchCategories;
 import timber.log.Timber;
 
-import static me.calebjones.spacelaunchnow.wear.model.Constants.*;
 
 public class NavigationAdapter extends WearableNavigationDrawerView.WearableNavigationDrawerAdapter implements WearableNavigationDrawerView.OnItemSelectedListener{
 
-    private ArrayList<LaunchCategory> launchCategoryList = new ArrayList<>();
+    private List<LaunchCategories> launchCategoryList = new ArrayList<>();
     private int mSelectedCategory = 1;
     private AdapterCallback mAdapterCallback;
+    private Context context;
 
-    public NavigationAdapter(AdapterCallback callback) {
+    public NavigationAdapter(AdapterCallback callback, Context context) {
         this.mAdapterCallback = callback;
+        this.context = context;
         initializeCategories();
     }
 
     private void initializeCategories() {
-        launchCategoryList.add(new LaunchCategory("ALL", AGENCY_ALL));
-        launchCategoryList.add(new LaunchCategory("SpaceX", AGENCY_SPACEX));
-        launchCategoryList.add(new LaunchCategory("ROSCOSMOS", AGENCY_ROSCOSMOS));
-        launchCategoryList.add(new LaunchCategory("ULA", AGENCY_ULA));
-        launchCategoryList.add(new LaunchCategory("NASA", AGENCY_NASA));
-        launchCategoryList.add(new LaunchCategory("CASC", AGENCY_CASC));
+        launchCategoryList = Arrays.asList(LaunchCategories.values());
     }
 
     @Override
@@ -38,7 +37,7 @@ public class NavigationAdapter extends WearableNavigationDrawerView.WearableNavi
 
     @Override
     public Drawable getItemDrawable(int i) {
-        return null;
+        return ContextCompat.getDrawable(context, launchCategoryList.get(i).getIcon());
     }
 
     @Override
@@ -46,7 +45,7 @@ public class NavigationAdapter extends WearableNavigationDrawerView.WearableNavi
         Timber.d("NavigationAdapter.onItemSelected(): %s", i);
         mSelectedCategory = i;
 
-        LaunchCategory launchCategory = launchCategoryList.get(mSelectedCategory);
+        LaunchCategories launchCategory = launchCategoryList.get(mSelectedCategory);
         mAdapterCallback.onMethodCallback(launchCategory.getCategory());
 
     }
