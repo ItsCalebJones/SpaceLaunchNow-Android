@@ -15,4 +15,9 @@
     <color name="darkPrimary_dark">#ff37474f</color>
     <color name="darkAccent">#F44336</color>
     <color name="darkIcons">#ffffffff</color>
+
+
+    <!-- Alert overlay colors -->
+    <item name="connectivity_indicator_text" type="color">#9d9d9d</item>
+    <item name="connectivity_indicator_bg" type="color">#434343</item>
 </resources>

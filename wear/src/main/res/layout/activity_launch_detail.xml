@@ -125,6 +125,7 @@
                                 android:textSize="10sp" />
 
                             <android.support.v7.widget.AppCompatButton
+                                android:id="@+id/explore_button"
                                 android:theme="@style/AppTheme.Button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"

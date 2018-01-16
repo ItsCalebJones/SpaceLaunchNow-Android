@@ -17,6 +17,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.CapabilityApi;
+import com.google.android.gms.wearable.CapabilityClient;
 import com.google.android.gms.wearable.CapabilityInfo;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.Wearable;
@@ -34,7 +35,7 @@ import me.calebjones.spacelaunchnow.wear.launch.LaunchActivity;
 import timber.log.Timber;
 
 public class MainActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, CapabilityApi.CapabilityListener {
+        GoogleApiClient.OnConnectionFailedListener, CapabilityClient.OnCapabilityChangedListener {
 
     private Node mAndroidPhoneNodeWithApp;
 
@@ -61,8 +62,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
 
     // Links to mobile app for Android (Play Store).
     // TODO: Replace with your links/packages.
-    private static final String PLAY_STORE_APP_URI =
-            "market://details?id=me.calebjones.spacelaunchnow";
+    private static final String PLAY_STORE_APP_URI = "market://details?id=me.calebjones.spacelaunchnow";
 
     @BindView(R.id.information_text_view)
     TextView mInformationTextView;
@@ -110,6 +110,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
             mGoogleApiClient.disconnect();
         }
     }
+
 
     @Override
     protected void onResume() {

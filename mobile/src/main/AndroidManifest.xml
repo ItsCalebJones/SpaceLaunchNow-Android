@@ -157,6 +157,14 @@
                 android:resource="@xml/widget_launch_list_info" />
         </receiver>
 
+        <service android:name=".content.services.ListenerServiceFromWear">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <data android:scheme="wear" android:host="*" android:path="/start-activity" />
+            </intent-filter>
+        </service>
+
         <service
             android:name=".widget.launchlist.LaunchListWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />

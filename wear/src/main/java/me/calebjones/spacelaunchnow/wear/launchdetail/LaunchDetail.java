@@ -1,19 +1,50 @@
 package me.calebjones.spacelaunchnow.wear.launchdetail;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.ResultReceiver;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.AppCompatButton;
 import android.support.wearable.activity.WearableActivity;
+import android.support.wearable.view.ConfirmationOverlay;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.android.gms.wearable.CapabilityClient;
+import com.google.android.gms.wearable.CapabilityInfo;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.Wearable;
+import com.google.android.gms.wearable.WearableListenerService;
+import com.google.android.wearable.intent.RemoteIntent;
+import com.google.android.wearable.playstore.PlayStoreAvailability;
+
+import java.nio.ByteBuffer;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.realm.Realm;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.wear.R;
+import me.calebjones.spacelaunchnow.wear.launch.LaunchActivity;
+import me.calebjones.spacelaunchnow.wear.main.MainActivity;
 import timber.log.Timber;
 
 public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout.OnRefreshListener {
@@ -42,9 +73,16 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
     TextView launchStatus;
     @BindView(R.id.countdown_view)
     LinearLayout countdownView;
+    @BindView(R.id.explore_button)
+    AppCompatButton exploreButton;
     private Launch launch;
     private Realm realm;
     private CountDownTimer timer;
+    private String nodeId;
+
+    public static final String START_ACTIVITY = "/start-activity";
+    private static final String START_ACTIVITY_CAPABILITY = "start_activity";
+    private static final String PLAY_STORE_APP_URI = "market://details?id=me.calebjones.spacelaunchnow";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +103,27 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
 
         // Enables Always-on
         setAmbientEnabled();
+
+        checkCompanionInstalled();
+    }
+
+    private void checkCompanionInstalled() {
+        Task<CapabilityInfo> capabilityInfo = Wearable.getCapabilityClient(this).getCapability(START_ACTIVITY_CAPABILITY, CapabilityClient.FILTER_REACHABLE);
+        capabilityInfo.addOnCompleteListener(new OnCompleteListener<CapabilityInfo>() {
+            @Override
+            public void onComplete(@NonNull Task<CapabilityInfo> task) {
+                if (task.isSuccessful()) {
+                    nodeId = pickBestNodeId(task.getResult().getNodes());
+                    if (nodeId != null) {
+                        exploreButton.setText("EXPLORE");
+                    } else {
+                        exploreButton.setText("GET PHONE APP");
+                    }
+                } else {
+                    if (task.getException() != null) Timber.e(task.getException());
+                }
+            }
+        });
     }
 
     @Override
@@ -178,7 +237,7 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
     }
 
     private String getStatus(Integer status) {
-        switch (status){
+        switch (status) {
             case 0:
                 break;
             case 1:
@@ -192,4 +251,107 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
         }
         return "Unknown Launch Status";
     }
+
+    @OnClick(R.id.explore_button)
+    public void onViewClicked() {
+        sendMessage(launch.getId());
+    }
+
+    private String pickBestNodeId(Set<Node> nodes) {
+        String bestNodeId = null;
+        // Find a nearby node or pick one arbitrarily
+        for (Node node : nodes) {
+            if (node.isNearby()) {
+                return node.getId();
+            }
+            bestNodeId = node.getId();
+        }
+        return bestNodeId;
+    }
+
+    private void sendMessage(final int launchID) {
+        if (nodeId != null) {
+            ByteBuffer b = ByteBuffer.allocate(4);
+            b.putInt(launchID);
+
+            byte[] result = b.array();
+            Task<Integer> sendTask = Wearable.getMessageClient(getApplicationContext()).sendMessage(
+                    nodeId, START_ACTIVITY, result);
+
+            sendTask.addOnSuccessListener(new OnSuccessListener<Integer>() {
+                @Override
+                public void onSuccess(Integer integer) {
+                    Timber.v("Successfully sent!");
+                }
+            });
+            sendTask.addOnCompleteListener(new OnCompleteListener<Integer>() {
+                @Override
+                public void onComplete(@NonNull Task<Integer> task) {
+                    Timber.v("Successfully Completed!");
+                }
+            });
+            sendTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(LaunchDetail.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    Timber.e(e);
+                }
+            });
+        } else {
+            openAppInStoreOnPhone();
+        }
+    }
+
+    private void openAppInStoreOnPhone() {
+        Timber.d("openAppInStoreOnPhone()");
+
+        int playStoreAvailabilityOnPhone =
+                PlayStoreAvailability.getPlayStoreAvailabilityOnPhone(getApplicationContext());
+
+        switch (playStoreAvailabilityOnPhone) {
+
+            // Android phone with the Play Store.
+            case PlayStoreAvailability.PLAY_STORE_ON_PHONE_AVAILABLE:
+                Timber.d("\tPLAY_STORE_ON_PHONE_AVAILABLE");
+
+                // Create Remote Intent to open Play Store listing of app on remote device.
+                Intent intentAndroid = new Intent(Intent.ACTION_VIEW).addCategory(Intent.CATEGORY_BROWSABLE).setData(Uri.parse(PLAY_STORE_APP_URI));
+
+                RemoteIntent.startRemoteActivity(
+                        getApplicationContext(),
+                        intentAndroid,
+                        mResultReceiver
+                );
+                break;
+
+            // Assume iPhone (iOS device) or Android without Play Store (not supported right now).
+            case PlayStoreAvailability.PLAY_STORE_ON_PHONE_UNAVAILABLE:
+                Timber.d("\tPLAY_STORE_ON_PHONE_UNAVAILABLE");
+                break;
+
+            case PlayStoreAvailability.PLAY_STORE_ON_PHONE_ERROR_UNKNOWN:
+                Timber.d("\tPLAY_STORE_ON_PHONE_ERROR_UNKNOWN");
+                break;
+        }
+    }
+
+    // Result from sending RemoteIntent to phone to open app in play/app store.
+    private final ResultReceiver mResultReceiver = new ResultReceiver(new Handler()) {
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+
+            if (resultCode == RemoteIntent.RESULT_OK) {
+                new ConfirmationOverlay().showOn(LaunchDetail.this);
+
+            } else if (resultCode == RemoteIntent.RESULT_FAILED) {
+                new ConfirmationOverlay()
+                        .setType(ConfirmationOverlay.FAILURE_ANIMATION)
+                        .showOn(LaunchDetail.this);
+
+            } else {
+                throw new IllegalStateException("Unexpected result " + resultCode);
+            }
+        }
+    };
+
 }

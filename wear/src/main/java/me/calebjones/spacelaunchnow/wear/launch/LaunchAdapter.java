@@ -19,7 +19,7 @@ import me.calebjones.spacelaunchnow.wear.content.ContentManager;
 import me.calebjones.spacelaunchnow.wear.utils.Utils;
 import timber.log.Timber;
 
-public class LaunchAdapter extends RecyclerView.Adapter<LaunchViewHolder> implements ContentManager.ContentCallback {
+public class LaunchAdapter extends RecyclerView.Adapter<LaunchViewHolder>{
 
     private int category;
     private RealmResults<Launch> launchList;
@@ -28,15 +28,15 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchViewHolder> implem
     private Context context;
 
 
-    public LaunchAdapter(Context context, int category) {
+    public LaunchAdapter(Context context, int category, ContentManager contentManager) {
         this.context = context;
         this.category = category;
-        contentManager = new ContentManager(context, this, category);
+        this.contentManager = contentManager;
         sdf = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy");
         loadData();
     }
 
-    private void loadData() {
+    public void loadData() {
         launchList = contentManager.getLaunchList(this.category);
         notifyDataSetChanged();
     }
@@ -121,10 +121,5 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchViewHolder> implem
 
     public void cleanup() {
         contentManager.cleanup();
-    }
-
-    @Override
-    public void dataLoaded() {
-        loadData();
     }
 }
