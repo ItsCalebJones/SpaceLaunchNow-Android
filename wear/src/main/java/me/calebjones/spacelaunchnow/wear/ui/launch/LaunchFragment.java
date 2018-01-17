@@ -1,10 +1,12 @@
-package me.calebjones.spacelaunchnow.wear.launch;
+package me.calebjones.spacelaunchnow.wear.ui.launch;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.wear.widget.WearableRecyclerView;
+import android.support.wearable.view.CircularButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.wear.R;
 import me.calebjones.spacelaunchnow.wear.common.DividerItemDecoration;
 import me.calebjones.spacelaunchnow.wear.content.ContentManager;
+import timber.log.Timber;
 
 import static me.calebjones.spacelaunchnow.wear.model.Constants.BUTTON_ADD_WIFI;
 import static me.calebjones.spacelaunchnow.wear.model.Constants.BUTTON_REQUEST_HIGHBANDWIDTH;
@@ -32,7 +35,7 @@ import static me.calebjones.spacelaunchnow.wear.model.Constants.UI_STATE_NETWORK
 import static me.calebjones.spacelaunchnow.wear.model.Constants.UI_STATE_REQUESTING_NETWORK;
 import static me.calebjones.spacelaunchnow.wear.model.Constants.UI_STATE_REQUEST_NETWORK;
 
-public class LaunchFragment extends Fragment implements ContentManager.ContentCallback {
+public class LaunchFragment extends Fragment implements ContentManager.ContentCallback, SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -47,11 +50,13 @@ public class LaunchFragment extends Fragment implements ContentManager.ContentCa
     @BindView(R.id.button_label)
     TextView buttonLabel;
     @BindView(R.id.button_icon)
-    ImageView buttonRequestNetwork;
+    CircularButton buttonRequestNetwork;
     @BindView(R.id.button_icon_no)
-    ImageView buttonCancel;
+    CircularButton buttonCancel;
     @BindView(R.id.button)
     LinearLayout buttonContainer;
+    @BindView(R.id.swipe_refresh)
+    SwipeRefreshLayout swipeRefresh;
 
     private LaunchAdapter launchAdapter;
     private ContentManager contentManager;
@@ -71,6 +76,7 @@ public class LaunchFragment extends Fragment implements ContentManager.ContentCa
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_launch, container, false);
         ButterKnife.bind(this, rootView);
+        swipeRefresh.setOnRefreshListener(this);
         contentManager = new ContentManager(getContext(), this);
         contentManager.init();
         launchAdapter = new LaunchAdapter(getContext(), getArguments() != null ? getArguments().getInt("category") : 0, contentManager);
@@ -88,7 +94,15 @@ public class LaunchFragment extends Fragment implements ContentManager.ContentCa
 
     @Override
     public void dataLoaded() {
+        swipeRefresh.setRefreshing(false);
         launchAdapter.loadData();
+    }
+
+    @Override
+    public void errorLoading(String error) {
+        Timber.e(error);
+        swipeRefresh.setRefreshing(false);
+        Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -140,14 +154,6 @@ public class LaunchFragment extends Fragment implements ContentManager.ContentCa
 
                 mProgressBar.setVisibility(View.GONE);
                 showConnectivityWiFiRequest();
-//                mInfoText.setVisibility(View.VISIBLE);
-//                mButton.setVisibility(View.VISIBLE);
-//
-//                mButton.setTag(TAG_ADD_WIFI);
-//                mButtonIcon.setImageResource(R.drawable.ic_wifi_network);
-//                mButtonText.setText(R.string.button_add_wifi);
-//                mInfoText.setText(R.string.info_add_wifi);
-
                 break;
         }
     }
@@ -193,7 +199,7 @@ public class LaunchFragment extends Fragment implements ContentManager.ContentCa
         }, 3000);
     }
 
-    private void showConnectivityWiFiRequest(){
+    private void showConnectivityWiFiRequest() {
         buttonState = BUTTON_ADD_WIFI;
         recyclerView.setVisibility(View.GONE);
         buttonContainer.setVisibility(View.VISIBLE);
@@ -201,13 +207,13 @@ public class LaunchFragment extends Fragment implements ContentManager.ContentCa
         buttonLabel.setText(R.string.button_add_wifi);
     }
 
-    private void showConnectivityRequest(){
+    private void showConnectivityRequest() {
         buttonState = BUTTON_REQUEST_HIGHBANDWIDTH;
         recyclerView.setVisibility(View.GONE);
         buttonContainer.setVisibility(View.VISIBLE);
     }
 
-    private void hideConnectivityRequest(){
+    private void hideConnectivityRequest() {
 
         recyclerView.setVisibility(View.VISIBLE);
         buttonContainer.setVisibility(View.GONE);
@@ -227,5 +233,10 @@ public class LaunchFragment extends Fragment implements ContentManager.ContentCa
                 hideConnectivityRequest();
                 break;
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        contentManager.getFreshData(launchAdapter.getCategory());
     }
 }

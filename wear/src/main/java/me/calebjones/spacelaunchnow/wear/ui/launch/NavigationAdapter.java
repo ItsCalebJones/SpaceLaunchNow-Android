@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.wear.launch;
+package me.calebjones.spacelaunchnow.wear.ui.launch;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -55,7 +55,7 @@ public class NavigationAdapter extends WearableNavigationDrawerView.WearableNavi
         return launchCategoryList.size();
     }
 
-    public int getSelectedPlanet(){
+    public int getSelectedCategory(){
         return mSelectedCategory;
     }
 

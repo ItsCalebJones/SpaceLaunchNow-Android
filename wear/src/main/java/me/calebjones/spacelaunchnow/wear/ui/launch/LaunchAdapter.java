@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.wear.launch;
+package me.calebjones.spacelaunchnow.wear.ui.launch;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +13,7 @@ import java.util.TimeZone;
 
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
-import me.calebjones.spacelaunchnow.wear.launchdetail.LaunchDetail;
+import me.calebjones.spacelaunchnow.wear.ui.launchdetail.LaunchDetail;
 import me.calebjones.spacelaunchnow.wear.R;
 import me.calebjones.spacelaunchnow.wear.content.ContentManager;
 import me.calebjones.spacelaunchnow.wear.utils.Utils;
@@ -110,6 +110,10 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchViewHolder>{
     public void setCategory(int category) {
         this.category = category;
         contentManager.setCategory(this.category);
+    }
+
+    public int getCategory(){
+        return category;
     }
 
     public void onClick(int position) {

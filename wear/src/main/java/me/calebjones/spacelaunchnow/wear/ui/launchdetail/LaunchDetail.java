@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.wear.launchdetail;
+package me.calebjones.spacelaunchnow.wear.ui.launchdetail;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -7,7 +7,6 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatButton;
 import android.support.wearable.activity.WearableActivity;
@@ -17,37 +16,39 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.android.gms.wearable.CapabilityClient;
 import com.google.android.gms.wearable.CapabilityInfo;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.Wearable;
-import com.google.android.gms.wearable.WearableListenerService;
 import com.google.android.wearable.intent.RemoteIntent;
 import com.google.android.wearable.playstore.PlayStoreAvailability;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.List;
+import java.util.Collections;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
+import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.networking.RetrofitBuilder;
+import me.calebjones.spacelaunchnow.data.networking.interfaces.WearService;
+import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchWearResponse;
 import me.calebjones.spacelaunchnow.wear.R;
-import me.calebjones.spacelaunchnow.wear.launch.LaunchActivity;
-import me.calebjones.spacelaunchnow.wear.main.MainActivity;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 import timber.log.Timber;
 
-public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout.OnRefreshListener, CapabilityClient.OnCapabilityChangedListener {
 
     @BindView(R.id.content_title)
     TextView launchTitle;
@@ -79,6 +80,7 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
     private Realm realm;
     private CountDownTimer timer;
     private String nodeId;
+    private Retrofit retrofit;
 
     public static final String START_ACTIVITY = "/start-activity";
     private static final String START_ACTIVITY_CAPABILITY = "start_activity";
@@ -90,6 +92,8 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
         setContentView(R.layout.activity_launch_detail);
         ButterKnife.bind(this);
         realm = Realm.getDefaultInstance();
+        retrofit = RetrofitBuilder.getWearRetrofit();
+        swipeRefresh.setOnRefreshListener(this);
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
@@ -98,13 +102,17 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
             launchID = intent.getIntExtra("launchId", 0);
         }
 
-        launch = realm.where(Launch.class).equalTo("id", launchID).findFirst();
-        setupView(launch);
+        loadData(launchID);
 
         // Enables Always-on
         setAmbientEnabled();
 
         checkCompanionInstalled();
+    }
+
+    private void loadData(int launchID) {
+        launch = realm.where(Launch.class).equalTo("id", launchID).findFirst();
+        setupView(launch);
     }
 
     private void checkCompanionInstalled() {
@@ -127,13 +135,57 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
     }
 
     @Override
-    public void onResume() {
+    protected  void onResume() {
         super.onResume();
+        Wearable.getCapabilityClient(this).addListener(this, START_ACTIVITY_CAPABILITY);
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        Wearable.getCapabilityClient(this).removeListener(this);
     }
 
     @Override
     public void onRefresh() {
+        final WearService request = retrofit.create(WearService.class);
+        Call<LaunchWearResponse> call;
+        final RealmList<Launch> items = new RealmList<>();
+        call = request.getWearLaunchByID(launch.getId());
+        Timber.v("Calling - %s", call.request().url().url().toString());
+        call.enqueue(new Callback<LaunchWearResponse>() {
 
+            @Override
+            public void onResponse(Call<LaunchWearResponse> call, Response<LaunchWearResponse> response) {
+                if (response.isSuccessful()) {
+                    Timber.v("Successful! - %s", call.request().url().url().toString());
+                    Collections.addAll(items, response.body().getLaunches());
+                    realm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            realm.copyToRealmOrUpdate(items);
+                        }
+                    });
+                    loadData(launch.getId());
+                } else {
+                    try {
+                        Toast.makeText(LaunchDetail.this, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        Toast.makeText(LaunchDetail.this, "Unknown error occurred.", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
+                    Timber.e("Error: %s", response.errorBody());
+                }
+                swipeRefresh.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(Call<LaunchWearResponse> call, Throwable t) {
+                swipeRefresh.setRefreshing(false);
+                Timber.e(t.getLocalizedMessage());
+            }
+
+        });
     }
 
     private void setupView(Launch launch) {
@@ -354,4 +406,14 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
         }
     };
 
+    @Override
+    public void onCapabilityChanged(@NonNull CapabilityInfo capabilityInfo) {
+        Timber.v("onCapabilityChanged - %s", capabilityInfo.getName());
+        nodeId = pickBestNodeId(capabilityInfo.getNodes());
+        if (nodeId != null) {
+            exploreButton.setText("EXPLORE");
+        } else {
+            exploreButton.setText("GET PHONE APP");
+        }
+    }
 }

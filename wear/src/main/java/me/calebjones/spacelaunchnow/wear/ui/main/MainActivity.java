@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.wear.main;
+package me.calebjones.spacelaunchnow.wear.ui.main;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.wear.R;
 import me.calebjones.spacelaunchnow.wear.common.BaseActivity;
-import me.calebjones.spacelaunchnow.wear.launch.LaunchActivity;
+import me.calebjones.spacelaunchnow.wear.ui.launch.LaunchActivity;
 import timber.log.Timber;
 
 public class MainActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks,

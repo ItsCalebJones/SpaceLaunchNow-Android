@@ -26,6 +26,10 @@
             android:name="com.google.android.wearable"
             android:required="true" />
 
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="true" />
+
         <service
             android:name=".watchface.SpaceLaunchWatchFace"
             android:label="${applicationLabel}"
@@ -52,7 +56,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".launch.LaunchActivity"
+            android:name=".ui.launch.LaunchActivity"
             android:label="@string/title_activity_main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -69,7 +73,7 @@
             android:value="true" />
 
         <activity
-            android:name=".launchdetail.LaunchDetail"
+            android:name=".ui.launchdetail.LaunchDetail"
             android:label="@string/title_activity_launch_detail"></activity>
     </application>
 

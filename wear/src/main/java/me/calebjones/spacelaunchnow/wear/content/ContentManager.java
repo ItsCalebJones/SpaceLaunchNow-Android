@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -88,7 +89,9 @@ public class ContentManager {
         if (activeNetwork != null) {
             int bandwidth = mConnectivityManager.getNetworkCapabilities(activeNetwork).getLinkDownstreamBandwidthKbps();
             Timber.v("Network available - Bandwidth: %s/kbps", bandwidth);
-            getFreshData();
+            if (shouldGetFresh(0)) {
+                getFreshData();
+            }
             contentCallback.networkState(UI_STATE_NETWORK_CONNECTED);
         } else {
             // request high-bandwidth network
@@ -244,12 +247,19 @@ public class ContentManager {
                     updateLastSync(0);
                     contentCallback.dataLoaded();
                 } else {
+                    try {
+                        contentCallback.errorLoading(response.errorBody().string());
+                    } catch (IOException e) {
+                        contentCallback.errorLoading("Unknown Error");
+                        e.printStackTrace();
+                    }
                     Timber.e("Error: %s", response.errorBody());
                 }
             }
 
             @Override
             public void onFailure(Call<LaunchWearResponse> call, Throwable t) {
+                contentCallback.errorLoading(t.getLocalizedMessage());
                 Timber.e(t.getLocalizedMessage());
             }
 
@@ -257,6 +267,10 @@ public class ContentManager {
     }
 
     public void getFreshData(final int category) {
+        if (category == 0 ) {
+            getFreshData();
+            return;
+        }
         final WearService request = retrofit.create(WearService.class);
         Call<LaunchWearResponse> call;
         final RealmList<Launch> items = new RealmList<>();
@@ -283,12 +297,19 @@ public class ContentManager {
                     updateLastSync(category);
                     contentCallback.dataLoaded();
                 } else {
+                    try {
+                        contentCallback.errorLoading(response.errorBody().string());
+                    } catch (IOException e) {
+                        contentCallback.errorLoading("Unknown Error");
+                        e.printStackTrace();
+                    }
                     Timber.e("Error: %s", response.errorBody());
                 }
             }
 
             @Override
             public void onFailure(Call<LaunchWearResponse> call, Throwable t) {
+                contentCallback.errorLoading(t.getLocalizedMessage());
                 Timber.e(t.getLocalizedMessage());
             }
 
@@ -307,6 +328,8 @@ public class ContentManager {
 
     public interface ContentCallback {
         void dataLoaded();
+
+        void errorLoading(String error);
 
         void networkState(int state);
     }

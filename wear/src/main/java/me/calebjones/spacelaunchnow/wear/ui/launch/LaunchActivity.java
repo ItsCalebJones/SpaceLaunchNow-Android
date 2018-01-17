@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.wear.launch;
+package me.calebjones.spacelaunchnow.wear.ui.launch;
 
 import android.app.FragmentManager;
 import android.os.Bundle;

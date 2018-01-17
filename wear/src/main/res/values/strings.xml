@@ -2,10 +2,10 @@
     <string name="app_name">Space Launch Now</string>
     <string name="notification_posted">Notification posted</string>
     <string name="title_activity_main">Space Launch Now</string>
-    <string name="title_activity_launch_detail">LaunchDetail</string>
+    <string name="title_activity_launch_detail">Launch Detail</string>
 
-    <string name="network_fast">Network Fast</string>
-    <string name="network_slow">Network Slow</string>
+    <string name="network_fast">Network Connected</string>
+    <string name="network_slow">Slow Network Connected</string>
     <string name="network_disconnected">Disconnected</string>
     <string name="network_connecting">Connecting</string>
 

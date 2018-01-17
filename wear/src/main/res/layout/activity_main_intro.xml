@@ -8,7 +8,7 @@
   android:paddingRight="@dimen/activity_main_right_padding"
   android:paddingLeft="@dimen/activity_main_left_padding"
   android:paddingBottom="@dimen/activity_main_bottom_padding"
-  tools:context=".main.MainActivity">
+  tools:context=".ui.main.MainActivity">
 
   <TextView
     android:id="@+id/information_text_view"
