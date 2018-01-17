@@ -1,12 +1,15 @@
-package me.calebjones.spacelaunchnow.wear;
+package me.calebjones.spacelaunchnow.wear.model;
 
 import android.support.v7.graphics.Target;
 
-public class WearConstants {
+public final class WearConstants {
+
     public static final Target DARK;
     public static final Target LIGHT;
     public static final Target NEUTRAL;
     public static final Target DOMINANT;
+
+    public static String LIBRARY_BASE_URL = "https://launchlibrary.net/";
 
     static {
         DOMINANT = new Target.Builder().setPopulationWeight(1f)
@@ -50,5 +53,8 @@ public class WearConstants {
                 .setLightnessWeight(0.60f)
                 .setExclusive(false)
                 .build();
+    }
+
+    private WearConstants() {
     }
 }

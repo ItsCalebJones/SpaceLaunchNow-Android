@@ -8,7 +8,9 @@
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background" />
+        android:src="@drawable/background"
+        android:scaleType="centerCrop"
+        android:cropToPadding="false" />
 
     <android.support.wear.widget.BoxInsetLayout
         android:layout_width="match_parent"

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.calebjones.spacelaunchnow.wear;
+package me.calebjones.spacelaunchnow.wear.watchface;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -76,10 +76,11 @@ import java.util.TimeZone;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import me.calebjones.spacelaunchnow.wear.R;
 import timber.log.Timber;
 
-import static me.calebjones.spacelaunchnow.wear.WearConstants.LIGHT;
-import static me.calebjones.spacelaunchnow.wear.WearConstants.NEUTRAL;
+import static me.calebjones.spacelaunchnow.wear.model.WearConstants.LIGHT;
+import static me.calebjones.spacelaunchnow.wear.model.WearConstants.NEUTRAL;
 
 /**
  * Digital watch face with seconds. In ambient mode, the seconds aren't displayed. On devices with
@@ -388,7 +389,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             if (launchName != null) {
                 launchNameText = launchName;
             } else {
-                launchNameText = "Waiting for Next Launch...";
+                launchNameText = "Waiting for Next LaunchCategory...";
             }
 
             //Parse time into day, hour, minute, and second
@@ -440,10 +441,10 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             utcTimeView.setText(utcText);
 
 
-            //Launch Name
+            //LaunchCategory Name
             if (launchName != null) {
                 launchNameView.setText(launchNameText);
-                //Launch Countdown/Status
+                //LaunchCategory Countdown/Status
                 if (launchTime == 0 && launchDate != null) {
                     String dayNumberSuffix = getDayNumberSuffix(utcDate.getDate());
                     SimpleDateFormat formatter = getSimpleDateFormatForUI("EEEE, MMMM d'" + dayNumberSuffix + "'");
@@ -454,7 +455,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             // Else align text in a manner that fits
 
 
-            //Launch Countdown/Status
+            //LaunchCategory Countdown/Status
             if (launchTime != 0) {
                 launchCountdownView.setVisibility(View.GONE);
                 countdownLayout.setVisibility(View.VISIBLE);
