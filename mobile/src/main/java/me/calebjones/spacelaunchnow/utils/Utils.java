@@ -598,7 +598,7 @@ public class Utils {
             return GlideApp.with(context)
                     .asBitmap()
                     .load(imageURL)
-                    .into(200, 200)
+                    .submit(200, 200)
                     .get();
         } catch (InterruptedException | ExecutionException e) {
             Timber.e(e);

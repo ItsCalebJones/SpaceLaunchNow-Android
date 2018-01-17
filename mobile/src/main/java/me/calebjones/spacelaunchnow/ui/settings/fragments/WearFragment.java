@@ -30,9 +30,7 @@ import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import timber.log.Timber;
 
-public class WearFragment extends BaseSettingFragment implements SharedPreferences.OnSharedPreferenceChangeListener,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+public class WearFragment extends BaseSettingFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private GoogleApiClient mGoogleApiClient;
     private SwitchPreferences switchPreferences;
@@ -45,15 +43,6 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.wear_preferences);
-
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Wearable.API)
-                .build();
-
-        mGoogleApiClient.connect();
-
         setUpPreferences();
         setName("Wear Fragment");
     }
@@ -76,10 +65,6 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
     public void onDestroy() {
         super.onDestroy();
         Timber.d("onDestroy");
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            Timber.d("Google Client Disconnect");
-            mGoogleApiClient.disconnect();
-        }
     }
 
     @Override
@@ -93,29 +78,13 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
             putDataMapReq.getDataMap().putLong("time", new Date().getTime());
 
             PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
-            Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
+            Wearable.getDataClient(getActivity()).putDataItem(putDataReq);
             Analytics.from(this).sendPreferenceEvent(key, hourMode);
         } else {
             Analytics.from(this).sendPreferenceEvent(key);
         }
 
         UpdateWearJob.scheduleJobNow();
-    }
-
-    //Google API client methods
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
     }
 
     //Class Methods

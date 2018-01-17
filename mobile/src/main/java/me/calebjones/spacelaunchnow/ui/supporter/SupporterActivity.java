@@ -331,6 +331,12 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("weather", true);
         editor.apply();
+        Timber.i("Purchase Data: %s", details.purchaseInfo.purchaseData.packageName);
+        Timber.i("Purchase Data: %s", details.purchaseInfo.purchaseData.developerPayload);
+        Timber.i("Purchase Data: %s", details.purchaseInfo.purchaseData.orderId);
+        Timber.i("Purchase Data: %s", details.purchaseInfo.purchaseData.purchaseTime);
+        Timber.i("Purchase Data: %s", details.purchaseInfo.purchaseData.purchaseToken);
+        Timber.i("Purchase Data: %s", details.purchaseInfo.purchaseData.purchaseState.name());
         Analytics.from(this).sendPurchaseEvent(product, productId);
     }
 

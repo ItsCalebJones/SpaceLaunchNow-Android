@@ -3,6 +3,7 @@ package me.calebjones.spacelaunchnow.content.wear;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 
 import com.bumptech.glide.Glide;
@@ -122,7 +123,9 @@ public class WearWatchfaceManager extends BaseManager {
 
             if (modify) {
                 try {
-                    MultiTransformation multi = new MultiTransformation(new SaturationTransformation(context, satFloat),
+                    if (radius == 25) radius = 24;
+                    MultiTransformation multi = new MultiTransformation(
+                            new SaturationTransformation(context, satFloat),
                             new BlurTransformation(radius, blur),
                             new BrightnessFilterTransformation(dimFloat));
                     Bitmap resource = GlideApp.with(context)
@@ -131,8 +134,9 @@ public class WearWatchfaceManager extends BaseManager {
                             .skipMemoryCache(true)
                             .diskCacheStrategy(DiskCacheStrategy.DATA)
                             .apply(RequestOptions.bitmapTransform(multi))
-                            .into(300, 300)
+                            .submit(300, 300)
                             .get();
+
 
                     Asset asset = createAssetFromBitmap(resource);
                     putImageReq.getDataMap().putString(NAME_KEY, launch.getName());
@@ -143,7 +147,7 @@ public class WearWatchfaceManager extends BaseManager {
                     putImageReq.getDataMap().putBoolean(DYNAMIC_KEY, dynamicText);
                     PutDataRequest putDataReq = putImageReq.asPutDataRequest();
                     putImageReq.getDataMap().putLong("time", new Date().getTime());
-                    Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
+                    Wearable.getDataClient(context).putDataItem(putDataReq);
                     Timber.v("Data sent to wearable.");
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
@@ -154,9 +158,10 @@ public class WearWatchfaceManager extends BaseManager {
                     Bitmap resource = Glide.with(context)
                             .asBitmap()
                             .load(image)
-                            .apply(RequestOptions.bitmapTransform(new BrightnessFilterTransformation(-.1f)))
-                            .into(300, 300)
+                            .submit(300, 300)
                             .get();
+
+
                     Asset asset = createAssetFromBitmap(resource);
                     putImageReq.getDataMap().putString(NAME_KEY, launch.getName());
                     putImageReq.getDataMap().putInt(TIME_KEY, launch.getNetstamp());
@@ -166,7 +171,7 @@ public class WearWatchfaceManager extends BaseManager {
                     putImageReq.getDataMap().putBoolean(DYNAMIC_KEY, dynamicText);
                     PutDataRequest putDataReq = putImageReq.asPutDataRequest();
                     putImageReq.getDataMap().putLong("time", new Date().getTime());
-                    Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
+                    Wearable.getDataClient(context).putDataItem(putDataReq);
                     Timber.v("Data sent to wearable.");
 
                 } catch (InterruptedException | ExecutionException e) {

@@ -24,7 +24,6 @@ advancedVersioning {
 android {
     compileSdkVersion 27
     buildToolsVersion '26.0.2'
-
     def appVersionCode = app.versionMajor * 10000 + app.versionMinor * 1000 + app.versionPatch * 100 + advancedVersioning.versionCode
 
     defaultConfig {
@@ -45,6 +44,7 @@ android {
             applicationIdSuffix '.debug'
             versionNameSuffix "-debug-b${appVersionCode}"
             manifestPlaceholders = [applicationLabel: "SLN - Debug"]
+
         }
     }
 
