@@ -89,6 +89,7 @@ android {
         versionName advancedVersioning.versionName
         resConfigs "en"
         multiDexEnabled true
+        wearAppUnbundled true
 
     }
     buildTypes {
@@ -101,7 +102,6 @@ android {
             renderscriptOptimLevel 3
             versionNameSuffix "-debug-b${appVersionCode}"
             minifyEnabled true
-            useProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
 
         }

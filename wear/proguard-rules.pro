@@ -26,12 +26,14 @@
     public static final *** NULL;
 }
 
+-dontwarn okio.**
 -keep class com.squareup.okhttp.** { *; }
 -keep interface com.squareup.okhttp.** { *; }
 -keep class retrofit.** { *; }
 -keepclasseswithmembers class * {
     @retrofit.http.* *;
 }
+-dontwarn retrofit2.Platform$Java8
 
 -dontwarn com.evernote.android.job.gcm.**
 -dontwarn com.evernote.android.job.GcmAvailableHelper
