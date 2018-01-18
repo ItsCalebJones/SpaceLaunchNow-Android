@@ -1,7 +1,19 @@
 import org.moallemi.gradle.internal.VersionCodeType
 
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.2'
+    }
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'org.moallemi.advanced-build-version'
+apply plugin: 'com.getkeepsafe.dexcount'
 
 advancedVersioning {
     nameOptions {
@@ -16,7 +28,7 @@ advancedVersioning {
 
     }
     outputOptions {
-        renameOutput false
+        renameOutput true
         nameFormat '${projectName}-${appName}-${buildType}-${versionName}'
     }
 }
@@ -60,6 +72,14 @@ android {
     }
     buildTypes {
         release {
+//            splits {
+//                abi {
+//                    enable true
+//                    reset()
+//                    include 'x86_64', 'x86', 'armeabi-v7a', 'arm64-v8a', 'mips'
+//                    universalApk true
+//                }
+//            }
             signingConfig signingConfigs.releaseConfig
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
