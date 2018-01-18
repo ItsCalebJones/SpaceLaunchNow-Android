@@ -12,11 +12,6 @@
             android:summaryOn="Use 24 Hour mode for keeping time."
             android:title="Watch Hour Mode" />
 
-        <SwitchPreference
-            android:key="wear_text_dynamic"
-            android:defaultValue="false"
-            android:summary="Generate text color based on background."
-            android:title="Dynamic Text" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Background">

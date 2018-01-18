@@ -45,6 +45,7 @@ import me.calebjones.spacelaunchnow.content.jobs.DataJobCreator;
 import me.calebjones.spacelaunchnow.content.jobs.SyncJob;
 import me.calebjones.spacelaunchnow.content.jobs.SyncWearJob;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateJob;
+import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.UpdateRecord;
@@ -223,6 +224,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
         }
         SyncJob.schedulePeriodicJob(this);
         SyncWearJob.scheduleJob();
+        UpdateWearJob.scheduleJobNow();
 
         MobileAds.initialize(this, "ca-app-pub-9824528399164059~9700152528");
 

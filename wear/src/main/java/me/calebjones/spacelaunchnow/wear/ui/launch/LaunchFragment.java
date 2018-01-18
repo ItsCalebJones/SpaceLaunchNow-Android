@@ -83,6 +83,7 @@ public class LaunchFragment extends Fragment implements ContentManager.ContentCa
         recyclerView.setAdapter(launchAdapter);
         WearableRecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
         recyclerView.addItemDecoration(itemDecoration);
+        recyclerView.setElevation(0);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return rootView;
@@ -102,6 +103,7 @@ public class LaunchFragment extends Fragment implements ContentManager.ContentCa
     public void errorLoading(String error) {
         Timber.e(error);
         swipeRefresh.setRefreshing(false);
+        launchAdapter.loadData();
         Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
     }
 
@@ -196,7 +198,7 @@ public class LaunchFragment extends Fragment implements ContentManager.ContentCa
             public void run() {
                 mConnectivityIndicator.setVisibility(View.VISIBLE);
             }
-        }, 3000);
+        }, 0);
     }
 
     private void showConnectivityWiFiRequest() {
@@ -217,6 +219,7 @@ public class LaunchFragment extends Fragment implements ContentManager.ContentCa
 
         recyclerView.setVisibility(View.VISIBLE);
         buttonContainer.setVisibility(View.GONE);
+        hideConnectivityStatus();
     }
 
     @OnClick({R.id.button_icon, R.id.button_icon_no})

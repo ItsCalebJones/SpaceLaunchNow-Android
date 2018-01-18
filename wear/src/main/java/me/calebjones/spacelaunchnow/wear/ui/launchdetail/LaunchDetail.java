@@ -128,6 +128,7 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
                         exploreButton.setText("GET PHONE APP");
                     }
                 } else {
+                    exploreButton.setVisibility(View.GONE);
                     if (task.getException() != null) Timber.e(task.getException());
                 }
             }
@@ -163,6 +164,9 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
                     realm.executeTransaction(new Realm.Transaction() {
                         @Override
                         public void execute(Realm realm) {
+                            for (Launch item: items){
+                                item.getLocation().setPrimaryID();
+                            }
                             realm.copyToRealmOrUpdate(items);
                         }
                     });
@@ -393,7 +397,7 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
         protected void onReceiveResult(int resultCode, Bundle resultData) {
 
             if (resultCode == RemoteIntent.RESULT_OK) {
-                new ConfirmationOverlay().showOn(LaunchDetail.this);
+                new ConfirmationOverlay().setType(ConfirmationOverlay.OPEN_ON_PHONE_ANIMATION).showOn(LaunchDetail.this);
 
             } else if (resultCode == RemoteIntent.RESULT_FAILED) {
                 new ConfirmationOverlay()

@@ -235,6 +235,9 @@ public class ContentManager {
                             realm.executeTransaction(new Realm.Transaction() {
                                 @Override
                                 public void execute(Realm realm) {
+                                    for (Launch item: items){
+                                        item.getLocation().setPrimaryID();
+                                    }
                                     realm.copyToRealmOrUpdate(items);
                                 }
                             });
@@ -287,6 +290,9 @@ public class ContentManager {
                     realm.executeTransaction(new Realm.Transaction() {
                         @Override
                         public void execute(Realm realm) {
+                            for (Launch item: items){
+                                item.getLocation().setPrimaryID();
+                            }
                             realm.copyToRealmOrUpdate(items);
                         }
                     });
@@ -340,7 +346,6 @@ public class ContentManager {
         long lastSync = sharedPreferences.getLong(LaunchCategories.findByKey(category), 0);
         long timeSinceSync = System.currentTimeMillis() - lastSync;
         Timber.v("Time since last update %d", timeSinceSync);
-        Map<String, ?> test = sharedPreferences.getAll();
         if (timeSinceSync > 36000000) {
             return true;
         } else {
