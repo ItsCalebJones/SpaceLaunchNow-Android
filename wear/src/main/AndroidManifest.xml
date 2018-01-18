@@ -64,6 +64,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="dc9cc4c8ab9f9d19cc6ba7cf0cdef85dab29d1ec"
+            />
         <!--
                Set to true if your app is Standalone, that is, it does not require the handheld
                app to run.

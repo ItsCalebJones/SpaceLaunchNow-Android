@@ -2,8 +2,10 @@ package me.calebjones.spacelaunchnow.wear;
 
 import android.app.Application;
 
+import com.crashlytics.android.Crashlytics;
 import com.evernote.android.job.JobManager;
 
+import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
@@ -29,5 +31,6 @@ public class WearApplication extends Application {
                                               .deleteRealmIfMigrationNeeded()
                                               .build());
         JobManager.create(this).addJobCreator(new WearJobCreator());
+        Fabric.with(this, new Crashlytics());
     }
 }

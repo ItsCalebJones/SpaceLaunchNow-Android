@@ -10,16 +10,8 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.content.ContextCompat;
-
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
@@ -29,7 +21,6 @@ import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import io.realm.RealmList;
-import io.realm.RealmObject;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.data.networking.RetrofitBuilder;
@@ -237,14 +228,19 @@ public class ContentManager {
             public void onResponse(Call<LaunchWearResponse> call, Response<LaunchWearResponse> response) {
                 if (response.isSuccessful()) {
                     Timber.v("Successful - %s", call.request().url().url().toString());
-                    Collections.addAll(items, response.body().getLaunches());
-                    realm.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            realm.copyToRealmOrUpdate(items);
+                    if (response.body() != null) {
+                        Launch[] launch = response.body().getLaunches();
+                        if (launch != null && launch.length > 0) {
+                            Collections.addAll(items, launch);
+                            realm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    realm.copyToRealmOrUpdate(items);
+                                }
+                            });
+                            updateLastSync(0);
                         }
-                    });
-                    updateLastSync(0);
+                    }
                     contentCallback.dataLoaded();
                 } else {
                     try {
