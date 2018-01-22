@@ -33,6 +33,7 @@ import me.calebjones.spacelaunchnow.content.services.BaseManager;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.RocketDetail;
+import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.transformations.SaturationTransformation;
 import timber.log.Timber;
@@ -156,6 +157,7 @@ public class WearWatchfaceManager extends BaseManager {
                 putImageReq.getDataMap().putLong(DATE_KEY, launch.getNet().getTime());
                 putImageReq.getDataMap().putLong("time", new Date().getTime());
                 putImageReq.getDataMap().putAsset(BACKGROUND_KEY, asset);
+                putImageReq.getDataMap().putBoolean(SUPPORTER_KEY, SupporterHelper.isSupporter());
                 PutDataRequest putDataReq = putImageReq.asPutDataRequest();
                 putImageReq.getDataMap().putLong("time", new Date().getTime());
                 Wearable.getDataClient(context).putDataItem(putDataReq);
@@ -179,6 +181,7 @@ public class WearWatchfaceManager extends BaseManager {
                 putImageReq.getDataMap().putLong(DATE_KEY, launch.getNet().getTime());
                 putImageReq.getDataMap().putLong("time", new Date().getTime());
                 putImageReq.getDataMap().putAsset(BACKGROUND_KEY, asset);
+                putImageReq.getDataMap().putBoolean(SUPPORTER_KEY, SupporterHelper.isSupporter());
                 PutDataRequest putDataReq = putImageReq.asPutDataRequest();
                 putImageReq.getDataMap().putLong("time", new Date().getTime());
                 Wearable.getDataClient(context).putDataItem(putDataReq);

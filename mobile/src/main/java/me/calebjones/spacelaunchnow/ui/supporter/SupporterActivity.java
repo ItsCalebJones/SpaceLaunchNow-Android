@@ -39,6 +39,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
+import me.calebjones.spacelaunchnow.content.jobs.SyncWearJob;
+import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
+import me.calebjones.spacelaunchnow.content.wear.WearWatchfaceManager;
 import me.calebjones.spacelaunchnow.data.models.Products;
 import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
@@ -327,6 +330,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         getRealm().beginTransaction();
         getRealm().copyToRealmOrUpdate(product);
         getRealm().commitTransaction();
+        UpdateWearJob.scheduleJobNow();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("weather", true);
@@ -387,7 +391,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         } else {
             SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, "Google Play billing services not available.");
         }
-
+        UpdateWearJob.scheduleJobNow();
     }
 
     @Override

@@ -20,7 +20,9 @@ import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.content.data.DataRepositoryManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.JobUtils;
+import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
+import me.calebjones.spacelaunchnow.content.wear.WearWatchfaceManager;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.data.models.Products;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
@@ -67,10 +69,15 @@ public class DebugPresenter implements DebugContract.Presenter {
                     realm.copyToRealmOrUpdate(SupporterHelper.getProduct(SupporterHelper.SKU_TWO_DOLLAR));
                 }
             });
+            realm.beginTransaction();
+            realm.copyToRealmOrUpdate(SupporterHelper.getProduct(SupporterHelper.SKU_TWO_DOLLAR));
+            realm.commitTransaction();
+            realm.close();
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean("weather", true);
             editor.apply();
+            UpdateWearJob.scheduleJobNow();
         } else {
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
@@ -78,12 +85,12 @@ public class DebugPresenter implements DebugContract.Presenter {
                     realm.delete(Products.class);
                 }
             });
+            realm.close();
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean("weather", false);
             editor.apply();
         }
-        realm.close();
     }
 
     @Override

@@ -166,6 +166,7 @@
                     android:path="/verify_remote_launch_spacelaunchnow_wear_app"/>
                 <action android:name="com.google.android.gms.wearable.CHANNEL_EVENT" />
                 <data android:scheme="wear" android:host="*" android:path="/start-activity" />
+                <data android:scheme="wear" android:host="*" android:path="/start-activity-supporter" />
             </intent-filter>
         </service>
 

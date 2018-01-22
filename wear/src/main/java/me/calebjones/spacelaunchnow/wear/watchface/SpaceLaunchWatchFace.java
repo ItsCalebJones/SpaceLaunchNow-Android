@@ -89,9 +89,8 @@ import static me.calebjones.spacelaunchnow.wear.model.WearConstants.NEUTRAL;
  * low-bit ambient mode, the text is drawn without anti-aliasing in ambient mode.
  */
 public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
-    private static final Typeface NORMAL_TYPEFACE =
-            Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
-    private static final TimeZone timeZone = TimeZone.getTimeZone("EDT");
+    private static final Typeface NORMAL_TYPEFACE = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
+    private static final TimeZone timeZone = TimeZone.getDefault();
     private static final String NAME_KEY = "me.calebjones.spacelaunchnow.wear.nextname";
     private static final String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
     private static final String DATE_KEY = "me.calebjones.spacelaunchnow.wear.nextdate";
@@ -614,34 +613,6 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             countdownSecondaryLabel.setShadowLayer(1,0,0,shadowColor);
         }
 
-        private void applySwatch(Palette.Swatch swatch) {
-            int shadowColor = ContextCompat.getColor(getApplicationContext(), R.color.text_shadow);
-            shadowColor = swatch.getRgb();
-            primaryTextColor = ColorUtils.setAlphaComponent(swatch.getTitleTextColor(), 255);
-            secondaryTextColor = ColorUtils.setAlphaComponent(swatch.getBodyTextColor(), 200);
-            timeView.setTextColor(primaryTextColor);
-            utcTimeView.setTextColor(secondaryTextColor);
-            dateView.setTextColor(secondaryTextColor);
-
-            launchNameView.setTextColor(primaryTextColor);
-            launchCountdownView.setTextColor(secondaryTextColor);
-            countdownPrimary.setTextColor(primaryTextColor);
-            countdownSecondary.setTextColor(primaryTextColor);
-            countdownPrimaryLabel.setTextColor(secondaryTextColor);
-            countdownSecondaryLabel.setTextColor(secondaryTextColor);
-
-            timeView.setShadowLayer(1,0,0, shadowColor);
-            utcTimeView.setShadowLayer(1,0,0, shadowColor);
-            dateView.setShadowLayer(1,0,0, shadowColor);
-            launchNameView.setShadowLayer(1,0,0, shadowColor);
-            launchCountdownView.setShadowLayer(1,0,0, shadowColor);
-            countdownPrimary.setShadowLayer(1,0,0, shadowColor);
-            countdownSecondary.setShadowLayer(1,0,0, shadowColor);
-            countdownPrimaryLabel.setShadowLayer(1,0,0, shadowColor);
-            countdownSecondaryLabel.setShadowLayer(1,0,0, shadowColor);
-            timeView.setElevation(8);
-
-        }
 
         public Bitmap loadBitmapFromAsset(Asset asset) {
             if (asset == null) {

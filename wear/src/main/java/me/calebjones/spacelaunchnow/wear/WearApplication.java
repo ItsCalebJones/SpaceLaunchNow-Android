@@ -1,9 +1,11 @@
 package me.calebjones.spacelaunchnow.wear;
 
 import android.app.Application;
+import android.content.ContextWrapper;
 
 import com.crashlytics.android.Crashlytics;
 import com.evernote.android.job.JobManager;
+import com.pixplicity.easyprefs.library.Prefs;
 
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
@@ -22,6 +24,7 @@ public class WearApplication extends Application {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
+        Fabric.with(this, new Crashlytics());
         Realm.init(this);
 
         // Get a Realm instance for this thread
@@ -31,6 +34,12 @@ public class WearApplication extends Application {
                                               .deleteRealmIfMigrationNeeded()
                                               .build());
         JobManager.create(this).addJobCreator(new WearJobCreator());
-        Fabric.with(this, new Crashlytics());
+
+        new Prefs.Builder()
+                .setContext(this)
+                .setMode(ContextWrapper.MODE_PRIVATE)
+                .setPrefsName(getPackageName())
+                .setUseDefaultSharedPreference(true)
+                .build();
     }
 }

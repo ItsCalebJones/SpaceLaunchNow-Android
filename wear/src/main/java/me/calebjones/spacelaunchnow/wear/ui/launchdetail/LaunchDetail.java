@@ -37,6 +37,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.data.networking.RetrofitBuilder;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.WearService;
@@ -111,8 +113,14 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
     }
 
     private void loadData(int launchID) {
-        launch = realm.where(Launch.class).equalTo("id", launchID).findFirst();
-        setupView(launch);
+        RealmResults<Launch> launches = realm.where(Launch.class).equalTo("id", launchID).findAll();
+        if (launches.size() > 0){
+            setupView(launches.first());
+        } else {
+            Intent cancelIntent = new Intent();
+            setResult(RESULT_CANCELED, cancelIntent);
+            finish();
+        }
     }
 
     private void checkCompanionInstalled() {
