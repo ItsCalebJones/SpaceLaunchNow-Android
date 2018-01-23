@@ -41,7 +41,7 @@ public class NextLaunchComplicationProvider extends ComplicationProviderService 
         Intent intent = new Intent(context, NextLaunchComplicationConfigActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(EXTRA_CONFIG_PROVIDER_COMPONENT, provider);
-        intent.putExtra(EXTRA_COMPLICATION_ID, complicationId);
+        intent.putExtra("android.support.wearable.complications.EXTRA_CONFIG_COMPLICATION_ID", complicationId);
 
         return PendingIntent.getActivity(context, complicationId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
@@ -63,9 +63,6 @@ public class NextLaunchComplicationProvider extends ComplicationProviderService 
     @Override
     public void onComplicationDeactivated (int complicationId){
         Timber.v("onComplicationActivated(): %s", complicationId);
-        SwitchPreference mSwitchPreference = SwitchPreference.getInstance(this, complicationId);
-        mSwitchPreference.resetSwitches();
-        mSwitchPreference.setConfigured(false);
     }
 
 
