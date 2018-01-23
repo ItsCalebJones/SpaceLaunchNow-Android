@@ -44,9 +44,9 @@
             android:theme="@style/BaseAppTheme" />
         <activity
             android:name=".ui.main.MainActivity"
-            android:configChanges="screenSize"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/BaseAppTheme.Launcher"
-            android:windowSoftInputMode="adjustResize">
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

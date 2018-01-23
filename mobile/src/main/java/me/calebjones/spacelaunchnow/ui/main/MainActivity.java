@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,7 +26,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.ads.AdListener;
@@ -122,6 +122,7 @@ public class MainActivity extends BaseActivity {
         super("Main Activity");
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Timber.d("onCreate");
@@ -142,6 +143,8 @@ public class MainActivity extends BaseActivity {
                     AppearanceFragment.class.getName());
             startActivity(sendIntent);
         }
+
+        Timber.d("Creating Preference instances.");
         listPreferences = ListPreferences.getInstance(this.context);
         switchPreferences = SwitchPreferences.getInstance(this.context);
 
@@ -150,16 +153,19 @@ public class MainActivity extends BaseActivity {
         this.context = getApplicationContext();
         customTabActivityHelper = new CustomTabActivityHelper();
 
-
+        Timber.d("Checking if night mode active.");
         if (listPreferences.isNightModeActive(this)) {
+            Timber.d("Night mode is active.");
             switchPreferences.setNightModeStatus(true);
             statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
         } else {
+            Timber.d("Night mode is not active.");
             switchPreferences.setNightModeStatus(false);
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
         }
         m_theme = R.style.LightTheme_NoActionBar;
 
+        Timber.d("Checking if theme changed.");
         if (getSharedPreferences("theme_changed", 0).getBoolean("recreate", false)) {
             SharedPreferences.Editor editor = getSharedPreferences("theme_changed", 0).edit();
             editor.putBoolean("recreate", false);
@@ -167,31 +173,40 @@ public class MainActivity extends BaseActivity {
             recreate();
         }
 
+        Timber.d("Setting theme.");
         setTheme(m_theme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Timber.d("Binding views.");
         ButterKnife.bind(this);
 
+        Timber.d("Check if supporter.");
         if (!SupporterHelper.isSupporter()) {
+            Timber.d("Loading ads.");
             adView.loadAd(new AdRequest.Builder().build());
             adView.setAdListener(new AdListener() {
                 @Override
                 public void onAdFailedToLoad(int i) {
+                    Timber.d("Failed to load ads.");
                     adviewEnabled = false;
                     super.onAdFailedToLoad(i);
                 }
 
                 @Override
                 public void onAdLoaded() {
+                    Timber.d("Ad loaded successfully.");
                     adviewEnabled = true;
                     showAd();
                     super.onAdLoaded();
                 }
             });
         } else {
+            Timber.d("Hiding ads.");
             adviewEnabled = false;
             hideAd();
         }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setupWindowAnimations();
         }
@@ -206,6 +221,7 @@ public class MainActivity extends BaseActivity {
             mNavItemId = savedInstanceState.getInt(NAV_ITEM_ID);
         }
 
+        Timber.d("Building account header.");
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withCompactStyle(false)
@@ -213,6 +229,7 @@ public class MainActivity extends BaseActivity {
                 .withSavedInstance(savedInstanceState)
                 .build();
 
+        Timber.d("Building rate builder.");
         rate = new Rate.Builder(context)
                 .setTriggerCount(10)
                 .setMinimumInstallTime(TimeUnit.DAYS.toMillis(3))
@@ -227,6 +244,7 @@ public class MainActivity extends BaseActivity {
                 .build();
 
 
+        Timber.d("Building DrawerBuilder");
         result = new DrawerBuilder()
                 .withActivity(this)
                 .withTranslucentStatusBar(true)
@@ -309,7 +327,9 @@ public class MainActivity extends BaseActivity {
                     }
                 }).build();
 
+        Timber.d("If not Supporter add footer else thank the user!");
         if (!SupporterHelper.isSupporter()) {
+            Timber.d("Adding footer.");
             result.addStickyFooterItem(
                     new PrimaryDrawerItem().withName("Become a Supporter")
                             .withDescription("Get Pro Features")
@@ -319,6 +339,7 @@ public class MainActivity extends BaseActivity {
         }
 
         if (SupporterHelper.isSupporter()) {
+            Timber.d("Show thanks for support.");
             result.addStickyFooterItem(
                     new PrimaryDrawerItem().withName("Thank you for the support!")
                             .withIcon(GoogleMaterial.Icon.gmd_mood)
@@ -326,6 +347,7 @@ public class MainActivity extends BaseActivity {
                             .withSelectable(false));
         }
 
+        Timber.d("Navigate to initial fragment.");
         navigate(mNavItemId);
     }
 
@@ -359,9 +381,16 @@ public class MainActivity extends BaseActivity {
         Intent whatsNew = new Intent(this, ChangelogActivity.class);
         startActivity(whatsNew);
     }
+    
+    @Override
+    public void onConfigurationChanged (Configuration newConfig){
+        Timber.v("onConfigurationChanged");
+    }
+
 
     public void onResume() {
         super.onResume();
+        Timber.v("onResume");
         if (rate != null) {
             rate.count();
         }
@@ -480,6 +509,7 @@ public class MainActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     private void navigate(final int itemId) {
         Timber.v("Navigate to %s", itemId);

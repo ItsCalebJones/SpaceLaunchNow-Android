@@ -6,12 +6,11 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.format.DateFormat;
 import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.Toast;
 import android.zetterstrom.com.forecast.ForecastClient;
 import android.zetterstrom.com.forecast.ForecastConfiguration;
 
@@ -23,22 +22,17 @@ import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.onesignal.OneSignal;
 
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
-
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Locale;
+import java.util.TimeZone;
 
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.Sort;
 import io.realm.exceptions.RealmMigrationNeededException;
 import jonathanfinerty.once.Once;
-import me.calebjones.spacelaunchnow.content.data.DataClientManager;
-import me.calebjones.spacelaunchnow.content.data.DataRepositoryManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.DataJobCreator;
@@ -48,156 +42,66 @@ import me.calebjones.spacelaunchnow.content.jobs.UpdateJob;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.UpdateRecord;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
 import me.calebjones.spacelaunchnow.data.models.realm.Migration;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
-import me.calebjones.spacelaunchnow.utils.GlideApp;
-import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
+import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
-import me.calebjones.spacelaunchnow.utils.analytics.CrashlyticsTree;
+import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
-import okhttp3.OkHttpClient;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
+import me.calebjones.spacelaunchnow.utils.analytics.CrashlyticsTree;
 import timber.log.Timber;
 
 public class LaunchApplication extends Application implements Analytics.Provider {
 
     public static final String TAG = "Space Launch Now";
-    public OkHttpClient client;
-    private static LaunchApplication mInstance;
     private static ListPreferences sharedPreference;
     private SwitchPreferences switchPreferences;
     private SharedPreferences sharedPref;
     protected volatile Analytics mAnalytics;
+    private Context context;
+    private LibraryDataManager libraryDataManager;
 
-    public static synchronized LaunchApplication getInstance() {
-        return mInstance;
-    }
-
-    @NonNull
-    public static LaunchApplication get(@NonNull Context anyContext) {
-        return (LaunchApplication) anyContext.getApplicationContext();
-    }
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(this);
-    }
-
+    
     @Override
     public void onCreate() {
         super.onCreate();
-        /*
-        * Init Crashlytics and gather additional device information.
-        * Always leave this at the top so it catches any init failures.
-        * Version 1.3.0-Beta had a bug where starting a service crashed before Crashlytics picked it up.
-        */
-        // Set up Crashlytics, disabled for debug builds
-        Crashlytics crashlyticsKit = new Crashlytics.Builder()
-                .core(new CrashlyticsCore.Builder().build())
-                .build();
-        Fabric.with(this, crashlyticsKit);
+        context = this;
+        setupAds();
+        setupPreferences();
+        setupCrashlytics();
+        setupOneSignal();
+        setupRealm();
+        setupForecast();
+        setupWebView();
+        setupTheme();
+        setupDrawableLoader();
+        checkSubscriptions();
+        setupAndCheckOnce();
+    }
 
-        // Initialize Fabric with the debug-disabled crashlytics.
-        Crashlytics.setString("Timezone", String.valueOf(TimeZone.getDefault().getDisplayName()));
-        Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
-        Crashlytics.setBool("is24", DateFormat.is24HourFormat(getApplicationContext()));
-        Crashlytics.setBool("Network State", Utils.isNetworkAvailable(this));
-        Crashlytics.setString("Network Info", Connectivity.getNetworkStatus(this));
+    private void setupAndCheckOnce() {
+        Once.initialise(this);
 
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-
-        OneSignal.startInit(this)
-                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
-                .init();
-
-        if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree(), new CrashlyticsTree(this));
-            OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.ERROR);
-
-            JSONObject tags = new JSONObject();
-            try {
-                tags.put("Production", false);
-                tags.put("Debug", true);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            OneSignal.sendTags(tags);
-        } else {
-            JSONObject tags = new JSONObject();
-            try {
-                tags.put("Production", true);
-                tags.put("Debug", false);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            OneSignal.sendTags(tags);
-            Timber.plant(new CrashlyticsTree(this));
-        }
-
-        ForecastConfiguration configuration =
-                new ForecastConfiguration.Builder(getResources().getString(R.string.forecast_io_key))
-                        .setCacheDirectory(getCacheDir())
-                        .build();
-        ForecastClient.create(configuration);
-
-        mInstance = this;
-
-        ListPreferences.create(this);
-
-        sharedPreference = ListPreferences.getInstance(this);
-        switchPreferences = SwitchPreferences.getInstance(this);
-
-
-        String version;
-
-        if (sharedPreference.isDebugEnabled()) {
-            version = "dev";
-        } else {
-            version = "1.3";
-        }
-
-        Realm.init(this);
-
-        RealmConfiguration config = new RealmConfiguration.Builder()
-                .schemaVersion(Constants.DB_SCHEMA_VERSION_2_0_0)
-                .modules(Realm.getDefaultModule(), new LaunchDataModule())
-                .migration(new Migration())
-                .build();
-
-        DataClient.create(version);
-        LibraryDataManager libraryDataManager;
-        JobManager.create(this).addJobCreator(new DataJobCreator());
-        try {
-            Realm.setDefaultConfiguration(config);
-            Realm realm = Realm.getDefaultInstance();
-            realm.close();
-            libraryDataManager = new LibraryDataManager(this);
-        } catch (RealmMigrationNeededException | NullPointerException e) {
-            Timber.e(e);
-            Realm.deleteRealm(config);
-            Realm.setDefaultConfiguration(config);
-            libraryDataManager = new LibraryDataManager(this);
+        if (!Once.beenDone(Once.THIS_APP_INSTALL, "loadInitialData")) {
             libraryDataManager.getFirstLaunchData();
-            Crashlytics.logException(e);
+            Once.markDone("loadInitialData");
         }
+    }
 
-        try {
-            new WebView(getApplicationContext());
-        } catch (Exception e) {
-            Timber.e(e);
-        }
-        if (sharedPreference.isNightThemeEnabled()) {
-            if (sharedPreference.isDayNightAutoEnabled()) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+    
+    private void setupAds() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                MobileAds.initialize(context, "ca-app-pub-9824528399164059~9700152528");
             }
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
+        }).start();
+    }
 
+
+    private void setupDrawableLoader() {
         //initialize and create the image loader logic
         DrawerImageLoader.init(new AbstractDrawerImageLoader() {
             @Override
@@ -210,68 +114,225 @@ public class LaunchApplication extends Application implements Analytics.Provider
                 GlideApp.with(imageView.getContext()).clear(imageView);
             }
         });
-
-        try {
-            checkSubscriptions();
-        } catch (JSONException e) {
-            Timber.e(e);
-            Crashlytics.logException(e);
-        }
+    }
 
 
-        if (sharedPref.getBoolean("background", true)) {
-            UpdateJob.scheduleJob(this);
-        }
-        SyncJob.schedulePeriodicJob(this);
-        SyncWearJob.scheduleJob();
-        UpdateWearJob.scheduleJobNow();
-
-        MobileAds.initialize(this, "ca-app-pub-9824528399164059~9700152528");
-
-        Once.initialise(this);
-
-        if (!Once.beenDone(Once.THIS_APP_INSTALL, "loadInitialData")) {
-            libraryDataManager.getFirstLaunchData();
-            Once.markDone("loadInitialData");
+    private void setupTheme() {
+        if (sharedPreference.isNightThemeEnabled()) {
+            if (sharedPreference.isDayNightAutoEnabled()) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            }
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
     }
 
-    private void checkSubscriptions() throws JSONException {
-        //TODO reconsider the boolean for notificaitons_new_message
-        if (sharedPref.getBoolean("notifications_new_message", true)) {
-            OneSignal.setSubscription(true);
-            JSONObject tags = new JSONObject();
 
-            tags.put("Nasa", switchPreferences.getSwitchNasa());
+    private void setupWebView() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    new WebView(context);
+                } catch (Exception e) {
+                    Timber.e(e);
+                }
+            }
+        }).start();
+    }
 
-            tags.put("ISRO", switchPreferences.getSwitchISRO());
 
-            tags.put("Roscosmos", switchPreferences.getSwitchRoscosmos());
-
-            tags.put("ULA", switchPreferences.getSwitchULA());
-
-            tags.put("Arianespace", switchPreferences.getSwitchArianespace());
-
-            tags.put("KSC", switchPreferences.getSwitchKSC());
-
-            tags.put("Ples", switchPreferences.getSwitchPles());
-
-            tags.put("Van", switchPreferences.getSwitchVan());
-
-            tags.put("SpaceX", switchPreferences.getSwitchSpaceX());
-
-            tags.put("CASC", switchPreferences.getSwitchCASC());
-
-            tags.put("Cape", switchPreferences.getSwitchCape());
-
-            tags.put("all", switchPreferences.getAllSwitch());
-
-            //Allow background alarms
-            tags.put("background", 1);
-
-            OneSignal.sendTags(tags);
+    private void setupData(final boolean update) {
+        final String version;
+        if (sharedPreference.isDebugEnabled()) {
+            version = "dev";
         } else {
-            OneSignal.setSubscription(false);
+            version = "1.3";
+        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                DataClient.create(version);
+                libraryDataManager = new LibraryDataManager(context);
+                JobManager.create(context).addJobCreator(new DataJobCreator());
+                startJobs();
+                if (update) {
+                    libraryDataManager.getFirstLaunchData();
+                }
+            }
+        }).start();
+    }
+
+
+    private void setupRealm() {
+        Timber.d("Realm.init()");
+        Realm.init(this);
+
+        Timber.d("Realm building config");
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .schemaVersion(Constants.DB_SCHEMA_VERSION_2_0_0)
+                .modules(Realm.getDefaultModule(), new LaunchDataModule())
+                .migration(new Migration())
+                .build();
+
+
+        try {
+            Timber.d("Realm set Default");
+            Realm.setDefaultConfiguration(config);
+            Realm realm = Realm.getDefaultInstance();
+            realm.close();
+            Timber.d("Realm opened and closed successfully.");
+            setupData(false);
+        } catch (RealmMigrationNeededException | NullPointerException e) {
+            Timber.d("Realm Migration Exception");
+            Timber.e(e);
+            Realm.deleteRealm(config);
+            Realm.setDefaultConfiguration(config);
+            setupData(true);
+            Crashlytics.logException(e);
+        }
+
+    }
+
+
+    private void setupPreferences() {
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreference = ListPreferences.getInstance(this);
+        switchPreferences = SwitchPreferences.getInstance(this);
+    }
+
+
+    private void setupForecast() {
+        if (SupporterHelper.isSupporter()) {
+            ForecastConfiguration configuration =
+                    new ForecastConfiguration.Builder(getResources().getString(R.string.forecast_io_key))
+                            .setCacheDirectory(getCacheDir())
+                            .build();
+            ForecastClient.create(configuration);
+        }
+    }
+
+
+    private void setupOneSignal() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OneSignal.startInit(context)
+                        .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+                        .init();
+
+                if (BuildConfig.DEBUG) {
+                    Timber.plant(new Timber.DebugTree(), new CrashlyticsTree(context));
+                    OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.ERROR);
+
+                    JSONObject tags = new JSONObject();
+                    try {
+                        tags.put("Production", false);
+                        tags.put("Debug", true);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    OneSignal.sendTags(tags);
+                } else {
+                    JSONObject tags = new JSONObject();
+                    try {
+                        tags.put("Production", true);
+                        tags.put("Debug", false);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    OneSignal.sendTags(tags);
+                    Timber.plant(new CrashlyticsTree(context));
+                }
+            }
+        }).start();
+    }
+
+
+    private void setupCrashlytics() {
+        /*
+        * Init Crashlytics and gather additional device information.
+        * Always leave this at the top so it catches any init failures.
+        * Version 1.3.0-Beta had a bug where starting a service crashed before Crashlytics picked it up.
+        */
+        // Set up Crashlytics, disabled for debug builds
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                Crashlytics crashlyticsKit = new Crashlytics.Builder()
+                        .core(new CrashlyticsCore.Builder().build())
+                        .build();
+                Fabric.with(context, crashlyticsKit);
+
+                // Initialize Fabric with the debug-disabled crashlytics.
+                Crashlytics.setString("Timezone", String.valueOf(TimeZone.getDefault().getDisplayName()));
+                Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
+                Crashlytics.setBool("is24", DateFormat.is24HourFormat(getApplicationContext()));
+                Crashlytics.setBool("Network State", Utils.isNetworkAvailable(context));
+                Crashlytics.setString("Network Info", Connectivity.getNetworkStatus(context));
+            }
+        }).start();
+    }
+
+
+    private void startJobs() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (sharedPref.getBoolean("background", true)) {
+                    UpdateJob.scheduleJob(context);
+                }
+                SyncJob.schedulePeriodicJob(context);
+                SyncWearJob.scheduleJob();
+                UpdateWearJob.scheduleJobNow();
+            }
+        }).start();
+    }
+
+
+    private void checkSubscriptions() {
+        try {
+            if (sharedPref.getBoolean("notifications_new_message", true)) {
+                OneSignal.setSubscription(true);
+                JSONObject tags = new JSONObject();
+
+
+                tags.put("Nasa", switchPreferences.getSwitchNasa());
+
+                tags.put("ISRO", switchPreferences.getSwitchISRO());
+
+                tags.put("Roscosmos", switchPreferences.getSwitchRoscosmos());
+
+                tags.put("ULA", switchPreferences.getSwitchULA());
+
+                tags.put("Arianespace", switchPreferences.getSwitchArianespace());
+
+                tags.put("KSC", switchPreferences.getSwitchKSC());
+
+                tags.put("Ples", switchPreferences.getSwitchPles());
+
+                tags.put("Van", switchPreferences.getSwitchVan());
+
+                tags.put("SpaceX", switchPreferences.getSwitchSpaceX());
+
+                tags.put("CASC", switchPreferences.getSwitchCASC());
+
+                tags.put("Cape", switchPreferences.getSwitchCape());
+
+                tags.put("all", switchPreferences.getAllSwitch());
+
+                //Allow background alarms
+                tags.put("background", 1);
+
+                OneSignal.sendTags(tags);
+            } else {
+                OneSignal.setSubscription(false);
+            }
+        } catch (JSONException e) {
+            Crashlytics.logException(e);
         }
     }
 

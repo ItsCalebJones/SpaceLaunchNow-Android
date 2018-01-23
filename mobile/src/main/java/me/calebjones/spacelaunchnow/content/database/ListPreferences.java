@@ -81,10 +81,6 @@ public class ListPreferences {
         return INSTANCE;
     }
 
-    public static void create(Context context) {
-        INSTANCE = new ListPreferences(context);
-    }
-
     public void setPreviousFirstBoot(boolean value) {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();

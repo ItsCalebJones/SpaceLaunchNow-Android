@@ -16,7 +16,6 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatCheckBox;
@@ -31,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -119,26 +119,28 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     private boolean switchChanged;
     private CalendarSyncManager calendarSyncManager;
 
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreference = ListPreferences.getInstance(getActivity().getApplication());
-        switchPreferences = SwitchPreferences.getInstance(getActivity().getApplication());
+        context = getActivity();
+        Toast.makeText(getContext(), "Fragment - onCreate()", Toast.LENGTH_SHORT).show();
+        sharedPreference = ListPreferences.getInstance(context);
+        switchPreferences = SwitchPreferences.getInstance(context);
         setScreenName("Next Launch Fragment");
     }
 
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        context = getActivity().getApplicationContext();
         final int color;
         active = false;
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
         if (adapter == null) {
-            adapter = new CardAdapter(getActivity());
+            adapter = new CardAdapter(context);
         }
 
 
@@ -153,9 +155,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         super.onCreateView(inflater, container, savedInstanceState);
 
         setHasOptionsMenu(true);
-
-        LayoutInflater lf = getActivity().getLayoutInflater();
-        view = lf.inflate(R.layout.fragment_upcoming, container, false);
+        view = inflater.inflate(R.layout.fragment_upcoming, container, false);
         ButterKnife.bind(this, view);
 
         setUpSwitches();
@@ -209,6 +209,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         return view;
     }
 
+    
     @Override
     public void onStart() {
         Timber.v("onStart");
@@ -253,6 +254,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         }
     };
 
+    
     public void displayLaunches() {
         Timber.v("loadLaunches...");
         Calendar calendar = Calendar.getInstance();
@@ -276,6 +278,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         }
     }
 
+    
     private void setLayoutManager(int size) {
         if (!isDetached() && isAdded()) {
             if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && (launchRealms != null && launchRealms.size() == 1 || size == 1)) {
@@ -294,11 +297,13 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         }
     }
 
+    
     private void filterLaunchRealm() {
         launchRealms = QueryBuilder.buildUpcomingSwitchQueryAsync(context, getRealm());
         launchRealms.addChangeListener(callback);
     }
 
+    
     private void setUpSwitches() {
         customSwitch.setChecked(switchPreferences.getAllSwitch());
         nasaSwitch.setChecked(switchPreferences.getSwitchNasa());
@@ -398,6 +403,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         }
     }
 
+    
     @Override
     public void onResume() {
         super.onResume();
@@ -435,6 +441,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         }
     }
 
+    
     @Override
     public void onPause() {
         super.onPause();
@@ -478,6 +485,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         }
     };
 
+    
     @Override
     public void onRefresh() {
         fetchData();
@@ -524,6 +532,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         return super.onOptionsItemSelected(item);
     }
 
+    
     private void checkFilter() {
 
         if (!active) {
