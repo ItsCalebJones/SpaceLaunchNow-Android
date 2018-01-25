@@ -59,6 +59,8 @@ import me.calebjones.spacelaunchnow.content.events.LaunchRequestEvent;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.RocketDetail;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
+import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
+import me.calebjones.spacelaunchnow.data.networking.error.LibraryError;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
 import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.ui.launchdetail.TabsAdapter;
@@ -118,6 +120,7 @@ public class LaunchDetailActivity extends BaseActivity
     public String response;
     public Launch launch;
     private boolean fabShowable = true;
+    private Realm realm;
     private Rate rate;
 
     public LaunchDetailActivity() {
@@ -130,6 +133,7 @@ public class LaunchDetailActivity extends BaseActivity
 
         int m_theme;
 
+        realm = getRealm();
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         context = getApplicationContext();
         customTabActivityHelper = new CustomTabActivityHelper();
@@ -200,16 +204,15 @@ public class LaunchDetailActivity extends BaseActivity
         if (type != null && type.equals("launch")) {
             final int id = mIntent.getIntExtra("launchID", 0);
 
-            Launch launch = getRealm().where(Launch.class).equalTo("id", id).findFirst();
+            Launch launch = realm.where(Launch.class).equalTo("id", id).findFirst();
             if (launch != null) {
                 updateViews(launch);
             }
-            if (launch != null && savedInstanceState == null) {
+            if (savedInstanceState == null) {
                 detailSwipeRefresh.setRefreshing(true);
                 DataClient.getInstance().getLaunchById(id, true, new Callback<LaunchResponse>() {
                     @Override
                     public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
-                        Realm realm = Realm.getDefaultInstance();
                         if (response.isSuccessful()) {
                             final RealmList<Launch> items = new RealmList<>(response.body().getLaunches());
                             if (items.size() == 1) {
@@ -242,25 +245,35 @@ public class LaunchDetailActivity extends BaseActivity
                                 });
                             }
                         } else {
-                            sendUpdateView(id);
+                            LibraryError error = ErrorUtil.parseLibraryError(response);
+                            if (error.getMessage().contains("None found")) {
+                                final Launch launch = realm.where(Launch.class).equalTo("id", id).findFirst();
+                                if (launch != null) {
+                                    realm.executeTransaction(new Realm.Transaction() {
+                                        @Override
+                                        public void execute(Realm realm) {
+                                            launch.deleteFromRealm();
+                                        }
+                                    });
+                                }
+                                Toast.makeText(LaunchDetailActivity.this, "Error: Error loading launch.", Toast.LENGTH_SHORT).show();
+                                onBackPressed();
+                            }
                         }
-                        realm.close();
+
                         detailSwipeRefresh.setRefreshing(false);
                     }
 
                     @Override
                     public void onFailure(Call<LaunchResponse> call, Throwable t) {
-                        Realm realm = Realm.getDefaultInstance();
                         Launch item = realm.where(Launch.class)
                                 .equalTo("id", id)
                                 .findFirst();
                         updateViews(item);
-                        realm.close();
                         detailSwipeRefresh.setRefreshing(false);
                     }
                 });
             }
-
         }
 
         toolbar.setNavigationOnClickListener(
@@ -650,6 +663,11 @@ public class LaunchDetailActivity extends BaseActivity
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onLowMemory(){
+        adView.destroy();
     }
 
     public void videoPlaying() {
