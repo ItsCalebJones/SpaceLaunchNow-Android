@@ -123,7 +123,7 @@ public class LaunchListFactory implements RemoteViewsService.RemoteViewsFactory 
 
         //Retrieve missionType
         if (launch.getMissions().size() != 0) {
-            row.setImageViewResource(R.id.categoryIcon, Utils.getCategoryIcon(launch.getMissions().get(0).getTypeName(), false));
+            row.setImageViewResource(R.id.categoryIcon, Utils.getCategoryIcon(launch.getMissions().get(0).getTypeName()));
         } else {
             row.setImageViewResource(R.id.categoryIcon, R.drawable.ic_unknown);
         }
