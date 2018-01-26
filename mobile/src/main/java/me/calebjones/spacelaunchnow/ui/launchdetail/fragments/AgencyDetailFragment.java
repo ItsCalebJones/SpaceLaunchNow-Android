@@ -118,10 +118,8 @@ public class AgencyDetailFragment extends BaseFragment {
 
         Timber.v("Creating views...");
 
-        if (detailLaunch != null) {
+        if (detailLaunch != null && detailLaunch.isValid()) {
             setUpViews(detailLaunch);
-        } else {
-
         }
 
         return view;

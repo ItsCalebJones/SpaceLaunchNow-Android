@@ -381,12 +381,6 @@ public class MainActivity extends BaseActivity {
         Intent whatsNew = new Intent(this, ChangelogActivity.class);
         startActivity(whatsNew);
     }
-    
-    @Override
-    public void onConfigurationChanged (Configuration newConfig){
-        Timber.v("onConfigurationChanged");
-    }
-
 
     public void onResume() {
         super.onResume();

@@ -44,7 +44,7 @@
             android:theme="@style/BaseAppTheme" />
         <activity
             android:name=".ui.main.MainActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:configChanges="keyboardHidden"
             android:theme="@style/BaseAppTheme.Launcher"
             android:launchMode="singleTop">
             <intent-filter>

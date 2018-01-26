@@ -667,7 +667,9 @@ public class LaunchDetailActivity extends BaseActivity
 
     @Override
     public void onLowMemory(){
-        adView.destroy();
+        Timber.v("onLowMemory");
+//        adView.destroy();
+        super.onLowMemory();
     }
 
     public void videoPlaying() {

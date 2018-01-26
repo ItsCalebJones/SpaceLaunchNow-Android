@@ -35,6 +35,11 @@ advancedVersioning {
         dependsOnTasks 'release' // defaultValue
 
     }
+
+    outputOptions {
+        renameOutput true
+        nameFormat '${projectName}-${appName}-${buildType}-${versionName}'
+    }
 }
 
 //ext.abiCodes = ['armeabi-v7a':1, mips:2, x86:3, x86_64:4, armeabi:5]

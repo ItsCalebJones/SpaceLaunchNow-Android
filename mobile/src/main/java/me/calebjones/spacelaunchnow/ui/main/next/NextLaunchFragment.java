@@ -124,7 +124,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-        Toast.makeText(getContext(), "Fragment - onCreate()", Toast.LENGTH_SHORT).show();
         sharedPreference = ListPreferences.getInstance(context);
         switchPreferences = SwitchPreferences.getInstance(context);
         setScreenName("Next Launch Fragment");

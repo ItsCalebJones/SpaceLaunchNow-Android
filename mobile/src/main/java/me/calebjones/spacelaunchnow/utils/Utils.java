@@ -390,6 +390,52 @@ public class Utils {
         }
     }
 
+    public static void setCategoryIcon(RemoteViews remoteViews, String type, Boolean night, Integer id) {
+        if (type != null) {
+            switch (type) {
+                case "Earth Science":
+                    remoteViews.setImageViewResource(id, R.drawable.ic_earth);
+                    break;
+                case "Planetary Science":
+                    remoteViews.setImageViewResource(id, R.drawable.ic_planetary);
+                    break;
+                case "Astrophysics":
+                    remoteViews.setImageViewResource(id, R.drawable.ic_astrophysics);
+                    break;
+                case "Heliophysics":
+                    remoteViews.setImageViewResource(id, R.drawable.ic_heliophysics_alt);
+                    break;
+                case "Human Exploration":
+                    remoteViews.setImageViewResource(id, R.drawable.ic_human_explore);
+                    break;
+                case "Robotic Exploration":
+                    remoteViews.setImageViewResource(id, R.drawable.ic_robotic_explore);
+                    break;
+                case "Government/Top Secret":
+                    remoteViews.setImageViewResource(id, R.drawable.ic_top_secret);
+                    break;
+                case "Tourism":
+                    remoteViews.setImageViewResource(id, R.drawable.ic_tourism);
+                    break;
+                case "Unknown":
+                    remoteViews.setImageViewResource(id, R.drawable.ic_unknown);
+                    break;
+                case "Communications":
+                    remoteViews.setImageViewResource(id, R.drawable.ic_satellite);
+                    break;
+                case "Resupply":
+                    remoteViews.setImageViewResource(id, R.drawable.ic_resupply);
+                    break;
+                default:
+                    remoteViews.setImageViewResource(id, R.drawable.ic_unknown);
+                    break;
+            }
+        } else {
+            remoteViews.setImageViewResource(id, R.drawable.ic_unknown);
+        }
+    }
+
+
     public static String getFormattedDateFromTimestamp(long timestampInMilliSeconds) {
         Date date = new Date();
         date.setTime(timestampInMilliSeconds);
