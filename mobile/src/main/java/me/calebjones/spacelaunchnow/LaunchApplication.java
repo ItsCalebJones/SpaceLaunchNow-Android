@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatDelegate;
 import android.text.format.DateFormat;
 import android.webkit.WebView;
 import android.widget.ImageView;
-import android.widget.Toast;
 import android.zetterstrom.com.forecast.ForecastClient;
 import android.zetterstrom.com.forecast.ForecastConfiguration;
 
@@ -63,7 +62,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
     private Context context;
     private LibraryDataManager libraryDataManager;
 
-    
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -90,7 +89,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
         }
     }
 
-    
+
     private void setupAds() {
         new Thread(new Runnable() {
             @Override
@@ -131,16 +130,11 @@ public class LaunchApplication extends Application implements Analytics.Provider
 
 
     private void setupWebView() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    new WebView(context);
-                } catch (Exception e) {
-                    Timber.e(e);
-                }
-            }
-        }).start();
+        try {
+            new WebView(context);
+        } catch (Exception e) {
+            Timber.e(e);
+        }
     }
 
 
@@ -205,13 +199,11 @@ public class LaunchApplication extends Application implements Analytics.Provider
 
 
     private void setupForecast() {
-        if (SupporterHelper.isSupporter()) {
-            ForecastConfiguration configuration =
-                    new ForecastConfiguration.Builder(getResources().getString(R.string.forecast_io_key))
-                            .setCacheDirectory(getCacheDir())
-                            .build();
-            ForecastClient.create(configuration);
-        }
+        ForecastConfiguration configuration =
+                new ForecastConfiguration.Builder(getResources().getString(R.string.forecast_io_key))
+                        .setCacheDirectory(getCacheDir())
+                        .build();
+        ForecastClient.create(configuration);
     }
 
 
