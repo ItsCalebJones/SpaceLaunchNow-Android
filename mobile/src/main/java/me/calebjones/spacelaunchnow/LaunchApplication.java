@@ -265,6 +265,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
                 Crashlytics.setBool("is24", DateFormat.is24HourFormat(getApplicationContext()));
                 Crashlytics.setBool("Network State", Utils.isNetworkAvailable(context));
                 Crashlytics.setString("Network Info", Connectivity.getNetworkStatus(context));
+                Crashlytics.setBool("Debug Logging", sharedPref.getBoolean("debug_logging", false));
             }
         }).start();
     }
