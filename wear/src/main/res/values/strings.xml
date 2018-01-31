@@ -1,6 +1,25 @@
 <resources>
     <string name="app_name">Space Launch Now</string>
-    <string name="hello">Hello World!</string>
-    <string name="title">Hello Notification!</string>
     <string name="notification_posted">Notification posted</string>
+    <string name="title_activity_main">Space Launch Now</string>
+    <string name="title_activity_launch_detail">Launch Detail</string>
+
+    <string name="network_fast">Network Connected</string>
+    <string name="network_slow">Slow Network Connected</string>
+    <string name="network_disconnected">Disconnected</string>
+    <string name="network_connecting">Connecting</string>
+
+    <string name="info_request_network">To use this sample, ensure that you have removed saved Wi-Fi networks and the device is unplugged</string>
+    <string name="info_release_network">A high-bandwidth network is now available</string>
+    <string name="info_add_wifi">No high-bandwidth network is available. You must add a Wi-Fi network to continue</string>
+
+    <string name="button_request_network">Use network access?</string>
+    <string name="button_release_network">Release High-bandwidth Network</string>
+    <string name="button_add_wifi">Add Wi-Fi Network</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
 </resources>
+

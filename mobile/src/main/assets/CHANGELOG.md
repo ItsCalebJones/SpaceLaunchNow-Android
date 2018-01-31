@@ -3,9 +3,19 @@ A space launch tracker for Android using data from the Launch Library API.
 
 [View the latest releases here.](https://github.com/ItsCalebJones/SpaceLaunchNow-Android/releases)
 ## Changelog
-#### Updated 12-31-2017
+#### Updated 1-26-2017
 ---
-### Version 2.0.0 (Latest)
+### Version 2.1.5 (Latest)
+#### Overview
+I've been wanting to revisit Android Wear - had a chance to sit down and work through it. This is just the initial release, let me know if you have suggestions.
+
+#### Changelog
+* Added a standalone Android Wear 2.0 app for tracking launches from your watch!
+* Added a 'Next Launch' complication for Android Wear watchfaces.
+* Improved legacy Space Launch Now watchface.
+
+---
+### Version 2.0.0
 #### Overview
 Took a lot of time to refine the current UI design, adding color and tightening up keylines wherever I could. Also added a new widget for Supporters - a list of upcoming launches.
 

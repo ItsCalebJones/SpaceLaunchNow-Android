@@ -12,11 +12,6 @@
             android:summaryOn="Use 24 Hour mode for keeping time."
             android:title="Watch Hour Mode" />
 
-        <SwitchPreference
-            android:key="wear_text_dynamic"
-            android:defaultValue="false"
-            android:summary="Generate text color based on background."
-            android:title="Dynamic Text" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Background">
@@ -24,7 +19,7 @@
         <SwitchPreference
             android:key="supporter_dynamic_background"
             android:defaultValue="false"
-            android:summary="Use image of the next launch vehicle if available."
+            android:summary="Use image of the next launchCategory vehicle if available."
             android:title="Dynamic Background" />
 
         <SwitchPreference

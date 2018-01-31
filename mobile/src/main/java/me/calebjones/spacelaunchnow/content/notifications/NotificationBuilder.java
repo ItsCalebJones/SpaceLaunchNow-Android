@@ -84,10 +84,8 @@ public class NotificationBuilder {
                         .setHintHideIcon(true);
         if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
             wearableExtender.setBackground(Utils.getBitMapFromUrl(context, launch.getRocket().getImageURL()));
-        } else {
-            wearableExtender.setBackground(BitmapFactory.decodeResource(context.getResources(), R.drawable.nav_header
-            ));
         }
+
         if (update){
             mBuilder.setContentTitle("UPDATE: " + launchName);
         } else {
@@ -95,7 +93,7 @@ public class NotificationBuilder {
         }
 
         mBuilder.setContentText(expandedText)
-                .setSmallIcon(R.drawable.ic_rocket_white)
+                .setSmallIcon(R.drawable.ic_rocket)
                 .setAutoCancel(true)
                 .setContentText(expandedText)
                 .extend(wearableExtender)

@@ -100,13 +100,11 @@
                 </LinearLayout>
             </LinearLayout>
 
-
             <ImageView
                 android:id="@+id/map_view"
                 android:layout_width="fill_parent"
                 android:layout_height="160dp"
                 android:contentDescription="A map view of launch location." />
-
             <TextView
                 android:id="@+id/content_status"
                 android:layout_width="match_parent"

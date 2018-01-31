@@ -44,9 +44,9 @@
             android:theme="@style/BaseAppTheme" />
         <activity
             android:name=".ui.main.MainActivity"
-            android:configChanges="screenSize"
+            android:configChanges="keyboardHidden"
             android:theme="@style/BaseAppTheme.Launcher"
-            android:windowSoftInputMode="adjustResize">
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -77,7 +77,7 @@
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/CustomPreferenceTheme" />
         <activity android:name=".ui.orbiter.OrbiterDetailActivity" />
-        <activity android:name=".ui.launcher.LauncherDetailActivity"/>
+        <activity android:name=".ui.launcher.LauncherDetailActivity" />
 
         <receiver android:name=".content.receivers.UpdateUpcomingLaunchesReceiver">
             <intent-filter>
@@ -131,7 +131,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_launch_card_compact_info" />
         </receiver>
-
         <receiver
             android:name=".widget.wordtimer.LaunchWordTimerWidgetProvider"
             android:label="Launch Timer">
@@ -145,7 +144,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_launch_word_timer_info" />
         </receiver>
-
         <receiver
             android:name=".widget.launchlist.LaunchListWidgetProvider"
             android:label="Launch List (Supporters)">
@@ -159,9 +157,22 @@
                 android:resource="@xml/widget_launch_list_info" />
         </receiver>
 
-        <service android:name=".widget.launchlist.LaunchListWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <service android:name=".content.services.ListenerServiceFromWear">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <action android:name="com.google.android.gms.wearable.CAPABILITY_CHANGED" />
+                <data android:host="*" android:scheme="wear"
+                    android:path="/verify_remote_launch_spacelaunchnow_wear_app"/>
+                <action android:name="com.google.android.gms.wearable.CHANNEL_EVENT" />
+                <data android:scheme="wear" android:host="*" android:path="/start-activity" />
+                <data android:scheme="wear" android:host="*" android:path="/start-activity-supporter" />
+            </intent-filter>
+        </service>
 
+        <service
+            android:name=".widget.launchlist.LaunchListWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
         <service
             android:name="com.evernote.android.job.v21.PlatformJobService"
             android:exported="false"
@@ -221,7 +232,7 @@
 
         <activity
             android:name=".ui.changelog.ChangelogActivity"
-            android:theme="@style/BaseAppTheme"/>
+            android:theme="@style/BaseAppTheme" />
     </application>
 
 </manifest>

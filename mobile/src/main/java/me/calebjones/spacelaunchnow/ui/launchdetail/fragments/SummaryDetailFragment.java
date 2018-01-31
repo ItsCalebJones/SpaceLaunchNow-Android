@@ -92,7 +92,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     private Context context;
     private CountDownTimer timer;
     public Launch detailLaunch;
-    private RocketDetail launchVehicle;
     private YouTubePlayerSupportFragment youTubePlayerFragment;
     private YouTubePlayer summaryYouTubePlayer;
     private boolean nightMode;
@@ -199,6 +198,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     TextView launchWindowText;
     @BindView(R.id.error_message)
     TextView errorMessage;
+    @BindView(R.id.youtube_view)
+    View youTubeView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -542,10 +543,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                 } else {
                     fetchPastWeather();
                 }
-            }
-
-            if (detailLaunch.getRocket() != null) {
-                getLaunchVehicle(detailLaunch);
             }
 
             setupCountdownTimer(launch);
@@ -1028,16 +1025,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         }
     }
 
-    private void getLaunchVehicle(Launch vehicle) {
-        String query;
-        if (vehicle.getRocket().getName().contains("Space Shuttle")) {
-            query = "Space Shuttle";
-        } else {
-            query = vehicle.getRocket().getName();
-        }
-
-        launchVehicle = getRealm().where(RocketDetail.class).contains("name", query).findFirst();
-    }
 
     private void setWindowStamp() {
         // Create a DateFormatter object for displaying date in specified format.
@@ -1146,8 +1133,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         if (youTubeInitializationResult.isUserRecoverableError()) {
             youTubeInitializationResult.getErrorDialog(getActivity(), 1).show();
         } else {
-            String error = String.format(getString(R.string.player_error), youTubeInitializationResult.toString());
-            Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
+            youTubeView.setVisibility(View.GONE);
         }
     }
 }

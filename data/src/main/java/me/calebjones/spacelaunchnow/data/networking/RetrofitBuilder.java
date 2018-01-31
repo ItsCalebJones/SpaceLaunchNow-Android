@@ -113,6 +113,16 @@ public class RetrofitBuilder {
         return retrofit;
     }
 
+    public static Retrofit getWearRetrofit() {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constants.LIBRARY_BASE_URL)
+                .client(defaultClient())
+                .addConverterFactory(GsonConverterFactory.create(getGson()))
+                .build();
+        return retrofit;
+    }
+
     private static OkHttpClient defaultClient() {
         OkHttpClient.Builder client = new OkHttpClient().newBuilder();
         client.connectTimeout(15, TimeUnit.SECONDS);

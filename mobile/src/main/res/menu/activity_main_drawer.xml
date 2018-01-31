@@ -17,7 +17,7 @@
             android:title="Missions" />
         <item
             android:id="@+id/menu_vehicle"
-            android:icon="@drawable/ic_rocket_white"
+            android:icon="@drawable/ic_rocket"
             android:title="Vehicles" />
         <item
             android:checkable="false"

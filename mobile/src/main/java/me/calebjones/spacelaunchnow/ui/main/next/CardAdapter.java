@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -25,6 +27,12 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.crashlytics.android.Crashlytics;
 import com.mypopsy.maps.StaticMap;
 
@@ -174,8 +182,19 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                             Timber.v("onPreDraw: %s", map.toString());
                             GlideApp.with(context)
                                     .load(map.toString())
-                                    .error(R.drawable.placeholder)
                                     .optionalCenterCrop()
+                                    .listener(new RequestListener<Drawable>() {
+                                        @Override
+                                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                            holder.map_view.setVisibility(View.GONE);
+                                            return false;
+                                        }
+
+                                        @Override
+                                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                            return false;
+                                        }
+                                    })
                                     .into(holder.map_view);
                             holder.map_view.getViewTreeObserver().removeOnPreDrawListener(this);
                             return true;
@@ -450,6 +469,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 //If pad and agency exist add it to location, otherwise get whats always available
                 if (launchItem.getLocation() != null) {
                     holder.location.setText(launchItem.getLocation().getName());
+                } else {
+                    holder.location.setText("");
                 }
             }
         } catch (NullPointerException e) {
