@@ -262,7 +262,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
                 // Initialize Fabric with the debug-disabled crashlytics.
                 Crashlytics.setString("Timezone", String.valueOf(TimeZone.getDefault().getDisplayName()));
                 Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
-                Crashlytics.setBool("is24", DateFormat.is24HourFormat(getApplicationContext()));
+                Crashlytics.setBool("is24", DateFormat.is24HourFormat(context));
                 Crashlytics.setBool("Network State", Utils.isNetworkAvailable(context));
                 Crashlytics.setString("Network Info", Connectivity.getNetworkStatus(context));
                 Crashlytics.setBool("Debug Logging", sharedPref.getBoolean("debug_logging", false));
