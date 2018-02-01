@@ -47,7 +47,7 @@ import timber.log.Timber;
 public class MissionDetailFragment extends RetroFitFragment {
 
     private Context context;
-    public static Launch detailLaunch;
+    public Launch detailLaunch;
     private RocketDetail launchVehicle;
     @BindView(R.id.vehicle_spec_view)
     View vehicleSpecView;
