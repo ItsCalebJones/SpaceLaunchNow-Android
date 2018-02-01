@@ -32,16 +32,12 @@ import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
 import com.transitionseverywhere.TransitionManager;
 
-import java.util.concurrent.TimeUnit;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
-import me.calebjones.spacelaunchnow.content.jobs.SyncWearJob;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
-import me.calebjones.spacelaunchnow.content.wear.WearWatchfaceManager;
 import me.calebjones.spacelaunchnow.data.models.Products;
 import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
@@ -139,7 +135,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
 
         if (id == R.id.action_restore) {
             isRefreshable = true;
-            restorePurchaseHistory();
+            restorePurchaseHistory(true);
         }
 
         if (id == R.id.action_support) {
@@ -347,7 +343,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     @Override
     public void onPurchaseHistoryRestored() {
         Timber.d("Purchase History restored.");
-        restorePurchaseHistory();
+        restorePurchaseHistory(false);
     }
 
     @Override
@@ -362,10 +358,10 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     @Override
     public void onBillingInitialized() {
         Timber.v("Billing initialized.");
-        restorePurchaseHistory();
+        restorePurchaseHistory(false);
     }
 
-    private void restorePurchaseHistory() {
+    private void restorePurchaseHistory(boolean userRequested) {
         if (isAvailable) {
             if (isRefreshable) {
                 isRefreshable = false;
@@ -385,6 +381,13 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
                     }
                     SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Purchase history restored.");
                 } else {
+                    if (userRequested) {
+                        if (bp == null){
+                            SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, "Unable to initialize Billing Processor.");
+                        } else if (bp !=null && bp.listOwnedProducts().size() == 0){
+                            SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Purchases restored - none found with this Google account.");
+                        }
+                    }
                     Timber.d("Purchase History - None purchased.");
                 }
             }
