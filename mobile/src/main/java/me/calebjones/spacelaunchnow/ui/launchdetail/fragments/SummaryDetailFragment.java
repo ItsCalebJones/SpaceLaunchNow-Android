@@ -532,9 +532,11 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean("youTubePlaying", summaryYouTubePlayer.isPlaying());
-        outState.putInt("youTubeProgress", summaryYouTubePlayer.getCurrentTimeMillis());
-        outState.putString("youTubeID", youTubeURL);
+        if (summaryYouTubePlayer != null) {
+            outState.putBoolean("youTubePlaying", summaryYouTubePlayer.isPlaying());
+            outState.putInt("youTubeProgress", summaryYouTubePlayer.getCurrentTimeMillis());
+            outState.putString("youTubeID", youTubeURL);
+        }
         super.onSaveInstanceState(outState);
     }
 
