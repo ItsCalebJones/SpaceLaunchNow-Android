@@ -3,9 +3,20 @@ A space launch tracker for Android using data from the Launch Library API.
 
 [View the latest releases here.](https://github.com/ItsCalebJones/SpaceLaunchNow-Android/releases)
 ## Changelog
-#### Updated 1-26-2017
+#### Updated 2-1-2017
 ---
-### Version 2.1.5 (Latest)
+### Version 2.1.6 (Latest)
+#### Overview
+Quick bug fix release - addressing a few issues.
+
+#### Changelog
+* Added an option to hide launches that have an unconfirmed date.
+* Fixed an issue with some users not receiving notifications.
+* Fixed issue where the incorrect launcher data was being shown.
+* Fixed a few crashes.
+
+---
+### Version 2.1.5
 #### Overview
 I've been wanting to revisit Android Wear - had a chance to sit down and work through it. This is just the initial release, let me know if you have suggestions.
 
