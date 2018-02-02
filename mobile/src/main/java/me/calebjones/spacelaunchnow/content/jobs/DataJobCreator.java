@@ -40,6 +40,9 @@ public class DataJobCreator implements JobCreator {
             case UpdateLaunchListJob.TAG:
                 Timber.v(UpdateLaunchListJob.TAG);
                 return new UpdateLaunchListJob();
+            case SyncCalendarJob.TAG:
+                Timber.v(SyncCalendarJob.TAG);
+                return new SyncCalendarJob();
             default:
                 return null;
         }

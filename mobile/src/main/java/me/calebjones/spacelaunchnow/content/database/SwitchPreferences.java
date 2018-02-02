@@ -64,6 +64,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
     private static String PREFS_SWITCH_ALL;
     private static String PREFS_CALENDAR_STATUS;
     private static String PREFS_NO_GO_SWITCH;
+    private static String PREFS_TBD_SWITCH;
     private static String PREFS_PERSIST_LAST_SWITCH;
     private static String PREFS_VERSION_CODE;
 
@@ -111,6 +112,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         PREFS_UP_LOCATION_FILTERED_ARRAY = "UP_LOCATION_FILTERED_ARRAY";
         PREFS_CALENDAR_STATUS = "CALENDAR_STATUS";
         PREFS_NO_GO_SWITCH = "NO_GO_SWITCH";
+        PREFS_TBD_SWITCH = "TBD_SWITCH";
         PREFS_PERSIST_LAST_SWITCH = "PERSIST_LAST_SWITCH";
         INSTANCE = null;
     }
@@ -953,6 +955,18 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_PERSIST_LAST_SWITCH, key);
+        this.prefsEditor.apply();
+    }
+
+    public boolean getTBDLaunchSwitch() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getBoolean(PREFS_TBD_SWITCH, true);
+    }
+
+    public void setTBDLaunchSwitch(boolean key) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean(PREFS_TBD_SWITCH, key);
         this.prefsEditor.apply();
     }
 }

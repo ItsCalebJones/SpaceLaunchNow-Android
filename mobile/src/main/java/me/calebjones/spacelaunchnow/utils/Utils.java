@@ -442,17 +442,12 @@ public class Utils {
         return new SimpleDateFormat("h:mm a z - MMM d, yyyy ", Locale.US).format(date);
     }
 
-    public static Bitmap getBitMapFromUrl(Context context, String imageURL) {
-        try {
-            return GlideApp.with(context)
-                    .asBitmap()
-                    .load(imageURL)
-                    .submit(200, 200)
-                    .get();
-        } catch (InterruptedException | ExecutionException e) {
-            Timber.e(e);
-            return null;
-        }
+    public static Bitmap getBitMapFromUrl(Context context, String imageURL) throws ExecutionException, InterruptedException {
+        return GlideApp.with(context)
+                .asBitmap()
+                .load(imageURL)
+                .submit(200, 200)
+                .get();
     }
 
     public static SimpleDateFormat getSimpleDateFormatForUI(String pattern) {

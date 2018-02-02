@@ -19,6 +19,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -30,7 +31,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.widget.Toast;
+
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -45,10 +47,10 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.content.jobs.SyncCalendarJob;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
@@ -93,10 +95,18 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     AppCompatCheckBox isroSwitch;
     @BindView(R.id.all_switch)
     AppCompatCheckBox customSwitch;
+    @BindView(R.id.tbd_launch)
+    SwitchCompat tbdLaunchSwitch;
     @BindView(R.id.no_go_launch)
     SwitchCompat noGoSwitch;
     @BindView(R.id.persist_last_launch)
     SwitchCompat persistLastSwitch;
+    @BindView(R.id.no_go_info)
+    AppCompatImageView noGoInfo;
+    @BindView(R.id.tbd_info)
+    AppCompatImageView tbdInfo;
+    @BindView(R.id.last_launch_info)
+    AppCompatImageView lastLaunchInfo;
 
     private View view;
     private RecyclerView mRecyclerView;
@@ -117,9 +127,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     private boolean active;
     private boolean switchChanged;
-    private CalendarSyncManager calendarSyncManager;
 
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,7 +138,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         setScreenName("Next Launch Fragment");
     }
 
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -204,11 +213,10 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
         //Enable no data by default
         no_data.setVisibility(View.VISIBLE);
-        calendarSyncManager = new CalendarSyncManager(context);
         return view;
     }
 
-    
+
     @Override
     public void onStart() {
         Timber.v("onStart");
@@ -253,7 +261,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         }
     };
 
-    
+
     public void displayLaunches() {
         Timber.v("loadLaunches...");
         Calendar calendar = Calendar.getInstance();
@@ -267,8 +275,14 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     .greaterThanOrEqualTo("net", date);
             if (switchPreferences.getNoGoSwitch()) {
                 query.equalTo("status", 1);
+                query.findAll();
             }
-            launchRealms = query.findAllSortedAsync("net", Sort.ASCENDING);
+            if (switchPreferences.getTBDLaunchSwitch()) {
+                query.equalTo("tbddate", 0);
+                query.findAll();
+            }
+            query.sort("net", Sort.ASCENDING);
+            launchRealms = query.findAllAsync();
             launchRealms.addChangeListener(callback);
             Timber.v("loadLaunches - Realm query created.");
         } else {
@@ -277,7 +291,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         }
     }
 
-    
+
     private void setLayoutManager(int size) {
         if (!isDetached() && isAdded()) {
             if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && (launchRealms != null && launchRealms.size() == 1 || size == 1)) {
@@ -296,13 +310,13 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         }
     }
 
-    
+
     private void filterLaunchRealm() {
         launchRealms = QueryBuilder.buildUpcomingSwitchQueryAsync(context, getRealm());
         launchRealms.addChangeListener(callback);
     }
 
-    
+
     private void setUpSwitches() {
         customSwitch.setChecked(switchPreferences.getAllSwitch());
         nasaSwitch.setChecked(switchPreferences.getSwitchNasa());
@@ -317,6 +331,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         vanSwitch.setChecked(switchPreferences.getSwitchVan());
         kscSwitch.setChecked(switchPreferences.getSwitchKSC());
         noGoSwitch.setChecked(switchPreferences.getNoGoSwitch());
+        tbdLaunchSwitch.setChecked(switchPreferences.getTBDLaunchSwitch());
         persistLastSwitch.setChecked(switchPreferences.getPersistSwitch());
     }
 
@@ -402,7 +417,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         }
     }
 
-    
+
     @Override
     public void onResume() {
         super.onResume();
@@ -440,7 +455,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         }
     }
 
-    
+
     @Override
     public void onPause() {
         super.onPause();
@@ -484,7 +499,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         }
     };
 
-    
+
     @Override
     public void onRefresh() {
         fetchData();
@@ -531,7 +546,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         return super.onOptionsItemSelected(item);
     }
 
-    
+
     private void checkFilter() {
 
         if (!active) {
@@ -564,7 +579,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                         .getAppWidgetIds(new ComponentName(context,
                                 LaunchCardCompactWidgetProvider.class));
 
-                for (int id : cardIds){
+                for (int id : cardIds) {
                     launchCardCompactManager.updateAppWidget(id);
                 }
 
@@ -572,7 +587,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                         .getAppWidgetIds(new ComponentName(context,
                                 LaunchWordTimerWidgetProvider.class));
 
-                for (int id : timerIds){
+                for (int id : timerIds) {
                     launchWordTimerManager.updateAppWidget(id);
                 }
 
@@ -580,14 +595,14 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                         .getAppWidgetIds(new ComponentName(context,
                                 LaunchListWidgetProvider.class));
 
-                for (int id : listIds){
+                for (int id : listIds) {
                     launchListManager.updateAppWidget(id);
                 }
 
                 UpdateWearJob.scheduleJobNow();
                 displayLaunches();
                 if (switchPreferences.getCalendarStatus()) {
-                    calendarSyncManager.resyncAllEvents();
+                    SyncCalendarJob.scheduleImmediately();
                 }
             }
         }
@@ -701,16 +716,35 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     public void noGoSwitch() {
         confirm();
         switchPreferences.setNoGoSwitch(noGoSwitch.isChecked());
-        displayLaunches();
+    }
 
-        calendarSyncManager.resyncAllEvents();
+    @OnClick(R.id.tbd_launch)
+    public void tbdLaunchSwitch() {
+        confirm();
+        switchPreferences.setTBDLaunchSwitch(tbdLaunchSwitch.isChecked());
     }
 
     @OnClick(R.id.persist_last_launch)
     public void setPersistLastSwitch() {
         confirm();
         switchPreferences.setPersistLastSwitch(persistLastSwitch.isChecked());
-        displayLaunches();
+    }
+
+    @OnClick({R.id.no_go_info, R.id.tbd_info, R.id.last_launch_info})
+    public void onViewClicked(View view) {
+        MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
+        dialog.positiveText("Ok");
+        switch (view.getId()) {
+            case R.id.no_go_info:
+                dialog.title("No Go Launches").content("This hides launches that have a status of 'no-go' and can sometimes hide launches that are within their launch window but holding for technical or range issues.").show();
+                break;
+            case R.id.tbd_info:
+                dialog.title("To Be Determined - Launches").content("This hides launches that do not have a confirmed launch date or launch time. This can occasionally hide launches that have been scrubbed for the day.").show();
+                break;
+            case R.id.last_launch_info:
+                dialog.title("Keep Launches for 24 hours").content("This option will show launches on the home page for up to 24 hours after launch has occurred.").show();
+                break;
+        }
     }
 }
 
