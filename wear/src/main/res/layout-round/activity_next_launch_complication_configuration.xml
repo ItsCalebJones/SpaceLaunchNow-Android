@@ -8,6 +8,7 @@
 
     <LinearLayout
         app:layout_box="bottom|left|right"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -16,6 +17,7 @@
             style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="@dimen/material_baseline_grid_2x"
             android:paddingLeft="@dimen/material_baseline_grid_4x"
             android:paddingRight="@dimen/material_baseline_grid_4x"
             android:background="@color/darkPrimary"
@@ -24,6 +26,8 @@
             android:textAlignment="center" />
 
         <ScrollView
+            android:paddingStart="@dimen/material_baseline_grid_1.5x"
+            android:paddingEnd="@dimen/material_baseline_grid_1.5x"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -98,7 +102,7 @@
 
                 <android.support.v4.widget.Space
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/material_baseline_grid_4x" />
+                    android:layout_height="@dimen/material_baseline_grid_6x" />
 
             </LinearLayout>
         </ScrollView>
