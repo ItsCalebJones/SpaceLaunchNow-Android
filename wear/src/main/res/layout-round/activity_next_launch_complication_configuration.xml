@@ -16,6 +16,7 @@
             style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="@dimen/material_baseline_grid_2x"
             android:paddingLeft="@dimen/material_baseline_grid_4x"
             android:paddingRight="@dimen/material_baseline_grid_4x"
             android:background="@color/darkPrimary"
@@ -98,7 +99,7 @@
 
                 <android.support.v4.widget.Space
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/material_baseline_grid_2x" />
+                    android:layout_height="@dimen/material_baseline_grid_6x" />
 
             </LinearLayout>
         </ScrollView>
