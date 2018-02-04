@@ -87,7 +87,6 @@
             </LinearLayout>
         </LinearLayout>
 
-
         <ImageView
             android:id="@+id/map_view"
             android:layout_width="fill_parent"

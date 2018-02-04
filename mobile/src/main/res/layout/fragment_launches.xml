@@ -109,7 +109,7 @@
         android:id="@+id/vehicle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_rocket_white"
+        android:src="@drawable/ic_rocket"
         app:fab_colorNormal="@color/colorAccent"
         app:fab_colorPressed="@color/colorAccentLight"
         app:fab_label="Vehicle"

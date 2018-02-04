@@ -108,7 +108,7 @@
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="weather"
-            android:summary="Show weather card for upcoming launches in launch details."
+            android:summary="Show weather card for upcoming launches in launchCategory details."
             android:title="Enable Weather" />
         <SwitchPreference
             android:defaultValue="true"

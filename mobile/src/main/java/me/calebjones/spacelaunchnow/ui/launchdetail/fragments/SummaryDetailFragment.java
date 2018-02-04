@@ -30,7 +30,6 @@ import android.zetterstrom.com.forecast.models.Forecast;
 import android.zetterstrom.com.forecast.models.Unit;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.crashlytics.android.Crashlytics;
 import com.github.pwittchen.weathericonview.WeatherIconView;
@@ -68,7 +67,6 @@ import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Pad;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
-import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.RocketDetail;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -92,12 +90,13 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     private Context context;
     private CountDownTimer timer;
     public Launch detailLaunch;
-    private RocketDetail launchVehicle;
     private YouTubePlayerSupportFragment youTubePlayerFragment;
     private YouTubePlayer summaryYouTubePlayer;
     private boolean nightMode;
     private String youTubeURL;
     private Dialog dialog;
+    private boolean youTubePlaying = false;
+    private int youTubeProgress = 0;
 
     @BindView(R.id.content_TMinus_status)
     TextView contentTMinusStatus;
@@ -199,6 +198,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     TextView launchWindowText;
     @BindView(R.id.error_message)
     TextView errorMessage;
+    @BindView(R.id.youtube_view)
+    View youTubeView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -228,6 +229,11 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.add(R.id.youtube_view, youTubePlayerFragment).commit();
 
+        if (savedInstanceState != null){
+            youTubePlaying = savedInstanceState.getBoolean("youTubePlaying", false);
+            youTubeProgress = savedInstanceState.getInt("youTubeProgress", 0);
+            youTubeURL = savedInstanceState.getString("youTubeID");
+        }
 
         return view;
     }
@@ -240,7 +246,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         } else {
             nightMode = false;
         }
-        if (detailLaunch != null) {
+        if (detailLaunch != null && detailLaunch.isValid()) {
             setUpViews(detailLaunch);
         }
         super.onResume();
@@ -526,6 +532,11 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        if (summaryYouTubePlayer != null) {
+            outState.putBoolean("youTubePlaying", summaryYouTubePlayer.isPlaying());
+            outState.putInt("youTubeProgress", summaryYouTubePlayer.getCurrentTimeMillis());
+            outState.putString("youTubeID", youTubeURL);
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -542,10 +553,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                 } else {
                     fetchPastWeather();
                 }
-            }
-
-            if (detailLaunch.getRocket() != null) {
-                getLaunchVehicle(detailLaunch);
             }
 
             setupCountdownTimer(launch);
@@ -641,12 +648,12 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                         public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean restored) {
                             mainActivity.youTubePlayer = youTubePlayer;
                             summaryYouTubePlayer = youTubePlayer;
-                            if (!restored) {
-                                youTubePlayer.cueVideo(youTubeURL);
-                            }
+                            youTubePlayer.cueVideo(youTubeURL);
+                            Timber.v("YouTube Player - initialized: Progress - %s isPlaying - %s", youTubeProgress, youTubePlaying);
                             youTubePlayer.setOnFullscreenListener(new YouTubePlayer.OnFullscreenListener() {
                                 @Override
                                 public void onFullscreen(boolean b) {
+                                    Timber.v("onFullscreen");
                                     mainActivity.isYouTubePlayerFullScreen = b;
                                 }
                             });
@@ -708,6 +715,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                                         errorMessage.setVisibility(View.VISIBLE);
                                         errorMessage.setText(String.format("Live Broadcast %s", s));
                                     }
+                                    checkState();
                                 }
 
                                 @Override
@@ -774,8 +782,9 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                                         String url = detailLaunch.getVidURLs().get(index).getVal();
                                         String youTubeID = getYouTubeID(url);
                                         if (summaryYouTubePlayer != null && youTubeID != null){
+                                            youTubeURL = youTubeID;
                                             if (dialog != null && dialog.isShowing()) dialog.dismiss();
-                                            summaryYouTubePlayer.cueVideo(youTubeID);
+                                            summaryYouTubePlayer.cueVideo(youTubeURL);
                                             summaryYouTubePlayer.play();
                                         } else {
                                             Uri watchUri = Uri.parse(url);
@@ -822,6 +831,15 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
             }
         } catch (NullPointerException e) {
             Timber.e(e);
+        }
+    }
+
+    private void checkState() {
+        if (youTubeProgress != 0 && summaryYouTubePlayer != null) {
+            summaryYouTubePlayer.seekToMillis(youTubeProgress);
+            if (youTubePlaying) {
+                summaryYouTubePlayer.play();
+            }
         }
     }
 
@@ -1028,16 +1046,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         }
     }
 
-    private void getLaunchVehicle(Launch vehicle) {
-        String query;
-        if (vehicle.getRocket().getName().contains("Space Shuttle")) {
-            query = "Space Shuttle";
-        } else {
-            query = vehicle.getRocket().getName();
-        }
-
-        launchVehicle = getRealm().where(RocketDetail.class).contains("name", query).findFirst();
-    }
 
     private void setWindowStamp() {
         // Create a DateFormatter object for displaying date in specified format.
@@ -1146,8 +1154,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         if (youTubeInitializationResult.isUserRecoverableError()) {
             youTubeInitializationResult.getErrorDialog(getActivity(), 1).show();
         } else {
-            String error = String.format(getString(R.string.player_error), youTubeInitializationResult.toString());
-            Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
+            youTubeView.setVisibility(View.GONE);
         }
     }
 }

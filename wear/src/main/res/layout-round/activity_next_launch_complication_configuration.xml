@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.wear.widget.BoxInsetLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        app:layout_box="bottom|left|right"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/TextAppearance.AppCompat.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/material_baseline_grid_2x"
+            android:paddingLeft="@dimen/material_baseline_grid_4x"
+            android:paddingRight="@dimen/material_baseline_grid_4x"
+            android:background="@color/darkPrimary"
+            android:elevation="@dimen/material_baseline_grid_1x"
+            android:text="Select Launches to Follow"
+            android:textAlignment="center" />
+
+        <ScrollView
+            android:paddingStart="@dimen/material_baseline_grid_1.5x"
+            android:paddingEnd="@dimen/material_baseline_grid_1.5x"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/material_baseline_grid_1x"
+                android:layout_marginStart="@dimen/material_baseline_grid_1x"
+                android:orientation="vertical"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp">
+
+                <Switch
+                    android:id="@+id/switch_all"
+                    style="@style/Widget.Wear.RoundSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                    android:layout_marginTop="@dimen/material_baseline_grid_1x"
+                    android:text="All" />
+
+                <Switch
+                    android:id="@+id/switch_spacex"
+                    style="@style/Widget.Wear.RoundSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                    android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                    android:text="SpaceX" />
+
+                <Switch
+                    android:id="@+id/switch_nasa"
+                    style="@style/Widget.Wear.RoundSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                    android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                    android:text="NASA" />
+
+                <Switch
+                    android:id="@+id/switch_ula"
+                    style="@style/Widget.Wear.RoundSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                    android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                    android:text="ULA" />
+
+                <Switch
+                    android:id="@+id/switch_roscosmos"
+                    style="@style/Widget.Wear.RoundSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                    android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                    android:text="ROSCOSMOS" />
+
+                <Switch
+                    android:id="@+id/switch_cnsa"
+                    style="@style/Widget.Wear.RoundSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                    android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                    android:text="CSNA" />
+
+                <Button
+                    android:id="@+id/button_ok"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Accept" />
+
+                <android.support.v4.widget.Space
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/material_baseline_grid_6x" />
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</android.support.wear.widget.BoxInsetLayout>

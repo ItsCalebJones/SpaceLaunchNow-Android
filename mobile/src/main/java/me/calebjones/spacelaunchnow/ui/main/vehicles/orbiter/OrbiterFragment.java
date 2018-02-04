@@ -126,7 +126,7 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
                     OrbiterResponse jsonResponse = response.body();
                     items = new ArrayList<>(Arrays.asList(jsonResponse.getOrbiters()));
                     adapter.addItems(items);
-                    Analytics.from(getActivity()).sendNetworkEvent("ORBITER_INFORMATION", call.request().url().toString(), true);
+                    Analytics.from(context).sendNetworkEvent("ORBITER_INFORMATION", call.request().url().toString(), true);
                 } else {
                     Timber.e(ErrorUtil.parseSpaceLaunchNowError(response).message());
                     if (OrbiterFragment.this.getUserVisibleHint()) {
@@ -143,7 +143,7 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
                 if (OrbiterFragment.this.getUserVisibleHint()) {
                     SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, t.getLocalizedMessage());
                 }
-                Analytics.from(getActivity()).sendNetworkEvent("ORBITER_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());
+                Analytics.from(context).sendNetworkEvent("ORBITER_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());
             }
         });
     }

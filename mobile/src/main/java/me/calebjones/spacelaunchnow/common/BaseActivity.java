@@ -47,6 +47,9 @@ public class BaseActivity extends AppCompatActivity {
         super.onStart();
         Timber.d("onStart");
         Analytics.from(this).sendScreenView(name, name + " started.");
+        if (realm.isClosed()) {
+            realm = Realm.getDefaultInstance();
+        }
     }
 
     @Override

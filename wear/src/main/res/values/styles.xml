@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="BaseAppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/darkPrimary</item>
+        <item name="colorPrimaryDark">@color/darkPrimary_dark</item>
+        <item name="colorAccent">@color/darkAccent</item>
+        <item name="colorControlNormal">@color/darkIcons</item>
+        <item name="android:background">@color/dark_theme_background</item>
+
+        <item name="android:textColorHighlight">@color/dark_primary_text_color_selector</item>
+        <item name="android:textColorPrimary">@color/dark_primary_text_color_selector</item>
+        <item name="android:textColor">@color/dark_secondary_text_color_selector</item>
+        <item name="android:textColorSecondary">@color/dark_secondary_text_color_selector</item>
+    </style>
+
+    <style name="AppTheme.Button" parent="Base.Widget.AppCompat.Button">
+        <item name="android:colorButtonNormal">@color/darkAccent</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+
+    <style name="connectivity_indicator_icon">
+        <item name="android:tint">@color/connectivity_indicator_text</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">16dp</item>
+    </style>
+    <style name="connectivity_indicator">
+        <item name="android:background">@color/connectivity_indicator_bg</item>
+    </style>
+
+    <style name="connectivity_indicator_text">
+        <item name="android:textColor">@color/connectivity_indicator_text</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="action_button" parent="@android:style/Widget.ActionButton">
+        <item name="android:background">@drawable/bg_action_button</item>
+        <item name="android:backgroundTint">@color/darkAccent</item>
+        <item name="android:tint">@color/white</item>
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:paddingEnd">8dp</item>
+        <item name="android:scaleType">fitXY</item>
+    </style>
+</resources>

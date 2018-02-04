@@ -392,6 +392,9 @@ public class QueryBuilder {
             query.equalTo("status", 1).findAll();
         }
 
+        if (switchPreferences.getTBDLaunchSwitch()) {
+            query.equalTo("tbddate", 0).findAll();
+        }
         query.beginGroup();
 
         if (switchPreferences.getSwitchNasa()) {

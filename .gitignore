@@ -18,6 +18,6 @@ mobile/fabric.properties
 projectFilesBackup/.idea/workspace.xml
 
 *.apk
-
 keystore.properties
 mobile/keystore.properties
+mobile/alpha/release/output.json

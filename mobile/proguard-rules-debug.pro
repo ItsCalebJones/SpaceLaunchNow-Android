@@ -31,6 +31,11 @@
    public *;
 }
 
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
 # ButterKnife 7
 
 -keep class butterknife.** { *; }

@@ -14,9 +14,12 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.ExecutionException;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.Constants;
@@ -83,11 +86,18 @@ public class NotificationBuilder {
                 new NotificationCompat.WearableExtender()
                         .setHintHideIcon(true);
         if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
-            wearableExtender.setBackground(Utils.getBitMapFromUrl(context, launch.getRocket().getImageURL()));
-        } else {
-            wearableExtender.setBackground(BitmapFactory.decodeResource(context.getResources(), R.drawable.nav_header
-            ));
+            Bitmap bitmap = null;
+            try {
+                bitmap = Utils.getBitMapFromUrl(context, launch.getRocket().getImageURL());
+            } catch (ExecutionException | InterruptedException e) {
+                Timber.e(e);
+                Crashlytics.logException(e);
+            }
+            if (bitmap != null) {
+                wearableExtender.setBackground(bitmap);
+            }
         }
+
         if (update){
             mBuilder.setContentTitle("UPDATE: " + launchName);
         } else {
@@ -95,7 +105,7 @@ public class NotificationBuilder {
         }
 
         mBuilder.setContentText(expandedText)
-                .setSmallIcon(R.drawable.ic_rocket_white)
+                .setSmallIcon(R.drawable.ic_rocket)
                 .setAutoCancel(true)
                 .setContentText(expandedText)
                 .extend(wearableExtender)
@@ -110,7 +120,13 @@ public class NotificationBuilder {
 
 
         if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
-            Bitmap bitmap = Utils.getBitMapFromUrl(context, launch.getRocket().getImageURL());
+            Bitmap bitmap = null;
+            try {
+                bitmap = Utils.getBitMapFromUrl(context, launch.getRocket().getImageURL());
+            } catch (ExecutionException | InterruptedException e) {
+                Timber.e(e);
+                Crashlytics.logException(e);
+            }
             if (bitmap != null){
                 mBuilder.setLargeIcon(bitmap);
             }
