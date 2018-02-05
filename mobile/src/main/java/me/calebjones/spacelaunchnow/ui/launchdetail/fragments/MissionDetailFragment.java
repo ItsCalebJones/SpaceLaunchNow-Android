@@ -110,7 +110,7 @@ public class MissionDetailFragment extends RetroFitFragment {
 
     @Override
     public void onResume() {
-        if (detailLaunch != null) {
+        if (detailLaunch != null && detailLaunch.isValid()) {
             setUpViews(detailLaunch);
         }
         super.onResume();
