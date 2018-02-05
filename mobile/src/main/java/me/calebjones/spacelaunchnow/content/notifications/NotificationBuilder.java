@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -16,13 +15,14 @@ import android.support.v4.app.NotificationCompat;
 
 import com.crashlytics.android.Crashlytics;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.ExecutionException;
 
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.UniqueIdentifier;
@@ -31,6 +31,7 @@ import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import timber.log.Timber;
 
 import static me.calebjones.spacelaunchnow.content.notifications.NotificationHelper.CHANNEL_LAUNCH_IMMINENT;
+import static me.calebjones.spacelaunchnow.content.notifications.NotificationHelper.CHANNEL_LAUNCH_SILENT;
 import static me.calebjones.spacelaunchnow.content.notifications.NotificationHelper.CHANNEL_LAUNCH_UPDATE;
 
 public class NotificationBuilder {
@@ -51,6 +52,18 @@ public class NotificationBuilder {
         String expandedText;
         String launchName = launch.getName();
         String launchPad = launch.getLocation().getName();
+        boolean isDoNotDisturb = sharedPref.getBoolean("do_not_disturb_status", false);
+
+        if (isDoNotDisturb) {
+            try {
+                isDoNotDisturb = isTimeBetweenTwoTime(sharedPref.getString("do_not_disturb_start_time", "22:00"),
+                        sharedPref.getString("do_not_disturb_end_time", "08:00"),
+                        new SimpleDateFormat("HH:mm").format(new Date()));
+            } catch (ParseException e) {
+                Timber.e(e);
+                isDoNotDisturb = false;
+            }
+        }
 
         String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone", "default ringtone");
         Uri alarmSound = Uri.parse(ringtoneBox);
@@ -127,8 +140,10 @@ public class NotificationBuilder {
             mNotifyManager.notify(launch.getId(), summaryBuilder.build());
         }
 
-        if (update){
+        if (update && !isDoNotDisturb){
             mBuilder.setChannelId(CHANNEL_LAUNCH_UPDATE);
+        } else if (isDoNotDisturb) {
+            mBuilder.setChannelId(CHANNEL_LAUNCH_SILENT);
         } else {
             mBuilder.setChannelId(CHANNEL_LAUNCH_IMMINENT).setSound(alarmSound);
         }
@@ -148,7 +163,7 @@ public class NotificationBuilder {
             }
         }
 
-        if (update){
+        if (update || isDoNotDisturb){
             mBuilder.setPriority(Notification.PRIORITY_LOW);
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && sharedPref.getBoolean("notifications_new_message_heads_up", true)) {
@@ -166,6 +181,82 @@ public class NotificationBuilder {
 
         Analytics.from(context).sendNotificationEvent(launch.getName(), expandedText);
         mNotifyManager.notify(UniqueIdentifier.getID(), mBuilder.build());
+    }
+
+    public static boolean isTimeBetweenTwoTime(String argStartTime,
+                                               String argEndTime,
+                                               String argCurrentTime) throws ParseException {
+        String reg = "^([0-1][0-9]|[0-3]):([0-5][0-9])$";
+        //
+        if (argStartTime.matches(reg) && argEndTime.matches(reg)
+                && argCurrentTime.matches(reg)) {
+            boolean valid = false;
+            // Start Time
+            java.util.Date startTime = new SimpleDateFormat("HH:mm")
+                    .parse(argStartTime);
+            Calendar startCalendar = Calendar.getInstance();
+            startCalendar.setTime(startTime);
+
+            // Current Time
+            java.util.Date currentTime = new SimpleDateFormat("HH:mm")
+                    .parse(argCurrentTime);
+            Calendar currentCalendar = Calendar.getInstance();
+            currentCalendar.setTime(currentTime);
+
+            // End Time
+            java.util.Date endTime = new SimpleDateFormat("HH:mm")
+                    .parse(argEndTime);
+            Calendar endCalendar = Calendar.getInstance();
+            endCalendar.setTime(endTime);
+
+            //
+            if (currentTime.compareTo(endTime) < 0) {
+
+                currentCalendar.add(Calendar.DATE, 1);
+                currentTime = currentCalendar.getTime();
+
+            }
+
+            if (startTime.compareTo(endTime) < 0) {
+
+                startCalendar.add(Calendar.DATE, 1);
+                startTime = startCalendar.getTime();
+
+            }
+            //
+            if (currentTime.before(startTime)) {
+
+                Timber.v(" Time is Lesser ");
+
+                valid = false;
+            } else {
+
+                if (currentTime.after(endTime)) {
+                    endCalendar.add(Calendar.DATE, 1);
+                    endTime = endCalendar.getTime();
+
+                }
+
+                Timber.v("Comparing , Start Time /n %s", startTime);
+                Timber.v("Comparing , End Time /n %s", endTime);
+                Timber.v("Comparing , Current Time /n %s", currentTime);
+
+                if (currentTime.before(endTime)) {
+                    Timber.v("RESULT, Time lies b/w");
+                    valid = true;
+                } else {
+                    valid = false;
+                    Timber.v("RESULT, Time does not lies b/w");
+                }
+
+            }
+            return valid;
+
+        } else {
+            throw new IllegalArgumentException(
+                    "Not a valid time, expecting HH:MM:SS format");
+        }
+
     }
 
     private static String getContentText(long timeToFinish, boolean update) {

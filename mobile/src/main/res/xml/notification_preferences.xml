@@ -24,6 +24,28 @@
             android:title="Web-cast Only" />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="Do Not Disturb">
+        <SwitchPreference
+            android:key="do_not_disturb_status"
+            android:title="Enable Do Not Disturb"
+            android:summary="Enable for silent notifications for pre-Marshmallow."
+            />
+        <me.calebjones.spacelaunchnow.common.customviews.TimePreference
+            android:key="do_not_disturb_start_time"
+            android:dependency="do_not_disturb_status"
+            android:title="Start Time"
+            android:defaultValue="22:00"
+            />
+        <me.calebjones.spacelaunchnow.common.customviews.TimePreference
+            android:key="do_not_disturb_end_time"
+            android:dependency="do_not_disturb_status"
+            android:title="End Time"
+            android:defaultValue="08:00"
+            />
+
+
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="Notification Preferences">
         <RingtonePreference
             android:defaultValue="content://settings/system/notification_sound"
@@ -65,24 +87,24 @@
     <PreferenceCategory
         android:dependency="notifications_new_message"
         android:title="Notification Intervals"
-        android:summary="Select intervals to receive launchCategory notifications">
+        android:summary="Select intervals to receive launch notifications">
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="notifications_launch_day"
             android:summaryOff="Do not notify for launches within 24 hours."
-            android:summaryOn="Receive notification when a launchCategory is within 24 hours."
+            android:summaryOn="Receive notification when a launch is within 24 hours."
             android:title="24 Hours" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="notifications_launch_imminent"
-            android:summaryOff="Do not notify when a launchCategory is imminent."
-            android:summaryOn="Receive notification when a launchCategory is within one hour."
+            android:summaryOff="Do not notify when a launch is imminent."
+            android:summaryOn="Receive notification when a launch is within one hour."
             android:title="One Hour" />
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="notifications_launch_minute"
-            android:summaryOff="Do not notify when a launchCategory is within ten minutes."
-            android:summaryOn="Receive notification when a launchCategory is within ten minutes."
+            android:summaryOff="Do not notify when a launch is within ten minutes."
+            android:summaryOn="Receive notification when a launch is within ten minutes."
             android:title="Ten Minutes" />
     </PreferenceCategory>
 </PreferenceScreen>
