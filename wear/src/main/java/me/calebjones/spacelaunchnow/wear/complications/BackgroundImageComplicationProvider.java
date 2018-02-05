@@ -73,7 +73,7 @@ public class BackgroundImageComplicationProvider extends ComplicationProviderSer
                                         if (complicationData != null) {
                                             complicationManager.updateComplicationData(complicationId, complicationData);
 
-                                        } else {b
+                                        } else {
                                             // If no data is sent, we still need to inform the ComplicationManager, so
                                             // the update job can finish and the wake lock isn't held any longer.
                                             complicationManager.noUpdateRequired(complicationId);
