@@ -52,6 +52,7 @@ public final class Constants {
     public static final String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
     public static final String DATE_KEY = "me.calebjones.spacelaunchnow.wear.nextdate";
     public static final String HOUR_KEY = "me.calebjones.spacelaunchnow.wear.hourmode";
+    public static final String UTC_KEY = "me.calebjones.spacelaunchnow.wear.utcmode";
     public static final String DYNAMIC_KEY = "me.calebjones.spacelaunchnow.wear.textdynamic";
     public static final String BACKGROUND_KEY = "me.calebjones.spacelaunchnow.wear.background";
     public static final String SUPPORTER_KEY = "me.calebjones.spacelaunchnow.wear.supporter";
