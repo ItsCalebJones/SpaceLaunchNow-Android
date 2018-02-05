@@ -25,6 +25,7 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.utils.UniqueIdentifier;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import timber.log.Timber;
@@ -109,7 +110,22 @@ public class NotificationBuilder {
                 .setAutoCancel(true)
                 .setContentText(expandedText)
                 .extend(wearableExtender)
-                .setContentIntent(pending);
+                .setContentIntent(pending)
+                .setGroup(launch.getId() + "_group")
+                .setShowWhen(true);
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            NotificationCompat.Builder summaryBuilder = new NotificationCompat.Builder(context, CHANNEL_LAUNCH_IMMINENT)
+                    .setContentTitle(launchName)
+                    .setContentText("Launch Updates available.")
+                    .setSmallIcon(R.drawable.ic_rocket)
+                    .setShowWhen(true)
+                    .setGroup(launch.getId() + "_group")
+                    .setGroupSummary(true);
+
+            mNotifyManager.notify(launch.getId(), summaryBuilder.build());
+        }
 
         if (update){
             mBuilder.setChannelId(CHANNEL_LAUNCH_UPDATE);
@@ -135,8 +151,7 @@ public class NotificationBuilder {
         if (update){
             mBuilder.setPriority(Notification.PRIORITY_LOW);
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
-                    sharedPref.getBoolean("notifications_new_message_heads_up", true)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && sharedPref.getBoolean("notifications_new_message_heads_up", true)) {
                 mBuilder.setPriority(Notification.PRIORITY_HIGH);
             }
         }
@@ -150,7 +165,7 @@ public class NotificationBuilder {
         }
 
         Analytics.from(context).sendNotificationEvent(launch.getName(), expandedText);
-        mNotifyManager.notify(Constants.NOTIF_ID_HOUR + launch.getId(), mBuilder.build());
+        mNotifyManager.notify(UniqueIdentifier.getID(), mBuilder.build());
     }
 
     private static String getContentText(long timeToFinish, boolean update) {
