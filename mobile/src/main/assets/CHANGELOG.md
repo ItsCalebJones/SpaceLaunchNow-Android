@@ -3,9 +3,21 @@ A space launch tracker for Android using data from the Launch Library API.
 
 [View the latest releases here.](https://github.com/ItsCalebJones/SpaceLaunchNow-Android/releases)
 ## Changelog
-#### Updated 2-1-2017
+#### Updated 2-7-2017
 ---
-### Version 2.1.6 (Latest)
+### Version 2.2.0 (Latest)
+#### Overview
+Added a few small features and fixed some crashes found during the craziness of Falcon Heavy.
+
+#### Changelog
+* Add Do Not Disturb hours for pre-Marshmallow devices.
+* Add bundled notifications.
+* Add option to hide UTC time on Android Wear watchface.
+* Add background image complication for Android Wear.
+* Fix UI bugs and crashes.
+
+---
+### Version 2.1.6
 #### Overview
 Quick bug fix release - addressing a few issues.
 
