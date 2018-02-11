@@ -32,7 +32,7 @@ advancedVersioning {
     }
     codeOptions {
         versionCodeType VersionCodeType.AUTO_INCREMENT_ONE_STEP
-        dependsOnTasks 'release' // defaultValue
+        dependsOnTasks 'assemble' // defaultValue
 
     }
 
