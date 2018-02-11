@@ -87,24 +87,24 @@
     <PreferenceCategory
         android:dependency="notifications_new_message"
         android:title="Notification Intervals"
-        android:summary="Select intervals to receive launch notifications">
+        android:summary="Select intervals to receive launchCategory notifications">
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="notifications_launch_day"
             android:summaryOff="Do not notify for launches within 24 hours."
-            android:summaryOn="Receive notification when a launch is within 24 hours."
+            android:summaryOn="Receive notification when a launchCategory is within 24 hours."
             android:title="24 Hours" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="notifications_launch_imminent"
-            android:summaryOff="Do not notify when a launch is imminent."
-            android:summaryOn="Receive notification when a launch is within one hour."
+            android:summaryOff="Do not notify when a launchCategory is imminent."
+            android:summaryOn="Receive notification when a launchCategory is within one hour."
             android:title="One Hour" />
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="notifications_launch_minute"
-            android:summaryOff="Do not notify when a launch is within ten minutes."
-            android:summaryOn="Receive notification when a launch is within ten minutes."
+            android:summaryOff="Do not notify when a launchCategory is within ten minutes."
+            android:summaryOn="Receive notification when a launchCategory is within ten minutes."
             android:title="Ten Minutes" />
     </PreferenceCategory>
 </PreferenceScreen>

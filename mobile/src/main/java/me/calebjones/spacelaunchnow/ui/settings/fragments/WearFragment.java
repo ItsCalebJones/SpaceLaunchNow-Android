@@ -72,6 +72,7 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Timber.i("Wear preference %s changed.", key);
         Analytics.from(this).sendPreferenceEvent(key);
+
         UpdateWearJob.scheduleJobNow();
     }
 

@@ -18,6 +18,7 @@
             android:summary="Enable to show current time in UTC."
             android:title="Show UTC Time" />
 
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Background">
