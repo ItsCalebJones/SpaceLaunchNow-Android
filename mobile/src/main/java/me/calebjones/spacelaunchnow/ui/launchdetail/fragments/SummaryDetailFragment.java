@@ -86,7 +86,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     @BindView(R.id.countdown_separator)
     View countdownSeparator;
     private SharedPreferences sharedPref;
-    private static ListPreferences sharedPreference;
+    private ListPreferences sharedPreference;
     private Context context;
     private CountDownTimer timer;
     public Launch detailLaunch;

@@ -112,6 +112,14 @@ public class WearWatchfaceManager extends BaseManager {
         int grey = sharedPreferences.getInt("GREY_WEAR", DEFAULT_GREY) + 1;
 
         final PutDataMapRequest putImageReq = PutDataMapRequest.create("/nextLaunch");
+        PutDataMapRequest putConfigReq = PutDataMapRequest.create("/config");
+        putConfigReq.getDataMap().putBoolean(HOUR_KEY, sharedPreferences.getBoolean("wear_hour_mode", false));
+        putConfigReq.getDataMap().putBoolean(UTC_KEY, sharedPreferences.getBoolean("wear_display_utc", true));
+        putConfigReq.getDataMap().putLong("time", new Date().getTime());
+
+        PutDataRequest putConfigDataReq = putConfigReq.asPutDataRequest();
+        Wearable.getDataClient(context).putDataItem(putConfigDataReq);
+
 
             /*
              * brightness value ranges from -1.0 to 1.0, with 0.0 as the normal level

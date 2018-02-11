@@ -24,6 +24,28 @@
             android:title="Web-cast Only" />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="Do Not Disturb">
+        <SwitchPreference
+            android:key="do_not_disturb_status"
+            android:title="Enable Do Not Disturb"
+            android:summary="Enable for silent notifications for pre-Marshmallow."
+            />
+        <me.calebjones.spacelaunchnow.common.customviews.TimePreference
+            android:key="do_not_disturb_start_time"
+            android:dependency="do_not_disturb_status"
+            android:title="Start Time"
+            android:defaultValue="22:00"
+            />
+        <me.calebjones.spacelaunchnow.common.customviews.TimePreference
+            android:key="do_not_disturb_end_time"
+            android:dependency="do_not_disturb_status"
+            android:title="End Time"
+            android:defaultValue="08:00"
+            />
+
+
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="Notification Preferences">
         <RingtonePreference
             android:defaultValue="content://settings/system/notification_sound"

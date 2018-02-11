@@ -36,6 +36,7 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
     private SwitchPreferences switchPreferences;
     private WearWatchfaceManager wearWatchfaceManager;
     private static final String HOUR_KEY = "me.calebjones.spacelaunchnow.wear.hourmode";
+    private static final String UTC_KEY = "me.calebjones.spacelaunchnow.wear.utcmode";
     private static final String BACKGROUND_KEY = "me.calebjones.spacelaunchnow.wear.background";
 
     //Fragment lifecycle methods
@@ -70,19 +71,7 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Timber.i("Wear preference %s changed.", key);
-
-        if (key.equals("wear_hour_mode")) {
-            boolean hourMode = sharedPreferences.getBoolean(key, false);
-            PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/config");
-            putDataMapReq.getDataMap().putBoolean(HOUR_KEY, hourMode);
-            putDataMapReq.getDataMap().putLong("time", new Date().getTime());
-
-            PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
-            Wearable.getDataClient(getActivity()).putDataItem(putDataReq);
-            Analytics.from(this).sendPreferenceEvent(key, hourMode);
-        } else {
-            Analytics.from(this).sendPreferenceEvent(key);
-        }
+        Analytics.from(this).sendPreferenceEvent(key);
 
         UpdateWearJob.scheduleJobNow();
     }

@@ -95,11 +95,16 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
     private static final String TIME_KEY = "me.calebjones.spacelaunchnow.wear.nexttime";
     private static final String DATE_KEY = "me.calebjones.spacelaunchnow.wear.nextdate";
     private static final String HOUR_KEY = "me.calebjones.spacelaunchnow.wear.hourmode";
+    private static final String UTC_KEY = "me.calebjones.spacelaunchnow.wear.utcmode";
+
     private static final String BACKGROUND_KEY = "me.calebjones.spacelaunchnow.wear.background";
     private static final int BACKGROUND_NORMAL = 0;
     private static final int BACKGROUND_CUSTOM = 1;
     private static final int BACKGROUND_DYNAMIC = 2;
     private boolean twentyfourhourmode = false;
+
+    private boolean utcMode = true;
+
     private boolean custombackground = false;
     private String timeText;
     private int primaryTextColor;
@@ -185,6 +190,10 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
         private Bitmap bitmap;
         private DataClient dataClient;
 
+        private SimpleDateFormat twentyFourHourMode;
+        private SimpleDateFormat twelveHourMode;
+
+
 
         /**
          * Whether the display supports fewer bits for each color in ambient mode. When true, we
@@ -204,6 +213,10 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
                     .setShowUnreadCountIndicator(true)
                     .build();
             setWatchFaceStyle(watchFaceStyle);
+
+
+            twentyFourHourMode = new SimpleDateFormat("HH:mm");
+            twelveHourMode = new SimpleDateFormat("h:mm");
 
 
             layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -360,8 +373,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
 
             Date now = new Date();
             mTime = Calendar.getInstance();
-            SimpleDateFormat twentyFourHourMode = new SimpleDateFormat("HH:mm");
-            SimpleDateFormat twelveHourMode = new SimpleDateFormat("h:mm");
+
             if (twentyfourhourmode) {
                 // Draw H:MM in ambient mode or H:MM:SS in interactive mode.
                 timeText = twentyFourHourMode.format(now);
@@ -443,8 +455,14 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             //Date Text
             dateView.setText(dateText);
 
-            //UTC Text
-            utcTimeView.setText(utcText);
+            if (utcMode) {
+                utcTimeView.setVisibility(View.VISIBLE);
+                //UTC Text
+                utcTimeView.setText(utcText);
+            } else {
+                utcTimeView.setVisibility(View.GONE);
+            }
+
 
 
             //LaunchCategory Name
@@ -584,6 +602,11 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
                     twentyfourhourmode = dataMap.getBoolean(HOUR_KEY);
                     Timber.v("24 Hour Mode = %s", twentyfourhourmode);
                 }
+                if (dataMap.containsKey(UTC_KEY)) {
+                    utcMode = dataMap.getBoolean(UTC_KEY);
+                    Timber.v("UTC Mode = %s", utcMode);
+                }
+
             }
         }
 

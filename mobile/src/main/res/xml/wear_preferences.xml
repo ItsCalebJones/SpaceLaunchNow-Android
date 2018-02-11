@@ -12,6 +12,13 @@
             android:summaryOn="Use 24 Hour mode for keeping time."
             android:title="Watch Hour Mode" />
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="wear_display_utc"
+            android:summary="Enable to show current time in UTC."
+            android:title="Show UTC Time" />
+
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Background">

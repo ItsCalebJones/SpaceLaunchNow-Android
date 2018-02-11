@@ -103,6 +103,25 @@
                 android:value="me.calebjones.spacelaunchnow.complications.PROVIDER_CONFIG_ACTION"/>
 
         </service>
+      
+        <service
+            android:name=".complications.BackgroundImageComplicationProvider"
+            android:icon="@drawable/ic_human_explore_white"
+            android:label="Background"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="LARGE_IMAGE"/>
+
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="0"/>
+        </service>
+
         <receiver android:name=".complications.ComplicationTapBroadcastReceiver"/>
         <activity
             android:name=".complications.NextLaunchComplicationConfigActivity"

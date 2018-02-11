@@ -16,9 +16,11 @@ import me.calebjones.spacelaunchnow.R;
 class NotificationHelper extends ContextWrapper {
     private NotificationManager notifManager;
     public static final String CHANNEL_LAUNCH_IMMINENT = "me.calebjones.spacelaunchnow.LAUNCH_IMMINENT";
-    public static final String CHANNEL_LAUNCH_IMMINENT_NAME = "Launch Imminent";
+    public static final String CHANNEL_LAUNCH_IMMINENT_NAME = "Standard Launch Notification";
     public static final String CHANNEL_LAUNCH_UPDATE = "me.calebjones.spacelaunchnow.LAUNCH_UPDATE";
-    public static final String CHANNEL_LAUNCH_UPDATE_NAME = "Launch Update";
+    public static final String CHANNEL_LAUNCH_UPDATE_NAME = "Launch Status Updates";
+    public static final String CHANNEL_LAUNCH_SILENT = "me.calebjones.spacelaunchnow.LAUNCH_SILENT";
+    public static final String CHANNEL_LAUNCH_SILENT_NAME = "Do Not Disturb";
 
 //Create your notification channels//
 
@@ -46,6 +48,13 @@ class NotificationHelper extends ContextWrapper {
         statusChanged.setLightColor(Color.RED);
         statusChanged.setShowBadge(true);
         getManager().createNotificationChannel(statusChanged);
+
+        NotificationChannel silentChannel = new NotificationChannel(CHANNEL_LAUNCH_SILENT,
+                CHANNEL_LAUNCH_SILENT_NAME, NotificationManager.IMPORTANCE_MIN);
+        silentChannel.enableLights(false);
+        silentChannel.setLightColor(Color.RED);
+        silentChannel.setShowBadge(true);
+        getManager().createNotificationChannel(silentChannel);
 
     }
 

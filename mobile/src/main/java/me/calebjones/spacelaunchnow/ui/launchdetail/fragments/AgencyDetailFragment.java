@@ -127,7 +127,7 @@ public class AgencyDetailFragment extends BaseFragment {
 
     @Override
     public void onResume() {
-        if (detailLaunch != null) {
+        if (detailLaunch != null && detailLaunch.isValid()) {
             setUpViews(detailLaunch);
         }
         super.onResume();
