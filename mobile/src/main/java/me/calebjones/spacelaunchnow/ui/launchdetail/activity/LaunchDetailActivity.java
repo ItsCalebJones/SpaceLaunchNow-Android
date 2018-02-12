@@ -48,7 +48,6 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmList;
-import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.common.customviews.generate.OnFeedbackListener;
@@ -204,7 +203,7 @@ public class LaunchDetailActivity extends BaseActivity
         if (type != null && type.equals("launch")) {
             final int id = mIntent.getIntExtra("launchID", 0);
 
-            Launch launch = realm.where(Launch.class).equalTo("id", id).findFirst();
+            Launch launch = getRealm().where(Launch.class).equalTo("id", id).findFirst();
             if (launch != null) {
                 updateViews(launch);
             }
@@ -217,7 +216,7 @@ public class LaunchDetailActivity extends BaseActivity
                             final RealmList<Launch> items = new RealmList<>(response.body().getLaunches());
                             if (items.size() == 1) {
                                 final Launch item = items.first();
-                                realm.executeTransactionAsync(new Realm.Transaction() {
+                                getRealm().executeTransactionAsync(new Realm.Transaction() {
                                     @Override
                                     public void execute(Realm bgRealm) {
                                         Launch previous = bgRealm.where(Launch.class)
@@ -247,9 +246,9 @@ public class LaunchDetailActivity extends BaseActivity
                         } else {
                             LibraryError error = ErrorUtil.parseLibraryError(response);
                             if (error.getMessage().contains("None found")) {
-                                final Launch launch = realm.where(Launch.class).equalTo("id", id).findFirst();
+                                final Launch launch = getRealm().where(Launch.class).equalTo("id", id).findFirst();
                                 if (launch != null) {
-                                    realm.executeTransaction(new Realm.Transaction() {
+                                    getRealm().executeTransaction(new Realm.Transaction() {
                                         @Override
                                         public void execute(Realm realm) {
                                             launch.deleteFromRealm();
@@ -266,7 +265,7 @@ public class LaunchDetailActivity extends BaseActivity
 
                     @Override
                     public void onFailure(Call<LaunchResponse> call, Throwable t) {
-                        Launch item = realm.where(Launch.class)
+                        Launch item = getRealm().where(Launch.class)
                                 .equalTo("id", id)
                                 .findFirst();
                         updateViews(item);
