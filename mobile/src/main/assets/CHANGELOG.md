@@ -18,6 +18,7 @@ Added a few small features and fixed some crashes found during the craziness of 
 
 ---
 ### Version 2.1.6
+
 #### Overview
 Quick bug fix release - addressing a few issues.
 

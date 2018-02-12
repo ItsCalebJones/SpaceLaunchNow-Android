@@ -96,12 +96,15 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
     private static final String DATE_KEY = "me.calebjones.spacelaunchnow.wear.nextdate";
     private static final String HOUR_KEY = "me.calebjones.spacelaunchnow.wear.hourmode";
     private static final String UTC_KEY = "me.calebjones.spacelaunchnow.wear.utcmode";
+
     private static final String BACKGROUND_KEY = "me.calebjones.spacelaunchnow.wear.background";
     private static final int BACKGROUND_NORMAL = 0;
     private static final int BACKGROUND_CUSTOM = 1;
     private static final int BACKGROUND_DYNAMIC = 2;
     private boolean twentyfourhourmode = false;
+
     private boolean utcMode = true;
+
     private boolean custombackground = false;
     private String timeText;
     private int primaryTextColor;
@@ -186,8 +189,10 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
         private int apiConnectedRefresh;
         private Bitmap bitmap;
         private DataClient dataClient;
+
         private SimpleDateFormat twentyFourHourMode;
         private SimpleDateFormat twelveHourMode;
+
 
 
         /**
@@ -208,6 +213,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
                     .setShowUnreadCountIndicator(true)
                     .build();
             setWatchFaceStyle(watchFaceStyle);
+
 
             twentyFourHourMode = new SimpleDateFormat("HH:mm");
             twelveHourMode = new SimpleDateFormat("h:mm");
@@ -367,6 +373,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
 
             Date now = new Date();
             mTime = Calendar.getInstance();
+
             if (twentyfourhourmode) {
                 // Draw H:MM in ambient mode or H:MM:SS in interactive mode.
                 timeText = twentyFourHourMode.format(now);
@@ -455,6 +462,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             } else {
                 utcTimeView.setVisibility(View.GONE);
             }
+
 
 
             //LaunchCategory Name
@@ -598,6 +606,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
                     utcMode = dataMap.getBoolean(UTC_KEY);
                     Timber.v("UTC Mode = %s", utcMode);
                 }
+
             }
         }
 

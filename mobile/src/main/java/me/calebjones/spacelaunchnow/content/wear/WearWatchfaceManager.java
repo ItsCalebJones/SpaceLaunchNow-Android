@@ -120,6 +120,7 @@ public class WearWatchfaceManager extends BaseManager {
         PutDataRequest putConfigDataReq = putConfigReq.asPutDataRequest();
         Wearable.getDataClient(context).putDataItem(putConfigDataReq);
 
+
             /*
              * brightness value ranges from -1.0 to 1.0, with 0.0 as the normal level
              */

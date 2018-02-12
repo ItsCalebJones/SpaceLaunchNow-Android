@@ -103,7 +103,7 @@
                 android:value="me.calebjones.spacelaunchnow.complications.PROVIDER_CONFIG_ACTION"/>
 
         </service>
-
+      
         <service
             android:name=".complications.BackgroundImageComplicationProvider"
             android:icon="@drawable/ic_human_explore_white"
