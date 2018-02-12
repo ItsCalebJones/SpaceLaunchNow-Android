@@ -21,3 +21,4 @@ projectFilesBackup/.idea/workspace.xml
 keystore.properties
 mobile/keystore.properties
 mobile/alpha/release/output.json
+*.lnk
