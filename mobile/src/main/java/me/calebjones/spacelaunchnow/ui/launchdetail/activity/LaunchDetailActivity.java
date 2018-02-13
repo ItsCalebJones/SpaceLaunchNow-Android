@@ -268,7 +268,9 @@ public class LaunchDetailActivity extends BaseActivity
                         Launch item = getRealm().where(Launch.class)
                                 .equalTo("id", id)
                                 .findFirst();
-                        updateViews(item);
+                        if (item != null) {
+                            updateViews(item);
+                        }
                         detailSwipeRefresh.setRefreshing(false);
                     }
                 });

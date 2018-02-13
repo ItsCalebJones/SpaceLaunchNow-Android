@@ -16,7 +16,7 @@
         <SwitchPreference
             android:defaultValue="true"
             android:key="background_sync"
-            android:summaryOff="Allow Launch Data to sync in the background, required for launchCategory notifications."
+            android:summaryOff="Allow Launch Data to sync in the background, required for Launch notifications."
             android:summaryOn="Launch data will be synced even when the app is in the background."
             android:title="Allow Background Syncs" />
         <SwitchPreference
@@ -28,7 +28,7 @@
         <SwitchPreference
             android:dependency="background_sync"
             android:key="wifi_only"
-            android:summary="Launch data will not be synced unless a WiFi connection is available. This will impact launchCategory notifications."
+            android:summary="Launch data will not be synced unless a WiFi connection is available. This will impact Launch notifications."
             android:title="WiFi Only" />
     </PreferenceCategory>
 
@@ -39,7 +39,7 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="calendar_sync_state"
-            android:summary="Allow next launchCategory to sync with default Calendar."
+            android:summary="Allow next Launch to sync with default Calendar."
             android:title="Automatic Calendar Sync" />
 
         <com.afollestad.materialdialogs.prefs.MaterialListPreference
@@ -55,11 +55,11 @@
         <com.afollestad.materialdialogs.prefs.MaterialListPreference
             android:defaultValue="0"
             android:dependency="calendar_sync_state"
-            android:dialogMessage="Select a Calendar for launchCategory events."
+            android:dialogMessage="Select a Calendar for Launch events."
             android:entries="@array/empty"
             android:entryValues="@array/empty"
             android:key="default_calendar_state"
-            android:summary="Configure Calendar for launchCategory events."
+            android:summary="Configure Calendar for Launch events."
             android:title="Calendar Account" />
 
         <com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference

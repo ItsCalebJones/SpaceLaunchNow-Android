@@ -186,7 +186,7 @@ public class NotificationBuilder {
     public static boolean isTimeBetweenTwoTime(String argStartTime,
                                                String argEndTime,
                                                String argCurrentTime) throws ParseException {
-        String reg = "^([0-1][0-9]|[0-3]):([0-5][0-9])$";
+        String reg = "^([0-2][0-9]|[0-3]):([0-5][0-9])$";
         //
         if (argStartTime.matches(reg) && argEndTime.matches(reg)
                 && argCurrentTime.matches(reg)) {
@@ -254,7 +254,7 @@ public class NotificationBuilder {
 
         } else {
             throw new IllegalArgumentException(
-                    "Not a valid time, expecting HH:MM:SS format");
+                    "Not a valid time, expecting HH:MM format");
         }
 
     }

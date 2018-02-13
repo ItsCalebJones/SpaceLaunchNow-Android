@@ -27,6 +27,6 @@
         android:layout_marginLeft="32dp"
         android:layout_toRightOf="@id/ivIcon"
         android:layout_width="match_parent"
-        android:text="Set up launchCategory notifications and scheduling."
+        android:text="Set up Launch notifications and scheduling."
         android:textSize="14sp" />
 </RelativeLayout>
