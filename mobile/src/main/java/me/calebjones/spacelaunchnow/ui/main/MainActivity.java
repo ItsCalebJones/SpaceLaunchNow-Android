@@ -410,27 +410,44 @@ public class MainActivity extends BaseActivity {
                     }
                 }, 1000);
 
-            } else if (Once.beenDone("appOpen", Amount.exactly(3))) {
-                if (!Once.beenDone("showRemoveAdThree") && !SupporterHelper.isSupporter()) {
-                    Once.markDone("showRemoveAdThree");
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            showRemoveAd();
+            }
+            if (!SupporterHelper.isSupporter()) {
+                if (!Once.beenDone("userCheckedSupporter")) {
+                    if (Once.beenDone("appOpen", Amount.exactly(3))) {
+                        if (!Once.beenDone("showRemoveAdThree") && !SupporterHelper.isSupporter()) {
+                            Once.markDone("showRemoveAdThree");
+                            final Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showRemoveAd();
+                                }
+                            }, 5000);
                         }
-                    }, 1000);
-                }
-            } else if (Once.beenDone("appOpen", Amount.exactly(7))) {
-                if (!Once.beenDone("showRemoveAdSeven") && !SupporterHelper.isSupporter()) {
-                    Once.markDone("showRemoveAdSeven");
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            showRemoveAd();
+                    } else if (Once.beenDone("appOpen", Amount.moreThan(7))
+                            && Once.beenDone("appOpen", Amount.lessThan(13))) {
+                        if (!Once.beenDone("showRemoveAdSeven") && !SupporterHelper.isSupporter()) {
+                            Once.markDone("showRemoveAdSeven");
+                            final Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showRemoveAd();
+                                }
+                            }, 5000);
                         }
-                    }, 1000);
+                    } else if (Once.beenDone("appOpen", Amount.exactly(14))) {
+                        if (!Once.beenDone("showRemoveAd14") && !SupporterHelper.isSupporter()) {
+                            Once.markDone("showRemoveAd14");
+                            final Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showRemoveAd();
+                                }
+                            }, 5000);
+                        }
+                    }
                 }
             }
         }
@@ -452,12 +469,13 @@ public class MainActivity extends BaseActivity {
 
     private void showRemoveAd(){
         snackbar = Snackbar
-                .make(coordinatorLayout, "Remove ads and get pro features?", Snackbar.LENGTH_LONG)
+                .make(coordinatorLayout, "Interested in Pro Features or Removing Ads?", Snackbar.LENGTH_INDEFINITE)
                 .setActionTextColor(ContextCompat.getColor(context, R.color.colorAccent))
-                .setAction("Yes!", new View.OnClickListener() {
+                .setAction("Yes", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        startActivity(new Intent(context, SupportActivity.class));
+                        Once.markDone("userCheckedSupporter");
+                        startActivity(new Intent(context, SupporterActivity.class));
                     }
                 });
         snackbar.show();
