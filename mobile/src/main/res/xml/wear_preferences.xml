@@ -26,7 +26,7 @@
         <SwitchPreference
             android:key="supporter_dynamic_background"
             android:defaultValue="false"
-            android:summary="Use image of the next launchCategory vehicle if available."
+            android:summary="Use image of the next Launch vehicle if available."
             android:title="Dynamic Background" />
 
         <SwitchPreference

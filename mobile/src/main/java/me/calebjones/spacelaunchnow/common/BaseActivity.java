@@ -68,6 +68,9 @@ public class BaseActivity extends AppCompatActivity {
 
 
     public Realm getRealm() {
+        if(realm.isClosed()){
+            realm = Realm.getDefaultInstance();
+        }
         return realm;
     }
 }

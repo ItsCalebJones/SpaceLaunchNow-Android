@@ -533,9 +533,13 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (summaryYouTubePlayer != null) {
-            outState.putBoolean("youTubePlaying", summaryYouTubePlayer.isPlaying());
-            outState.putInt("youTubeProgress", summaryYouTubePlayer.getCurrentTimeMillis());
-            outState.putString("youTubeID", youTubeURL);
+            try {
+                outState.putBoolean("youTubePlaying", summaryYouTubePlayer.isPlaying());
+                outState.putInt("youTubeProgress", summaryYouTubePlayer.getCurrentTimeMillis());
+                outState.putString("youTubeID", youTubeURL);
+            } catch (IllegalStateException e) {
+                Timber.e(e);
+            }
         }
         super.onSaveInstanceState(outState);
     }
@@ -1120,7 +1124,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
     @OnClick(R.id.map_view_summary)
     public void onViewClicked() {
-        if (detailLaunch != null && detailLaunch.getLocation() != null) {
+        if (detailLaunch != null && detailLaunch.getLocation() != null && detailLaunch.isValid()) {
             String location = detailLaunch.getLocation().getName();
             location = (location.substring(location.indexOf(",") + 1));
 
