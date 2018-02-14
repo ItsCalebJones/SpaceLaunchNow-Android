@@ -53,6 +53,7 @@ import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
+import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import timber.log.Timber;
@@ -559,6 +560,10 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.upcoming_menu, menu);
+
+        if(SupporterHelper.isSupporter()){
+            menu.removeItem(R.id.action_supporter);
+        }
 
         final MenuItem item = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);

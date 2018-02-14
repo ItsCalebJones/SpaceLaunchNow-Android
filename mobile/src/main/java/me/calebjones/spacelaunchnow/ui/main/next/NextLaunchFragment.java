@@ -18,6 +18,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,6 +42,7 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.mrapp.android.preference.activity.PreferenceActivity;
 import io.realm.RealmChangeListener;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
@@ -59,6 +61,9 @@ import me.calebjones.spacelaunchnow.data.models.UpdateRecord;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
+import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
+import me.calebjones.spacelaunchnow.ui.settings.fragments.NotificationsFragment;
+import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactManager;
@@ -107,6 +112,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     AppCompatImageView tbdInfo;
     @BindView(R.id.last_launch_info)
     AppCompatImageView lastLaunchInfo;
+    @BindView(R.id.action_notification_settings)
+    AppCompatButton notificationsSettings;
 
     private View view;
     private RecyclerView mRecyclerView;
@@ -127,7 +134,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     private boolean active;
     private boolean switchChanged;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -527,6 +533,10 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             inflater.inflate(R.menu.next_menu, menu);
             mMenu = menu;
         }
+
+        if(SupporterHelper.isSupporter()){
+            menu.removeItem(R.id.action_supporter);
+        }
     }
 
     @Override
@@ -728,6 +738,14 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     public void setPersistLastSwitch() {
         confirm();
         switchPreferences.setPersistLastSwitch(persistLastSwitch.isChecked());
+    }
+
+    @OnClick(R.id.action_notification_settings)
+    public void onNotificationSettingsClicked(){
+        Intent intent = new Intent(context, SettingsActivity.class );
+        intent.putExtra( PreferenceActivity.EXTRA_SHOW_FRAGMENT, NotificationsFragment.class.getName());
+        intent.putExtra( PreferenceActivity.EXTRA_NO_HEADERS, true );
+        startActivity(intent);
     }
 
     @OnClick({R.id.no_go_info, R.id.tbd_info, R.id.last_launch_info})

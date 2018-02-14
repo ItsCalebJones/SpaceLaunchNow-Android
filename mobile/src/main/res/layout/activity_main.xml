@@ -24,7 +24,8 @@
                 layout="@layout/app_bar_main"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@id/adView" />
+                android:layout_above="@id/adView"
+                />
 
             <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/adView"
@@ -35,6 +36,7 @@
                 android:visibility="gone"
                 ads:adSize="SMART_BANNER"
                 ads:adUnitId="ca-app-pub-9824528399164059/9713798255" />
+
         </RelativeLayout>
     </android.support.v4.widget.DrawerLayout>
 </android.support.design.widget.CoordinatorLayout>

@@ -12,6 +12,13 @@
         android:title="Date" />
 
     <item
+        android:id="@+id/action_supporter"
+        android:orderInCategory="95"
+        android:title="Remove Ads"
+        android:textColor="?android:textColorPrimary"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/return_home"
         android:orderInCategory="1"
         android:icon="@drawable/ic_action_home"

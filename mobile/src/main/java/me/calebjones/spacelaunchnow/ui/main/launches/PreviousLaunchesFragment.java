@@ -56,6 +56,7 @@ import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
+import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
@@ -595,6 +596,10 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.previous_menu, menu);
+
+        if(SupporterHelper.isSupporter()){
+            menu.removeItem(R.id.action_supporter);
+        }
 
         final MenuItem item = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);

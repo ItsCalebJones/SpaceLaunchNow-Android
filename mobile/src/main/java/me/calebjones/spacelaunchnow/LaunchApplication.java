@@ -87,6 +87,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
             libraryDataManager.getFirstLaunchData();
             Once.markDone("loadInitialData");
         }
+        Once.markDone("appOpen");
     }
 
 

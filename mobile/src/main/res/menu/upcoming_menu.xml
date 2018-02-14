@@ -12,6 +12,13 @@
         android:title="Refresh" />
 
     <item
+        android:id="@+id/action_supporter"
+        android:orderInCategory="95"
+        android:title="Remove Ads"
+        android:textColor="?android:textColorPrimary"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
