@@ -13,10 +13,14 @@ import android.support.v4.content.ContextCompat;
 import me.calebjones.spacelaunchnow.R;
 
 
-class NotificationHelper extends ContextWrapper {
+public class NotificationHelper extends ContextWrapper {
     private NotificationManager notifManager;
     public static final String CHANNEL_LAUNCH_IMMINENT = "me.calebjones.spacelaunchnow.LAUNCH_IMMINENT";
-    public static final String CHANNEL_LAUNCH_IMMINENT_NAME = "Standard Launch Notification";
+    public static final String CHANNEL_LAUNCH_IMMINENT_NAME = "Launch Notification (Less then One Hour)";
+    public static final String CHANNEL_LAUNCH_REMINDER = "me.calebjones.spacelaunchnow.LAUNCH_REMINDER";
+    public static final String CHANNEL_LAUNCH_REMINDER_NAME = "Launch Notification (24 Hour)";
+    public static final String CHANNEL_LAUNCH_WEEKLY = "me.calebjones.spacelaunchnow.LAUNCH_WEEKLY_DIGEST";
+    public static final String CHANNEL_LAUNCH_WEEKLY_NAME = "Weekly Summary";
     public static final String CHANNEL_LAUNCH_UPDATE = "me.calebjones.spacelaunchnow.LAUNCH_UPDATE";
     public static final String CHANNEL_LAUNCH_UPDATE_NAME = "Launch Status Updates";
     public static final String CHANNEL_LAUNCH_SILENT = "me.calebjones.spacelaunchnow.LAUNCH_SILENT";
@@ -42,12 +46,26 @@ class NotificationHelper extends ContextWrapper {
         getManager().createNotificationChannel(launchImminent);
 
         NotificationChannel statusChanged = new NotificationChannel(CHANNEL_LAUNCH_UPDATE,
-                CHANNEL_LAUNCH_UPDATE_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+                CHANNEL_LAUNCH_REMINDER_NAME, NotificationManager.IMPORTANCE_DEFAULT);
         statusChanged.enableLights(false);
         statusChanged.enableVibration(true);
         statusChanged.setLightColor(Color.RED);
         statusChanged.setShowBadge(true);
         getManager().createNotificationChannel(statusChanged);
+
+        NotificationChannel launchReminder = new NotificationChannel(CHANNEL_LAUNCH_REMINDER,
+                CHANNEL_LAUNCH_UPDATE_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+        launchReminder.enableLights(false);
+        launchReminder.setLightColor(Color.RED);
+        launchReminder.setShowBadge(true);
+        getManager().createNotificationChannel(launchReminder);
+
+        NotificationChannel launchWeeklySummary = new NotificationChannel(CHANNEL_LAUNCH_WEEKLY,
+                CHANNEL_LAUNCH_WEEKLY_NAME, NotificationManager.IMPORTANCE_LOW);
+        launchWeeklySummary.enableLights(false);
+        launchWeeklySummary.setLightColor(Color.RED);
+        launchWeeklySummary.setShowBadge(true);
+        getManager().createNotificationChannel(launchWeeklySummary);
 
         NotificationChannel silentChannel = new NotificationChannel(CHANNEL_LAUNCH_SILENT,
                 CHANNEL_LAUNCH_SILENT_NAME, NotificationManager.IMPORTANCE_MIN);

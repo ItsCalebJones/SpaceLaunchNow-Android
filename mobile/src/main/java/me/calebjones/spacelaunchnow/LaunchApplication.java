@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.format.DateFormat;
@@ -39,6 +40,7 @@ import me.calebjones.spacelaunchnow.content.jobs.SyncJob;
 import me.calebjones.spacelaunchnow.content.jobs.SyncWearJob;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateJob;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
+import me.calebjones.spacelaunchnow.content.notifications.NotificationHelper;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
@@ -78,6 +80,13 @@ public class LaunchApplication extends Application implements Analytics.Provider
         setupDrawableLoader();
         checkSubscriptions();
         setupAndCheckOnce();
+        setupNotificationChannels();
+    }
+
+    private void setupNotificationChannels() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            new NotificationHelper(context);
+        }
     }
 
     private void setupAndCheckOnce() {
