@@ -55,8 +55,7 @@ public class NotificationReceiver extends NotificationExtenderService {
                         long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
 
                         if (timeToFinish > 0) {
-                            boolean update = data.getString("notification_type").contains("netstampChanged");
-                            NotificationBuilder.notifyUser(getApplicationContext(), launch, timeToFinish, update);
+                            NotificationBuilder.notifyUser(getApplicationContext(), launch, timeToFinish, data.getString("notification_type"));
                         }
                     }
                     return true;

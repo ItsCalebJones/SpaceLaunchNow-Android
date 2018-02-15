@@ -31,18 +31,20 @@ import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import timber.log.Timber;
 
 import static me.calebjones.spacelaunchnow.content.notifications.NotificationHelper.CHANNEL_LAUNCH_IMMINENT;
+import static me.calebjones.spacelaunchnow.content.notifications.NotificationHelper.CHANNEL_LAUNCH_REMINDER;
 import static me.calebjones.spacelaunchnow.content.notifications.NotificationHelper.CHANNEL_LAUNCH_SILENT;
 import static me.calebjones.spacelaunchnow.content.notifications.NotificationHelper.CHANNEL_LAUNCH_UPDATE;
 
 public class NotificationBuilder {
-    public static void notifyUser(Context context, Launch launch, long timeToFinish, boolean update) {
+    public static void notifyUser(Context context, Launch launch, long timeToFinish, String notificationType) {
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         NotificationCompat.Builder mBuilder;
         NotificationManager mNotifyManager;
+        boolean update = notificationType.contains("netstampChanged");
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationHelper notificationHelper = new NotificationHelper(context);
-            mBuilder = new NotificationCompat.Builder(context, CHANNEL_LAUNCH_IMMINENT);
+            mBuilder = new NotificationCompat.Builder(context, CHANNEL_LAUNCH_REMINDER);
             mNotifyManager = notificationHelper.getManager();
         } else {
             mBuilder = new NotificationCompat.Builder(context);
@@ -127,9 +129,26 @@ public class NotificationBuilder {
                 .setGroup(launch.getId() + "_group")
                 .setShowWhen(true);
 
+        String channel;
+        if (update && !isDoNotDisturb){
+            channel = CHANNEL_LAUNCH_UPDATE;
+            mBuilder.setChannelId(CHANNEL_LAUNCH_UPDATE);
+        } else if (isDoNotDisturb) {
+            channel = CHANNEL_LAUNCH_SILENT;
+            mBuilder.setChannelId(CHANNEL_LAUNCH_SILENT);
+        } else if (notificationType.contains("oneHour") || notificationType.contains("tenMinute")) {
+            channel = CHANNEL_LAUNCH_IMMINENT;
+            mBuilder.setChannelId(CHANNEL_LAUNCH_IMMINENT).setSound(alarmSound);
+        } else if (notificationType.contains("twentyFourHour")){
+            channel = CHANNEL_LAUNCH_REMINDER;
+            mBuilder.setChannelId(CHANNEL_LAUNCH_REMINDER);
+        } else {
+            channel = CHANNEL_LAUNCH_REMINDER;
+            mBuilder.setChannelId(CHANNEL_LAUNCH_REMINDER);
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            NotificationCompat.Builder summaryBuilder = new NotificationCompat.Builder(context, CHANNEL_LAUNCH_IMMINENT)
+            NotificationCompat.Builder summaryBuilder = new NotificationCompat.Builder(context, channel)
                     .setContentTitle(launchName)
                     .setContentText("Launch Updates available.")
                     .setSmallIcon(R.drawable.ic_rocket)
@@ -140,13 +159,6 @@ public class NotificationBuilder {
             mNotifyManager.notify(launch.getId(), summaryBuilder.build());
         }
 
-        if (update && !isDoNotDisturb){
-            mBuilder.setChannelId(CHANNEL_LAUNCH_UPDATE);
-        } else if (isDoNotDisturb) {
-            mBuilder.setChannelId(CHANNEL_LAUNCH_SILENT);
-        } else {
-            mBuilder.setChannelId(CHANNEL_LAUNCH_IMMINENT).setSound(alarmSound);
-        }
 
 
 

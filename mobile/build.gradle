@@ -251,7 +251,7 @@ dependencies {
     // Billing
     implementation 'com.anjlab.android.iab.v3:library:1.0.44'
 
-    implementation 'com.evernote:android-job:1.2.1'
+    implementation 'com.evernote:android-job:1.2.2'
     implementation 'blue.aodev:material-values:1.1.1'
 
     // Views and Animations
