@@ -21,6 +21,7 @@ import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.ui.main.vehicles.launcher.LauncherFragment;
 import me.calebjones.spacelaunchnow.ui.main.vehicles.orbiter.OrbiterFragment;
+import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 
 public class VehiclesViewPager extends BaseFragment {
 
@@ -87,6 +88,10 @@ public class VehiclesViewPager extends BaseFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.main_menu, menu);
+
+        if(SupporterHelper.isSupporter()){
+            menu.removeItem(R.id.action_supporter);
+        }
     }
 
     @Override

@@ -241,6 +241,13 @@
                             </LinearLayout>
                         </LinearLayout>
 
+                        <android.support.v7.widget.AppCompatButton
+                            style="@style/Base.Widget.AppCompat.Button.Colored"
+                            android:id="@+id/action_notification_settings"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Edit Notification Settings"/>
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

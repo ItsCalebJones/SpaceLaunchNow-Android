@@ -87,6 +87,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
             libraryDataManager.getFirstLaunchData();
             Once.markDone("loadInitialData");
         }
+        Once.markDone("appOpen");
     }
 
 
@@ -250,15 +251,16 @@ public class LaunchApplication extends Application implements Analytics.Provider
         * Version 1.3.0-Beta had a bug where starting a service crashed before Crashlytics picked it up.
         */
         // Set up Crashlytics, disabled for debug builds
+
+        Crashlytics crashlyticsKit = new Crashlytics.Builder()
+                .core(new CrashlyticsCore.Builder().build())
+                .build();
+        Fabric.with(context, crashlyticsKit);
+
         new Thread(new Runnable() {
 
             @Override
             public void run() {
-                Crashlytics crashlyticsKit = new Crashlytics.Builder()
-                        .core(new CrashlyticsCore.Builder().build())
-                        .build();
-                Fabric.with(context, crashlyticsKit);
-
                 // Initialize Fabric with the debug-disabled crashlytics.
                 Crashlytics.setString("Timezone", String.valueOf(TimeZone.getDefault().getDisplayName()));
                 Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());

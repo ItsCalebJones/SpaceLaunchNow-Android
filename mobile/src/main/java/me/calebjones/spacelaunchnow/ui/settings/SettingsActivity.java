@@ -1,8 +1,6 @@
 package me.calebjones.spacelaunchnow.ui.settings;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 
 import de.mrapp.android.preference.activity.PreferenceActivity;
@@ -15,8 +13,6 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
         ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
@@ -27,7 +23,6 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     public final void onStart() {
         super.onStart();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         Analytics.from(this).sendScreenView("Settings", "Settings started.");
     }
 

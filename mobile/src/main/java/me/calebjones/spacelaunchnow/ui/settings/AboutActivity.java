@@ -56,24 +56,21 @@ public class AboutActivity extends AppCompatActivity {
                 .addTwitterLink("spacelaunchnow")
                 .addFacebookLink("spacelaunchnow")
                 .addWebsiteLink("https://spacelaunchnow.me")
-                .addLink(new IconicsDrawable(this)
+                .addAction(new IconicsDrawable(this)
                         .icon(CommunityMaterial.Icon.cmd_rocket)
                         .sizeDp(24).toBitmap(),
                         "Launch Library",
                         "https://launchlibrary.net")
+                .addLink(new IconicsDrawable(this)
+                                .icon(CommunityMaterial.Icon.cmd_discord)
+                                .sizeDp(24).toBitmap(),
+                        "Discord",
+                        "https://discord.gg/WVfzEDW")
                 .setAppName("Space Launch Now")
                 .setAppTitle(Utils.getVersionName(this))
                 .addShareAction("Checkout " + R.string.app_name)
                 .addUpdateAction()
                 .setActionsColumnsCount(2)
-                .addChangeLogAction(new Intent(this, ChangelogActivity.class))
-                .addIntroduceAction(new Intent(this, OnboardingActivity.class))
-                .addDonateAction(new Intent(this, SupporterActivity.class))
-                .addAction(new IconicsDrawable(this)
-                        .icon(CommunityMaterial.Icon.cmd_discord)
-                        .sizeDp(24).toBitmap(),
-                        "Discord",
-                        "https://discord.gg/WVfzEDW")
                 .addAction(new IconicsDrawable(this)
                                 .icon(CommunityMaterial.Icon.cmd_android_debug_bridge)
                                 .sizeDp(24).toBitmap(),
@@ -99,6 +96,10 @@ public class AboutActivity extends AppCompatActivity {
                             }
                         }
                 )
+                .addChangeLogAction(new Intent(this, ChangelogActivity.class))
+                .addIntroduceAction(new Intent(this, OnboardingActivity.class))
+                .addDonateAction(new Intent(Intent.ACTION_VIEW, Uri.parse("https://paypal.me/cejones")))
+                .addRemoveAdsAction(new Intent(this, SupporterActivity.class))
                 .setWrapScrollView(true)
                 .setShowAsCard(true);
 

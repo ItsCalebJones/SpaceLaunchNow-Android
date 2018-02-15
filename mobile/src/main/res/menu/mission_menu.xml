@@ -9,6 +9,13 @@
     <item android:id="@+id/action_refresh"
         app:showAsAction="never"
         android:title="Refresh" />
+
+    <item
+        android:id="@+id/action_supporter"
+        android:orderInCategory="95"
+        android:title="Remove Ads"
+        android:textColor="?android:textColorPrimary"
+        app:showAsAction="never" />
     <item
         android:id="@+id/return_home"
         android:orderInCategory="95"

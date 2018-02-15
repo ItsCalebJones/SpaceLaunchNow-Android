@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.SupportActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -49,6 +50,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.greenrobot.eventbus.util.ErrorDialogFragments;
 
 import java.util.concurrent.TimeUnit;
 
@@ -56,6 +58,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.mrapp.android.preference.activity.PreferenceActivity;
 import io.fabric.sdk.android.Fabric;
+import jonathanfinerty.once.Amount;
 import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
@@ -71,6 +74,7 @@ import me.calebjones.spacelaunchnow.ui.main.launches.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.main.missions.MissionFragment;
 import me.calebjones.spacelaunchnow.ui.main.next.NextLaunchFragment;
 import me.calebjones.spacelaunchnow.ui.main.vehicles.VehiclesViewPager;
+import me.calebjones.spacelaunchnow.ui.settings.AboutActivity;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.ui.settings.fragments.AppearanceFragment;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity;
@@ -82,9 +86,7 @@ import timber.log.Timber;
 public class MainActivity extends BaseActivity {
 
     private static final String NAV_ITEM_ID = "navItemId";
-    private static final int REQUEST_CODE_INTRO = 1837;
     private static ListPreferences listPreferences;
-    private final Handler mDrawerActionHandler = new Handler();
     @BindView(R.id.adView)
     AdView adView;
     @BindView(R.id.container)
@@ -107,7 +109,7 @@ public class MainActivity extends BaseActivity {
     static final int SHOW_INTRO = 1;
 
     private int mNavItemId;
-
+    private Snackbar snackbar;
     public int statusColor;
 
     public void mayLaunchUrl(Uri parse) {
@@ -300,7 +302,7 @@ public class MainActivity extends BaseActivity {
                                         .withIcon(CommunityMaterial.Icon.cmd_web)
                                         .withLevel(2)
                                         .withName("On the Web")
-                                        .withDescription("Space Launch Now - Official Site")
+                                        .withDescription("Official Website")
                                         .withIdentifier(R.id.menu_website)
                                         .withSelectable(false)
                         ),
@@ -310,6 +312,11 @@ public class MainActivity extends BaseActivity {
                                 .withName("What's New?")
                                 .withDescription("See the changelog.")
                                 .withIdentifier(R.id.menu_new)
+                                .withSelectable(false),
+                        new SecondaryDrawerItem()
+                                .withIcon(GoogleMaterial.Icon.gmd_account_box)
+                                .withName("About").withDescription("About the developer!")
+                                .withIdentifier(R.id.about)
                                 .withSelectable(false),
                         new SecondaryDrawerItem()
                                 .withIcon(GoogleMaterial.Icon.gmd_feedback)
@@ -391,9 +398,9 @@ public class MainActivity extends BaseActivity {
         if (BuildConfig.DEBUG) {
             showRemainingCount();
         }
+        if (!rate.isShown()) {
+            if (!Once.beenDone(Once.THIS_APP_VERSION, "showChangelog")) {
 
-        if (!Once.beenDone(Once.THIS_APP_VERSION, "showChangelog")) {
-            if (!rate.isShown()) {
                 Once.markDone("showChangelog");
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -402,6 +409,46 @@ public class MainActivity extends BaseActivity {
                         showChangelogSnackbar();
                     }
                 }, 1000);
+
+            }
+            if (!SupporterHelper.isSupporter()) {
+                if (!Once.beenDone("userCheckedSupporter")) {
+                    if (Once.beenDone("appOpen", Amount.exactly(3))) {
+                        if (!Once.beenDone("showRemoveAdThree") && !SupporterHelper.isSupporter()) {
+                            Once.markDone("showRemoveAdThree");
+                            final Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showRemoveAd();
+                                }
+                            }, 5000);
+                        }
+                    } else if (Once.beenDone("appOpen", Amount.moreThan(7))
+                            && Once.beenDone("appOpen", Amount.lessThan(13))) {
+                        if (!Once.beenDone("showRemoveAdSeven") && !SupporterHelper.isSupporter()) {
+                            Once.markDone("showRemoveAdSeven");
+                            final Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showRemoveAd();
+                                }
+                            }, 5000);
+                        }
+                    } else if (Once.beenDone("appOpen", Amount.exactly(14))) {
+                        if (!Once.beenDone("showRemoveAd14") && !SupporterHelper.isSupporter()) {
+                            Once.markDone("showRemoveAd14");
+                            final Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showRemoveAd();
+                                }
+                            }, 5000);
+                        }
+                    }
+                }
             }
         }
         if (getSharedPreferences("theme_changed", 0).getBoolean("recreate", false)) {
@@ -420,8 +467,22 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    private void showRemoveAd(){
+        snackbar = Snackbar
+                .make(coordinatorLayout, "Interested in Pro Features or Removing Ads?", Snackbar.LENGTH_INDEFINITE)
+                .setActionTextColor(ContextCompat.getColor(context, R.color.colorAccent))
+                .setAction("Yes", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Once.markDone("userCheckedSupporter");
+                        startActivity(new Intent(context, SupporterActivity.class));
+                    }
+                });
+        snackbar.show();
+    }
+
     private void showChangelogSnackbar() {
-        Snackbar snackbar = Snackbar
+        snackbar = Snackbar
                 .make(coordinatorLayout, "Updated to version " + Utils.getVersionName(context), Snackbar.LENGTH_LONG)
                 .setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
                 .setAction("Changelog", new View.OnClickListener() {
@@ -431,6 +492,7 @@ public class MainActivity extends BaseActivity {
                     }
                 });
         snackbar.show();
+
     }
 
     @SuppressLint("ShowToast")
@@ -480,9 +542,13 @@ public class MainActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         if (BuildConfig.DEBUG) {
-            getMenuInflater().inflate(R.menu.main_menu, menu);
+            getMenuInflater().inflate(R.menu.debug_menu, menu);
         } else {
             getMenuInflater().inflate(R.menu.main_menu, menu);
+        }
+        if(SupporterHelper.isSupporter()){
+            menu.findItem(R.id.action_supporter).setVisible(false);
+            menu.removeItem(R.id.action_supporter);
         }
         return true;
     }
@@ -498,6 +564,12 @@ public class MainActivity extends BaseActivity {
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            return true;
+        }
+
+        if (id == R.id.action_supporter){
+            Intent intent = new Intent(this, SupporterActivity.class);
             startActivity(intent);
             return true;
         }
@@ -613,6 +685,10 @@ public class MainActivity extends BaseActivity {
                 Intent websiteIntent = new Intent(Intent.ACTION_VIEW);
                 websiteIntent.setData(Uri.parse(websiteUrl));
                 startActivity(websiteIntent);
+                break;
+            case R.id.about:
+                Intent intent = new Intent(this, AboutActivity.class);
+                startActivity(intent);
                 break;
             default:
                 // ignore
