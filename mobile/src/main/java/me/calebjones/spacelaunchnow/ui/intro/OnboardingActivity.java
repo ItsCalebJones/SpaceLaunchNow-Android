@@ -13,9 +13,6 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 
-/**
- * Created by Caleb on 11/16/2017.
- */
 
 public class OnboardingActivity extends AhoyOnboarderActivity {
 
@@ -28,21 +25,26 @@ public class OnboardingActivity extends AhoyOnboarderActivity {
         AhoyOnboarderCard introCard = new AhoyOnboarderCard("Space Launch Now", "Keep up to date on all your favorite  orbital launches, missions, and launch vehicles.",
                 R.drawable.intro_slide_one);
 
-        AhoyOnboarderCard notifyCard = new AhoyOnboarderCard("Notification for Launches", "Get notifications for upcoming launches and look into the history of spaceflight",
+        AhoyOnboarderCard notifyCard = new AhoyOnboarderCard("Notification for Launches", "Get notifications for upcoming launches and look into the history of spaceflight.",
                 R.drawable.intro_slide_two);
 
         AhoyOnboarderCard vehicleCard = new AhoyOnboarderCard("Find Launch Vehicles", "Get to know the vehicles that have taken us to orbit.",
                 R.drawable.intro_slide_three);
 
+        AhoyOnboarderCard supporterCard = new AhoyOnboarderCard("Become a Supporter", "Get Pro Features - Remove all Ads!",
+                R.drawable.ic_support);
+
         introCard.setBackgroundColor(R.color.slide_one);
         notifyCard.setBackgroundColor(R.color.slide_two);
         vehicleCard.setBackgroundColor(R.color.slide_three);
+        supporterCard.setBackgroundColor(R.color.slide_four);
 
         List<AhoyOnboarderCard> pages = new ArrayList<>();
 
         pages.add(introCard);
         pages.add(notifyCard);
         pages.add(vehicleCard);
+        pages.add(supporterCard);
 
         for (AhoyOnboarderCard page : pages) {
             page.setTitleColor(R.color.material_typography_primary_text_color_light);
