@@ -67,7 +67,7 @@ public class NotificationReceiver extends NotificationExtenderService {
             } catch (JSONException | ParseException e) {
                 // Error parsing additional data
                 Timber.e(e);
-                return false;
+                return true;
             }
 
             // Payload is null, likely no additional data, show the notification
