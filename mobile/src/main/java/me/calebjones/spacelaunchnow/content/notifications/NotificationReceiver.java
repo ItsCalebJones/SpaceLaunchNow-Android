@@ -55,8 +55,7 @@ public class NotificationReceiver extends NotificationExtenderService {
                         long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
 
                         if (timeToFinish > 0) {
-                            boolean update = data.getString("notification_type").contains("netstampChanged");
-                            NotificationBuilder.notifyUser(getApplicationContext(), launch, timeToFinish, update);
+                            NotificationBuilder.notifyUser(getApplicationContext(), launch, timeToFinish, data.getString("notification_type"));
                         }
                     }
                     return true;
@@ -79,11 +78,11 @@ public class NotificationReceiver extends NotificationExtenderService {
     private boolean isNotificationEnabled(String notificationType, boolean webcastAvailable) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean notificationEnabled = prefs.getBoolean("notifications_new_message", true);
-        boolean netstampChanged = prefs.getBoolean("notifications_launch_imminent_updates", false);
+        boolean netstampChanged = prefs.getBoolean("notifications_launch_imminent_updates", true);
         boolean webcastOnly = prefs.getBoolean("notifications_new_message_webcast", false);
         boolean twentyFourHour = prefs.getBoolean("notifications_launch_day", true);
         boolean oneHour = prefs.getBoolean("notifications_launch_imminent", true);
-        boolean tenMinutes = prefs.getBoolean("notifications_launch_minute", false);
+        boolean tenMinutes = prefs.getBoolean("notifications_launch_minute", true);
 
         if (notificationEnabled) {
 
