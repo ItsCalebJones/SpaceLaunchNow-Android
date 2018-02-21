@@ -253,7 +253,6 @@ public class MainActivity extends BaseActivity {
                 .withToolbar(toolbar)
                 .withHasStableIds(true)
                 .withAccountHeader(headerResult)
-//                                )
                 .addDrawerItems(
                         new PrimaryDrawerItem().withName("Home")
                                 .withIcon(GoogleMaterial.Icon.gmd_home)
@@ -354,8 +353,14 @@ public class MainActivity extends BaseActivity {
                             .withSelectable(false));
         }
 
-        Timber.d("Navigate to initial fragment.");
-        navigate(mNavItemId);
+
+        if ("SHOW_FILTERS".equals(action)) {
+            navigate(R.id.menu_next_launch);
+        } else {
+            Timber.d("Navigate to initial fragment.");
+            navigate(mNavItemId);
+        }
+
     }
 
     private void setupWindowAnimations() {
@@ -587,9 +592,15 @@ public class MainActivity extends BaseActivity {
                 // Check to see if we have retained the worker fragment.
                 mUpcomingFragment = (NextLaunchFragment) fm.findFragmentByTag("NEXT_LAUNCH");
 
+
                 // If not retained (or first time running), we need to create it.
                 if (mUpcomingFragment == null) {
                     mUpcomingFragment = new NextLaunchFragment();
+                    if ("SHOW_FILTERS".equals(getIntent().getAction())) {
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean("SHOW_FILTERS", true);
+                        mUpcomingFragment.setArguments(bundle);
+                    }
                     // Tell it who it is working with.
                     fm.beginTransaction().replace(R.id.flContent, mUpcomingFragment, "NEXT_LAUNCH").commit();
                 }

@@ -219,6 +219,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
         //Enable no data by default
         no_data.setVisibility(View.VISIBLE);
+
         return view;
     }
 
@@ -457,6 +458,20 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             if (timeSinceUpdate > timeMaxUpdate) {
                 Timber.d("%s greater then %s - updating library data.", timeSinceUpdate, timeMaxUpdate);
                 fetchData();
+            }
+        }
+        Bundle bundle = getArguments();
+        if(bundle != null) {
+            if(bundle.getBoolean("SHOW_FILTERS")){
+                if (!active) {
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            checkFilter();
+                        }
+                    }, 500);
+                }
             }
         }
     }
