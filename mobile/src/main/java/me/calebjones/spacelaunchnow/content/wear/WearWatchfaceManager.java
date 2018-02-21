@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
@@ -15,13 +16,18 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.gms.wearable.Asset;
+import com.google.android.gms.wearable.CapabilityClient;
+import com.google.android.gms.wearable.CapabilityInfo;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import io.realm.Realm;
@@ -51,6 +57,20 @@ public class WearWatchfaceManager extends BaseManager {
 
     // Create a data map and put data in it
     public void updateWear() {
+
+        //TODO Figure this out - need to detect if an Android Wear device is connected before connecting.
+//        Task<Map<String, CapabilityInfo>> capabilityInfo = Wearable.getCapabilityClient(context).getAllCapabilities(CapabilityClient.FILTER_REACHABLE);
+//        capabilityInfo.addOnCompleteListener(new OnCompleteListener<Map<String, CapabilityInfo>>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Map<String, CapabilityInfo>> task) {
+//                Map<String, CapabilityInfo> result = task.getResult();
+//                result.size();
+//            }
+//        });
+        checkLaunch();
+    }
+
+    private void checkLaunch() {
         mRealm = Realm.getDefaultInstance();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -121,6 +141,7 @@ public class WearWatchfaceManager extends BaseManager {
         Wearable.getDataClient(context).putDataItem(putConfigDataReq);
 
 
+
             /*
              * brightness value ranges from -1.0 to 1.0, with 0.0 as the normal level
              */
@@ -172,6 +193,7 @@ public class WearWatchfaceManager extends BaseManager {
                 Timber.v("Data sent to wearable.");
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
+                Crashlytics.log(String.format("Crashed sending %s to Wear", image));
                 Crashlytics.logException(e);
             }
         } else {

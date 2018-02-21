@@ -23,16 +23,12 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.ExecutionException;
 
-import de.mrapp.android.preference.activity.PreferenceActivity;
 import jonathanfinerty.once.Amount;
 import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
-import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
-import me.calebjones.spacelaunchnow.ui.settings.fragments.NotificationsFragment;
-import me.calebjones.spacelaunchnow.utils.UniqueIdentifier;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import timber.log.Timber;

@@ -463,13 +463,15 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         Bundle bundle = getArguments();
         if(bundle != null) {
             if(bundle.getBoolean("SHOW_FILTERS")){
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        checkFilter();
-                    }
-                }, 500);
+                if (!active) {
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            checkFilter();
+                        }
+                    }, 500);
+                }
             }
         }
     }
