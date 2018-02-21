@@ -10,7 +10,7 @@
             android:summaryOn="Notifications are on for upcoming launches."
             android:title="Enable Notifications" />
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:dependency="notifications_new_message"
             android:key="notifications_launch_imminent_updates"
             android:summaryOff="Do not update when a launch successful changes."
@@ -101,7 +101,7 @@
             android:summaryOn="Receive notification when a Launch is within one hour."
             android:title="One Hour" />
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="notifications_launch_minute"
             android:summaryOff="Do not notify when a Launch is within ten minutes."
             android:summaryOn="Receive notification when a Launch is within ten minutes."

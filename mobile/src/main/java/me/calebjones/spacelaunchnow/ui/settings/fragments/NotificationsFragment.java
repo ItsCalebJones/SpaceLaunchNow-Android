@@ -10,6 +10,7 @@ import com.onesignal.OneSignal;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 
 import io.realm.Realm;
 import io.realm.Sort;
@@ -88,7 +89,7 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
         now.setTimeInMillis(System.currentTimeMillis());
         long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
 
-        NotificationBuilder.notifyUser(context, launch, timeToFinish, false);
+        NotificationBuilder.notifyUser(context, launch, timeToFinish, "oneHour");
         realm.close();
     }
 }

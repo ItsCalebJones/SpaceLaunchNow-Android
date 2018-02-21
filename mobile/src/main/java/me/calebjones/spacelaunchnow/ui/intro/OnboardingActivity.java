@@ -13,9 +13,6 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 
-/**
- * Created by Caleb on 11/16/2017.
- */
 
 public class OnboardingActivity extends AhoyOnboarderActivity {
 
@@ -25,24 +22,31 @@ public class OnboardingActivity extends AhoyOnboarderActivity {
 
 
 
-        AhoyOnboarderCard introCard = new AhoyOnboarderCard("Space Launch Now", "Keep up to date on all your favorite  orbital launches, missions, and launch vehicles.",
+        AhoyOnboarderCard introCard = new AhoyOnboarderCard("Space Launch Now",
+                "Keep up to date on all your favorite orbital launches, missions, and launch vehicles.",
                 R.drawable.intro_slide_one);
-
-        AhoyOnboarderCard notifyCard = new AhoyOnboarderCard("Notification for Launches", "Get notifications for upcoming launches and look into the history of spaceflight",
+        AhoyOnboarderCard supporterCard = new AhoyOnboarderCard("Become a Supporter",
+                "Exclusive Widgets, Wear Complications, Remove Ads and more.",
+                R.drawable.ic_support);
+        AhoyOnboarderCard vehicleCard = new AhoyOnboarderCard("Find Launch Vehicles",
+                "Get to know the vehicles that have taken us to orbit.",
+                R.drawable.intro_slide_three);
+        AhoyOnboarderCard notifyCard = new AhoyOnboarderCard("Notification for Launches",
+                "Get notifications for the launches you care about.",
                 R.drawable.intro_slide_two);
 
-        AhoyOnboarderCard vehicleCard = new AhoyOnboarderCard("Find Launch Vehicles", "Get to know the vehicles that have taken us to orbit.",
-                R.drawable.intro_slide_three);
 
         introCard.setBackgroundColor(R.color.slide_one);
-        notifyCard.setBackgroundColor(R.color.slide_two);
-        vehicleCard.setBackgroundColor(R.color.slide_three);
+        vehicleCard.setBackgroundColor(R.color.slide_two);
+        supporterCard.setBackgroundColor(R.color.slide_three);
+        notifyCard.setBackgroundColor(R.color.slide_four);
 
         List<AhoyOnboarderCard> pages = new ArrayList<>();
 
         pages.add(introCard);
-        pages.add(notifyCard);
         pages.add(vehicleCard);
+        pages.add(supporterCard);
+        pages.add(notifyCard);
 
         for (AhoyOnboarderCard page : pages) {
             page.setTitleColor(R.color.material_typography_primary_text_color_light);
@@ -56,6 +60,7 @@ public class OnboardingActivity extends AhoyOnboarderActivity {
         colorList.add(R.color.slide_one_background);
         colorList.add(R.color.slide_two_background);
         colorList.add(R.color.slide_three_background);
+        colorList.add(R.color.slide_four_background);
 
         setColorBackground(colorList);
         setImageBackground(R.drawable.intro_slide_background);

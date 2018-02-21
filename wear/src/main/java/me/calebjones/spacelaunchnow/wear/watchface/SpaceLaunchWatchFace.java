@@ -29,15 +29,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.ColorUtils;
-import android.support.v7.graphics.Palette;
 import android.support.wearable.watchface.CanvasWatchFaceService;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.text.Html;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -49,14 +45,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.gms.wearable.Asset;
-import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataClient;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
@@ -66,7 +58,6 @@ import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.Wearable;
 
-import java.io.File;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
@@ -79,10 +70,6 @@ import java.util.concurrent.TimeUnit;
 
 import me.calebjones.spacelaunchnow.wear.R;
 import timber.log.Timber;
-
-import static me.calebjones.spacelaunchnow.wear.model.WearConstants.DARK;
-import static me.calebjones.spacelaunchnow.wear.model.WearConstants.LIGHT;
-import static me.calebjones.spacelaunchnow.wear.model.WearConstants.NEUTRAL;
 
 /**
  * Digital watch face with seconds. In ambient mode, the seconds aren't displayed. On devices with
@@ -190,8 +177,9 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
         private Bitmap bitmap;
         private DataClient dataClient;
 
-        private SimpleDateFormat twentyFourHourMode;
-        private SimpleDateFormat twelveHourMode;
+        private SimpleDateFormat twentyFourHourFormat;
+        private SimpleDateFormat twentyFourHourFormatUTC;
+        private SimpleDateFormat twelveHourFormat;
 
 
 
@@ -215,8 +203,9 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
             setWatchFaceStyle(watchFaceStyle);
 
 
-            twentyFourHourMode = new SimpleDateFormat("HH:mm");
-            twelveHourMode = new SimpleDateFormat("h:mm");
+            twentyFourHourFormat = new SimpleDateFormat("HH:mm");
+            twentyFourHourFormatUTC = new SimpleDateFormat("HH:mm");
+            twelveHourFormat = new SimpleDateFormat("h:mm");
 
 
             layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -376,10 +365,10 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
 
             if (twentyfourhourmode) {
                 // Draw H:MM in ambient mode or H:MM:SS in interactive mode.
-                timeText = twentyFourHourMode.format(now);
+                timeText = twentyFourHourFormat.format(now);
             } else {
                 // Draw H:MM in ambient mode or H:MM:SS in interactive mode.
-                timeText = twelveHourMode.format(now);
+                timeText = twelveHourFormat.format(now);
             }
 
 
@@ -392,8 +381,8 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
 
             SimpleDateFormat dateFormat = getSimpleDateFormatForUI("EEEE, MMMM d'" + getDayNumberSuffix(mTime.get(Calendar.DAY_OF_MONTH)) + "'");
             String dateText = dateFormat.format(date);
-            twentyFourHourMode.setTimeZone(TimeZone.getTimeZone("UTC"));
-            String utcText = twentyFourHourMode.format(utcDate) + " UTC";
+            twentyFourHourFormatUTC.setTimeZone(TimeZone.getTimeZone("UTC"));
+            String utcText = twentyFourHourFormatUTC.format(utcDate) + " UTC";
 
             long longdate = launchTime;
             longdate = longdate * 1000;

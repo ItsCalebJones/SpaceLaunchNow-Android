@@ -5,7 +5,20 @@ A space launch tracker for Android using data from the Launch Library API.
 ## Changelog
 #### Updated 2-7-2017
 ---
-### Version 2.2.0 (Latest)
+### Version 2.2.1 (Latest)
+#### Overview
+Another small release with bug fixes.
+
+#### Changelog
+* Add quick link to Notification settings in filter menu.
+* Add additional onboarding information.
+* Fix issue with wrong time showing in 24 hour mode for Android Wear watchface.
+* Fix crash when switching landscape mode.
+* Fix other miscellaneous crashes.
+* Improve Notifications bundling.
+
+---
+### Version 2.2.0
 #### Overview
 Added a few small features and fixed some crashes found during the craziness of Falcon Heavy.
 
