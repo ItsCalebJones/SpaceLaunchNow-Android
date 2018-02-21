@@ -119,7 +119,7 @@ public class NotificationBuilder {
             }
         }
 
-
+        Once.markDone("SHOW_FILTER_SETTINGS");
         if (Once.beenDone("SHOW_FILTER_SETTINGS", Amount.lessThan(10))){
             Intent intent = new Intent(context, MainActivity.class );
             intent.setAction("SHOW_FILTERS");
@@ -161,7 +161,7 @@ public class NotificationBuilder {
             }
 
         }
-        Once.markDone("SHOW_FILTER_SETTINGS");
+
 
         if (update){
             mBuilder.setContentTitle("UPDATE: " + launchName);
