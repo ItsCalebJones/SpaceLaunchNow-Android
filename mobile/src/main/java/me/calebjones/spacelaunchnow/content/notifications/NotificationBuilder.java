@@ -1,5 +1,6 @@
 package me.calebjones.spacelaunchnow.content.notifications;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -22,9 +23,15 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.ExecutionException;
 
+import de.mrapp.android.preference.activity.PreferenceActivity;
+import jonathanfinerty.once.Amount;
+import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.ui.main.MainActivity;
+import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
+import me.calebjones.spacelaunchnow.ui.settings.fragments.NotificationsFragment;
 import me.calebjones.spacelaunchnow.utils.UniqueIdentifier;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
@@ -36,11 +43,13 @@ import static me.calebjones.spacelaunchnow.content.notifications.NotificationHel
 import static me.calebjones.spacelaunchnow.content.notifications.NotificationHelper.CHANNEL_LAUNCH_UPDATE;
 
 public class NotificationBuilder {
+    @SuppressLint("ObsoleteSdkInt")
     public static void notifyUser(Context context, Launch launch, long timeToFinish, String notificationType) {
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         NotificationCompat.Builder mBuilder;
         NotificationManager mNotifyManager;
+        int notificationId = 0;
         boolean update = notificationType.contains("netstampChanged");
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationHelper notificationHelper = new NotificationHelper(context);
@@ -114,10 +123,56 @@ public class NotificationBuilder {
             }
         }
 
+
+        if (Once.beenDone("SHOW_FILTER_SETTINGS", Amount.lessThan(10))){
+            Intent intent = new Intent(context, MainActivity.class );
+            intent.setAction("SHOW_FILTERS");
+            PendingIntent archiveIntent = PendingIntent.getActivity(context,
+                    2,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+
+            NotificationCompat.Action filterSettings =
+                    new NotificationCompat.Action.Builder(R.drawable.ic_filter,
+                            "Filters", archiveIntent)
+                            .build();
+
+            mBuilder.addAction(filterSettings);
+
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Intent notificationSettings = new Intent();
+                notificationSettings.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+
+                //for Android 5-7
+                notificationSettings.putExtra("app_package", context.getPackageName());
+                notificationSettings.putExtra("app_uid", context.getApplicationInfo().uid);
+
+                // for Android O
+                notificationSettings.putExtra("android.provider.extra.APP_PACKAGE", context.getPackageName());
+
+                PendingIntent channelPendingIntent = PendingIntent.getActivity(context,
+                        3,
+                        notificationSettings,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
+                NotificationCompat.Action channelSettings =
+                        new NotificationCompat.Action.Builder(R.drawable.ic_notifications_white,
+                                "Settings", channelPendingIntent)
+                                .build();
+
+                mBuilder.addAction(channelSettings);
+
+            }
+
+        }
+        Once.markDone("SHOW_FILTER_SETTINGS");
+
         if (update){
             mBuilder.setContentTitle("UPDATE: " + launchName);
+            notificationId = launch.getNetstamp();
         } else {
             mBuilder.setContentTitle(launchName);
+            notificationId = launch.getId();
         }
 
         mBuilder.setContentText(expandedText)
@@ -125,41 +180,20 @@ public class NotificationBuilder {
                 .setAutoCancel(true)
                 .setContentText(expandedText)
                 .extend(wearableExtender)
-                .setContentIntent(pending)
-                .setGroup(launch.getId() + "_group")
-                .setShowWhen(true);
+                .setContentIntent(pending);
 
-        String channel;
+
         if (update && !isDoNotDisturb){
-            channel = CHANNEL_LAUNCH_UPDATE;
             mBuilder.setChannelId(CHANNEL_LAUNCH_UPDATE);
         } else if (isDoNotDisturb) {
-            channel = CHANNEL_LAUNCH_SILENT;
             mBuilder.setChannelId(CHANNEL_LAUNCH_SILENT);
         } else if (notificationType.contains("oneHour") || notificationType.contains("tenMinute")) {
-            channel = CHANNEL_LAUNCH_IMMINENT;
             mBuilder.setChannelId(CHANNEL_LAUNCH_IMMINENT).setSound(alarmSound);
         } else if (notificationType.contains("twentyFourHour")){
-            channel = CHANNEL_LAUNCH_REMINDER;
             mBuilder.setChannelId(CHANNEL_LAUNCH_REMINDER);
         } else {
-            channel = CHANNEL_LAUNCH_REMINDER;
             mBuilder.setChannelId(CHANNEL_LAUNCH_REMINDER);
         }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            NotificationCompat.Builder summaryBuilder = new NotificationCompat.Builder(context, channel)
-                    .setContentTitle(launchName)
-                    .setContentText("Launch Updates available.")
-                    .setSmallIcon(R.drawable.ic_rocket)
-                    .setShowWhen(true)
-                    .setGroup(launch.getId() + "_group")
-                    .setGroupSummary(true);
-
-            mNotifyManager.notify(launch.getId(), summaryBuilder.build());
-        }
-
-
 
 
         if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
@@ -192,7 +226,7 @@ public class NotificationBuilder {
         }
 
         Analytics.from(context).sendNotificationEvent(launch.getName(), expandedText);
-        mNotifyManager.notify(UniqueIdentifier.getID(), mBuilder.build());
+        mNotifyManager.notify(notificationId, mBuilder.build());
     }
 
     public static boolean isTimeBetweenTwoTime(String argStartTime,
