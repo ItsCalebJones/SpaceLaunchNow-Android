@@ -19,7 +19,7 @@
         android:layout_marginLeft="32dp"
         android:layout_toRightOf="@id/ivIcon"
         android:layout_width="match_parent"
-        android:text="Wear"
+        android:text="@string/wear"
         android:textSize="16sp" />
     <TextView
         android:layout_below="@+id/tvTitle"
@@ -27,6 +27,6 @@
         android:layout_marginLeft="32dp"
         android:layout_toRightOf="@id/ivIcon"
         android:layout_width="match_parent"
-        android:text="Change Android Wear watch face settings."
+        android:text="@string/wear_description"
         android:textSize="14sp" />
 </RelativeLayout>

@@ -217,8 +217,8 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     private void showCountryDialog() {
         Analytics.from(getActivity()).sendButtonClicked("Previous Filter - Country");
         new MaterialDialog.Builder(getContext())
-                .title("Select a Country")
-                .content("Check a country below, to remove all filters use reset icon in the toolbar.")
+                .title(R.string.select_country)
+                .content(R.string.select_country_description)
                 .items(R.array.country)
                 .buttonRippleColorRes(R.color.colorAccentLight)
                 .itemsCallbackMultiChoice(switchPreferences.getPrevCountryFiltered(),
@@ -243,8 +243,8 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
                                 return true;
                             }
                         })
-                .positiveText("Filter")
-                .negativeText("Close")
+                .positiveText(R.string.filter)
+                .negativeText(R.string.close)
                 .icon(ContextCompat.getDrawable(getContext(), R.mipmap.ic_launcher))
                 .show();
     }
@@ -252,8 +252,8 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     private void showLocationDialog() {
         Analytics.from(getActivity()).sendButtonClicked("Previous Filter - Location");
         new MaterialDialog.Builder(getContext())
-                .title("Select a Location")
-                .content("Check an location below, to remove all filters use reset icon in the toolbar.")
+                .title(R.string.select_location)
+                .content(R.string.select_location_description)
                 .items(R.array.location)
                 .buttonRippleColorRes(R.color.colorAccentLight)
                 .itemsCallbackMultiChoice(switchPreferences.getPrevLocationFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
@@ -276,8 +276,8 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
                         return true;
                     }
                 })
-                .positiveText("Filter")
-                .negativeText("Close")
+                .positiveText(R.string.filter)
+                .negativeText(R.string.close)
                 .icon(ContextCompat.getDrawable(getContext(), R.mipmap.ic_launcher))
                 .show();
     }
@@ -285,8 +285,8 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     private void showAgencyDialog() {
         Analytics.from(getActivity()).sendButtonClicked("Previous Filter - LauncherAgency");
         new MaterialDialog.Builder(getContext())
-                .title("Select an LauncherAgency")
-                .content("Check an agency below, to remove all filters use reset icon in the toolbar.")
+                .title(R.string.select_launch_agency)
+                .content(R.string.select_launch_agency_description)
                 .items(R.array.agencies)
                 .buttonRippleColorRes(R.color.colorAccentLight)
                 .itemsCallbackMultiChoice(switchPreferences.getPrevAgencyFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
@@ -309,8 +309,8 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
                         return true;
                     }
                 })
-                .positiveText("Filter")
-                .negativeText("Close")
+                .positiveText(R.string.filter)
+                .negativeText(R.string.close)
                 .icon(ContextCompat.getDrawable(getContext(), R.mipmap.ic_launcher))
                 .show();
     }
@@ -318,8 +318,8 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     private void showVehicleDialog() {
         Analytics.from(getActivity()).sendButtonClicked("Previous Filter - Vehicle");
         new MaterialDialog.Builder(getContext())
-                .title("Select a Launch Vehicle")
-                .content("Check a vehicle below, to remove all filters use reset icon in the toolbar.")
+                .title(R.string.select_launch_vehicle)
+                .content(R.string.select_launch_vehicle_description)
                 .items(R.array.vehicles)
                 .buttonRippleColorRes(R.color.colorAccentLight)
                 .itemsCallbackMultiChoice(switchPreferences.getPrevVehicleFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
@@ -342,8 +342,8 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
                         return true;
                     }
                 })
-                .positiveText("Filter")
-                .negativeText("Close")
+                .positiveText(R.string.filter)
+                .negativeText(R.string.close)
                 .icon(ContextCompat.getDrawable(getContext(), R.mipmap.ic_launcher))
                 .show();
     }
@@ -400,9 +400,9 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
 
     public void getPrevLaunchData() {
         new MaterialDialog.Builder(context)
-                .title("Launch History Data")
-                .content("Retrieve historical launch data? Typically around 2-3mb of data usage.")
-                .positiveText("Ok")
+                .title(R.string.launch_history_data)
+                .content(R.string.launch_history_data_description)
+                .positiveText(R.string.ok)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {

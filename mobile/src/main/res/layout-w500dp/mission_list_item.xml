@@ -59,7 +59,7 @@
                         android:gravity="left"
                         android:lines="1"
                         android:paddingTop="8dp"
-                        android:text="Unknown Launch Vehicle"
+                        android:text="@string/unknown_launch_vehicle"
                         android:textColor="?android:textColorPrimary"
                         android:textSize="20sp"
                         android:textStyle="normal" />
@@ -72,7 +72,7 @@
                         android:gravity="left"
                         android:paddingTop="4dp"
                         android:singleLine="true"
-                        android:text="Unknown Mission"
+                        android:text="@string/unknown_mission"
                         android:textColor="?android:textColorSecondary" />
 
                     <TextView
@@ -83,7 +83,7 @@
                         android:gravity="left"
                         android:paddingBottom="2dp"
                         android:singleLine="true"
-                        android:text="Unknown Mission Date"
+                        android:text="@string/unknown_mission_date"
                         android:textColor="?android:textColorSecondary" />
 
                 </LinearLayout>
@@ -107,7 +107,7 @@
                 android:ellipsize="end"
                 android:gravity="left"
                 android:singleLine="false"
-                android:text="Unknown Mission"
+                android:text="@string/unknown_mission"
                 android:textColor="?android:textColorSecondary" />
 
             <LinearLayout
@@ -125,7 +125,7 @@
                     android:layout_marginStart="@dimen/material_baseline_grid_3x"
                     android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
                     android:gravity="center"
-                    android:text="Launch"
+                    android:text="@string/launch"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
 
@@ -139,7 +139,7 @@
                     android:layout_marginStart="@dimen/material_baseline_grid_0.5x"
                     android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
                     android:gravity="center"
-                    android:text="INFO"
+                    android:text="@string/info"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
             </LinearLayout>

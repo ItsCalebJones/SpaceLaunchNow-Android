@@ -55,8 +55,8 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:layout_margin="@dimen/material_baseline_grid_2x"
-            android:text="Become a Supporter to unlock this widget."
-            android:textAppearance="@style/MaterialTypography.Regular.Title" />'
+            android:text="@string/become_a_supporter"
+            android:textAppearance="@style/MaterialTypography.Regular.Title" />
     </LinearLayout>
 
 </FrameLayout>

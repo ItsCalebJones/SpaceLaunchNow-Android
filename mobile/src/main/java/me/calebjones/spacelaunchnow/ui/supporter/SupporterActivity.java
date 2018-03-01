@@ -90,10 +90,10 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         ButterKnife.bind(this);
 
         if (SupporterHelper.isSupporter()) {
-            purchaseButton.setText("You again? Sure!");
+            purchaseButton.setText(R.string.you_again);
             enterReveal(supportThankYou);
         } else {
-            purchaseButton.setText("Become a Supporter");
+            purchaseButton.setText(R.string.supporter_title);
         }
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -104,7 +104,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
             // continue
             bp = new BillingProcessor(this, getResources().getString(R.string.rsa_key), this);
         } else {
-            SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, "Google Play billing services not available.");
+            SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, getString(R.string.billing_not_available));
         }
 
         nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
@@ -140,13 +140,13 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
 
         if (id == R.id.action_support) {
             new MaterialDialog.Builder(this)
-                    .title("Need Support?")
-                    .content("The fastest and most reliable way to get support is through Discord. If thats not an option feel free to email me directly.")
-                    .neutralText("Email")
+                    .title(R.string.need_support)
+                    .content(R.string.need_support_description)
+                    .neutralText(R.string.email)
                     .positiveColor(ContextCompat.getColor(this, R.color.colorPrimary))
                     .neutralColor(ContextCompat.getColor(this, R.color.colorPrimary))
-                    .negativeText("Cancel")
-                    .positiveText("Discord")
+                    .negativeText(R.string.cancel)
+                    .positiveText(R.string.discord)
                     .onNeutral(new MaterialDialog.SingleButtonCallback() {
                         @Override
                         public void onClick(MaterialDialog dialog, DialogAction which) {
@@ -199,17 +199,9 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     public void checkClick() {
         Analytics.from(this).sendButtonClicked("Supporter Button clicked.");
         MaterialDialog dialog = new MaterialDialog.Builder(this)
-                .title("Thanks for your Support!")
+                .title(R.string.thank_you_support)
                 .customView(R.layout.seekbar_dialog_supporter, true)
-                .positiveText("Ok")
-                .neutralText("BTC | ETH | LTC")
-                .onNeutral(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                        showCryptoDialog();
-                    }
-                })
+                .positiveText(R.string.ok)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -243,64 +235,20 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         });
     }
 
-    private void showCryptoDialog(){
-        MaterialDialog dialog = new MaterialDialog.Builder(this)
-                .title("Thanks for your Support!")
-                .customView(R.layout.dialog_crypto, true)
-                .positiveText("Ok")
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                    }
-                })
-                .show();
-        ImageView ltcIcon = dialog.getCustomView().findViewById(R.id.ltc_icon);
-        ImageView btcIcon = dialog.getCustomView().findViewById(R.id.btc_icon);
-        ImageView ethIcon = dialog.getCustomView().findViewById(R.id.eth_icon);
-
-        ltcIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent animateIntent = new Intent(getApplicationContext(), FullscreenImageActivity.class);
-                animateIntent.putExtra("image", "ltc");
-                getApplicationContext().startActivity(animateIntent);
-            }
-        });
-
-        btcIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent animateIntent = new Intent(getApplicationContext(), FullscreenImageActivity.class);
-                animateIntent.putExtra("image", "btc");
-                getApplicationContext().startActivity(animateIntent);
-            }
-        });
-
-        ethIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent animateIntent = new Intent(getApplicationContext(), FullscreenImageActivity.class);
-                animateIntent.putExtra("image", "eth");
-                getApplicationContext().startActivity(animateIntent);
-            }
-        });
-    }
-
     private void makePurchase(int product) {
         String sku = null;
         switch (product) {
             case 0:
-                sku = SupporterHelper.SKU_TWO_DOLLAR;
+                sku = SupporterHelper.SKU_2018_TWO_DOLLAR;
                 break;
             case 1:
-                sku = SupporterHelper.SKU_SIX_DOLLAR;
+                sku = SupporterHelper.SKU_2018_SIX_DOLLAR;
                 break;
             case 2:
-                sku = SupporterHelper.SKU_TWELVE_DOLLAR;
+                sku = SupporterHelper.SKU_2018_TWELVE_DOLLAR;
                 break;
             case 3:
-                sku = SupporterHelper.SKU_THIRTY_DOLLAR;
+                sku = SupporterHelper.SKU_2018_THIRTY_DOLLAR;
                 break;
         }
 
@@ -313,14 +261,14 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
             Analytics.from(this).sendStartCheckout(products);
             bp.purchase(this, sku);
         } else {
-            SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, "Issues connecting to Google Play Billing");
+            SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, getString(R.string.issues_connecting_billing));
         }
     }
 
     @Override
     public void onProductPurchased(String productId, TransactionDetails details) {
         Timber.v("%s purchased.", productId);
-        SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Thanks for helping keep the gears turning!");
+        SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, getString(R.string.thanks_support_development));
         animatePurchase();
         Products product = SupporterHelper.getProduct(productId);
         getRealm().beginTransaction();
@@ -351,7 +299,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         if (error != null) {
             SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, error.getLocalizedMessage());
         } else if (errorCode != 0) {
-            SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, "billing error code - " + errorCode);
+            SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, getString(R.string.billing_error_code) + errorCode);
         }
     }
 
@@ -379,20 +327,20 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
                         getRealm().copyToRealmOrUpdate(product);
                         getRealm().commitTransaction();
                     }
-                    SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Purchase history restored.");
+                    SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, getString(R.string.purchase_history));
                 } else {
                     if (userRequested) {
                         if (bp == null){
-                            SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, "Unable to initialize Billing Processor.");
+                            SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, getString(R.string.unable_to_start_billing));
                         } else if (bp !=null && bp.listOwnedProducts().size() == 0){
-                            SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, "Purchases restored - none found with this Google account.");
+                            SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, getString(R.string.no_purchase_history));
                         }
                     }
                     Timber.d("Purchase History - None purchased.");
                 }
             }
         } else {
-            SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, "Google Play billing services not available.");
+            SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, getString(R.string.billing_not_available));
         }
         UpdateWearJob.scheduleJobNow();
     }
@@ -429,28 +377,28 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
 
         switch (iconPosition) {
             case 0:
-                text.setText("Bronze - $1.99");
+                text.setText("Bronze - $2");
                 icon.setImageDrawable(new IconicsDrawable(this)
                         .icon(GoogleMaterial.Icon.gmd_local_drink)
                         .color(Color.BLACK)
                         .sizeDp(96));
                 break;
             case 1:
-                text.setText("Silver - $5.99");
+                text.setText("Silver - $6");
                 icon.setImageDrawable(new IconicsDrawable(this)
                         .icon(GoogleMaterial.Icon.gmd_local_cafe)
                         .color(Color.BLACK)
                         .sizeDp(96));
                 break;
             case 2:
-                text.setText("Gold - $11.99");
+                text.setText("Gold - $12");
                 icon.setImageDrawable(new IconicsDrawable(this)
                         .icon(GoogleMaterial.Icon.gmd_local_dining)
                         .color(Color.BLACK)
                         .sizeDp(96));
                 break;
             case 3:
-                text.setText("Platinum - $29.99");
+                text.setText("Platinum - $30");
                 icon.setImageResource(R.drawable.take_my_money);
                 break;
         }

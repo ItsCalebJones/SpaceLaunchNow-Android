@@ -22,17 +22,17 @@ public class OnboardingActivity extends AhoyOnboarderActivity {
 
 
 
-        AhoyOnboarderCard introCard = new AhoyOnboarderCard("Space Launch Now",
-                "Keep up to date on all your favorite orbital launches, missions, and launch vehicles.",
+        AhoyOnboarderCard introCard = new AhoyOnboarderCard(getString(R.string.app_name),
+                getString(R.string.intro_card_description),
                 R.drawable.intro_slide_one);
-        AhoyOnboarderCard supporterCard = new AhoyOnboarderCard("Become a Supporter",
-                "Exclusive Widgets, Wear Complications, Remove Ads and more.",
+        AhoyOnboarderCard supporterCard = new AhoyOnboarderCard(getString(R.string.supporter_title),
+                getString(R.string.supporter_card_description),
                 R.drawable.ic_support);
-        AhoyOnboarderCard vehicleCard = new AhoyOnboarderCard("Find Launch Vehicles",
-                "Get to know the vehicles that have taken us to orbit.",
+        AhoyOnboarderCard vehicleCard = new AhoyOnboarderCard(getString(R.string.vehicle_card_title),
+                getString(R.string.vehicle_card_description),
                 R.drawable.intro_slide_three);
-        AhoyOnboarderCard notifyCard = new AhoyOnboarderCard("Notification for Launches",
-                "Get notifications for the launches you care about.",
+        AhoyOnboarderCard notifyCard = new AhoyOnboarderCard(getString(R.string.notification_card),
+                getString(R.string.notification_card_description),
                 R.drawable.intro_slide_two);
 
 
@@ -53,7 +53,7 @@ public class OnboardingActivity extends AhoyOnboarderActivity {
             page.setDescriptionColor(R.color.material_typography_secondary_text_color_light);
         }
 
-        setFinishButtonTitle("Done");
+        setFinishButtonTitle(R.string.done);
         showNavigationControls(false);
 
         List<Integer> colorList = new ArrayList<>();

@@ -92,10 +92,10 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
                     checkLocationPermission();
                 } else {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                    Toast.makeText(context, "Night mode might need to restart app to take effect.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.night_mode_restart, Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(context, "Day mode might need to restart app to take effect.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.day_mode_restart, Toast.LENGTH_SHORT).show();
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             }
             Intent intent = new Intent(getActivity(), MainActivity.class);
@@ -115,7 +115,7 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
                     checkLocationPermission();
                 } else {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                    Toast.makeText(context, "Auto DayNight disabled, might need to restart app to take effect.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.auto_daynight_restart, Toast.LENGTH_SHORT).show();
                 }
             } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
@@ -186,13 +186,13 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
             weather.setSelectable(false);
 
             PreferenceCategory prefCatWeather = (PreferenceCategory) findPreference("weather_category");
-            prefCatWeather.setTitle(prefCatWeather.getTitle() + " (Supporter Feature)");
+            prefCatWeather.setTitle(prefCatWeather.getTitle() + getString(R.string.supporter_feature));
             Preference measurement = findPreference("weather_US_SI");
             measurement.setEnabled(false);
             measurement.setSelectable(false);
 
             PreferenceCategory prefCatWidget = (PreferenceCategory) findPreference("widget_category");
-            prefCatWidget.setTitle(prefCatWidget.getTitle() + " (Supporter Feature)");
+            prefCatWidget.setTitle(prefCatWidget.getTitle() + getString(R.string.supporter_feature));
 
 
             widgetPresets.setEnabled(false);
@@ -248,7 +248,7 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
                 @Override
                 public void onPermissionDenied(PermissionDeniedResponse response) {
                     if (response.isPermanentlyDenied()) {
-                        Toast.makeText(context, "Location denied, please go to Android Settings -> Apps to enable.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, R.string.location_denied, Toast.LENGTH_LONG).show();
                     }
                 }
 

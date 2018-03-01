@@ -85,7 +85,7 @@
                 android:layout_marginLeft="32dp"
                 android:layout_marginRight="32dp"
                 android:singleLine="true"
-                android:text="Unknown Rocket"
+                android:text="@string/unknown_rocket"
                 android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
             ​
 
@@ -97,7 +97,7 @@
                 android:layout_margin="4dp"
                 android:layout_marginBottom="8dp"
                 android:singleLine="true"
-                android:text="Unknown Mission and Location"
+                android:text="@string/unknown_mission_location"
                 android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
                 android:textColor="@android:color/white" />
             ​

@@ -34,7 +34,7 @@
             android:lines="1"
             android:padding="0dp"
             android:textColor="?android:textColorSecondary"
-            android:text="DAYS"
+            android:text="@string/days"
             android:textSize="12dp" />
     </LinearLayout>
 
@@ -74,7 +74,7 @@
             android:lines="1"
             android:padding="0dp"
             android:textColor="?android:textColorSecondary"
-            android:text="HOURS"
+            android:text="@string/hours"
             android:textSize="12dp" />
     </LinearLayout>
 
@@ -114,7 +114,7 @@
             android:lines="1"
             android:padding="0dp"
             android:textColor="?android:textColorSecondary"
-            android:text="MINUTES"
+            android:text="@string/minutes"
             android:textSize="12dp" />
     </LinearLayout>
 
@@ -154,7 +154,7 @@
             android:lines="1"
             android:padding="0dp"
             android:textColor="?android:textColorSecondary"
-            android:text="SECONDS"
+            android:text="@string/seconds"
             android:textSize="12dp" />
     </LinearLayout>
 </LinearLayout>

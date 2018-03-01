@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Nothing here, refresh from menu."
+        android:text="@string/nothing_here"
         android:id="@+id/textView"
         android:layout_below="@+id/launcher"
         android:layout_centerHorizontal="true"

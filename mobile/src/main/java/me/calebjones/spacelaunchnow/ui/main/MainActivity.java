@@ -227,7 +227,7 @@ public class MainActivity extends BaseActivity {
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withCompactStyle(false)
-                .withHeaderBackground(new ImageHolder("http://res.cloudinary.com/dnkkbfy3m/image/upload/v1462465326/navbar_one_sqfhes.png"))
+                .withHeaderBackground(new ImageHolder(getString(R.string.header_image)))
                 .withSavedInstance(savedInstanceState)
                 .build();
 
@@ -254,73 +254,73 @@ public class MainActivity extends BaseActivity {
                 .withHasStableIds(true)
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
-                        new PrimaryDrawerItem().withName("Home")
+                        new PrimaryDrawerItem().withName(R.string.home)
                                 .withIcon(GoogleMaterial.Icon.gmd_home)
                                 .withIdentifier(R.id.menu_next_launch)
                                 .withSelectable(true),
-                        new PrimaryDrawerItem().withName("Launches")
+                        new PrimaryDrawerItem().withName(R.string.launches)
                                 .withIcon(GoogleMaterial.Icon.gmd_assignment)
                                 .withIdentifier(R.id.menu_launches)
                                 .withSelectable(true),
-                        new PrimaryDrawerItem().withName("Missions")
+                        new PrimaryDrawerItem().withName(R.string.missions)
                                 .withIcon(GoogleMaterial.Icon.gmd_satellite)
                                 .withIdentifier(R.id.menu_missions)
                                 .withSelectable(true),
-                        new PrimaryDrawerItem().withName("Vehicles")
+                        new PrimaryDrawerItem().withName(R.string.vehicles)
                                 .withIcon(FontAwesome.Icon.faw_rocket)
                                 .withIdentifier(R.id.menu_vehicle)
                                 .withSelectable(true),
-                        new PrimaryDrawerItem().withName("Settings")
+                        new PrimaryDrawerItem().withName(R.string.settings)
                                 .withIcon(GoogleMaterial.Icon.gmd_settings)
                                 .withIdentifier(R.id.menu_settings)
                                 .withSelectable(true),
                         new DividerDrawerItem(),
-                        new ExpandableDrawerItem().withName("Stay Connected").withIcon(CommunityMaterial.Icon.cmd_account).withDescription("Connect with the Community").withIdentifier(19).withSelectable(false).withSubItems(
+                        new ExpandableDrawerItem().withName(R.string.stay_connected).withIcon(CommunityMaterial.Icon.cmd_account).withDescription(R.string.connect_description).withIdentifier(19).withSelectable(false).withSubItems(
                                 new SecondaryDrawerItem()
                                         .withIcon(CommunityMaterial.Icon.cmd_discord)
                                         .withLevel(2)
-                                        .withName("Discord")
-                                        .withDescription("Join the Community")
+                                        .withName(R.string.discord)
+                                        .withDescription(R.string.discord_subtitle)
                                         .withIdentifier(R.id.menu_discord)
                                         .withSelectable(false),
                                 new SecondaryDrawerItem()
                                         .withIcon(CommunityMaterial.Icon.cmd_twitter)
                                         .withLevel(2)
-                                        .withName("Twitter")
-                                        .withDescription("Connect on Twitter")
+                                        .withName(R.string.twitter)
+                                        .withDescription(R.string.twitter_subtitle)
                                         .withIdentifier(R.id.menu_twitter)
                                         .withSelectable(false),
                                 new SecondaryDrawerItem()
                                         .withIcon(CommunityMaterial.Icon.cmd_facebook)
                                         .withLevel(2)
-                                        .withName("Facebook")
-                                        .withDescription("Follow on Facebook")
+                                        .withName(R.string.facebook)
+                                        .withDescription(R.string.facebook_subtitle)
                                         .withIdentifier(R.id.menu_facebook)
                                         .withSelectable(false),
                                 new SecondaryDrawerItem()
                                         .withIcon(CommunityMaterial.Icon.cmd_web)
                                         .withLevel(2)
-                                        .withName("On the Web")
-                                        .withDescription("Official Website")
+                                        .withName(R.string.website)
+                                        .withDescription(R.string.website_subtitle)
                                         .withIdentifier(R.id.menu_website)
                                         .withSelectable(false)
                         ),
                         new DividerDrawerItem(),
                         new SecondaryDrawerItem()
                                 .withIcon(GoogleMaterial.Icon.gmd_info_outline)
-                                .withName("What's New?")
-                                .withDescription("See the changelog.")
+                                .withName(R.string.whats_new)
+                                .withDescription(R.string.whats_new_subtitle)
                                 .withIdentifier(R.id.menu_new)
                                 .withSelectable(false),
                         new SecondaryDrawerItem()
                                 .withIcon(GoogleMaterial.Icon.gmd_account_box)
-                                .withName("About").withDescription("About the developer!")
+                                .withName(R.string.about).withDescription(R.string.about_subtitle)
                                 .withIdentifier(R.id.about)
                                 .withSelectable(false),
                         new SecondaryDrawerItem()
                                 .withIcon(GoogleMaterial.Icon.gmd_feedback)
-                                .withName("Feedback")
-                                .withDescription("Found a bug?")
+                                .withName(R.string.feedback)
+                                .withDescription(R.string.feedback_subtitle)
                                 .withIdentifier(R.id.menu_feedback)
                                 .withSelectable(false)
                 ).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
@@ -337,8 +337,8 @@ public class MainActivity extends BaseActivity {
         if (!SupporterHelper.isSupporter()) {
             Timber.d("Adding footer.");
             result.addStickyFooterItem(
-                    new PrimaryDrawerItem().withName("Become a Supporter")
-                            .withDescription("Get Pro Features")
+                    new PrimaryDrawerItem().withName(R.string.supporter_title)
+                            .withDescription(R.string.get_pro_features)
                             .withIcon(GoogleMaterial.Icon.gmd_mood)
                             .withIdentifier(R.id.menu_support)
                             .withSelectable(false));
@@ -347,7 +347,7 @@ public class MainActivity extends BaseActivity {
         if (SupporterHelper.isSupporter()) {
             Timber.d("Show thanks for support.");
             result.addStickyFooterItem(
-                    new PrimaryDrawerItem().withName("Thank you for the support!")
+                    new PrimaryDrawerItem().withName(R.string.thank_you_for_support)
                             .withIcon(GoogleMaterial.Icon.gmd_mood)
                             .withIdentifier(R.id.menu_support)
                             .withSelectable(false));
@@ -474,7 +474,7 @@ public class MainActivity extends BaseActivity {
 
     private void showRemoveAd(){
         snackbar = Snackbar
-                .make(coordinatorLayout, "Interested in Pro Features or Removing Ads?", Snackbar.LENGTH_INDEFINITE)
+                .make(coordinatorLayout, R.string.upgrade_pro, Snackbar.LENGTH_INDEFINITE)
                 .setActionTextColor(ContextCompat.getColor(context, R.color.colorAccent))
                 .setAction("Yes", new View.OnClickListener() {
                     @Override
@@ -488,7 +488,7 @@ public class MainActivity extends BaseActivity {
 
     private void showChangelogSnackbar() {
         snackbar = Snackbar
-                .make(coordinatorLayout, "Updated to version " + Utils.getVersionName(context), Snackbar.LENGTH_LONG)
+                .make(coordinatorLayout, getString(R.string.updated_version) + Utils.getVersionName(context), Snackbar.LENGTH_LONG)
                 .setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
                 .setAction("Changelog", new View.OnClickListener() {
                     @Override
@@ -526,9 +526,9 @@ public class MainActivity extends BaseActivity {
             } else {
                 if (sharedPref.getBoolean("confirm_exit", false)) {
                     new MaterialDialog.Builder(this)
-                            .title("Confirm Exit")
-                            .negativeText("Cancel")
-                            .positiveText("Exit")
+                            .title(R.string.confirm_exit)
+                            .negativeText(R.string.cancel)
+                            .positiveText(R.string.exit)
                             .onPositive(new MaterialDialog.SingleButtonCallback() {
                                 @Override
                                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -674,25 +674,25 @@ public class MainActivity extends BaseActivity {
                 showFeedback();
                 break;
             case R.id.menu_twitter:
-                String url = "https://twitter.com/spacelaunchnow";
+                String url = getString(R.string.twitter_url);
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 startActivity(i);
                 break;
             case R.id.menu_discord:
-                String discordUrl = "https://discord.gg/WVfzEDW";
+                String discordUrl = getString(R.string.discord_url);
                 Intent discordIntent = new Intent(Intent.ACTION_VIEW);
                 discordIntent.setData(Uri.parse(discordUrl));
                 startActivity(discordIntent);
                 break;
             case R.id.menu_facebook:
-                String facebookUrl = "https://www.facebook.com/spacelaunchnow/";
+                String facebookUrl = getString(R.string.facebook_url);
                 Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
                 facebookIntent.setData(Uri.parse(facebookUrl));
                 startActivity(facebookIntent);
                 break;
             case R.id.menu_website:
-                String websiteUrl = "https://spacelaunchnow.me/";
+                String websiteUrl = getString(R.string.spacelaunchnow_web);
                 Intent websiteIntent = new Intent(Intent.ACTION_VIEW);
                 websiteIntent.setData(Uri.parse(websiteUrl));
                 startActivity(websiteIntent);
@@ -709,31 +709,31 @@ public class MainActivity extends BaseActivity {
 
     private void showFeedback() {
         new MaterialDialog.Builder(this)
-                .title("Submit Feedback")
+                .title(R.string.feedback_title)
                 .autoDismiss(true)
-                .content("Feel free to submit bugs or feature requests for anything related to the app. If you found an issue with the launch data, the libraries at Launch Library that provide the data can be contacted via Discord or Reddit.")
+                .content(R.string.feedback_description)
                 .neutralColor(ContextCompat.getColor(this, R.color.colorPrimary))
-                .negativeText("Launch Data")
+                .negativeText(R.string.launch_data)
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        String url = "https://www.reddit.com/r/LaunchLibrary/";
+                        String url = getString(R.string.launch_library_reddit);
                         Intent i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(url));
                         startActivity(i);
                     }
                 })
                 .positiveColor(ContextCompat.getColor(this, R.color.colorPrimary))
-                .positiveText("App Feedback")
+                .positiveText(R.string.app_feedback)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         dialog.getBuilder()
-                                .title("Need Support?")
-                                .content("The fastest and most reliable way to get support is through Discord. If thats not an option feel free to email me directly.")
-                                .neutralText("Email")
-                                .negativeText("Cancel")
-                                .positiveText("Discord")
+                                .title(R.string.need_support)
+                                .content(R.string.need_support_description)
+                                .neutralText(R.string.email)
+                                .negativeText(R.string.cancel)
+                                .positiveText(R.string.discord)
                                 .onNeutral(new MaterialDialog.SingleButtonCallback() {
                                     @Override
                                     public void onClick(MaterialDialog dialog, DialogAction which) {
@@ -748,7 +748,7 @@ public class MainActivity extends BaseActivity {
                                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                                     @Override
                                     public void onClick(MaterialDialog dialog, DialogAction which) {
-                                        String url = "https://discord.gg/WVfzEDW";
+                                        String url = getString(R.string.discord_url);
                                         Intent i = new Intent(Intent.ACTION_VIEW);
                                         i.setData(Uri.parse(url));
                                         startActivity(i);

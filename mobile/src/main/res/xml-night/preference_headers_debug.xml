@@ -5,7 +5,7 @@
         android:fragment="me.calebjones.spacelaunchnow.ui.settings.fragments.GeneralFragment"
         android:icon="@drawable/ic_settings_white"
         android:title="General"
-        android:summary="@string/general_settings_for_launch_tracking_and_application_behavior"
+        android:summary="@string/general_settings"
         android:breadCrumbTitle="General" />
     <header
         android:fragment="me.calebjones.spacelaunchnow.ui.settings.fragments.NotificationsFragment"

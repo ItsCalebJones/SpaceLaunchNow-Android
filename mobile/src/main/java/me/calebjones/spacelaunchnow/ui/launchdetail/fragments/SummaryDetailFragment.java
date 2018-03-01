@@ -1124,7 +1124,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
     @OnClick(R.id.map_view_summary)
     public void onViewClicked() {
-        if (detailLaunch != null && detailLaunch.getLocation() != null && detailLaunch.isValid()) {
+        if (detailLaunch != null && detailLaunch.isValid() && detailLaunch.getLocation() != null) {
             String location = detailLaunch.getLocation().getName();
             location = (location.substring(location.indexOf(",") + 1));
 

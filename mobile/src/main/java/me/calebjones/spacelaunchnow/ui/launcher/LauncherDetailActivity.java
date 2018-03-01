@@ -134,7 +134,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
         final LauncherAgency launcher = gson.fromJson(intent.getStringExtra("json"), LauncherAgency.class);
 
         if (launcher == null) {
-            Toast.makeText(context, "Error - Unable to load launcher details.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.error_launch_details, Toast.LENGTH_SHORT).show();
             Timber.e("Error - Unable to load launch details.");
             Intent homeIntent = new Intent(this, MainActivity.class);
             startActivity(homeIntent);

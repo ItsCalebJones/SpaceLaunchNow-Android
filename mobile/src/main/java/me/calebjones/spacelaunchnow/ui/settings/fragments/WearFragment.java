@@ -87,7 +87,7 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
         } else {
             dynamicBackground.setEnabled(false);
             dynamicBackground.setSelectable(false);
-            dynamicBackground.setTitle(dynamicBackground.getTitle() + " (Supporter Feature)");
+            dynamicBackground.setTitle(dynamicBackground.getTitle() + getString(R.string.supporter_feature));
         }
 
         Preference blurSettings = findPreference("wear_blur_dialog");

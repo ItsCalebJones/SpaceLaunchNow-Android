@@ -153,20 +153,15 @@ public class LaunchApplication extends Application implements Analytics.Provider
         if (sharedPreference.isDebugEnabled()) {
             version = "dev";
         } else {
-            version = "1.3";
+            version = "1.4";
         }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                DataClient.create(version);
-                libraryDataManager = new LibraryDataManager(context);
-                JobManager.create(context).addJobCreator(new DataJobCreator());
-                startJobs();
-                if (update) {
-                    libraryDataManager.getFirstLaunchData();
-                }
-            }
-        }).start();
+        DataClient.create(version);
+        libraryDataManager = new LibraryDataManager(context);
+        JobManager.create(context).addJobCreator(new DataJobCreator());
+        startJobs();
+        if (update) {
+            libraryDataManager.getFirstLaunchData();
+        }
     }
 
 

@@ -146,7 +146,7 @@ public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.
         final Orbiter orbiter = gson.fromJson(intent.getStringExtra("json"), Orbiter.class);
 
         if (orbiter == null){
-            Toast.makeText(context, "Error - Unable to load orbiter details.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.error_orbiter_details, Toast.LENGTH_SHORT).show();
             Timber.e("Error - Unable to load launch details.");
             Intent homeIntent = new Intent(this, MainActivity.class);
             startActivity(homeIntent);
@@ -216,7 +216,7 @@ public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.
                 .into(detail_profile_image);
 
         //Set up history information
-        orbiter_history.setText(String.format("%s Spacecraft History", orbiter.getName()));
+        orbiter_history.setText(String.format(getString(R.string.spacecraft_history), orbiter.getName()));
         orbiter_history_description.setText(orbiter.getHistory());
 
         if (orbiter.getWikiLink() != null && orbiter.getWikiLink().length() > 0) {
@@ -231,7 +231,7 @@ public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.
         }
 
         //Set up vehicle card Information
-        orbiter_title.setText(String.format("%s Spacecraft Details", orbiter.getName()));
+        orbiter_title.setText(String.format(getString(R.string.spacecraft_details), orbiter.getName()));
         orbiter_description.setText(orbiter.getDetails());
     }
 
