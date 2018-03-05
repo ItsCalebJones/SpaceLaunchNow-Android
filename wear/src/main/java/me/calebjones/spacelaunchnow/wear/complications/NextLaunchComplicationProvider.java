@@ -254,7 +254,7 @@ public class NextLaunchComplicationProvider extends ComplicationProviderService 
                 case ComplicationData.TYPE_SHORT_TEXT:
                     String agency = "Unk";
                     if (launch.getLsp() != null && launch.getLsp().getAbbrev() != null) {
-                        agency = launch.getLsp().getAbbrev()
+                        agency = launch.getLsp().getAbbrev();
                     } else if (launch.getMissions() != null && launch.getMissions().size() > 0) {
                         if (launch.getRocket() != null
                                 && launch.getRocket().getAgencies() != null
