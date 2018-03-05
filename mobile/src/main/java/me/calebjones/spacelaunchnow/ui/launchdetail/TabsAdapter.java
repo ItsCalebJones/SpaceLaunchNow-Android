@@ -17,9 +17,9 @@ public class TabsAdapter extends FragmentPagerAdapter {
     private AgencyDetailFragment agencyFragment = AgencyDetailFragment.newInstance();
     private Context context;
 
-    public TabsAdapter(FragmentManager fragmentManager) {
+    public TabsAdapter(FragmentManager fragmentManager, Context context) {
         super(fragmentManager);
-        context = summaryFragment.getActivity();
+        this.context = context;
     }
 
     @Override

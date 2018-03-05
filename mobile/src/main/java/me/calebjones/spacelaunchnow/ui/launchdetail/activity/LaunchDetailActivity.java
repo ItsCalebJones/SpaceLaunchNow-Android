@@ -292,7 +292,7 @@ public class LaunchDetailActivity extends BaseActivity
         appBarLayout.addOnOffsetChangedListener(this);
         mMaxScrollSize = appBarLayout.getTotalScrollRange();
 
-        tabAdapter = new TabsAdapter(getSupportFragmentManager());
+        tabAdapter = new TabsAdapter(getSupportFragmentManager(), context);
 
         viewPager.setAdapter(tabAdapter);
         viewPager.setOffscreenPageLimit(3);
