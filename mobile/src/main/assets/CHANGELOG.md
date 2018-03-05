@@ -5,7 +5,17 @@ A space launch tracker for Android using data from the Launch Library API.
 ## Changelog
 #### Updated 2-7-2017
 ---
-### Version 2.2.2 (Latest)
+### Version 2.2.3 (Latest)
+#### Overview
+Bug fixes, work to support translations.
+
+#### Changelog
+* Fix crash on Wear complications.
+* Fix issue when no Wearable is detected.
+* Fix asynchronous related crashes.
+
+
+### Version 2.2.2
 #### Overview
 Another small release with bug fixes.
 
