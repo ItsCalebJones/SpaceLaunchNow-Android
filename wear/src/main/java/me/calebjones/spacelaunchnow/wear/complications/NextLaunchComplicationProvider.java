@@ -258,7 +258,7 @@ public class NextLaunchComplicationProvider extends ComplicationProviderService 
                     } else if (launch.getMissions() != null && launch.getMissions().size() > 0) {
                         if (launch.getRocket() != null
                                 && launch.getRocket().getAgencies() != null
-                                && launch.getRocket().getAgencies().size() == 1
+                                && launch.getRocket().getAgencies().size() >= 1
                                 && launch.getRocket().getAgencies().get(0) != null){
                             Agency launchAgency = launch.getRocket().getAgencies().get(0);
                             if (launchAgency != null){

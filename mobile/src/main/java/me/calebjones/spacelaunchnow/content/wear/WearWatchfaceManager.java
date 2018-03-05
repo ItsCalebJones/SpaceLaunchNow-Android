@@ -63,11 +63,8 @@ public class WearWatchfaceManager extends BaseManager {
 
     // Create a data map and put data in it
     public void updateWear() {
-
-        //TODO Figure this out - need to detect if an Android Wear device is connected before connecting.
-        CapabilityInfo capabilityInfo = null;
         try {
-            capabilityInfo = Tasks.await(
+            CapabilityInfo capabilityInfo = Tasks.await(
                     Wearable.getCapabilityClient(context).getCapability(
                             WEAR_APP_CAPABILITY, CapabilityClient.FILTER_REACHABLE));
 
