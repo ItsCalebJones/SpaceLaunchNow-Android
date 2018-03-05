@@ -6,29 +6,29 @@
         android:icon="@drawable/ic_settings_black"
         android:title="General"
         android:summary="@string/general_settings"
-        android:breadCrumbTitle="General" />
+        android:breadCrumbTitle="@string/general" />
     <header
         android:fragment="me.calebjones.spacelaunchnow.ui.settings.fragments.NotificationsFragment"
         android:icon="@drawable/ic_notifications"
         android:title="Notifications"
         android:summary="@string/notifications_settings"
-        android:breadCrumbTitle="Notifications"/>
+        android:breadCrumbTitle="@string/notifications"/>
     <header
         android:fragment="me.calebjones.spacelaunchnow.ui.settings.fragments.AppearanceFragment"
         android:icon="@drawable/ic_appearance"
         android:title="Appearance"
         android:summary="@string/appearance_settings"
-        android:breadCrumbTitle="Appearance"/>
+        android:breadCrumbTitle="@string/appearance"/>
     <header
         android:fragment="me.calebjones.spacelaunchnow.ui.settings.fragments.WearFragment"
         android:icon="@drawable/ic_wear"
         android:title="Wear"
         android:summary="@string/wear_settings"
-        android:breadCrumbTitle="Wear"/>
+        android:breadCrumbTitle="@string/wear"/>
     <header
         android:icon="@drawable/ic_about_black"
         android:summary="@string/about_settings"
-        android:title="About">
+        android:title="@string/about">
         <intent
             android:targetClass="me.calebjones.spacelaunchnow.ui.settings.AboutActivity"
             android:targetPackage="me.calebjones.spacelaunchnow"/>
@@ -36,7 +36,7 @@
     <header
         android:icon="@drawable/ic_support_black"
         android:summary="@string/support_settings"
-        android:title="Support">
+        android:title="@string/Support">
         <intent
             android:targetClass="me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity"
             android:targetPackage="me.calebjones.spacelaunchnow"/>
