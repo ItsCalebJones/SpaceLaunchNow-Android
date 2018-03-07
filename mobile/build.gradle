@@ -231,6 +231,7 @@ dependencies {
     implementation "com.android.support:animated-vector-drawable:$rootProject.supportLibraryVersion"
     implementation "com.android.support:support-v13:$rootProject.supportLibraryVersion"
     implementation "com.android.support:percent:$rootProject.supportLibraryVersion"
+    implementation "com.google.firebase:firebase-core:$rootProject.playServicesVersion"
     implementation "com.google.android.gms:play-services-location:$rootProject.playServicesVersion"
     implementation "com.google.android.gms:play-services-wearable:$rootProject.playServicesVersion"
     implementation "com.google.android.gms:play-services-gcm:$rootProject.playServicesVersion"
@@ -301,3 +302,5 @@ dependencies {
     implementation 'com.mikepenz:fontawesome-typeface:4.7.0.0@aar'
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
 }
+
+apply plugin: 'com.google.gms.google-services'

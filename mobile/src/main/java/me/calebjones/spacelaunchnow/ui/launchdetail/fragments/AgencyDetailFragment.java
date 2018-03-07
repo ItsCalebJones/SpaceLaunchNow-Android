@@ -163,6 +163,8 @@ public class AgencyDetailFragment extends BaseFragment {
 
             if (detailLaunch.getMissions() !=null && detailLaunch.getMissions().size() > 0){
                 mission_agency_type.setText(detailLaunch.getMissions().get(0).getName());
+            } else {
+                mission_agency_type.setText(R.string.unknown_mission);
             }
 
             if (mission_agencies >= 2) {
@@ -190,8 +192,8 @@ public class AgencyDetailFragment extends BaseFragment {
         mission_one.setVisibility(View.GONE);
         mission_two.setVisibility(View.GONE);
 
-        mission_agency_title.setText("Mission Agency");
-        mission_agency_type.setText("Unknown Mission Agency");
+        mission_agency_title.setText(R.string.mission_agency);
+        mission_agency_type.setText(R.string.unknown_mission);
     }
 
     private void setOneMissionAgencies() {
@@ -266,7 +268,7 @@ public class AgencyDetailFragment extends BaseFragment {
 
     private void setTwoMissionAgencies() {
         mission_agency_type.setVisibility(View.VISIBLE);
-        mission_agency_title.setText("Mission Agencies");
+        mission_agency_title.setText(R.string.mission_agencies);
 
         String agencyTypeOne = "";
         String agencyNameOne = "";
@@ -274,6 +276,11 @@ public class AgencyDetailFragment extends BaseFragment {
         String agencyAbbrevTwo = "";
         String agencyTypeTwo = "";
         String agencyNameTwo = "";
+        mission_agency_type.setText(agencyTypeOne);
+        mission_agency_type_one.setText(agencyTypeOne);
+        mission_agency_type_two.setText(agencyTypeTwo);
+        mission_agency_one.setText(agencyAbbrevOne);
+        mission_agency_two.setText(agencyAbbrevTwo);
         try {
             agencyTypeOne = getAgencyType(detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getType());
             agencyNameOne = detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getName();
@@ -642,6 +649,9 @@ public class AgencyDetailFragment extends BaseFragment {
         } else if (abbrev.equalsIgnoreCase("nasa")) {
             view.setText(R.string.nasa_summary);
             view.setVisibility(View.VISIBLE);
+        } else {
+            view.setText("");
+            view.setVisibility(View.GONE);
         }
     }
 

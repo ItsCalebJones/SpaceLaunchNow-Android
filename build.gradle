@@ -14,7 +14,7 @@ buildscript {
         classpath 'org.moallemi.gradle.advanced-build-version:gradle-plugin:1.6.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
-
+        classpath 'com.google.gms:google-services:3.2.0' // google-services plugin
     }
 }
 
@@ -22,6 +22,9 @@ allprojects {
     repositories {
         jcenter()
         maven { url "https://jitpack.io" }
+        maven {
+            url "https://maven.google.com" // Google's Maven repository
+        }
         google()
     }
 }
@@ -46,7 +49,7 @@ ext {
     buildToolsVersion = '23.0.3'
 
     // App dependencies
-    supportLibraryVersion = '27.0.2'
+    supportLibraryVersion = '27.1.0'
     playServicesVersion = '11.8.0'
 
     sdk = 25

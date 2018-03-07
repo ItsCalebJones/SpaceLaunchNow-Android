@@ -348,4 +348,5 @@
   <string name="blur_background_summary">Blur the background image.</string>
   <string name="blur_settings">Blur Settings</string>
   <string name="blur_settings_summary">Configure the strength and characteristics of the blur effect.</string>
+  <string name="mission_agencies">Mission Agencies</string>
 </resources>
