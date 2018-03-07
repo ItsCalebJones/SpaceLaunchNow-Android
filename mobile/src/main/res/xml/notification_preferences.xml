@@ -6,40 +6,40 @@
         <SwitchPreference
             android:defaultValue="true"
             android:key="notifications_new_message"
-            android:summaryOff="Allow Notifications for upcoming launches."
-            android:summaryOn="Notifications are on for upcoming launches."
-            android:title="Enable Notifications" />
+            android:summaryOff="@string/enable_notifications_off"
+            android:summaryOn="@string/enable_notifications_on"
+            android:title="@string/enable_notifications" />
         <SwitchPreference
             android:defaultValue="true"
             android:dependency="notifications_new_message"
             android:key="notifications_launch_imminent_updates"
-            android:summaryOff="Do not update when a launch successful changes."
-            android:summaryOn="Receive update notification for launch status changes."
-            android:title="Status Updates" />
+            android:summaryOff="@string/status_updates_off"
+            android:summaryOn="@string/status_updates_on"
+            android:title="@string/status_updates" />
         <SwitchPreference
             android:defaultValue="false"
             android:dependency="notifications_new_message"
             android:key="notifications_new_message_webcast"
-            android:summary="Only notify for launches with webcast's available."
-            android:title="Web-cast Only" />
+            android:summary="@string/webcast_only_summary"
+            android:title="@string/webcast_only" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Do Not Disturb">
         <SwitchPreference
             android:key="do_not_disturb_status"
-            android:title="Enable Do Not Disturb"
-            android:summary="Enable for silent notifications for pre-Marshmallow."
+            android:title="@string/do_not_disturb"
+            android:summary="@string/do_not_disturb_summary"
             />
         <me.calebjones.spacelaunchnow.common.customviews.TimePreference
             android:key="do_not_disturb_start_time"
             android:dependency="do_not_disturb_status"
-            android:title="Start Time"
+            android:title="@string/start_time"
             android:defaultValue="22:00"
             />
         <me.calebjones.spacelaunchnow.common.customviews.TimePreference
             android:key="do_not_disturb_end_time"
             android:dependency="do_not_disturb_status"
-            android:title="End Time"
+            android:title="@string/end_time"
             android:defaultValue="08:00"
             />
 

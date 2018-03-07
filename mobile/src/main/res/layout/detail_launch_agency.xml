@@ -45,7 +45,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
                         android:lines="1"
-                        android:text="Mission Agency"
+                        android:text="@string/mission_agency"
                         android:textAlignment="center"
                         android:textColor="@color/dark_primary_text_color_selector"
                         android:textSize="@dimen/material_typography_regular_title_text_size"
@@ -89,7 +89,7 @@
                         android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
                         android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
                         android:layout_marginTop="@dimen/material_baseline_grid_1x"
-                        android:text="Agency One"
+                        android:text="@string/primary_agency"
                         android:textColor="?android:textColorSecondary"
                         android:textAppearance="@style/MaterialTypography.Regular.Title"
                         android:textSize="@dimen/material_typography_regular_subheading_text_size" />
@@ -104,7 +104,7 @@
                         android:paddingBottom="@dimen/material_card_supporting_text_padding_bottom"
                         android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
                         android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:text="Unknown Agency Type"
+                        android:text="@string/unknown_agency_type"
                         android:textColor="?android:textColorSecondary"
                         android:textAppearance="@style/MaterialTypography.Regular.Caption" />
 
@@ -133,7 +133,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="INFO"
+                            android:text="@string/info"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
 
@@ -143,7 +143,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="WIKI"
+                            android:text="@string/wiki"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -176,7 +176,7 @@
                         android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
                         android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
                         android:paddingTop="@dimen/material_baseline_grid_1x"
-                        android:text="Agency Two"
+                        android:text="@string/secondary_agency"
                         android:textAppearance="@style/MaterialTypography.Regular.Title"
                         android:textColor="?android:textColorSecondary"
                         android:textSize="@dimen/material_typography_regular_subheading_text_size" />
@@ -191,7 +191,7 @@
                         android:paddingBottom="@dimen/material_card_supporting_text_padding_bottom"
                         android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
                         android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:text="Unknown Agency Type"
+                        android:text="@string/unknown_agency_type"
                         android:textAppearance="@style/MaterialTypography.Regular.Caption"
                         android:textColor="?android:textColorSecondary" />
 
@@ -221,7 +221,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="INFO"
+                            android:text="@string/info"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
 
@@ -231,7 +231,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="WIKI"
+                            android:text="@string/wiki"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -268,7 +268,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:lines="1"
-                        android:text="Vehicle Agency"
+                        android:text="@string/vehicle_agency"
                         android:textAlignment="center"
                         android:textColor="@color/dark_primary_text_color_selector"
                         android:textSize="@dimen/material_typography_regular_title_text_size"
@@ -311,7 +311,7 @@
                         android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
                         android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
                         android:layout_marginTop="@dimen/material_card_supporting_text_padding_top"
-                        android:text="Agency One"
+                        android:text="@string/primary_agency"
                         android:textColor="?android:textColorSecondary"
                         android:textAppearance="@style/MaterialTypography.Regular.Title"
                         android:textSize="@dimen/material_typography_regular_subheading_text_size" />
@@ -326,7 +326,7 @@
                         android:paddingBottom="@dimen/material_baseline_grid_0.5x"
                         android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
                         android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:text="Unknown Agency Type"
+                        android:text="@string/unknown_agency_type"
                         android:textColor="?android:textColorSecondary"
                         android:textAppearance="@style/MaterialTypography.Regular.Caption" />
 
@@ -355,7 +355,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="INFO"
+                            android:text="@string/info"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
 
@@ -365,7 +365,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="WIKI"
+                            android:text="@string/wiki"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -397,7 +397,7 @@
                         android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
                         android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
                         android:paddingTop="@dimen/material_baseline_grid_1x"
-                        android:text="Agency Two"
+                        android:text="@string/secondary_agency"
                         android:textColor="?android:textColorSecondary"
                         android:textAppearance="@style/MaterialTypography.Regular.Title"
                         android:textSize="@dimen/material_typography_regular_subheading_text_size" />
@@ -412,7 +412,7 @@
                         android:paddingBottom="@dimen/material_baseline_grid_0.5x"
                         android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
                         android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:text="Unknown Agency Type"
+                        android:text="@string/unknown_agency_type"
                         android:textColor="?android:textColorSecondary"
                         android:textAppearance="@style/MaterialTypography.Regular.Caption"
                         />
@@ -443,7 +443,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="INFO"
+                            android:text="@string/info"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
 
@@ -453,7 +453,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="WIKI"
+                            android:text="@string/wiki"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
                     </LinearLayout>

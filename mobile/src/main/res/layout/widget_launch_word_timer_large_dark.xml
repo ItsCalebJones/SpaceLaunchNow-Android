@@ -84,7 +84,7 @@
                     android:gravity="center|bottom"
                     android:lines="1"
                     android:paddingTop="8dp"
-                    android:text="days"
+                    android:text="@string/lower_days"
                     android:textColor="@color/dark_theme_primary_text_color"
                     android:textSize="20sp" />
 
@@ -109,7 +109,7 @@
                     android:gravity="center|bottom"
                     android:lines="1"
                     android:paddingTop="8dp"
-                    android:text="hours"
+                    android:text="@string/lower_hours"
                     android:textColor="@color/dark_theme_primary_text_color"
                     android:textSize="20sp" />
             </LinearLayout>

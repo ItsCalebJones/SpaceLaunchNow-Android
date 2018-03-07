@@ -16,11 +16,14 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.CapabilityClient;
 import com.google.android.gms.wearable.CapabilityInfo;
+import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
@@ -28,8 +31,10 @@ import com.google.android.gms.wearable.Wearable;
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
+import io.fabric.sdk.android.services.common.Crash;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import jp.wasabeef.glide.transformations.BlurTransformation;
@@ -49,6 +54,7 @@ import static me.calebjones.spacelaunchnow.data.models.Constants.*;
 public class WearWatchfaceManager extends BaseManager {
 
     private Context context;
+    private static final String WEAR_APP_CAPABILITY = "verify_remote_launch_spacelaunchnow_wear_app";
 
     public WearWatchfaceManager(Context context) {
         super(context);
@@ -57,17 +63,22 @@ public class WearWatchfaceManager extends BaseManager {
 
     // Create a data map and put data in it
     public void updateWear() {
+        try {
+            CapabilityInfo capabilityInfo = Tasks.await(
+                    Wearable.getCapabilityClient(context).getCapability(
+                            WEAR_APP_CAPABILITY, CapabilityClient.FILTER_REACHABLE));
 
-        //TODO Figure this out - need to detect if an Android Wear device is connected before connecting.
-//        Task<Map<String, CapabilityInfo>> capabilityInfo = Wearable.getCapabilityClient(context).getAllCapabilities(CapabilityClient.FILTER_REACHABLE);
-//        capabilityInfo.addOnCompleteListener(new OnCompleteListener<Map<String, CapabilityInfo>>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Map<String, CapabilityInfo>> task) {
-//                Map<String, CapabilityInfo> result = task.getResult();
-//                result.size();
-//            }
-//        });
-        checkLaunch();
+            Set<Node> connectedNodes = capabilityInfo.getNodes();
+            if (isWearAppConnected(connectedNodes)) checkLaunch();
+        } catch (ExecutionException | InterruptedException  e) {
+            Timber.e(e);
+        }
+    }
+
+
+
+    private boolean isWearAppConnected(Set<Node> nodes) {
+        return nodes.size() > 0;
     }
 
     private void checkLaunch() {
@@ -160,18 +171,6 @@ public class WearWatchfaceManager extends BaseManager {
                 );
                 Bitmap resource = GlideApp.with(context)
                         .asBitmap()
-                        .listener(new RequestListener<Bitmap>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                                Timber.e(e);
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                                return false;
-                            }
-                        })
                         .load(image)
                         .skipMemoryCache(true)
                         .diskCacheStrategy(DiskCacheStrategy.DATA)

@@ -72,7 +72,7 @@
         android:src="@drawable/ic_refresh_white"
         app:fab_colorNormal="@color/colorAccent"
         app:fab_colorPressed="@color/colorAccentLight"
-        app:fab_label="Reset"
+        app:fab_label="@string/reset"
         app:fab_size="mini" />
 
       <com.github.clans.fab.FloatingActionButton
@@ -82,7 +82,7 @@
         android:src="@drawable/ic_government_white"
         app:fab_colorNormal="@color/colorAccent"
         app:fab_colorPressed="@color/colorAccentLight"
-        app:fab_label="Agency"
+        app:fab_label="@string/agency"
         app:fab_size="mini" />
 
       <com.github.clans.fab.FloatingActionButton
@@ -92,7 +92,7 @@
         android:src="@drawable/ic_flag"
         app:fab_colorNormal="@color/colorAccent"
         app:fab_colorPressed="@color/colorAccentLight"
-        app:fab_label="Country"
+        app:fab_label="@string/country"
         app:fab_size="mini" />
 
       <com.github.clans.fab.FloatingActionButton
@@ -102,7 +102,7 @@
         android:src="@drawable/ic_earth_white"
         app:fab_colorNormal="@color/colorAccent"
         app:fab_colorPressed="@color/colorAccentLight"
-        app:fab_label="Location"
+        app:fab_label="@string/location"
         app:fab_size="mini" />
 
       <com.github.clans.fab.FloatingActionButton
@@ -112,7 +112,7 @@
         android:src="@drawable/ic_rocket"
         app:fab_colorNormal="@color/colorAccent"
         app:fab_colorPressed="@color/colorAccentLight"
-        app:fab_label="Vehicle"
+        app:fab_label="@string/vehicle"
         app:fab_size="mini" />
 
 

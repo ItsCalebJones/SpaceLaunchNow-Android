@@ -1,5 +1,6 @@
 package me.calebjones.spacelaunchnow.ui.main.next;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -30,9 +31,7 @@ import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.transition.Transition;
 import com.crashlytics.android.Crashlytics;
 import com.mypopsy.maps.StaticMap;
 
@@ -117,6 +116,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         return new ViewHolder(v);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
         Launch launchItem = launchList.get(i);
@@ -137,7 +137,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     title = launchItem.getName();
                 } else {
                     Timber.e("Error - launch item is effectively null.");
-                    title = "Error - Unknown Launch";
+                    title = context.getString(R.string.error_unknown_launch);
                 }
 
                 holder.title.setText(title);
@@ -203,7 +203,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 }
 
                 if (launchItem.getProbability() != null && launchItem.getProbability() > 0) {
-                    holder.contentForecast.setText(String.format("Weather Favorable: %s%%", launchItem.getProbability()));
+                    holder.contentForecast.setText(String.format(context.getString(R.string.weather_favorable), launchItem.getProbability()));
                     holder.contentForecast.setVisibility(View.VISIBLE);
                 } else {
                     holder.contentForecast.setVisibility(View.GONE);
@@ -268,13 +268,13 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                                 holder.content_TMinus_status.setTextColor(color);
                             }
                             if (status == 1) {
-                                holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
+                                holder.content_TMinus_status.setText(R.string.watch_webcast);
 
                             } else {
                                 if (hold != null && hold.length() > 1) {
                                     holder.content_TMinus_status.setText(hold);
                                 } else {
-                                    holder.content_TMinus_status.setText("Watch Live webcast for up to date status.");
+                                    holder.content_TMinus_status.setText(R.string.watch_webcast);
                                 }
                             }
                             holder.content_TMinus_status.setVisibility(View.VISIBLE);
@@ -369,15 +369,15 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     }
                     if (launchItem.getStatus() != 1) {
                         if (launchItem.getRocket().getAgencies().size() > 0) {
-                            holder.content_TMinus_status.setText(String.format("Pending confirmed GO from %s", launchItem.getRocket().getAgencies().get(0).getName()));
+                            holder.content_TMinus_status.setText(String.format(context.getString(R.string.pending_confirmed_go_specific), launchItem.getRocket().getAgencies().get(0).getName()));
                         } else {
-                            holder.content_TMinus_status.setText("Pending confirmed Go for Launch from launch agency");
+                            holder.content_TMinus_status.setText(R.string.pending_confirmed_go);
                         }
                     } else {
                         if (launchItem.getRocket().getAgencies().size() > 0) {
-                            holder.content_TMinus_status.setText(String.format("Waiting on exact launch time from %s", launchItem.getRocket().getAgencies().first().getName()));
+                            holder.content_TMinus_status.setText(String.format(context.getString(R.string.waiting_on_launch_time_specific), launchItem.getRocket().getAgencies().first().getName()));
                         } else {
-                            holder.content_TMinus_status.setText("Waiting on exact launch time from launch provider");
+                            holder.content_TMinus_status.setText(R.string.waiting_on_launch_time);
                         }
                     }
                 }
@@ -393,7 +393,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                         Date date = launchItem.getNet();
                         String launchTime = sdf.format(date);
                         if (launchItem.getTbddate() == 1){
-                            launchTime = launchTime + " (Unconfirmed)";
+                            launchTime = launchTime + context.getString(R.string.unconfirmed);
                         }
                         holder.launch_date_compact.setText(launchTime);
                         holder.launch_time.setVisibility(View.GONE);

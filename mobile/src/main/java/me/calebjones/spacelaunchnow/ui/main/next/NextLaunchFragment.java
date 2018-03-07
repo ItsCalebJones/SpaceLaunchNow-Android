@@ -769,13 +769,13 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         dialog.positiveText("Ok");
         switch (view.getId()) {
             case R.id.no_go_info:
-                dialog.title("No Go Launches").content("This hides launches that have a status of 'no-go' and can sometimes hide launches that are within their launch window but holding for technical or range issues.").show();
+                dialog.title(R.string.no_go).content(R.string.no_go_description).show();
                 break;
             case R.id.tbd_info:
-                dialog.title("To Be Determined - Launches").content("This hides launches that do not have a confirmed launch date or launch time. This can occasionally hide launches that have been scrubbed for the day.").show();
+                dialog.title(R.string.to_be_determined).content(R.string.to_be_determined_description).show();
                 break;
             case R.id.last_launch_info:
-                dialog.title("Keep Launches for 24 hours").content("This option will show launches on the home page for up to 24 hours after launch has occurred.").show();
+                dialog.title(R.string.launch_info).content(R.string.launch_info_description).show();
                 break;
         }
     }

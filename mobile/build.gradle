@@ -113,7 +113,7 @@ android {
     defaultConfig {
 
         applicationId "me.calebjones.spacelaunchnow"
-        manifestPlaceholders = [appNameLabel                   : "@string/application_name",
+        manifestPlaceholders = [appNameLabel                   : "@string/app_name",
                                 manifestApplicationId          : "${applicationId}",
                                 onesignal_app_id               : "${app_id}",
                                 onesignal_google_project_number: "${google_project_number}"]

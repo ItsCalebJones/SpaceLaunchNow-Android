@@ -102,7 +102,7 @@ public class DebugPresenter implements DebugContract.Presenter {
             DataClient.create("dev");
         } else {
             sharedPreference.setDebugLaunch(false);
-            DataClient.create("1.2.1");
+            DataClient.create("1.4");
         }
 
 

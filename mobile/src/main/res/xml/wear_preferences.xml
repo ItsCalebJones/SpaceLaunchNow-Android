@@ -8,15 +8,15 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="wear_hour_mode"
-            android:summaryOff="Use AM/PM mode for keeping time."
-            android:summaryOn="Use 24 Hour mode for keeping time."
-            android:title="Watch Hour Mode" />
+            android:summaryOff="@string/watch_hour_mode_off"
+            android:summaryOn="@string/watch_hour_mode_on"
+            android:title="@string/watch_hour_mode" />
 
         <SwitchPreference
             android:defaultValue="true"
             android:key="wear_display_utc"
-            android:summary="Enable to show current time in UTC."
-            android:title="Show UTC Time" />
+            android:summary="@string/utc_time_summary"
+            android:title="@string/utc_time" />
 
 
     </PreferenceCategory>
@@ -26,21 +26,21 @@
         <SwitchPreference
             android:key="supporter_dynamic_background"
             android:defaultValue="false"
-            android:summary="Use image of the next Launch vehicle if available."
-            android:title="Dynamic Background" />
+            android:summary="@string/dynamic_background_summary"
+            android:title="@string/dynamic_background" />
 
         <SwitchPreference
             android:key="wear_background_blur"
             android:defaultValue="true"
-            android:summary="Blur the background image."
-            android:title="Blur Background" />
+            android:summary="@string/blur_background_summary"
+            android:title="@string/blur_background" />
 
         <Preference
             android:key="wear_blur_dialog"
             android:dependency="wear_background_blur"
             android:enabled="true"
-            android:summary="Configure the strength and characteristics of the blur effect."
-            android:title="Blur Settings" />
+            android:summary="@string/blur_settings_summary"
+            android:title="@string/blur_settings" />
 
     </PreferenceCategory>
 

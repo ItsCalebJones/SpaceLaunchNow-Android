@@ -65,7 +65,7 @@
                         android:fontFamily="sans-serif-condensed"
                         android:gravity="left"
                         android:maxLines="2"
-                        android:text="Unknown Launch"
+                        android:text="@string/unknown_launch"
                         android:textColor="@color/dark_primary_text_color_selector"
                         android:textAppearance="@style/MaterialTypography.Tall.Title"
                         android:textSize="20sp"
@@ -80,7 +80,7 @@
                         android:gravity="left"
                         android:maxLines="2"
                         android:singleLine="false"
-                        android:text="Unknown Launch Location"
+                        android:text="@string/unknown_launch_location"
                         android:textAppearance="@style/MaterialTypography.Regular.Subheading"
                         android:textColor="@color/dark_primary_text_color_selector" />
 
@@ -93,7 +93,7 @@
                         android:maxLines="2"
                         android:paddingBottom="@dimen/material_baseline_grid_1x"
                         android:singleLine="false"
-                        android:text="Unknown Launch Date"
+                        android:text="@string/unknown_launch_date"
                         android:textAppearance="@style/MaterialTypography.Regular.Subheading"
                         android:textColor="@color/dark_primary_text_color_selector" />
 
@@ -103,8 +103,7 @@
             <ImageView
                 android:id="@+id/map_view"
                 android:layout_width="fill_parent"
-                android:layout_height="160dp"
-                android:contentDescription="A map view of launch location." />
+                android:layout_height="160dp" />
             <TextView
                 android:id="@+id/content_status"
                 android:layout_width="match_parent"
@@ -114,7 +113,7 @@
                 android:paddingBottom="8dp"
                 android:paddingTop="4dp"
                 android:singleLine="false"
-                android:text="Unknown Launch Status"
+                android:text="@string/unknown_launch_status"
                 android:elevation="4dp"
                 android:clipToPadding="false"
                 android:background="?attr/titleBarColor"
@@ -147,7 +146,7 @@
                         android:ellipsize="end"
                         android:gravity="left"
                         android:singleLine="false"
-                        android:text="Unknown CountDown Status"
+                        android:text="@string/unknown_countdown_status"
                         android:textAlignment="center"
                         android:textColor="?android:textColorSecondary"
                         android:textSize="16sp" />
@@ -170,7 +169,7 @@
                 android:maxLines="2"
                 android:paddingBottom="@dimen/material_baseline_grid_0.5x"
                 android:singleLine="false"
-                android:text="Unknown Launch Date"
+                android:text="@string/unknown_launch_date"
                 android:textAppearance="@style/MaterialTypography.Regular.Subheading"
                 android:textColor="?android:textColorSecondary" />
 
@@ -179,7 +178,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Unknown"
+                android:text="@string/unknown"
                 android:textAppearance="@style/MaterialTypography.Regular.Subheading"
                 android:textColor="?android:textColorSecondary"
                 android:textIsSelectable="false" />
@@ -204,7 +203,7 @@
                     android:id="@+id/content_mission"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Unknown Mission"
+                    android:text="@string/unknown_mission"
                     android:layout_marginStart="@dimen/material_baseline_grid_2.5x"
                     android:layout_marginEnd="@dimen/material_baseline_grid_2.5x"
                     android:textAppearance="@style/MaterialTypography.Regular.Caption"
@@ -238,7 +237,7 @@
                     android:layout_marginStart="@dimen/material_baseline_grid_2x"
 
                     android:gravity="center"
-                    android:text="Watch Live" />
+                    android:text="@string/watch_live" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/shareButton"
@@ -247,7 +246,7 @@
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="@dimen/material_baseline_grid_2x"
-                    android:text="Share" />
+                    android:text="@string/share" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/exploreButton"
@@ -256,7 +255,7 @@
                     android:layout_height="match_parent"
                     android:layout_alignParentBottom="true"
                     android:layout_toLeftOf="@id/shareButton"
-                    android:text="Explore" />
+                    android:text="@string/explore" />
             </RelativeLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>

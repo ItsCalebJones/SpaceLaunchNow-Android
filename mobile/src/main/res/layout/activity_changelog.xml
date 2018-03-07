@@ -18,7 +18,7 @@
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
-            app:title="Whats New? "/>
+            app:title="@string/whats_new"/>
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"

@@ -255,7 +255,7 @@ public class LaunchDetailActivity extends BaseActivity
                                         }
                                     });
                                 }
-                                Toast.makeText(LaunchDetailActivity.this, "Error: Error loading launch.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LaunchDetailActivity.this, R.string.error_loading_launch, Toast.LENGTH_SHORT).show();
                                 onBackPressed();
                             }
                         }
@@ -292,7 +292,7 @@ public class LaunchDetailActivity extends BaseActivity
         appBarLayout.addOnOffsetChangedListener(this);
         mMaxScrollSize = appBarLayout.getTotalScrollRange();
 
-        tabAdapter = new TabsAdapter(getSupportFragmentManager());
+        tabAdapter = new TabsAdapter(getSupportFragmentManager(), context);
 
         viewPager.setAdapter(tabAdapter);
         viewPager.setOffscreenPageLimit(3);
@@ -302,31 +302,31 @@ public class LaunchDetailActivity extends BaseActivity
 
     private void showFeedback() {
         new MaterialDialog.Builder(this)
-                .title("Submit Feedback")
+                .title(R.string.feedback_title)
                 .autoDismiss(true)
-                .content("Feel free to submit bugs or feature requests for anything related to the app. If you found an issue with the launch data, the libraries at Launch Library that provide the data can be contacted via Discord or Reddit.")
+                .content(R.string.feedback_description)
                 .neutralColor(ContextCompat.getColor(this, R.color.colorPrimary))
-                .negativeText("Launch Data")
+                .negativeText(R.string.launch_data)
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        String url = "https://www.reddit.com/r/LaunchLibrary/";
+                        String url = getString(R.string.launch_library_reddit);
                         Intent i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(url));
                         startActivity(i);
                     }
                 })
                 .positiveColor(ContextCompat.getColor(this, R.color.colorPrimary))
-                .positiveText("App Feedback")
+                .positiveText(R.string.app_feedback)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         dialog.getBuilder()
-                                .title("Need Support?")
-                                .content("The fastest and most reliable way to get support is through Discord. If thats not an option feel free to email me directly.")
-                                .neutralText("Email")
-                                .negativeText("Cancel")
-                                .positiveText("Discord")
+                                .title(R.string.need_support)
+                                .content(R.string.need_support_description)
+                                .neutralText(R.string.email)
+                                .negativeText(R.string.cancel)
+                                .positiveText(R.string.discord)
                                 .onNeutral(new MaterialDialog.SingleButtonCallback() {
                                     @Override
                                     public void onClick(MaterialDialog dialog, DialogAction which) {
@@ -431,8 +431,8 @@ public class LaunchDetailActivity extends BaseActivity
     private void findProfileLogo() {
 
         //Default location, mission is unknown.
-        String location = "Unknown Location";
-        String mission = "Unknown Mission";
+        String location = getString(R.string.unknown_location);
+        String mission = getString(R.string.unknown_mission);
         String locationCountryCode = null;
         String agencyName = null;
         //This checks to see if a location is available

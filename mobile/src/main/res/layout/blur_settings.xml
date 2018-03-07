@@ -10,7 +10,7 @@
         android:layout_marginLeft="@dimen/material_baseline_grid_1x"
         android:layout_marginRight="@dimen/material_baseline_grid_1x"
         android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
-        android:text="Configure the strength and characteristics of the blur applied to background images."/>
+        android:text="@string/blur_description"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,7 +19,7 @@
             android:layout_width="@dimen/material_baseline_grid_10x"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/material_baseline_grid_0.5x"
-            android:text="Brightness"
+            android:text="@string/blur_brightness"
             android:gravity="center|left"
             android:textStyle="bold"/>
     <android.support.v7.widget.AppCompatSeekBar
@@ -39,7 +39,7 @@
             android:layout_width="@dimen/material_baseline_grid_10x"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/material_baseline_grid_0.5x"
-            android:text="Sampling"
+            android:text="@string/blur_sampling"
             android:gravity="center|left"
             android:textStyle="bold"/>
         <android.support.v7.widget.AppCompatSeekBar
@@ -59,7 +59,7 @@
             android:layout_width="@dimen/material_baseline_grid_10x"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/material_baseline_grid_0.5x"
-            android:text="Radius"
+            android:text="@string/blur_radius"
             android:gravity="center|left"
             android:textStyle="bold"/>
 
@@ -80,7 +80,7 @@
             android:layout_width="@dimen/material_baseline_grid_10x"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/material_baseline_grid_0.5x"
-            android:text="Saturation"
+            android:text="@string/blur_saturation"
             android:gravity="center|left"
             android:textStyle="bold"/>
         <android.support.v7.widget.AppCompatSeekBar

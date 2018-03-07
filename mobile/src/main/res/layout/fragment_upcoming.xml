@@ -46,7 +46,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginBottom="8dp"
-                        android:text="Uh oh...no launches!" />
+                        android:text="@string/no_launches" />
                 </LinearLayout>
             </RelativeLayout>
 
@@ -74,7 +74,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="8dp"
-                            android:text="Select Launches to Follow"
+                            android:text="@string/select_launches"
                             android:textAppearance="@style/TextAppearance.AppCompat.Title"
                             android:textColor="@color/white"
                             android:textSize="26dp"
@@ -86,7 +86,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="8dp"
-                            android:text="Your selections will be visible on the Home page and send notifications before launch."
+                            android:text="@string/selection_description"
                             android:textAppearance="@style/TextAppearance.AppCompat.Title"
                             android:textColor="@color/white"
                             android:textSize="16dp"
@@ -117,7 +117,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="6dp"
                                     android:checked="false"
-                                    android:text="NASA"
+                                    android:text="@string/nasa"
                                     android:textColor="@color/white"
                                     app:buttonTint="@color/white" />
 
@@ -127,7 +127,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="6dp"
                                     android:checked="false"
-                                    android:text="SpaceX"
+                                    android:text="@string/spacex"
                                     android:textColor="@color/white"
                                     app:buttonTint="@color/white" />
 
@@ -137,7 +137,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="6dp"
                                     android:checked="false"
-                                    android:text="ROSCOSMOS"
+                                    android:text="@string/roscosmos"
                                     android:textColor="@color/white"
                                     app:buttonTint="@color/white" />
 
@@ -147,7 +147,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="6dp"
                                     android:checked="false"
-                                    android:text="ULA"
+                                    android:text="@string/ula"
                                     android:textColor="@color/white"
                                     app:buttonTint="@color/white" />
 
@@ -157,7 +157,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="6dp"
                                     android:checked="false"
-                                    android:text="Kennedy Space Center"
+                                    android:text="@string/kennedy_space_center"
                                     android:textColor="@color/white"
                                     app:buttonTint="@color/white" />
 
@@ -167,7 +167,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="6dp"
                                     android:checked="false"
-                                    android:text="Vandenberg AFB"
+                                    android:text="@string/vandenberg_afb"
                                     android:textColor="@color/white"
                                     app:buttonTint="@color/white" />
                             </LinearLayout>
@@ -185,7 +185,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="6dp"
                                     android:checked="false"
-                                    android:text="Arianespace"
+                                    android:text="@string/arianespace"
                                     android:textColor="@color/white"
                                     app:buttonTint="@color/white" />
 
@@ -195,7 +195,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="6dp"
                                     android:checked="false"
-                                    android:text="CASC"
+                                    android:text="@string/casc"
                                     android:textColor="@color/white"
                                     app:buttonTint="@color/white" />
 
@@ -205,7 +205,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="6dp"
                                     android:checked="false"
-                                    android:text="ISRO"
+                                    android:text="@string/isro"
                                     android:textColor="@color/white"
                                     app:buttonTint="@color/white" />
 
@@ -215,7 +215,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="6dp"
                                     android:checked="false"
-                                    android:text="Cape Canaveral"
+                                    android:text="@string/cape_canaveral"
                                     android:textColor="@color/white"
                                     app:buttonTint="@color/white" />
 
@@ -225,7 +225,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="6dp"
                                     android:checked="false"
-                                    android:text="Plesetsk Cosmodrome"
+                                    android:text="@string/plesetsk_cosmodrome"
                                     android:textColor="@color/white"
                                     app:buttonTint="@color/white" />
 
@@ -235,7 +235,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="6dp"
                                     android:checked="false"
-                                    android:text="All"
+                                    android:text="@string/all"
                                     android:textColor="@color/white"
                                     app:buttonTint="@color/white" />
                             </LinearLayout>
@@ -246,7 +246,7 @@
                             android:id="@+id/action_notification_settings"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Edit Notification Settings"/>
+                            android:text="@string/edit_notification_settings"/>
 
                         <TextView
                             android:layout_width="match_parent"
@@ -254,7 +254,7 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"
-                            android:text="Additional Launch Filters"
+                            android:text="@string/additional_filters"
                             android:textAppearance="@style/TextAppearance.AppCompat.Title"
                             android:textColor="@color/white"
                             android:textSize="16dp"
@@ -265,7 +265,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"
-                            android:text="These do not affect launch notifications."
+                            android:text="@string/these_do_not_affect_launch_notifications"
                             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/white"
                             android:typeface="sans" />
@@ -292,7 +292,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight=".80"
                                 android:checked="true"
-                                android:text="Hide No-Go Launches"
+                                android:text="@string/hide_no_go_launches"
                                 android:textColor="@color/white"
                                 app:buttonTint="@color/white" />
 
@@ -322,7 +322,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight=".80"
                                 android:checked="true"
-                                android:text="Hide TBD Launches"
+                                android:text="@string/hide_tbd_launches"
                                 android:textColor="@color/white"
                                 app:buttonTint="@color/white" />
 
@@ -350,7 +350,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:checked="true"
-                                android:text="Keep Launches for 24 Hours"
+                                android:text="@string/keep_launches"
                                 android:textColor="@color/white"
                                 app:buttonTint="@color/white" />
 

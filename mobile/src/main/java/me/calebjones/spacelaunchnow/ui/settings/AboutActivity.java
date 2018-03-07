@@ -98,7 +98,6 @@ public class AboutActivity extends AppCompatActivity {
                 )
                 .addChangeLogAction(new Intent(this, ChangelogActivity.class))
                 .addIntroduceAction(new Intent(this, OnboardingActivity.class))
-                .addDonateAction(new Intent(Intent.ACTION_VIEW, Uri.parse("https://paypal.me/cejones")))
                 .addRemoveAdsAction(new Intent(this, SupporterActivity.class))
                 .setWrapScrollView(true)
                 .setShowAsCard(true);

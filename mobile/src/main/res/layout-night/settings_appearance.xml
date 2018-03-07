@@ -19,7 +19,7 @@
         android:layout_marginLeft="32dp"
         android:layout_toRightOf="@id/ivIcon"
         android:layout_width="match_parent"
-        android:text="Appearance"
+        android:text="@string/appearance"
         android:textSize="16sp" />
     <TextView
         android:layout_below="@+id/tvTitle"
@@ -27,6 +27,6 @@
         android:layout_marginLeft="32dp"
         android:layout_toRightOf="@id/ivIcon"
         android:layout_width="match_parent"
-        android:text="Customize app theme and colors."
+        android:text="@string/appearance_description"
         android:textSize="14sp" />
 </RelativeLayout>

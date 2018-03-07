@@ -5,30 +5,30 @@
         android:fragment="me.calebjones.spacelaunchnow.ui.settings.fragments.GeneralFragment"
         android:icon="@drawable/ic_settings_black"
         android:title="General"
-        android:summary="@string/general_settings_for_launch_tracking_and_application_behavior"
-        android:breadCrumbTitle="General" />
+        android:summary="@string/general_settings"
+        android:breadCrumbTitle="@string/general" />
     <header
         android:fragment="me.calebjones.spacelaunchnow.ui.settings.fragments.NotificationsFragment"
         android:icon="@drawable/ic_notifications"
         android:title="Notifications"
         android:summary="Set up launch notifications and scheduling."
-        android:breadCrumbTitle="Notifications"/>
+        android:breadCrumbTitle="@string/notifications"/>
     <header
         android:fragment="me.calebjones.spacelaunchnow.ui.settings.fragments.AppearanceFragment"
         android:icon="@drawable/ic_appearance"
         android:title="Appearance"
         android:summary="Customize app theme and colors."
-        android:breadCrumbTitle="Appearance"/>
+        android:breadCrumbTitle="@string/appearance"/>
     <header
         android:fragment="me.calebjones.spacelaunchnow.ui.settings.fragments.WearFragment"
         android:icon="@drawable/ic_wear"
         android:title="Wear"
         android:summary="Change Android Wear watch face settings."
-        android:breadCrumbTitle="Wear"/>
+        android:breadCrumbTitle="@string/wear"/>
     <header
         android:icon="@drawable/ic_about_black"
         android:summary="Application information about license, libraries, changelog, etc"
-        android:title="About">
+        android:title="@string/about">
         <intent
             android:targetClass="me.calebjones.spacelaunchnow.ui.settings.AboutActivity"
             android:targetPackage="me.calebjones.spacelaunchnow.debug"/>
@@ -36,7 +36,7 @@
     <header
         android:icon="@drawable/ic_support_black"
         android:summary="Follow my projects and contribute to future development."
-        android:title="Support">
+        android:title="@string/Support">
         <intent
             android:targetClass="me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity"
             android:targetPackage="me.calebjones.spacelaunchnow.debug"/>

@@ -104,7 +104,7 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
                 adapter.addItems(results);
                 missionList = results;
             } else {
-                showErrorSnackbar("Unable to load missions.");
+                showErrorSnackbar(getString(R.string.error_loading_mission));
             }
             hideLoading();
         }
@@ -177,7 +177,7 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
         showLoading();
         DataClientManager dataClientManager = new DataClientManager(getActivity());
         dataClientManager.getAllMissions();
-        showSnackbar("Updating mission data... this may take a few seconds.");
+        showSnackbar(getString(R.string.updating_mission_data));
     }
 
     private void showLoading() {

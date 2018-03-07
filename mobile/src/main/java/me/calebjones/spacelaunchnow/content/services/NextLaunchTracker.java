@@ -3,6 +3,9 @@ package me.calebjones.spacelaunchnow.content.services;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.os.Handler;
+
+import java.util.concurrent.ExecutionException;
 
 import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
@@ -75,8 +78,12 @@ public NextLaunchTracker(Context context) {
     }
 
     public void updateWear() {
-        WearWatchfaceManager watchfaceManager = new WearWatchfaceManager(context);
-        watchfaceManager.updateWear();
+        final WearWatchfaceManager watchfaceManager = new WearWatchfaceManager(context);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                watchfaceManager.updateWear();
+            }
+        }).start();
     }
-
 }

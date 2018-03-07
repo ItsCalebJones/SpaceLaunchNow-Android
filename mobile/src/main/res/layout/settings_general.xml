@@ -19,7 +19,7 @@
         android:layout_marginLeft="32dp"
         android:layout_toRightOf="@id/ivIcon"
         android:layout_width="match_parent"
-        android:text="General"
+        android:text="@string/general"
         android:textSize="16sp" />
     <TextView
         android:layout_below="@+id/tvTitle"
@@ -27,6 +27,6 @@
         android:layout_marginLeft="32dp"
         android:layout_toRightOf="@id/ivIcon"
         android:layout_width="match_parent"
-        android:text="@string/general_settings_for_launch_tracking_and_application_behavior"
+        android:text="@string/general_settings"
         android:textSize="14sp" />
 </RelativeLayout>

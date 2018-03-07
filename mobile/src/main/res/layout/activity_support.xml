@@ -76,7 +76,7 @@
                 android:layout_marginRight="32dp"
                 android:maxLines="1"
                 android:paddingTop="8dp"
-                android:text="Become a Supporter"
+                android:text="@string/supporter_title"
                 android:textSize="26sp" />
 
             <TextView
@@ -87,7 +87,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="4dp"
                 android:maxLines="1"
-                android:text="Get Pro Features"
+                android:text="@string/get_pro_features"
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />
         </LinearLayout>
@@ -107,7 +107,7 @@
                 android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
                 android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
                 android:gravity="center"
-                android:text="Thank you for your continued support!"
+                android:text="@string/thank_you_support"
                 android:textColor="@color/material_typography_primary_text_color_light"
                 android:textSize="@dimen/material_typography_regular_title_text_size" />
 
@@ -185,7 +185,7 @@
                                     android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
                                     android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
                                     android:gravity="center_vertical"
-                                    android:text="Support Development"
+                                    android:text="@string/support_development"
                                     android:textSize="@dimen/material_typography_regular_title_text_size" />
 
                                 <TextView
@@ -238,14 +238,14 @@
                                     android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
                                     android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
                                     android:gravity="center_vertical"
-                                    android:text="Weather Forecast"
+                                    android:text="@string/weather_forecast"
                                     android:textSize="20sp" />
 
                                 <TextView
                                     android:layout_width="fill_parent"
                                     android:layout_height="wrap_content"
                                     android:lines="2"
-                                    android:text="Get weather information from the launch pad for historical and upcoming launches." />
+                                    android:text="@string/weather_description" />
 
                             </LinearLayout>
 
@@ -290,14 +290,14 @@
                                     android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
                                     android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
                                     android:gravity="center_vertical"
-                                    android:text="Calendar Sync"
+                                    android:text="@string/calendar_sync"
                                     android:textSize="20sp" />
 
                                 <TextView
                                     android:layout_width="fill_parent"
                                     android:layout_height="wrap_content"
                                     android:lines="2"
-                                    android:text="Automatically sync upcoming launches to your calendar." />
+                                    android:text="@string/calendar_sync_description" />
 
                             </LinearLayout>
 
@@ -342,14 +342,14 @@
                                     android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
                                     android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
                                     android:gravity="center_vertical"
-                                    android:text="Dynamic Watch Face"
+                                    android:text="@string/dynamic_watch_face"
                                     android:textSize="20sp" />
 
                                 <TextView
                                     android:layout_width="fill_parent"
                                     android:layout_height="wrap_content"
                                     android:lines="2"
-                                    android:text="Dynamic pictures of launch vehicles as watch face background." />
+                                    android:text="@string/dynamic_watch_face_description" />
 
                             </LinearLayout>
                         </LinearLayout>
@@ -393,14 +393,14 @@
                                     android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
                                     android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
                                     android:gravity="center_vertical"
-                                    android:text="Remove Ads"
+                                    android:text="@string/remove_ads"
                                     android:textSize="20sp" />
 
                                 <TextView
                                     android:layout_width="fill_parent"
                                     android:layout_height="wrap_content"
                                     android:lines="2"
-                                    android:text="Remove all advertisements forever!" />
+                                    android:text="@string/remove_ads_description" />
 
                             </LinearLayout>
 
@@ -445,14 +445,14 @@
                                     android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
                                     android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
                                     android:gravity="center_vertical"
-                                    android:text="Discord"
+                                    android:text="@string/discord"
                                     android:textSize="20sp" />
 
                                 <TextView
                                     android:layout_width="fill_parent"
                                     android:layout_height="wrap_content"
                                     android:lines="2"
-                                    android:text="Receive an exclusive Supporter role in the Space Launch Now Discord chat server." />
+                                    android:text="@string/discord_description" />
 
                             </LinearLayout>
 
@@ -497,14 +497,14 @@
                                     android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
                                     android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
                                     android:gravity="center_vertical"
-                                    android:text="Exclusive Customizable Widgets"
+                                    android:text="@string/exclusive_widgets"
                                     android:textSize="20sp" />
 
                                 <TextView
                                     android:layout_width="fill_parent"
                                     android:layout_height="wrap_content"
                                     android:lines="2"
-                                    android:text="Get access to an additional widget and the ability to customize them." />
+                                    android:text="@string/exclusive_widgets_description" />
 
                             </LinearLayout>
 
@@ -518,7 +518,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/material_baseline_grid_0.5x"
-                        android:text="Become a Supporter"
+                        android:text="@string/supporter_title"
                         android:theme="@style/PrimaryButtonTheme" />
 
                 </LinearLayout>

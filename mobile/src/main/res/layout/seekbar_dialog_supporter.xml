@@ -9,7 +9,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/material_baseline_grid_2x"
     android:textAlignment="center"
-    android:text="Drag the slider to select your preferred supporter level. \n\n Pay what you want get the same features."/>
+    android:text="@string/supporter_unlock_text"/>
 
   <android.support.v7.widget.AppCompatSeekBar
     android:id="@+id/dialog_seekbar"

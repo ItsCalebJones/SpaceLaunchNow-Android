@@ -124,12 +124,12 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
         if (!SupporterHelper.isSupporter()) {
             calendarSyncState.setChecked(false);
             calendarSyncState.setEnabled(false);
-            calendarCategory.setTitle(calendarCategory.getTitle() + " (Supporter Feature)");
+            calendarCategory.setTitle(calendarCategory.getTitle() + getString(R.string.supporter_feature));
         } else {
             if (calendarSyncState.isChecked() && ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
                 setCalendarPreference();
             } else if (calendarSyncState.isChecked() && ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(context, "Calendar permission denied, try re-selecting or go to Android Settings -> Apps to enable.", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, R.string.calendar_permissions_denied, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -162,9 +162,9 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
         final CalendarItem calendarItem = mRealm.where(CalendarItem.class).findFirst();
 
         if (calendarItem != null){
-            summary = "Current calendar: " + calendarItem.getAccountName();
+            summary = getString(R.string.current_calendar) + calendarItem.getAccountName();
         } else {
-            summary = "Select a Calendar to add launch events.";
+            summary = getString(R.string.select_calendar);
         }
         calendarPrefList.setSummary(summary);
         calendarPrefList.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -211,9 +211,9 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
             calendarItem.setId(calendarList.get(0).id);
 
             if (calendarItem != null) {
-                summary = "Default calendar: " + calendarItem.getAccountName();
+                summary = getString(R.string.default_calendar) + calendarItem.getAccountName();
             } else {
-                summary = "Select a Calendar to add launch events.";
+                summary = getString(R.string.select_calendar);
             }
             calendarPreference.setSummary(summary);
             mRealm.executeTransactionAsync(new Realm.Transaction() {
@@ -229,7 +229,7 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
                 }
             });
         } else {
-            Toast.makeText(context, "No Calendars available to sync launch events with.", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.no_calendars_available, Toast.LENGTH_LONG).show();
             SwitchPreference calendarSyncState = (SwitchPreference) findPreference("calendar_sync_state");
             calendarSyncState.setChecked(false);
             switchPreferences.setCalendarStatus(false);
@@ -243,8 +243,8 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
         allPermissionsListener =
                 new CompositeMultiplePermissionsListener(feedbackViewMultiplePermissionListener,
                         DialogOnAnyDeniedMultiplePermissionsListener.Builder.withContext(context)
-                                .withTitle("Permission Denied")
-                                .withMessage("If you change your mind, try to enable again. Or go to Settings -> Application -> Space Launch Now -> Permissions.")
+                                .withTitle(R.string.permission_denied)
+                                .withMessage(R.string.permission_denied_description)
                                 .withButtonText(android.R.string.ok)
                                 .withIcon(R.mipmap.ic_launcher)
                                 .build());
@@ -260,8 +260,8 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
     }
 
     public void showPermissionRationale(final PermissionToken token) {
-        new AlertDialog.Builder(context).setTitle("Calendar Permission Needed")
-                .setMessage("This permission is needed to sync launches with your calendar.")
+        new AlertDialog.Builder(context).setTitle(R.string.calendar_permission_required)
+                .setMessage(R.string.calendar_permission_required_description)
                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -304,7 +304,7 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
         calendarSyncState.setChecked(false);
         switchPreferences.setCalendarStatus(false);
         if (isPermanentlyDenied){
-            Toast.makeText(context, "Calendar permission denied, please go to Android Settings -> Apps to enable.", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.calendar_permissions_denied, Toast.LENGTH_LONG).show();
         }
     }
 

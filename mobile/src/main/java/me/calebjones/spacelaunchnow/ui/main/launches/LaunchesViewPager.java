@@ -37,8 +37,8 @@ public class LaunchesViewPager extends Fragment {
         View inflatedView = inflater.inflate(R.layout.fragment_launches_view_pager, container, false);
 
         tabLayout = inflatedView.findViewById(R.id.tabLayout);
-        tabLayout.addTab(tabLayout.newTab().setText("Upcoming"));
-        tabLayout.addTab(tabLayout.newTab().setText("Previous"));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.upcoming));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.previous));
         viewPager = inflatedView.findViewById(R.id.viewpager);
 
         pagerAdapter = new PagerAdapter

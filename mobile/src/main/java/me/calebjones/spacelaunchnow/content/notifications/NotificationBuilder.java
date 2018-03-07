@@ -165,7 +165,7 @@ public class NotificationBuilder {
 
         if (update){
             mBuilder.setContentTitle("UPDATE: " + launchName);
-            notificationId = launch.getNetstamp();
+            notificationId = (int) (launch.getNet().getTime()/1000);
         } else {
             mBuilder.setContentTitle(launchName);
             notificationId = launch.getId();

@@ -269,7 +269,9 @@ public class MissionDetailFragment extends RetroFitFragment {
             @Override
             public void onFailure(Call<VehicleResponse> call, Throwable t) {
                 Crashlytics.logException(t);
-                launchVehicle = getRealm().where(RocketDetail.class).contains("fullName", query).findFirst();
+                if (!getRealm().isClosed()) {
+                    launchVehicle = getRealm().where(RocketDetail.class).contains("fullName", query).findFirst();
+                }
             }
         });
     }

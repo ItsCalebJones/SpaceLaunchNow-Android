@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/material_baseline_grid_2x"
         android:layout_marginTop="@dimen/material_baseline_grid_2x"
-        android:text="Settings"
+        android:text="@string/settings"
         android:textColor="@color/material_color_red_700"
         android:textSize="@dimen/materialize_typography_headline" />
 
@@ -41,8 +41,7 @@
           android:layout_height="wrap_content"
           android:gravity="left"
           android:padding="@dimen/material_baseline_grid_1.5x"
-          android:text="Supporter"
-          android:textAlignment="textStart" />
+          android:text="@string/supporter" />
 
         <android.support.v7.widget.SwitchCompat
           android:id="@+id/debug_launches_switch"
@@ -50,8 +49,7 @@
           android:layout_height="wrap_content"
           android:layout_gravity="left"
           android:padding="@dimen/material_baseline_grid_1.5x"
-          android:text="Debug Launches"
-          android:textAlignment="textStart" />
+          android:text="@string/debug_launches" />
 
       </LinearLayout>
 

@@ -45,7 +45,7 @@
                     android:gravity="left"
                     android:maxLines="1"
                     android:paddingTop="8dp"
-                    android:text="Unknown Mission"
+                    android:text="@string/unknown_mission"
                     android:textColor="@color/dark_theme_primary_text_color"
                     android:textSize="16sp"
                     android:textStyle="normal" />
@@ -61,7 +61,7 @@
                     android:paddingRight="8dp"
                     android:paddingTop="2dp"
                     android:singleLine="false"
-                    android:text="Unknown Launch Vehicle"
+                    android:text="@string/unknown_launch_vehicle"
                     android:textColor="@color/dark_theme_secondary_text_color"
                     android:textSize="12sp" />
 
@@ -75,7 +75,7 @@
                     android:paddingBottom="1dp"
                     android:paddingRight="8dp"
                     android:singleLine="false"
-                    android:text="Unknown Launch Location"
+                    android:text="@string/unknown_launch_location"
                     android:textColor="@color/dark_theme_secondary_text_color"
                     android:textSize="12sp" />
 
@@ -89,7 +89,7 @@
                     android:paddingBottom="2dp"
                     android:paddingRight="8dp"
                     android:singleLine="false"
-                    android:text="Unknown Launch Date"
+                    android:text="@string/unknown_launch_date"
                     android:textColor="@color/dark_theme_secondary_text_color"
                     android:textSize="12sp" />
 

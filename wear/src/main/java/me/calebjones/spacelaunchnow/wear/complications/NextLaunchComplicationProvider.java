@@ -15,6 +15,7 @@ import java.util.Date;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Agency;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.wear.content.ComplicationContentManager;
 import me.calebjones.spacelaunchnow.wear.content.SwitchPreference;
@@ -61,7 +62,7 @@ public class NextLaunchComplicationProvider extends ComplicationProviderService 
     }
 
     @Override
-    public void onComplicationDeactivated (int complicationId){
+    public void onComplicationDeactivated(int complicationId) {
         Timber.v("onComplicationActivated(): %s", complicationId);
     }
 
@@ -88,7 +89,7 @@ public class NextLaunchComplicationProvider extends ComplicationProviderService 
         realm = Realm.getDefaultInstance();
         switchPreference = SwitchPreference.getInstance(this, complicationId);
 
-        if(!SupporterHelper.isSupporter()){
+        if (!SupporterHelper.isSupporter()) {
             switch (dataType) {
                 case ComplicationData.TYPE_SHORT_TEXT:
                     complicationData = new ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
@@ -212,24 +213,24 @@ public class NextLaunchComplicationProvider extends ComplicationProviderService 
         Launch launch = null;
         if (launches != null && launches.size() > 0) {
             launch = launches.first();
-        } else if (launches != null && launches.size() == 0){
-            if (switchPreference.getSwitchULA() && contentManager.shouldGetFresh(AGENCY_ULA)){
+        } else if (launches != null && launches.size() == 0) {
+            if (switchPreference.getSwitchULA() && contentManager.shouldGetFresh(AGENCY_ULA)) {
                 contentManager.getFreshData(AGENCY_ULA);
                 return;
             }
-            if (switchPreference.getSwitchSpaceX()  && contentManager.shouldGetFresh(AGENCY_SPACEX)){
+            if (switchPreference.getSwitchSpaceX() && contentManager.shouldGetFresh(AGENCY_SPACEX)) {
                 contentManager.getFreshData(AGENCY_SPACEX);
                 return;
             }
-            if (switchPreference.getSwitchNasa()  && contentManager.shouldGetFresh(AGENCY_NASA)){
+            if (switchPreference.getSwitchNasa() && contentManager.shouldGetFresh(AGENCY_NASA)) {
                 contentManager.getFreshData(AGENCY_NASA);
                 return;
             }
-            if (switchPreference.getSwitchRoscosmos() && contentManager.shouldGetFresh(AGENCY_ROSCOSMOS)){
+            if (switchPreference.getSwitchRoscosmos() && contentManager.shouldGetFresh(AGENCY_ROSCOSMOS)) {
                 contentManager.getFreshData(AGENCY_ROSCOSMOS);
                 return;
             }
-            if (switchPreference.getSwitchCNSA()  && contentManager.shouldGetFresh(AGENCY_CNSA)){
+            if (switchPreference.getSwitchCNSA() && contentManager.shouldGetFresh(AGENCY_CNSA)) {
                 contentManager.getFreshData(AGENCY_CNSA);
                 return;
             }
@@ -251,8 +252,22 @@ public class NextLaunchComplicationProvider extends ComplicationProviderService 
 
             switch (dataType) {
                 case ComplicationData.TYPE_SHORT_TEXT:
+                    String agency = "Unk";
+                    if (launch.getLsp() != null && launch.getLsp().getAbbrev() != null) {
+                        agency = launch.getLsp().getAbbrev();
+                    } else if (launch.getMissions() != null && launch.getMissions().size() > 0) {
+                        if (launch.getRocket() != null
+                                && launch.getRocket().getAgencies() != null
+                                && launch.getRocket().getAgencies().size() >= 1
+                                && launch.getRocket().getAgencies().get(0) != null){
+                            Agency launchAgency = launch.getRocket().getAgencies().get(0);
+                            if (launchAgency != null){
+                                agency = launchAgency.getAbbrev();
+                            }
+                        }
+                    }
                     complicationData = new ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
-                            .setShortTitle(ComplicationText.plainText(launch.getLsp().getAbbrev()))
+                            .setShortTitle(ComplicationText.plainText(agency))
                             .setShortText(shortCountdownText)
                             .setTapAction(openLaunchDetail)
                             .build();

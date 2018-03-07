@@ -5,38 +5,38 @@
         android:fragment="me.calebjones.spacelaunchnow.ui.settings.fragments.GeneralFragment"
         android:icon="@drawable/ic_settings_white"
         android:title="General"
-        android:summary="@string/general_settings_for_launch_tracking_and_application_behavior"
-        android:breadCrumbTitle="General" />
+        android:summary="@string/general_settings"
+        android:breadCrumbTitle="@string/general" />
     <header
         android:fragment="me.calebjones.spacelaunchnow.ui.settings.fragments.NotificationsFragment"
         android:icon="@drawable/ic_notifications_white"
         android:title="Notifications"
-        android:summary="Set up Launch notifications and scheduling."
-        android:breadCrumbTitle="Notifications"/>
+        android:summary="@string/notifications_settings"
+        android:breadCrumbTitle="@string/notifications"/>
     <header
         android:fragment="me.calebjones.spacelaunchnow.ui.settings.fragments.AppearanceFragment"
         android:icon="@drawable/ic_appearance_white"
         android:title="Appearance"
-        android:summary="Customize app theme, widgets and colors."
-        android:breadCrumbTitle="Appearance"/>
+        android:summary="@string/appearance_settings"
+        android:breadCrumbTitle="@string/appearance"/>
     <header
         android:fragment="me.calebjones.spacelaunchnow.ui.settings.fragments.WearFragment"
         android:icon="@drawable/ic_wear_white"
         android:title="Wear"
-        android:summary="Change Android Wear watch face settings."
-        android:breadCrumbTitle="Wear"/>
+        android:summary="@string/wear_settings"
+        android:breadCrumbTitle="@string/wear"/>
     <header
         android:icon="@drawable/ic_about"
-        android:summary="Application information about license, libraries, changelog, etc"
-        android:title="About">
+        android:summary="@string/about_settings"
+        android:title="@string/about">
         <intent
             android:targetClass="me.calebjones.spacelaunchnow.ui.settings.AboutActivity"
             android:targetPackage="me.calebjones.spacelaunchnow"/>
     </header>
     <header
         android:icon="@drawable/ic_support"
-        android:summary="Follow my projects and contribute to future development."
-        android:title="Support">
+        android:summary="@string/support_settings"
+        android:title="@string/Support">
         <intent
             android:targetClass="me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity"
             android:targetPackage="me.calebjones.spacelaunchnow"/>

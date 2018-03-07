@@ -19,7 +19,7 @@
         android:layout_marginLeft="32dp"
         android:layout_toRightOf="@id/ivIcon"
         android:layout_width="match_parent"
-        android:text="About"
+        android:text="@string/about"
         android:textSize="16sp" />
     <TextView
         android:layout_below="@+id/tvTitle"
@@ -27,6 +27,6 @@
         android:layout_marginLeft="32dp"
         android:layout_toRightOf="@id/ivIcon"
         android:layout_width="match_parent"
-        android:text="Application information about license, libraries, changelog, etc"
+        android:text="@string/about_description"
         android:textSize="14sp" />
 </RelativeLayout>

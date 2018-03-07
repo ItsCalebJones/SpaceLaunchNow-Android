@@ -89,7 +89,7 @@
                         android:paddingBottom="8dp"
                         android:paddingTop="4dp"
                         android:singleLine="false"
-                        android:text="Unknown Launch Status"
+                        android:text="@string/unknown_launch_status"
                         android:textAlignment="center"
                         android:textColor="@color/dark_primary_text_color_selector"
                         android:textSize="20sp"
@@ -111,7 +111,7 @@
                             android:ellipsize="end"
                             android:gravity="left"
                             android:singleLine="false"
-                            android:text="Unknown CountDown Status"
+                            android:text="@string/unknown_countdown_status"
                             android:textAlignment="center"
                             android:textColor="?android:textColorSecondary"
                             android:textSize="16sp" />
@@ -141,7 +141,7 @@
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:paddingTop="4dp"
-                    android:text="Estimated Launch Date"
+                    android:text="@string/estimated_launch_date"
                     android:textAlignment="center"
                     android:textAppearance="@style/MaterialTypography.Regular.Subheading"
                     android:textSize="18sp" />
@@ -157,7 +157,7 @@
                     android:paddingRight="8dp"
                     android:paddingTop="4dp"
                     android:singleLine="false"
-                    android:text="Unknown Launch Date"
+                    android:text="@string/unknown_launch_date"
                     android:textAlignment="center"
                     android:textColor="?android:textColorSecondary" />
                 <TextView
@@ -172,7 +172,7 @@
                     android:paddingRight="8dp"
                     android:paddingTop="2dp"
                     android:singleLine="false"
-                    android:text="Unknown Launch Date"
+                    android:text="@string/unknown_launch_date"
                     android:textAlignment="center"
                     android:textColor="?android:textColorSecondary" />
 
@@ -195,7 +195,7 @@
                             android:layout_marginBottom="8dp"
                             android:layout_marginLeft="8dp"
                             android:gravity="center"
-                            android:text="Watch Launch"
+                            android:text="@string/watch_launch"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
 

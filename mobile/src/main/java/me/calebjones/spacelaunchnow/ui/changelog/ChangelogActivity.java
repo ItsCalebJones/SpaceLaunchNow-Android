@@ -1,5 +1,6 @@
 package me.calebjones.spacelaunchnow.ui.changelog;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.ContextCompat;
@@ -25,7 +26,7 @@ public class ChangelogActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_changelog);
         ButterKnife.bind(this);
-        toolbar.setTitle("Whats New? v" + Utils.getVersionName(this));
+        toolbar.setTitle(getResources().getString(R.string.whats_new) + " v" + Utils.getVersionName(this));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

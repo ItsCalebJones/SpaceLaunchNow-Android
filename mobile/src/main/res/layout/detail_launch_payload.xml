@@ -39,7 +39,7 @@
                     android:background="?attr/titleBarColor"
                     android:gravity="center"
                     android:paddingTop="8dp"
-                    android:text="Mission Details"
+                    android:text="@string/mission_details"
                     android:textAlignment="center"
                     android:textColor="@color/dark_primary_text_color_selector"
                     android:textSize="@dimen/material_typography_regular_title_text_size"
@@ -57,7 +57,7 @@
                     android:paddingRight="8dp"
                     android:paddingTop="4dp"
                     android:singleLine="false"
-                    android:text="Unknown Payload"
+                    android:text="@string/unknown_payload"
                     android:textAlignment="center"
                     android:textColor="@color/dark_primary_text_color_selector"
                     android:textSize="@dimen/material_typography_regular_subheading_text_size" />
@@ -74,7 +74,7 @@
                     android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
                     android:paddingTop="@dimen/material_card_supporting_text_padding_top"
                     android:singleLine="false"
-                    android:text="Unknown Mission Type"
+                    android:text="@string/unknown_agency_type"
                     android:textAlignment="center"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="@dimen/material_typography_regular_subheading_text_size" />
@@ -111,7 +111,7 @@
                         android:layout_marginStart="12dp"
                         android:layout_marginTop="2dp"
                         android:gravity="center"
-                        android:text="INFO"
+                        android:text="@string/info"
                         android:textColor="@color/white"
                         android:textSize="12sp" />
 
@@ -125,7 +125,7 @@
                         android:layout_marginStart="12dp"
                         android:layout_marginTop="2dp"
                         android:gravity="center"
-                        android:text="WIKI"
+                        android:text="@string/wiki"
                         android:textColor="@color/white"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -161,7 +161,7 @@
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:paddingTop="8dp"
-                    android:text="Launch Vehicle Summary"
+                    android:text="@string/launch_vehicle_summary"
                     android:textAlignment="center"
                     android:textColor="@color/dark_primary_text_color_selector"
                     android:textSize="20sp"
@@ -180,7 +180,7 @@
                     android:paddingRight="8dp"
                     android:paddingTop="4dp"
                     android:singleLine="false"
-                    android:text="Unknown Launch Vehicle"
+                    android:text="@string/unknown_launch_vehicle"
                     android:textAlignment="center"
                     android:textColor="@color/dark_primary_text_color_selector"
                     android:textSize="16sp" />
@@ -205,7 +205,7 @@
                             android:gravity="start"
                             android:maxLines="2"
                             android:paddingBottom="@dimen/material_baseline_grid_0.5x"
-                            android:text="Family: "
+                            android:text="@string/family"
                             android:textAppearance="@style/MaterialTypography.Regular.Title"
                             android:textColor="?android:textColorSecondary"
                             android:textSize="@dimen/material_typography_regular_subheading_text_size" />
@@ -236,7 +236,7 @@
                             android:gravity="start"
                             android:maxLines="2"
                             android:paddingBottom="@dimen/material_baseline_grid_0.5x"
-                            android:text="Configuration: "
+                            android:text="@string/configuration"
                             android:textAppearance="@style/MaterialTypography.Regular.Title"
                             android:textColor="?android:textColorSecondary"
                             android:textSize="@dimen/material_typography_regular_subheading_text_size" />
@@ -279,7 +279,7 @@
                             android:lines="1"
                             android:paddingBottom="@dimen/material_baseline_grid_0.5x"
                             android:layout_marginTop="@dimen/material_baseline_grid_1x"
-                            android:text="Vehicle Specifications"
+                            android:text="@string/vehicle_specifications"
                             android:textAppearance="@style/MaterialTypography.Regular.Title"
                             android:textColor="?android:textColorSecondary"
                             android:textSize="@dimen/material_typography_regular_subheading_text_size" />
@@ -303,7 +303,7 @@
                             android:lines="1"
                             android:layout_marginTop="@dimen/material_baseline_grid_1x"
                             android:singleLine="false"
-                            android:text="Height: "
+                            android:text="@string/height"
                             android:textColor="?android:textColorSecondary" />
 
                         <TextView
@@ -315,7 +315,7 @@
                             android:gravity="left"
                             android:lines="1"
                             android:singleLine="false"
-                            android:text="Diameter: "
+                            android:text="@string/diameter"
                             android:textColor="?android:textColorSecondary" />
 
                         <TextView
@@ -327,7 +327,7 @@
                             android:gravity="left"
                             android:lines="1"
                             android:singleLine="false"
-                            android:text="Stages: "
+                            android:text="@string/stages"
                             android:textColor="?android:textColorSecondary" />
 
                         <TextView
@@ -339,7 +339,7 @@
                             android:gravity="left"
                             android:lines="1"
                             android:singleLine="false"
-                            android:text="Payload to LEO: "
+                            android:text="@string/mass_to_leo"
                             android:textColor="?android:textColorSecondary" />
 
                         <TextView
@@ -351,7 +351,7 @@
                             android:gravity="left"
                             android:lines="1"
                             android:singleLine="false"
-                            android:text="Payload to GTO: "
+                            android:text="@string/mass_to_gto"
                             android:textColor="?android:textColorSecondary" />
 
                         <TextView
@@ -363,7 +363,7 @@
                             android:gravity="left"
                             android:lines="1"
                             android:singleLine="false"
-                            android:text="Mass at Launch: "
+                            android:text="@string/mass_at_launch"
                             android:textColor="?android:textColorSecondary" />
 
                         <TextView
@@ -376,7 +376,7 @@
                             android:lines="1"
                             android:layout_marginBottom="@dimen/material_baseline_grid_1x"
                             android:singleLine="false"
-                            android:text="Thrust at Launch: "
+                            android:text="@string/thrust_at_launch"
                             android:textColor="?android:textColorSecondary" />
                     </LinearLayout>
                 </LinearLayout>
@@ -393,7 +393,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="INFO"
+                        android:text="@string/info"
                         android:textColor="@color/white"
                         android:textSize="12sp" />
 
@@ -403,7 +403,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="WIKI"
+                        android:text="@string/wiki"
                         android:textColor="@color/white"
                         android:textSize="12sp" />
                 </LinearLayout>

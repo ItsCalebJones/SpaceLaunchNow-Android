@@ -40,7 +40,7 @@
                     android:gravity="left"
                     android:maxLines="2"
                     android:paddingTop="8dp"
-                    android:text="Unknown Launch Vehicle"
+                    android:text="@string/unknown_launch_vehicle"
                     android:textColor="?android:textColorPrimary"
                     android:textSize="18sp"
                     android:textStyle="normal" />
@@ -57,7 +57,7 @@
                     android:paddingTop="4dp"
                     android:singleLine="false"
                     android:textColor="?android:textColorSecondary"
-                    android:text="Unknown Mission" />
+                    android:text="@string/unknown_mission" />
 
                 <TextView
                     android:id="@+id/location"
@@ -70,7 +70,7 @@
                     android:paddingRight="16dp"
                     android:singleLine="false"
                     android:textColor="?android:textColorSecondary"
-                    android:text="Unknown Launch Location" />
+                    android:text="@string/unknown_launch_location" />
 
                 <TextView
                     android:id="@+id/launch_date"
@@ -83,9 +83,8 @@
                     android:paddingRight="16dp"
                     android:singleLine="false"
                     android:textColor="?android:textColorSecondary"
-                    android:text="Unknown Launch Date" />
+                    android:text="@string/unknown_launch_date" />
             </LinearLayout>
-
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

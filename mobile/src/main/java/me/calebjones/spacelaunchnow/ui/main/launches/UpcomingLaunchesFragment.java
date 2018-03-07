@@ -210,8 +210,8 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     private void showCountryDialog() {
         Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - Country");
         new MaterialDialog.Builder(getContext())
-                .title("Select a Country")
-                .content("Check an country below, to remove all filters use reset icon in the toolbar.")
+                .title(R.string.select_country)
+                .content(R.string.select_country_description)
                 .items(R.array.country)
                 .buttonRippleColorRes(R.color.colorAccentLight)
                 .itemsCallbackMultiChoice(switchPreferences.getUpCountryFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
@@ -234,8 +234,8 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
                         return true;
                     }
                 })
-                .positiveText("Filter")
-                .negativeText("Close")
+                .positiveText(R.string.filter)
+                .negativeText(R.string.close)
                 .icon(ContextCompat.getDrawable(getContext(), R.mipmap.ic_launcher))
                 .show();
     }
@@ -243,8 +243,8 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     private void showLocationDialog() {
         Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - Location");
         new MaterialDialog.Builder(getContext())
-                .title("Select a Location")
-                .content("Check an location below, to remove all filters use reset icon in the toolbar.")
+                .title(R.string.select_location)
+                .content(R.string.select_location_description)
                 .items(R.array.location)
                 .buttonRippleColorRes(R.color.colorAccentLight)
                 .itemsCallbackMultiChoice(switchPreferences.getUpLocationFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
@@ -267,8 +267,8 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
                         return true;
                     }
                 })
-                .positiveText("Filter")
-                .negativeText("Close")
+                .positiveText(R.string.filter)
+                .negativeText(R.string.close)
                 .icon(ContextCompat.getDrawable(getContext(), R.mipmap.ic_launcher))
                 .show();
     }
@@ -276,8 +276,8 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     private void showAgencyDialog() {
         Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - LauncherAgency");
         new MaterialDialog.Builder(getContext())
-                .title("Select an LauncherAgency")
-                .content("Check an agency below, to remove all filters use reset icon in the toolbar.")
+                .title(R.string.select_launch_agency)
+                .content(R.string.select_launch_agency_description)
                 .items(R.array.agencies)
                 .buttonRippleColorRes(R.color.colorAccentLight)
                 .itemsCallbackMultiChoice(switchPreferences.getUpAgencyFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
@@ -300,8 +300,8 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
                         return true;
                     }
                 })
-                .positiveText("Filter")
-                .negativeText("Close")
+                .positiveText(R.string.filter)
+                .negativeText(R.string.close)
                 .icon(ContextCompat.getDrawable(getContext(), R.mipmap.ic_launcher))
                 .show();
     }
@@ -309,8 +309,8 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     private void showVehicleDialog() {
         Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - Vehicle");
         new MaterialDialog.Builder(getContext())
-                .title("Select a Launch Vehicle")
-                .content("Check a vehicle below, to remove all filters use reset icon in the toolbar.")
+                .title(R.string.select_launch_vehicle)
+                .content(R.string.select_launch_vehicle_description)
                 .items(R.array.vehicles)
                 .buttonRippleColorRes(R.color.colorAccentLight)
                 .itemsCallbackMultiChoice(switchPreferences.getUpVehicleFiltered(), new MaterialDialog.ListCallbackMultiChoice() {
@@ -333,8 +333,8 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
                         return true;
                     }
                 })
-                .positiveText("Filter")
-                .negativeText("Close")
+                .positiveText(R.string.filter)
+                .negativeText(R.string.close)
                 .icon(ContextCompat.getDrawable(getContext(), R.mipmap.ic_launcher))
                 .show();
     }
