@@ -4,8 +4,25 @@ A space launch tracker for Android using data from the Launch Library API.
 [View the latest releases here.](https://github.com/ItsCalebJones/SpaceLaunchNow-Android/releases)
 ## Changelog
 #### Updated 2-7-2017
+
 ---
-### Version 2.2.3 (Latest)
+
+### Version 2.2.4 (Latest)
+#### Overview
+Bug fixes, work to support translations.
+
+#### Changelog
+* Add menu item to hide floating action button on Next launch screen.
+* Fixed a text issues on the countdown widget.
+* Fixed incorrect text showing up for the vehicle agency.
+* Potentially fixed wrong launch displaying for widgets.
+* Integrate with Google's Firebase for Analytics and Crash logging.
+
+Added 2018 Supporter in-app-products for those who wanted to donate again. I will be looking at small things I can add to thank those that became supporters last year and are choosing to support development another year.
+
+---
+
+### Version 2.2.3
 #### Overview
 Bug fixes, work to support translations.
 
@@ -14,6 +31,7 @@ Bug fixes, work to support translations.
 * Fix issue when no Wearable is detected.
 * Fix asynchronous related crashes.
 
+---
 
 ### Version 2.2.2
 #### Overview
