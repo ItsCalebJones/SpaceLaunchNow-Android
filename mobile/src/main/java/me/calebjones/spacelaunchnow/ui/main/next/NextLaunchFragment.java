@@ -554,12 +554,13 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             mMenu = menu;
         }
 
-        if(SupporterHelper.isSupporter()){
-            menu.removeItem(R.id.action_supporter);
+        if (switchPreferences.getNextFABHidden()){
+            MenuItem item = menu.findItem(R.id.action_FAB);
+            item.setTitle("Show FAB");
         }
 
-        if (switchPreferences.getNextFABHidden()){
-            menu.getItem(R.id.action_FAB).setTitle("Show FAB");
+        if(SupporterHelper.isSupporter()){
+            mMenu.removeItem(R.id.action_supporter);
         }
     }
 
