@@ -35,7 +35,8 @@ public interface LibraryService {
     @GET("launch/{start_date}/{end_date}?mode=verbose")
     Call<LaunchResponse> getNextUpcomingLaunches(@Path("start_date") String start_date,
                                                  @Path("end_date") String end_date,
-                                                 @Query("offset") int offset);
+                                                 @Query("offset") int offset,
+                                                 @Query("limit") int limit);
 
     @Headers({
             "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME

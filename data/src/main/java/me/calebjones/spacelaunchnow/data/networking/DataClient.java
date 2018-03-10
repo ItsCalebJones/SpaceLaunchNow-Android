@@ -126,7 +126,7 @@ public class DataClient {
     }
 
     public Call<LaunchResponse> getNextUpcomingLaunches(int offset, Callback<LaunchResponse> callback) {
-        Call<LaunchResponse> call = libraryServiceThreaded.getNextUpcomingLaunches(Utils.getStartDate(-2), Utils.getEndDate(10), offset);
+        Call<LaunchResponse> call = libraryServiceThreaded.getNextUpcomingLaunches(Utils.getStartDate(-2), Utils.getEndDate(30), offset, 10);
 
         call.enqueue(callback);
 
