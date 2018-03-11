@@ -153,7 +153,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
         if (sharedPreference.isDebugEnabled()) {
             version = "dev";
         } else {
-            version = "1.4";
+            version = "1.3";
         }
         DataClient.create(version);
         libraryDataManager = new LibraryDataManager(context);
@@ -213,38 +213,33 @@ public class LaunchApplication extends Application implements Analytics.Provider
 
 
     private void setupOneSignal() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                OneSignal.startInit(context)
-                        .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
-                        .init();
+        OneSignal.startInit(context)
+                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+                .init();
 
-                if (BuildConfig.DEBUG) {
-                    Timber.plant(new Timber.DebugTree(), new CrashlyticsTree(context));
-                    OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.ERROR);
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree(), new CrashlyticsTree(context));
+            OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.ERROR);
 
-                    JSONObject tags = new JSONObject();
-                    try {
-                        tags.put("Production", false);
-                        tags.put("Debug", true);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    OneSignal.sendTags(tags);
-                } else {
-                    JSONObject tags = new JSONObject();
-                    try {
-                        tags.put("Production", true);
-                        tags.put("Debug", false);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    OneSignal.sendTags(tags);
-                    Timber.plant(new CrashlyticsTree(context));
-                }
+            JSONObject tags = new JSONObject();
+            try {
+                tags.put("Production", false);
+                tags.put("Debug", true);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        }).start();
+            OneSignal.sendTags(tags);
+        } else {
+            JSONObject tags = new JSONObject();
+            try {
+                tags.put("Production", true);
+                tags.put("Debug", false);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            OneSignal.sendTags(tags);
+            Timber.plant(new CrashlyticsTree(context));
+        }
     }
 
 

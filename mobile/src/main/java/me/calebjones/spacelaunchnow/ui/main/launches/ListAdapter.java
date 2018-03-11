@@ -50,16 +50,15 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
         sharedPreference = ListPreferences.getInstance(context);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         mContext = context;
-        if (!sharedPref.getBoolean("local_time", true)) {
-            sdf = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy ");
-            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        if (sharedPref.getBoolean("local_time", true)) {
+            sdf = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy");
         } else {
             sdf = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy zzz");
             sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         }
 
         if (sharedPref.getBoolean("24_hour_mode", false)) {
-            df = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy - HH:mm zzz");
+            df = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy - HH:mm");
         } else {
             df = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy - hh:mm a zzz");
             df.setTimeZone(TimeZone.getTimeZone("UTC"));

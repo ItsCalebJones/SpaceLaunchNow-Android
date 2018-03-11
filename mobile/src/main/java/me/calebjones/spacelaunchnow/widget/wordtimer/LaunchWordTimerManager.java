@@ -99,7 +99,7 @@ public class LaunchWordTimerManager {
             if (switchPreferences.getNoGoSwitch()) {
                 query.equalTo("status", 1);
             }
-            launchRealms = query.findAllSorted("net", Sort.ASCENDING);
+            launchRealms = query.findAll().sort("net", Sort.ASCENDING);
             Timber.v("loadLaunches - Realm query created.");
         } else {
             launchRealms = QueryBuilder.buildSwitchQuery(context, mRealm);

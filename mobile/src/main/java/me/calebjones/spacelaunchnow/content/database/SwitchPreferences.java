@@ -67,6 +67,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
     private static String PREFS_TBD_SWITCH;
     private static String PREFS_PERSIST_LAST_SWITCH;
     private static String PREFS_VERSION_CODE;
+    private static String PREFS_FAB_HIDDEN;
 
 
     static {
@@ -94,6 +95,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         PREFS_SWITCH_KSC = "SWITCH_KSC";
         PREFS_SWITCH_PLES = "SWITCH_PLES";
         PREFS_SWITCH_ALL = "SWITCH_ALL";
+        PREFS_FAB_HIDDEN = "FAB_HIDDEN";
         PREFS_PREV_VEHICLE_FILTERED_WHICH = "PREV_VEHICLE_FILTERED_WHICH";
         PREFS_PREV_AGENCY_FILTERED_WHICH = "PREV_AGENCY_FILTERED_WHICH";
         PREFS_PREV_LOCATION_FILTERED_WHICH = "PREV_LOCATION_FILTERED_WHICH";
@@ -967,6 +969,18 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_TBD_SWITCH, key);
+        this.prefsEditor.apply();
+    }
+
+    public boolean getNextFABHidden() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getBoolean(PREFS_FAB_HIDDEN, false);
+    }
+
+    public void setNextFABHidden(boolean key) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean(PREFS_FAB_HIDDEN, key);
         this.prefsEditor.apply();
     }
 }

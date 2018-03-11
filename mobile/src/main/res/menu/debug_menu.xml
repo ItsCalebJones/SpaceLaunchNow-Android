@@ -8,6 +8,13 @@
         android:title="Remove Ads"
         android:textColor="?android:textColorPrimary"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_FAB"
+        android:orderInCategory="96"
+        android:title="Hide FAB"
+        android:textColor="?android:textColorPrimary"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_alert"
         android:icon="@drawable/ic_filter"

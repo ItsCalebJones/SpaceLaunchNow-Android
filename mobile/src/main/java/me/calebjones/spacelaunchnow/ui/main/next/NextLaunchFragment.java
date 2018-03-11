@@ -183,6 +183,11 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 checkFilter();
             }
         });
+        if(switchPreferences.getNextFABHidden()){
+            FABMenu.setVisibility(View.GONE);
+        } else {
+            FABMenu.setVisibility(View.VISIBLE);
+        }
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -549,8 +554,13 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             mMenu = menu;
         }
 
+        if (switchPreferences.getNextFABHidden()){
+            MenuItem item = menu.findItem(R.id.action_FAB);
+            item.setTitle("Show FAB");
+        }
+
         if(SupporterHelper.isSupporter()){
-            menu.removeItem(R.id.action_supporter);
+            mMenu.removeItem(R.id.action_supporter);
         }
     }
 
@@ -567,6 +577,20 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
         } else if (id == R.id.action_alert) {
             checkFilter();
+        } else if (id == R.id.action_FAB){
+            switchPreferences.setNextFABHidden(!switchPreferences.getNextFABHidden());
+            if (switchPreferences.getNextFABHidden()){
+                item.setTitle("Show FAB");
+                if(switchPreferences.getNextFABHidden()){
+
+                    FABMenu.setVisibility(View.GONE);
+                }
+            } else {
+                item.setTitle("Hide FAB");
+                if(!switchPreferences.getNextFABHidden()){
+                    FABMenu.setVisibility(View.VISIBLE);
+                }
+            }
         }
         return super.onOptionsItemSelected(item);
     }

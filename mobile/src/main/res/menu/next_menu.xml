@@ -13,6 +13,12 @@
         android:textColor="?android:textColorPrimary"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_FAB"
+        android:orderInCategory="96"
+        android:title="Hide FAB"
+        android:textColor="?android:textColorPrimary"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
