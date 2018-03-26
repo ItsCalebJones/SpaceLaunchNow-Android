@@ -43,6 +43,7 @@ import java.util.TimeZone;
 
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.content.data.LaunchStatus;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
@@ -209,31 +210,10 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     holder.contentForecast.setVisibility(View.GONE);
                 }
 
-                switch (launchItem.getStatus()) {
-                    case 1:
-                        //GO for launch
-                        holder.content_status.setText(R.string.status_go);
-//                        holder.content_status.setBackgroundColor(ContextCompat.getColor(context, R.color.colorStatusGo));
-                        break;
-                    case 2:
-                        //NO GO for launch
-                        holder.content_status.setText(R.string.status_nogo);
-//                        holder.content_status.setBackgroundColor(ContextCompat.getColor(context, R.color.colorStatusNoGo));
-                        break;
-                    case 3:
-                        //Success for launch
-                        holder.content_status.setText(R.string.status_success);
-//                        holder.content_status.setBackgroundColor(ContextCompat.getColor(context, R.color.colorStatusGo));
-                        break;
-                    case 4:
-                        //Failure to launch
-                        holder.content_status.setText(R.string.status_failure);
-//                        holder.content_status.setBackgroundColor(ContextCompat.getColor(context, R.color.colorStatusNoGo));
-                        break;
-                }
+                holder.content_status.setText(LaunchStatus.getLaunchStatusTitle(context, launchItem.getStatus()));
 
                 //If timestamp is available calculate TMinus and date.
-                if (launchItem.getNetstamp() > 0) {
+                if (launchItem.getNetstamp() > 0 && (launchItem.getStatus() == 1 || launchItem.getStatus() == 2)) {
                     long longdate = launchItem.getNetstamp();
                     longdate = longdate * 1000;
                     final Date date = new Date(longdate);
@@ -255,131 +235,112 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
 
                     holder.countdownView.setVisibility(View.VISIBLE);
                     long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
-                    holder.timer = new CountDownTimer(timeToFinish, 1000) {
-                        StringBuilder time = new StringBuilder();
+                    if (timeToFinish > 0) {
+                        holder.timer = new CountDownTimer(timeToFinish, 1000) {
+                            StringBuilder time = new StringBuilder();
 
-                        @Override
-                        public void onFinish() {
-                            Timber.v("Countdown finished.");
-                            holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
-                            if (night) {
-                                holder.content_TMinus_status.setTextColor(nightColor);
-                            } else {
-                                holder.content_TMinus_status.setTextColor(color);
-                            }
-                            if (status == 1) {
-                                holder.content_TMinus_status.setText(R.string.watch_webcast);
-
-                            } else {
-                                if (hold != null && hold.length() > 1) {
-                                    holder.content_TMinus_status.setText(hold);
+                            @Override
+                            public void onFinish() {
+                                Timber.v("Countdown finished.");
+                                holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
+                                if (night) {
+                                    holder.content_TMinus_status.setTextColor(nightColor);
                                 } else {
-                                    holder.content_TMinus_status.setText(R.string.watch_webcast);
+                                    holder.content_TMinus_status.setTextColor(color);
                                 }
-                            }
-                            holder.content_TMinus_status.setVisibility(View.VISIBLE);
-                            holder.countdownDays.setText("- -");
-                            holder.countdownHours.setText("- -");
-                            holder.countdownMinutes.setText("- -");
-                            holder.countdownSeconds.setText("- -");
-                        }
+                                if (status == 1) {
+                                    holder.content_TMinus_status.setText(R.string.watch_webcast);
 
-                        @Override
-                        public void onTick(long millisUntilFinished) {
-                            time.setLength(0);
-
-                            // Calculate the Days/Hours/Mins/Seconds numerically.
-                            long longDays = millisUntilFinished / 86400000;
-                            long longHours = (millisUntilFinished / 3600000) % 24;
-                            long longMins = (millisUntilFinished / 60000) % 60;
-                            long longSeconds = (millisUntilFinished / 1000) % 60;
-
-                            String days = String.valueOf(longDays);
-                            String hours;
-                            String minutes;
-                            String seconds;
-
-                            // Translate those numerical values to string values.
-                            if (longHours < 10) {
-                                hours = "0" + String.valueOf(longHours);
-                            } else {
-                                hours = String.valueOf(longHours);
-                            }
-
-                            if (longMins < 10) {
-                                minutes = "0" + String.valueOf(longMins);
-                            } else {
-                                minutes = String.valueOf(longMins);
-                            }
-
-                            if (longSeconds < 10) {
-                                seconds = "0" + String.valueOf(longSeconds);
-                            } else {
-                                seconds = String.valueOf(longSeconds);
-                            }
-
-
-                            // Update the views
-                            if (Integer.valueOf(days) > 0) {
-                                holder.countdownDays.setText(days);
-                            } else {
-                                holder.countdownDays.setText("- -");
-                            }
-
-                            if (Integer.valueOf(hours) > 0) {
-                                holder.countdownHours.setText(hours);
-                            } else if (Integer.valueOf(days) > 0) {
+                                } else {
+                                    if (hold != null && hold.length() > 1) {
+                                        holder.content_TMinus_status.setText(hold);
+                                    } else {
+                                        holder.content_TMinus_status.setText(R.string.watch_webcast);
+                                    }
+                                }
+                                holder.content_TMinus_status.setVisibility(View.VISIBLE);
+                                holder.countdownDays.setText("00");
                                 holder.countdownHours.setText("00");
-                            } else {
-                                holder.countdownHours.setText("- -");
-                            }
-
-                            if (Integer.valueOf(minutes) > 0) {
-                                holder.countdownMinutes.setText(minutes);
-                            } else if (Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
                                 holder.countdownMinutes.setText("00");
-                            } else {
-                                holder.countdownMinutes.setText("- -");
-                            }
-
-                            if (Integer.valueOf(seconds) > 0) {
-                                holder.countdownSeconds.setText(seconds);
-                            } else if (Integer.valueOf(minutes) > 0 || Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
                                 holder.countdownSeconds.setText("00");
-                            } else {
-                                holder.countdownSeconds.setText("- -");
                             }
 
-                            // Hide status if countdown is active.
-                            holder.content_TMinus_status.setVisibility(View.GONE);
-                        }
-                    }.start();
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                time.setLength(0);
+
+                                // Calculate the Days/Hours/Mins/Seconds numerically.
+                                long longDays = millisUntilFinished / 86400000;
+                                long longHours = (millisUntilFinished / 3600000) % 24;
+                                long longMins = (millisUntilFinished / 60000) % 60;
+                                long longSeconds = (millisUntilFinished / 1000) % 60;
+
+                                String days = String.valueOf(longDays);
+                                String hours;
+                                String minutes;
+                                String seconds;
+
+                                // Translate those numerical values to string values.
+                                if (longHours < 10) {
+                                    hours = "0" + String.valueOf(longHours);
+                                } else {
+                                    hours = String.valueOf(longHours);
+                                }
+
+                                if (longMins < 10) {
+                                    minutes = "0" + String.valueOf(longMins);
+                                } else {
+                                    minutes = String.valueOf(longMins);
+                                }
+
+                                if (longSeconds < 10) {
+                                    seconds = "0" + String.valueOf(longSeconds);
+                                } else {
+                                    seconds = String.valueOf(longSeconds);
+                                }
+
+
+                                // Update the views
+                                if (Integer.valueOf(days) > 0) {
+                                    holder.countdownDays.setText(days);
+                                } else {
+                                    holder.countdownDays.setText("00");
+                                }
+
+                                if (Integer.valueOf(hours) > 0) {
+                                    holder.countdownHours.setText(hours);
+                                } else if (Integer.valueOf(days) > 0) {
+                                    holder.countdownHours.setText("00");
+                                } else {
+                                    holder.countdownHours.setText("00");
+                                }
+
+                                if (Integer.valueOf(minutes) > 0) {
+                                    holder.countdownMinutes.setText(minutes);
+                                } else if (Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
+                                    holder.countdownMinutes.setText("00");
+                                } else {
+                                    holder.countdownMinutes.setText("00");
+                                }
+
+                                if (Integer.valueOf(seconds) > 0) {
+                                    holder.countdownSeconds.setText(seconds);
+                                } else if (Integer.valueOf(minutes) > 0 || Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
+                                    holder.countdownSeconds.setText("00");
+                                } else {
+                                    holder.countdownSeconds.setText("00");
+                                }
+
+                                // Hide status if countdown is active.
+                                holder.content_TMinus_status.setVisibility(View.GONE);
+                            }
+                        }.start();
+                    } else {
+                        showStatusDescription(launchItem, holder);
+                    }
 
                 } else {
-                    holder.countdownView.setVisibility(View.GONE);
-                    holder.content_TMinus_status.setVisibility(View.VISIBLE);
-                    holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
-                    if (night) {
-                        holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color));
-                    } else {
-                        holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary));
-                    }
-                    if (holder.timer != null) {
-                        holder.timer.cancel();
-                    }
-                    if (launchItem.getStatus() != 1) {
-                        if (launchItem.getRocket().getAgencies().size() > 0) {
-                            holder.content_TMinus_status.setText(String.format(context.getString(R.string.pending_confirmed_go_specific), launchItem.getRocket().getAgencies().get(0).getName()));
-                        } else {
-                            holder.content_TMinus_status.setText(R.string.pending_confirmed_go);
-                        }
-                    } else {
-                        if (launchItem.getRocket().getAgencies().size() > 0) {
-                            holder.content_TMinus_status.setText(String.format(context.getString(R.string.waiting_on_launch_time_specific), launchItem.getRocket().getAgencies().first().getName()));
-                        } else {
-                            holder.content_TMinus_status.setText(R.string.waiting_on_launch_time);
-                        }
-                    }
+                    showStatusDescription(launchItem, holder);
                 }
 
                 //Get launch date
@@ -475,6 +436,44 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
             }
         } catch (NullPointerException e) {
             Crashlytics.logException(e);
+        }
+    }
+
+    private void showStatusDescription(Launch launchItem, ViewHolder holder) {
+        holder.content_TMinus_status.setVisibility(View.VISIBLE);
+        holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
+        if (night) {
+            holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color));
+        } else {
+            holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary));
+        }
+        if (holder.timer != null) {
+            holder.timer.cancel();
+        }
+        if (launchItem.getStatus() == 2) {
+            holder.countdownView.setVisibility(View.GONE);
+            if (launchItem.getRocket().getAgencies().size() > 0) {
+                holder.content_TMinus_status.setText(String.format(context.getString(R.string.pending_confirmed_go_specific), launchItem.getRocket().getAgencies().get(0).getName()));
+            } else {
+                holder.content_TMinus_status.setText(R.string.pending_confirmed_go);
+            }
+        } else if (launchItem.getStatus() == 3)  {
+            holder.countdownView.setVisibility(View.GONE);
+            holder.content_TMinus_status.setText("Launch was a success!");
+        } else if (launchItem.getStatus() == 4)  {
+            holder.countdownView.setVisibility(View.GONE);
+            holder.content_TMinus_status.setText("A launch failure has occurred.");
+        } else if (launchItem.getStatus() == 5)  {
+                holder.content_TMinus_status.setText("A hold has been placed on the launch.");
+        } else if (launchItem.getStatus() == 6)  {
+            holder.countdownDays.setText("00");
+            holder.countdownHours.setText("00");
+            holder.countdownMinutes.setText("00");
+            holder.countdownSeconds.setText("00");
+            holder.content_TMinus_status.setText("The launch is currently in flight.");
+        } else if (launchItem.getStatus() == 7)  {
+            holder.countdownView.setVisibility(View.GONE);
+            holder.content_TMinus_status.setText("Launch was a partial failure, payload separated into an incorrect orbit.");
         }
     }
 

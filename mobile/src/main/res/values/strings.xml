@@ -349,4 +349,7 @@
   <string name="blur_settings">Blur Settings</string>
   <string name="blur_settings_summary">Configure the strength and characteristics of the blur effect.</string>
   <string name="mission_agencies">Mission Agencies</string>
+  <string name="status_hold">Hold</string>
+  <string name="status_in_flight">In Flight</string>
+  <string name="status_partial_failure">Partial Failure</string>
 </resources>

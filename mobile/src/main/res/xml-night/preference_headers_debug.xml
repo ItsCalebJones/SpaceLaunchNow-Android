@@ -4,25 +4,25 @@
     <header
         android:fragment="me.calebjones.spacelaunchnow.ui.settings.fragments.GeneralFragment"
         android:icon="@drawable/ic_settings_white"
-        android:title="General"
+        android:title="@string/general"
         android:summary="@string/general_settings"
         android:breadCrumbTitle="@string/general" />
     <header
         android:fragment="me.calebjones.spacelaunchnow.ui.settings.fragments.NotificationsFragment"
         android:icon="@drawable/ic_notifications_white"
-        android:title="Notifications"
+        android:title="@string/notifications"
         android:summary="Set up Launch notifications and scheduling."
         android:breadCrumbTitle="@string/notifications"/>
     <header
         android:fragment="me.calebjones.spacelaunchnow.ui.settings.fragments.AppearanceFragment"
         android:icon="@drawable/ic_appearance_white"
-        android:title="Appearance"
+        android:title="@string/appearance"
         android:summary="Customize app theme and colors."
         android:breadCrumbTitle="@string/appearance"/>
     <header
         android:fragment="me.calebjones.spacelaunchnow.ui.settings.fragments.WearFragment"
         android:icon="@drawable/ic_wear_white"
-        android:title="Wear"
+        android:title="@string/wear"
         android:summary="Change Android Wear watch face settings."
         android:breadCrumbTitle="@string/wear"/>
     <header

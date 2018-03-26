@@ -286,7 +286,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             RealmQuery<Launch> query = getRealm().where(Launch.class)
                     .greaterThanOrEqualTo("net", date);
             if (switchPreferences.getNoGoSwitch()) {
-                query.equalTo("status", 1);
+                query.notEqualTo("status", 2);
                 query.findAll();
             }
             if (switchPreferences.getTBDLaunchSwitch()) {

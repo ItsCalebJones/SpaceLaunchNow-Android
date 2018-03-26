@@ -60,6 +60,7 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
 import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
+import me.calebjones.spacelaunchnow.content.data.LaunchStatus;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
@@ -68,6 +69,7 @@ import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Pad;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.ui.main.next.CardAdapter;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
@@ -229,7 +231,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.add(R.id.youtube_view, youTubePlayerFragment).commit();
 
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
             youTubePlaying = savedInstanceState.getBoolean("youTubePlaying", false);
             youTubeProgress = savedInstanceState.getInt("youTubeProgress", 0);
             youTubeURL = savedInstanceState.getString("youTubeID");
@@ -612,27 +614,15 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
             Date mDate;
             String dateText = null;
 
-            switch (detailLaunch.getStatus()) {
-                case 1:
-                    String go = context.getResources().getString(R.string.status_go);
-                    if (detailLaunch.getProbability() != null && detailLaunch.getProbability() > 0) {
-                        go = String.format("%s | Forecast - %s%%", go, detailLaunch.getProbability());
-                    }
-                    //GO for launch
-                    launch_status.setText(go);
-                    break;
-                case 2:
-                    //NO GO for launch
-                    launch_status.setText(R.string.status_nogo);
-                    break;
-                case 3:
-                    //Success for launch
-                    launch_status.setText(R.string.status_success);
-                    break;
-                case 4:
-                    //Failure to launch
-                    launch_status.setText(R.string.status_failure);
-                    break;
+            if (launch.getStatus() == 1){
+                String go = context.getResources().getString(R.string.status_go);
+                if (detailLaunch.getProbability() != null && detailLaunch.getProbability() > 0) {
+                    go = String.format("%s | Forecast - %s%%", go, detailLaunch.getProbability());
+                }
+                //GO for launch
+                launch_status.setText(go);
+            } else {
+                launch_status.setText(LaunchStatus.getLaunchStatusTitle(context, detailLaunch.getStatus()));
             }
 
             if (detailLaunch.getVidURLs() != null && detailLaunch.getVidURLs().size() > 0) {
@@ -744,7 +734,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                                         errorMessage.setVisibility(View.VISIBLE);
                                         errorMessage.setText("Broadcast may not be live.");
                                     }
-                                    if (errorReason.ordinal() == 4){
+                                    if (errorReason.ordinal() == 4) {
                                         Toast.makeText(mainActivity, "Playback paused by YouTube while view is obstructed.", Toast.LENGTH_SHORT).show();
                                     }
                                     Crashlytics.log(errorReason.name());
@@ -785,9 +775,10 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                                     } else {
                                         String url = detailLaunch.getVidURLs().get(index).getVal();
                                         String youTubeID = getYouTubeID(url);
-                                        if (summaryYouTubePlayer != null && youTubeID != null){
+                                        if (summaryYouTubePlayer != null && youTubeID != null) {
                                             youTubeURL = youTubeID;
-                                            if (dialog != null && dialog.isShowing()) dialog.dismiss();
+                                            if (dialog != null && dialog.isShowing())
+                                                dialog.dismiss();
                                             summaryYouTubePlayer.cueVideo(youTubeURL);
                                             summaryYouTubePlayer.play();
                                         } else {
@@ -861,7 +852,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
     private void setupCountdownTimer(Launch launch) {
         //If timestamp is available calculate TMinus and date.
-        if (launch.getNetstamp() > 0) {
+        if (launch.getNetstamp() > 0 && (launch.getStatus() == 1 || launch.getStatus() == 2)) {
             long longdate = launch.getNetstamp();
             longdate = longdate * 1000;
             final Date date = new Date(longdate);
@@ -885,13 +876,9 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
             contentTMinusStatus.setTypeface(Typeface.SANS_SERIF);
             contentTMinusStatus.setTextColor(accentColor);
 
-            if (detailLaunch.getStatus() == 3 || detailLaunch.getStatus() == 4) {
-                countdownLayout.setVisibility(View.GONE);
-                countdownSeparator.setVisibility(View.GONE);
-                contentTMinusStatus.setVisibility(View.GONE);
-            } else {
-                countdownLayout.setVisibility(View.VISIBLE);
-                long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
+            countdownLayout.setVisibility(View.VISIBLE);
+            long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
+            if (timeToFinish > 0) {
                 timer = new CountDownTimer(timeToFinish, 1000) {
                     StringBuilder time = new StringBuilder();
 
@@ -915,10 +902,10 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                             }
                         }
                         contentTMinusStatus.setVisibility(View.VISIBLE);
-                        countdownDays.setText("- -");
-                        countdownHours.setText("- -");
-                        countdownMinutes.setText("- -");
-                        countdownSeconds.setText("- -");
+                        countdownDays.setText("00");
+                        countdownHours.setText("00");
+                        countdownMinutes.setText("00");
+                        countdownSeconds.setText("00");
                     }
 
                     @Override
@@ -960,7 +947,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                         if (Integer.valueOf(days) > 0) {
                             countdownDays.setText(days);
                         } else {
-                            countdownDays.setText("- -");
+                            countdownDays.setText("00");
                         }
 
                         if (Integer.valueOf(hours) > 0) {
@@ -968,7 +955,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                         } else if (Integer.valueOf(days) > 0) {
                             countdownHours.setText("00");
                         } else {
-                            countdownHours.setText("- -");
+                            countdownHours.setText("00");
                         }
 
                         if (Integer.valueOf(minutes) > 0) {
@@ -976,7 +963,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                         } else if (Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
                             countdownMinutes.setText("00");
                         } else {
-                            countdownMinutes.setText("- -");
+                            countdownMinutes.setText("00");
                         }
 
                         if (Integer.valueOf(seconds) > 0) {
@@ -984,40 +971,53 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                         } else if (Integer.valueOf(minutes) > 0 || Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
                             countdownSeconds.setText("00");
                         } else {
-                            countdownSeconds.setText("- -");
+                            countdownSeconds.setText("00");
                         }
 
                         // Hide status if countdown is active.
                         contentTMinusStatus.setVisibility(View.GONE);
                     }
                 }.start();
+            } else {
+                showStatusDescription(launch);
             }
-
         } else {
+            showStatusDescription(launch);
+        }
+    }
+
+    private void showStatusDescription(Launch launchItem) {
+        contentTMinusStatus.setVisibility(View.VISIBLE);
+        contentTMinusStatus.setTypeface(Typeface.DEFAULT);
+        if (sharedPreference.isNightModeActive(context)) {
+            contentTMinusStatus.setTextColor(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color));
+        } else {
+            contentTMinusStatus.setTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary));
+        }
+        if (launchItem.getStatus() == 2) {
             countdownLayout.setVisibility(View.GONE);
-            contentTMinusStatus.setVisibility(View.VISIBLE);
-            contentTMinusStatus.setTypeface(Typeface.DEFAULT);
-            if (sharedPreference.isNightModeActive(context)) {
-                contentTMinusStatus.setTextColor(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color));
+            if (launchItem.getRocket().getAgencies().size() > 0) {
+                contentTMinusStatus.setText(String.format(context.getString(R.string.pending_confirmed_go_specific), launchItem.getRocket().getAgencies().get(0).getName()));
             } else {
-                contentTMinusStatus.setTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary));
+                contentTMinusStatus.setText(R.string.pending_confirmed_go);
             }
-            if (timer != null) {
-                timer.cancel();
-            }
-            if (launch.getStatus() != 1) {
-                if (launch.getRocket().getAgencies().size() > 0) {
-                    contentTMinusStatus.setText(String.format("Pending confirmed GO from %s", launch.getRocket().getAgencies().get(0).getName()));
-                } else {
-                    contentTMinusStatus.setText("Pending confirmed Go for Launch from launch agency");
-                }
-            } else {
-                if (launch.getRocket().getAgencies().size() > 0) {
-                    contentTMinusStatus.setText(String.format("Waiting on exact launch time from %s", launch.getRocket().getAgencies().first().getName()));
-                } else {
-                    contentTMinusStatus.setText("Waiting on exact launch time from launch provider");
-                }
-            }
+        } else if (launchItem.getStatus() == 3)  {
+            countdownLayout.setVisibility(View.GONE);
+            contentTMinusStatus.setText("Launch was a success!");
+        } else if (launchItem.getStatus() == 4)  {
+            countdownLayout.setVisibility(View.GONE);
+            contentTMinusStatus.setText("A launch failure has occurred.");
+        } else if (launchItem.getStatus() == 5)  {
+            contentTMinusStatus.setText("A hold has been placed on the launch.");
+        } else if (launchItem.getStatus() == 6)  {
+            countdownDays.setText("00");
+            countdownHours.setText("00");
+            countdownMinutes.setText("00");
+            countdownSeconds.setText("00");
+            contentTMinusStatus.setText("The launch is currently in flight.");
+        } else if (launchItem.getStatus() == 7)  {
+            countdownLayout.setVisibility(View.GONE);
+            contentTMinusStatus.setText("Launch was a partial failure, payload separated into an incorrect orbit.");
         }
     }
 
