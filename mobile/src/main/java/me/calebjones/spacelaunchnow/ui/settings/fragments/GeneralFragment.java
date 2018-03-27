@@ -211,7 +211,7 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
             calendarItem.setId(calendarList.get(0).id);
 
             if (calendarItem != null) {
-                summary = getString(R.string.default_calendar) + calendarItem.getAccountName();
+                summary = getString(R.string.default_calendar) + " " +calendarItem.getAccountName();
             } else {
                 summary = getString(R.string.select_calendar);
             }

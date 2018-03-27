@@ -44,6 +44,9 @@ import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import timber.log.Timber;
 
+import static com.anjlab.android.iab.v3.Constants.BILLING_RESPONSE_RESULT_OK;
+import static com.anjlab.android.iab.v3.Constants.BILLING_RESPONSE_RESULT_USER_CANCELED;
+
 public class SupporterActivity extends BaseActivity implements BillingProcessor.IBillingHandler {
 
     @BindView(R.id.purchase)
@@ -298,8 +301,8 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     public void onBillingError(int errorCode, Throwable error) {
         if (error != null) {
             SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, error.getLocalizedMessage());
-        } else if (errorCode != 0) {
-            SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, getString(R.string.billing_error_code) + errorCode);
+        } else if (errorCode != BILLING_RESPONSE_RESULT_USER_CANCELED && errorCode != BILLING_RESPONSE_RESULT_OK) {
+            SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, BillingErrorProcessor.getResponseCodeDescription(errorCode));
         }
     }
 

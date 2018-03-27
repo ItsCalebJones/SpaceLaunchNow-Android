@@ -6,8 +6,20 @@ A space launch tracker for Android using data from the Launch Library API.
 #### Updated 2-7-2017
 
 ---
+### Version 2.3.0 (Latest)
+#### Overview
+Add French and German translations, support new launch statuses!
 
-### Version 2.2.4 (Latest)
+#### Changelog
+* Added French and German translations - join Discord to help add more!
+* Added new Launch Statuses - Hold, In Flight and Partial Failure.
+* Fixed a few crashes and bugs.
+
+Added 2018 Supporter in-app-products for those who wanted to donate again. I will be looking at small things I can add to thank those that became supporters last year and are choosing to support development another year.
+
+---
+
+### Version 2.2.4
 #### Overview
 Bug fixes, work to support translations.
 

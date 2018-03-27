@@ -91,6 +91,7 @@ public class CalendarUtility {
             event.endDate = endDate.getTime();
         } else if (launch.getNet() != null) {
             event.startDate = launch.getNet().getTime();
+            event.endDate = launch.getNet().getTime() + 1000 * 60 * 60;
         }
         event.timezone = TimeZone.getDefault().getDisplayName();
 
@@ -129,7 +130,10 @@ public class CalendarUtility {
                     urls = urls + "\n" + launch.getVidURLs().get(i).getVal();
                 }
             }
-            if (launch.getMissions() != null && launch.getMissions().size() > 0) {
+            if (launch.getMissions() != null
+                    && launch.getMissions().size() > 0
+                    && launch.getMissions().get(0) != null
+                    &&  launch.getMissions().get(0).getDescription() != null) {
                 description = launch.getMissions().get(0).getDescription() + urls;
             }
 
@@ -146,6 +150,7 @@ public class CalendarUtility {
 
             } else if (launch.getNet() != null) {
                 calEvent.put(CalendarContract.Events.DTSTART, launch.getNet().getTime());
+                calEvent.put(CalendarContract.Events.DTEND, launch.getNet().getTime() + 1000 * 60 * 60);
             }
             calEvent.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getDisplayName());
 

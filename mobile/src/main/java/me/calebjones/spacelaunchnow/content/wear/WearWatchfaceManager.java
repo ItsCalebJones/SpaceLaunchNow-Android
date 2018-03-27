@@ -71,7 +71,9 @@ public class WearWatchfaceManager extends BaseManager {
             Set<Node> connectedNodes = capabilityInfo.getNodes();
             if (isWearAppConnected(connectedNodes)) checkLaunch();
         } catch (ExecutionException | InterruptedException  e) {
-            Timber.e(e);
+            if (!e.getLocalizedMessage().contains("Wearable.API is not available on this device")) {
+                Timber.e(e);
+            }
         }
     }
 

@@ -245,7 +245,7 @@ public class LaunchDetailActivity extends BaseActivity
                             }
                         } else {
                             LibraryError error = ErrorUtil.parseLibraryError(response);
-                            if (error.getMessage().contains("None found")) {
+                            if (error.getMessage() != null && error.getMessage().contains("None found")) {
                                 final Launch launch = getRealm().where(Launch.class).equalTo("id", id).findFirst();
                                 if (launch != null) {
                                     getRealm().executeTransaction(new Realm.Transaction() {
