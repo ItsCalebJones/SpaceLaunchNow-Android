@@ -112,8 +112,7 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
     
     private void displayMissions() {
         showLoading();
-        missionList = getRealm().where(Mission.class)
-                .findAllSortedAsync("name", Sort.ASCENDING);
+        missionList = getRealm().where(Mission.class).sort("name", Sort.ASCENDING).findAllAsync();
         missionList.addChangeListener(callback);
     }
 

@@ -29,32 +29,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    productFlavors {
-        debugTesting {
-            minSdkVersion 21
-            multiDexEnabled false
-            dimension "release"
-        }
-        prod {
-            // The actual minSdkVersion for the application.
-            minSdkVersion 19
-            multiDexEnabled false
-            dimension "release"
-        }
-        beta {
-            // The actual minSdkVersion for the application.
-            minSdkVersion 19
-            multiDexEnabled false
-            dimension "release"
-        }
-
-        alpha {
-            // The actual minSdkVersion for the application.
-            minSdkVersion 19
-            multiDexEnabled false
-            dimension "release"
-        }
-    }
 }
 
 dependencies {

@@ -62,7 +62,8 @@ public class QueryBuilder {
         }
 
         Timber.v("Returning Query");
-        return query.findAllSortedAsync("net", Sort.DESCENDING);
+        query.sort("net", Sort.DESCENDING);
+        return query.findAllAsync();
     }
 
     public static RealmResults<Launch> buildPrevQuery(Context context, Realm realm) throws ParseException {
@@ -104,7 +105,8 @@ public class QueryBuilder {
         }
 
         Timber.v("Returning Query");
-        return query.findAllSorted("net", Sort.DESCENDING);
+        query.sort("net", Sort.DESCENDING);
+        return query.findAllAsync();
     }
 
     public static RealmResults<Launch> buildUpQueryAsync(Context context, Realm realm) {
@@ -144,7 +146,8 @@ public class QueryBuilder {
         }
 
         Timber.v("Returning Query");
-        return query.findAllSortedAsync("net", Sort.ASCENDING);
+        query.sort("net", Sort.ASCENDING);
+        return query.findAllAsync();
     }
 
     private static void verifyUpSwitches(Context context, SwitchPreferences switchPreferences) {
@@ -229,7 +232,9 @@ public class QueryBuilder {
         }
 
         Timber.v("Returning Query");
-        return query.findAllSorted("net", Sort.ASCENDING);
+        query.sort("net", Sort.ASCENDING);
+        return query.findAllAsync();
+
     }
 
     private static RealmQuery<Launch> filterVehicle(RealmQuery<Launch> query, ArrayList<String> vehicleFilter) {
@@ -514,7 +519,8 @@ public class QueryBuilder {
 
         query.endGroup();
 
-        return query.findAllSortedAsync("net", Sort.ASCENDING);
+        query.sort("net", Sort.ASCENDING);
+        return query.findAllAsync();
     }
 
     public static RealmResults<Launch> buildSwitchQuery(Context context, Realm realm) {
@@ -780,6 +786,8 @@ public class QueryBuilder {
             query.equalTo("location.id", 18);
         }
 
-        return query.endGroup().findAllSorted("net", Sort.ASCENDING);
+        query.endGroup();
+        query.sort("net", Sort.ASCENDING);
+        return query.findAllAsync();
     }
 }

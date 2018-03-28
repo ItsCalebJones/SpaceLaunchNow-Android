@@ -81,7 +81,7 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
         Realm realm = Realm.getDefaultInstance();
         Launch launch = realm.where(Launch.class)
                 .greaterThanOrEqualTo("net", new Date())
-                .findAllSorted("net", Sort.ASCENDING).first();
+                .sort("net", Sort.ASCENDING).findFirst();
 
         Calendar future = Utils.DateToCalendar(launch.getNet());
         Calendar now = Calendar.getInstance();

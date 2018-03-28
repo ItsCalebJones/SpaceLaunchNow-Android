@@ -174,29 +174,6 @@ android {
         abortOnError false
         checkReleaseBuilds false
     }
-    productFlavors {
-        debugTesting {
-            minSdkVersion 21
-            multiDexEnabled false
-            dimension "release"
-        }
-        prod {
-            // The actual minSdkVersion for the application.
-            minSdkVersion 19
-            multiDexEnabled false
-            dimension "release"
-        }
-        beta {
-            minSdkVersion 19
-            multiDexEnabled false
-            versionNameSuffix "-beta"
-        }
-        alpha {
-            minSdkVersion 19
-            multiDexEnabled false
-            versionNameSuffix "-alpha"
-        }
-    }
 }
 
 //// map for the version code that gives each ABI a value. make sure to list all ABIs mentioned in splits block, an keep the order.
