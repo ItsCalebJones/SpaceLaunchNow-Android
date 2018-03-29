@@ -86,14 +86,14 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Timber.i("General preference %s changed.", key);
         if (key.equals("calendar_reminder_array") ) {
-            Analytics.from(this).sendPreferenceEvent(key);
+            Analytics.getInstance().sendPreferenceEvent(key);
             calendarSyncManager.syncAllEevnts();
         } else if (key.equals("calendar_count")){
-            Analytics.from(this).sendPreferenceEvent(key);
+            Analytics.getInstance().sendPreferenceEvent(key);
             calendarSyncManager.resyncAllEvents();
         } else if (key.equals("calendar_sync_state")) {
             Timber.v("Calendar Sync State: %s", sharedPreferences.getBoolean(key, true));
-            Analytics.from(this).sendPreferenceEvent(key, sharedPreferences.getBoolean(key, false));
+            Analytics.getInstance().sendPreferenceEvent(key, sharedPreferences.getBoolean(key, false));
             if (sharedPreferences.getBoolean(key, true)) {
                 Timber.v("Calendar Status: %s", switchPreferences.getCalendarStatus());
                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
@@ -114,7 +114,7 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
                 switchPreferences.setCalendarStatus(false);
             }
         } else {
-            Analytics.from(this).sendPreferenceEvent(key);
+            Analytics.getInstance().sendPreferenceEvent(key);
         }
     }
 

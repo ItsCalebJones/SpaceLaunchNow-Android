@@ -282,18 +282,18 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                             if (response.isSuccessful()) {
                                 Forecast forecast = response.body();
                                 if (SummaryDetailFragment.this.isVisible()) {
-                                    Analytics.from(getActivity()).sendWeatherEvent(detailLaunch.getName(), true, "Success");
+                                    Analytics.getInstance().sendWeatherEvent(detailLaunch.getName(), true, "Success");
                                     updateWeatherView(forecast);
                                 }
                             } else {
-                                Analytics.from(getActivity()).sendWeatherEvent(detailLaunch.getName(), false, response.errorBody().toString());
+                                Analytics.getInstance().sendWeatherEvent(detailLaunch.getName(), false, response.errorBody().toString());
                                 Timber.e("Error: %s", response.errorBody());
                             }
                         }
 
                         @Override
                         public void onFailure(Call<Forecast> forecastCall, Throwable t) {
-                            Analytics.from(getActivity()).sendWeatherEvent(detailLaunch.getName(), false, t.getLocalizedMessage());
+                            Analytics.getInstance().sendWeatherEvent(detailLaunch.getName(), false, t.getLocalizedMessage());
                             Timber.e("ERROR: %s", t.getLocalizedMessage());
                         }
                     });
@@ -1137,7 +1137,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
             Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
             mapIntent.setPackage("com.google.android.apps.maps");
 
-            Analytics.from(context).sendLaunchMapClicked(detailLaunch.getName());
+            Analytics.getInstance().sendLaunchMapClicked(detailLaunch.getName());
 
             if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
                 Toast.makeText(context, "Loading " + detailLaunch.getLocation().getPads().get(0).getName(), Toast.LENGTH_LONG).show();

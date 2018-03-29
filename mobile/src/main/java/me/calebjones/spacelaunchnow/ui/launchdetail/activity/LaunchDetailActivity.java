@@ -636,7 +636,7 @@ public class LaunchDetailActivity extends BaseActivity
                     .setChooserTitle("Share: " + launch.getName())
                     .setText(String.format("%s\n\nWatch Live: %s", message, launch.getUrl()))
                     .startChooser();
-            Analytics.from(context).sendLaunchShared("Share FAB", launch.getName() + "-" + launch.getId().toString());
+            Analytics.getInstance().sendLaunchShared("Share FAB", launch.getName() + "-" + launch.getId().toString());
         } else {
             SnackbarHandler.showErrorSnackbar(this, rootview, "Error - unable to share this launch.");
         }

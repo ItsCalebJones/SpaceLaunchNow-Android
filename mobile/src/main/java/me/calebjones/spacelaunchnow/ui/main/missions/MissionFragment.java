@@ -223,14 +223,14 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
         int id = item.getItemId();
 
         if (id == R.id.action_refresh) {
-            Analytics.from(getActivity()).sendButtonClicked("Mission - Refresh Clicked");
+            Analytics.getInstance().sendButtonClicked("Mission - Refresh Clicked");
             showLoading();
             fetchData();
             return true;
         }
 
         if (id == R.id.return_home) {
-            Analytics.from(getActivity()).sendButtonClicked("Mission - Home Clicked");
+            Analytics.getInstance().sendButtonClicked("Mission - Home Clicked");
             mRecyclerView.scrollToPosition(0);
         }
         return super.onOptionsItemSelected(item);
@@ -240,7 +240,7 @@ public class MissionFragment extends BaseFragment implements SwipeRefreshLayout.
     public boolean onQueryTextChange(String query) {
         // Here is where we are going to implement our filter logic
         final List<Mission> filteredModelList = filter(missionList, query);
-        Analytics.from(getActivity()).sendSearchEvent(query, "Mission", filteredModelList.size());
+        Analytics.getInstance().sendSearchEvent(query, "Mission", filteredModelList.size());
         adapter.animateTo(filteredModelList);
         new Handler().postDelayed(new Runnable() {
             @Override

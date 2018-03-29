@@ -50,7 +50,7 @@ public class WebViewFallbackActivity extends BaseActivity {
                 }
             }
         });
-        Analytics.from(this).sendScreenView("Web View Activity", "Loaded URL: " + url);
+        Analytics.getInstance().sendScreenView("Web View Activity", "Loaded URL: " + url);
 
         webView.loadUrl(url);
     }

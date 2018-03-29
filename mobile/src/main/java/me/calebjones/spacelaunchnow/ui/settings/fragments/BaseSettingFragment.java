@@ -35,13 +35,13 @@ public abstract class BaseSettingFragment extends PreferenceFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Analytics.from(this).sendScreenView(name, name + " resumed.");
+        Analytics.getInstance().sendScreenView(name, name + " resumed.");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Analytics.from(this).notifyGoneBackground();
+        Analytics.getInstance().notifyGoneBackground();
     }
 
     public void setName(String name){

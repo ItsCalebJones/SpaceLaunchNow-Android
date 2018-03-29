@@ -23,7 +23,7 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     public final void onStart() {
         super.onStart();
-        Analytics.from(this).sendScreenView("Settings", "Settings started.");
+        Analytics.getInstance().sendScreenView("Settings", "Settings started.");
     }
 
     @Override

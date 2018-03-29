@@ -73,7 +73,7 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
         if (key.equals("notifications_new_message")){
             OneSignal.setSubscription(sharedPreferences.getBoolean(key, true));
         } else {
-            Analytics.from(this).sendPreferenceEvent(key);
+            Analytics.getInstance().sendPreferenceEvent(key);
         }
     }
 

@@ -146,7 +146,7 @@ public class DataSaver {
         if (result.isSuccessful()) {
             Timber.i("%s - Successful: %s", result.getAction(), result.isSuccessful());
 
-            Analytics.from(context).sendNetworkEvent(result.getAction(), result.getRequestURL(), result.isSuccessful());
+            Analytics.getInstance().sendNetworkEvent(result.getAction(), result.getRequestURL(), result.isSuccessful());
 
         } else if (!result.isSuccessful() && result.getErrorMessage() != null) {
             Timber.d("%s - ERROR: %s", result.getAction(), result.getErrorMessage());
@@ -155,7 +155,7 @@ public class DataSaver {
 
             Crashlytics.log(result.getErrorMessage());
 
-            Analytics.from(context).sendNetworkEvent(result.getAction(), result.getRequestURL(), result.isSuccessful(), result.getErrorMessage());
+            Analytics.getInstance().sendNetworkEvent(result.getAction(), result.getRequestURL(), result.isSuccessful(), result.getErrorMessage());
 
         } else if (!result.isSuccessful()) {
             Timber.d("%s - ERROR: Unknown - URL: %s", result.getAction(), result.getRequestURL());
@@ -164,7 +164,7 @@ public class DataSaver {
 
             broadcastIntent.putExtra("error", "Unknown error has occurred.");
 
-            Analytics.from(context).sendNetworkEvent(result.getAction(), result.getRequestURL(), result.isSuccessful());
+            Analytics.getInstance().sendNetworkEvent(result.getAction(), result.getRequestURL(), result.isSuccessful());
         }
 
         context.sendBroadcast(broadcastIntent);

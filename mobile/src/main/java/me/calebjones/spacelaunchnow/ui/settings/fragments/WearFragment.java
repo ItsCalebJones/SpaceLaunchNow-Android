@@ -71,7 +71,7 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Timber.i("Wear preference %s changed.", key);
-        Analytics.from(this).sendPreferenceEvent(key);
+        Analytics.getInstance().sendPreferenceEvent(key);
 
         UpdateWearJob.scheduleJobNow();
     }
@@ -95,7 +95,7 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
             @Override
             public boolean onPreferenceClick(final Preference preference) {
                 final String key = preference.getKey();
-                Analytics.from(getActivity()).sendPreferenceEvent(key, "Preference clicked.");
+                Analytics.getInstance().sendPreferenceEvent(key, "Preference clicked.");
                 final MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
                         .title("Blur Settings")
                         .customView(R.layout.blur_settings, true)
@@ -128,7 +128,7 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
                     @Override
                     public void onClick(View view) {
                         String result = String.format("Blur %s - Radius %s - Dim %s - Grey %s", blurSeekBar.getProgress(), radiusSeekBar.getProgress(), dimSeekBar.getProgress(), greySeekBar.getProgress());
-                        Analytics.from(getActivity()).sendPreferenceEvent(key, result);
+                        Analytics.getInstance().sendPreferenceEvent(key, result);
                         Timber.v(result);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putInt("BLUR_WEAR", blurSeekBar.getProgress());
@@ -146,7 +146,7 @@ public class WearFragment extends BaseSettingFragment implements SharedPreferenc
                 neutralAction.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Analytics.from(getActivity()).sendPreferenceEvent(key, "Blur settings to default.");
+                        Analytics.getInstance().sendPreferenceEvent(key, "Blur settings to default.");
                         Timber.v("Blur %s - Radius %s - Dim %s - Grey %s", blurSeekBar.getProgress(), radiusSeekBar.getProgress(), dimSeekBar.getProgress(), greySeekBar.getProgress());
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putInt("BLUR_WEAR", Constants.DEFAULT_BLUR);

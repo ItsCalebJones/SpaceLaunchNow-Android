@@ -1,6 +1,7 @@
 package me.calebjones.spacelaunchnow.utils.analytics;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -9,16 +10,19 @@ import android.support.v4.app.NotificationCompat;
 import com.crashlytics.android.answers.AddToCartEvent;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+import com.crashlytics.android.answers.FirebaseAnalyticsEvent;
 import com.crashlytics.android.answers.PurchaseEvent;
 import com.crashlytics.android.answers.SearchEvent;
 import com.crashlytics.android.answers.ShareEvent;
 import com.crashlytics.android.answers.StartCheckoutEvent;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.math.BigDecimal;
 import java.util.Currency;
 
 import me.calebjones.spacelaunchnow.data.models.Products;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import timber.log.Timber;
 
 public class Analytics {
@@ -27,25 +31,38 @@ public class Analytics {
     public static final String TYPE_UPCOMING_LAUNCH = "Upcoming";
 
     private String mLastScreenName;
+    private Context mContext;
+    private static Analytics mInstance;
+    private FirebaseAnalytics firebaseAnalytics;
 
-    public static Analytics from(Context context){
-        return ((Provider) context.getApplicationContext()).getAnalytics();
+    public Analytics(Context context){
+        mContext = context;
+        firebaseAnalytics = FirebaseAnalytics.getInstance(mContext);
     }
 
-    public static Analytics from(Fragment fragment) {
-        return from(fragment.getActivity());
+    /**
+     * Applications must call create to configure the DataClient singleton
+     */
+    public static void create(Context context) {
+        mInstance = new Analytics(context);
     }
 
-    public static Analytics from(PreferenceFragment fragment) {
-        return from(fragment.getActivity());
+    /**
+     * Singleton accessor
+     * <p/>
+     * Will throw an exception if {@link #create(Context context)} was never called
+     *
+     * @return the Analytics singleton
+     */
+    public static Analytics getInstance() {
+        if (mInstance == null) {
+            throw new AssertionError("Did you forget to call create() ?");
+        }
+        return mInstance;
     }
 
     public void sendNotificationEvent(String launchName, String content) {
         Answers.getInstance().logCustom(new NotificationEvent().putLaunchName(launchName).putContent(content));
-    }
-
-    public interface Provider {
-        Analytics getAnalytics();
     }
 
     //Logging methods.
@@ -174,30 +191,30 @@ public class Analytics {
     }
 
     public void sendAddToCartEvent(@NonNull Products products, String sku){
-        Answers.getInstance().logAddToCart(new AddToCartEvent()
-                                                   .putItemPrice(BigDecimal.valueOf(products.getPrice()))
-                                                   .putCurrency(Currency.getInstance("USD"))
-                                                   .putItemName(products.getName())
-                                                   .putItemType(products.getType())
-                                                   .putItemId(sku));
+//        Answers.getInstance().logAddToCart(new AddToCartEvent()
+//                                                   .putItemPrice(BigDecimal.valueOf(products.getPrice()))
+//                                                   .putCurrency(Currency.getInstance("USD"))
+//                                                   .putItemName(products.getName())
+//                                                   .putItemType(products.getType())
+//                                                   .putItemId(sku));
         Timber.v("Add to Cart: %s %s - $%s SKU: %s", products.getName(), products.getType(), products.getPrice(), sku);
     }
 
     public void sendStartCheckout(@NonNull Products products) {
-        Answers.getInstance().logStartCheckout(new StartCheckoutEvent().putTotalPrice(BigDecimal.valueOf(products.getPrice()))
-                                                   .putCurrency(Currency.getInstance("USD"))
-                                                   .putItemCount(1));
+//        Answers.getInstance().logStartCheckout(new StartCheckoutEvent().putTotalPrice(BigDecimal.valueOf(products.getPrice()))
+//                                                   .putCurrency(Currency.getInstance("USD"))
+//                                                   .putItemCount(1));
         Timber.v("StartCheckout: %s %s - $%s", products.getName(), products.getType(), products.getPrice());
     }
 
     public void sendPurchaseEvent(@NonNull Products products, String sku) {
-        Answers.getInstance().logPurchase(new PurchaseEvent()
-                                                  .putItemPrice(BigDecimal.valueOf(products.getPrice()))
-                                                  .putCurrency(Currency.getInstance("USD"))
-                                                  .putItemName(products.getName())
-                                                  .putItemType(products.getType())
-                                                  .putItemId(sku)
-                                                  .putSuccess(true));
+//        Answers.getInstance().logPurchase(new PurchaseEvent()
+//                                                  .putItemPrice(BigDecimal.valueOf(products.getPrice()))
+//                                                  .putCurrency(Currency.getInstance("USD"))
+//                                                  .putItemName(products.getName())
+//                                                  .putItemType(products.getType())
+//                                                  .putItemId(sku)
+//                                                  .putSuccess(true));
         Timber.v("Purchased: %s %s - $%sSKU: %s", products.getName(), products.getType(), products.getPrice(), sku);
     }
 

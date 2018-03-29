@@ -59,7 +59,7 @@ import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.analytics.CrashlyticsTree;
 import timber.log.Timber;
 
-public class LaunchApplication extends Application implements Analytics.Provider {
+public class LaunchApplication extends Application {
 
     public static final String TAG = "Space Launch Now";
     private static ListPreferences sharedPreference;
@@ -270,6 +270,7 @@ public class LaunchApplication extends Application implements Analytics.Provider
                 .core(new CrashlyticsCore.Builder().build())
                 .build();
         Fabric.with(context, crashlyticsKit);
+        Analytics.create(this);
 
         new Thread(new Runnable() {
 
@@ -348,19 +349,5 @@ public class LaunchApplication extends Application implements Analytics.Provider
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-    }
-
-    @Override
-    public Analytics getAnalytics() {
-        Analytics analytics = mAnalytics;
-        if (analytics == null) {
-            synchronized (this) {
-                analytics = mAnalytics;
-                if (analytics == null) {
-                    mAnalytics = analytics = new Analytics();
-                }
-            }
-        }
-        return analytics;
     }
 }

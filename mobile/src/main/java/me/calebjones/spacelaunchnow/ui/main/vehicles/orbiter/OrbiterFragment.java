@@ -126,7 +126,7 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
                     OrbiterResponse jsonResponse = response.body();
                     items = new ArrayList<>(Arrays.asList(jsonResponse.getOrbiters()));
                     adapter.addItems(items);
-                    Analytics.from(context).sendNetworkEvent("ORBITER_INFORMATION", call.request().url().toString(), true);
+                    Analytics.getInstance().sendNetworkEvent("ORBITER_INFORMATION", call.request().url().toString(), true);
                 } else {
                     Timber.e(ErrorUtil.parseSpaceLaunchNowError(response).message());
                     if (OrbiterFragment.this.getUserVisibleHint()) {
@@ -143,7 +143,7 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
                 if (OrbiterFragment.this.getUserVisibleHint()) {
                     SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, t.getLocalizedMessage());
                 }
-                Analytics.from(context).sendNetworkEvent("ORBITER_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());
+                Analytics.getInstance().sendNetworkEvent("ORBITER_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());
             }
         });
     }
@@ -167,7 +167,7 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
 
             Gson gson = new Gson();
             String jsonItem = gson.toJson(items.get(position));
-            Analytics.from(getActivity()).sendButtonClicked("Orbiter clicked", items.get(position).getName());
+            Analytics.getInstance().sendButtonClicked("Orbiter clicked", items.get(position).getName());
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                 Timber.d("Starting Activity at %s", position);
@@ -199,7 +199,7 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
 
     @Override
     public void onRefresh() {
-        Analytics.from(this).sendButtonClicked("Orbiter Refresh");
+        Analytics.getInstance().sendButtonClicked("Orbiter Refresh");
         loadJSON();
     }
 

@@ -169,7 +169,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - Reset");
+                Analytics.getInstance().sendButtonClicked("Upcoming Filter - Reset");
                 switchPreferences.resetAllUpFilters();
                 if (switchPreferences.isUpFiltered()) {
                     switchPreferences.setUpFiltered(false);
@@ -208,7 +208,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     }
 
     private void showCountryDialog() {
-        Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - Country");
+        Analytics.getInstance().sendButtonClicked("Upcoming Filter - Country");
         new MaterialDialog.Builder(getContext())
                 .title(R.string.select_country)
                 .content(R.string.select_country_description)
@@ -222,7 +222,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
                         for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
-                        Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - Country Selection", keyArray.toString());
+                        Analytics.getInstance().sendButtonClicked("Upcoming Filter - Country Selection", keyArray.toString());
                         if (keyArray.size() > 0) {
                             switchPreferences.setUpCountryFilteredArray(keyArray);
                             switchPreferences.setUpFiltered(true);
@@ -241,7 +241,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     }
 
     private void showLocationDialog() {
-        Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - Location");
+        Analytics.getInstance().sendButtonClicked("Upcoming Filter - Location");
         new MaterialDialog.Builder(getContext())
                 .title(R.string.select_location)
                 .content(R.string.select_location_description)
@@ -255,7 +255,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
                         for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
-                        Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - Location Selection", keyArray.toString());
+                        Analytics.getInstance().sendButtonClicked("Upcoming Filter - Location Selection", keyArray.toString());
                         if (keyArray.size() > 0) {
                             switchPreferences.setUpLocationFilteredArray(keyArray);
                             switchPreferences.setUpFiltered(true);
@@ -274,7 +274,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     }
 
     private void showAgencyDialog() {
-        Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - LauncherAgency");
+        Analytics.getInstance().sendButtonClicked("Upcoming Filter - LauncherAgency");
         new MaterialDialog.Builder(getContext())
                 .title(R.string.select_launch_agency)
                 .content(R.string.select_launch_agency_description)
@@ -288,7 +288,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
                         for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
-                        Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - LauncherAgency Selection", keyArray.toString());
+                        Analytics.getInstance().sendButtonClicked("Upcoming Filter - LauncherAgency Selection", keyArray.toString());
                         if (keyArray.size() > 0) {
                             switchPreferences.setUpAgencyFilterArray(keyArray);
                             switchPreferences.setUpFiltered(true);
@@ -307,7 +307,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     }
 
     private void showVehicleDialog() {
-        Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - Vehicle");
+        Analytics.getInstance().sendButtonClicked("Upcoming Filter - Vehicle");
         new MaterialDialog.Builder(getContext())
                 .title(R.string.select_launch_vehicle)
                 .content(R.string.select_launch_vehicle_description)
@@ -321,7 +321,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
                         for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
-                        Analytics.from(getActivity()).sendButtonClicked("Upcoming Filter - Vehicle Selection", keyArray.toString());
+                        Analytics.getInstance().sendButtonClicked("Upcoming Filter - Vehicle Selection", keyArray.toString());
                         if (keyArray.size() > 0) {
                             switchPreferences.setUpVehicleFilteredArray(keyArray);
                             switchPreferences.setUpFiltered(true);
@@ -593,7 +593,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
         switchPreferences.setPrevFiltered(true);
         // Here is where we are going to implement our filter logic
         final List<Launch> filteredModelList = filter(launchRealms, query);
-        Analytics.from(this).sendSearchEvent(query, Analytics.TYPE_UPCOMING_LAUNCH, filteredModelList.size());
+        Analytics.getInstance().sendSearchEvent(query, Analytics.TYPE_UPCOMING_LAUNCH, filteredModelList.size());
 
         if (filteredModelList.size() > 50) {
             adapter.clear();

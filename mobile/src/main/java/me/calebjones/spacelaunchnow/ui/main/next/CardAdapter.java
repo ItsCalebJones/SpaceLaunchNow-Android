@@ -585,7 +585,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
             switch (v.getId()) {
                 case R.id.watchButton:
                     Timber.d("Watch: %s", launch.getVidURLs().size());
-                    Analytics.from(context).sendButtonClicked("Watch Button - Opening Dialogue");
+                    Analytics.getInstance().sendButtonClicked("Watch Button - Opening Dialogue");
                     if (launch.getVidURLs().size() > 0) {
                         final DialogAdapter adapter = new DialogAdapter(new DialogAdapter.Callback() {
 
@@ -598,12 +598,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                                         sendIntent.putExtra(Intent.EXTRA_TEXT, launch.getVidURLs().get(index).getVal()); // Simple text and URL to share
                                         sendIntent.setType("text/plain");
                                         context.startActivity(sendIntent);
-                                        Analytics.from(context).sendButtonClickedWithURL("Watch Button - URL Long Clicked", launch.getVidURLs().get(index).getVal());
+                                        Analytics.getInstance().sendButtonClickedWithURL("Watch Button - URL Long Clicked", launch.getVidURLs().get(index).getVal());
                                     } else {
                                         Uri watchUri = Uri.parse(launch.getVidURLs().get(index).getVal());
                                         Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
                                         context.startActivity(i);
-                                        Analytics.from(context).sendButtonClickedWithURL("Watch Button - URL", launch.getVidURLs().get(index).getVal());
+                                        Analytics.getInstance().sendButtonClickedWithURL("Watch Button - URL", launch.getVidURLs().get(index).getVal());
                                     }
                                 } catch (ArrayIndexOutOfBoundsException e) {
                                     Timber.e(e);
@@ -628,7 +628,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     break;
                 case R.id.exploreButton:
                     Timber.d("Explore: %s", launchList.get(position).getId());
-                    Analytics.from(context).sendButtonClicked("Explore Button", launch.getName());
+                    Analytics.getInstance().sendButtonClicked("Explore Button", launch.getName());
 
                     Intent exploreIntent = new Intent(context, LaunchDetailActivity.class);
                     exploreIntent.putExtra("TYPE", "launch");
@@ -675,7 +675,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                             .setChooserTitle("Share: " + launch.getName())
                             .setText(String.format("%s\n\nWatch Live: %s", message, launch.getUrl()))
                             .startChooser();
-                    Analytics.from(context).sendLaunchShared("Explore Button", launch.getName() + "-" + launch.getId().toString());
+                    Analytics.getInstance().sendLaunchShared("Explore Button", launch.getName() + "-" + launch.getId().toString());
                     break;
                 case R.id.map_view:
                     String location = launchList.get(position).getLocation().getName();
@@ -690,7 +690,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                     mapIntent.setPackage("com.google.android.apps.maps");
 
-                    Analytics.from(context).sendLaunchMapClicked(launch.getName());
+                    Analytics.getInstance().sendLaunchMapClicked(launch.getName());
 
                     if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
                         Toast.makeText(context, "Loading " + launchList.get(position).getLocation().getPads().get(0).getName(), Toast.LENGTH_LONG).show();
@@ -699,7 +699,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     break;
                 case R.id.TitleCard:
                     Timber.d("Explore: %s", launchList.get(position).getId());
-                    Analytics.from(context).sendButtonClicked("Title Card", launch.getName());
+                    Analytics.getInstance().sendButtonClicked("Title Card", launch.getName());
 
                     Intent titleIntent = new Intent(context, LaunchDetailActivity.class);
                     titleIntent.putExtra("TYPE", "launch");
