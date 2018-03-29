@@ -106,7 +106,7 @@ public class QueryBuilder {
 
         Timber.v("Returning Query");
         query.sort("net", Sort.DESCENDING);
-        return query.findAllAsync();
+        return query.findAll();
     }
 
     public static RealmResults<Launch> buildUpQueryAsync(Context context, Realm realm) {
@@ -788,6 +788,6 @@ public class QueryBuilder {
 
         query.endGroup();
         query.sort("net", Sort.ASCENDING);
-        return query.findAllAsync();
+        return query.findAll();
     }
 }

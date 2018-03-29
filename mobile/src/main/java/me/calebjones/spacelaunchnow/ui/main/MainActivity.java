@@ -623,7 +623,7 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.menu_missions:
                 mNavItemId = R.id.menu_missions;
-                setActionBarTitle("Missions");
+                setActionBarTitle(getString(R.string.missions));
                 // Check to see if we have retained the worker fragment.
                 mMissionFragment = (MissionFragment) fm.findFragmentByTag("MISSION_FRAGMENT");
 
@@ -640,7 +640,7 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.menu_vehicle:
                 mNavItemId = R.id.menu_vehicle;
-                setActionBarTitle("Vehicles");
+                setActionBarTitle(getString(R.string.vehicles));
                 // Check to see if we have retained the worker fragment.
                 mVehicleViewPager = (VehiclesViewPager) fm.findFragmentByTag("VEHICLE_VIEWPAGER");
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="Notifications">
-    <PreferenceCategory android:title="General">
+    <PreferenceCategory android:title="@string/general">
 
         <SwitchPreference
             android:defaultValue="true"
@@ -24,10 +24,10 @@
             android:title="@string/webcast_only" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Do Not Disturb">
+    <PreferenceCategory android:title="@string/do_not_disturb">
         <SwitchPreference
             android:key="do_not_disturb_status"
-            android:title="@string/do_not_disturb"
+            android:title="@string/do_not_disturb_enable"
             android:summary="@string/do_not_disturb_summary"
             />
         <me.calebjones.spacelaunchnow.common.customviews.TimePreference
@@ -46,65 +46,65 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Notification Preferences">
+    <PreferenceCategory android:title="@string/notification_preferences">
         <RingtonePreference
             android:defaultValue="content://settings/system/notification_sound"
             android:dependency="notifications_new_message"
             android:key="notifications_new_message_ringtone"
             android:ringtoneType="notification"
-            android:summary="Select a custom notification ringtone."
-            android:title="Ringtone" />
+            android:summary="@string/ringtone_summary"
+            android:title="@string/ringtone" />
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:dependency="notifications_new_message"
             android:key="notifications_new_message_heads_up"
-            android:summary="Heads-up notification, sound and vibration by default."
-            android:title="Priority" />
+            android:summary="@string/priority_summary"
+            android:title="@string/priority" />
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:dependency="notifications_new_message"
             android:key="notifications_new_message_vibrate"
-            android:summary="Allow vibration for notifications."
-            android:title="Vibration" />
+            android:summary="@string/vibration_summary"
+            android:title="@string/vibration" />
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:dependency="notifications_new_message"
             android:key="notifications_new_message_led"
-            android:summary="Allow LED blink with notification. (Works on some devices)"
-            android:title="LED Blink" />
+            android:summary="@string/led_summary"
+            android:title="@string/led" />
 
         <Preference
             android:defaultValue="true"
             android:dependency="notifications_new_message"
             android:key="notifications_new_message_test"
-            android:summary="Send a test notification."
-            android:title="Notification Test" />
+            android:summary="@string/test_notification_summary"
+            android:title="@string/test_notification" />
     </PreferenceCategory>
 
     <PreferenceCategory
         android:dependency="notifications_new_message"
-        android:title="Notification Intervals"
-        android:summary="Select intervals to receive launch notifications">
+        android:title="@string/notification_interval"
+        android:summary="@string/notification_interval_summary">
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="notifications_launch_day"
-            android:summaryOff="Do not notify for launches within 24 hours."
-            android:summaryOn="Receive notification when a Launch is within 24 hours."
-            android:title="24 Hours" />
+            android:summaryOff="@string/twenty_four_hour_off"
+            android:summaryOn="@string/twenty_four_hour_on"
+            android:title="@string/twenty_four_hour_title" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="notifications_launch_imminent"
-            android:summaryOff="Do not notify when a Launch is imminent."
-            android:summaryOn="Receive notification when a Launch is within one hour."
-            android:title="One Hour" />
+            android:summaryOff="@string/one_hour_off"
+            android:summaryOn="@string/one_hour_on"
+            android:title="@string/one_hour_title" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="notifications_launch_minute"
-            android:summaryOff="Do not notify when a Launch is within ten minutes."
-            android:summaryOn="Receive notification when a Launch is within ten minutes."
-            android:title="Ten Minutes" />
+            android:summaryOff="@string/ten_minutes_off"
+            android:summaryOn="@string/ten_minutes_on"
+            android:title="@string/ten_minutes_title" />
     </PreferenceCategory>
 </PreferenceScreen>

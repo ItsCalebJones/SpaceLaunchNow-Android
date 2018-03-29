@@ -329,7 +329,7 @@
     <string name="status_updates_off">Ne pas envoyer de notifications lors du changement de statut d\'un lancement.</string>
     <string name="webcast_only">Live Uniquement</string>
     <string name="webcast_only_summary">Être notifié uniquement pour les lancements retransmis en direct.</string>
-    <string name="do_not_disturb">Activer Ne Pas Déranger</string>
+    <string name="do_not_disturb_enable">Activer Ne Pas Déranger</string>
     <string name="do_not_disturb_summary">Activer pour rendre les notifications silencieuses sur un appareil pré-Marshmallow.</string>
     <string name="start_time">Heure de Début</string>
     <string name="end_time">Heure de Fin</string>
