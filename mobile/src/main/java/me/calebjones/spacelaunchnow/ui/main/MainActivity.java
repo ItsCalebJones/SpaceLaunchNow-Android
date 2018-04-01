@@ -74,6 +74,7 @@ import me.calebjones.spacelaunchnow.ui.main.launches.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.main.missions.MissionFragment;
 import me.calebjones.spacelaunchnow.ui.main.next.NextLaunchFragment;
 import me.calebjones.spacelaunchnow.ui.main.vehicles.VehiclesViewPager;
+import me.calebjones.spacelaunchnow.ui.news.NewsFragment;
 import me.calebjones.spacelaunchnow.ui.settings.AboutActivity;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.ui.settings.fragments.AppearanceFragment;
@@ -96,6 +97,7 @@ public class MainActivity extends BaseActivity {
     private LaunchesViewPager mlaunchesViewPager;
     private MissionFragment mMissionFragment;
     private NextLaunchFragment mUpcomingFragment;
+    private NewsFragment mNewsFragment;
     private VehiclesViewPager mVehicleViewPager;
     private Toolbar toolbar;
     private Drawer result = null;
@@ -266,6 +268,10 @@ public class MainActivity extends BaseActivity {
                                 .withIcon(GoogleMaterial.Icon.gmd_satellite)
                                 .withIdentifier(R.id.menu_missions)
                                 .withSelectable(true),
+                        new PrimaryDrawerItem().withName(R.string.news)
+                                .withIcon(CommunityMaterial.Icon.cmd_newspaper)
+                                .withIdentifier(R.id.menu_news)
+                                .withSelectable(true),
                         new PrimaryDrawerItem().withName(R.string.vehicles)
                                 .withIcon(FontAwesome.Icon.faw_rocket)
                                 .withIdentifier(R.id.menu_vehicle)
@@ -306,6 +312,7 @@ public class MainActivity extends BaseActivity {
                                         .withSelectable(false)
                         ),
                         new DividerDrawerItem(),
+                        new ExpandableDrawerItem().withName(R.string.get_help).withIcon(GoogleMaterial.Icon.gmd_account_box).withDescription(R.string.help_description).withIdentifier(20).withSelectable(false).withSubItems(
                         new SecondaryDrawerItem()
                                 .withIcon(GoogleMaterial.Icon.gmd_info_outline)
                                 .withName(R.string.whats_new)
@@ -323,6 +330,8 @@ public class MainActivity extends BaseActivity {
                                 .withDescription(R.string.feedback_subtitle)
                                 .withIdentifier(R.id.menu_feedback)
                                 .withSelectable(false)
+                        ),
+                        new DividerDrawerItem()
                 ).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
@@ -632,6 +641,23 @@ public class MainActivity extends BaseActivity {
                     mMissionFragment = new MissionFragment();
                     // Tell it who it is working with.
                     fm.beginTransaction().replace(R.id.flContent, mMissionFragment, "MISSION_FRAGMENT").commit();
+                }
+                if (rate != null) {
+                    rate.showRequest();
+                }
+
+                break;
+            case R.id.menu_news:
+                mNavItemId = R.id.menu_news;
+                setActionBarTitle(getString(R.string.news));
+                // Check to see if we have retained the worker fragment.
+                mNewsFragment = (NewsFragment) fm.findFragmentByTag("NEWS_FRAGMENT");
+
+                // If not retained (or first time running), we need to create it.
+                if (mNewsFragment == null) {
+                    mNewsFragment = new NewsFragment();
+                    // Tell it who it is working with.
+                    fm.beginTransaction().replace(R.id.flContent, mNewsFragment, "NEWS_FRAGMENT").commit();
                 }
                 if (rate != null) {
                     rate.showRequest();

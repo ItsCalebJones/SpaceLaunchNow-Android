@@ -9,6 +9,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.zetterstrom.com.forecast.ForecastClient;
@@ -21,6 +22,10 @@ import com.google.android.gms.ads.MobileAds;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.onesignal.OneSignal;
+import com.twitter.sdk.android.core.DefaultLogger;
+import com.twitter.sdk.android.core.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterConfig;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -81,6 +86,16 @@ public class LaunchApplication extends Application implements Analytics.Provider
         checkSubscriptions();
         setupAndCheckOnce();
         setupNotificationChannels();
+        setupTwitter();
+    }
+
+    private void setupTwitter() {
+        TwitterConfig config = new TwitterConfig.Builder(this)
+                .logger(new DefaultLogger(Log.DEBUG))
+                .twitterAuthConfig(new TwitterAuthConfig(getString(R.string.consumer_key), getString(R.string.consumer_secret)))
+                .debug(true)
+                .build();
+        Twitter.initialize(config);
     }
 
     private void setupNotificationChannels() {

@@ -62,6 +62,10 @@
 
     <style name="SPL"></style>
 
+    <style name="SpaceLaunchNowTweetStyle" parent="tw__TweetDarkStyle">
+        <item name="tw__container_bg_color">@color/dark_theme_background</item>
+    </style>
+
     <style name="SPL.SnackBar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

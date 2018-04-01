@@ -34,6 +34,15 @@
             android:targetPackage="me.calebjones.spacelaunchnow.debug"/>
     </header>
     <header
+        android:icon="@drawable/ic_translate"
+        android:summary="@string/translate_settings"
+        android:title="@string/translate">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://spacelaunchnow.oneskyapp.com/"
+            />
+    </header>
+    <header
         android:icon="@drawable/ic_support_black"
         android:summary="Follow my projects and contribute to future development."
         android:title="@string/Support">

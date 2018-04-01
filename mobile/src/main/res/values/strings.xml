@@ -385,4 +385,12 @@
   <string name="misc">Miscellaneous</string>
   <string name="launchers">Launchers</string>
   <string name="orbiters">Orbiters</string>
+  <string name="translate_settings">Contribute to translating Space Launch Now!</string>
+  <string name="translate">Translate</string>
+  <string name="news">News</string>
+  <string name="get_help">Get Help</string>
+  <string name="help_description">Help and Support</string>
+
+  <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

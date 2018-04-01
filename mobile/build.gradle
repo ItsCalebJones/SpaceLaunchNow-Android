@@ -236,6 +236,7 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:commons:0.9.3.0'
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
     implementation 'com.jakewharton:butterknife:8.8.1'
+    implementation 'com.android.support:support-v4:27.1.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.github.jrvansuita:MaterialAbout:0.2.1'
     implementation 'com.github.mukeshsolanki:MarkdownView-Android:1.0.4'
@@ -277,6 +278,10 @@ dependencies {
     implementation 'com.github.pwittchen:weathericonview:1.1.0'
     implementation 'com.mikepenz:fontawesome-typeface:4.7.0.0@aar'
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
+
+    //Twitter
+    implementation 'com.twitter.sdk.android:twitter-core:3.1.1'
+    implementation 'com.twitter.sdk.android:tweet-ui:3.1.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

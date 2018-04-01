@@ -4,4 +4,5 @@
     <item name="menu_discord" type="id">menu_discord</item>
     <item name="menu_facebook" type="id">menu_facebook</item>
     <item name="menu_website" type="id">menu_website</item>
+    <item name="menu_news" type="id">menu_news</item>
 </resources>
