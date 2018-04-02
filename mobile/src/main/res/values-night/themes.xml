@@ -62,7 +62,7 @@
 
     <style name="SPL"></style>
 
-    <style name="SpaceLaunchNowTweetStyle" parent="tw__TweetDarkStyle">
+    <style name="SpaceLaunchNowTweetStyle" parent="tw__TweetDarkWithActionsStyle">
         <item name="tw__container_bg_color">@color/dark_theme_background</item>
     </style>
 

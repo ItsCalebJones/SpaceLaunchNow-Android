@@ -6,7 +6,7 @@
         <item name="android:windowBackground">@drawable/launcher_drawable</item>
     </style>
 
-    <style name="SpaceLaunchNowTweetStyle" parent="tw__TweetLightStyle">
+    <style name="SpaceLaunchNowTweetStyle" parent="tw__TweetLightWithActionsStyle">
     </style>
 
     <style name="CustomTitle2" parent="TextAppearance.AppCompat.Title">

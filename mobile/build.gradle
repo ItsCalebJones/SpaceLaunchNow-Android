@@ -262,6 +262,7 @@ dependencies {
     // HTTP Related libraries
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-simplexml:2.4.0'
     implementation 'com.github.renaudcerrato:static-maps-api:1.0.4'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.squareup.okhttp3:okhttp:3.9.1'
@@ -282,6 +283,9 @@ dependencies {
     //Twitter
     implementation 'com.twitter.sdk.android:twitter-core:3.1.1'
     implementation 'com.twitter.sdk.android:tweet-ui:3.1.1'
+
+    implementation "io.reactivex.rxjava2:rxjava:2.1.12"
+
 }
 
 apply plugin: 'com.google.gms.google-services'
