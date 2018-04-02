@@ -6,6 +6,7 @@ import org.simpleframework.xml.Root;
 import org.simpleframework.xml.Text;
 
 import io.realm.RealmObject;
+import io.realm.annotations.LinkingObjects;
 import io.realm.annotations.PrimaryKey;
 
 @Root(strict = false, name="item")
@@ -32,5 +33,8 @@ public class Article extends RealmObject {
 
     @Element(name = "source", required = false)
     private Source source;
+
+    @LinkingObjects("articles")
+    private final Channel channel = null;
 
 }
