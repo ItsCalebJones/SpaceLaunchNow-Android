@@ -10,6 +10,7 @@ import java.util.List;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
 import io.realm.annotations.LinkingObjects;
 
 @Root(strict = false)
@@ -22,7 +23,7 @@ public class Channel extends RealmObject {
     public RealmList<Article> articles;
 
     @LinkingObjects("channel")
-    private final NewsFeedResponse newsFeedResponse = null;
+    final RealmResults<NewsFeedResponse> newsFeedResponse = null;
 
     public String getTitle() {
         return title;

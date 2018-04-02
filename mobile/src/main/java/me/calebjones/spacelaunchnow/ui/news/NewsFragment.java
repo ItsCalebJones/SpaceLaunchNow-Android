@@ -67,24 +67,23 @@ public class NewsFragment extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         articleRepository = new ArticleRepository(context);
 
-        final TwitterListTimeline timeline = new TwitterListTimeline.Builder()
-                .slugWithOwnerScreenName("space-launch-news", "SpaceLaunchNow")
-                .build();
-
-        final TweetTimelineRecyclerViewAdapter adapter =
-                new TweetTimelineRecyclerViewAdapter.Builder(context)
-                        .setTimeline(timeline)
-                        .setViewStyle(R.style.SpaceLaunchNowTweetStyle)
-                        .build();
-
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                linearLayoutManager.getOrientation());
-        recyclerView.addItemDecoration(dividerItemDecoration);
-
-        recyclerView.setAdapter(adapter);
+//        final TwitterListTimeline timeline = new TwitterListTimeline.Builder()
+//                .slugWithOwnerScreenName("space-launch-news", "SpaceLaunchNow")
+//                .build();
+//
+//        final TweetTimelineRecyclerViewAdapter adapter =
+//                new TweetTimelineRecyclerViewAdapter.Builder(context)
+//                        .setTimeline(timeline)
+//                        .setViewStyle(R.style.SpaceLaunchNowTweetStyle)
+//                        .build();
+//
+//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+//                linearLayoutManager.getOrientation());
+//        recyclerView.addItemDecoration(dividerItemDecoration);
+//
+//        recyclerView.setAdapter(adapter);
 
         articles = articleRepository.getArticles();
-        articles.addChangeListener(callback);
     }
 
     @Override
