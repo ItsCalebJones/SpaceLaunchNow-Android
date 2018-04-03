@@ -646,7 +646,7 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.menu_news:
                 mNavItemId = R.id.menu_news;
-                setActionBarTitle(getString(R.string.news));
+                setActionBarTitle(getString(R.string.space_launch_news));
                 // Check to see if we have retained the worker fragment.
                 mNewsViewpagerFragment = (NewsViewPager) fm.findFragmentByTag("NEWS_FRAGMENT_VIEWPAGER");
 

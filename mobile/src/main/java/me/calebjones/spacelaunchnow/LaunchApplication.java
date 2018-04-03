@@ -26,6 +26,7 @@ import com.twitter.sdk.android.core.DefaultLogger;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterConfig;
+import com.twitter.sdk.android.tweetui.TweetUi;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -96,6 +97,12 @@ public class LaunchApplication extends Application {
                 .debug(true)
                 .build();
         Twitter.initialize(config);
+        new Thread() {
+            @Override
+            public void run() {
+                TweetUi.getInstance();
+            }
+        }.start();
     }
 
     private void setupNotificationChannels() {
