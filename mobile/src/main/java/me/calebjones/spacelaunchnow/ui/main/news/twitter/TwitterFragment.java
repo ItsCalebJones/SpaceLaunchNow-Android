@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.ui.news;
+package me.calebjones.spacelaunchnow.ui.main.news.twitter;
 
 
 import android.content.Context;
@@ -39,15 +39,15 @@ import retrofit2.Response;
 import timber.log.Timber;
 
 
-public class NewsFragment extends Fragment {
+public class TwitterFragment extends Fragment {
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
     private Context context;
     private LinearLayoutManager linearLayoutManager;
-    private ArticleRepository articleRepository;
-    private RealmResults<Article> articles;
+    private TweetTimelineRecyclerViewAdapter timelineAdapter;
+    private TwitterListTimeline timeline;
 
 
     @Override
@@ -57,33 +57,8 @@ public class NewsFragment extends Fragment {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_news, container, false);
         ButterKnife.bind(this, view);
+        getTwitterTimeline();
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        linearLayoutManager = new LinearLayoutManager(context);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        articleRepository = new ArticleRepository(context);
-
-//        final TwitterListTimeline timeline = new TwitterListTimeline.Builder()
-//                .slugWithOwnerScreenName("space-launch-news", "SpaceLaunchNow")
-//                .build();
-//
-//        final TweetTimelineRecyclerViewAdapter adapter =
-//                new TweetTimelineRecyclerViewAdapter.Builder(context)
-//                        .setTimeline(timeline)
-//                        .setViewStyle(R.style.SpaceLaunchNowTweetStyle)
-//                        .build();
-//
-//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-//                linearLayoutManager.getOrientation());
-//        recyclerView.addItemDecoration(dividerItemDecoration);
-//
-//        recyclerView.setAdapter(adapter);
-
-        articles = articleRepository.getArticles();
     }
 
     @Override
@@ -91,7 +66,7 @@ public class NewsFragment extends Fragment {
         menu.clear();
         inflater.inflate(R.menu.main_menu, menu);
 
-        if(SupporterHelper.isSupporter()){
+        if (SupporterHelper.isSupporter()) {
             menu.removeItem(R.id.action_supporter);
         }
     }
@@ -105,21 +80,20 @@ public class NewsFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private OrderedRealmCollectionChangeListener<RealmResults<Article>> callback = new OrderedRealmCollectionChangeListener<RealmResults<Article>>() {
-        @Override
-        public void onChange(RealmResults<Article> results, OrderedCollectionChangeSet changeSet) {
-            if (changeSet == null) {
-                // The first time async returns with an null changeSet.
-            } else {
-                // Called on every update.
-            }
-        }
-    };
 
-    @Override
-    public void onStop () {
-        super.onStop();
-        articles.removeAllChangeListeners(); // remove all registered listeners
+    public void getTwitterTimeline() {
+        linearLayoutManager = new LinearLayoutManager(context);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                linearLayoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        timeline = new TwitterListTimeline.Builder()
+                .slugWithOwnerScreenName("space-launch-news", "SpaceLaunchNow")
+                .build();
+        timelineAdapter = new TweetTimelineRecyclerViewAdapter.Builder(context)
+                .setTimeline(timeline)
+                .setViewStyle(R.style.SpaceLaunchNowTweetStyle)
+                .build();
+        recyclerView.setAdapter(timelineAdapter);
     }
-
 }

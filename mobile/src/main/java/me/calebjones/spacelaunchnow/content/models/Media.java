@@ -7,7 +7,6 @@ import io.realm.annotations.PrimaryKey;
 
 public class Media extends RealmObject {
 
-        @PrimaryKey
         @Attribute(name = "url")
         private String url;
 

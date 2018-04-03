@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.ui.main.launches;
+package me.calebjones.spacelaunchnow.ui.main.news;
 
 
 import android.content.Context;
@@ -15,9 +15,13 @@ import android.view.ViewGroup;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
+import me.calebjones.spacelaunchnow.ui.main.launches.PreviousLaunchesFragment;
+import me.calebjones.spacelaunchnow.ui.main.launches.UpcomingLaunchesFragment;
+import me.calebjones.spacelaunchnow.ui.main.news.twitter.TwitterFragment;
+import me.calebjones.spacelaunchnow.ui.main.news.web.WebNewsFragment;
 import timber.log.Timber;
 
-public class LaunchesViewPager extends Fragment {
+public class NewsViewPager extends Fragment {
 
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
@@ -36,8 +40,8 @@ public class LaunchesViewPager extends Fragment {
         View inflatedView = inflater.inflate(R.layout.fragment_view_pager, container, false);
 
         tabLayout = inflatedView.findViewById(R.id.tabLayout);
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.upcoming));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.previous));
+        tabLayout.addTab(tabLayout.newTab().setText("Twitter"));
+        tabLayout.addTab(tabLayout.newTab().setText("Web"));
         viewPager = inflatedView.findViewById(R.id.viewpager);
 
         pagerAdapter = new PagerAdapter
@@ -45,15 +49,10 @@ public class LaunchesViewPager extends Fragment {
 
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                if (tab.getPosition() == 0) {
-                    ((MainActivity) getActivity()).setActionBarTitle(sharedPreference.getUpTitle());
-                } else {
-                    ((MainActivity) getActivity()).setActionBarTitle(sharedPreference.getPreviousTitle());
-                }
             }
 
             @Override
@@ -66,39 +65,8 @@ public class LaunchesViewPager extends Fragment {
 
             }
         });
+
         return inflatedView;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        // Do your stuff
-    }
-
-
-
-    @Override
-    public void onResume() {
-        Timber.d("onResume");
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        Timber.d("onPause");
-        super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        Timber.d("onStop");
-        super.onStop();
-    }
-
-    @Override
-    public void onDetach() {
-        Timber.d("onDetach");
-        super.onDetach();
     }
 
 
@@ -114,8 +82,8 @@ public class LaunchesViewPager extends Fragment {
         public Fragment getItem(int position) {
 
             switch (position) {
-                case 0: return UpcomingLaunchesFragment.newInstance("Upcoming");
-                case 1: return PreviousLaunchesFragment.newInstance("Previous");
+                case 0: return new TwitterFragment();
+                case 1: return new WebNewsFragment();
                 default:
                     return null;
             }
