@@ -29,6 +29,14 @@
     protected Object[][] getContents();
 }
 
+-dontwarn org.xmlpull.v1.**
+
+-keep public class org.jsoup.** {
+public *;
+}
+
+-keeppackagenames org.jsoup.nodes
+
 # Keep public classes and methods.
 -dontwarn com.bea.xml.stream.**
 -dontwarn org.simpleframework.xml.stream.**

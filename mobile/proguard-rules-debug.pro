@@ -31,6 +31,14 @@
    public *;
 }
 
+-keep public class org.jsoup.** {
+public *;
+}
+
+-keeppackagenames org.jsoup.nodes
+
+-dontwarn org.xmlpull.v1.**
+
 # Keep public classes and methods.
 -dontwarn com.bea.xml.stream.**
 -dontwarn org.simpleframework.xml.stream.**

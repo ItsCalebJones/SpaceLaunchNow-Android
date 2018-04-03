@@ -3,7 +3,6 @@ package me.calebjones.spacelaunchnow.ui.main.news.twitter;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.ConditionVariable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,28 +14,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.twitter.sdk.android.tweetui.SearchTimeline;
 import com.twitter.sdk.android.tweetui.TweetTimelineRecyclerViewAdapter;
 import com.twitter.sdk.android.tweetui.TwitterListTimeline;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.OrderedCollectionChangeSet;
-import io.realm.OrderedRealmCollectionChangeListener;
-import io.realm.RealmChangeListener;
-import io.realm.RealmList;
-import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.models.Article;
-import me.calebjones.spacelaunchnow.content.models.NewsFeedResponse;
-import me.calebjones.spacelaunchnow.content.network.NewsAPIClient;
-import me.calebjones.spacelaunchnow.content.repository.ArticleRepository;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import timber.log.Timber;
 
 
 public class TwitterFragment extends Fragment {

@@ -18,7 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.models.Article;
+import me.calebjones.spacelaunchnow.data.models.news.Article;
 import me.calebjones.spacelaunchnow.content.repository.ArticleRepository;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 
@@ -44,9 +44,6 @@ public class WebNewsFragment extends Fragment {
 
 
         linearLayoutManager = new LinearLayoutManager(context);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                linearLayoutManager.getOrientation());
-        recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setLayoutManager(linearLayoutManager);
         articleAdapter = new ArticleAdapter(context);
         recyclerView.setAdapter(articleAdapter);

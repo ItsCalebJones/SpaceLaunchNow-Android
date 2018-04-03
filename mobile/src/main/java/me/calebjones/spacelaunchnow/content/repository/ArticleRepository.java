@@ -5,14 +5,9 @@ import android.content.Context;
 import java.util.Date;
 
 import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmObjectSchema;
 import io.realm.RealmResults;
-import io.realm.RealmSchema;
-import io.realm.Sort;
-import io.realm.annotations.RealmField;
-import me.calebjones.spacelaunchnow.content.models.Article;
-import me.calebjones.spacelaunchnow.content.models.NewsFeedResponse;
+import me.calebjones.spacelaunchnow.data.models.news.Article;
+import me.calebjones.spacelaunchnow.data.models.news.NewsFeedResponse;
 import me.calebjones.spacelaunchnow.content.network.NewsAPIClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,7 +37,6 @@ public class ArticleRepository {
             }
         });
         final RealmResults<Article> articles = realm.where(Article.class).greaterThanOrEqualTo("channel.newsFeedResponse.lastUpdate", currentDate.getTime()).findAll();
-        final RealmResults<Article> articlesW = realm.where(Article.class).isNotNull("media").findAll();
         newsAPIClient.getNews(new Callback<NewsFeedResponse>() {
             @Override
             public void onResponse(Call<NewsFeedResponse> call, Response<NewsFeedResponse> response) {

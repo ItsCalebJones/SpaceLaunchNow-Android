@@ -1,9 +1,8 @@
 package me.calebjones.spacelaunchnow.content.network;
 
-import me.calebjones.spacelaunchnow.content.models.NewsFeedResponse;
+import me.calebjones.spacelaunchnow.data.models.news.NewsFeedResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Query;
 
 public interface NewsService {
 

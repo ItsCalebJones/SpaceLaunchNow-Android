@@ -1,14 +1,10 @@
-package me.calebjones.spacelaunchnow.content.models;
+package me.calebjones.spacelaunchnow.data.models.news;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
-import java.util.Date;
-import java.util.List;
-
-import io.realm.RealmModel;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 

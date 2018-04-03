@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.content.models;
+package me.calebjones.spacelaunchnow.data.models.news;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
@@ -31,15 +31,14 @@ public class Article extends RealmObject {
     @Element(name = "pubDate", required = false)
     private String pubDate;
 
-    @Element(name = "media:content", required = false)
-    private Media media;
+    @Element(name = "content", required = false)
+    private String content;
+
+
 
     @Path("enclosure")
     @Attribute(name = "url", required = false)
     private String mediaUrl;
-
-    @Element(name = "source", required = false)
-    private Source source;
 
     @LinkingObjects("articles")
     private final RealmResults<Channel> channel = null;
@@ -84,22 +83,6 @@ public class Article extends RealmObject {
         this.pubDate = pubDate;
     }
 
-    public Media getMedia() {
-        return media;
-    }
-
-    public void setMedia(Media media) {
-        this.media = media;
-    }
-
-    public Source getSource() {
-        return source;
-    }
-
-    public void setSource(Source source) {
-        this.source = source;
-    }
-
     public RealmResults<Channel> getChannel() {
         return channel;
     }
@@ -111,4 +94,5 @@ public class Article extends RealmObject {
     public void setMediaUrl(String mediaUrl) {
         this.mediaUrl = mediaUrl;
     }
+
 }

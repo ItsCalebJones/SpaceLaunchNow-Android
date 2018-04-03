@@ -2,14 +2,12 @@ package me.calebjones.spacelaunchnow.content.network;
 
 import java.util.concurrent.TimeUnit;
 
-import me.calebjones.spacelaunchnow.content.models.NewsFeedResponse;
-import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
+import me.calebjones.spacelaunchnow.data.models.news.NewsFeedResponse;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
-import timber.log.Timber;
 
 public class NewsAPIClient {
 
