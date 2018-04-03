@@ -34,6 +34,7 @@
 -keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
     public static final *** NULL;
 }
+-keep class org.xmlpull.v1.** { *;}
 -dontwarn org.xmlpull.v1.**
 -dontwarn okio.**
 -keep class com.squareup.okhttp.** { *; }

@@ -123,7 +123,7 @@ public class Migration implements RealmMigration {
             oldVersion++;
         }
 
-        if (oldVersion <= Constants.DB_SCHEMA_VERSION_2_0_0) {
+        if (oldVersion < Constants.DB_SCHEMA_VERSION_2_0_0) {
             RealmObjectSchema details = schema.get("RocketDetail");
             if (details != null){
                 details.addField("fullName", String.class);
@@ -135,7 +135,7 @@ public class Migration implements RealmMigration {
             oldVersion++;
         }
 
-        if (oldVersion <= Constants.DB_SCHEMA_VERSION_2_3_0) {
+        if (oldVersion < Constants.DB_SCHEMA_VERSION_2_3_0) {
             RealmObjectSchema article = schema.create("Article");
             article.addField("title", String.class, FieldAttribute.PRIMARY_KEY);
             article.addField("link", String.class);

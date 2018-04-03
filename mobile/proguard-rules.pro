@@ -29,6 +29,7 @@
     protected Object[][] getContents();
 }
 
+-keep class org.xmlpull.v1.** { *;}
 -dontwarn org.xmlpull.v1.**
 
 -keep public class org.jsoup.** {
