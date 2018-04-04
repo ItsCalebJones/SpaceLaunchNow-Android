@@ -3,6 +3,7 @@ package me.calebjones.spacelaunchnow.ui.main.news.web;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,6 +30,8 @@ public class WebNewsFragment extends Fragment {
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+    @BindView(R.id.swiperefresh)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     private Context context;
     private ArticleRepository articleRepository;
@@ -43,38 +46,21 @@ public class WebNewsFragment extends Fragment {
         context = getActivity();
         articleRepository = new ArticleRepository(context);
         setHasOptionsMenu(true);
-        View view = inflater.inflate(R.layout.fragment_news, container, false);
+        View view = inflater.inflate(The caht R.layout.fragment_news, container, false);
         ButterKnife.bind(this, view);
 
 
         linearLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
-        articleAdapter = new ArticleAdapter(context);
+        articleAdapter = new ArticleAdapter(context, getActivity());
         recyclerView.setAdapter(articleAdapter);
-        articleRepository.getArticles(false, new ArticleRepository.GetArticlesCallback() {
+        getArticles(false);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onSuccess(RealmResults<Article> newArticles) {
-                articles = newArticles;
-                articleAdapter.addItems(articles);
-                articles.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults<Article>>() {
-                    @Override
-                    public void onChange(RealmResults<Article> articles, OrderedCollectionChangeSet changeSet) {
-                        articleAdapter.updateItems(changeSet);
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-
-            }
-
-            @Override
-            public void onNetworkFailure() {
-
+            public void onRefresh() {
+                getArticles(true);
             }
         });
-
         return view;
     }
 
@@ -100,5 +86,33 @@ public class WebNewsFragment extends Fragment {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         return super.onOptionsItemSelected(item);
+    }
+
+    public void getArticles(boolean forced) {
+        swipeRefreshLayout.setRefreshing(true);
+        articleRepository.getArticles(forced, new ArticleRepository.GetArticlesCallback() {
+            @Override
+            public void onSuccess(RealmResults<Article> newArticles) {
+                articles = newArticles;
+                articleAdapter.addItems(articles);
+                articles.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults<Article>>() {
+                    @Override
+                    public void onChange(RealmResults<Article> articles, OrderedCollectionChangeSet changeSet) {
+                        articleAdapter.updateItems(changeSet);
+                    }
+                });
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onNetworkFailure() {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 }

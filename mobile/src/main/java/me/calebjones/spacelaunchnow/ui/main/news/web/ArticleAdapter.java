@@ -1,18 +1,23 @@
 package me.calebjones.spacelaunchnow.ui.main.news.web;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,9 +27,7 @@ import io.github.ponnamkarthik.richlinkpreview.MetaData;
 import io.github.ponnamkarthik.richlinkpreview.ResponseListener;
 import io.github.ponnamkarthik.richlinkpreview.RichPreview;
 import io.realm.OrderedCollectionChangeSet;
-import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.news.Article;
@@ -37,10 +40,17 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     private Context context;
     private RealmResults<Article> articles;
     private int color;
+    private SimpleDateFormat inDateFormat;
+    private SimpleDateFormat outDateFormat;
+    private Activity activity;
 
-    public ArticleAdapter(Context context) {
+    public ArticleAdapter(Context context, Activity activity) {
         this.context = context;
+        this.activity = activity;
         color = ContextCompat.getColor(context, R.color.accent);
+        inDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.US);
+        String format = DateFormat.getBestDateTimePattern(Locale.getDefault(), "h:mm a - MMMM d, yyyy");
+        outDateFormat = new SimpleDateFormat(format, Locale.getDefault());
     }
 
     public void addItems(final RealmResults<Article> articles) {
@@ -82,36 +92,45 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final Article article = articles.get(position);
+        boolean useStock = false;
         if (article != null) {
             holder.titleText.setText(article.getTitle());
             if (article.getMediaUrl() != null) {
-                GlideApp.with(context).load(article.getMediaUrl()).placeholder(R.drawable.placeholder).into(holder.imageView);
+                if (article.getMediaUrl().equals("") || article.getMediaUrl().contains("cropped-fav3-32x32.png") || article.getMediaUrl().contains("favicon.ico")) {
+                    useStock = true;
+                } else {
+                    GlideApp.with(context).load(article.getMediaUrl()).placeholder(R.drawable.placeholder).into(holder.imageView);
+                }
             } else {
-                RichPreview richPreview = new RichPreview(new ResponseListener() {
-                    @Override
-                    public void onData(final MetaData metaData) {
-                        Timber.v("Got metadata URL - %s", metaData.getImageurl());
-                        //Implement your Layout
-                        if (metaData.getImageurl() != null) {
-                            Realm realm = Realm.getDefaultInstance();
-                            realm.executeTransaction(new Realm.Transaction() {
-                                @Override
-                                public void execute(Realm realm) {
-                                    article.setMediaUrl(metaData.getImageurl());
-                                    realm.copyToRealmOrUpdate(article);
-                                }
-                            });
-                            realm.close();
+                if (!article.getLink().contains("spaceflight101") && !article.getLink().contains("nasaspaceflight") && !article.getLink().contains("spaceflightnow")) {
+                    RichPreview richPreview = new RichPreview(new ResponseListener() {
+                        @Override
+                        public void onData(final MetaData metaData) {
+                            Timber.v("Got metadata URL - %s", metaData.getImageurl());
+                            //Implement your Layout
+                            if (metaData.getImageurl() != null) {
+                                Realm realm = Realm.getDefaultInstance();
+                                realm.executeTransaction(new Realm.Transaction() {
+                                    @Override
+                                    public void execute(Realm realm) {
+                                        article.setMediaUrl(metaData.getImageurl());
+                                        realm.copyToRealmOrUpdate(article);
+                                    }
+                                });
+                                realm.close();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onError(Exception e) {
-                        //handle error
-                    }
-                });
-                richPreview.getPreview(article.getLink());
-                GlideApp.with(context).load(R.drawable.placeholder).into(holder.imageView);
+                        @Override
+                        public void onError(Exception e) {
+                            //handle error
+                        }
+                    });
+                    richPreview.getPreview(article.getLink());
+                    GlideApp.with(context).load(R.drawable.placeholder).into(holder.imageView);
+                } else {
+                    useStock = true;
+                }
             }
             BadgeDrawable.Builder siteDrawable =
                     new BadgeDrawable.Builder()
@@ -124,21 +143,56 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
             if (article.getLink().contains("spaceflightnow")){
                 siteDrawable.text1("Space Flight Now");
+                if (useStock) GlideApp.with(context)
+                        .load(context.getString(R.string.spaceflightnow_logo))
+                        .placeholder(R.drawable.placeholder).centerInside()
+                        .into(holder.imageView);
             } else  if (article.getLink().contains("spaceflight101")){
                 siteDrawable.text1("Space Flight 101");
+                if (useStock) GlideApp.with(context)
+                        .load(context.getString(R.string.spaceflight_101))
+                        .placeholder(R.drawable.placeholder)
+                        .into(holder.imageView);
             } else if (article.getLink().contains("spacenews")){
                 siteDrawable.text1("Space News");
+                if (useStock) GlideApp.with(context)
+                        .load(context.getString(R.string.spacenews_logo))
+                        .placeholder(R.drawable.placeholder).centerInside()
+                        .into(holder.imageView);
             } else if (article.getLink().contains("nasaspaceflight")){
                 siteDrawable.text1("NASA Spaceflight");
+                if (useStock) GlideApp.with(context)
+                        .load(context.getString(R.string.nasaspaceflight_logo))
+                        .placeholder(R.drawable.placeholder).centerInside()
+                        .into(holder.imageView);
             } else if (article.getLink().contains("nasa.gov")){
                 siteDrawable.text1("NASA.Gov");
+                if (useStock) GlideApp.with(context)
+                        .load(context.getString(R.string.NASA_logo))
+                        .placeholder(R.drawable.placeholder).centerInside()
+                        .into(holder.imageView);
+            } else if (article.getLink().contains("spacex.com")){
+                siteDrawable.text1("SpaceX");
+                if (useStock) GlideApp.with(context)
+                        .load(context.getString(R.string.spacex_logo))
+                        .placeholder(R.drawable.placeholder).centerInside()
+                        .fitCenter()
+                        .into(holder.imageView);
             } else {
                 siteDrawable.text1("Unknown");
+                if (useStock) GlideApp.with(context)
+                        .load(R.drawable.placeholder)
+                        .into(holder.imageView);
             }
             holder.siteText.setText(siteDrawable.build().toSpannable());
 
-            //TODO parse this to local time
-            holder.publicationDate.setText(article.getPubDate());
+            try {
+                Date pubDate = inDateFormat.parse(article.getPubDate());
+                holder.publicationDate.setText(outDateFormat.format(pubDate));
+            } catch (ParseException e) {
+                e.printStackTrace();
+                holder.publicationDate.setText(article.getPubDate());
+            }
         }
     }
 
@@ -166,8 +220,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
         @OnClick(R.id.rootview)
         void onClick() {
-            Article article = articles.get(getAdapterPosition());
-            Toast.makeText(context, String.format("Clicked %s", getAdapterPosition()), Toast.LENGTH_SHORT).show();
+            Utils.openCustomTab(activity, context, articles.get(getAdapterPosition()).getLink());
         }
 
         public ViewHolder(View itemView) {
