@@ -16,6 +16,9 @@ import android.view.ViewGroup;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.OrderedCollectionChangeSet;
+import io.realm.OrderedRealmCollectionChangeListener;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.news.Article;
@@ -31,6 +34,7 @@ public class WebNewsFragment extends Fragment {
     private ArticleRepository articleRepository;
     private ArticleAdapter articleAdapter;
     private LinearLayoutManager linearLayoutManager;
+    private RealmResults<Article> articles;
 
 
     @Override
@@ -49,8 +53,15 @@ public class WebNewsFragment extends Fragment {
         recyclerView.setAdapter(articleAdapter);
         articleRepository.getArticles(false, new ArticleRepository.GetArticlesCallback() {
             @Override
-            public void onSuccess(RealmResults<Article> articles) {
+            public void onSuccess(RealmResults<Article> newArticles) {
+                articles = newArticles;
                 articleAdapter.addItems(articles);
+                articles.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults<Article>>() {
+                    @Override
+                    public void onChange(RealmResults<Article> articles, OrderedCollectionChangeSet changeSet) {
+                        articleAdapter.updateItems(changeSet);
+                    }
+                });
             }
 
             @Override
@@ -63,7 +74,14 @@ public class WebNewsFragment extends Fragment {
 
             }
         });
+
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        articles.removeAllChangeListeners();
     }
 
     @Override
