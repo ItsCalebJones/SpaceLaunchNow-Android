@@ -294,7 +294,6 @@ dependencies {
 
     // Firebase Messaging
     implementation "com.google.firebase:firebase-messaging:$rootProject.playServicesVersion"
-
 }
 
 apply plugin: 'com.google.gms.google-services'
