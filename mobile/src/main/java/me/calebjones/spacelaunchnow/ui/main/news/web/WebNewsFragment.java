@@ -46,7 +46,7 @@ public class WebNewsFragment extends Fragment {
         context = getActivity();
         articleRepository = new ArticleRepository(context);
         setHasOptionsMenu(true);
-        View view = inflater.inflate(The caht R.layout.fragment_news, container, false);
+        View view = inflater.inflate(R.layout.fragment_news, container, false);
         ButterKnife.bind(this, view);
 
 
