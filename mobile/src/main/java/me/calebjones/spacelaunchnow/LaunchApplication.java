@@ -19,6 +19,7 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.evernote.android.job.JobManager;
 import com.google.android.gms.ads.MobileAds;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.onesignal.OneSignal;
@@ -52,7 +53,6 @@ import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
 import me.calebjones.spacelaunchnow.data.models.realm.Migration;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
-import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -78,7 +78,7 @@ public class LaunchApplication extends Application {
         setupAds();
         setupPreferences();
         setupCrashlytics();
-        setupOneSignal();
+        setupNotification();
         setupRealm();
         setupForecast();
         setupWebView();
@@ -234,12 +234,14 @@ public class LaunchApplication extends Application {
     }
 
 
-    private void setupOneSignal() {
+    private void setupNotification() {
         OneSignal.startInit(context)
                 .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
                 .init();
 
         if (BuildConfig.DEBUG) {
+            FirebaseMessaging.getInstance().subscribeToTopic("debug");
+            FirebaseMessaging.getInstance().unsubscribeFromTopic("production");
             Timber.plant(new Timber.DebugTree(), new CrashlyticsTree(context));
             OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.ERROR);
 
@@ -252,6 +254,8 @@ public class LaunchApplication extends Application {
             }
             OneSignal.sendTags(tags);
         } else {
+            FirebaseMessaging.getInstance().subscribeToTopic("production");
+            FirebaseMessaging.getInstance().unsubscribeFromTopic("debug");
             JSONObject tags = new JSONObject();
             try {
                 tags.put("Production", true);

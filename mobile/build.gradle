@@ -260,12 +260,12 @@ dependencies {
     }
 
     // HTTP Related libraries
-    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.squareup.retrofit2:converter-simplexml:2.4.0'
     implementation 'com.github.renaudcerrato:static-maps-api:1.0.4'
     implementation 'com.google.code.gson:gson:2.8.2'
-    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'android.zetterstrom.com.forecast:forecast:1.2.0'
     implementation 'it.macisamuele:calendarprovider-lib:0.0.1'
 
@@ -291,6 +291,9 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.11.2'
 
     implementation 'com.github.nekocode:Badge:2.0'
+
+    // Firebase Messaging
+    implementation "com.google.firebase:firebase-messaging:$rootProject.playServicesVersion"
 
 }
 
