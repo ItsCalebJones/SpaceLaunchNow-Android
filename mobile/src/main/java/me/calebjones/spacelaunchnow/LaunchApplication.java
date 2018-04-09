@@ -22,15 +22,11 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
-import com.onesignal.OneSignal;
 import com.twitter.sdk.android.core.DefaultLogger;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterConfig;
 import com.twitter.sdk.android.tweetui.TweetUi;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Locale;
 import java.util.TimeZone;
@@ -235,46 +231,25 @@ public class LaunchApplication extends Application {
 
 
     private void setupNotification() {
-        OneSignal.startInit(context)
-                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
-                .init();
-
         if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree(), new CrashlyticsTree(context));
             FirebaseMessaging.getInstance().subscribeToTopic("debug");
             FirebaseMessaging.getInstance().unsubscribeFromTopic("production");
-            Timber.plant(new Timber.DebugTree(), new CrashlyticsTree(context));
-            OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.ERROR);
 
-            JSONObject tags = new JSONObject();
-            try {
-                tags.put("Production", false);
-                tags.put("Debug", true);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            OneSignal.sendTags(tags);
         } else {
+            Timber.plant(new CrashlyticsTree(context));
             FirebaseMessaging.getInstance().subscribeToTopic("production");
             FirebaseMessaging.getInstance().unsubscribeFromTopic("debug");
-            JSONObject tags = new JSONObject();
-            try {
-                tags.put("Production", true);
-                tags.put("Debug", false);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            OneSignal.sendTags(tags);
-            Timber.plant(new CrashlyticsTree(context));
         }
     }
 
 
     private void setupCrashlytics() {
         /*
-        * Init Crashlytics and gather additional device information.
-        * Always leave this at the top so it catches any init failures.
-        * Version 1.3.0-Beta had a bug where starting a service crashed before Crashlytics picked it up.
-        */
+         * Init Crashlytics and gather additional device information.
+         * Always leave this at the top so it catches any init failures.
+         * Version 1.3.0-Beta had a bug where starting a service crashed before Crashlytics picked it up.
+         */
         // Set up Crashlytics, disabled for debug builds
 
         Crashlytics crashlyticsKit = new Crashlytics.Builder()
@@ -313,47 +288,85 @@ public class LaunchApplication extends Application {
         }).start();
     }
 
-
     private void checkSubscriptions() {
-        try {
-            if (sharedPref.getBoolean("notifications_new_message", true)) {
-                OneSignal.setSubscription(true);
-                JSONObject tags = new JSONObject();
+        FirebaseMessaging firebaseMessaging = FirebaseMessaging.getInstance();
+        if (sharedPref.getBoolean("notifications_new_message", true)) {
 
-
-                tags.put("Nasa", switchPreferences.getSwitchNasa());
-
-                tags.put("ISRO", switchPreferences.getSwitchISRO());
-
-                tags.put("Roscosmos", switchPreferences.getSwitchRoscosmos());
-
-                tags.put("ULA", switchPreferences.getSwitchULA());
-
-                tags.put("Arianespace", switchPreferences.getSwitchArianespace());
-
-                tags.put("KSC", switchPreferences.getSwitchKSC());
-
-                tags.put("Ples", switchPreferences.getSwitchPles());
-
-                tags.put("Van", switchPreferences.getSwitchVan());
-
-                tags.put("SpaceX", switchPreferences.getSwitchSpaceX());
-
-                tags.put("CASC", switchPreferences.getSwitchCASC());
-
-                tags.put("Cape", switchPreferences.getSwitchCape());
-
-                tags.put("all", switchPreferences.getAllSwitch());
-
-                //Allow background alarms
-                tags.put("background", 1);
-
-                OneSignal.sendTags(tags);
+            if (switchPreferences.getSwitchNasa()) {
+                firebaseMessaging.subscribeToTopic("nasa");
             } else {
-                OneSignal.setSubscription(false);
+                firebaseMessaging.unsubscribeFromTopic("nasa");
             }
-        } catch (JSONException e) {
-            Crashlytics.logException(e);
+
+            if (switchPreferences.getSwitchISRO()) {
+                firebaseMessaging.subscribeToTopic("isro");
+            } else {
+                firebaseMessaging.unsubscribeFromTopic("isro");
+            }
+
+            if (switchPreferences.getSwitchRoscosmos()) {
+                firebaseMessaging.subscribeToTopic("roscosmos");
+            } else {
+                firebaseMessaging.unsubscribeFromTopic("roscosmos");
+            }
+
+            if (switchPreferences.getSwitchULA()) {
+                firebaseMessaging.subscribeToTopic("ula");
+            } else {
+                firebaseMessaging.unsubscribeFromTopic("ula");
+            }
+
+            if (switchPreferences.getSwitchArianespace()) {
+                firebaseMessaging.subscribeToTopic("arianespace");
+            } else {
+                firebaseMessaging.unsubscribeFromTopic("arianespace");
+            }
+
+            if (switchPreferences.getSwitchKSC()) {
+                firebaseMessaging.subscribeToTopic("ksc");
+            } else {
+                firebaseMessaging.unsubscribeFromTopic("ksc");
+            }
+
+            if (switchPreferences.getSwitchPles()) {
+                firebaseMessaging.subscribeToTopic("ples");
+            } else {
+                firebaseMessaging.unsubscribeFromTopic("ples");
+            }
+
+            if (switchPreferences.getSwitchVan()) {
+                firebaseMessaging.subscribeToTopic("van");
+            } else {
+                firebaseMessaging.unsubscribeFromTopic("van");
+            }
+
+            if (switchPreferences.getSwitchSpaceX()) {
+                firebaseMessaging.subscribeToTopic("spacex");
+            } else {
+                firebaseMessaging.unsubscribeFromTopic("spacex");
+            }
+
+            if (switchPreferences.getSwitchCASC()) {
+                firebaseMessaging.subscribeToTopic("casc");
+            } else {
+                firebaseMessaging.unsubscribeFromTopic("casc");
+            }
+
+            if (switchPreferences.getSwitchCape()) {
+                firebaseMessaging.subscribeToTopic("cape");
+            } else {
+                firebaseMessaging.unsubscribeFromTopic("cape");
+            }
+
+            if (switchPreferences.getAllSwitch()) {
+                firebaseMessaging.subscribeToTopic("all");
+            } else {
+                firebaseMessaging.unsubscribeFromTopic("all");
+            }
+
+            firebaseMessaging.subscribeToTopic("notifications_new_message");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("notifications_new_message");
         }
     }
 

@@ -114,9 +114,7 @@ android {
 
         applicationId "me.calebjones.spacelaunchnow"
         manifestPlaceholders = [appNameLabel                   : "@string/app_name",
-                                manifestApplicationId          : "${applicationId}",
-                                onesignal_app_id               : "${app_id}",
-                                onesignal_google_project_number: "${google_project_number}"]
+                                manifestApplicationId          : "${applicationId}",]
 
         minSdkVersion 19
         targetSdkVersion 27
@@ -212,9 +210,6 @@ dependencies {
     implementation "com.google.android.gms:play-services-wearable:$rootProject.playServicesVersion"
     implementation "com.google.android.gms:play-services-gcm:$rootProject.playServicesVersion"
     implementation "com.google.android.gms:play-services-ads:$rootProject.playServicesVersion"
-
-    // Communication
-    implementation 'com.onesignal:OneSignal:3.6.5@aar'
 
     // Architecture and Tools
     implementation 'com.jonathanfinerty.once:once:1.2.2'
