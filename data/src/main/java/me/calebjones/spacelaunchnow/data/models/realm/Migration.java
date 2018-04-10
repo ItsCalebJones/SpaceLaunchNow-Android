@@ -1,5 +1,7 @@
 package me.calebjones.spacelaunchnow.data.models.realm;
 
+import java.util.Date;
+
 import io.realm.DynamicRealm;
 import io.realm.DynamicRealmObject;
 import io.realm.FieldAttribute;
@@ -154,6 +156,12 @@ public class Migration implements RealmMigration {
             newsFeed.addField("lastUpdate", long.class, FieldAttribute.PRIMARY_KEY);
             newsFeed.addRealmObjectField("channel", channel);
             oldVersion++;
+        }
+
+        if (oldVersion < Constants.DB_SCHEMA_VERSION_2_3_1){
+            RealmObjectSchema article = schema.get("Article");
+            article.addField("date", Date.class, FieldAttribute.INDEXED);
+            oldVersion = Constants.DB_SCHEMA_VERSION_2_3_1;
         }
 
         Timber.i("Final Schema - Version %s", newVersion);

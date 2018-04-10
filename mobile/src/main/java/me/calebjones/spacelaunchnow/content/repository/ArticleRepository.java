@@ -2,12 +2,16 @@ package me.calebjones.spacelaunchnow.content.repository;
 
 import android.content.Context;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import io.github.ponnamkarthik.richlinkpreview.MetaData;
 import io.github.ponnamkarthik.richlinkpreview.ResponseListener;
 import io.github.ponnamkarthik.richlinkpreview.RichPreview;
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.news.Article;
@@ -34,14 +38,8 @@ public class ArticleRepository {
     public void getArticles(boolean forceRefresh, final GetArticlesCallback callback) {
         Date currentDate = new Date();
         currentDate.setTime(currentDate.getTime() - 1000 * 60 * 60);
-        final RealmResults<NewsFeedResponse> oldResponses = realm.where(NewsFeedResponse.class).lessThan("lastUpdate", currentDate.getTime()).findAll();
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                oldResponses.deleteAllFromRealm();
-            }
-        });
-        final RealmResults<Article> articles = realm.where(Article.class).greaterThanOrEqualTo("channel.newsFeedResponse.lastUpdate", currentDate.getTime()).findAll();
+        RealmList<Article> articles = new RealmList();
+        articles.addAll(realm.where(Article.class).sort("date").findAll());
 
         if (articles.size() == 0 || forceRefresh) {
             newsAPIClient.getNews(new Callback<NewsFeedResponse>() {
@@ -54,11 +52,29 @@ public class ArticleRepository {
                             realm.executeTransaction(new Realm.Transaction() {
                                 @Override
                                 public void execute(Realm realm) {
-                                    newsResponse.setLastUpdate(new Date().getTime());
-                                    realm.copyToRealmOrUpdate(newsResponse);
+                                    RealmList<Article> finalArticles = new RealmList();
+                                    SimpleDateFormat inDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.US);
+                                    SimpleDateFormat altDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm Z", Locale.US);
+                                    for (Article article: newsResponse.getChannel().getArticles()){
+                                        try {
+                                            Date pubDate = inDateFormat.parse(article.getPubDate());
+                                            article.setDate(pubDate);
+                                            finalArticles.add(article);
+                                        } catch (ParseException e) {
+                                            try {
+                                                Date pubDate = altDateFormat.parse(article.getPubDate());
+                                                article.setDate(pubDate);
+                                                finalArticles.add(article);
+                                            } catch (ParseException f){
+                                                Timber.e(f, "Unable to parse %s", article.getTitle());
+                                            }
+                                        }
+                                    }
+                                    realm.copyToRealmOrUpdate(finalArticles);
+                                    callback.onSuccess(finalArticles);
                                 }
                             });
-                            callback.onSuccess(articles);
+
                         }
                     } else {
                         callback.onNetworkFailure();
@@ -78,7 +94,7 @@ public class ArticleRepository {
 
 
     public interface GetArticlesCallback {
-        void onSuccess(RealmResults<Article> articles);
+        void onSuccess(RealmList<Article> articles);
 
         void onFailure(Throwable throwable);
 

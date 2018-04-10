@@ -18,6 +18,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +29,7 @@ import io.github.ponnamkarthik.richlinkpreview.ResponseListener;
 import io.github.ponnamkarthik.richlinkpreview.RichPreview;
 import io.realm.OrderedCollectionChangeSet;
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.news.Article;
@@ -38,7 +40,7 @@ import timber.log.Timber;
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder> {
 
     private Context context;
-    private RealmResults<Article> articles;
+    private RealmList<Article> articles;
     private int color;
     private SimpleDateFormat inDateFormat;
     private SimpleDateFormat outDateFormat;
@@ -53,7 +55,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         outDateFormat = new SimpleDateFormat(format, Locale.getDefault());
     }
 
-    public void addItems(final RealmResults<Article> articles) {
+    public void addItems(final RealmList<Article> articles) {
         this.articles = articles;
         notifyDataSetChanged();
     }
@@ -118,6 +120,11 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
                                     }
                                 });
                                 realm.close();
+                                try {
+                                    GlideApp.with(context).load(article.getMediaUrl()).placeholder(R.drawable.placeholder).into(holder.imageView);
+                                } catch (Exception e){
+                                    Timber.e(e);
+                                }
                             }
                         }
 
@@ -127,10 +134,9 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
                         }
                     });
                     richPreview.getPreview(article.getLink());
-                    GlideApp.with(context).load(R.drawable.placeholder).into(holder.imageView);
-                } else {
                     useStock = true;
                 }
+
             }
             BadgeDrawable.Builder siteDrawable =
                     new BadgeDrawable.Builder()
