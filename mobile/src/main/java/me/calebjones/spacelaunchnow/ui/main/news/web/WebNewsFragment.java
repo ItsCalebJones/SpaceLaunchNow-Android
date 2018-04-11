@@ -37,7 +37,7 @@ public class WebNewsFragment extends Fragment {
     private ArticleRepository articleRepository;
     private ArticleAdapter articleAdapter;
     private LinearLayoutManager linearLayoutManager;
-    private RealmResults<Article> articles;
+    private RealmList<Article> articles;
 
 
     @Override
@@ -67,7 +67,6 @@ public class WebNewsFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        articles.removeAllChangeListeners();
     }
 
     @Override
@@ -92,15 +91,9 @@ public class WebNewsFragment extends Fragment {
         swipeRefreshLayout.setRefreshing(true);
         articleRepository.getArticles(forced, new ArticleRepository.GetArticlesCallback() {
             @Override
-            public void onSuccess(RealmResults<Article> newArticles) {
+            public void onSuccess(RealmList<Article> newArticles) {
                 articles = newArticles;
                 articleAdapter.addItems(articles);
-                articles.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults<Article>>() {
-                    @Override
-                    public void onChange(RealmResults<Article> articles, OrderedCollectionChangeSet changeSet) {
-                        articleAdapter.updateItems(changeSet);
-                    }
-                });
                 swipeRefreshLayout.setRefreshing(false);
             }
 

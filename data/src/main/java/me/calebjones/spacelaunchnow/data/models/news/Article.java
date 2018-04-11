@@ -7,8 +7,11 @@ import org.simpleframework.xml.Path;
 import org.simpleframework.xml.Root;
 import org.simpleframework.xml.Text;
 
+import java.util.Date;
+
 import io.realm.RealmObject;
 import io.realm.RealmResults;
+import io.realm.annotations.Index;
 import io.realm.annotations.LinkingObjects;
 import io.realm.annotations.PrimaryKey;
 
@@ -34,7 +37,8 @@ public class Article extends RealmObject {
     @Element(name = "content", required = false)
     private String content;
 
-
+    @Index
+    private Date date;
 
     @Path("enclosure")
     @Attribute(name = "url", required = false)
@@ -95,4 +99,11 @@ public class Article extends RealmObject {
         this.mediaUrl = mediaUrl;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 }
