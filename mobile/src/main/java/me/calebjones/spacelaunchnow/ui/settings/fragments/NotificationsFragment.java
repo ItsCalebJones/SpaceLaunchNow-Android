@@ -6,11 +6,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 
-import com.onesignal.OneSignal;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
 
 import io.realm.Realm;
 import io.realm.Sort;
@@ -71,7 +70,11 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Timber.i("Notifications preference %s changed.", key);
         if (key.equals("notifications_new_message")){
-            OneSignal.setSubscription(sharedPreferences.getBoolean(key, true));
+            if (sharedPreferences.getBoolean(key, true)){
+                FirebaseMessaging.getInstance().subscribeToTopic("notifications_new_message");
+            } else {
+                FirebaseMessaging.getInstance().unsubscribeFromTopic("notifications_new_message");
+            }
         } else {
             Analytics.getInstance().sendPreferenceEvent(key);
         }

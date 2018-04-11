@@ -13,6 +13,7 @@ import io.github.ponnamkarthik.richlinkpreview.RichPreview;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.news.Article;
 import me.calebjones.spacelaunchnow.data.models.news.NewsFeedResponse;
@@ -39,7 +40,7 @@ public class ArticleRepository {
         Date currentDate = new Date();
         currentDate.setTime(currentDate.getTime() - 1000 * 60 * 60);
         RealmList<Article> articles = new RealmList();
-        articles.addAll(realm.where(Article.class).sort("date").findAll());
+        articles.addAll(realm.where(Article.class).sort("date", Sort.DESCENDING).findAll());
 
         if (articles.size() == 0 || forceRefresh) {
             newsAPIClient.getNews(new Callback<NewsFeedResponse>() {

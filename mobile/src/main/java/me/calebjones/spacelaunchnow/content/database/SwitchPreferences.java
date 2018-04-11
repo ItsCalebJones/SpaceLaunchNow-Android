@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.onesignal.OneSignal;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -20,6 +20,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
     private static SwitchPreferences INSTANCE;
     private static SharedPreferences SETTINGS;
     private static ListPreferences listPreferences;
+    private FirebaseMessaging firebaseMessaging;
     private SharedPreferences sharedPrefs;
     private Context appContext;
     SharedPreferences.Editor prefsEditor;
@@ -124,6 +125,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor = null;
         this.appContext = context.getApplicationContext();
         appContext.getSharedPreferences(PREFS_NAME, 0).registerOnSharedPreferenceChangeListener(this);
+        firebaseMessaging = FirebaseMessaging.getInstance();
     }
 
     public static SwitchPreferences getInstance(Context context) {
@@ -486,13 +488,11 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_VAN, key);
         this.prefsEditor.apply();
-        JSONObject tags = new JSONObject();
-        try {
-            tags.put("Van", key);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (key) {
+            firebaseMessaging.subscribeToTopic("van");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("van");
         }
-        OneSignal.sendTags(tags);
     }
 
     //Nasa Switch
@@ -506,13 +506,11 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_KSC, key);
         this.prefsEditor.apply();
-        JSONObject tags = new JSONObject();
-        try {
-            tags.put("KSC", key);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (key) {
+            firebaseMessaging.subscribeToTopic("ksc");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("ksc");
         }
-        OneSignal.sendTags(tags);
     }
 
 
@@ -527,13 +525,11 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_PLES, key);
         this.prefsEditor.apply();
-        JSONObject tags = new JSONObject();
-        try {
-            tags.put("Ples", key);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (key) {
+            firebaseMessaging.subscribeToTopic("ples");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("ples");
         }
-        OneSignal.sendTags(tags);
     }
 
     //Nasa Switch
@@ -547,13 +543,11 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_CAPE, key);
         this.prefsEditor.apply();
-        JSONObject tags = new JSONObject();
-        try {
-            tags.put("Cape", key);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (key) {
+            firebaseMessaging.subscribeToTopic("cape");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("cape");
         }
-        OneSignal.sendTags(tags);
     }
 
     //Nasa Switch
@@ -567,14 +561,11 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_NASA, key);
         this.prefsEditor.apply();
-        JSONObject tags = new JSONObject();
-
-        try {
-            tags.put("Nasa", key);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (key) {
+            firebaseMessaging.subscribeToTopic("nasa");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("nasa");
         }
-        OneSignal.sendTags(tags);
     }
 
     //SpaceX Switch
@@ -588,13 +579,11 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_SPACEX, key);
         this.prefsEditor.apply();
-        JSONObject tags = new JSONObject();
-        try {
-            tags.put("SpaceX", key);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (key) {
+            firebaseMessaging.subscribeToTopic("spacex");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("spacex");
         }
-        OneSignal.sendTags(tags);
     }
 
     //Roscosmos Switch
@@ -608,13 +597,11 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_ROSCOSMOS, key);
         this.prefsEditor.apply();
-        JSONObject tags = new JSONObject();
-        try {
-            tags.put("Roscosmos", key);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (key) {
+            firebaseMessaging.subscribeToTopic("roscosmos");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("roscosmos");
         }
-        OneSignal.sendTags(tags);
     }
 
     //ULA Switch
@@ -628,14 +615,11 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_ULA, key);
         this.prefsEditor.apply();
-        JSONObject tags = new JSONObject();
-
-        try {
-            tags.put("ULA", key);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (key) {
+            firebaseMessaging.subscribeToTopic("ula");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("ula");
         }
-        OneSignal.sendTags(tags);
     }
 
     //Arianespace Switch
@@ -649,13 +633,11 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_ARIANE, key);
         this.prefsEditor.apply();
-        JSONObject tags = new JSONObject();
-        try {
-            tags.put("Arianespace", key);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (key) {
+            firebaseMessaging.subscribeToTopic("arianespace");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("arianespace");
         }
-        OneSignal.sendTags(tags);
     }
 
     //CASC Switch
@@ -669,14 +651,11 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_CASC, key);
         this.prefsEditor.apply();
-        JSONObject tags = new JSONObject();
-
-        try {
-            tags.put("CASC", key);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (key) {
+            firebaseMessaging.subscribeToTopic("casc");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("casc");
         }
-        OneSignal.sendTags(tags);
     }
 
     //ISRO Switch
@@ -690,15 +669,11 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_ISRO, key);
         this.prefsEditor.apply();
-        JSONObject tags = new JSONObject();
-
-        try {
-            tags.put("ISRO", key);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (key) {
+            firebaseMessaging.subscribeToTopic("isro");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("isro");
         }
-
-        OneSignal.sendTags(tags);
     }
 
     //All Switch
@@ -714,14 +689,9 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor.apply();
         if (key) {
             resetSwitches();
+            firebaseMessaging.subscribeToTopic("all");
         } else {
-            JSONObject tags = new JSONObject();
-            try {
-                tags.put("ALL-Filter", false);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            OneSignal.sendTags(tags);
+            firebaseMessaging.unsubscribeFromTopic("all");
         }
     }
 
@@ -737,24 +707,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         setSwitchKSC(true);
         setSwitchPles(true);
         setSwitchVan(true);
-        JSONObject tags = new JSONObject();
-        try {
-            tags.put("Nasa", true);
-            tags.put("ISRO", true);
-            tags.put("Roscosmos", true);
-            tags.put("ULA", true);
-            tags.put("Arianespace", true);
-            tags.put("KSC", true);
-            tags.put("Ples", true);
-            tags.put("Van", true);
-            tags.put("SpaceX", true);
-            tags.put("Cape", true);
-            tags.put("CASC", true);
-            tags.put("ALL-Filter", true);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        OneSignal.sendTags(tags);
+        setAllSwitch(true);
     }
 
     @Override
