@@ -273,10 +273,6 @@ public class MainActivity extends BaseActivity {
                                 .withIcon(FontAwesome.Icon.faw_rocket)
                                 .withIdentifier(R.id.menu_vehicle)
                                 .withSelectable(true),
-                        new PrimaryDrawerItem().withName(R.string.settings)
-                                .withIcon(GoogleMaterial.Icon.gmd_settings)
-                                .withIdentifier(R.id.menu_settings)
-                                .withSelectable(true),
                         new DividerDrawerItem(),
                         new ExpandableDrawerItem().withName(R.string.stay_connected).withIcon(CommunityMaterial.Icon.cmd_account).withDescription(R.string.connect_description).withIdentifier(19).withSelectable(false).withSubItems(
                                 new SecondaryDrawerItem()
@@ -328,7 +324,11 @@ public class MainActivity extends BaseActivity {
                                 .withIdentifier(R.id.menu_feedback)
                                 .withSelectable(false)
                         ),
-                        new DividerDrawerItem()
+                        new DividerDrawerItem(),
+                        new PrimaryDrawerItem().withName(R.string.settings)
+                                .withIcon(GoogleMaterial.Icon.gmd_settings)
+                                .withIdentifier(R.id.menu_settings)
+                                .withSelectable(true)
                 ).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
