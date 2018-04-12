@@ -494,7 +494,7 @@ public class MainActivity extends BaseActivity {
 
     private void showChangelogSnackbar() {
         snackbar = Snackbar
-                .make(coordinatorLayout, getString(R.string.updated_version) + Utils.getVersionName(context), Snackbar.LENGTH_LONG)
+                .make(coordinatorLayout, getString(R.string.updated_version) + " " + Utils.getVersionName(context), Snackbar.LENGTH_LONG)
                 .setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
                 .setAction("Changelog", new View.OnClickListener() {
                     @Override

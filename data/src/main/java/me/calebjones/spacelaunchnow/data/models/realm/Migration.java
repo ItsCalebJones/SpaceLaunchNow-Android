@@ -160,9 +160,12 @@ public class Migration implements RealmMigration {
 
         if (oldVersion < Constants.DB_SCHEMA_VERSION_2_3_1){
             RealmObjectSchema article = schema.get("Article");
-            article.addField("date", Date.class, FieldAttribute.INDEXED);
+            if (!article.getFieldNames().contains("date")) {
+                article.addField("date", Date.class, FieldAttribute.INDEXED);
+            }
             oldVersion = Constants.DB_SCHEMA_VERSION_2_3_1;
         }
+
 
         Timber.i("Final Schema - Version %s", newVersion);
         for (RealmObjectSchema objectSchema : schema.getAll()) {

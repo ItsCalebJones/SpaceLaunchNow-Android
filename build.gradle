@@ -44,13 +44,13 @@ ext {
     ]
     // Sdk and tools
     minSdkVersion = 15
-    targetSdkVersion = 24
-    compileSdkVersion = 24
+    targetSdkVersion = 27
+    compileSdkVersion = 27
     buildToolsVersion = '27.0.3'
 
     // App dependencies
-    supportLibraryVersion = '27.1.0'
-    playServicesVersion = '11.8.0'
+    supportLibraryVersion = '27.1.1'
+    playServicesVersion = '12.0.1'
 
     sdk = 25
     buildTools = "25.0.0" //keep 25.0.0 for Continuous Integration
