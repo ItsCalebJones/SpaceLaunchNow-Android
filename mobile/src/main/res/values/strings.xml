@@ -304,7 +304,7 @@
   <string name="wifi_only">WiFi Only</string>
   <string name="wifi_only_summary">Launch data will not be synced unless a WiFi connection is available. This will impact Launch notifications.</string>
   <string name="launch_tracking">Launch Tracking</string>
-  <string name="calendar_settings">Calender Settings</string>
+  <string name="calendar_settings">Calendar Settings</string>
   <string name="auto_calendar">Automatic Calendar Sync</string>
   <string name="auto_calendar_summary">Allow next Launch to sync with default Calendar.</string>
   <string name="event_count">Event Count</string>
@@ -327,7 +327,7 @@
   <string name="status_updates_off">Do not update when a launch successful changes.</string>
   <string name="webcast_only">Web-cast Only</string>
   <string name="webcast_only_summary">Only notify for launches with webcast\'s available.</string>
-  <string name="do_not_disturb">Enable Do Not Disturb</string>
+  <string name="do_not_disturb_enable">Enable Do Not Disturb</string>
   <string name="do_not_disturb_summary">Enable for silent notifications for pre-Marshmallow.</string>
   <string name="start_time">Start Time</string>
   <string name="end_time">End Time</string>
@@ -349,4 +349,49 @@
   <string name="blur_settings">Blur Settings</string>
   <string name="blur_settings_summary">Configure the strength and characteristics of the blur effect.</string>
   <string name="mission_agencies">Mission Agencies</string>
+  <string name="status_hold">Hold</string>
+  <string name="status_in_flight">In Flight</string>
+  <string name="status_partial_failure">Partial Failure</string>
+  <string name="do_not_disturb">Do Not Disturb</string>
+  <string name="notification_preferences">Notification Preferences</string>
+  <string name="ringtone_summary">Select a custom notification ringtone.</string>
+  <string name="ringtone">Ringtone</string>
+  <string name="priority_summary">Heads-up notification, sound and vibration by default.</string>
+  <string name="priority">Priority</string>
+  <string name="vibration_summary">Allow vibration for notifications.</string>
+  <string name="vibration">Vibration</string>
+  <string name="led_summary">Allow LED blink with notification. (Works on some devices)</string>
+  <string name="led">LED Blink</string>
+  <string name="test_notification_summary">Send a test notification.</string>
+  <string name="test_notification">Notification Test</string>
+  <string name="notification_interval">Notification Intervals</string>
+  <string name="notification_interval_summary">Select intervals to receive launch notifications</string>
+  <string name="twenty_four_hour_title">24 Hours</string>
+  <string name="twenty_four_hour_on">Receive notification when a Launch is within 24 hours.</string>
+  <string name="twenty_four_hour_off">Do not notify for launches within 24 hours.</string>
+  <string name="one_hour_title">One Hour</string>
+  <string name="one_hour_on">Receive notification when a Launch is within one hour.</string>
+  <string name="one_hour_off">Do not notify when a Launch is imminent.</string>
+  <string name="ten_minutes_title">Ten Minutes</string>
+  <string name="ten_minutes_on">Receive notification when a Launch is within ten minutes.</string>
+  <string name="ten_minutes_off">Do not notify when a Launch is within ten minutes.</string>
+  <string name="default_launch_count">Default Launch Count</string>
+  <string name="background_sync">Background Sync</string>
+  <string name="night_mode_title">NightMode</string>
+  <string name="widgets">Widgets</string>
+  <string name="weather">Weather</string>
+  <string name="watchface_image">Watchface Image</string>
+  <string name="wear_os">Wear OS</string>
+  <string name="misc">Miscellaneous</string>
+  <string name="launchers">Launchers</string>
+  <string name="orbiters">Orbiters</string>
+  <string name="translate_settings">Contribute to translating Space Launch Now!</string>
+  <string name="translate">Translate</string>
+  <string name="news">News</string>
+  <string name="get_help">Get Help</string>
+  <string name="help_description">Help and Support</string>
+
+  <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+  <string name="space_launch_news">Space Launch News</string>
 </resources>

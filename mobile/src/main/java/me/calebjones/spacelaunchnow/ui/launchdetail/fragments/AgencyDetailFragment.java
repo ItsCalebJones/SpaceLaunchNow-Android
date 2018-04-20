@@ -226,7 +226,7 @@ public class AgencyDetailFragment extends BaseFragment {
                 public void onClick(View v) {
                     Activity activity = (Activity) context;
                     Utils.openCustomTab(activity, context, detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL());
-                    Analytics.from(getActivity()).sendButtonClickedWithURL("Mission Wiki",
+                    Analytics.getInstance().sendButtonClickedWithURL("Mission Wiki",
                             detailLaunch.getName(),
                             detailLaunch.getLocation()
                                     .getPads()
@@ -253,7 +253,7 @@ public class AgencyDetailFragment extends BaseFragment {
                     Activity activity = (Activity) context;
                     Utils.openCustomTab(activity, context, detailLaunch.getLocation().getPads()
                             .get(0).getAgencies().get(0).getInfoURL());
-                    Analytics.from(getActivity()).sendButtonClickedWithURL(
+                    Analytics.getInstance().sendButtonClickedWithURL(
                             "Mission Info",
                             detailLaunch.getName(),
                             detailLaunch.getLocation().getPads()
@@ -313,7 +313,7 @@ public class AgencyDetailFragment extends BaseFragment {
                 public void onClick(View v) {
                     Activity activity = (Activity) context;
                     Utils.openCustomTab(activity, context, detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL());
-                    Analytics.from(getActivity()).sendButtonClickedWithURL(
+                    Analytics.getInstance().sendButtonClickedWithURL(
                             "Mission Wiki",
                             detailLaunch.getName(),
                             detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getWikiURL());
@@ -334,7 +334,7 @@ public class AgencyDetailFragment extends BaseFragment {
                 public void onClick(View v) {
                     Activity activity = (Activity) context;
                     Utils.openCustomTab(activity, context, detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL());
-                    Analytics.from(getActivity()).sendButtonClickedWithURL(
+                    Analytics.getInstance().sendButtonClickedWithURL(
                             "Mission Info",
                             detailLaunch.getName(),
                             detailLaunch.getLocation().getPads().get(0).getAgencies().get(0).getInfoURL());
@@ -355,7 +355,7 @@ public class AgencyDetailFragment extends BaseFragment {
                 public void onClick(View v) {
                     Activity activity = (Activity) context;
                     Utils.openCustomTab(activity, context, detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getWikiURL());
-                    Analytics.from(getActivity()).sendButtonClickedWithURL(
+                    Analytics.getInstance().sendButtonClickedWithURL(
                             "Mission Wiki",
                             detailLaunch.getName(),
                             detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getWikiURL());
@@ -376,7 +376,7 @@ public class AgencyDetailFragment extends BaseFragment {
                 public void onClick(View v) {
                     Activity activity = (Activity) context;
                     Utils.openCustomTab(activity, context, detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getInfoURL());
-                    Analytics.from(getActivity()).sendButtonClickedWithURL(
+                    Analytics.getInstance().sendButtonClickedWithURL(
                             "Mission Info",
                             detailLaunch.getName(),
                             detailLaunch.getLocation().getPads().get(0).getAgencies().get(1).getInfoURL());
@@ -438,7 +438,7 @@ public class AgencyDetailFragment extends BaseFragment {
                 public void onClick(View v) {
                     Activity activity = (Activity) context;
                     Utils.openCustomTab(activity, context, detailLaunch.getRocket().getAgencies().get(0).getWikiURL());
-                    Analytics.from(getActivity()).sendButtonClickedWithURL(
+                    Analytics.getInstance().sendButtonClickedWithURL(
                             "Mission Wiki",
                             detailLaunch.getName(),
                             detailLaunch.getRocket().getAgencies().get(0).getWikiURL()
@@ -460,7 +460,7 @@ public class AgencyDetailFragment extends BaseFragment {
                 public void onClick(View v) {
                     Activity activity = (Activity) context;
                     Utils.openCustomTab(activity, context, detailLaunch.getRocket().getAgencies().get(0).getInfoURL());
-                    Analytics.from(getActivity()).sendButtonClickedWithURL(
+                    Analytics.getInstance().sendButtonClickedWithURL(
                             "Mission Info",
                             detailLaunch.getName(),
                             detailLaunch.getRocket().getAgencies().get(0).getInfoURL()
@@ -536,7 +536,7 @@ public class AgencyDetailFragment extends BaseFragment {
                 public void onClick(View v) {
                     Activity activity = (Activity) context;
                     Utils.openCustomTab(activity, context, detailLaunch.getRocket().getAgencies().get(0).getWikiURL());
-                    Analytics.from(getActivity()).sendButtonClickedWithURL(
+                    Analytics.getInstance().sendButtonClickedWithURL(
                             "Mission Wiki",
                             detailLaunch.getName(),
                             detailLaunch.getRocket().getAgencies().get(0).getInfoURL()
@@ -558,7 +558,7 @@ public class AgencyDetailFragment extends BaseFragment {
                 public void onClick(View v) {
                     Activity activity = (Activity) context;
                     Utils.openCustomTab(activity, context, detailLaunch.getRocket().getAgencies().get(0).getInfoURL());
-                    Analytics.from(getActivity()).sendButtonClickedWithURL(
+                    Analytics.getInstance().sendButtonClickedWithURL(
                             "Mission Info",
                             detailLaunch.getName(),
                             detailLaunch.getRocket().getAgencies().get(0).getInfoURL()
@@ -579,7 +579,7 @@ public class AgencyDetailFragment extends BaseFragment {
                 public void onClick(View v) {
                     Activity activity = (Activity) context;
                     Utils.openCustomTab(activity, context, detailLaunch.getRocket().getAgencies().get(1).getWikiURL());
-                    Analytics.from(getActivity()).sendButtonClickedWithURL(
+                    Analytics.getInstance().sendButtonClickedWithURL(
                             "Mission Wiki",
                             detailLaunch.getName(),
                             detailLaunch.getRocket().getAgencies().get(1).getWikiURL()
@@ -600,7 +600,7 @@ public class AgencyDetailFragment extends BaseFragment {
                 public void onClick(View v) {
                     Activity activity = (Activity) context;
                     Utils.openCustomTab(activity, context, detailLaunch.getRocket().getAgencies().get(1).getInfoURL());
-                    Analytics.from(getActivity()).sendButtonClickedWithURL(
+                    Analytics.getInstance().sendButtonClickedWithURL(
                             "Mission Info",
                             detailLaunch.getName(),
                             detailLaunch.getRocket().getAgencies().get(1).getInfoURL()

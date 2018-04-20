@@ -19,7 +19,7 @@ public class BaseFragment extends Fragment {
     public void onStart() {
         super.onStart();
         realm = Realm.getDefaultInstance();
-        Analytics.from(this).sendScreenView(screenName, screenName + " started.");
+        Analytics.getInstance().sendScreenView(screenName, screenName + " started.");
     }
 
     @Override
@@ -32,13 +32,13 @@ public class BaseFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Analytics.from(this).sendScreenView(screenName, screenName + " resumed.");
+        Analytics.getInstance().sendScreenView(screenName, screenName + " resumed.");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Analytics.from(this).notifyGoneBackground();
+        Analytics.getInstance().notifyGoneBackground();
     }
 
     public Realm getRealm() {

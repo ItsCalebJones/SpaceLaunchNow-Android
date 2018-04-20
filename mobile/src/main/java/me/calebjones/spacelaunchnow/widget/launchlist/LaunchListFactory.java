@@ -66,7 +66,7 @@ public class LaunchListFactory implements RemoteViewsService.RemoteViewsFactory 
             if (switchPreferences.getNoGoSwitch()) {
                 query.equalTo("status", 1);
             }
-            launchRealms = query.findAllSorted("net", Sort.ASCENDING);
+            launchRealms = query.sort("net", Sort.ASCENDING).findAll();
             Timber.v("loadLaunches - Realm query created.");
         } else {
             launchRealms = QueryBuilder.buildSwitchQuery(context, mRealm);

@@ -6,8 +6,31 @@ A space launch tracker for Android using data from the Launch Library API.
 #### Updated 2-7-2017
 
 ---
+### Version 2.4.0 (Latest)
+#### Overview
+Improved News section, more reliable notifications.
 
-### Version 2.2.4 (Latest)
+#### Changelog
+* Move from Onesignal to Firebase for Notifications
+* Improve the News section, stil more work to do there.
+* Bug fixes.
+
+
+---
+### Version 2.3.0 (Latest)
+#### Overview
+Add French and German translations, support new launch statuses, and a news section!
+
+#### Changelog
+* Added French and German translations - join Discord to help add more!
+* Added new Launch Statuses - Hold, In Flight and Partial Failure.
+* Added a News section with a Space Launch News Twitter List and articles from top Spaceflight reporters.
+* Fixed a few crashes and bugs.
+
+
+---
+
+### Version 2.2.4
 #### Overview
 Bug fixes, work to support translations.
 

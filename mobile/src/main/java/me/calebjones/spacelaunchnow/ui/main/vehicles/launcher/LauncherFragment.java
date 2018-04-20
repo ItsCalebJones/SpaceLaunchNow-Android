@@ -132,7 +132,7 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
                     Timber.v("Success %s", response.message());
                     items = new ArrayList<>(Arrays.asList(jsonResponse.getLaunchers()));
                     adapter.addItems(items);
-                    Analytics.from(context).sendNetworkEvent("LAUNCHER_INFORMATION", call.request().url().toString(), true);
+                    Analytics.getInstance().sendNetworkEvent("LAUNCHER_INFORMATION", call.request().url().toString(), true);
 
                 } else {
                     Timber.e(ErrorUtil.parseSpaceLaunchNowError(response).message());
@@ -146,7 +146,7 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
                 Timber.e(t.getMessage());
                 hideLoading();
                 SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, t.getLocalizedMessage());
-                Analytics.from(context).sendNetworkEvent("VEHICLE_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());
+                Analytics.getInstance().sendNetworkEvent("VEHICLE_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());
             }
         });
     }
@@ -167,7 +167,7 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
 
         @Override
         public void onClick(View v, int position) {
-            Analytics.from(context).sendButtonClicked("Launcher clicked", items.get(position).getAgency());
+            Analytics.getInstance().sendButtonClicked("Launcher clicked", items.get(position).getAgency());
             Gson gson = new Gson();
             String jsonItem = gson.toJson(items.get(position));
 
@@ -181,7 +181,7 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
 
     @Override
     public void onRefresh() {
-        Analytics.from(this).sendButtonClicked("Launcher Refresh");
+        Analytics.getInstance().sendButtonClicked("Launcher Refresh");
         loadJSON();
     }
 }

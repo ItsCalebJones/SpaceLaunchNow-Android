@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:title="Wear">
+    android:title="@string/wear_os">
 
-    <PreferenceCategory android:title="Settings">
+    <PreferenceCategory android:title="@string/settings">
 
         <SwitchPreference
             android:defaultValue="false"
@@ -21,7 +21,7 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Background">
+    <PreferenceCategory android:title="@string/watchface_image">
 
         <SwitchPreference
             android:key="supporter_dynamic_background"

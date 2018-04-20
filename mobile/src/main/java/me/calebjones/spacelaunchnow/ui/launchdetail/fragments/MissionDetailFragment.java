@@ -146,7 +146,7 @@ public class MissionDetailFragment extends RetroFitFragment {
                         public void onClick(View v) {
                             Activity activity = (Activity) context;
                             Utils.openCustomTab(activity, context, mission.getInfoURL());
-                            Analytics.from(getActivity()).sendButtonClickedWithURL(
+                            Analytics.getInstance().sendButtonClickedWithURL(
                                     "Mission Info",
                                     detailLaunch.getName(),
                                     mission.getInfoURL()
@@ -165,7 +165,7 @@ public class MissionDetailFragment extends RetroFitFragment {
                         public void onClick(View v) {
                             Activity activity = (Activity) context;
                             Utils.openCustomTab(activity, context, mission.getWikiURL());
-                            Analytics.from(getActivity()).sendButtonClickedWithURL(
+                            Analytics.getInstance().sendButtonClickedWithURL(
                                     "Mission Wiki",
                                     detailLaunch.getName(),
                                     mission.getWikiURL()
@@ -191,7 +191,7 @@ public class MissionDetailFragment extends RetroFitFragment {
                     public void onClick(View view) {
                         Activity activity = (Activity) context;
                         Utils.openCustomTab(activity, context, detailLaunch.getRocket().getInfoURL());
-                        Analytics.from(getActivity()).sendButtonClickedWithURL("Vehicle Info",
+                        Analytics.getInstance().sendButtonClickedWithURL("Vehicle Info",
                                 detailLaunch.getRocket().getInfoURL());
                     }
                 });
@@ -205,7 +205,7 @@ public class MissionDetailFragment extends RetroFitFragment {
                     public void onClick(View view) {
                         Activity activity = (Activity) context;
                         Utils.openCustomTab(activity, context, detailLaunch.getRocket().getWikiURL());
-                        Analytics.from(getActivity()).sendButtonClickedWithURL("Vehicle Wiki",
+                        Analytics.getInstance().sendButtonClickedWithURL("Vehicle Wiki",
                                 detailLaunch.getRocket().getWikiURL());
                     }
                 });

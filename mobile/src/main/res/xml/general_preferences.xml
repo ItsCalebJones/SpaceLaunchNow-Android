@@ -2,7 +2,7 @@
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/launch_tracking">
-    <PreferenceCategory android:title="Default Launch Count">
+    <PreferenceCategory android:title="@string/default_launch_count">
         <com.afollestad.materialdialogs.prefs.MaterialListPreference
             android:defaultValue="5"
             android:entries="@array/upcoming_array"
@@ -12,7 +12,7 @@
             android:title="@string/upcoming_launches" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Background Sync">
+    <PreferenceCategory android:title="@string/background_sync">
         <SwitchPreference
             android:defaultValue="true"
             android:key="background_sync"
@@ -73,7 +73,7 @@
             android:summary="@string/event_reminder_summary"
             android:title="@string/event_reminder" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Other Settings">
+    <PreferenceCategory android:title="@string/misc">
         <SwitchPreference
             android:defaultValue="false"
             android:key="confirm_exit"

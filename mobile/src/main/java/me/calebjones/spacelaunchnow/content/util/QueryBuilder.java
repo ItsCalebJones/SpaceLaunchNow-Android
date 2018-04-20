@@ -62,7 +62,8 @@ public class QueryBuilder {
         }
 
         Timber.v("Returning Query");
-        return query.findAllSortedAsync("net", Sort.DESCENDING);
+        query.sort("net", Sort.DESCENDING);
+        return query.findAllAsync();
     }
 
     public static RealmResults<Launch> buildPrevQuery(Context context, Realm realm) throws ParseException {
@@ -104,7 +105,8 @@ public class QueryBuilder {
         }
 
         Timber.v("Returning Query");
-        return query.findAllSorted("net", Sort.DESCENDING);
+        query.sort("net", Sort.DESCENDING);
+        return query.findAll();
     }
 
     public static RealmResults<Launch> buildUpQueryAsync(Context context, Realm realm) {
@@ -144,7 +146,8 @@ public class QueryBuilder {
         }
 
         Timber.v("Returning Query");
-        return query.findAllSortedAsync("net", Sort.ASCENDING);
+        query.sort("net", Sort.ASCENDING);
+        return query.findAllAsync();
     }
 
     private static void verifyUpSwitches(Context context, SwitchPreferences switchPreferences) {
@@ -229,7 +232,9 @@ public class QueryBuilder {
         }
 
         Timber.v("Returning Query");
-        return query.findAllSorted("net", Sort.ASCENDING);
+        query.sort("net", Sort.ASCENDING);
+        return query.findAllAsync();
+
     }
 
     private static RealmQuery<Launch> filterVehicle(RealmQuery<Launch> query, ArrayList<String> vehicleFilter) {
@@ -387,9 +392,10 @@ public class QueryBuilder {
         Date date = calendar.getTime();
         RealmQuery<Launch> query = realm.where(Launch.class)
                 .greaterThanOrEqualTo("net", date);
+        query.findAll();
 
         if (switchPreferences.getNoGoSwitch()) {
-            query.equalTo("status", 1).findAll();
+            query.notEqualTo("status", 2).findAll();
         }
 
         if (switchPreferences.getTBDLaunchSwitch()) {
@@ -513,7 +519,8 @@ public class QueryBuilder {
 
         query.endGroup();
 
-        return query.findAllSortedAsync("net", Sort.ASCENDING);
+        query.sort("net", Sort.ASCENDING);
+        return query.findAllAsync();
     }
 
     public static RealmResults<Launch> buildSwitchQuery(Context context, Realm realm) {
@@ -523,8 +530,10 @@ public class QueryBuilder {
         RealmQuery<Launch> query = realm.where(Launch.class)
                 .greaterThanOrEqualTo("net", date);
 
+        query.findAll();
+
         if (switchPreferences.getNoGoSwitch()) {
-            query.equalTo("status", 1).findAll();
+            query.notEqualTo("status", 2).findAll();
         }
 
         query.beginGroup();
@@ -655,8 +664,10 @@ public class QueryBuilder {
         RealmQuery<Launch> query = realm.where(Launch.class)
                 .greaterThanOrEqualTo("net", date).equalTo("syncCalendar", calendarState);
 
+        query.findAll();
+
         if (switchPreferences.getNoGoSwitch()) {
-            query.equalTo("status", 1).findAll();
+            query.notEqualTo("status", 2).findAll();
         }
 
         query.beginGroup();
@@ -775,6 +786,8 @@ public class QueryBuilder {
             query.equalTo("location.id", 18);
         }
 
-        return query.endGroup().findAllSorted("net", Sort.ASCENDING);
+        query.endGroup();
+        query.sort("net", Sort.ASCENDING);
+        return query.findAll();
     }
 }

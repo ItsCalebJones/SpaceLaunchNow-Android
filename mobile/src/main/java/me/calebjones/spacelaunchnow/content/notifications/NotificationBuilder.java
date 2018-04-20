@@ -221,7 +221,7 @@ public class NotificationBuilder {
             mBuilder.setLights(Color.GREEN, 3000, 3000);
         }
 
-        Analytics.from(context).sendNotificationEvent(launch.getName(), expandedText);
+        Analytics.getInstance().sendNotificationEvent(launch.getName(), expandedText);
         mNotifyManager.notify(notificationId, mBuilder.build());
     }
 

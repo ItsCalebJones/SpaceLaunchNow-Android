@@ -179,7 +179,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Analytics.from(getActivity()).sendButtonClicked("Previous Filter - Reset");
+                Analytics.getInstance().sendButtonClicked("Previous Filter - Reset");
                 switchPreferences.resetAllPrevFilters(context);
                 switchPreferences.setPrevFiltered(false);
                 getDefaultDateRange();
@@ -215,7 +215,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     }
 
     private void showCountryDialog() {
-        Analytics.from(getActivity()).sendButtonClicked("Previous Filter - Country");
+        Analytics.getInstance().sendButtonClicked("Previous Filter - Country");
         new MaterialDialog.Builder(getContext())
                 .title(R.string.select_country)
                 .content(R.string.select_country_description)
@@ -231,7 +231,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
                                 for (int i = 0; i < which.length; i++) {
                                     keyArray.add(text[i].toString());
                                 }
-                                Analytics.from(getActivity()).sendButtonClicked("Previous Filter - Country Selection", keyArray.toString());
+                                Analytics.getInstance().sendButtonClicked("Previous Filter - Country Selection", keyArray.toString());
                                 if (keyArray.size() > 0) {
                                     switchPreferences.setPrevCountryFilteredArray(keyArray);
                                     switchPreferences.setPrevFiltered(true);
@@ -250,7 +250,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     }
 
     private void showLocationDialog() {
-        Analytics.from(getActivity()).sendButtonClicked("Previous Filter - Location");
+        Analytics.getInstance().sendButtonClicked("Previous Filter - Location");
         new MaterialDialog.Builder(getContext())
                 .title(R.string.select_location)
                 .content(R.string.select_location_description)
@@ -264,7 +264,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
                         for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
-                        Analytics.from(getActivity()).sendButtonClicked("Previous Filter - Location Selection", keyArray.toString());
+                        Analytics.getInstance().sendButtonClicked("Previous Filter - Location Selection", keyArray.toString());
                         if (keyArray.size() > 0) {
                             switchPreferences.setPrevLocationFilteredArray(keyArray);
                             switchPreferences.setPrevFiltered(true);
@@ -283,7 +283,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     }
 
     private void showAgencyDialog() {
-        Analytics.from(getActivity()).sendButtonClicked("Previous Filter - LauncherAgency");
+        Analytics.getInstance().sendButtonClicked("Previous Filter - LauncherAgency");
         new MaterialDialog.Builder(getContext())
                 .title(R.string.select_launch_agency)
                 .content(R.string.select_launch_agency_description)
@@ -297,7 +297,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
                         for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
-                        Analytics.from(getActivity()).sendButtonClicked("Previous Filter - LauncherAgency Selection", keyArray.toString());
+                        Analytics.getInstance().sendButtonClicked("Previous Filter - LauncherAgency Selection", keyArray.toString());
                         if (keyArray.size() > 0) {
                             switchPreferences.setPrevAgencyFilterArray(keyArray);
                             switchPreferences.setPrevFiltered(true);
@@ -316,7 +316,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     }
 
     private void showVehicleDialog() {
-        Analytics.from(getActivity()).sendButtonClicked("Previous Filter - Vehicle");
+        Analytics.getInstance().sendButtonClicked("Previous Filter - Vehicle");
         new MaterialDialog.Builder(getContext())
                 .title(R.string.select_launch_vehicle)
                 .content(R.string.select_launch_vehicle_description)
@@ -330,7 +330,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
                         for (int i = 0; i < which.length; i++) {
                             keyArray.add(text[i].toString());
                         }
-                        Analytics.from(getActivity()).sendButtonClicked("Previous Filter - Vehicle Selection", keyArray.toString());
+                        Analytics.getInstance().sendButtonClicked("Previous Filter - Vehicle Selection", keyArray.toString());
                         if (keyArray.size() > 0) {
                             switchPreferences.setPrevVehicleFilteredArray(keyArray);
                             switchPreferences.setPrevFiltered(true);
@@ -406,7 +406,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        Analytics.from(getActivity()).sendButtonClicked("Previous Refresh");
+                        Analytics.getInstance().sendButtonClicked("Previous Refresh");
                         showLoading();
                         getRealm().removeAllChangeListeners();
                         LibraryDataManager libraryDataManager = new LibraryDataManager(context);
@@ -651,7 +651,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
         switchPreferences.setPrevFiltered(true);
         // Here is where we are going to implement our filter logic
         final List<Launch> filteredModelList = filter(launchRealms, query);
-        Analytics.from(this).sendSearchEvent(query, Analytics.TYPE_PREVIOUS_LAUNCH,filteredModelList.size());
+        Analytics.getInstance().sendSearchEvent(query, Analytics.TYPE_PREVIOUS_LAUNCH,filteredModelList.size());
 
         if (filteredModelList.size() > 50) {
             adapter.clear();

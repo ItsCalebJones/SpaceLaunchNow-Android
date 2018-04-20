@@ -454,5 +454,10 @@ public class Utils {
         String format = DateFormat.getBestDateTimePattern(Locale.getDefault(), pattern);
         return new SimpleDateFormat(format, Locale.getDefault());
     }
+
+    public static int sp2px(Context context, float spValue) {
+        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (spValue * fontScale + 0.5f);
+    }
 }
 

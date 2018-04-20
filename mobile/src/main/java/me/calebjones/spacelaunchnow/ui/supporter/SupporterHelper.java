@@ -3,6 +3,8 @@ package me.calebjones.spacelaunchnow.ui.supporter;
 
 import android.widget.RemoteViews;
 
+import java.util.Map;
+
 import io.realm.Realm;
 import me.calebjones.spacelaunchnow.data.models.Products;
 
@@ -79,4 +81,6 @@ public class SupporterHelper {
             return false;
         }
     }
+
+
 }

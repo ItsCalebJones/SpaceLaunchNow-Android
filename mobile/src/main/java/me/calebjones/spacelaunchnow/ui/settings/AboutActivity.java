@@ -26,6 +26,11 @@ import com.mikepenz.iconics.IconicsDrawable;
 import com.vansuita.materialabout.builder.AboutBuilder;
 import com.vansuita.materialabout.views.AboutView;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 public class AboutActivity extends AppCompatActivity {
     
     private Context context;
@@ -42,6 +47,8 @@ public class AboutActivity extends AppCompatActivity {
         final FrameLayout flHolder = (FrameLayout) this.findViewById(R.id.about);
 
         AboutBuilder builder = AboutBuilder.with(this)
+                .setAppName("Space Launch Now")
+                .setAppTitle(Utils.getVersionName(this))
                 .setAppIcon(R.drawable.launcher)
                 .setAppName(R.string.app_name)
                 .setPhoto(R.drawable.ic_jones_logo)
@@ -56,21 +63,16 @@ public class AboutActivity extends AppCompatActivity {
                 .addTwitterLink("spacelaunchnow")
                 .addFacebookLink("spacelaunchnow")
                 .addWebsiteLink("https://spacelaunchnow.me")
-                .addAction(new IconicsDrawable(this)
-                        .icon(CommunityMaterial.Icon.cmd_rocket)
-                        .sizeDp(24).toBitmap(),
-                        "Launch Library",
-                        "https://launchlibrary.net")
                 .addLink(new IconicsDrawable(this)
                                 .icon(CommunityMaterial.Icon.cmd_discord)
                                 .sizeDp(24).toBitmap(),
                         "Discord",
                         "https://discord.gg/WVfzEDW")
-                .setAppName("Space Launch Now")
-                .setAppTitle(Utils.getVersionName(this))
-                .addShareAction("Checkout " + R.string.app_name)
-                .addUpdateAction()
-                .setActionsColumnsCount(2)
+                .addAction(new IconicsDrawable(this)
+                                .icon(CommunityMaterial.Icon.cmd_rocket)
+                                .sizeDp(24).toBitmap(),
+                        "Launch Library",
+                        "https://launchlibrary.net")
                 .addAction(new IconicsDrawable(this)
                                 .icon(CommunityMaterial.Icon.cmd_android_debug_bridge)
                                 .sizeDp(24).toBitmap(),
@@ -96,9 +98,74 @@ public class AboutActivity extends AppCompatActivity {
                             }
                         }
                 )
+                .addShareAction("Checkout " + R.string.app_name)
+                .addUpdateAction()
+                .setActionsColumnsCount(2)
+
+                .addAction(new IconicsDrawable(this).icon(CommunityMaterial.Icon.cmd_google_translate).sizeDp(24).toBitmap(),
+                        "Translate", "https://spacelaunchnow.oneskyapp.com/")
                 .addChangeLogAction(new Intent(this, ChangelogActivity.class))
                 .addIntroduceAction(new Intent(this, OnboardingActivity.class))
                 .addRemoveAdsAction(new Intent(this, SupporterActivity.class))
+                .addAction(new IconicsDrawable(this)
+                                .icon(CommunityMaterial.Icon.cmd_file_document)
+                                .sizeDp(24)
+                                .toBitmap(),
+                        "Privacy Policy",
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                try {
+                                    StringBuilder buf = new StringBuilder();
+                                    InputStream json = context.getAssets().open("PRIVACY.md");
+                                    BufferedReader in = new BufferedReader(new InputStreamReader(json, "UTF-8"));
+
+                                    String str;
+                                    while((str = in.readLine()) != null) {
+                                        buf.append(str).append("\n");
+                                    }
+
+                                    in.close();
+                                    new MaterialDialog.Builder(context)
+                                            .title("Privacy Policy")
+                                            .content(buf.toString())
+                                            .positiveText("Got it.")
+                                            .show();
+                                } catch (IOException var6) {
+                                    var6.printStackTrace();
+                                }
+
+                            }
+                        })
+                .addAction(new IconicsDrawable(this)
+                                .icon(CommunityMaterial.Icon.cmd_file_check)
+                                .sizeDp(24)
+                                .toBitmap(),
+                        "Terms of Use",
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                try {
+                                    StringBuilder buf = new StringBuilder();
+                                    InputStream json = context.getAssets().open("TERMS.md");
+                                    BufferedReader in = new BufferedReader(new InputStreamReader(json, "UTF-8"));
+
+                                    String str;
+                                    while((str = in.readLine()) != null) {
+                                        buf.append(str).append("\n");
+                                    }
+
+                                    in.close();
+                                    new MaterialDialog.Builder(context)
+                                            .title("Terms of Use")
+                                            .content(buf.toString())
+                                            .positiveText("Got it.")
+                                            .show();
+                                } catch (IOException var6) {
+                                    var6.printStackTrace();
+                                }
+                            }
+                        })
                 .setWrapScrollView(true)
                 .setShowAsCard(true);
 

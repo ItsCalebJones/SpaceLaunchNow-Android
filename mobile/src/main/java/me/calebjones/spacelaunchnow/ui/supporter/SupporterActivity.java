@@ -44,6 +44,9 @@ import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import timber.log.Timber;
 
+import static com.anjlab.android.iab.v3.Constants.BILLING_RESPONSE_RESULT_OK;
+import static com.anjlab.android.iab.v3.Constants.BILLING_RESPONSE_RESULT_USER_CANCELED;
+
 public class SupporterActivity extends BaseActivity implements BillingProcessor.IBillingHandler {
 
     @BindView(R.id.purchase)
@@ -129,7 +132,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
-            Analytics.from(this).sendButtonClicked("Back - From Supporter Page");
+            Analytics.getInstance().sendButtonClicked("Back - From Supporter Page");
             onBackPressed();
         }
 
@@ -197,7 +200,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
 
     @OnClick({R.id.purchase, R.id.fab_supporter})
     public void checkClick() {
-        Analytics.from(this).sendButtonClicked("Supporter Button clicked.");
+        Analytics.getInstance().sendButtonClicked("Supporter Button clicked.");
         MaterialDialog dialog = new MaterialDialog.Builder(this)
                 .title(R.string.thank_you_support)
                 .customView(R.layout.seekbar_dialog_supporter, true)
@@ -254,11 +257,11 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
 
         //Get Product from SKU
         Products products = SupporterHelper.getProduct(sku);
-        Analytics.from(this).sendAddToCartEvent(products, sku);
+        Analytics.getInstance().sendAddToCartEvent(products, sku);
 
         //Initiate purchase
         if (BillingProcessor.isIabServiceAvailable(this)) {
-            Analytics.from(this).sendStartCheckout(products);
+            Analytics.getInstance().sendStartCheckout(products);
             bp.purchase(this, sku);
         } else {
             SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, getString(R.string.issues_connecting_billing));
@@ -285,7 +288,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         Timber.i("Purchase Data: %s", details.purchaseInfo.purchaseData.purchaseTime);
         Timber.i("Purchase Data: %s", details.purchaseInfo.purchaseData.purchaseToken);
         Timber.i("Purchase Data: %s", details.purchaseInfo.purchaseData.purchaseState.name());
-        Analytics.from(this).sendPurchaseEvent(product, productId);
+        Analytics.getInstance().sendPurchaseEvent(product, productId);
     }
 
     @Override
@@ -298,8 +301,8 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     public void onBillingError(int errorCode, Throwable error) {
         if (error != null) {
             SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, error.getLocalizedMessage());
-        } else if (errorCode != 0) {
-            SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, getString(R.string.billing_error_code) + errorCode);
+        } else if (errorCode != BILLING_RESPONSE_RESULT_USER_CANCELED && errorCode != BILLING_RESPONSE_RESULT_OK) {
+            SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, BillingErrorProcessor.getResponseCodeDescription(errorCode));
         }
     }
 

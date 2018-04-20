@@ -1,5 +1,7 @@
 package me.calebjones.spacelaunchnow.data.models.realm;
 
+import java.util.Date;
+
 import io.realm.DynamicRealm;
 import io.realm.DynamicRealmObject;
 import io.realm.FieldAttribute;
@@ -7,6 +9,7 @@ import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
 import io.realm.RealmSchema;
 import me.calebjones.spacelaunchnow.data.models.Constants;
+import me.calebjones.spacelaunchnow.data.models.news.Article;
 import timber.log.Timber;
 
 public class Migration implements RealmMigration {
@@ -122,7 +125,7 @@ public class Migration implements RealmMigration {
             oldVersion++;
         }
 
-        if (oldVersion <= Constants.DB_SCHEMA_VERSION_2_0_0) {
+        if (oldVersion < Constants.DB_SCHEMA_VERSION_2_0_0) {
             RealmObjectSchema details = schema.get("RocketDetail");
             if (details != null){
                 details.addField("fullName", String.class);
@@ -133,6 +136,36 @@ public class Migration implements RealmMigration {
             }
             oldVersion++;
         }
+
+        if (oldVersion < Constants.DB_SCHEMA_VERSION_2_3_0) {
+            RealmObjectSchema article = schema.create("Article");
+            article.addField("title", String.class, FieldAttribute.PRIMARY_KEY);
+            article.addField("link", String.class);
+            article.addField("description", String.class);
+            article.addField("guid", String.class);
+            article.addField("pubDate", String.class);
+            article.addField("content", String.class);
+            article.addField("mediaUrl", String.class);
+
+            RealmObjectSchema channel = schema.create("Channel");
+            channel.addField("title", String.class);
+            channel.addRealmListField("articles", article);
+
+            RealmObjectSchema newsFeed = schema.create("NewsFeedResponse");
+            newsFeed.addField("version", String.class);
+            newsFeed.addField("lastUpdate", long.class, FieldAttribute.PRIMARY_KEY);
+            newsFeed.addRealmObjectField("channel", channel);
+            oldVersion++;
+        }
+
+        if (oldVersion < Constants.DB_SCHEMA_VERSION_2_3_1){
+            RealmObjectSchema article = schema.get("Article");
+            if (!article.getFieldNames().contains("date")) {
+                article.addField("date", Date.class, FieldAttribute.INDEXED);
+            }
+            oldVersion = Constants.DB_SCHEMA_VERSION_2_3_1;
+        }
+
 
         Timber.i("Final Schema - Version %s", newVersion);
         for (RealmObjectSchema objectSchema : schema.getAll()) {

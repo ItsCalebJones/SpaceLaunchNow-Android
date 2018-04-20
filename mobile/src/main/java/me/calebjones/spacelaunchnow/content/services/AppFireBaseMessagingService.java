@@ -1,11 +1,10 @@
-package me.calebjones.spacelaunchnow.content.notifications;
+package me.calebjones.spacelaunchnow.content.services;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.onesignal.NotificationExtenderService;
-import com.onesignal.OSNotificationPayload;
-import com.onesignal.OSNotificationReceivedResult;
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,24 +13,31 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Map;
 
 import me.calebjones.spacelaunchnow.BuildConfig;
+import me.calebjones.spacelaunchnow.content.notifications.NotificationBuilder;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Location;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Rocket;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
-public class NotificationReceiver extends NotificationExtenderService {
-
+public class AppFireBaseMessagingService extends FirebaseMessagingService {
     @Override
-    protected boolean onNotificationProcessing(OSNotificationReceivedResult receivedResult) {
-        // Read properties from result.
-        Timber.i("Received Result - App in Focus: %s Payload: %s", receivedResult.isAppInFocus, receivedResult.payload);
+    public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        if (receivedResult.payload != null) {
-            OSNotificationPayload payload = receivedResult.payload;
-            JSONObject data = payload.additionalData;
+        // TODO(developer): Handle FCM messages here.
+        // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
+        Timber.d("From: %s", remoteMessage.getFrom());
+
+
+
+        // Check if message contains a data payload.
+        if (remoteMessage.getData().size() > 0) {
+            Timber.d("Message data payload: %s",remoteMessage.getData());
+            Map<String, String> params = remoteMessage.getData();
+            JSONObject data = new JSONObject(params);
             SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy HH:mm:ss zzz", Locale.ENGLISH);
             try {
                 String background = data.getString("background");
@@ -58,21 +64,20 @@ public class NotificationReceiver extends NotificationExtenderService {
                             NotificationBuilder.notifyUser(getApplicationContext(), launch, timeToFinish, data.getString("notification_type"));
                         }
                     }
-                    return true;
-                } else {
-                    // Not a background payload, likely no additional data, show the notification
-                    return false;
                 }
             } catch (JSONException | ParseException e) {
                 // Error parsing additional data
                 Timber.e(e);
-                return true;
             }
-
-            // Payload is null, likely no additional data, show the notification
-        } else {
-            return false;
         }
+
+        // Check if message contains a notification payload.
+        if (remoteMessage.getNotification() != null) {
+            Timber.d("Message Notification Body: %s", remoteMessage.getNotification().getBody());
+        }
+
+        // Also if you intend on generating your own notifications as a result of a received FCM
+        // message, here is where that should be initiated. See sendNotification method below.
     }
 
     private boolean isNotificationEnabled(String notificationType, boolean webcastAvailable) {

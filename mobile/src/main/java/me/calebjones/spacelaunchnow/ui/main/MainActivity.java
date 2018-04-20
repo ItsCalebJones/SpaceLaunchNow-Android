@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.SupportActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -50,7 +48,6 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.greenrobot.eventbus.util.ErrorDialogFragments;
 
 import java.util.concurrent.TimeUnit;
 
@@ -72,6 +69,7 @@ import me.calebjones.spacelaunchnow.ui.changelog.ChangelogActivity;
 import me.calebjones.spacelaunchnow.ui.intro.OnboardingActivity;
 import me.calebjones.spacelaunchnow.ui.main.launches.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.main.missions.MissionFragment;
+import me.calebjones.spacelaunchnow.ui.main.news.NewsViewPager;
 import me.calebjones.spacelaunchnow.ui.main.next.NextLaunchFragment;
 import me.calebjones.spacelaunchnow.ui.main.vehicles.VehiclesViewPager;
 import me.calebjones.spacelaunchnow.ui.settings.AboutActivity;
@@ -96,6 +94,7 @@ public class MainActivity extends BaseActivity {
     private LaunchesViewPager mlaunchesViewPager;
     private MissionFragment mMissionFragment;
     private NextLaunchFragment mUpcomingFragment;
+    private NewsViewPager mNewsViewpagerFragment;
     private VehiclesViewPager mVehicleViewPager;
     private Toolbar toolbar;
     private Drawer result = null;
@@ -266,13 +265,13 @@ public class MainActivity extends BaseActivity {
                                 .withIcon(GoogleMaterial.Icon.gmd_satellite)
                                 .withIdentifier(R.id.menu_missions)
                                 .withSelectable(true),
+                        new PrimaryDrawerItem().withName(R.string.news)
+                                .withIcon(CommunityMaterial.Icon.cmd_newspaper)
+                                .withIdentifier(R.id.menu_news)
+                                .withSelectable(true),
                         new PrimaryDrawerItem().withName(R.string.vehicles)
                                 .withIcon(FontAwesome.Icon.faw_rocket)
                                 .withIdentifier(R.id.menu_vehicle)
-                                .withSelectable(true),
-                        new PrimaryDrawerItem().withName(R.string.settings)
-                                .withIcon(GoogleMaterial.Icon.gmd_settings)
-                                .withIdentifier(R.id.menu_settings)
                                 .withSelectable(true),
                         new DividerDrawerItem(),
                         new ExpandableDrawerItem().withName(R.string.stay_connected).withIcon(CommunityMaterial.Icon.cmd_account).withDescription(R.string.connect_description).withIdentifier(19).withSelectable(false).withSubItems(
@@ -306,6 +305,7 @@ public class MainActivity extends BaseActivity {
                                         .withSelectable(false)
                         ),
                         new DividerDrawerItem(),
+                        new ExpandableDrawerItem().withName(R.string.get_help).withIcon(GoogleMaterial.Icon.gmd_account_box).withDescription(R.string.help_description).withIdentifier(20).withSelectable(false).withSubItems(
                         new SecondaryDrawerItem()
                                 .withIcon(GoogleMaterial.Icon.gmd_info_outline)
                                 .withName(R.string.whats_new)
@@ -323,6 +323,12 @@ public class MainActivity extends BaseActivity {
                                 .withDescription(R.string.feedback_subtitle)
                                 .withIdentifier(R.id.menu_feedback)
                                 .withSelectable(false)
+                        ),
+                        new DividerDrawerItem(),
+                        new PrimaryDrawerItem().withName(R.string.settings)
+                                .withIcon(GoogleMaterial.Icon.gmd_settings)
+                                .withIdentifier(R.id.menu_settings)
+                                .withSelectable(true)
                 ).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
@@ -488,7 +494,7 @@ public class MainActivity extends BaseActivity {
 
     private void showChangelogSnackbar() {
         snackbar = Snackbar
-                .make(coordinatorLayout, getString(R.string.updated_version) + Utils.getVersionName(context), Snackbar.LENGTH_LONG)
+                .make(coordinatorLayout, getString(R.string.updated_version) + " " + Utils.getVersionName(context), Snackbar.LENGTH_LONG)
                 .setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
                 .setAction("Changelog", new View.OnClickListener() {
                     @Override
@@ -623,7 +629,7 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.menu_missions:
                 mNavItemId = R.id.menu_missions;
-                setActionBarTitle("Missions");
+                setActionBarTitle(getString(R.string.missions));
                 // Check to see if we have retained the worker fragment.
                 mMissionFragment = (MissionFragment) fm.findFragmentByTag("MISSION_FRAGMENT");
 
@@ -638,9 +644,26 @@ public class MainActivity extends BaseActivity {
                 }
 
                 break;
+            case R.id.menu_news:
+                mNavItemId = R.id.menu_news;
+                setActionBarTitle(getString(R.string.space_launch_news));
+                // Check to see if we have retained the worker fragment.
+                mNewsViewpagerFragment = (NewsViewPager) fm.findFragmentByTag("NEWS_FRAGMENT_VIEWPAGER");
+
+                // If not retained (or first time running), we need to create it.
+                if (mNewsViewpagerFragment == null) {
+                    mNewsViewpagerFragment = new NewsViewPager();
+                    // Tell it who it is working with.
+                    fm.beginTransaction().replace(R.id.flContent, mNewsViewpagerFragment, "NEWS_FRAGMENT").commit();
+                }
+                if (rate != null) {
+                    rate.showRequest();
+                }
+
+                break;
             case R.id.menu_vehicle:
                 mNavItemId = R.id.menu_vehicle;
-                setActionBarTitle("Vehicles");
+                setActionBarTitle(getString(R.string.vehicles));
                 // Check to see if we have retained the worker fragment.
                 mVehicleViewPager = (VehiclesViewPager) fm.findFragmentByTag("VEHICLE_VIEWPAGER");
 

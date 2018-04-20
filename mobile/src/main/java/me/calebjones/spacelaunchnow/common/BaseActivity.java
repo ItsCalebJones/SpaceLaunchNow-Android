@@ -38,7 +38,7 @@ public class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Timber.d("onDestroy");
-        Analytics.from(this).sendScreenView(name, "Activity destroyed.");
+        Analytics.getInstance().sendScreenView(name, "Activity destroyed.");
         realm.close();
     }
 
@@ -46,7 +46,7 @@ public class BaseActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         Timber.d("onStart");
-        Analytics.from(this).sendScreenView(name, name + " started.");
+        Analytics.getInstance().sendScreenView(name, name + " started.");
         if (realm.isClosed()) {
             realm = Realm.getDefaultInstance();
         }
@@ -56,14 +56,14 @@ public class BaseActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         Timber.d("onResume");
-        Analytics.from(this).sendScreenView(name, name + " resumed.");
+        Analytics.getInstance().sendScreenView(name, name + " resumed.");
     }
 
     @Override
     public void onPause() {
         super.onPause();
         Timber.d("onPause");
-        Analytics.from(this).notifyGoneBackground();
+        Analytics.getInstance().notifyGoneBackground();
     }
 
 

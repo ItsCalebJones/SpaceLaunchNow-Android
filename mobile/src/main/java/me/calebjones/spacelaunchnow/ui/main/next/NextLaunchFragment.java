@@ -286,7 +286,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             RealmQuery<Launch> query = getRealm().where(Launch.class)
                     .greaterThanOrEqualTo("net", date);
             if (switchPreferences.getNoGoSwitch()) {
-                query.equalTo("status", 1);
+                query.notEqualTo("status", 2);
                 query.findAll();
             }
             if (switchPreferences.getTBDLaunchSwitch()) {
@@ -599,7 +599,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     private void checkFilter() {
 
         if (!active) {
-            Analytics.from(this).sendButtonClicked("Show Launch filters.");
+            Analytics.getInstance().sendButtonClicked("Show Launch filters.");
             switchChanged = false;
             active = true;
             mSwipeRefreshLayout.setEnabled(false);
@@ -610,7 +610,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 color_reveal.setVisibility(View.VISIBLE);
             }
         } else {
-            Analytics.from(this).sendButtonClicked("Hide Launch filters.");
+            Analytics.getInstance().sendButtonClicked("Hide Launch filters.");
             active = false;
             FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_filter));
             mSwipeRefreshLayout.setEnabled(true);

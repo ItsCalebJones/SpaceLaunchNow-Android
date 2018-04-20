@@ -86,7 +86,7 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
             themeEditor.apply();
 
             if (switchPreferences.getNightMode()) {
-                Analytics.from(this).sendPreferenceEvent(key, sharedPreferences.getBoolean(key, false));
+                Analytics.getInstance().sendPreferenceEvent(key, sharedPreferences.getBoolean(key, false));
                 if (switchPreferences.getDayNightAutoMode()) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
                     checkLocationPermission();
@@ -104,7 +104,7 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
             startActivity(intent);
         }
         if (key.equals("theme_auto")) {
-            Analytics.from(this).sendPreferenceEvent(key, sharedPreferences.getBoolean(key, false));
+            Analytics.getInstance().sendPreferenceEvent(key, sharedPreferences.getBoolean(key, false));
             SharedPreferences.Editor themeEditor = getActivity().getSharedPreferences("theme_changed", 0).edit();
             themeEditor.putBoolean("recreate", true);
             themeEditor.apply();
@@ -125,7 +125,7 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
             intent.setAction("me.calebjones.spacelaunchnow.NIGHTMODE");
             startActivity(intent);
         } else {
-            Analytics.from(this).sendPreferenceEvent(key);
+            Analytics.getInstance().sendPreferenceEvent(key);
         }
 
         if (key.equals("widget_background_color") || key.equals("widget_text_color") || key.equals("widget_secondary_text_color") || key.equals("widget_icon_color") || key.equals("widget_title_text_color") || key.equals("widget_list_accent_color") || key.equals("widget_refresh_enabled")) {

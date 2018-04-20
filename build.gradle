@@ -7,8 +7,8 @@ buildscript {
         google()
     }
     dependencies {
-        classpath "io.realm:realm-gradle-plugin:4.3.4"
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath "io.realm:realm-gradle-plugin:5.0.0"
+        classpath 'com.android.tools.build:gradle:3.1.1'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
         classpath 'org.moallemi.gradle.advanced-build-version:gradle-plugin:1.6.0'
@@ -38,18 +38,18 @@ ext {
 
     app = [
             versionMajor : 2,
-            versionMinor : 2,
-            versionPatch : 4
+            versionMinor : 4,
+            versionPatch : 0
 
     ]
     // Sdk and tools
     minSdkVersion = 15
-    targetSdkVersion = 24
-    compileSdkVersion = 24
-    buildToolsVersion = '23.0.3'
+    targetSdkVersion = 27
+    compileSdkVersion = 27
+    buildToolsVersion = '27.0.3'
 
     // App dependencies
-    supportLibraryVersion = '27.1.0'
+    supportLibraryVersion = '27.1.1'
     playServicesVersion = '11.8.0'
 
     sdk = 25

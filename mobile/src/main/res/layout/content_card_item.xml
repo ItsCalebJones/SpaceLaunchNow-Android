@@ -203,11 +203,10 @@
             <TextView
                 android:id="@+id/content_mission_description"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/material_baseline_grid_2.5x"
                 android:layout_marginStart="@dimen/material_baseline_grid_2.5x"
-                android:lines="8"
-                android:paddingBottom="8dp"
+                android:paddingBottom="2dp"
                 android:paddingTop="8dp"
                 android:textColor="?android:textColorSecondary"
                 android:textSize="14sp" />

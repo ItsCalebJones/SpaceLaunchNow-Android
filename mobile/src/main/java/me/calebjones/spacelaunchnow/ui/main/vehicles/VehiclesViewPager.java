@@ -48,8 +48,8 @@ public class VehiclesViewPager extends BaseFragment {
         View inflatedView = inflater.inflate(R.layout.fragment_vehicles_viewpager, container, false);
 
         TabLayout tabLayout = (TabLayout) inflatedView.findViewById(R.id.tabLayout);
-        tabLayout.addTab(tabLayout.newTab().setText("Launchers"));
-        tabLayout.addTab(tabLayout.newTab().setText("Orbiters"));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.launchers));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.orbiters));
         viewPager = (ViewPager) inflatedView.findViewById(R.id.viewpager);
 
         pagerAdapter = new PagerAdapter
