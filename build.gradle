@@ -43,7 +43,7 @@ ext {
 
     ]
     // Sdk and tools
-    minSdkVersion = 15
+    minSdkVersion = 19
     targetSdkVersion = 27
     compileSdkVersion = 27
     buildToolsVersion = '27.0.3'
@@ -51,12 +51,7 @@ ext {
     // App dependencies
     supportLibraryVersion = '27.1.1'
     playServicesVersion = '11.8.0'
-
-    sdk = 25
-    buildTools = "25.0.0" //keep 25.0.0 for Continuous Integration
-    minSdk = 14
     libraryVersion = "2.1.1"
-    supportVersion = "25.3.1"
 
     sourceCompatibilityVersion = JavaVersion.VERSION_1_7
     targetCompatibilityVersion = JavaVersion.VERSION_1_7
