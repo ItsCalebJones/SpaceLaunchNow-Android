@@ -65,12 +65,14 @@ public class LaunchApplication extends Application {
     protected volatile Analytics mAnalytics;
     private Context context;
     private LibraryDataManager libraryDataManager;
+    private FirebaseMessaging firebaseMessaging;
 
 
     @Override
     public void onCreate() {
         super.onCreate();
         context = this;
+        firebaseMessaging = FirebaseMessaging.getInstance();
         setupAds();
         setupPreferences();
         setupCrashlytics();
@@ -233,13 +235,13 @@ public class LaunchApplication extends Application {
     private void setupNotification() {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree(), new CrashlyticsTree(context));
-            FirebaseMessaging.getInstance().subscribeToTopic("debug");
-            FirebaseMessaging.getInstance().unsubscribeFromTopic("production");
+            firebaseMessaging.subscribeToTopic("debug");
+            firebaseMessaging.unsubscribeFromTopic("production");
 
         } else {
             Timber.plant(new CrashlyticsTree(context));
-            FirebaseMessaging.getInstance().subscribeToTopic("production");
-            FirebaseMessaging.getInstance().unsubscribeFromTopic("debug");
+            firebaseMessaging.subscribeToTopic("production");
+            firebaseMessaging.unsubscribeFromTopic("debug");
         }
     }
 
@@ -289,7 +291,6 @@ public class LaunchApplication extends Application {
     }
 
     private void checkSubscriptions() {
-        FirebaseMessaging firebaseMessaging = FirebaseMessaging.getInstance();
         if (sharedPref.getBoolean("notifications_new_message", true)) {
 
             if (switchPreferences.getSwitchNasa()) {
