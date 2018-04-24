@@ -12,7 +12,7 @@ Improved News section, more reliable notifications.
 
 #### Changelog
 * Move from Onesignal to Firebase for Notifications
-* Improve the News section, stil more work to do there.
+* Improve the News section, still more work to do there.
 * Bug fixes.
 
 
