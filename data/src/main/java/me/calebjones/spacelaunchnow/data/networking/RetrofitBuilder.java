@@ -25,6 +25,8 @@ import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -103,11 +105,11 @@ public class RetrofitBuilder {
     }
 
 
-    public static Retrofit getSpaceLaunchNowRetrofit() {
+    public static Retrofit getSpaceLaunchNowRetrofit(String token) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.API_BASE_URL)
-                .client(defaultClient())
+                .client(spaceLaunchNowClient(token))
                 .addConverterFactory(GsonConverterFactory.create(getGson()))
                 .build();
         return retrofit;
@@ -128,6 +130,20 @@ public class RetrofitBuilder {
         client.connectTimeout(15, TimeUnit.SECONDS);
         client.readTimeout(15, TimeUnit.SECONDS);
         client.writeTimeout(15, TimeUnit.SECONDS);
+        return client.build();
+    }
+
+    private static OkHttpClient spaceLaunchNowClient(final String token) {
+        OkHttpClient.Builder client = new OkHttpClient().newBuilder();
+        client.connectTimeout(15, TimeUnit.SECONDS);
+        client.readTimeout(15, TimeUnit.SECONDS);
+        client.writeTimeout(15, TimeUnit.SECONDS);
+        client.addInterceptor(new Interceptor() {
+            @Override public Response intercept(Chain chain) throws IOException {
+                Request request = chain.request().newBuilder().addHeader("Authorization", "Token " + token).build();
+                return chain.proceed(request);
+            }
+        });
         return client.build();
     }
 
