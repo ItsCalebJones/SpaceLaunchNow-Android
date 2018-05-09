@@ -17,6 +17,7 @@ import java.io.IOException;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.data.DataRepositoryManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.JobUtils;
@@ -99,10 +100,10 @@ public class DebugPresenter implements DebugContract.Presenter {
         sharedPreference.setDebugLaunch(selected);
         if (selected) {
             sharedPreference.setDebugLaunch(true);
-            DataClient.create("dev");
+            DataClient.create("dev", context.getString(R.string.sln_token));
         } else {
             sharedPreference.setDebugLaunch(false);
-            DataClient.create("1.3");
+            DataClient.create("1.3", context.getString(R.string.sln_token));
         }
 
 
