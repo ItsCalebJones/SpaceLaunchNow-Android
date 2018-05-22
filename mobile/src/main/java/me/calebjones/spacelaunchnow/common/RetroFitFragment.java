@@ -28,19 +28,13 @@ abstract public class RetroFitFragment extends BaseFragment {
     private Context context;
 
     private Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
-        @Override public okhttp3.Response intercept(Chain chain) throws IOException {
+        @Override
+        public okhttp3.Response intercept(Chain chain) throws IOException {
             okhttp3.Response originalResponse = chain.proceed(chain.request());
-            if (Utils.isNetworkAvailable(context)) {
-                int maxAge = 60 * 60 * 24 * 3; // Three day cache
-                return originalResponse.newBuilder()
-                        .header("Cache-Control", "public, max-age=" + maxAge)
-                        .build();
-            } else {
-                int maxStale = 60 * 60 * 24 * 28; // tolerate 4-weeks stale
-                return originalResponse.newBuilder()
-                        .header("Cache-Control", "public, only-if-cached, max-stale=" + maxStale)
-                        .build();
-            }
+            int maxStale = 60 * 60 * 24 * 3; // tolerate 3-days stale
+            return originalResponse.newBuilder()
+                    .header("Cache-Control", "public, only-if-cached, max-stale=" + maxStale)
+                    .build();
         }
     };
 
@@ -90,7 +84,7 @@ abstract public class RetroFitFragment extends BaseFragment {
         }
     }
 
-    public Retrofit getLibraryRetrofit(){
+    public Retrofit getLibraryRetrofit() {
         return libraryRetrofit;
     }
 

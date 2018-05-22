@@ -133,6 +133,9 @@ public class MainActivity extends BaseActivity {
         if (!Once.beenDone(Once.THIS_APP_INSTALL, "showTutorial")) {
             startActivityForResult(new Intent(this, OnboardingActivity.class), SHOW_INTRO);
         }
+        if (!Once.beenDone(Once.THIS_APP_INSTALL, "showConsentDialog")) {
+            showConsent();
+        }
 
         // Get intent, action and MIME type
         Intent intent = getIntent();
@@ -786,6 +789,12 @@ public class MainActivity extends BaseActivity {
                                 .show();
                     }
                 })
+                .show();
+    }
+
+    private void showConsent() {
+        new MaterialDialog.Builder(this)
+                .customView(R.layout.consent_dialog, true)
                 .show();
     }
 
