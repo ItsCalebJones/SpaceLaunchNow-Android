@@ -11,7 +11,7 @@ import retrofit2.http.Query;
 
 public interface SpaceLaunchNowService {
 
-    String version = "v1";
+    String version = "2.0.0";
     @Headers({
             "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
     })
@@ -21,14 +21,14 @@ public interface SpaceLaunchNowService {
     @Headers({
             "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
     })
-    @GET(version + "/agency/")
-    Call<LauncherResponse> getVehicleAgencies();
+    @GET(version + "/agencies/")
+    Call<LauncherResponse> getVehicleAgencies(@Query("featured") boolean featured);
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
-    @GET(version + "/launcher_details/")
-    Call<VehicleResponse> getVehiclesByAgency(@Query("launch_agency__agency") String agency);
+    @GET(version + "/launchers/")
+    Call<VehicleResponse> getVehiclesByAgency(@Query("launch_agency__name") String agency);
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
-    @GET(version + "/launcher_details/")
+    @GET(version + "/launchers/")
     Call<VehicleResponse> getVehicle(@Query("full_name") String vehicle);
 }

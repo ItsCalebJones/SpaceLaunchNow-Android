@@ -192,7 +192,7 @@ public class LaunchApplication extends Application {
 
         Timber.d("Realm building config");
         RealmConfiguration config = new RealmConfiguration.Builder()
-                .schemaVersion(Constants.DB_SCHEMA_VERSION_2_3_1)
+                .schemaVersion(Constants.DB_SCHEMA_VERSION_2_3_2)
                 .modules(Realm.getDefaultModule(), new LaunchDataModule())
                 .migration(new Migration())
                 .build();
