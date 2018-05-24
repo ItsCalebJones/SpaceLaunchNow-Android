@@ -695,7 +695,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         }
     }
 
-    public void resetSwitches() {
+    private void resetSwitches() {
         setSwitchNasa(true);
         setSwitchISRO(true);
         setSwitchRoscosmos(true);
@@ -707,7 +707,6 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         setSwitchKSC(true);
         setSwitchPles(true);
         setSwitchVan(true);
-        setAllSwitch(true);
     }
 
     @Override

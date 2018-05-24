@@ -25,10 +25,12 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
 
     private SwitchPreferences switchPreferences;
     private Context context;
+    private FirebaseMessaging firebaseMessaging;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        firebaseMessaging = FirebaseMessaging.getInstance();
         addPreferencesFromResource(R.xml.notification_preferences);
         Preference testPreference =  findPreference("notifications_new_message_test");
         testPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -71,9 +73,9 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
         Timber.i("Notifications preference %s changed.", key);
         if (key.equals("notifications_new_message")){
             if (sharedPreferences.getBoolean(key, true)){
-                FirebaseMessaging.getInstance().subscribeToTopic("notifications_new_message");
+                firebaseMessaging.subscribeToTopic("notifications_new_message");
             } else {
-                FirebaseMessaging.getInstance().unsubscribeFromTopic("notifications_new_message");
+                firebaseMessaging.unsubscribeFromTopic("notifications_new_message");
             }
         } else {
             Analytics.getInstance().sendPreferenceEvent(key);

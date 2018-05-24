@@ -390,8 +390,16 @@
   <string name="news">News</string>
   <string name="get_help">Get Help</string>
   <string name="help_description">Help and Support</string>
+  <string name="gdpr_dialog_disagree_info">I understand that I may still see ads if I am not a Supporter, but they may not be as relevant to my interests.</string>
+  <string name="gdpr_dialog_disagree_no_ads">No ads at all, please.</string>
+  <string name="gdpr_type_ads">advertisement</string>
+  <string name="gdpr_type_cloud_database">cloud database</string>
+  <string name="gdpr_type_crash">crash reporting</string>
+  <string name="gdpr_type_analytics">analytics reporting</string>
 
   <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
   <string name="space_launch_news">Space Launch News</string>
+    <string name="consent_body">This application uses Google Firebase for analytics and Google AdMod for serving advertisements. Your anonymous usage data may be used to personalize advertisements within this application. You can withdraw permission at anytime from within the applications settings.</string>
+    <string name="data_consent">Data Consent</string>
 </resources>

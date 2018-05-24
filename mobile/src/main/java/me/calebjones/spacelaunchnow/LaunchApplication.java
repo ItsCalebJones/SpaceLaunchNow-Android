@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -20,6 +21,7 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import com.evernote.android.job.JobManager;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.michaelflisar.gdprdialog.GDPR;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.twitter.sdk.android.core.DefaultLogger;
@@ -65,12 +67,14 @@ public class LaunchApplication extends Application {
     protected volatile Analytics mAnalytics;
     private Context context;
     private LibraryDataManager libraryDataManager;
+    private FirebaseMessaging firebaseMessaging;
 
 
     @Override
     public void onCreate() {
         super.onCreate();
         context = this;
+        firebaseMessaging = FirebaseMessaging.getInstance();
         setupAds();
         setupPreferences();
         setupCrashlytics();
@@ -119,6 +123,7 @@ public class LaunchApplication extends Application {
 
 
     private void setupAds() {
+        GDPR.getInstance().init(this);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -173,7 +178,7 @@ public class LaunchApplication extends Application {
         } else {
             version = "1.3";
         }
-        DataClient.create(version);
+        DataClient.create(version, getString(R.string.sln_token));
         libraryDataManager = new LibraryDataManager(context);
         JobManager.create(context).addJobCreator(new DataJobCreator());
         startJobs();
@@ -189,7 +194,7 @@ public class LaunchApplication extends Application {
 
         Timber.d("Realm building config");
         RealmConfiguration config = new RealmConfiguration.Builder()
-                .schemaVersion(Constants.DB_SCHEMA_VERSION_2_3_1)
+                .schemaVersion(Constants.DB_SCHEMA_VERSION_2_3_2)
                 .modules(Realm.getDefaultModule(), new LaunchDataModule())
                 .migration(new Migration())
                 .build();
@@ -233,13 +238,13 @@ public class LaunchApplication extends Application {
     private void setupNotification() {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree(), new CrashlyticsTree(context));
-            FirebaseMessaging.getInstance().subscribeToTopic("debug");
-            FirebaseMessaging.getInstance().unsubscribeFromTopic("production");
+            firebaseMessaging.subscribeToTopic("debug");
+            firebaseMessaging.unsubscribeFromTopic("production");
 
         } else {
             Timber.plant(new CrashlyticsTree(context));
-            FirebaseMessaging.getInstance().subscribeToTopic("production");
-            FirebaseMessaging.getInstance().unsubscribeFromTopic("debug");
+            firebaseMessaging.subscribeToTopic("production");
+            firebaseMessaging.unsubscribeFromTopic("debug");
         }
     }
 
@@ -289,7 +294,6 @@ public class LaunchApplication extends Application {
     }
 
     private void checkSubscriptions() {
-        FirebaseMessaging firebaseMessaging = FirebaseMessaging.getInstance();
         if (sharedPref.getBoolean("notifications_new_message", true)) {
 
             if (switchPreferences.getSwitchNasa()) {

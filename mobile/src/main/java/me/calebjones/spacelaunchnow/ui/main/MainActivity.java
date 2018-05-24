@@ -27,9 +27,18 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
+import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.michaelflisar.gdprdialog.GDPR;
+import com.michaelflisar.gdprdialog.GDPRConsent;
+import com.michaelflisar.gdprdialog.GDPRConsentState;
+import com.michaelflisar.gdprdialog.GDPRDefinitions;
+import com.michaelflisar.gdprdialog.GDPRLocation;
+import com.michaelflisar.gdprdialog.GDPRNetwork;
+import com.michaelflisar.gdprdialog.GDPRSetup;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -81,7 +90,7 @@ import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
 
     private static final String NAV_ITEM_ID = "navItemId";
     private static ListPreferences listPreferences;
@@ -182,31 +191,8 @@ public class MainActivity extends BaseActivity {
         Timber.d("Binding views.");
         ButterKnife.bind(this);
 
-        Timber.d("Check if supporter.");
-        if (!SupporterHelper.isSupporter()) {
-            Timber.d("Loading ads.");
-            adView.loadAd(new AdRequest.Builder().build());
-            adView.setAdListener(new AdListener() {
-                @Override
-                public void onAdFailedToLoad(int i) {
-                    Timber.d("Failed to load ads.");
-                    adviewEnabled = false;
-                    super.onAdFailedToLoad(i);
-                }
-
-                @Override
-                public void onAdLoaded() {
-                    Timber.d("Ad loaded successfully.");
-                    adviewEnabled = true;
-                    showAd();
-                    super.onAdLoaded();
-                }
-            });
-        } else {
-            Timber.d("Hiding ads.");
-            adviewEnabled = false;
-            hideAd();
-        }
+        adviewEnabled = false;
+        hideAd();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setupWindowAnimations();
@@ -476,18 +462,18 @@ public class MainActivity extends BaseActivity {
             switchPreferences.setNightModeStatus(false);
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
         }
+        // show GDPR Dialog if necessary, the library takes care about if and how to show it
+        GDPR.getInstance().checkIfNeedsToBeShown(this, getGDPRSetup());
+        configureAdState(GDPR.getInstance().getConsentState());
     }
 
     private void showRemoveAd(){
         snackbar = Snackbar
                 .make(coordinatorLayout, R.string.upgrade_pro, Snackbar.LENGTH_INDEFINITE)
                 .setActionTextColor(ContextCompat.getColor(context, R.color.colorAccent))
-                .setAction("Yes", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Once.markDone("userCheckedSupporter");
-                        startActivity(new Intent(context, SupporterActivity.class));
-                    }
+                .setAction("Yes", view -> {
+                    Once.markDone("userCheckedSupporter");
+                    startActivity(new Intent(context, SupporterActivity.class));
                 });
         snackbar.show();
     }
@@ -496,12 +482,7 @@ public class MainActivity extends BaseActivity {
         snackbar = Snackbar
                 .make(coordinatorLayout, getString(R.string.updated_version) + " " + Utils.getVersionName(context), Snackbar.LENGTH_LONG)
                 .setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
-                .setAction("Changelog", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showWhatsNew();
-                    }
-                });
+                .setAction("Changelog", view -> showWhatsNew());
         snackbar.show();
 
     }
@@ -577,6 +558,10 @@ public class MainActivity extends BaseActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             return true;
+        }
+
+        if (id == R.id.action_consent){
+            showGDPRIfNecessary(true, GDPRLocation.UNKNOWN);
         }
 
         if (id == R.id.action_supporter){
@@ -825,6 +810,131 @@ public class MainActivity extends BaseActivity {
                 Once.markDone("showTutorial");
                 navigate(mNavItemId);
             }
+        }
+    }
+
+    private void showGDPRIfNecessary(boolean forceShow, GDPRLocation location) {
+        if (forceShow || location == GDPRLocation.EAA) {
+            GDPR.getInstance().showDialog(this , getGDPRSetup(), location);
+        }
+    }
+
+    private GDPRSetup getGDPRSetup(){
+        return  new GDPRSetup(GDPRDefinitions.ADMOB,
+                GDPRDefinitions.FIREBASE_CRASH,
+                new GDPRNetwork("Fabric - Crashlytics",
+                        "https://try.crashlytics.com/terms/",
+                        context.getString(R.string.gdpr_type_crash),
+                        true,
+                        false),
+                new GDPRNetwork("Fabric - Answers",
+                        "https://answers.io/img/onepager/privacy.pdf",
+                        context.getString(R.string.gdpr_type_analytics),
+                        true,
+                        false),
+                GDPRDefinitions.FIREBASE_ANALYTICS)
+        .withPrivacyPolicy("https://spacelaunchnow.me/app/privacy")
+        .withAllowNoConsent(false)
+        .withExplicitAgeConfirmation(true)
+        .withCheckRequestLocation(true)
+        .withBottomSheet(true)
+        .withForceSelection(true);
+    }
+
+    @Override
+    public void onConsentNeedsToBeRequested(GDPRLocation gdprLocation) {
+        // default: forward the result and show the dialog
+        showGDPRIfNecessary(true, gdprLocation);
+    }
+
+    @Override
+    public void onConsentInfoUpdate(GDPRConsentState consentState, boolean isNewState) {
+        GDPRConsent consent = consentState.getConsent();
+        if (isNewState) {
+            // user just selected this consent, do whatever you want...
+            switch (consent) {
+                case UNKNOWN:
+                    // never happens!
+                    break;
+                case NO_CONSENT:
+                if (!SupporterHelper.isSupporter()) {
+                    Intent intent = new Intent(this, SupporterActivity.class);
+                        startActivity(intent);
+                    }
+                    FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(false);
+                    break;
+                case NON_PERSONAL_CONSENT_ONLY:
+                    break;
+                case PERSONAL_CONSENT:
+                    break;
+            }
+        } else {
+            switch (consent) {
+                case UNKNOWN:
+                    // never happens!
+                    break;
+                case NO_CONSENT:
+                    // with the default setup, the dialog will shown in this case again anyways!
+                    if (!SupporterHelper.isSupporter()) {
+                        Intent intent = new Intent(this, SupporterActivity.class);
+                        startActivity(intent);
+                    }
+                    FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(false);
+                    break;
+                case NON_PERSONAL_CONSENT_ONLY:
+                    break;
+                case PERSONAL_CONSENT:
+                    // user restarted activity and consent was already given...
+                    break;
+            }
+        }
+        configureAdState(consentState);
+    }
+
+    private void configureAdState(GDPRConsentState consentState) {
+        boolean allowsPersonalAds = true;
+        boolean allowAds = true;
+        GDPRConsent consent = consentState.getConsent();
+
+        if (consentState.getLocation() == GDPRLocation.EAA && consent == GDPRConsent.UNKNOWN){
+            allowAds = false;
+        }
+
+        if (consent == GDPRConsent.NO_CONSENT || consent == GDPRConsent.NON_PERSONAL_CONSENT_ONLY){
+            allowsPersonalAds = false;
+        }
+
+        Timber.v("Load Ads");
+        if (!SupporterHelper.isSupporter() && allowAds) {
+            Timber.d("Loading ads.");
+            if (allowsPersonalAds) {
+                adView.loadAd(new AdRequest.Builder().build());
+            } else {
+                Bundle extras = new Bundle();
+                extras.putString("npa", "1");
+
+                adView.loadAd(new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras).build());
+            }
+            adView.setAdListener(new AdListener() {
+                @Override
+                public void onAdFailedToLoad(int i) {
+                    Timber.d("Failed to load ads.");
+                    adviewEnabled = false;
+                    super.onAdFailedToLoad(i);
+                }
+
+                @Override
+                public void onAdLoaded() {
+                    Timber.d("Ad loaded successfully.");
+                    adviewEnabled = true;
+                    showAd();
+                    super.onAdLoaded();
+                }
+            });
+        } else {
+            Timber.d("Hiding ads.");
+            adviewEnabled = false;
+            hideAd();
         }
     }
 }
