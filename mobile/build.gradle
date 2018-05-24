@@ -4,11 +4,12 @@ import com.android.build.OutputFile
 buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
+        maven { url "https://jitpack.io" }
         jcenter()
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.25.2'
+        classpath 'io.fabric.tools:gradle:1.25.4'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.2'
     }
 }
@@ -108,16 +109,16 @@ android {
 
     def appVersionCode = app.versionMajor * 10000 + app.versionMinor * 1000 + app.versionPatch * 100 + advancedVersioning.versionCode
     flavorDimensions "release"
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
     defaultConfig {
 
         applicationId "me.calebjones.spacelaunchnow"
         manifestPlaceholders = [appNameLabel                   : "@string/app_name",
                                 manifestApplicationId          : "${applicationId}",]
 
-        minSdkVersion 19
-        targetSdkVersion 27
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
         versionCode appVersionCode
         versionName advancedVersioning.versionName
         resConfigs "en", "fr", "de"
@@ -172,6 +173,11 @@ android {
         abortOnError false
         checkReleaseBuilds false
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 //// map for the version code that gives each ABI a value. make sure to list all ABIs mentioned in splits block, an keep the order.
@@ -195,7 +201,7 @@ dependencies {
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
 
     // Android Official Libraries
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     implementation "com.android.support:customtabs:$rootProject.supportLibraryVersion"
     implementation "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
     implementation "com.android.support:palette-v7:$rootProject.supportLibraryVersion"
@@ -232,7 +238,7 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:commons:0.9.3.0'
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
     implementation 'com.jakewharton:butterknife:8.8.1'
-
+    implementation 'com.github.MFlisar:GDPRDialog:0.5.2'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.github.jrvansuita:MaterialAbout:0.2.1'
     implementation 'com.github.mukeshsolanki:MarkdownView-Android:1.0.4'
@@ -260,7 +266,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.squareup.retrofit2:converter-simplexml:2.4.0'
     implementation 'com.github.renaudcerrato:static-maps-api:1.0.4'
-    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.google.code.gson:gson:2.8.4'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'android.zetterstrom.com.forecast:forecast:1.2.0'
     implementation 'it.macisamuele:calendarprovider-lib:0.0.1'
@@ -287,7 +293,6 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.11.2'
 
     implementation 'com.github.nekocode:Badge:2.0'
-
     // Firebase Messaging
     implementation "com.google.firebase:firebase-messaging:$rootProject.playServicesVersion"
 }

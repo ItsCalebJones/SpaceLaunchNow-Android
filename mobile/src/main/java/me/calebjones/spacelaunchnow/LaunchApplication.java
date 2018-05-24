@@ -21,6 +21,7 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import com.evernote.android.job.JobManager;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.michaelflisar.gdprdialog.GDPR;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.twitter.sdk.android.core.DefaultLogger;
@@ -122,6 +123,7 @@ public class LaunchApplication extends Application {
 
 
     private void setupAds() {
+        GDPR.getInstance().init(this);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -192,7 +194,7 @@ public class LaunchApplication extends Application {
 
         Timber.d("Realm building config");
         RealmConfiguration config = new RealmConfiguration.Builder()
-                .schemaVersion(Constants.DB_SCHEMA_VERSION_2_3_1)
+                .schemaVersion(Constants.DB_SCHEMA_VERSION_2_3_2)
                 .modules(Realm.getDefaultModule(), new LaunchDataModule())
                 .migration(new Migration())
                 .build();

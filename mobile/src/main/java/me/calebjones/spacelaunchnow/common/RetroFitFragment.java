@@ -27,18 +27,6 @@ abstract public class RetroFitFragment extends BaseFragment {
     private Retrofit spaceLaunchNowRetrofit;
     private Context context;
 
-    private Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
-        @Override
-        public okhttp3.Response intercept(Chain chain) throws IOException {
-            okhttp3.Response originalResponse = chain.proceed(chain.request());
-            int maxStale = 60 * 60 * 24 * 3; // tolerate 3-days stale
-            return originalResponse.newBuilder()
-                    .header("Cache-Control", "public, only-if-cached, max-stale=" + maxStale)
-                    .build();
-        }
-    };
-
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity().getApplicationContext();
@@ -47,10 +35,8 @@ abstract public class RetroFitFragment extends BaseFragment {
         File httpCacheDirectory = new File(context.getCacheDir(), "responses");
         int cacheSize = 10 * 1024 * 1024; // 10 MiB
         Cache cache = new Cache(httpCacheDirectory, cacheSize);
-
         client = new OkHttpClient()
                 .newBuilder()
-                .addNetworkInterceptor(REWRITE_CACHE_CONTROL_INTERCEPTOR)
                 .cache(cache)
                 .build();
 

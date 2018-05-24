@@ -4,11 +4,12 @@ import com.google.gson.annotations.SerializedName;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class LauncherAgency extends RealmObject{
+public class SLNAgency extends RealmObject{
 
     @PrimaryKey
-    @SerializedName(value = "agency")
-    public String agency;
+    public int id;
+    @SerializedName(value = "name")
+    public String name;
     @SerializedName(value = "launchers")
     public String launchers;
     @SerializedName(value = "orbiters")
@@ -19,13 +20,61 @@ public class LauncherAgency extends RealmObject{
     public String imageURL;
     @SerializedName(value = "nation_url")
     public String nationURL;
+    @SerializedName(value = "ceo")
+    public String CEO;
+    @SerializedName(value = "founding_year")
+    public String foundingYear;
+    @SerializedName(value = "launch_library_url")
+    public String launchLibraryURL;
+    @SerializedName(value = "launch_library_id")
+    public int launchLibraryId;
 
-    public String getAgency() {
-        return agency;
+    public int getId() {
+        return id;
     }
 
-    public void setAgency(String agency) {
-        this.agency = agency;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getCEO() {
+        return CEO;
+    }
+
+    public void setCEO(String CEO) {
+        this.CEO = CEO;
+    }
+
+    public String getFoundingYear() {
+        return foundingYear;
+    }
+
+    public void setFoundingYear(String foundingYear) {
+        this.foundingYear = foundingYear;
+    }
+
+    public String getLaunchLibraryURL() {
+        return launchLibraryURL;
+    }
+
+    public void setLaunchLibraryURL(String launchLibraryURL) {
+        this.launchLibraryURL = launchLibraryURL;
+    }
+
+    public int getLaunchLibraryId() {
+        return launchLibraryId;
+    }
+
+    public void setLaunchLibraryId(int launchLibraryId) {
+        this.launchLibraryId = launchLibraryId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getLaunchers() {

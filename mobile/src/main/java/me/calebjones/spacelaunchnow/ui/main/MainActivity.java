@@ -27,9 +27,16 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
+import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.michaelflisar.gdprdialog.GDPR;
+import com.michaelflisar.gdprdialog.GDPRConsent;
+import com.michaelflisar.gdprdialog.GDPRDefinitions;
+import com.michaelflisar.gdprdialog.GDPRNetwork;
+import com.michaelflisar.gdprdialog.GDPRSetup;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -81,7 +88,7 @@ import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
 
     private static final String NAV_ITEM_ID = "navItemId";
     private static ListPreferences listPreferences;
@@ -133,9 +140,6 @@ public class MainActivity extends BaseActivity {
         if (!Once.beenDone(Once.THIS_APP_INSTALL, "showTutorial")) {
             startActivityForResult(new Intent(this, OnboardingActivity.class), SHOW_INTRO);
         }
-        if (!Once.beenDone(Once.THIS_APP_INSTALL, "showConsentDialog")) {
-            showConsent();
-        }
 
         // Get intent, action and MIME type
         Intent intent = getIntent();
@@ -185,31 +189,8 @@ public class MainActivity extends BaseActivity {
         Timber.d("Binding views.");
         ButterKnife.bind(this);
 
-        Timber.d("Check if supporter.");
-        if (!SupporterHelper.isSupporter()) {
-            Timber.d("Loading ads.");
-            adView.loadAd(new AdRequest.Builder().build());
-            adView.setAdListener(new AdListener() {
-                @Override
-                public void onAdFailedToLoad(int i) {
-                    Timber.d("Failed to load ads.");
-                    adviewEnabled = false;
-                    super.onAdFailedToLoad(i);
-                }
-
-                @Override
-                public void onAdLoaded() {
-                    Timber.d("Ad loaded successfully.");
-                    adviewEnabled = true;
-                    showAd();
-                    super.onAdLoaded();
-                }
-            });
-        } else {
-            Timber.d("Hiding ads.");
-            adviewEnabled = false;
-            hideAd();
-        }
+        adviewEnabled = false;
+        hideAd();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setupWindowAnimations();
@@ -479,6 +460,8 @@ public class MainActivity extends BaseActivity {
             switchPreferences.setNightModeStatus(false);
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
         }
+        // show GDPR Dialog if necessary, the library takes care about if and how to show it
+        showGDPRIfNecessary(false);
     }
 
     private void showRemoveAd(){
@@ -580,6 +563,10 @@ public class MainActivity extends BaseActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             return true;
+        }
+
+        if (id == R.id.action_consent){
+            showGDPRIfNecessary(true);
         }
 
         if (id == R.id.action_supporter){
@@ -834,6 +821,122 @@ public class MainActivity extends BaseActivity {
                 Once.markDone("showTutorial");
                 navigate(mNavItemId);
             }
+        }
+    }
+
+    private void showGDPRIfNecessary(boolean forceShow) {
+        GDPRSetup setup = new GDPRSetup(GDPRDefinitions.ADMOB,
+                GDPRDefinitions.FIREBASE_CRASH,
+                new GDPRNetwork("Fabric - Crashlytics",
+                        "https://try.crashlytics.com/terms/",
+                        context.getString(R.string.gdpr_type_crash),
+                        true,
+                        false),
+                new GDPRNetwork("Fabric - Answers",
+                        "https://answers.io/img/onepager/privacy.pdf",
+                        context.getString(R.string.gdpr_type_analytics),
+                        true,
+                        false)); // add all networks you use to the constructor, signature is `GDPRSetup(GDPRNetwork... adNetworks)`
+        setup.withPrivacyPolicy("https://spacelaunchnow.me/app/privacy");// provide your own privacy policy, optional but very recommended
+        setup.withAllowNoConsent(false);
+        setup.withExplicitAgeConfirmation(true);
+        setup.withCheckRequestLocation(true);
+        setup.withBottomSheet(true);
+        setup.withForceSelection(true);
+        if (forceShow || GDPR.getInstance().getConsent() == GDPRConsent.UNKNOWN || GDPR.getInstance().getConsent() == GDPRConsent.NO_CONSENT) {
+            GDPR.getInstance().showDialog(this /* extends AppCompatActivity & GDPR.IGDPRCallback */, setup);
+        } else if (GDPR.getInstance().getConsent() == GDPRConsent.NON_PERSONAL_CONSENT_ONLY) {
+            onConsentKnown(false);
+        } else if (GDPR.getInstance().getConsent() == GDPRConsent.PERSONAL_CONSENT) {
+            onConsentKnown(true);
+        }
+    }
+
+    @Override
+    public void onConsentNeedsToBeRequested() {
+        // default: forward the result and show the dialog
+        showGDPRIfNecessary(true);
+    }
+
+    @Override
+    public void onConsentInfoUpdate(GDPRConsent consentState, boolean isNewState) {
+        if (isNewState) {
+            // user just selected this consent, do whatever you want...
+            switch (consentState) {
+                case UNKNOWN:
+                    // never happens!
+                    break;
+                case NO_CONSENT:
+                if (!SupporterHelper.isSupporter()) {
+                    Intent intent = new Intent(this, SupporterActivity.class);
+                        startActivity(intent);
+                    }
+                    FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(false);
+                    break;
+                case NON_PERSONAL_CONSENT_ONLY:
+                    onConsentKnown(false);
+                    break;
+                case PERSONAL_CONSENT:
+                    onConsentKnown(true);
+                    break;
+            }
+        } else {
+            switch (consentState) {
+                case UNKNOWN:
+                    // never happens!
+                    break;
+                case NO_CONSENT:
+                    // with the default setup, the dialog will shown in this case again anyways!
+                    if (!SupporterHelper.isSupporter()) {
+                        Intent intent = new Intent(this, SupporterActivity.class);
+                        startActivity(intent);
+                    }
+                    FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(false);
+                    break;
+                case NON_PERSONAL_CONSENT_ONLY:
+                    onConsentKnown(false);
+                    break;
+                case PERSONAL_CONSENT:
+                    // user restarted activity and consent was already given...
+                    onConsentKnown(true);
+                    break;
+            }
+        }
+    }
+
+    private void onConsentKnown(boolean allowsPersonalAds) {
+        Timber.v("Load Ads");
+        Timber.d("Check if supporter.");
+        if (!SupporterHelper.isSupporter()) {
+            Timber.d("Loading ads.");
+            if (allowsPersonalAds) {
+                adView.loadAd(new AdRequest.Builder().build());
+            } else {
+                Bundle extras = new Bundle();
+                extras.putString("npa", "1");
+
+                adView.loadAd(new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras).build());
+            }
+            adView.setAdListener(new AdListener() {
+                @Override
+                public void onAdFailedToLoad(int i) {
+                    Timber.d("Failed to load ads.");
+                    adviewEnabled = false;
+                    super.onAdFailedToLoad(i);
+                }
+
+                @Override
+                public void onAdLoaded() {
+                    Timber.d("Ad loaded successfully.");
+                    adviewEnabled = true;
+                    showAd();
+                    super.onAdLoaded();
+                }
+            });
+        } else {
+            Timber.d("Hiding ads.");
+            adviewEnabled = false;
+            hideAd();
         }
     }
 }

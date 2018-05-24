@@ -31,7 +31,7 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.data.DataSaver;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.LauncherAgency;
+import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.SLNAgency;
 import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.RocketDetail;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
@@ -131,7 +131,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
     public void displayRockets() {
         Intent intent = getIntent();
         Gson gson = new Gson();
-        final LauncherAgency launcher = gson.fromJson(intent.getStringExtra("json"), LauncherAgency.class);
+        final SLNAgency launcher = gson.fromJson(intent.getStringExtra("json"), SLNAgency.class);
 
         if (launcher == null) {
             Toast.makeText(context, R.string.error_launch_details, Toast.LENGTH_SHORT).show();
@@ -146,12 +146,12 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
         }
         String agency = "Unknown";
         if (launcher != null) {
-            agency = launcher.getAgency();
+            agency = launcher.getName();
         }
         detail_rocket.setText(name);
         detail_vehicle_agency.setText(agency);
 
-        rocketLaunches = getRealm().where(RocketDetail.class).contains("agency", agency).findAll();
+        rocketLaunches = getRealm().where(RocketDetail.class).contains("name", agency).findAll();
         if (rocketLaunches.size() > 0) {
             adapter.clear();
             adapter.addItems(rocketLaunches);
