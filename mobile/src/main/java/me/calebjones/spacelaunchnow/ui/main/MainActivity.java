@@ -315,18 +315,16 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
                                 .withIcon(GoogleMaterial.Icon.gmd_settings)
                                 .withIdentifier(R.id.menu_settings)
                                 .withSelectable(true)
-                ).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                    @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        if (drawerItem != null) {
-                            navigate((int) drawerItem.getIdentifier());
-                        }
-                        return false;
+                ).withOnDrawerItemClickListener((view, position, drawerItem) -> {
+                    if (drawerItem != null) {
+                        navigate((int) drawerItem.getIdentifier());
                     }
+                    return false;
                 }).build();
 
         Timber.d("If not Supporter add footer else thank the user!");
         if (!SupporterHelper.isSupporter()) {
+            FirebaseAnalytics.getInstance(this).setUserProperty("supporter", "false");
             Timber.d("Adding footer.");
             result.addStickyFooterItem(
                     new PrimaryDrawerItem().withName(R.string.supporter_title)
@@ -337,6 +335,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
         }
 
         if (SupporterHelper.isSupporter()) {
+            FirebaseAnalytics.getInstance(this).setUserProperty("supporter", "true");
             Timber.d("Show thanks for support.");
             result.addStickyFooterItem(
                     new PrimaryDrawerItem().withName(R.string.thank_you_for_support)
@@ -850,7 +849,14 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
     @Override
     public void onConsentInfoUpdate(GDPRConsentState consentState, boolean isNewState) {
         GDPRConsent consent = consentState.getConsent();
+        FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         if (isNewState) {
+            Bundle bundle = new Bundle();
+            bundle.putString("GDPR_Consent", consent.name());
+            bundle.putString("GDPR_Location", consentState.getLocation().name());
+            firebaseAnalytics.logEvent("SLN_GDPR_EVENT", bundle);
+            firebaseAnalytics.setUserProperty("gdpr_consent", consent.name());
+            firebaseAnalytics.setUserProperty("gdpr_location",  consentState.getLocation().name());
             // user just selected this consent, do whatever you want...
             switch (consent) {
                 case UNKNOWN:
@@ -861,9 +867,10 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
                     Intent intent = new Intent(this, SupporterActivity.class);
                         startActivity(intent);
                     }
-                    FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(false);
+                    firebaseAnalytics.setAnalyticsCollectionEnabled(false);
                     break;
                 case NON_PERSONAL_CONSENT_ONLY:
+
                     break;
                 case PERSONAL_CONSENT:
                     break;
