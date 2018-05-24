@@ -38,8 +38,8 @@ ext {
 
     app = [
             versionMajor : 2,
-            versionMinor : 4,
-            versionPatch : 2
+            versionMinor : 5,
+            versionPatch : 0
 
     ]
     // Sdk and tools
@@ -53,6 +53,6 @@ ext {
     playServicesVersion = '11.8.0'
     libraryVersion = "2.1.1"
 
-    sourceCompatibilityVersion = JavaVersion.VERSION_1_7
-    targetCompatibilityVersion = JavaVersion.VERSION_1_7
+    sourceCompatibilityVersion = JavaVersion.VERSION_1_8
+    targetCompatibilityVersion = JavaVersion.VERSION_1_8
 }

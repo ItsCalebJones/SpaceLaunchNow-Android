@@ -13,5 +13,10 @@
         android:title="@string/action_settings"
         android:textColor="?android:textColorPrimary"
         app:showAsAction="never" />
-
+    <item
+        android:id="@+id/action_consent"
+        android:orderInCategory="105"
+        android:title="@string/data_consent"
+        android:textColor="?android:textColorPrimary"
+        app:showAsAction="never" />
 </menu>

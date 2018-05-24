@@ -101,7 +101,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
                 if (article.getMediaUrl().equals("") || article.getMediaUrl().contains("cropped-fav3-32x32.png") || article.getMediaUrl().contains("favicon.ico")) {
                     useStock = true;
                 } else {
-                    GlideApp.with(context).load(article.getMediaUrl()).placeholder(R.drawable.placeholder).into(holder.imageView);
+                    GlideApp.with(context).load(article.getMediaUrl()).placeholder(R.drawable.placeholder).error(R.drawable.placeholder).into(holder.imageView);
                 }
             } else {
                 if (!article.getLink().contains("spaceflight101") && !article.getLink().contains("nasaspaceflight") && !article.getLink().contains("spaceflightnow")) {

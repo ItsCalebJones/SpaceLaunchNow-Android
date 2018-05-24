@@ -35,7 +35,6 @@ abstract public class RetroFitFragment extends BaseFragment {
         File httpCacheDirectory = new File(context.getCacheDir(), "responses");
         int cacheSize = 10 * 1024 * 1024; // 10 MiB
         Cache cache = new Cache(httpCacheDirectory, cacheSize);
-
         client = new OkHttpClient()
                 .newBuilder()
                 .cache(cache)
@@ -71,7 +70,7 @@ abstract public class RetroFitFragment extends BaseFragment {
         }
     }
 
-    public Retrofit getLibraryRetrofit(){
+    public Retrofit getLibraryRetrofit() {
         return libraryRetrofit;
     }
 

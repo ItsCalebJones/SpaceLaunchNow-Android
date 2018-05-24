@@ -21,6 +21,7 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import com.evernote.android.job.JobManager;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.michaelflisar.gdprdialog.GDPR;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.twitter.sdk.android.core.DefaultLogger;
@@ -122,6 +123,7 @@ public class LaunchApplication extends Application {
 
 
     private void setupAds() {
+        GDPR.getInstance().init(this);
         new Thread(new Runnable() {
             @Override
             public void run() {
