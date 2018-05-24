@@ -814,7 +814,11 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
 
     private void showGDPRIfNecessary(boolean forceShow, GDPRLocation location) {
         if (forceShow || location == GDPRLocation.EAA) {
-            GDPR.getInstance().showDialog(this , getGDPRSetup(), location);
+            try {
+                GDPR.getInstance().showDialog(this, getGDPRSetup(), location);
+            } catch (IllegalStateException e) {
+                Timber.e(e);
+            }
         }
     }
 
