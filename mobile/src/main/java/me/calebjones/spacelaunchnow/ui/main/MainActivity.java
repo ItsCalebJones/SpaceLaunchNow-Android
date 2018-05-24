@@ -34,7 +34,9 @@ import com.google.android.gms.ads.AdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.michaelflisar.gdprdialog.GDPR;
 import com.michaelflisar.gdprdialog.GDPRConsent;
+import com.michaelflisar.gdprdialog.GDPRConsentState;
 import com.michaelflisar.gdprdialog.GDPRDefinitions;
+import com.michaelflisar.gdprdialog.GDPRLocation;
 import com.michaelflisar.gdprdialog.GDPRNetwork;
 import com.michaelflisar.gdprdialog.GDPRSetup;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
@@ -461,19 +463,17 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
         }
         // show GDPR Dialog if necessary, the library takes care about if and how to show it
-        showGDPRIfNecessary(false);
+        GDPR.getInstance().checkIfNeedsToBeShown(this, getGDPRSetup());
+        configureAdState(GDPR.getInstance().getConsentState());
     }
 
     private void showRemoveAd(){
         snackbar = Snackbar
                 .make(coordinatorLayout, R.string.upgrade_pro, Snackbar.LENGTH_INDEFINITE)
                 .setActionTextColor(ContextCompat.getColor(context, R.color.colorAccent))
-                .setAction("Yes", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Once.markDone("userCheckedSupporter");
-                        startActivity(new Intent(context, SupporterActivity.class));
-                    }
+                .setAction("Yes", view -> {
+                    Once.markDone("userCheckedSupporter");
+                    startActivity(new Intent(context, SupporterActivity.class));
                 });
         snackbar.show();
     }
@@ -482,12 +482,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
         snackbar = Snackbar
                 .make(coordinatorLayout, getString(R.string.updated_version) + " " + Utils.getVersionName(context), Snackbar.LENGTH_LONG)
                 .setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
-                .setAction("Changelog", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showWhatsNew();
-                    }
-                });
+                .setAction("Changelog", view -> showWhatsNew());
         snackbar.show();
 
     }
@@ -566,7 +561,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
         }
 
         if (id == R.id.action_consent){
-            showGDPRIfNecessary(true);
+            showGDPRIfNecessary(true, GDPRLocation.UNKNOWN);
         }
 
         if (id == R.id.action_supporter){
@@ -779,12 +774,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
                 .show();
     }
 
-    private void showConsent() {
-        new MaterialDialog.Builder(this)
-                .customView(R.layout.consent_dialog, true)
-                .show();
-    }
-
     protected void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(NAV_ITEM_ID, mNavItemId);
@@ -824,8 +813,14 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
         }
     }
 
-    private void showGDPRIfNecessary(boolean forceShow) {
-        GDPRSetup setup = new GDPRSetup(GDPRDefinitions.ADMOB,
+    private void showGDPRIfNecessary(boolean forceShow, GDPRLocation location) {
+        if (forceShow || location == GDPRLocation.EAA) {
+            GDPR.getInstance().showDialog(this , getGDPRSetup(), location);
+        }
+    }
+
+    private GDPRSetup getGDPRSetup(){
+        return  new GDPRSetup(GDPRDefinitions.ADMOB,
                 GDPRDefinitions.FIREBASE_CRASH,
                 new GDPRNetwork("Fabric - Crashlytics",
                         "https://try.crashlytics.com/terms/",
@@ -836,33 +831,28 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
                         "https://answers.io/img/onepager/privacy.pdf",
                         context.getString(R.string.gdpr_type_analytics),
                         true,
-                        false)); // add all networks you use to the constructor, signature is `GDPRSetup(GDPRNetwork... adNetworks)`
-        setup.withPrivacyPolicy("https://spacelaunchnow.me/app/privacy");// provide your own privacy policy, optional but very recommended
-        setup.withAllowNoConsent(false);
-        setup.withExplicitAgeConfirmation(true);
-        setup.withCheckRequestLocation(true);
-        setup.withBottomSheet(true);
-        setup.withForceSelection(true);
-        if (forceShow || GDPR.getInstance().getConsent() == GDPRConsent.UNKNOWN || GDPR.getInstance().getConsent() == GDPRConsent.NO_CONSENT) {
-            GDPR.getInstance().showDialog(this /* extends AppCompatActivity & GDPR.IGDPRCallback */, setup);
-        } else if (GDPR.getInstance().getConsent() == GDPRConsent.NON_PERSONAL_CONSENT_ONLY) {
-            onConsentKnown(false);
-        } else if (GDPR.getInstance().getConsent() == GDPRConsent.PERSONAL_CONSENT) {
-            onConsentKnown(true);
-        }
+                        false),
+                GDPRDefinitions.FIREBASE_ANALYTICS)
+        .withPrivacyPolicy("https://spacelaunchnow.me/app/privacy")
+        .withAllowNoConsent(false)
+        .withExplicitAgeConfirmation(true)
+        .withCheckRequestLocation(true)
+        .withBottomSheet(true)
+        .withForceSelection(true);
     }
 
     @Override
-    public void onConsentNeedsToBeRequested() {
+    public void onConsentNeedsToBeRequested(GDPRLocation gdprLocation) {
         // default: forward the result and show the dialog
-        showGDPRIfNecessary(true);
+        showGDPRIfNecessary(true, gdprLocation);
     }
 
     @Override
-    public void onConsentInfoUpdate(GDPRConsent consentState, boolean isNewState) {
+    public void onConsentInfoUpdate(GDPRConsentState consentState, boolean isNewState) {
+        GDPRConsent consent = consentState.getConsent();
         if (isNewState) {
             // user just selected this consent, do whatever you want...
-            switch (consentState) {
+            switch (consent) {
                 case UNKNOWN:
                     // never happens!
                     break;
@@ -874,14 +864,12 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
                     FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(false);
                     break;
                 case NON_PERSONAL_CONSENT_ONLY:
-                    onConsentKnown(false);
                     break;
                 case PERSONAL_CONSENT:
-                    onConsentKnown(true);
                     break;
             }
         } else {
-            switch (consentState) {
+            switch (consent) {
                 case UNKNOWN:
                     // never happens!
                     break;
@@ -894,20 +882,30 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
                     FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(false);
                     break;
                 case NON_PERSONAL_CONSENT_ONLY:
-                    onConsentKnown(false);
                     break;
                 case PERSONAL_CONSENT:
                     // user restarted activity and consent was already given...
-                    onConsentKnown(true);
                     break;
             }
         }
+        configureAdState(consentState);
     }
 
-    private void onConsentKnown(boolean allowsPersonalAds) {
+    private void configureAdState(GDPRConsentState consentState) {
+        boolean allowsPersonalAds = true;
+        boolean allowAds = true;
+        GDPRConsent consent = consentState.getConsent();
+
+        if (consentState.getLocation() == GDPRLocation.EAA && consent == GDPRConsent.UNKNOWN){
+            allowAds = false;
+        }
+
+        if (consent == GDPRConsent.NO_CONSENT || consent == GDPRConsent.NON_PERSONAL_CONSENT_ONLY){
+            allowsPersonalAds = false;
+        }
+
         Timber.v("Load Ads");
-        Timber.d("Check if supporter.");
-        if (!SupporterHelper.isSupporter()) {
+        if (!SupporterHelper.isSupporter() && allowAds) {
             Timber.d("Loading ads.");
             if (allowsPersonalAds) {
                 adView.loadAd(new AdRequest.Builder().build());

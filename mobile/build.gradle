@@ -238,7 +238,7 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:commons:0.9.3.0'
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
     implementation 'com.jakewharton:butterknife:8.8.1'
-    implementation 'com.github.MFlisar:GDPRDialog:0.5.2'
+    implementation 'com.github.MFlisar:GDPRDialog:1.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.github.jrvansuita:MaterialAbout:0.2.1'
     implementation 'com.github.mukeshsolanki:MarkdownView-Android:1.0.4'
