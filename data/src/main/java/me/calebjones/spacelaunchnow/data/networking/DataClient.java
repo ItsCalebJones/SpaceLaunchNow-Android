@@ -34,7 +34,7 @@ public class DataClient {
 
 
 
-    private DataClient(String version) {
+    private DataClient(String version, String token) {
 
         //TODO figure out caching strategy
 //        CacheControl cacheControl =
@@ -43,7 +43,7 @@ public class DataClient {
 //        mCacheControl = cacheControl.toString();
         libraryRetrofit = RetrofitBuilder.getLibraryRetrofit(version);
         libraryRetrofitThreaded = RetrofitBuilder.getLibraryRetrofitThreaded(version);
-        spaceLaunchNowRetrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit();
+        spaceLaunchNowRetrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit(token);
         libraryService = libraryRetrofit.create(LibraryService.class);
         libraryServiceThreaded = libraryRetrofitThreaded.create(LibraryService.class);
         spaceLaunchNowService = spaceLaunchNowRetrofit.create(SpaceLaunchNowService.class);
@@ -56,20 +56,20 @@ public class DataClient {
     }
 
     public Retrofit getSpaceLaunchNowRetrofit() {
-        return libraryRetrofit;
+        return spaceLaunchNowRetrofit;
     }
 
     /**
      * Applications must call create to configure the DataClient singleton
      */
-    public static void create(String version) {
-        mInstance = new DataClient(version);
+    public static void create(String version, String token) {
+        mInstance = new DataClient(version, token);
     }
 
     /**
      * Singleton accessor
      * <p/>
-     * Will throw an exception if {@link #create(String version)} was never called
+     * Will throw an exception if {@link #create(String version, String token)} was never called
      *
      * @return the DataClient singleton
      */

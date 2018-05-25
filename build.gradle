@@ -7,7 +7,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath "io.realm:realm-gradle-plugin:5.0.0"
+        classpath "io.realm:realm-gradle-plugin:5.1.0"
         classpath 'com.android.tools.build:gradle:3.1.2'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -38,8 +38,8 @@ ext {
 
     app = [
             versionMajor : 2,
-            versionMinor : 4,
-            versionPatch : 1
+            versionMinor : 5,
+            versionPatch : 0
 
     ]
     // Sdk and tools
@@ -53,6 +53,6 @@ ext {
     playServicesVersion = '11.8.0'
     libraryVersion = "2.1.1"
 
-    sourceCompatibilityVersion = JavaVersion.VERSION_1_7
-    targetCompatibilityVersion = JavaVersion.VERSION_1_7
+    sourceCompatibilityVersion = JavaVersion.VERSION_1_8
+    targetCompatibilityVersion = JavaVersion.VERSION_1_8
 }

@@ -19,8 +19,7 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.Launcher;
-import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.LauncherAgency;
+import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.SLNAgency;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
 import timber.log.Timber;
@@ -32,7 +31,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
 
     public int position;
     private Context mContext;
-    private List<LauncherAgency> launchers = new ArrayList<>();
+    private List<SLNAgency> launchers = new ArrayList<>();
     private OnItemClickListener onItemClickListener;
     private boolean night = false;
     private RequestOptions requestOptions;
@@ -55,7 +54,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
                 .centerCrop();
     }
 
-    public void addItems(List<LauncherAgency> items) {
+    public void addItems(List<SLNAgency> items) {
         if (this.launchers == null) {
             this.launchers = items;
         } else if (this.launchers.size() == 0) {
@@ -80,8 +79,8 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        LauncherAgency launcher = launchers.get(i);
-        Timber.v("onBindViewHolder %s", launcher.getAgency());
+        SLNAgency launcher = launchers.get(i);
+        Timber.v("onBindViewHolder %s", launcher.getName());
 
         GlideApp.with(mContext)
                 .load(launcher.getImageURL())
@@ -116,7 +115,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
                         .crossfade(true))
                 .into(holder.picture);
         holder.subTitle.setText(launcher.getLaunchers());
-        holder.name.setText(launcher.getAgency());
+        holder.name.setText(launcher.getName());
     }
 
     @Override

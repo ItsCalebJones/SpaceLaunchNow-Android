@@ -166,6 +166,25 @@ public class Migration implements RealmMigration {
             oldVersion = Constants.DB_SCHEMA_VERSION_2_3_1;
         }
 
+        if (oldVersion < Constants.DB_SCHEMA_VERSION_2_3_2){
+            if (schema.get("LauncherAgency") != null) {
+                schema.remove("LauncherAgency");
+            }
+            RealmObjectSchema agency = schema.create("SLNAgency");
+            agency.addField("id", int.class, FieldAttribute.PRIMARY_KEY)
+                    .addField("name", String.class)
+                    .addField("launchers", String.class)
+                    .addField("orbiters", String.class)
+                    .addField("description", String.class)
+                    .addField("imageURL", String.class)
+                    .addField("nationURL", String.class)
+                    .addField("CEO", String.class)
+                    .addField("foundingYear", String.class)
+                    .addField("launchLibraryURL", String.class)
+                    .addField("launchLibraryId", int.class);
+            oldVersion = Constants.DB_SCHEMA_VERSION_2_3_2;
+        }
+
 
         Timber.i("Final Schema - Version %s", newVersion);
         for (RealmObjectSchema objectSchema : schema.getAll()) {
