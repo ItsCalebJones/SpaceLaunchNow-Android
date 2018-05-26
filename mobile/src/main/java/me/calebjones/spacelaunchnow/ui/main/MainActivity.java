@@ -90,7 +90,7 @@ import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;
 
-public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
+public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
 
     private static final String NAV_ITEM_ID = "navItemId";
     private static ListPreferences listPreferences;
@@ -292,23 +292,23 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
                         ),
                         new DividerDrawerItem(),
                         new ExpandableDrawerItem().withName(R.string.get_help).withIcon(GoogleMaterial.Icon.gmd_account_box).withDescription(R.string.help_description).withIdentifier(20).withSelectable(false).withSubItems(
-                        new SecondaryDrawerItem()
-                                .withIcon(GoogleMaterial.Icon.gmd_info_outline)
-                                .withName(R.string.whats_new)
-                                .withDescription(R.string.whats_new_subtitle)
-                                .withIdentifier(R.id.menu_new)
-                                .withSelectable(false),
-                        new SecondaryDrawerItem()
-                                .withIcon(GoogleMaterial.Icon.gmd_account_box)
-                                .withName(R.string.about).withDescription(R.string.about_subtitle)
-                                .withIdentifier(R.id.about)
-                                .withSelectable(false),
-                        new SecondaryDrawerItem()
-                                .withIcon(GoogleMaterial.Icon.gmd_feedback)
-                                .withName(R.string.feedback)
-                                .withDescription(R.string.feedback_subtitle)
-                                .withIdentifier(R.id.menu_feedback)
-                                .withSelectable(false)
+                                new SecondaryDrawerItem()
+                                        .withIcon(GoogleMaterial.Icon.gmd_info_outline)
+                                        .withName(R.string.whats_new)
+                                        .withDescription(R.string.whats_new_subtitle)
+                                        .withIdentifier(R.id.menu_new)
+                                        .withSelectable(false),
+                                new SecondaryDrawerItem()
+                                        .withIcon(GoogleMaterial.Icon.gmd_account_box)
+                                        .withName(R.string.about).withDescription(R.string.about_subtitle)
+                                        .withIdentifier(R.id.about)
+                                        .withSelectable(false),
+                                new SecondaryDrawerItem()
+                                        .withIcon(GoogleMaterial.Icon.gmd_feedback)
+                                        .withName(R.string.feedback)
+                                        .withDescription(R.string.feedback_subtitle)
+                                        .withIdentifier(R.id.menu_feedback)
+                                        .withSelectable(false)
                         ),
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem().withName(R.string.settings)
@@ -466,7 +466,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
         configureAdState(GDPR.getInstance().getConsentState());
     }
 
-    private void showRemoveAd(){
+    private void showRemoveAd() {
         snackbar = Snackbar
                 .make(coordinatorLayout, R.string.upgrade_pro, Snackbar.LENGTH_INDEFINITE)
                 .setActionTextColor(ContextCompat.getColor(context, R.color.colorAccent))
@@ -492,7 +492,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
         String message = String.format("%s more times until rate pop-up", count);
         Toast mToast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
         mToast.setText(message);
-        if (BuildConfig.DEBUG){
+        if (BuildConfig.DEBUG) {
             mToast.show();
         }
     }
@@ -537,7 +537,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
         } else {
             getMenuInflater().inflate(R.menu.main_menu, menu);
         }
-        if(SupporterHelper.isSupporter()){
+        if (SupporterHelper.isSupporter()) {
             menu.findItem(R.id.action_supporter).setVisible(false);
             menu.removeItem(R.id.action_supporter);
         }
@@ -559,11 +559,11 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
             return true;
         }
 
-        if (id == R.id.action_consent){
-            showGDPRIfNecessary(true, GDPRLocation.UNKNOWN);
+        if (id == R.id.action_consent) {
+            showGDPRIfNecessary(true, GDPRLocation.IN_EAA_OR_UNKNOWN);
         }
 
-        if (id == R.id.action_supporter){
+        if (id == R.id.action_supporter) {
             Intent intent = new Intent(this, SupporterActivity.class);
             startActivity(intent);
             return true;
@@ -813,7 +813,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
     }
 
     private void showGDPRIfNecessary(boolean forceShow, GDPRLocation location) {
-        if (forceShow || location == GDPRLocation.EAA) {
+        if (forceShow || location == GDPRLocation.IN_EAA_OR_UNKNOWN) {
             try {
                 GDPR.getInstance().showDialog(this, getGDPRSetup(), location);
             } catch (IllegalStateException e) {
@@ -822,8 +822,9 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
         }
     }
 
-    private GDPRSetup getGDPRSetup(){
-        return  new GDPRSetup(GDPRDefinitions.ADMOB,
+    private GDPRSetup getGDPRSetup() {
+
+        return new GDPRSetup(GDPRDefinitions.ADMOB,
                 GDPRDefinitions.FIREBASE_CRASH,
                 new GDPRNetwork("Fabric - Crashlytics",
                         "https://try.crashlytics.com/terms/",
@@ -836,12 +837,12 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
                         true,
                         false),
                 GDPRDefinitions.FIREBASE_ANALYTICS)
-        .withPrivacyPolicy("https://spacelaunchnow.me/app/privacy")
-        .withAllowNoConsent(false)
-        .withExplicitAgeConfirmation(true)
-        .withCheckRequestLocation(true)
-        .withBottomSheet(true)
-        .withForceSelection(true);
+                .withPrivacyPolicy("https://spacelaunchnow.me/app/privacy")
+                .withAllowNoConsent(false)
+                .withExplicitAgeConfirmation(true)
+                .withCheckRequestLocation(true)
+                .withBottomSheet(true)
+                .withForceSelection(true);
     }
 
     @Override
@@ -860,23 +861,24 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
             bundle.putString("GDPR_Location", consentState.getLocation().name());
             firebaseAnalytics.logEvent("SLN_GDPR_EVENT", bundle);
             firebaseAnalytics.setUserProperty("gdpr_consent", consent.name());
-            firebaseAnalytics.setUserProperty("gdpr_location",  consentState.getLocation().name());
+            firebaseAnalytics.setUserProperty("gdpr_location", consentState.getLocation().name());
             // user just selected this consent, do whatever you want...
             switch (consent) {
                 case UNKNOWN:
                     // never happens!
                     break;
                 case NO_CONSENT:
-                if (!SupporterHelper.isSupporter()) {
-                    Intent intent = new Intent(this, SupporterActivity.class);
+                    if (!SupporterHelper.isSupporter()) {
+                        Intent intent = new Intent(this, SupporterActivity.class);
                         startActivity(intent);
                     }
                     firebaseAnalytics.setAnalyticsCollectionEnabled(false);
                     break;
                 case NON_PERSONAL_CONSENT_ONLY:
-
+                    firebaseAnalytics.setAnalyticsCollectionEnabled(true);
                     break;
                 case PERSONAL_CONSENT:
+                    firebaseAnalytics.setAnalyticsCollectionEnabled(true);
                     break;
             }
         } else {
@@ -893,6 +895,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
                     FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(false);
                     break;
                 case NON_PERSONAL_CONSENT_ONLY:
+                    firebaseAnalytics.setAnalyticsCollectionEnabled(true);
                     break;
                 case PERSONAL_CONSENT:
                     // user restarted activity and consent was already given...
@@ -907,11 +910,11 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback{
         boolean allowAds = true;
         GDPRConsent consent = consentState.getConsent();
 
-        if (consentState.getLocation() == GDPRLocation.EAA && consent == GDPRConsent.UNKNOWN){
+        if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN && consent == GDPRConsent.UNKNOWN) {
             allowAds = false;
         }
 
-        if (consent == GDPRConsent.NO_CONSENT || consent == GDPRConsent.NON_PERSONAL_CONSENT_ONLY){
+        if (consent == GDPRConsent.NO_CONSENT || consent == GDPRConsent.NON_PERSONAL_CONSENT_ONLY) {
             allowsPersonalAds = false;
         }
 

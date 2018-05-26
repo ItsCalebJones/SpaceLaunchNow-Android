@@ -396,7 +396,6 @@
   <string name="gdpr_type_cloud_database">cloud database</string>
   <string name="gdpr_type_crash">crash reporting</string>
   <string name="gdpr_type_analytics">analytics reporting</string>
-  <string name="gdpr_dialog_question">Can we continue to use your data for these purposes%1$s? \n\n(You may continue to use the application no matter your choice.)</string>
 
   <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
