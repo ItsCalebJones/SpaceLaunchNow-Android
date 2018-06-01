@@ -521,7 +521,7 @@ public class LaunchDetailActivity extends BaseActivity
                 .contains("name", query)
                 .findFirst();
         if (setImage) {
-            if (launchVehicle != null && launchVehicle.getImageURL().length() > 0 && !launchVehicle.getImageURL().contains("placeholder")) {
+            if (launchVehicle != null && launchVehicle.getImageURL()  != null && launchVehicle.getImageURL().length() > 0 && !launchVehicle.getImageURL().contains("placeholder")) {
                 GlideApp.with(this)
                         .load(launchVehicle.getImageURL())
                         .into(detail_profile_backdrop);
