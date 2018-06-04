@@ -21,7 +21,7 @@ If we ask for your personal information for a secondary reason, like marketing, 
 
 How do I withdraw my consent?
 
-If after you opt-in, you change your mind, you may withdraw your consent for us to contact you, for the continued collection, use or disclosure of your information, at anytime, by contacting us at support@calebjones.me or mailing us at: Space Launch Now
+If after you opt-in, you change your mind, you may withdraw your consent for us to contact you, for the continued collection, use or disclosure of your information, at anytime, by contacting us at privcay@spacelaunchnow.me or mailing us at: Space Launch Now
 
 
 ### SECTION 3 - DISCLOSURE
