@@ -176,4 +176,4 @@ We reserve the right, at our sole discretion, to update, change or replace any p
 
 ### SECTION 20 - CONTACT INFORMATION
 
-Questions about the Terms of Service should be sent to us at support@calebjones.me.
+Questions about the Terms of Service should be sent to us at terms@calebjones.me.

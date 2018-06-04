@@ -332,7 +332,7 @@ public class LaunchDetailActivity extends BaseActivity
                                     public void onClick(MaterialDialog dialog, DialogAction which) {
                                         Intent intent = new Intent(Intent.ACTION_SENDTO);
                                         intent.setData(Uri.parse("mailto:"));
-                                        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@calebjones.me"});
+                                        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@spacelaunchnow.me"});
                                         intent.putExtra(Intent.EXTRA_SUBJECT, "Space Launch Now - Feedback");
 
                                         startActivity(Intent.createChooser(intent, "Email via..."));
