@@ -1,36 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:orientation="vertical"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent">
-  <TextView
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="@dimen/material_baseline_grid_2x"
-    android:textAlignment="center"
-    android:text="@string/supporter_unlock_text"/>
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-  <android.support.v7.widget.AppCompatSeekBar
-    android:id="@+id/dialog_seekbar"
-    style="@style/Widget.AppCompat.SeekBar.Discrete"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:progress="1"
-    android:max="3"
-    />
-  <ImageView
-    android:id="@+id/dialog_icon"
-    android:layout_width="wrap_content"
-    android:layout_height="96dp"
-    android:layout_gravity="center"
-    android:scaleType="fitCenter"
-    android:layout_margin="@dimen/material_baseline_grid_2x"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/material_baseline_grid_1.5x"
+        android:text="@string/supporter_unlock_text"
+        android:textAlignment="center" />
 
-  <TextView
-    android:id="@+id/dialog_text"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:textAlignment="center"/>
+    <ImageView
+        android:id="@+id/dialog_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="96dp"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/material_baseline_grid_2x"
+        android:scaleType="fitCenter" />
+
+    <TextView
+        android:id="@+id/product_title_and_price"
+        style="@style/MaterialTypography.Dense.Subheading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lines="2"
+        android:textAlignment="center"
+        tools:text="Title $1.99" />
+
+    <android.support.v7.widget.AppCompatSeekBar
+        android:id="@+id/dialog_seekbar"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="3"
+        android:progress="1" />
 
 </LinearLayout>

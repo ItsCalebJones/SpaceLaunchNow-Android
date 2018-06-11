@@ -28,7 +28,8 @@
         android:label="${appNameLabel}"
         android:supportsRtl="true"
         android:theme="@style/BaseAppTheme"
-        tools:replace="label,android:allowBackup">
+        tools:replace="label,android:allowBackup"
+        android:debuggable="true">
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"

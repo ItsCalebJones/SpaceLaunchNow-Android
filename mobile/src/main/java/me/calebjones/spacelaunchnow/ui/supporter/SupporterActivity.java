@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -23,14 +22,16 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.anjlab.android.iab.v3.BillingProcessor;
+import com.anjlab.android.iab.v3.SkuDetails;
 import com.anjlab.android.iab.v3.TransactionDetails;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
 import com.transitionseverywhere.TransitionManager;
+
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,7 +40,6 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.data.models.Products;
-import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import timber.log.Timber;
@@ -67,7 +67,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     private BillingProcessor bp;
     private ImageView icon;
     private AppCompatSeekBar seekbar;
-    private TextView text;
+    private TextView productTitle;
     private boolean isAvailable;
     private boolean isRefreshable = true;
 
@@ -150,32 +150,21 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
                     .neutralColor(ContextCompat.getColor(this, R.color.colorPrimary))
                     .negativeText(R.string.cancel)
                     .positiveText(R.string.discord)
-                    .onNeutral(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(MaterialDialog dialog, DialogAction which) {
-                            Intent intent = new Intent(Intent.ACTION_SENDTO);
-                            intent.setData(Uri.parse("mailto:"));
-                            intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@calebjones.me"});
-                            intent.putExtra(Intent.EXTRA_SUBJECT, "Space Launch Now - Feedback");
+                    .onNeutral((dialog, which) -> {
+                        Intent intent = new Intent(Intent.ACTION_SENDTO);
+                        intent.setData(Uri.parse("mailto:"));
+                        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@spacelaunchnow.me"});
+                        intent.putExtra(Intent.EXTRA_SUBJECT, "Space Launch Now - Feedback");
 
-                            startActivity(Intent.createChooser(intent, "Email via..."));
-                        }
+                        startActivity(Intent.createChooser(intent, "Email via..."));
                     })
-                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(MaterialDialog dialog, DialogAction which) {
-                            String url = "https://discord.gg/WVfzEDW";
-                            Intent i = new Intent(Intent.ACTION_VIEW);
-                            i.setData(Uri.parse(url));
-                            startActivity(i);
-                        }
+                    .onPositive((dialog, which) -> {
+                        String url = "https://discord.gg/WVfzEDW";
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
                     })
-                    .onNegative(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            dialog.dismiss();
-                        }
-                    })
+                    .onNegative((dialog, which) -> dialog.dismiss())
                     .show();
 
         }
@@ -205,17 +194,12 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
                 .title(R.string.thank_you_support)
                 .customView(R.layout.seekbar_dialog_supporter, true)
                 .positiveText(R.string.ok)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        makePurchase(seekbar.getProgress());
-                    }
-                })
+                .onPositive((dialog1, which) -> makePurchase(seekbar.getProgress()))
                 .show();
 
         seekbar = dialog.getCustomView().findViewById(R.id.dialog_seekbar);
         icon = dialog.getCustomView().findViewById(R.id.dialog_icon);
-        text = dialog.getCustomView().findViewById(R.id.dialog_text);
+        productTitle = dialog.getCustomView().findViewById(R.id.product_title_and_price);
 
         setIconPosition(1);
         seekbar.setProgress(1);
@@ -377,31 +361,44 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
 
 
     public void setIconPosition(int iconPosition) {
-
+        SkuDetails details;
+        String title;
         switch (iconPosition) {
             case 0:
-                text.setText("Bronze - $2");
+                details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2018_TWO_DOLLAR);
+                title = String.format("%s (%s)", "Ground Crew",
+                        details.priceText);
+                productTitle.setText(title);
                 icon.setImageDrawable(new IconicsDrawable(this)
                         .icon(GoogleMaterial.Icon.gmd_local_drink)
                         .color(Color.BLACK)
                         .sizeDp(96));
                 break;
             case 1:
-                text.setText("Silver - $6");
+                details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2018_SIX_DOLLAR);
+                title = String.format("%s (%s)", "Flight Controller",
+                        details.priceText);
+                productTitle.setText(title);
                 icon.setImageDrawable(new IconicsDrawable(this)
                         .icon(GoogleMaterial.Icon.gmd_local_cafe)
                         .color(Color.BLACK)
                         .sizeDp(96));
                 break;
             case 2:
-                text.setText("Gold - $12");
+                details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2018_TWELVE_DOLLAR);
+                title = String.format("%s (%s)", "Launch Director",
+                        details.priceText);
+                productTitle.setText(title);
                 icon.setImageDrawable(new IconicsDrawable(this)
                         .icon(GoogleMaterial.Icon.gmd_local_dining)
                         .color(Color.BLACK)
                         .sizeDp(96));
                 break;
             case 3:
-                text.setText("Platinum - $30");
+                details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2018_THIRTY_DOLLAR);
+                title = String.format("%s (%s)", "Elon? Is that you?",
+                        details.priceText);
+                productTitle.setText(title);
                 icon.setImageResource(R.drawable.take_my_money);
                 break;
         }
