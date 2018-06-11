@@ -277,11 +277,11 @@ dependencies {
     implementation 'com.github.michael-rapp:android-preference-activity:4.2.11'
 
     // Iconography
-    implementation 'com.mikepenz:iconics-core:3.0.0@aar'
-    implementation 'com.mikepenz:google-material-typeface:3.0.1.1.original@aar'
+    implementation 'com.mikepenz:iconics-core:3.0.3@aar'
+    implementation 'com.mikepenz:google-material-typeface:3.0.1.2.original@aar'
     implementation 'com.mikepenz:community-material-typeface:2.0.46.1@aar'
     implementation 'com.github.pwittchen:weathericonview:1.1.0'
-    implementation 'com.mikepenz:fontawesome-typeface:4.7.0.0@aar'
+    implementation 'com.mikepenz:fontawesome-typeface:5.0.13.0@aar'
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
 
     //Twitter

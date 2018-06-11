@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
@@ -18,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -26,12 +28,11 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.SkuDetails;
 import com.anjlab.android.iab.v3.TransactionDetails;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
 import com.transitionseverywhere.TransitionManager;
-
-import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,8 +69,11 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     private ImageView icon;
     private AppCompatSeekBar seekbar;
     private TextView productTitle;
+    private TextView productPrice;
+    private Button okButton;
     private boolean isAvailable;
     private boolean isRefreshable = true;
+    private BottomSheetDialog dialog;
 
     public SupporterActivity() {
         super("Supporter Activity");
@@ -110,15 +114,12 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
             SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, getString(R.string.billing_not_available));
         }
 
-        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
-                    fabSupporter.hide();
-                } else {
-                    if (!fabSupporter.isShown()){
-                        fabSupporter.show();
-                    }
+        nestedScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
+                fabSupporter.hide();
+            } else {
+                if (!fabSupporter.isShown()){
+                    fabSupporter.show();
                 }
             }
         });
@@ -190,19 +191,18 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     @OnClick({R.id.purchase, R.id.fab_supporter})
     public void checkClick() {
         Analytics.getInstance().sendButtonClicked("Supporter Button clicked.");
-        MaterialDialog dialog = new MaterialDialog.Builder(this)
-                .title(R.string.thank_you_support)
-                .customView(R.layout.seekbar_dialog_supporter, true)
-                .positiveText(R.string.ok)
-                .onPositive((dialog1, which) -> makePurchase(seekbar.getProgress()))
-                .show();
+        View view = getLayoutInflater().inflate(R.layout.seekbar_dialog_supporter, null);
+        dialog = new BottomSheetDialog(this);
+        dialog.setContentView(view);
 
-        seekbar = dialog.getCustomView().findViewById(R.id.dialog_seekbar);
-        icon = dialog.getCustomView().findViewById(R.id.dialog_icon);
-        productTitle = dialog.getCustomView().findViewById(R.id.product_title_and_price);
+        seekbar = view.findViewById(R.id.dialog_seekbar);
+        icon = view.findViewById(R.id.dialog_icon);
+        productTitle = view.findViewById(R.id.product_title);
+        productPrice = view.findViewById(R.id.product_price);
+        okButton = view.findViewById(R.id.ok_button);
 
-        setIconPosition(1);
-        seekbar.setProgress(1);
+        setIconPosition(0);
+        seekbar.setProgress(0);
 
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -220,6 +220,12 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
 
             }
         });
+
+        okButton.setOnClickListener(view1 -> {
+            dialog.dismiss();
+            makePurchase(seekbar.getProgress());
+        });
+        dialog.show();
     }
 
     private void makePurchase(int product) {
@@ -363,41 +369,54 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     public void setIconPosition(int iconPosition) {
         SkuDetails details;
         String title;
+        String price = "(Unable to get price)";
         switch (iconPosition) {
             case 0:
                 details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2018_TWO_DOLLAR);
-                title = String.format("%s (%s)", "Ground Crew",
-                        details.priceText);
+                if (details != null){
+                    price = String.format("(%s)", details.priceText);
+                }
+                title = "Ground Crew";
+                productPrice.setText(price);
                 productTitle.setText(title);
                 icon.setImageDrawable(new IconicsDrawable(this)
-                        .icon(GoogleMaterial.Icon.gmd_local_drink)
+                        .icon(FontAwesome.Icon.faw_people_carry)
                         .color(Color.BLACK)
                         .sizeDp(96));
                 break;
             case 1:
                 details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2018_SIX_DOLLAR);
-                title = String.format("%s (%s)", "Flight Controller",
-                        details.priceText);
+                if (details != null){
+                    price = String.format("(%s)", details.priceText);
+                }
+                title = "Flight Controller";
+                productPrice.setText(price);
                 productTitle.setText(title);
                 icon.setImageDrawable(new IconicsDrawable(this)
-                        .icon(GoogleMaterial.Icon.gmd_local_cafe)
+                        .icon(FontAwesome.Icon.faw_broadcast_tower)
                         .color(Color.BLACK)
                         .sizeDp(96));
                 break;
             case 2:
                 details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2018_TWELVE_DOLLAR);
-                title = String.format("%s (%s)", "Launch Director",
-                        details.priceText);
+                if (details != null){
+                    price = String.format("(%s)", details.priceText);
+                }
+                title = "Launch Director";
+                productPrice.setText(price);
                 productTitle.setText(title);
                 icon.setImageDrawable(new IconicsDrawable(this)
-                        .icon(GoogleMaterial.Icon.gmd_local_dining)
+                        .icon(FontAwesome.Icon.faw_paper_plane2)
                         .color(Color.BLACK)
                         .sizeDp(96));
                 break;
             case 3:
                 details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2018_THIRTY_DOLLAR);
-                title = String.format("%s (%s)", "Elon? Is that you?",
-                        details.priceText);
+                if (details != null){
+                    price = String.format("(%s)", details.priceText);
+                }
+                title = "Elon? Is that you?";
+                productPrice.setText(price);
                 productTitle.setText(title);
                 icon.setImageResource(R.drawable.take_my_money);
                 break;

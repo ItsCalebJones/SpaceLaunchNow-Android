@@ -526,6 +526,8 @@
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
+
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_supporter"
         android:layout_width="wrap_content"
