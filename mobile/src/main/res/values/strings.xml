@@ -38,9 +38,9 @@
   <string name="notifications_settings">Set up launch notifications and scheduling.</string>
   <string name="appearance_settings">Customize app theme, widgets and colors.</string>
   <string name="about_settings">Application information about license, libraries, changelog, etc</string>
-  <string name="support_settings">Follow my projects and contribute to future development.</string>
+  <string name="support_settings">Get pro features and contribute to future development.</string>
   <string name="wear_settings">Change Android Wear watch face settings.</string>
-  <string name="supporter_unlock_text">Thank you for considering supporting Space Launch Now. Every level of support is a one-time purchase that unlocks all pro-features forever!    Pay what you want to unlock every pro feature!</string>
+  <string name="supporter_unlock_text">I appreciate you considering supporting Space Launch Now. \n\nEvery level of support is a one-time purchase that unlocks all pro-features forever. Pay what you want to support continued development and updates!</string>
   <string name="thank_you_support">Thanks for your continued support!</string>
   <string name="ok">OK</string>
   <string name="issues_connecting_billing">Issues connecting to Google Play Billing</string>
@@ -335,7 +335,7 @@
   <string name="notifications">Notifications</string>
   <string name="appearance">Appearance</string>
   <string name="wear">Wear</string>
-  <string name="Support">Support</string>
+  <string name="Support">Become a Supporter</string>
   <string name="about">About</string>
   <string name="watch_hour_mode">Watch Hour Mode</string>
   <string name="watch_hour_mode_on">Use 24 Hour mode for keeping time.</string>
@@ -402,4 +402,5 @@
   <string name="space_launch_news">Space Launch News</string>
     <string name="consent_body">This application uses Google Firebase for analytics and Google AdMod for serving advertisements. Your anonymous usage data may be used to personalize advertisements within this application. You can withdraw permission at anytime from within the applications settings.</string>
     <string name="data_consent">Data Consent</string>
+  <string name="supporter_main">Get Pro Features | Remove Ads</string>
 </resources>

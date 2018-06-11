@@ -44,7 +44,7 @@
     </header>
     <header
         android:icon="@drawable/ic_support_black"
-        android:summary="Follow my projects and contribute to future development."
+        android:summary="@string/support_settings"
         android:title="@string/Support">
         <intent
             android:targetClass="me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity"

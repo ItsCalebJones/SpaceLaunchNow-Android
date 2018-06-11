@@ -92,8 +92,8 @@ public class DataSaver {
                                 .equalTo("id", item.getId())
                                 .findFirst();
                         if (item.getMissions() != null && item.getMissions().size() > 0){
-                            Mission newMisison = item.getMissions().get(0);
-                            RealmResults<Mission> missions = mRealm1.where(Mission.class).equalTo("id", newMisison.getId()).findAll();
+                            Mission newMission = item.getMissions().get(0);
+                            RealmResults<Mission> missions = mRealm1.where(Mission.class).equalTo("id", newMission.getId()).findAll();
                             if  (missions != null && missions.size() > 0){
                                 RealmList <Mission> results = new RealmList<Mission>();
                                 results.addAll(missions.subList(0, missions.size()));

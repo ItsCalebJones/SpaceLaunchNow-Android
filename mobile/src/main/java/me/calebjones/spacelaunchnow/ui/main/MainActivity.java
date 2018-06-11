@@ -247,10 +247,10 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
                                 .withIcon(GoogleMaterial.Icon.gmd_assignment)
                                 .withIdentifier(R.id.menu_launches)
                                 .withSelectable(true),
-                        new PrimaryDrawerItem().withName(R.string.missions)
-                                .withIcon(GoogleMaterial.Icon.gmd_satellite)
-                                .withIdentifier(R.id.menu_missions)
-                                .withSelectable(true),
+//                        new PrimaryDrawerItem().withName(R.string.missions)
+//                                .withIcon(GoogleMaterial.Icon.gmd_satellite)
+//                                .withIdentifier(R.id.menu_missions)
+//                                .withSelectable(true),
                         new PrimaryDrawerItem().withName(R.string.news)
                                 .withIcon(CommunityMaterial.Icon.cmd_newspaper)
                                 .withIdentifier(R.id.menu_news)
@@ -328,7 +328,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
             Timber.d("Adding footer.");
             result.addStickyFooterItem(
                     new PrimaryDrawerItem().withName(R.string.supporter_title)
-                            .withDescription(R.string.get_pro_features)
+                            .withDescription(R.string.supporter_main)
                             .withIcon(GoogleMaterial.Icon.gmd_mood)
                             .withIdentifier(R.id.menu_support)
                             .withSelectable(false));

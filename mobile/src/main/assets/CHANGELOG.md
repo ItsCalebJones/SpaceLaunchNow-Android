@@ -3,9 +3,19 @@ A space launch tracker for Android using data from the Launch Library API.
 
 [View the latest releases here.](https://github.com/ItsCalebJones/SpaceLaunchNow-Android/releases)
 ## Changelog
-#### Updated 2-7-2017
+#### Updated 6-11-2018
 ---
-### Version 2.5.0 (Latest)
+### Version 2.5.4 (Latest)
+#### Overview
+Slight changes to handling GDPR users and their choices. Starting work to support a UI revamp.
+
+#### Changelog
+* New support email address added.
+* Removed the 'Missions' page to make room for new UI changes.
+* Changes to Supporter page.
+* Fixed a few random crashes.
+
+### Version 2.5.0
 #### Overview
 Support for EU's General Data Protection Regulations, Space Launch Now will now ask for consent before showing personalized advertisements. If advertisements aren't your thing, you can always support Space Launch Now with an in-app-purchase.
 
