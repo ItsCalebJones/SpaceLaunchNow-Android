@@ -1,7 +1,11 @@
 package me.calebjones.spacelaunchnow.common;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import io.realm.Realm;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
@@ -13,6 +17,20 @@ public class BaseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        realm = Realm.getDefaultInstance();
+        super.onCreateView(inflater, container, savedInstanceState);
+        return null;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        realm = Realm.getDefaultInstance();
+        super.onAttach(context);
     }
 
     @Override

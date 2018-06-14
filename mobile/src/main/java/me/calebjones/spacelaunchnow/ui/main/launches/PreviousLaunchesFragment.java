@@ -79,6 +79,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     private int mScrollOffset = 4;
     private LinearLayoutManager layoutManager;
     private Context context;
+    private DataRepository dataRepository;
 
     private CoordinatorLayout coordinatorLayout;
     String getRequestId;
@@ -97,6 +98,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         this.context = getContext();
+        dataRepository = new DataRepository(context, getRealm());
 
         listPreferences = ListPreferences.getInstance(this.context);
 
@@ -392,7 +394,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
 
     public void loadLaunches() {
         if (!getRealm().isClosed()) {
-            launchRealms = new DataRepository(getActivity()).getPreviousLaunchData(getRealm());
+            launchRealms = dataRepository.getPreviousLaunchData(getRealm());
             launchRealms.addChangeListener(callback);
             displayLaunches(launchRealms);
         }

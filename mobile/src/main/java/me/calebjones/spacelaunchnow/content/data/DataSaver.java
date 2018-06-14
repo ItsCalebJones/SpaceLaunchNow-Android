@@ -6,6 +6,7 @@ import android.content.Intent;
 import com.crashlytics.android.Crashlytics;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 
@@ -66,7 +67,7 @@ public class DataSaver {
         Realm mRealm = Realm.getDefaultInstance();
 
         mRealm.executeTransaction(mRealm1-> {
-
+                Date now = Calendar.getInstance().getTime();
                 if (mini) {
                     for (Launch item : launches) {
                         final Launch previous = mRealm1.where(Launch.class)
@@ -80,6 +81,7 @@ public class DataSaver {
                                     notification.resetNotifiers();
                                     mRealm1.copyToRealmOrUpdate(notification);
                                 }
+                                previous.setLastUpdate(now);
                                 previous.resetNotifiers();
                                 mRealm1.copyToRealmOrUpdate(previous);
                                 dataClientManager.getLaunchById(item.getId());
@@ -109,6 +111,7 @@ public class DataSaver {
                                     mRealm1.copyToRealmOrUpdate(notification);
                                 }
                             }
+                            item.setLastUpdate(now);
                             item.setEventID(previous.getEventID());
                             item.setSyncCalendar(previous.syncCalendar());
                             item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
@@ -183,6 +186,7 @@ public class DataSaver {
         isSaving = true;
         Realm mRealm = Realm.getDefaultInstance();
         mRealm.executeTransactionAsync(realm -> {
+            Date now = Calendar.getInstance().getTime();
                 for (Launch item : launches) {
 
                     Launch previous = realm.where(Launch.class)
@@ -196,7 +200,7 @@ public class DataSaver {
                                 realm.copyToRealmOrUpdate(notification);
                             }
                         }
-
+                        item.setLastUpdate(now);
                         item.setEventID(previous.getEventID());
                         item.setSyncCalendar(previous.syncCalendar());
                         item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
@@ -224,6 +228,7 @@ public class DataSaver {
         if (launches != null) {
             Realm mRealm = Realm.getDefaultInstance();
             mRealm.executeTransactionAsync(realm -> {
+                Date now = Calendar.getInstance().getTime();
                     for (Launch item : launches) {
 
                         Launch previous = realm.where(Launch.class)
@@ -237,6 +242,7 @@ public class DataSaver {
                                     realm.copyToRealmOrUpdate(notification);
                                 }
                             }
+                            item.setLastUpdate(now);
                             item.setEventID(previous.getEventID());
                             item.setSyncCalendar(previous.syncCalendar());
                             item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
@@ -258,5 +264,15 @@ public class DataSaver {
             mRealm.close();
         }
         isSaving = false;
+    }
+
+    public void deleteLaunch(int id) {
+        Realm mRealm = Realm.getDefaultInstance();
+        Launch previous = mRealm.where(Launch.class)
+                .equalTo("id", id)
+                .findFirst();
+        if (previous != null) {
+            previous.deleteFromRealm();
+        }
     }
 }

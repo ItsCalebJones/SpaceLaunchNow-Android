@@ -1,5 +1,6 @@
 package me.calebjones.spacelaunchnow.data.models.realm;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import io.realm.DynamicRealm;
@@ -185,8 +186,20 @@ public class Migration implements RealmMigration {
             oldVersion = Constants.DB_SCHEMA_VERSION_2_3_2;
         }
 
+        if (oldVersion < Constants.DB_SCHEMA_VERSION_2_6_0){
+            RealmObjectSchema launch = schema.get("Launch");
+            launch.addField("lastUpdate", Date.class);
+            launch.transform(new RealmObjectSchema.Function() {
+                @Override
+                public void apply(DynamicRealmObject obj) {
+                    obj.set("lastUpdate", Calendar.getInstance().getTime());
+                }
+            });
+            oldVersion = Constants.DB_SCHEMA_VERSION_2_6_0;
+        }
 
-        Timber.i("Final Schema - Version %s", newVersion);
+
+        Timber.i("Final Schema - Version %s", oldVersion);
         for (RealmObjectSchema objectSchema : schema.getAll()) {
             Timber.d("Name: %s Fields: %s", objectSchema.getClassName(), objectSchema.getFieldNames());
             for (String field : objectSchema.getFieldNames()){

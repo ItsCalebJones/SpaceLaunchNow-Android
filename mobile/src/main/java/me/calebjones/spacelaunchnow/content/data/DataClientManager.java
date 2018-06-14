@@ -63,8 +63,8 @@ public class DataClientManager {
     public DataRepositoryManager getDataRepositoryManager() {
         return dataRepositoryManager;
     }
-    
-    public DataSaver getDataSaver(){
+
+    public DataSaver getDataSaver() {
         return dataSaver;
     }
 
@@ -147,7 +147,7 @@ public class DataClientManager {
         });
     }
 
-    public void getNextUpcomingLaunches() {
+    public void getNextUpcomingLaunches(DataRepository.Callback callback) {
         isUpcomingLaunch = true;
         Timber.i("Running getNextUpcomingLaunches");
         DataClient.getInstance().getNextUpcomingLaunches(0, new Callback<LaunchResponse>() {
@@ -159,17 +159,18 @@ public class DataClientManager {
                     Timber.v("getNextUpcomingLaunches Count: %s", count);
                     dataSaver.saveLaunchesToRealm(response.body().getLaunches(), false);
                     if (count < total) {
-                        getNextUpcomingLaunches(count);
+                        getNextUpcomingLaunches(count, callback);
                     } else {
                         isUpcomingLaunch = false;
 
                         dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, true, call));
 
                         nextLaunchTracker.runUpdate();
+                        callback.onSuccess();
                     }
                 } else {
                     isUpcomingLaunch = false;
-
+                    callback.onNetworkFailure();
                     dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, false, call, ErrorUtil.parseLibraryError(response)));
 
                 }
@@ -178,13 +179,13 @@ public class DataClientManager {
             @Override
             public void onFailure(Call<LaunchResponse> call, Throwable t) {
                 isUpcomingLaunch = false;
-
+                callback.onFailure(t);
                 dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, false, call, t.getLocalizedMessage()));
             }
         });
     }
 
-    private void getNextUpcomingLaunches(final int offset) {
+    private void getNextUpcomingLaunches(final int offset, DataRepository.Callback callback) {
         isUpcomingLaunch = true;
         Timber.i("Running getNextUpcomingLaunches - %s", offset);
         DataClient.getInstance().getNextUpcomingLaunches(offset, new Callback<LaunchResponse>() {
@@ -196,17 +197,17 @@ public class DataClientManager {
                     Timber.v("UpcomingLaunches Count: %s", count);
                     dataSaver.saveLaunchesToRealm(response.body().getLaunches(), false);
                     if (count < total) {
-                        getNextUpcomingLaunches(count);
+                        getNextUpcomingLaunches(count, callback);
                     } else {
                         isUpcomingLaunch = false;
-
+                        callback.onSuccess();
                         dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, true, call));
 
                         nextLaunchTracker.runUpdate();
                     }
                 } else {
                     isUpcomingLaunch = false;
-
+                    callback.onNetworkFailure();
                     dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, false, call, ErrorUtil.parseLibraryError(response)));
                 }
             }
@@ -214,7 +215,7 @@ public class DataClientManager {
             @Override
             public void onFailure(Call<LaunchResponse> call, Throwable t) {
                 isUpcomingLaunch = false;
-
+                callback.onFailure(t);
                 dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, false, call, t.getLocalizedMessage()));
             }
         });
@@ -420,6 +421,9 @@ public class DataClientManager {
                     isLaunchById = false;
 
                 } else {
+                    if (response.code() == 404) {
+                        dataSaver.deleteLaunch(id);
+                    }
                     isLaunchById = false;
 
                     dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_BY_ID, false, call, ErrorUtil.parseLibraryError(response)));

@@ -4,11 +4,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.appwidget.AppWidgetManager;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,29 +33,20 @@ import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.mrapp.android.preference.activity.PreferenceActivity;
-import io.realm.RealmChangeListener;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
-import io.realm.Sort;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
+import me.calebjones.spacelaunchnow.content.data.DataRepository;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.SyncCalendarJob;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
-import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
-import me.calebjones.spacelaunchnow.data.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.UpdateRecord;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
@@ -65,7 +54,6 @@ import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.ui.settings.fragments.NotificationsFragment;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
-import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactManager;
 import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactWidgetProvider;
 import me.calebjones.spacelaunchnow.widget.launchlist.LaunchListManager;
@@ -131,6 +119,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     private SwitchPreferences switchPreferences;
     private SharedPreferences sharedPref;
     private Context context;
+    private DataRepository dataRepository;
 
     private boolean active;
     private boolean switchChanged;
@@ -141,6 +130,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         context = getActivity();
         sharedPreference = ListPreferences.getInstance(context);
         switchPreferences = SwitchPreferences.getInstance(context);
+        dataRepository = new DataRepository(context, getRealm());
         setScreenName("Next Launch Fragment");
     }
 
@@ -183,7 +173,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 checkFilter();
             }
         });
-        if(switchPreferences.getNextFABHidden()){
+        if (switchPreferences.getNextFABHidden()) {
             FABMenu.setVisibility(View.GONE);
         } else {
             FABMenu.setVisibility(View.VISIBLE);
@@ -224,7 +214,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
         //Enable no data by default
         no_data.setVisibility(View.VISIBLE);
-
         return view;
     }
 
@@ -238,71 +227,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     @Override
     public void onStop() {
         super.onStop();
-        if (!getRealm().isClosed()) {
-            launchRealms.removeChangeListener(callback); // remove a particular listener
-            // or
-            launchRealms.removeAllChangeListeners(); // remove all registered listeners
-        }
     }
-
-    private RealmChangeListener callback = new RealmChangeListener<RealmResults<Launch>>() {
-        @Override
-        public void onChange(RealmResults<Launch> results) {
-            Timber.v("Data changed - size: %s", results.size());
-
-            int preferredCount = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
-            adapter.clear();
-
-            if (results.size() >= preferredCount) {
-                no_data.setVisibility(View.GONE);
-                setLayoutManager(preferredCount);
-                adapter.addItems(results.subList(0, preferredCount));
-
-            } else if (results.size() > 0) {
-                no_data.setVisibility(View.GONE);
-                setLayoutManager(preferredCount);
-                adapter.addItems(results);
-
-            } else {
-                if (adapter != null) {
-                    adapter.clear();
-                }
-            }
-            hideLoading();
-            launchRealms.removeAllChangeListeners();
-        }
-    };
-
-
-    public void displayLaunches() {
-        Timber.v("loadLaunches...");
-        Calendar calendar = Calendar.getInstance();
-        if (switchPreferences.getPersistSwitch()) {
-            calendar.add(Calendar.HOUR_OF_DAY, -24);
-        }
-        Date date = calendar.getTime();
-
-        if (switchPreferences.getAllSwitch()) {
-            RealmQuery<Launch> query = getRealm().where(Launch.class)
-                    .greaterThanOrEqualTo("net", date);
-            if (switchPreferences.getNoGoSwitch()) {
-                query.notEqualTo("status", 2);
-                query.findAll();
-            }
-            if (switchPreferences.getTBDLaunchSwitch()) {
-                query.equalTo("tbddate", 0);
-                query.findAll();
-            }
-            query.sort("net", Sort.ASCENDING);
-            launchRealms = query.findAllAsync();
-            launchRealms.addChangeListener(callback);
-            Timber.v("loadLaunches - Realm query created.");
-        } else {
-            filterLaunchRealm();
-            Timber.v("loadLaunches - Filtered Realm query created.");
-        }
-    }
-
 
     private void setLayoutManager(int size) {
         if (!isDetached() && isAdded()) {
@@ -320,12 +245,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         } else if (isDetached()) {
             Timber.v("View is detached.");
         }
-    }
-
-
-    private void filterLaunchRealm() {
-        launchRealms = QueryBuilder.buildUpcomingSwitchQueryAsync(context, getRealm());
-        launchRealms.addChangeListener(callback);
     }
 
 
@@ -398,35 +317,58 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         anim.start();
     }
 
-    public void fetchData() {
+    public void fetchData(boolean forceRefresh) {
         Timber.v("Sending GET_UP_LAUNCHES");
         showLoading();
-        LibraryDataManager libraryDataManager = new LibraryDataManager(context);
-        libraryDataManager.getNextUpcomingLaunches();
+        dataRepository.getNextUpcomingLaunches(forceRefresh, new DataRepository.Callback() {
+            @Override
+            public void onSuccess() {
+                onLaunchesLoaded(QueryBuilder.buildUpcomingSwitchQuery(context, getRealm()));
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                Timber.v(throwable);
+                hideLoading();
+            }
+
+            @Override
+            public void onNetworkFailure() {
+                hideLoading();
+            }
+        });
+    }
+
+    private void onLaunchesLoaded(RealmResults<Launch> launches) {
+        int preferredCount = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
+        adapter.clear();
+
+        if (launches.size() >= preferredCount) {
+            no_data.setVisibility(View.GONE);
+            setLayoutManager(preferredCount);
+            adapter.addItems(launches.subList(0, preferredCount));
+
+        } else if (launches.size() > 0) {
+            no_data.setVisibility(View.GONE);
+            setLayoutManager(preferredCount);
+            adapter.addItems(launches);
+
+        } else {
+            if (adapter != null) {
+                adapter.clear();
+            }
+        }
+        hideLoading();
     }
 
     private void showLoading() {
         Timber.v("Show Loading...");
-        if (!mSwipeRefreshLayout.isRefreshing()) {
-            mSwipeRefreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    mSwipeRefreshLayout.setRefreshing(true);
-                }
-            });
-        }
+        mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
     }
 
     private void hideLoading() {
         Timber.v("Hide Loading...");
-        if (mSwipeRefreshLayout.isRefreshing()) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-            }, 200);
-        }
+        mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(false));
     }
 
 
@@ -435,110 +377,24 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         super.onResume();
         Timber.v("onResume");
         setTitle();
-
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Constants.ACTION_GET_UP_LAUNCHES_ALL);
-        intentFilter.addAction(Constants.ACTION_GET_UP_LAUNCHES);
-        intentFilter.addAction(Constants.ACTION_GET_NEXT_LAUNCHES);
-
-        getActivity().registerReceiver(launchReceiver, intentFilter);
-
-        displayLaunches();
-
-        RealmResults<UpdateRecord> records = getRealm().where(UpdateRecord.class)
-                .equalTo("type", Constants.ACTION_GET_UP_LAUNCHES_ALL)
-                .or()
-                .equalTo("type", Constants.ACTION_GET_UP_LAUNCHES)
-                .or()
-                .equalTo("type", Constants.ACTION_GET_NEXT_LAUNCHES)
-                .sort("date", Sort.DESCENDING)
-                .findAll();
-        if (records != null && records.size() > 0) {
-            UpdateRecord record = records.first();
-            Date currentDate = new Date();
-            Date lastUpdateDate = record.getDate();
-            long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
-            long timeMaxUpdate = TimeUnit.HOURS.toMillis(1);
-            Timber.d("Time since last upcoming launches sync %s", timeSinceUpdate);
-            if (timeSinceUpdate > timeMaxUpdate) {
-                Timber.d("%s greater then %s - updating library data.", timeSinceUpdate, timeMaxUpdate);
-                fetchData();
-            }
-        }
+        fetchData(false);
         Bundle bundle = getArguments();
-        if(bundle != null) {
-            if(bundle.getBoolean("SHOW_FILTERS")){
+        if (bundle != null) {
+            if (bundle.getBoolean("SHOW_FILTERS")) {
                 if (!active) {
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            checkFilter();
-                        }
-                    }, 500);
+                    new Handler().postDelayed(this::checkFilter, 500);
                 }
             }
         }
     }
-
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Timber.v("onPause");
-        getActivity().unregisterReceiver(launchReceiver);
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    private final BroadcastReceiver launchReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Timber.v("Received: %s", intent.getAction());
-            hideLoading();
-            if (intent.getAction().equals(Constants.ACTION_GET_UP_LAUNCHES) || intent.getAction().equals(Constants.ACTION_GET_NEXT_LAUNCHES)) {
-                if (intent.getExtras().getBoolean("result")) {
-                    onFinishedRefreshing();
-                } else {
-                    hideLoading();
-                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, intent.getStringExtra("error"));
-                }
-            }
-        }
-    };
-
 
     @Override
     public void onRefresh() {
-        fetchData();
-        launchRealms.removeChangeListener(callback);
+        fetchData(true);
     }
 
     private void setTitle() {
         ((MainActivity) getActivity()).setActionBarTitle("Space Launch Now");
-    }
-
-    public void onFinishedRefreshing() {
-        hideLoading();
-        displayLaunches();
     }
 
     //Currently only used to debug
@@ -554,12 +410,12 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             mMenu = menu;
         }
 
-        if (switchPreferences.getNextFABHidden()){
+        if (switchPreferences.getNextFABHidden()) {
             MenuItem item = menu.findItem(R.id.action_FAB);
             item.setTitle("Show FAB");
         }
 
-        if(SupporterHelper.isSupporter()){
+        if (SupporterHelper.isSupporter()) {
             mMenu.removeItem(R.id.action_supporter);
         }
     }
@@ -577,17 +433,17 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
         } else if (id == R.id.action_alert) {
             checkFilter();
-        } else if (id == R.id.action_FAB){
+        } else if (id == R.id.action_FAB) {
             switchPreferences.setNextFABHidden(!switchPreferences.getNextFABHidden());
-            if (switchPreferences.getNextFABHidden()){
+            if (switchPreferences.getNextFABHidden()) {
                 item.setTitle("Show FAB");
-                if(switchPreferences.getNextFABHidden()){
+                if (switchPreferences.getNextFABHidden()) {
 
                     FABMenu.setVisibility(View.GONE);
                 }
             } else {
                 item.setTitle("Hide FAB");
-                if(!switchPreferences.getNextFABHidden()){
+                if (!switchPreferences.getNextFABHidden()) {
                     FABMenu.setVisibility(View.VISIBLE);
                 }
             }
@@ -649,7 +505,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 }
 
                 UpdateWearJob.scheduleJobNow();
-                displayLaunches();
+                fetchData(false);
                 if (switchPreferences.getCalendarStatus()) {
                     SyncCalendarJob.scheduleImmediately();
                 }
@@ -780,10 +636,10 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
     @OnClick(R.id.action_notification_settings)
-    public void onNotificationSettingsClicked(){
-        Intent intent = new Intent(context, SettingsActivity.class );
-        intent.putExtra( PreferenceActivity.EXTRA_SHOW_FRAGMENT, NotificationsFragment.class.getName());
-        intent.putExtra( PreferenceActivity.EXTRA_NO_HEADERS, true );
+    public void onNotificationSettingsClicked() {
+        Intent intent = new Intent(context, SettingsActivity.class);
+        intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT, NotificationsFragment.class.getName());
+        intent.putExtra(PreferenceActivity.EXTRA_NO_HEADERS, true);
         startActivity(intent);
     }
 

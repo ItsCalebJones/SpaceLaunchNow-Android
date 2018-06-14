@@ -85,7 +85,22 @@ public class DataRepositoryManager {
             Timber.d("Time since last upcoming launches sync %s", timeSinceUpdate);
             if (timeSinceUpdate > daysMaxUpdate) {
                 Timber.d("%s greater then %s - updating library data.", timeSinceUpdate, daysMaxUpdate);
-                dataClientManager.getNextUpcomingLaunches();
+                dataClientManager.getNextUpcomingLaunches(new DataRepository.Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onFailure(Throwable throwable) {
+
+                    }
+
+                    @Override
+                    public void onNetworkFailure() {
+
+                    }
+                });
             }
         } else {
             Timber.d("No record - getting all launches");
@@ -98,12 +113,7 @@ public class DataRepositoryManager {
         RealmResults<Launch> launches = realm.where(Launch.class).findAll();
         for (final Launch launch : launches) {
             if (launch.getName() == null) {
-                realm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        launch.deleteFromRealm();
-                    }
-                });
+                realm.executeTransaction(realm1 -> launch.deleteFromRealm());
             }
         }
 

@@ -381,7 +381,8 @@ public class QueryBuilder {
         return query;
     }
 
-    public static RealmResults<Launch> buildUpcomingSwitchQueryAsync(Context context, Realm realm) {
+    // TODO need to consider ALL scenario
+    public static RealmResults<Launch> buildUpcomingSwitchQuery(Context context, Realm realm) {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
         boolean first = true;
         Calendar calendar = Calendar.getInstance();
@@ -520,7 +521,7 @@ public class QueryBuilder {
         query.endGroup();
 
         query.sort("net", Sort.ASCENDING);
-        return query.findAllAsync();
+        return query.findAll();
     }
 
     public static RealmResults<Launch> buildSwitchQuery(Context context, Realm realm) {

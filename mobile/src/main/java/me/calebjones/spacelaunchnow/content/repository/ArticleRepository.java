@@ -50,30 +50,27 @@ public class ArticleRepository {
                     if (response.isSuccessful()) {
                         final NewsFeedResponse newsResponse = response.body();
                         if (newsResponse != null) {
-                            realm.executeTransaction(new Realm.Transaction() {
-                                @Override
-                                public void execute(Realm realm) {
-                                    RealmList<Article> finalArticles = new RealmList();
-                                    SimpleDateFormat inDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.US);
-                                    SimpleDateFormat altDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm Z", Locale.US);
-                                    for (Article article: newsResponse.getChannel().getArticles()){
+                            realm.executeTransaction(realm -> {
+                                RealmList<Article> finalArticles = new RealmList();
+                                SimpleDateFormat inDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.US);
+                                SimpleDateFormat altDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm Z", Locale.US);
+                                for (Article article: newsResponse.getChannel().getArticles()){
+                                    try {
+                                        Date pubDate = inDateFormat.parse(article.getPubDate());
+                                        article.setDate(pubDate);
+                                        finalArticles.add(article);
+                                    } catch (ParseException e) {
                                         try {
-                                            Date pubDate = inDateFormat.parse(article.getPubDate());
+                                            Date pubDate = altDateFormat.parse(article.getPubDate());
                                             article.setDate(pubDate);
                                             finalArticles.add(article);
-                                        } catch (ParseException e) {
-                                            try {
-                                                Date pubDate = altDateFormat.parse(article.getPubDate());
-                                                article.setDate(pubDate);
-                                                finalArticles.add(article);
-                                            } catch (ParseException f){
-                                                Timber.e(f, "Unable to parse %s", article.getTitle());
-                                            }
+                                        } catch (ParseException f){
+                                            Timber.e(f, "Unable to parse %s", article.getTitle());
                                         }
                                     }
-                                    realm.copyToRealmOrUpdate(finalArticles);
-                                    callback.onSuccess(finalArticles);
                                 }
+                                realm.copyToRealmOrUpdate(finalArticles);
+                                callback.onSuccess(finalArticles);
                             });
 
                         }

@@ -45,6 +45,7 @@ public class Launch extends RealmObject {
 
     private Date startDate;
     private Date endDate;
+    private Date lastUpdate;
 
     private boolean notifiable = false;
     private boolean userToggledNotifiable = false;
@@ -372,5 +373,13 @@ public class Launch extends RealmObject {
 
     public void setTbddate(Integer tbddate) {
         this.tbddate = tbddate;
+    }
+
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 }

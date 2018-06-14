@@ -37,6 +37,7 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.exceptions.RealmMigrationNeededException;
 import jonathanfinerty.once.Once;
+import me.calebjones.spacelaunchnow.content.data.DataRepository;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.DataJobCreator;
@@ -74,6 +75,7 @@ public class LaunchApplication extends Application {
         super.onCreate();
         context = this;
         firebaseMessaging = FirebaseMessaging.getInstance();
+
         setupAds();
         setupPreferences();
         setupCrashlytics();
@@ -193,7 +195,7 @@ public class LaunchApplication extends Application {
 
         Timber.d("Realm building config");
         RealmConfiguration config = new RealmConfiguration.Builder()
-                .schemaVersion(Constants.DB_SCHEMA_VERSION_2_3_2)
+                .schemaVersion(Constants.DB_SCHEMA_VERSION_2_6_0)
                 .modules(Realm.getDefaultModule(), new LaunchDataModule())
                 .migration(new Migration())
                 .build();
