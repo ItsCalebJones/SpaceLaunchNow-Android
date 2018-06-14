@@ -37,13 +37,11 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.exceptions.RealmMigrationNeededException;
 import jonathanfinerty.once.Once;
-import me.calebjones.spacelaunchnow.content.data.DataRepository;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.DataJobCreator;
 import me.calebjones.spacelaunchnow.content.jobs.SyncJob;
 import me.calebjones.spacelaunchnow.content.jobs.SyncWearJob;
-import me.calebjones.spacelaunchnow.content.jobs.UpdateJob;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.content.notifications.NotificationHelper;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
@@ -281,16 +279,10 @@ public class LaunchApplication extends Application {
 
 
     private void startJobs() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (sharedPref.getBoolean("background", true)) {
-                    UpdateJob.scheduleJob(context);
-                }
-                SyncJob.schedulePeriodicJob(context);
-                SyncWearJob.scheduleJob();
-                UpdateWearJob.scheduleJobNow();
-            }
+        new Thread(() -> {
+            SyncJob.schedulePeriodicJob(context);
+            SyncWearJob.scheduleJob();
+            UpdateWearJob.scheduleJobNow();
         }).start();
     }
 

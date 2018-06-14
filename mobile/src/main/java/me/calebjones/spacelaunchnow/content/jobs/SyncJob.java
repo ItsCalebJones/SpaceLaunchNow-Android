@@ -66,7 +66,6 @@ public class SyncJob extends Job {
                 Crashlytics.logException(e);
             }
         }
-        dataClientManager.getDataRepositoryManager().cleanDB();
 
         RealmConfiguration configuration = Realm.getDefaultConfiguration();
         if (configuration != null){

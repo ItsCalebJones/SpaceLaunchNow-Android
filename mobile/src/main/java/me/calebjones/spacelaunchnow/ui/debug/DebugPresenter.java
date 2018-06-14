@@ -18,12 +18,10 @@ import java.io.IOException;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.data.DataRepositoryManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.JobUtils;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
-import me.calebjones.spacelaunchnow.content.wear.WearWatchfaceManager;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.data.models.Products;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
@@ -140,9 +138,9 @@ public class DebugPresenter implements DebugContract.Presenter {
 
     @Override
     public void syncBackgroundSyncClicked(Context context) {
-        DataRepositoryManager dataRepositoryManager = new DataRepositoryManager(context);
-        dataRepositoryManager.syncBackground();
+
     }
+
 
     @Override
     public void syncVehiclesClicked(Context context) {

@@ -33,8 +33,6 @@ import timber.log.Timber;
 public class DataClientManager {
 
     private Context context;
-
-    private DataRepositoryManager dataRepositoryManager;
     private DataSaver dataSaver;
     private NextLaunchTracker nextLaunchTracker;
 
@@ -55,13 +53,8 @@ public class DataClientManager {
 
     public DataClientManager(Context context) {
         this.context = context;
-        this.dataRepositoryManager = new DataRepositoryManager(context, this);
         this.dataSaver = new DataSaver(context, this);
         nextLaunchTracker = new NextLaunchTracker(context);
-    }
-
-    public DataRepositoryManager getDataRepositoryManager() {
-        return dataRepositoryManager;
     }
 
     public DataSaver getDataSaver() {
@@ -147,7 +140,7 @@ public class DataClientManager {
         });
     }
 
-    public void getNextUpcomingLaunches(DataRepository.Callback callback) {
+    public void getNextUpcomingLaunches(DataRepository.NetworkCallback networkCallback) {
         isUpcomingLaunch = true;
         Timber.i("Running getNextUpcomingLaunches");
         DataClient.getInstance().getNextUpcomingLaunches(0, new Callback<LaunchResponse>() {
@@ -159,18 +152,18 @@ public class DataClientManager {
                     Timber.v("getNextUpcomingLaunches Count: %s", count);
                     dataSaver.saveLaunchesToRealm(response.body().getLaunches(), false);
                     if (count < total) {
-                        getNextUpcomingLaunches(count, callback);
+                        getNextUpcomingLaunches(count, networkCallback);
                     } else {
                         isUpcomingLaunch = false;
 
                         dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, true, call));
 
                         nextLaunchTracker.runUpdate();
-                        callback.onSuccess();
+                        networkCallback.onSuccess();
                     }
                 } else {
                     isUpcomingLaunch = false;
-                    callback.onNetworkFailure();
+                    networkCallback.onNetworkFailure(response.code());
                     dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, false, call, ErrorUtil.parseLibraryError(response)));
 
                 }
@@ -179,13 +172,13 @@ public class DataClientManager {
             @Override
             public void onFailure(Call<LaunchResponse> call, Throwable t) {
                 isUpcomingLaunch = false;
-                callback.onFailure(t);
+                networkCallback.onFailure(t);
                 dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, false, call, t.getLocalizedMessage()));
             }
         });
     }
 
-    private void getNextUpcomingLaunches(final int offset, DataRepository.Callback callback) {
+    private void getNextUpcomingLaunches(final int offset, DataRepository.NetworkCallback networkCallback) {
         isUpcomingLaunch = true;
         Timber.i("Running getNextUpcomingLaunches - %s", offset);
         DataClient.getInstance().getNextUpcomingLaunches(offset, new Callback<LaunchResponse>() {
@@ -197,17 +190,17 @@ public class DataClientManager {
                     Timber.v("UpcomingLaunches Count: %s", count);
                     dataSaver.saveLaunchesToRealm(response.body().getLaunches(), false);
                     if (count < total) {
-                        getNextUpcomingLaunches(count, callback);
+                        getNextUpcomingLaunches(count, networkCallback);
                     } else {
                         isUpcomingLaunch = false;
-                        callback.onSuccess();
+                        networkCallback.onSuccess();
                         dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, true, call));
 
                         nextLaunchTracker.runUpdate();
                     }
                 } else {
                     isUpcomingLaunch = false;
-                    callback.onNetworkFailure();
+                    networkCallback.onNetworkFailure(response.code());
                     dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, false, call, ErrorUtil.parseLibraryError(response)));
                 }
             }
@@ -215,7 +208,7 @@ public class DataClientManager {
             @Override
             public void onFailure(Call<LaunchResponse> call, Throwable t) {
                 isUpcomingLaunch = false;
-                callback.onFailure(t);
+                networkCallback.onFailure(t);
                 dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, false, call, t.getLocalizedMessage()));
             }
         });

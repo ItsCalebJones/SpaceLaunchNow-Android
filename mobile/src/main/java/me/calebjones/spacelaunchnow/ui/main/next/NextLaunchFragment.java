@@ -46,7 +46,6 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.SyncCalendarJob;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
-import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
@@ -54,6 +53,7 @@ import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.ui.settings.fragments.NotificationsFragment;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
+import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactManager;
 import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactWidgetProvider;
 import me.calebjones.spacelaunchnow.widget.launchlist.LaunchListManager;
@@ -319,27 +319,35 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     public void fetchData(boolean forceRefresh) {
         Timber.v("Sending GET_UP_LAUNCHES");
-        showLoading();
-        dataRepository.getNextUpcomingLaunches(forceRefresh, new DataRepository.Callback() {
+        dataRepository.getNextUpcomingLaunches(forceRefresh, new DataRepository.LaunchCallback() {
             @Override
-            public void onSuccess() {
-                onLaunchesLoaded(QueryBuilder.buildUpcomingSwitchQuery(context, getRealm()));
+            public void onLaunchesLoaded(RealmResults<Launch> launches) {
+                updateAdapter(launches);
             }
 
             @Override
-            public void onFailure(Throwable throwable) {
-                Timber.v(throwable);
+            public void onRefreshingFromNetwork() {
+                showLoading();
+            }
+
+            @Override
+            public void onNetworkResultReceived() {
                 hideLoading();
             }
 
             @Override
-            public void onNetworkFailure() {
-                hideLoading();
+            public void onNetworkError(String message) {
+                SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                Timber.e(throwable);
             }
         });
     }
 
-    private void onLaunchesLoaded(RealmResults<Launch> launches) {
+    private void updateAdapter(RealmResults<Launch> launches) {
         int preferredCount = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
         adapter.clear();
 
@@ -358,7 +366,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 adapter.clear();
             }
         }
-        hideLoading();
     }
 
     private void showLoading() {

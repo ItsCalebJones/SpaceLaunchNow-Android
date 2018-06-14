@@ -160,7 +160,7 @@ public class QueryBuilder {
         ArrayList<String> locationArray = switchPreferences.getUpLocationFilteredArray();
         ArrayList<String> vehicleArray = switchPreferences.getUpVehicleFilteredArray();
 
-        if (countryArray != null && countryFilter != null && countryArray.size() != countryFilter.length){
+        if (countryArray != null && countryFilter != null && countryArray.size() != countryFilter.length) {
             Crashlytics.log("Country Array: " + countryArray + " Country Filter " + countryFilter);
             Toast.makeText(context, "UNKNOWN ERROR - Resetting Country filter.", Toast.LENGTH_SHORT).show();
             switchPreferences.resetAllUpFilters();
@@ -381,12 +381,55 @@ public class QueryBuilder {
         return query;
     }
 
-    // TODO need to consider ALL scenario
+
+    public static RealmResults<Launch> buildUpcomingSwitchQueryAsync(Context context, Realm realm) {
+        SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
+        RealmQuery<Launch> query;
+        if (switchPreferences.getAllSwitch()) {
+            query = getAllUpcomingQuery(context, realm);
+        } else {
+            query = getSortedUpcomingQuery(context, realm);
+        }
+        return query.findAllAsync();
+    }
+
     public static RealmResults<Launch> buildUpcomingSwitchQuery(Context context, Realm realm) {
+        SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
+        RealmQuery<Launch> query;
+        if (switchPreferences.getAllSwitch()) {
+            query = getAllUpcomingQuery(context, realm);
+        } else {
+            query = getSortedUpcomingQuery(context, realm);
+        }
+        return query.findAll();
+    }
+
+    private static RealmQuery<Launch> getAllUpcomingQuery(Context context, Realm realm) {
+        SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
+        Calendar calendar = Calendar.getInstance();
+        if (switchPreferences.getPersistSwitch()) {
+            calendar.add(Calendar.HOUR_OF_DAY, -24);
+        }
+        Date date = calendar.getTime();
+        RealmQuery<Launch> query = realm.where(Launch.class)
+                .greaterThanOrEqualTo("net", date);
+        if (switchPreferences.getNoGoSwitch()) {
+            query.notEqualTo("status", 2);
+            query.findAll();
+        }
+        if (switchPreferences.getTBDLaunchSwitch()) {
+            query.equalTo("tbddate", 0);
+            query.findAll();
+        }
+        query.sort("net", Sort.ASCENDING);
+        return query;
+    }
+
+    private static RealmQuery<Launch> getSortedUpcomingQuery(Context context, Realm realm) {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
         boolean first = true;
         Calendar calendar = Calendar.getInstance();
-        if(switchPreferences.getPersistSwitch()) {
+        if (switchPreferences.getPersistSwitch()) {
             calendar.add(Calendar.HOUR_OF_DAY, -24);
         }
 
@@ -521,8 +564,9 @@ public class QueryBuilder {
         query.endGroup();
 
         query.sort("net", Sort.ASCENDING);
-        return query.findAll();
+        return query;
     }
+
 
     public static RealmResults<Launch> buildSwitchQuery(Context context, Realm realm) {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
