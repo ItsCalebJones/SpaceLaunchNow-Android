@@ -33,15 +33,18 @@ import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.mrapp.android.preference.activity.PreferenceActivity;
+import io.reactivex.disposables.Disposable;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
-import me.calebjones.spacelaunchnow.content.data.DataRepository;
+import me.calebjones.spacelaunchnow.content.data.next.NextLaunchDataRepository;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.SyncCalendarJob;
@@ -70,8 +73,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     AppCompatCheckBox plesSwitch;
     @BindView(R.id.KSC_switch)
     AppCompatCheckBox kscSwitch;
-    @BindView(R.id.cape_switch)
-    AppCompatCheckBox capeSwitch;
     @BindView(R.id.nasa_switch)
     AppCompatCheckBox nasaSwitch;
     @BindView(R.id.spacex_switch)
@@ -119,7 +120,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     private SwitchPreferences switchPreferences;
     private SharedPreferences sharedPref;
     private Context context;
-    private DataRepository dataRepository;
+    private NextLaunchDataRepository nextLaunchDataRepository;
 
     private boolean active;
     private boolean switchChanged;
@@ -130,7 +131,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         context = getActivity();
         sharedPreference = ListPreferences.getInstance(context);
         switchPreferences = SwitchPreferences.getInstance(context);
-        dataRepository = new DataRepository(context, getRealm());
+        nextLaunchDataRepository = new NextLaunchDataRepository(context, getRealm());
         setScreenName("Next Launch Fragment");
     }
 
@@ -167,12 +168,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         color_reveal = view.findViewById(R.id.color_reveal);
         color_reveal.setBackgroundColor(ContextCompat.getColor(context, color));
         FABMenu = view.findViewById(R.id.menu);
-        FABMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkFilter();
-            }
-        });
+        FABMenu.setOnClickListener(v -> checkFilter());
         if (switchPreferences.getNextFABHidden()) {
             FABMenu.setVisibility(View.GONE);
         } else {
@@ -258,7 +254,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         cascSwitch.setChecked(switchPreferences.getSwitchCASC());
         isroSwitch.setChecked(switchPreferences.getSwitchISRO());
         plesSwitch.setChecked(switchPreferences.getSwitchPles());
-        capeSwitch.setChecked(switchPreferences.getSwitchCape());
         vanSwitch.setChecked(switchPreferences.getSwitchVan());
         kscSwitch.setChecked(switchPreferences.getSwitchKSC());
         noGoSwitch.setChecked(switchPreferences.getNoGoSwitch());
@@ -319,7 +314,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     public void fetchData(boolean forceRefresh) {
         Timber.v("Sending GET_UP_LAUNCHES");
-        dataRepository.getNextUpcomingLaunches(forceRefresh, new DataRepository.LaunchCallback() {
+        nextLaunchDataRepository.getNextUpcomingLaunches(forceRefresh, new NextLaunchDataRepository.LaunchCallback() {
             @Override
             public void onLaunchesLoaded(RealmResults<Launch> launches) {
                 updateAdapter(launches);
@@ -355,16 +350,26 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             no_data.setVisibility(View.GONE);
             setLayoutManager(preferredCount);
             adapter.addItems(launches.subList(0, preferredCount));
+            adapter.notifyDataSetChanged();
 
         } else if (launches.size() > 0) {
             no_data.setVisibility(View.GONE);
             setLayoutManager(preferredCount);
             adapter.addItems(launches);
+            adapter.notifyDataSetChanged();
 
         } else {
             if (adapter != null) {
                 adapter.clear();
             }
+        }
+    }
+
+    private void showNetworkLoading(boolean loading){
+        if (loading){
+            showLoading();
+        } else {
+            hideLoading();
         }
     }
 
@@ -607,13 +612,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     public void van_switch() {
         confirm();
         switchPreferences.setSwitchVan(!switchPreferences.getSwitchVan());
-        checkAll();
-    }
-
-    @OnClick(R.id.cape_switch)
-    public void cape_switch() {
-        confirm();
-        switchPreferences.setSwitchCape(!switchPreferences.getSwitchCape());
         checkAll();
     }
 

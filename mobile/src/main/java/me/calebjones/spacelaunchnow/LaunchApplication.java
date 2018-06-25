@@ -349,12 +349,6 @@ public class LaunchApplication extends Application {
                 firebaseMessaging.unsubscribeFromTopic("casc");
             }
 
-            if (switchPreferences.getSwitchCape()) {
-                firebaseMessaging.subscribeToTopic("cape");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("cape");
-            }
-
             if (switchPreferences.getAllSwitch()) {
                 firebaseMessaging.subscribeToTopic("all");
             } else {

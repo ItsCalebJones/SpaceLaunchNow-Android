@@ -1,7 +1,12 @@
 package me.calebjones.spacelaunchnow.data.networking;
 
 import java.io.IOException;
+import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.BehaviorSubject;
+import io.realm.Realm;
 import me.calebjones.spacelaunchnow.data.helpers.Utils;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryService;
@@ -30,7 +35,25 @@ public class DataClient {
     private static DataClient mInstance;
     private Retrofit libraryRetrofit;
     private Retrofit libraryRetrofitThreaded;
+
+    public LibraryService getLibraryServiceThreaded() {
+        return libraryServiceThreaded;
+    }
+
+    public LibraryService getLibraryServiceThreadedLowPriority() {
+        return libraryServiceThreadedLowPriority;
+    }
+
+    public LibraryService getLibraryService() {
+        return libraryService;
+    }
+
+    public SpaceLaunchNowService getSpaceLaunchNowService() {
+        return spaceLaunchNowService;
+    }
+
     private Retrofit spaceLaunchNowRetrofit;
+    private BehaviorSubject<Boolean> networkInUse;
 
 
 
@@ -93,28 +116,6 @@ public class DataClient {
         Timber.v("Creating getLaunchByID for Launch: %s", launchID);
 
         return call;
-    }
-
-    public Launch[] getLaunchByIdForNotification(int launchID) throws IOException {
-        Call<LaunchResponse> call = libraryService.getLaunchByID(launchID);
-        Response<LaunchResponse> response = call.execute();
-
-        // Here call newPostResponse.code() to get response code
-        int statusCode = response.code();
-        if (statusCode == 200) {
-            if (response.isSuccessful()) {
-                Launch[] launches;
-                try {
-                    launches = response.body().getLaunches();
-                } catch (NullPointerException e){
-                    return null;
-                }
-                if (launches != null) {
-                    return launches;
-                }
-            }
-        }
-        return null;
     }
 
     public Call<LaunchResponse> getNextUpcomingLaunchesMini(Callback<LaunchResponse> callback) {

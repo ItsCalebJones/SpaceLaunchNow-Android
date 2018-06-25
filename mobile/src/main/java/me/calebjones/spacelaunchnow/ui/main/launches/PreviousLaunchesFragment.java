@@ -49,7 +49,7 @@ import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecoration;
-import me.calebjones.spacelaunchnow.content.data.DataRepository;
+import me.calebjones.spacelaunchnow.content.data.next.NextLaunchDataRepository;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
@@ -79,7 +79,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     private int mScrollOffset = 4;
     private LinearLayoutManager layoutManager;
     private Context context;
-    private DataRepository dataRepository;
+    private NextLaunchDataRepository nextLaunchDataRepository;
 
     private CoordinatorLayout coordinatorLayout;
     String getRequestId;
@@ -98,7 +98,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         this.context = getContext();
-        dataRepository = new DataRepository(context, getRealm());
+        nextLaunchDataRepository = new NextLaunchDataRepository(context, getRealm());
 
         listPreferences = ListPreferences.getInstance(this.context);
 
@@ -394,7 +394,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
 
     public void loadLaunches() {
         if (!getRealm().isClosed()) {
-            launchRealms = dataRepository.getPreviousLaunchData(getRealm());
+            launchRealms = nextLaunchDataRepository.getPreviousLaunchData(getRealm());
             launchRealms.addChangeListener(callback);
             displayLaunches(launchRealms);
         }

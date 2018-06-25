@@ -1,10 +1,15 @@
 package me.calebjones.spacelaunchnow.data.networking.interfaces;
 
+import java.util.List;
+import io.reactivex.Observable;
+
 import me.calebjones.spacelaunchnow.data.BuildConfig;
+import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.AgencyResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LocationResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.MissionResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.NewLaunchResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.PadResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.RocketFamilyResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.RocketResponse;

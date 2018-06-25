@@ -536,7 +536,7 @@ public class QueryBuilder {
             query.equalTo("location.id", 17);
         }
 
-        if (switchPreferences.getSwitchCape()) {
+        if (switchPreferences.getSwitchKSC()) {
             if (!first) {
                 query.or();
             } else {
@@ -673,7 +673,7 @@ public class QueryBuilder {
             query.equalTo("location.id", 17);
         }
 
-        if (switchPreferences.getSwitchCape()) {
+        if (switchPreferences.getSwitchKSC()) {
             if (!first) {
                 query.or();
             } else {
@@ -806,7 +806,7 @@ public class QueryBuilder {
             query.equalTo("location.id", 17);
         }
 
-        if (switchPreferences.getSwitchCape()) {
+        if (switchPreferences.getSwitchKSC()) {
             if (!first) {
                 query.or();
             } else {

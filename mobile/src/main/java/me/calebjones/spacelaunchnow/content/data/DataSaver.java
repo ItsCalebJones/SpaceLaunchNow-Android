@@ -9,20 +9,27 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
-import io.realm.Sort;
-import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
+import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.data.models.LaunchNotification;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Mission;
 import me.calebjones.spacelaunchnow.data.models.Result;
 import me.calebjones.spacelaunchnow.data.models.UpdateRecord;
+import me.calebjones.spacelaunchnow.data.networking.DataClient;
+import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
+import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import timber.log.Timber;
 
 /**
@@ -33,14 +40,8 @@ import timber.log.Timber;
 public class DataSaver {
 
     private Context context;
-    private DataClientManager dataClientManager;
     public boolean isSaving = false;
     public boolean isSyncing = false;
-
-    public DataSaver(Context context, DataClientManager dataClientManager) {
-        this.context = context;
-        this.dataClientManager = dataClientManager;
-    }
 
     public DataSaver(Context context) {
         this.context = context;
@@ -51,22 +52,17 @@ public class DataSaver {
         final RealmList<RealmObject> realmList = new RealmList<>();
         if (objects != null) {
             Collections.addAll(realmList, objects);
-            mRealm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    realm.copyToRealmOrUpdate(realmList);
-                }
-            });
+            mRealm.executeTransaction(realm -> realm.copyToRealmOrUpdate(realmList));
             mRealm.close();
         }
     }
 
-    public void saveLaunchesToRealm(final Launch[] launches, final boolean mini) {
+    public void saveLaunchesToRealm(final List<Launch> launches, final boolean mini) {
         isSaving = true;
-        if (launches != null){
-        Realm mRealm = Realm.getDefaultInstance();
+        if (launches != null) {
+            Realm mRealm = Realm.getDefaultInstance();
 
-        mRealm.executeTransaction(mRealm1-> {
+            mRealm.executeTransaction(mRealm1 -> {
                 Date now = Calendar.getInstance().getTime();
                 if (mini) {
                     for (Launch item : launches) {
@@ -84,7 +80,6 @@ public class DataSaver {
                                 previous.setLastUpdate(now);
                                 previous.resetNotifiers();
                                 mRealm1.copyToRealmOrUpdate(previous);
-                                dataClientManager.getLaunchById(item.getId());
                             }
                         }
                     }
@@ -93,11 +88,11 @@ public class DataSaver {
                         final Launch previous = mRealm1.where(Launch.class)
                                 .equalTo("id", item.getId())
                                 .findFirst();
-                        if (item.getMissions() != null && item.getMissions().size() > 0){
+                        if (item.getMissions() != null && item.getMissions().size() > 0) {
                             Mission newMission = item.getMissions().get(0);
                             RealmResults<Mission> missions = mRealm1.where(Mission.class).equalTo("id", newMission.getId()).findAll();
-                            if  (missions != null && missions.size() > 0){
-                                RealmList <Mission> results = new RealmList<Mission>();
+                            if (missions != null && missions.size() > 0) {
+                                RealmList<Mission> results = new RealmList<Mission>();
                                 results.addAll(missions.subList(0, missions.size()));
                                 item.setMissions(results);
                             }
@@ -111,7 +106,7 @@ public class DataSaver {
                                     mRealm1.copyToRealmOrUpdate(notification);
                                 }
                             }
-                            item.setLastUpdate(now);
+
                             item.setEventID(previous.getEventID());
                             item.setSyncCalendar(previous.syncCalendar());
                             item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
@@ -120,13 +115,13 @@ public class DataSaver {
                         if (item.getLocation() != null) {
                             item.getLocation().setPrimaryID();
                         }
+                        item.setLastUpdate(now);
                         Timber.v("Saving item: %s", item.getName());
                         mRealm1.copyToRealmOrUpdate(item);
                     }
-                    mRealm1.copyToRealmOrUpdate(Arrays.asList(launches));
                 }
             });
-        mRealm.close();
+            mRealm.close();
         }
         isSaving = false;
     }
@@ -172,21 +167,71 @@ public class DataSaver {
         context.sendBroadcast(broadcastIntent);
         Realm mRealm = Realm.getDefaultInstance();
         mRealm.executeTransaction(realm -> {
-                UpdateRecord updateRecord = new UpdateRecord();
-                updateRecord.setType(result.getAction());
-                updateRecord.setDate(new Date());
-                updateRecord.setSuccessful(result.isSuccessful());
-                realm.copyToRealmOrUpdate(updateRecord);
-            }
+                    UpdateRecord updateRecord = new UpdateRecord();
+                    updateRecord.setType(result.getAction());
+                    updateRecord.setDate(new Date());
+                    updateRecord.setSuccessful(result.isSuccessful());
+                    realm.copyToRealmOrUpdate(updateRecord);
+                }
         );
         mRealm.close();
     }
 
-    public void saveLaunchesToRealm(final RealmList<Launch> launches) {
+    public void saveLaunchesToRealm(final List<Launch> launches) {
         isSaving = true;
-        Realm mRealm = Realm.getDefaultInstance();
-        mRealm.executeTransactionAsync(realm -> {
-            Date now = Calendar.getInstance().getTime();
+        if (launches != null) {
+            Realm mRealm = Realm.getDefaultInstance();
+
+            mRealm.executeTransaction(mRealm1 -> {
+                Date now = Calendar.getInstance().getTime();
+                for (final Launch item : launches) {
+                    final Launch previous = mRealm1.where(Launch.class)
+                            .equalTo("id", item.getId())
+                            .findFirst();
+                    if (item.getMissions() != null && item.getMissions().size() > 0) {
+                        Mission newMission = item.getMissions().get(0);
+                        RealmResults<Mission> missions = mRealm1.where(Mission.class).equalTo("id", newMission.getId()).findAll();
+                        if (missions != null && missions.size() > 0) {
+                            RealmList<Mission> results = new RealmList<Mission>();
+                            results.addAll(missions.subList(0, missions.size()));
+                            item.setMissions(results);
+                        }
+                    }
+                    if (previous != null) {
+                        if (isLaunchTimeChanged(previous, item)) {
+                            final LaunchNotification notification = mRealm1.where(LaunchNotification.class).equalTo("id", item.getId()).findFirst();
+                            if (notification != null) {
+
+                                notification.resetNotifiers();
+                                mRealm1.copyToRealmOrUpdate(notification);
+                            }
+                        }
+                        item.setLastUpdate(now);
+                        item.setEventID(previous.getEventID());
+                        item.setSyncCalendar(previous.syncCalendar());
+                        item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
+                        item.setNotifiable(previous.isNotifiable());
+                    }
+                    if (item.getLocation() != null) {
+                        item.getLocation().setPrimaryID();
+                    }
+                    Timber.v("Saving item: %s", item.getName());
+                    mRealm1.copyToRealmOrUpdate(item);
+                }
+                mRealm1.copyToRealmOrUpdate(launches);
+            });
+            mRealm.close();
+        }
+        checkForStaleLaunches();
+        isSaving = false;
+    }
+
+    public void saveLaunchesToRealmAsync(final List<Launch> launches) {
+        isSaving = true;
+        if (launches != null) {
+            Realm mRealm = Realm.getDefaultInstance();
+            mRealm.executeTransactionAsync(realm -> {
+                Date now = Calendar.getInstance().getTime();
                 for (Launch item : launches) {
 
                     Launch previous = realm.where(Launch.class)
@@ -200,70 +245,74 @@ public class DataSaver {
                                 realm.copyToRealmOrUpdate(notification);
                             }
                         }
-                        item.setLastUpdate(now);
+
                         item.setEventID(previous.getEventID());
                         item.setSyncCalendar(previous.syncCalendar());
                         item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
                         item.setNotifiable(previous.isNotifiable());
                     }
-                    if (item.getMissions() != null && item.getMissions().size() > 0){
+                    if (item.getMissions() != null && item.getMissions().size() > 0) {
                         Mission newMisison = item.getMissions().get(0);
                         RealmResults<Mission> missions = realm.where(Mission.class).equalTo("id", newMisison.getId()).findAll();
-                        if  (missions != null && missions.size() > 0){
-                            RealmList <Mission> results = new RealmList<Mission>();
+                        if (missions != null && missions.size() > 0) {
+                            RealmList<Mission> results = new RealmList<Mission>();
                             results.addAll(missions.subList(0, missions.size()));
                             item.setMissions(results);
                         }
                     }
+                    item.setLastUpdate(now);
                     Timber.v("Saving item: %s", item.getName());
                     realm.copyToRealmOrUpdate(item);
                 }
-        });
-        isSaving = false;
-        mRealm.close();
-    }
-
-    public void saveLaunchesToRealmAsync(final RealmList<Launch> launches) {
-        isSaving = true;
-        if (launches != null) {
-            Realm mRealm = Realm.getDefaultInstance();
-            mRealm.executeTransactionAsync(realm -> {
-                Date now = Calendar.getInstance().getTime();
-                    for (Launch item : launches) {
-
-                        Launch previous = realm.where(Launch.class)
-                                .equalTo("id", item.getId())
-                                .findFirst();
-                        if (previous != null) {
-                            if (isLaunchTimeChanged(previous, item)) {
-                                final LaunchNotification notification = realm.where(LaunchNotification.class).equalTo("id", item.getId()).findFirst();
-                                if (notification != null) {
-                                    notification.resetNotifiers();
-                                    realm.copyToRealmOrUpdate(notification);
-                                }
-                            }
-                            item.setLastUpdate(now);
-                            item.setEventID(previous.getEventID());
-                            item.setSyncCalendar(previous.syncCalendar());
-                            item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
-                            item.setNotifiable(previous.isNotifiable());
-                        }
-                        if (item.getMissions() != null && item.getMissions().size() > 0){
-                            Mission newMisison = item.getMissions().get(0);
-                            RealmResults<Mission> missions = realm.where(Mission.class).equalTo("id", newMisison.getId()).findAll();
-                            if  (missions != null && missions.size() > 0){
-                                RealmList <Mission> results = new RealmList<Mission>();
-                                results.addAll(missions.subList(0, missions.size()));
-                                item.setMissions(results);
-                            }
-                        }
-                        Timber.v("Saving item: %s", item.getName());
-                        realm.copyToRealmOrUpdate(item);
-                    }
-             });
+            });
             mRealm.close();
         }
+        checkForStaleLaunches();
         isSaving = false;
+    }
+
+    private void checkForStaleLaunches(){
+        Date currentDate = new Date();
+        Realm mRealm = Realm.getDefaultInstance();
+        RealmResults<Launch> launches = QueryBuilder.buildUpcomingSwitchQuery(context, mRealm);
+        for (Launch launch : launches) {
+            Date lastUpdate = launch.getLastUpdate();
+            Date net = launch.getNet();
+            // Check time between NET and NOW
+            long netDiffInMs = currentDate.getTime() - net.getTime();
+            long netDiffInHours = TimeUnit.MILLISECONDS.toHours(netDiffInMs);
+            long lastUpdateDiffInMs = currentDate.getTime() - lastUpdate.getTime();
+            long lastUpdateDiffInHours = TimeUnit.MILLISECONDS.toHours(lastUpdateDiffInMs);
+            if (netDiffInHours <= 168) {
+                if (lastUpdateDiffInHours > 24) {
+                    int id = launch.getId();
+                    DataClient.getInstance().getLaunchById(launch.getId(), false, new Callback<LaunchResponse>() {
+                        @Override
+                        public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
+                            if (response.isSuccessful()) {
+                                saveLaunchesToRealm(response.body().getLaunches(), false);
+
+                                sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_BY_ID, true, call));
+
+                            } else {
+                                if (response.code() == 404) {
+                                    deleteLaunch(id);
+                                }
+
+                                sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_BY_ID, false, call, ErrorUtil.parseLibraryError(response)));
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<LaunchResponse> call, Throwable t) {
+                            deleteLaunch(id);
+                            sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_BY_ID, false, call, t.getLocalizedMessage()));
+                        }
+                    });
+                }
+            }
+        }
+        mRealm.close();
     }
 
     public void deleteLaunch(int id) {

@@ -39,6 +39,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -213,35 +214,26 @@ public class LaunchDetailActivity extends BaseActivity
                     @Override
                     public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
                         if (response.isSuccessful()) {
-                            final RealmList<Launch> items = new RealmList<>(response.body().getLaunches());
+                            final List<Launch> items = response.body().getLaunches();
                             if (items.size() == 1) {
-                                final Launch item = items.first();
-                                getRealm().executeTransactionAsync(new Realm.Transaction() {
-                                    @Override
-                                    public void execute(Realm bgRealm) {
-                                        Launch previous = bgRealm.where(Launch.class)
-                                                .equalTo("id", item.getId())
-                                                .findFirst();
-                                        if (previous != null) {
-                                            item.setEventID(previous.getEventID());
-                                            item.setSyncCalendar(previous.syncCalendar());
-                                            item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
-                                            item.setIsNotifiedDay(previous.getIsNotifiedDay());
-                                            item.setIsNotifiedHour(previous.getIsNotifiedHour());
-                                            item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
-                                            item.setNotifiable(previous.isNotifiable());
-                                        }
-                                        item.getLocation().setPrimaryID();
-                                        bgRealm.copyToRealmOrUpdate(item);
-                                        Timber.v("Updated detailLaunch: %s", item.getId());
+                                final Launch item = items.get(0);
+                                getRealm().executeTransactionAsync(bgRealm -> {
+                                    Launch previous = bgRealm.where(Launch.class)
+                                            .equalTo("id", item.getId())
+                                            .findFirst();
+                                    if (previous != null) {
+                                        item.setEventID(previous.getEventID());
+                                        item.setSyncCalendar(previous.syncCalendar());
+                                        item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
+                                        item.setIsNotifiedDay(previous.getIsNotifiedDay());
+                                        item.setIsNotifiedHour(previous.getIsNotifiedHour());
+                                        item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
+                                        item.setNotifiable(previous.isNotifiable());
                                     }
-
-                                }, new Realm.Transaction.OnSuccess() {
-                                    @Override
-                                    public void onSuccess() {
-                                        sendUpdateView(id);
-                                    }
-                                });
+                                    item.getLocation().setPrimaryID();
+                                    bgRealm.copyToRealmOrUpdate(item);
+                                    Timber.v("Updated detailLaunch: %s", item.getId());
+                                }, () -> sendUpdateView(id));
                             }
                         } else {
                             LibraryError error = ErrorUtil.parseLibraryError(response);

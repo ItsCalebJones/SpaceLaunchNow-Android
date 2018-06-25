@@ -60,6 +60,9 @@ public class BaseFragment extends Fragment {
     }
 
     public Realm getRealm() {
+        if (realm != null && !realm.isClosed()){
+            realm = Realm.getDefaultInstance();
+        }
         return realm;
     }
 

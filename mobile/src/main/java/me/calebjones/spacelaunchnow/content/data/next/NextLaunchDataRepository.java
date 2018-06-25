@@ -1,44 +1,55 @@
-package me.calebjones.spacelaunchnow.content.data;
+package me.calebjones.spacelaunchnow.content.data.next;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 
 import com.crashlytics.android.Crashlytics;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
+import io.reactivex.subjects.BehaviorSubject;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import me.calebjones.spacelaunchnow.content.data.DataClientManager;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.Constants;
+import me.calebjones.spacelaunchnow.data.models.Result;
 import me.calebjones.spacelaunchnow.data.models.UpdateRecord;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Location;
 import me.calebjones.spacelaunchnow.data.models.launchlibrary.Mission;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
+import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
+import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import timber.log.Timber;
 
 /**
  * Responsible for retrieving data from the Realm cache.
  */
 
-public class DataRepository {
+public class NextLaunchDataRepository {
 
-    private DataClient dataClient;
-    private DataClientManager dataClientManager;
+    private NextLaunchDataLoader dataLoader;
     private Realm realm;
 
     private final Context context;
 
-    public DataRepository(Context context, Realm realm) {
+    public NextLaunchDataRepository(Context context, Realm realm) {
         this.context = context;
-        this.dataClient = DataClient.getInstance();
-        this.dataClientManager = new DataClientManager(context);
+        this.dataLoader = new NextLaunchDataLoader(context);
         this.realm = realm;
     }
 
@@ -94,7 +105,6 @@ public class DataRepository {
 
     @UiThread
     public void getNextUpcomingLaunches(boolean forceRefresh, LaunchCallback launchCallback){
-        launchCallback.onLaunchesLoaded(QueryBuilder.buildUpcomingSwitchQuery(context, realm));
 
         RealmResults<UpdateRecord> records = realm.where(UpdateRecord.class)
                 .equalTo("type", Constants.ACTION_GET_UP_LAUNCHES_ALL)
@@ -105,6 +115,8 @@ public class DataRepository {
                 .sort("date", Sort.DESCENDING)
                 .findAll();
 
+        // Start loading data from the network if needed
+        // It will put all data into Realm
         if (records != null && records.size() > 0) {
             UpdateRecord record = records.first();
             Date currentDate = new Date();
@@ -115,6 +127,8 @@ public class DataRepository {
             if (timeSinceUpdate > timeMaxUpdate || forceRefresh) {
                 Timber.d("%s greater then %s - updating library data.", timeSinceUpdate, timeMaxUpdate);
                 getNextUpcomingLaunchesFromNetwork(launchCallback);
+            } else {
+                launchCallback.onLaunchesLoaded(QueryBuilder.buildUpcomingSwitchQueryAsync(context, realm));
             }
         } else {
             getNextUpcomingLaunchesFromNetwork(launchCallback);
@@ -122,30 +136,14 @@ public class DataRepository {
     }
 
     private void getNextUpcomingLaunchesFromNetwork(LaunchCallback callback){
-        Date currentDate = new Date();
+
         callback.onRefreshingFromNetwork();
-        dataClientManager.getNextUpcomingLaunches(new NetworkCallback() {
+        dataLoader.getNextUpcomingLaunches(new NetworkCallback() {
             @Override
             public void onSuccess() {
                 callback.onNetworkResultReceived();
-                Realm mRealm = Realm.getDefaultInstance();
-                RealmResults<Launch> launches = QueryBuilder.buildUpcomingSwitchQuery(context, mRealm);
-                for (Launch launch : launches){
-                    Date lastUpdate = launch.getLastUpdate();
-                    Date net = launch.getNet();
-                    // Check time between NET and NOW
-                    long netDiffInMs = currentDate.getTime() - net.getTime();
-                    long netDiffInHours = TimeUnit.MILLISECONDS.toHours(netDiffInMs);
-                    long lastUpdateDiffInMs = currentDate.getTime() - lastUpdate.getTime();
-                    long lastUpdateDiffInHours = TimeUnit.MILLISECONDS.toHours(lastUpdateDiffInMs);
-                    if (netDiffInHours <= 168){
-                        if (lastUpdateDiffInHours > 24){
-                            dataClientManager.getLaunchById(launch.getId());
-                        }
-                    }
-                }
+                RealmResults<Launch> launches = QueryBuilder.buildUpcomingSwitchQuery(context, realm);
                 callback.onLaunchesLoaded(launches);
-                realm.close();
             }
 
             @Override

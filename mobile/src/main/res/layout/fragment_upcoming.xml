@@ -210,16 +210,6 @@
                                     app:buttonTint="@color/white" />
 
                                 <android.support.v7.widget.AppCompatCheckBox
-                                    android:id="@+id/cape_switch"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="6dp"
-                                    android:checked="false"
-                                    android:text="@string/cape_canaveral"
-                                    android:textColor="@color/white"
-                                    app:buttonTint="@color/white" />
-
-                                <android.support.v7.widget.AppCompatCheckBox
                                     android:id="@+id/ples_switch"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
