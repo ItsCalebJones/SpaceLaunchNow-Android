@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.content.network;
+package me.calebjones.spacelaunchnow.content.data.articles.network;
 
 import java.util.concurrent.TimeUnit;
 

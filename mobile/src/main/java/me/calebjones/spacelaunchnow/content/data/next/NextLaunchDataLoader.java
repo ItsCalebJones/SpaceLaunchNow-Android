@@ -32,6 +32,10 @@ public class NextLaunchDataLoader {
         libraryService = DataClient.getInstance().getLibraryService();
     }
 
+    public DataSaver getDataSaver() {
+        return dataSaver;
+    }
+
     public void getNextUpcomingLaunches(NextLaunchDataRepository.NetworkCallback networkCallback) {
         Timber.i("Running getNextUpcomingLaunches");
         DataClient.getInstance().getNextUpcomingLaunches(0, new Callback<LaunchResponse>() {

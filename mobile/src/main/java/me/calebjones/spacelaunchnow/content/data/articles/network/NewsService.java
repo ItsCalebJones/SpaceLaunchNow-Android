@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.content.network;
+package me.calebjones.spacelaunchnow.content.data.articles.network;
 
 import me.calebjones.spacelaunchnow.data.models.news.NewsFeedResponse;
 import retrofit2.Call;

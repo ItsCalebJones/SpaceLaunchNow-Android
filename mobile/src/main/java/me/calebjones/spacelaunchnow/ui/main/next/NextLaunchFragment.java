@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
@@ -321,23 +322,18 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             }
 
             @Override
-            public void onRefreshingFromNetwork() {
-                showLoading();
+            public void onNetworkStateChanged(boolean refreshing) {
+                showNetworkLoading(refreshing);
             }
 
             @Override
-            public void onNetworkResultReceived() {
-                hideLoading();
-            }
-
-            @Override
-            public void onNetworkError(String message) {
+            public void onError(String message, @Nullable Throwable throwable) {
+                if (throwable != null){
+                    Timber.e(throwable);
+                } else {
+                    Timber.e(message);
+                }
                 SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                Timber.e(throwable);
             }
         });
     }

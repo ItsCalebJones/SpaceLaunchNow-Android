@@ -2,6 +2,7 @@ package me.calebjones.spacelaunchnow.content.data.next;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 
 import com.crashlytics.android.Crashlytics;
@@ -105,7 +106,6 @@ public class NextLaunchDataRepository {
 
     @UiThread
     public void getNextUpcomingLaunches(boolean forceRefresh, LaunchCallback launchCallback){
-
         RealmResults<UpdateRecord> records = realm.where(UpdateRecord.class)
                 .equalTo("type", Constants.ACTION_GET_UP_LAUNCHES_ALL)
                 .or()
@@ -122,14 +122,15 @@ public class NextLaunchDataRepository {
             Date currentDate = new Date();
             Date lastUpdateDate = record.getDate();
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
-            long timeMaxUpdate = TimeUnit.HOURS.toMillis(1);
+            long timeMaxUpdate = TimeUnit.MINUTES.toMillis(1);
             Timber.d("Time since last upcoming launches sync %s", timeSinceUpdate);
             if (timeSinceUpdate > timeMaxUpdate || forceRefresh) {
                 Timber.d("%s greater then %s - updating library data.", timeSinceUpdate, timeMaxUpdate);
                 getNextUpcomingLaunchesFromNetwork(launchCallback);
             } else {
-                launchCallback.onLaunchesLoaded(QueryBuilder.buildUpcomingSwitchQueryAsync(context, realm));
+                launchCallback.onLaunchesLoaded(QueryBuilder.buildUpcomingSwitchQuery(context, realm));
             }
+            checkForStaleLaunches();
         } else {
             getNextUpcomingLaunchesFromNetwork(launchCallback);
         }
@@ -137,25 +138,69 @@ public class NextLaunchDataRepository {
 
     private void getNextUpcomingLaunchesFromNetwork(LaunchCallback callback){
 
-        callback.onRefreshingFromNetwork();
+        callback.onNetworkStateChanged(true);
         dataLoader.getNextUpcomingLaunches(new NetworkCallback() {
             @Override
             public void onSuccess() {
-                callback.onNetworkResultReceived();
+                callback.onNetworkStateChanged(false);
                 RealmResults<Launch> launches = QueryBuilder.buildUpcomingSwitchQuery(context, realm);
                 callback.onLaunchesLoaded(launches);
             }
 
             @Override
             public void onNetworkFailure(int code) {
-                callback.onNetworkError("Unable to load launch data.");
+                callback.onError("Unable to load launch data.", null);
             }
 
             @Override
             public void onFailure(Throwable throwable) {
-                callback.onError(throwable);
+                callback.onError("An error has occurred! Uh oh.", throwable);
             }
         });
+    }
+
+    private void checkForStaleLaunches(){
+        Date currentDate = new Date();
+        Realm mRealm = Realm.getDefaultInstance();
+        RealmResults<Launch> launches = QueryBuilder.buildUpcomingSwitchQuery(context, mRealm);
+        for (Launch launch : launches) {
+            Date lastUpdate = launch.getLastUpdate();
+            Date net = launch.getNet();
+            // Check time between NET and NOW
+            long netDiffInMs = currentDate.getTime() - net.getTime();
+            long netDiffInHours = TimeUnit.MILLISECONDS.toHours(netDiffInMs);
+            long lastUpdateDiffInMs = currentDate.getTime() - lastUpdate.getTime();
+            long lastUpdateDiffInHours = TimeUnit.MILLISECONDS.toHours(lastUpdateDiffInMs);
+            if (netDiffInHours <= 168) {
+                if (lastUpdateDiffInHours > 24) {
+                    int id = launch.getId();
+                    DataClient.getInstance().getLaunchById(launch.getId(), false, new Callback<LaunchResponse>() {
+                        @Override
+                        public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
+                            if (response.isSuccessful()) {
+                                dataLoader.getDataSaver().saveLaunchesToRealm(response.body().getLaunches(), false);
+
+                                dataLoader.getDataSaver().sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_BY_ID, true, call));
+
+                            } else {
+                                if (response.code() == 404) {
+                                    dataLoader.getDataSaver().deleteLaunch(id);
+                                }
+
+                                dataLoader.getDataSaver().sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_BY_ID, false, call, ErrorUtil.parseLibraryError(response)));
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<LaunchResponse> call, Throwable t) {
+                            dataLoader.getDataSaver().deleteLaunch(id);
+                            dataLoader.getDataSaver().sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_BY_ID, false, call, t.getLocalizedMessage()));
+                        }
+                    });
+                }
+            }
+        }
+        mRealm.close();
     }
 
     public interface NetworkCallback {
@@ -166,10 +211,8 @@ public class NextLaunchDataRepository {
 
     public interface LaunchCallback {
         void onLaunchesLoaded(RealmResults<Launch> launches);
-        void onRefreshingFromNetwork();
-        void onNetworkResultReceived();
-        void onNetworkError(String message);
-        void onError(Throwable throwable);
+        void onNetworkStateChanged(boolean refreshing);
+        void onError(String message, @Nullable Throwable throwable);
     }
 }
 

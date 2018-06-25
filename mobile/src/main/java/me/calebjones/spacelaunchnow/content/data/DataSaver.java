@@ -222,7 +222,6 @@ public class DataSaver {
             });
             mRealm.close();
         }
-        checkForStaleLaunches();
         isSaving = false;
     }
 
@@ -267,52 +266,7 @@ public class DataSaver {
             });
             mRealm.close();
         }
-        checkForStaleLaunches();
         isSaving = false;
-    }
-
-    private void checkForStaleLaunches(){
-        Date currentDate = new Date();
-        Realm mRealm = Realm.getDefaultInstance();
-        RealmResults<Launch> launches = QueryBuilder.buildUpcomingSwitchQuery(context, mRealm);
-        for (Launch launch : launches) {
-            Date lastUpdate = launch.getLastUpdate();
-            Date net = launch.getNet();
-            // Check time between NET and NOW
-            long netDiffInMs = currentDate.getTime() - net.getTime();
-            long netDiffInHours = TimeUnit.MILLISECONDS.toHours(netDiffInMs);
-            long lastUpdateDiffInMs = currentDate.getTime() - lastUpdate.getTime();
-            long lastUpdateDiffInHours = TimeUnit.MILLISECONDS.toHours(lastUpdateDiffInMs);
-            if (netDiffInHours <= 168) {
-                if (lastUpdateDiffInHours > 24) {
-                    int id = launch.getId();
-                    DataClient.getInstance().getLaunchById(launch.getId(), false, new Callback<LaunchResponse>() {
-                        @Override
-                        public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
-                            if (response.isSuccessful()) {
-                                saveLaunchesToRealm(response.body().getLaunches(), false);
-
-                                sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_BY_ID, true, call));
-
-                            } else {
-                                if (response.code() == 404) {
-                                    deleteLaunch(id);
-                                }
-
-                                sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_BY_ID, false, call, ErrorUtil.parseLibraryError(response)));
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<LaunchResponse> call, Throwable t) {
-                            deleteLaunch(id);
-                            sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_BY_ID, false, call, t.getLocalizedMessage()));
-                        }
-                    });
-                }
-            }
-        }
-        mRealm.close();
     }
 
     public void deleteLaunch(int id) {

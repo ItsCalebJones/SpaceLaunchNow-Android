@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.content.repository;
+package me.calebjones.spacelaunchnow.content.data.articles;
 
 import android.content.Context;
 
@@ -7,18 +7,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import io.github.ponnamkarthik.richlinkpreview.MetaData;
-import io.github.ponnamkarthik.richlinkpreview.ResponseListener;
-import io.github.ponnamkarthik.richlinkpreview.RichPreview;
 import io.realm.Realm;
 import io.realm.RealmList;
-import io.realm.RealmResults;
 import io.realm.Sort;
-import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.news.Article;
 import me.calebjones.spacelaunchnow.data.models.news.NewsFeedResponse;
-import me.calebjones.spacelaunchnow.content.network.NewsAPIClient;
-import me.calebjones.spacelaunchnow.utils.GlideApp;
+import me.calebjones.spacelaunchnow.content.data.articles.network.NewsAPIClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
