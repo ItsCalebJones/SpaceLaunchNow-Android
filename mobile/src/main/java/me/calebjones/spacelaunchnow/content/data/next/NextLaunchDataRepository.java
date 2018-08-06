@@ -165,6 +165,9 @@ public class NextLaunchDataRepository {
         RealmResults<Launch> launches = QueryBuilder.buildUpcomingSwitchQuery(context, mRealm);
         for (Launch launch : launches) {
             Date lastUpdate = launch.getLastUpdate();
+            if (lastUpdate == null){
+                lastUpdate = currentDate;
+            }
             Date net = launch.getNet();
             // Check time between NET and NOW
             long netDiffInMs = currentDate.getTime() - net.getTime();

@@ -165,12 +165,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
                 if (response.isSuccessful()) {
                     RocketDetail[] details = response.body().getVehicles();
                     if (details.length > 0) {
-                        getRealm().executeTransaction(new Realm.Transaction() {
-                            @Override
-                            public void execute(Realm realm) {
-                                getRealm().where(RocketDetail.class).contains("agency", finalAgency).findAll().deleteAllFromRealm();
-                            }
-                        });
+                        getRealm().executeTransaction(realm -> getRealm().where(RocketDetail.class).contains("agency", finalAgency).findAll().deleteAllFromRealm());
                         dataSaver.saveObjectsToRealm(details);
                         rocketLaunches = getRealm().where(RocketDetail.class).contains("agency", finalAgency).findAll();
                         adapter.clear();
