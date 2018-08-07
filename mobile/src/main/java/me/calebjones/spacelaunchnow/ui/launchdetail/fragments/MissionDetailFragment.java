@@ -2,10 +2,8 @@ package me.calebjones.spacelaunchnow.ui.launchdetail.fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
@@ -22,21 +20,16 @@ import org.greenrobot.eventbus.ThreadMode;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.common.RetroFitFragment;
 import me.calebjones.spacelaunchnow.content.data.DataSaver;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Result;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Mission;
-import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.RocketDetail;
-import me.calebjones.spacelaunchnow.data.networking.DataClient;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Launcher;
+import me.calebjones.spacelaunchnow.data.models.main.Mission;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
-import me.calebjones.spacelaunchnow.data.networking.responses.base.LauncherResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
-import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import retrofit2.Call;
@@ -48,7 +41,7 @@ public class MissionDetailFragment extends RetroFitFragment {
 
     private Context context;
     public Launch detailLaunch;
-    private RocketDetail launchVehicle;
+    private Launcher launchVehicle;
     @BindView(R.id.vehicle_spec_view)
     View vehicleSpecView;
     @BindView(R.id.payload_type)
@@ -124,57 +117,15 @@ public class MissionDetailFragment extends RetroFitFragment {
     private void setUpViews(Launch launch) {
         try {
             detailLaunch = launch;
-            if (detailLaunch.getRocket() != null) {
-                getLaunchVehicle(detailLaunch);
-            }
 
-            if (detailLaunch.getMissions().size() > 0) {
-                final Mission mission = getRealm().where(Mission.class)
-                        .equalTo("id", detailLaunch.getMissions().get(0).getId())
-                        .findFirst();
+            if (detailLaunch.getMission() != null) {
+                final Mission mission = detailLaunch.getMission();
 
                 payloadStatus.setText(mission.getName());
                 payloadDescription.setText(mission.getDescription());
                 payloadType.setText(mission.getTypeName());
-
-                if (mission.getInfoURL() != null && mission.getInfoURL().length() > 0) {
-
-                    ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(mission.getInfoURL()));
-
-                    payloadInfoButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Activity activity = (Activity) context;
-                            Utils.openCustomTab(activity, context, mission.getInfoURL());
-                            Analytics.getInstance().sendButtonClickedWithURL(
-                                    "Mission Info",
-                                    detailLaunch.getName(),
-                                    mission.getInfoURL()
-                            );
-                        }
-                    });
-                } else {
-                    payloadInfoButton.setVisibility(View.GONE);
-                }
-                if (mission.getWikiURL() != null && mission.getWikiURL().length() > 0) {
-
-                    ((LaunchDetailActivity) context).mayLaunchUrl(Uri.parse(mission.getWikiURL()));
-
-                    payloadWikiButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Activity activity = (Activity) context;
-                            Utils.openCustomTab(activity, context, mission.getWikiURL());
-                            Analytics.getInstance().sendButtonClickedWithURL(
-                                    "Mission Wiki",
-                                    detailLaunch.getName(),
-                                    mission.getWikiURL()
-                            );
-                        }
-                    });
-                } else {
-                    payloadWikiButton.setVisibility(View.GONE);
-                }
+                payloadInfoButton.setVisibility(View.GONE);
+                payloadWikiButton.setVisibility(View.GONE);
             } else {
                 payloadStatus.setText("Unknown Mission or Payload");
 
@@ -182,31 +133,31 @@ public class MissionDetailFragment extends RetroFitFragment {
                 payloadWikiButton.setVisibility(View.GONE);
             }
 
-            launchVehicleView.setText(detailLaunch.getRocket().getName());
-            launchConfiguration.setText(detailLaunch.getRocket().getConfiguration());
-            launchFamily.setText(detailLaunch.getRocket().getFamilyname());
-            if (detailLaunch.getRocket().getInfoURL() != null && detailLaunch.getRocket().getInfoURL().length() > 0){
+            launchVehicleView.setText(detailLaunch.getLauncher().getName());
+            launchConfiguration.setText(detailLaunch.getLauncher().getVariant());
+            launchFamily.setText(detailLaunch.getLauncher().getFamily());
+            if (detailLaunch.getLauncher().getInfoUrl() != null && detailLaunch.getLauncher().getInfoUrl().length() > 0){
                 vehicleInfoButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Activity activity = (Activity) context;
-                        Utils.openCustomTab(activity, context, detailLaunch.getRocket().getInfoURL());
+                        Utils.openCustomTab(activity, context, detailLaunch.getLauncher().getInfoUrl());
                         Analytics.getInstance().sendButtonClickedWithURL("Vehicle Info",
-                                detailLaunch.getRocket().getInfoURL());
+                                detailLaunch.getLauncher().getInfoUrl());
                     }
                 });
             } else {
                 vehicleInfoButton.setVisibility(View.GONE);
             }
 
-            if (detailLaunch.getRocket().getWikiURL() != null && detailLaunch.getRocket().getWikiURL().length() > 0){
+            if (detailLaunch.getLauncher().getWikiUrl() != null && detailLaunch.getLauncher().getWikiUrl().length() > 0){
                 vehicleWikiButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Activity activity = (Activity) context;
-                        Utils.openCustomTab(activity, context, detailLaunch.getRocket().getWikiURL());
+                        Utils.openCustomTab(activity, context, detailLaunch.getLauncher().getWikiUrl());
                         Analytics.getInstance().sendButtonClickedWithURL("Vehicle Wiki",
-                                detailLaunch.getRocket().getWikiURL());
+                                detailLaunch.getLauncher().getWikiUrl());
                     }
                 });
             } else {
@@ -218,17 +169,17 @@ public class MissionDetailFragment extends RetroFitFragment {
         }
     }
 
-    private void configureLaunchVehicle(RocketDetail launchVehicle) {
+    private void configureLaunchVehicle(Launcher launchVehicle) {
         if (launchVehicle != null) {
             vehicleSpecView.setVisibility(View.VISIBLE);
             try {
                 launchVehicleSpecsHeight.setText(String.format("Height: %s Meters", launchVehicle.getLength()));
                 launchVehicleSpecsDiameter.setText(String.format("Diameter: %s Meters", launchVehicle.getDiameter()));
                 launchVehicleSpecsStages.setText(String.format("Stages: %d", launchVehicle.getMaxStage()));
-                launchVehicleSpecsLeo.setText(String.format("Payload to LEO: %s kg", launchVehicle.getLEOCapacity()));
-                launchVehicleSpecsGto.setText(String.format("Payload to GTO: %s kg", launchVehicle.getGTOCapacity()));
+                launchVehicleSpecsLeo.setText(String.format("Payload to LEO: %s kg", launchVehicle.getLeoCapacity()));
+                launchVehicleSpecsGto.setText(String.format("Payload to GTO: %s kg", launchVehicle.getGtoCapacity()));
                 launchVehicleSpecsLaunchMass.setText(String.format("Mass at Launch: %s Tons", launchVehicle.getLaunchMass()));
-                launchVehicleSpecsThrust.setText(String.format("Thrust at Launch: %s kN", launchVehicle.getTOThrust()));
+                launchVehicleSpecsThrust.setText(String.format("Thrust at Launch: %s kN", launchVehicle.getToThrust()));
                 if (launchVehicle.getDescription() != null && launchVehicle.getDescription().length() > 0) {
                     launchVehicleDescription.setText(launchVehicle.getDescription());
                     launchVehicleDescription.setVisibility(View.VISIBLE);
@@ -242,38 +193,6 @@ public class MissionDetailFragment extends RetroFitFragment {
         } else {
             vehicleSpecView.setVisibility(View.GONE);
         }
-    }
-
-    private void getLaunchVehicle(Launch vehicle) {
-        final String query = vehicle.getRocket().getName();
-
-        SpaceLaunchNowService request = getSpaceLaunchNowRetrofit().create(SpaceLaunchNowService.class);
-        Call<VehicleResponse> call = request.getVehicle(query);
-        call.enqueue(new Callback<VehicleResponse>() {
-            @Override
-            public void onResponse(Call<VehicleResponse> call, Response<VehicleResponse> response) {
-                if (response.isSuccessful()) {
-                    RocketDetail[] details = response.body().getVehicles();
-                    DataSaver dataSaver = new DataSaver(context);
-                    dataSaver.saveObjectsToRealm(details);
-                    if (details.length > 0) {
-                        launchVehicle = details[0];
-                        configureLaunchVehicle(launchVehicle);
-                    }
-                    dataSaver.sendResult(new Result(Constants.ACTION_GET_VEHICLES_DETAIL, true, call));
-                } else {
-                    launchVehicle = getRealm().where(RocketDetail.class).contains("fullName", query).findFirst();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<VehicleResponse> call, Throwable t) {
-                Crashlytics.logException(t);
-                if (!getRealm().isClosed()) {
-                    launchVehicle = getRealm().where(RocketDetail.class).contains("fullName", query).findFirst();
-                }
-            }
-        });
     }
 
     @Override

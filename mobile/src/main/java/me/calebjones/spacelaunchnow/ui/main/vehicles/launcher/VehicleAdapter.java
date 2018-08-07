@@ -1,6 +1,7 @@
 package me.calebjones.spacelaunchnow.ui.main.vehicles.launcher;
 
 import android.content.Context;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
@@ -19,7 +20,7 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.SLNAgency;
+import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
 import timber.log.Timber;
@@ -31,7 +32,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
 
     public int position;
     private Context mContext;
-    private List<SLNAgency> launchers = new ArrayList<>();
+    private List<Agency> launchers = new ArrayList<>();
     private OnItemClickListener onItemClickListener;
     private boolean night = false;
     private RequestOptions requestOptions;
@@ -54,7 +55,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
                 .centerCrop();
     }
 
-    public void addItems(List<SLNAgency> items) {
+    public void addItems(List<Agency> items) {
         if (this.launchers == null) {
             this.launchers = items;
         } else if (this.launchers.size() == 0) {
@@ -79,13 +80,13 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        SLNAgency launcher = launchers.get(i);
+        Agency launcher = launchers.get(i);
         Timber.v("onBindViewHolder %s", launcher.getName());
 
         GlideApp.with(mContext)
-                .load(launcher.getImageURL())
+                .load(launcher.getImageUrl())
                 .apply(requestOptions)
-                .listener(GlidePalette.with(launcher.getImageURL())
+                .listener(GlidePalette.with(launcher.getImageUrl())
                         .use(palette)
                         .intoCallBack(new BitmapPalette.CallBack() {
                             @Override

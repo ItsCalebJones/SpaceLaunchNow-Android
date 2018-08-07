@@ -1,18 +1,7 @@
 package me.calebjones.spacelaunchnow.data.networking.interfaces;
 
-import java.util.List;
-import io.reactivex.Observable;
-
 import me.calebjones.spacelaunchnow.data.BuildConfig;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
-import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.AgencyResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
-import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LocationResponse;
-import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.MissionResponse;
-import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.NewLaunchResponse;
-import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.PadResponse;
-import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.RocketFamilyResponse;
-import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.RocketResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
@@ -68,80 +57,5 @@ public interface LibraryService {
     @GET("launch?fields=id,net,status")
     Call<LaunchResponse> getNextUpcomingLaunchesMini(@Query("start_date") String start_date,
                                                      @Query("end_date") String end_date);
-    //Get Missions Methods
-    @Headers({
-            "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
-    })
-    @GET("mission?mode=verbose&limit=100")
-    Call<MissionResponse> getAllMisisons(@Query("offset") int offset);
 
-    @Headers({
-            "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
-    })
-    @GET("mission/{missionID}?mode=verbose")
-    Call<MissionResponse> getMissionByID(@Path("missionID") int missionID);
-
-    //Get LauncherAgency Methods
-    @Headers({
-            "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
-    })
-    @GET("agency?mode=verbose")
-    Call<AgencyResponse> getAllAgency(@Query("offset") int offset);
-
-    @Headers({
-            "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
-    })
-    @GET("agency/{agencyID}?mode=verbose")
-    Call<AgencyResponse> getAgencyByID(@Path("agencyID") int agencyID);
-
-    //Get Rocket Methods
-    @Headers({
-            "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
-    })
-    @GET("rocket?mode=verbose")
-    Call<RocketResponse> getAllRockets(@Query("offset") int offset);
-
-    @Headers({
-            "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
-    })
-    @GET("rocket/{vehicleID}?mode=verbose")
-    Call<RocketResponse> getRocketsById(@Path("vehicleID") int vehicleID);
-
-    //Get Pad Methods
-    @Headers({
-            "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
-    })
-    @GET("pad?mode=verbose")
-    Call<PadResponse> getPads(@Query("offset") int offset);
-    @Headers({
-            "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
-    })
-    @GET("pad/{padId}?mode=verbose")
-    Call<PadResponse> getPadsById(@Path("padId") int padID);
-
-    //Get Location Methods
-    @Headers({
-            "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
-    })
-    @GET("location?mode=verbose")
-    Call<LocationResponse> getLocations(@Query("offset") int offset);
-
-    @Headers({
-            "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
-    })
-    @GET("location/{locationId}?mode=verbose")
-    Call<LocationResponse> getLocationsById(@Path("locationId") int locationId);
-
-    //Get RocketFamily
-    @Headers({
-            "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
-    })
-    @GET("rocketfamily?mode=verbose")
-    Call<RocketFamilyResponse> getAllRocketFamily(@Query("offset") int offset);
-
-    @Headers({
-            "User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME
-    })
-    @GET("rocketfamily/{rocketFamilyId}?mode=verbose")
-    Call<RocketFamilyResponse> getRocketFamilyById(@Path("rocketFamilyId") int rocketFamilyId);
 }

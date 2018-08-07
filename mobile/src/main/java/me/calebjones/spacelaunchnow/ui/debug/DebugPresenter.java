@@ -22,7 +22,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.JobUtils;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.Products;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
@@ -144,7 +144,6 @@ public class DebugPresenter implements DebugContract.Presenter {
 
     @Override
     public void syncVehiclesClicked(Context context) {
-        libraryDataManager.getVehicleDetails();
     }
 
     @Override

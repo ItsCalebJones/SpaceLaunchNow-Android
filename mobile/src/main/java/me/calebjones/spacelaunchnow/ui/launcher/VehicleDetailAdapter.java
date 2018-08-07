@@ -18,7 +18,7 @@ import com.bumptech.glide.request.RequestOptions;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.RocketDetail;
+import me.calebjones.spacelaunchnow.data.models.main.Launcher;
 import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -28,7 +28,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
     public int position;
     private Context mContext;
     private Activity activity;
-    private RealmList<RocketDetail> items;
+    private RealmList<Launcher> items;
     private RequestOptions requestOptions;
     private int backgroundColor = 0;
 
@@ -41,7 +41,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
         this.activity = activity;
     }
 
-    public void addItems(RealmResults<RocketDetail> items) {
+    public void addItems(RealmResults<Launcher> items) {
         if (this.items != null) {
             this.items.addAll(items);
         } else {
@@ -65,7 +65,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        RocketDetail launchVehicle = items.get(holder.getAdapterPosition());
+        Launcher launchVehicle = items.get(holder.getAdapterPosition());
 
         if (launchVehicle != null) {
             holder.vehicleSpecView.setVisibility(View.VISIBLE);
@@ -78,19 +78,19 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
             holder.vehicleSpecsHeight.setText(String.format(mContext.getString(R.string.height_full), launchVehicle.getLength()));
             holder.vehicleSpecsDiameter.setText(String.format(mContext.getString(R.string.diameter_full), launchVehicle.getDiameter()));
             holder.vehicleSpecsStages.setText(String.format(mContext.getString(R.string.stage_full), launchVehicle.getMaxStage()));
-            holder.vehicleSpecsLeo.setText(String.format(mContext.getString(R.string.mass_leo_full), launchVehicle.getLEOCapacity()));
-            holder.vehicleSpecsGto.setText(String.format(mContext.getString(R.string.mass_gto_full), launchVehicle.getGTOCapacity()));
+            holder.vehicleSpecsLeo.setText(String.format(mContext.getString(R.string.mass_leo_full), launchVehicle.getLeoCapacity()));
+            holder.vehicleSpecsGto.setText(String.format(mContext.getString(R.string.mass_gto_full), launchVehicle.getGtoCapacity()));
             holder.vehicleSpecsLaunchMass.setText(String.format(mContext.getString(R.string.mass_launch_full), launchVehicle.getLaunchMass()));
-            holder.vehicleSpecsThrust.setText(String.format(mContext.getString(R.string.thrust_full), launchVehicle.getTOThrust()));
+            holder.vehicleSpecsThrust.setText(String.format(mContext.getString(R.string.thrust_full), launchVehicle.getToThrust()));
 
 
             if (backgroundColor != 0) {
                 holder.titleContainer.setBackgroundColor(backgroundColor);
             }
-            if (launchVehicle.getImageURL() != null && launchVehicle.getImageURL().length() > 0) {
+            if (launchVehicle.getImageUrl() != null && launchVehicle.getImageUrl().length() > 0) {
                 holder.vehicleImage.setVisibility(View.VISIBLE);
                 GlideApp.with(mContext)
-                        .load(launchVehicle.getImageURL())
+                        .load(launchVehicle.getImageUrl())
                         .apply(requestOptions)
                         .into(holder.vehicleImage);
             } else {
@@ -104,18 +104,18 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
             holder.vehicleName.setText(vehicleName);
             holder.vehicleFamily.setText(launchVehicle.getFamily());
 
-            if (launchVehicle.getInfoURL() != null
-                    && launchVehicle.getInfoURL().length() > 0
-                    && !launchVehicle.getInfoURL().contains("null")) {
+            if (launchVehicle.getInfoUrl() != null
+                    && launchVehicle.getInfoUrl().length() > 0
+                    && !launchVehicle.getInfoUrl().contains("null")) {
                 holder.infoButton.setVisibility(View.VISIBLE);
             } else {
                 holder.infoButton.setVisibility(View.GONE);
             }
 
 
-            if (launchVehicle.getWikiURL() != null
-                    && launchVehicle.getWikiURL().length() > 0
-                    && !launchVehicle.getWikiURL().contains("null")) {
+            if (launchVehicle.getWikiUrl() != null
+                    && launchVehicle.getWikiUrl().length() > 0
+                    && !launchVehicle.getWikiUrl().contains("null")) {
                 holder.wikiButton.setVisibility(View.VISIBLE);
             } else {
                 holder.wikiButton.setVisibility(View.GONE);
@@ -194,14 +194,14 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
             final int position = getAdapterPosition();
             switch (v.getId()) {
                 case R.id.infoButton:
-                    Utils.openCustomTab(activity, mContext, items.get(position).getInfoURL());
+                    Utils.openCustomTab(activity, mContext, items.get(position).getInfoUrl());
                     break;
                 case R.id.wikiButton:
-                    Utils.openCustomTab(activity, mContext, items.get(position).getWikiURL());
+                    Utils.openCustomTab(activity, mContext, items.get(position).getWikiUrl());
                     break;
                 case R.id.item_icon:
                     Intent animateIntent = new Intent(activity, FullscreenImageActivity.class);
-                    animateIntent.putExtra("imageURL", items.get(position).getImageURL());
+                    animateIntent.putExtra("imageURL", items.get(position).getImageUrl());
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         activity.startActivity(animateIntent, ActivityOptions.makeSceneTransitionAnimation(activity, vehicleImage, "imageCover").toBundle());
                     } else {

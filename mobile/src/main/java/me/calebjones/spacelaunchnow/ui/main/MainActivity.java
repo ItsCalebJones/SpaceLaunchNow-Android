@@ -77,7 +77,6 @@ import me.calebjones.spacelaunchnow.content.events.FilterViewEvent;
 import me.calebjones.spacelaunchnow.ui.changelog.ChangelogActivity;
 import me.calebjones.spacelaunchnow.ui.intro.OnboardingActivity;
 import me.calebjones.spacelaunchnow.ui.main.launches.LaunchesViewPager;
-import me.calebjones.spacelaunchnow.ui.main.missions.MissionFragment;
 import me.calebjones.spacelaunchnow.ui.main.news.NewsViewPager;
 import me.calebjones.spacelaunchnow.ui.main.next.NextLaunchFragment;
 import me.calebjones.spacelaunchnow.ui.main.vehicles.VehiclesViewPager;
@@ -101,7 +100,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
     private LaunchesViewPager mlaunchesViewPager;
-    private MissionFragment mMissionFragment;
     private NextLaunchFragment mUpcomingFragment;
     private NewsViewPager mNewsViewpagerFragment;
     private VehiclesViewPager mVehicleViewPager;
@@ -605,23 +603,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
                     mlaunchesViewPager = new LaunchesViewPager();
                     // Tell it who it is working with.
                     fm.beginTransaction().replace(R.id.flContent, mlaunchesViewPager, "LAUNCH_VIEWPAGER").commit();
-                }
-                if (rate != null) {
-                    rate.showRequest();
-                }
-
-                break;
-            case R.id.menu_missions:
-                mNavItemId = R.id.menu_missions;
-                setActionBarTitle(getString(R.string.missions));
-                // Check to see if we have retained the worker fragment.
-                mMissionFragment = (MissionFragment) fm.findFragmentByTag("MISSION_FRAGMENT");
-
-                // If not retained (or first time running), we need to create it.
-                if (mMissionFragment == null) {
-                    mMissionFragment = new MissionFragment();
-                    // Tell it who it is working with.
-                    fm.beginTransaction().replace(R.id.flContent, mMissionFragment, "MISSION_FRAGMENT").commit();
                 }
                 if (rate != null) {
                     rate.showRequest();

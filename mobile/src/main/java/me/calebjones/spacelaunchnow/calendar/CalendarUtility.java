@@ -28,7 +28,7 @@ import it.macisamuele.calendarprovider.EventInfo;
 import me.calebjones.spacelaunchnow.calendar.model.Calendar;
 import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
 import me.calebjones.spacelaunchnow.calendar.model.Event;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import timber.log.Timber;
 
 // these imports are used in the following code
@@ -72,14 +72,14 @@ public class CalendarUtility {
                 urls = urls + "\n" + launch.getVidURLs().get(i).getVal();
             }
         }
-        if (launch.getMissions() != null && launch.getMissions().size() > 0) {
-            description = launch.getMissions().get(0).getDescription() + urls;
+        if (launch.getMission() != null) {
+            description = launch.getMission().getDescription() + urls;
         }
 
         description = description + "\n\n via Space Launch Now";
 
-        Date startDate = launch.getWindowstart();
-        Date endDate = launch.getWindowend();
+        Date startDate = launch.getWindowStart();
+        Date endDate = launch.getWindowEnd();
 
         Event event = new Event();
         event.calendarId = calendarItem.getId();
@@ -130,17 +130,14 @@ public class CalendarUtility {
                     urls = urls + "\n" + launch.getVidURLs().get(i).getVal();
                 }
             }
-            if (launch.getMissions() != null
-                    && launch.getMissions().size() > 0
-                    && launch.getMissions().get(0) != null
-                    &&  launch.getMissions().get(0).getDescription() != null) {
-                description = launch.getMissions().get(0).getDescription() + urls;
+            if (launch.getMission() != null && launch.getMission().getDescription() != null) {
+                description = launch.getMission().getDescription() + urls;
             }
 
             description = description + "\n\n via Space Launch Now";
 
-            Date startDate = launch.getWindowstart();
-            Date endDate = launch.getWindowend();
+            Date startDate = launch.getWindowStart();
+            Date endDate = launch.getWindowEnd();
 
             calEvent.put(CalendarContract.Events.DESCRIPTION, description);
             calEvent.put(CalendarContract.Events.EVENT_LOCATION, launch.getLocation().getName());

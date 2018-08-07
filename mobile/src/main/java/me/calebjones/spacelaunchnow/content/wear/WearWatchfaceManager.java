@@ -4,21 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.CapabilityClient;
@@ -30,11 +21,9 @@ import com.google.android.gms.wearable.Wearable;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
-import io.fabric.sdk.android.services.common.Crash;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import jp.wasabeef.glide.transformations.BlurTransformation;
@@ -42,8 +31,8 @@ import jp.wasabeef.glide.transformations.gpu.BrightnessFilterTransformation;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.services.BaseManager;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
-import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.RocketDetail;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Launcher;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.transformations.SaturationTransformation;
@@ -83,6 +72,7 @@ public class WearWatchfaceManager extends BaseManager {
         return nodes.size() > 0;
     }
 
+    // TODO Need to fix this for SLN 3.0
     private void checkLaunch() {
         mRealm = Realm.getDefaultInstance();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
@@ -97,25 +87,25 @@ public class WearWatchfaceManager extends BaseManager {
                 boolean dynamic = sharedPref.getBoolean("supporter_dynamic_background", false);
                 boolean modify = sharedPref.getBoolean("wear_background_blur", true);
                 if (dynamic) {
-                    if (launch.getRocket().getName() != null) {
-                        if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
-                            Timber.v("Sending image %s", launch.getRocket().getImageURL());
-                            sendDataToWear(launch.getRocket().getImageURL(), launch, modify);
+                    if (launch.getLauncher().getName() != null) {
+                        if (launch.getLauncher().getImageUrl() != null && launch.getLauncher().getImageUrl().length() > 0 && !launch.getLauncher().getImageUrl().contains("placeholder")) {
+                            Timber.v("Sending image %s", launch.getLauncher().getImageUrl());
+                            sendDataToWear(launch.getLauncher().getImageUrl(), launch, modify);
                         } else {
                             String query;
-                            if (launch.getRocket().getName().contains("Space Shuttle")) {
+                            if (launch.getLauncher().getName().contains("Space Shuttle")) {
                                 query = "Space Shuttle";
                             } else {
-                                query = launch.getRocket().getName();
+                                query = launch.getLauncher().getName();
                             }
 
-                            RocketDetail launchVehicle = mRealm.where(RocketDetail.class)
+                            Launcher launchVehicle = mRealm.where(Launcher.class)
                                     .contains("name", query)
                                     .findFirst();
-                            if (launchVehicle != null && launchVehicle.getImageURL() != null && launchVehicle.getImageURL().length() > 0) {
-                                Timber.v("Sending image %s", launchVehicle.getImageURL());
-                                sendDataToWear(launchVehicle.getImageURL(), launch, modify);
-                                Timber.d("Glide Loading: %s %s", launchVehicle.getName(), launchVehicle.getImageURL());
+                            if (launchVehicle != null && launchVehicle.getImageUrl() != null && launchVehicle.getImageUrl().length() > 0) {
+                                Timber.v("Sending image %s", launchVehicle.getImageUrl());
+                                sendDataToWear(launchVehicle.getImageUrl(), launch, modify);
+                                Timber.d("Glide Loading: %s %s", launchVehicle.getName(), launchVehicle.getImageUrl());
 
                             } else {
                                 sendDataToWear(context.getString(R.string.default_wear_image), launch, modify);

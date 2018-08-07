@@ -34,13 +34,10 @@ import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.mrapp.android.preference.activity.PreferenceActivity;
-import io.reactivex.disposables.Disposable;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
@@ -50,7 +47,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.SyncCalendarJob;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
@@ -121,6 +118,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     private SwitchPreferences switchPreferences;
     private SharedPreferences sharedPref;
     private Context context;
+    private int preferredCount;
     private NextLaunchDataRepository nextLaunchDataRepository;
 
     private boolean active;
@@ -131,8 +129,10 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         super.onCreate(savedInstanceState);
         context = getActivity();
         sharedPreference = ListPreferences.getInstance(context);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         switchPreferences = SwitchPreferences.getInstance(context);
         nextLaunchDataRepository = new NextLaunchDataRepository(context, getRealm());
+        preferredCount = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
         setScreenName("Next Launch Fragment");
     }
 
@@ -143,7 +143,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         final int color;
         active = false;
 
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+
 
         if (adapter == null) {
             adapter = new CardAdapter(context);
@@ -315,7 +315,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     public void fetchData(boolean forceRefresh) {
         Timber.v("Sending GET_UP_LAUNCHES");
-        nextLaunchDataRepository.getNextUpcomingLaunches(forceRefresh, new NextLaunchDataRepository.LaunchCallback() {
+        nextLaunchDataRepository.getNextUpcomingLaunches(preferredCount, forceRefresh, new NextLaunchDataRepository.LaunchCallback() {
             @Override
             public void onLaunchesLoaded(RealmResults<Launch> launches) {
                 updateAdapter(launches);
@@ -339,7 +339,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
     private void updateAdapter(RealmResults<Launch> launches) {
-        int preferredCount = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
         adapter.clear();
 
         if (launches.size() >= preferredCount) {

@@ -46,7 +46,7 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.data.LaunchStatus;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
@@ -117,7 +117,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         return new ViewHolder(v);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "StringFormatMatches"})
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
         Launch launchItem = launchList.get(i);
@@ -128,11 +128,11 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         String title;
         try {
             if (launchItem.isValid()) {
-                if (launchItem.getRocket() != null) {
-                    if (launchItem.getRocket().getAgencies() != null && launchItem.getRocket().getAgencies().size() > 0) {
-                        title = launchItem.getRocket().getAgencies().get(0).getName() + " | " + (launchItem.getRocket().getName());
+                if (launchItem.getLauncher() != null) {
+                    if (launchItem.getLsp() != null) {
+                        title = launchItem.getLsp().getName() + " | " + (launchItem.getLauncher().getName());
                     } else {
-                        title = launchItem.getRocket().getName();
+                        title = launchItem.getLauncher().getName();
                     }
                 } else if (launchItem.getName() != null) {
                     title = launchItem.getName();
@@ -144,17 +144,17 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 holder.title.setText(title);
 
                 //Retrieve missionType
-                if (launchItem.getMissions().size() != 0) {
-                    Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMissions().get(0).getTypeName(), true);
+                if (launchItem.getMission() != null) {
+                    Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMission().getTypeName(), true);
                 } else {
                     holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
                 }
 
                 double dlat = 0;
                 double dlon = 0;
-                if (launchItem.getLocation() != null && launchItem.getLocation().getPads() != null) {
-                    dlat = launchItem.getLocation().getPads().get(0).getLatitude();
-                    dlon = launchItem.getLocation().getPads().get(0).getLongitude();
+                if (launchItem.getPad() != null) {
+                    dlat = Double.parseDouble(launchItem.getPad().getLatitude());
+                    dlon = Double.parseDouble(launchItem.getPad().getLongitude());
                 }
 
                 // Getting status
@@ -353,7 +353,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                         sdf.toLocalizedPattern();
                         Date date = launchItem.getNet();
                         String launchTime = sdf.format(date);
-                        if (launchItem.getTbddate() == 1){
+                        if (launchItem.getTbddate()){
                             launchTime = launchTime + context.getString(R.string.unconfirmed);
                         }
                         holder.launch_date_compact.setText(launchTime);
@@ -405,10 +405,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 }
 
 
-                if (launchItem.getMissions().size() > 0) {
-                    holder.content_mission.setText(launchItem.getMissions().get(0).getName());
-                    String description = launchItem.getMissions().
-                            get(0).getDescription();
+                if (launchItem.getMission() != null) {
+                    holder.content_mission.setText(launchItem.getMission().getName());
+                    String description = launchItem.getMission().getDescription();
                     if (description.length() > 0) {
                         holder.content_mission_description_view.setVisibility(View.VISIBLE);
                         holder.content_mission_description.setText(description);
@@ -452,8 +451,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         }
         if (launchItem.getStatus() == 2) {
             holder.countdownView.setVisibility(View.GONE);
-            if (launchItem.getRocket().getAgencies().size() > 0) {
-                holder.content_TMinus_status.setText(String.format(context.getString(R.string.pending_confirmed_go_specific), launchItem.getRocket().getAgencies().get(0).getName()));
+            if (launchItem.getLsp() != null) {
+                holder.content_TMinus_status.setText(String.format(context.getString(R.string.pending_confirmed_go_specific), launchItem.getLsp().getName()));
             } else {
                 holder.content_TMinus_status.setText(R.string.pending_confirmed_go);
             }
@@ -638,8 +637,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 case R.id.shareButton:
                     String message;
                     if (launch.getVidURLs().size() > 0) {
-                        if (launch.getLocation() != null && launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
-                                get(0).getAgencies().size() > 0) {
+                        if (launch.getLocation() != null) {
 
                             message = launch.getName() + " launching from "
                                     + launch.getLocation().getName() + "\n\n"
@@ -654,8 +652,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                                     + launchDate;
                         }
                     } else {
-                        if (launch.getLocation() != null && launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
-                                get(0).getAgencies().size() > 0) {
+                        if (launch.getLocation() != null) {
 
                             message = launch.getName() + " launching from "
                                     + launch.getLocation().getName() + "\n\n"
@@ -683,8 +680,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
 
                     Timber.d("FAB: %s ", location);
 
-                    double dlat = launchList.get(position).getLocation().getPads().get(0).getLatitude();
-                    double dlon = launchList.get(position).getLocation().getPads().get(0).getLongitude();
+                    double dlat = Double.parseDouble(launchList.get(position).getPad().getLatitude());
+                    double dlon = Double.parseDouble(launchList.get(position).getPad().getLongitude());
 
                     Uri gmmIntentUri = Uri.parse("geo:" + dlat + ", " + dlon + "?z=12&q=" + dlat + ", " + dlon);
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
@@ -693,7 +690,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     Analytics.getInstance().sendLaunchMapClicked(launch.getName());
 
                     if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
-                        Toast.makeText(context, "Loading " + launchList.get(position).getLocation().getPads().get(0).getName(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Loading " + launchList.get(position).getPad().getName(), Toast.LENGTH_LONG).show();
                         context.startActivity(mapIntent);
                     }
                     break;

@@ -49,6 +49,7 @@ public class SyncJob extends Job {
                 .schedule();
     }
 
+    // TODO update this
     @NonNull
     @Override
     protected Result onRunJob(Params params) {

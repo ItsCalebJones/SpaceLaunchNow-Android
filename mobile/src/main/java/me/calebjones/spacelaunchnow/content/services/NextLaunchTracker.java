@@ -79,11 +79,6 @@ public NextLaunchTracker(Context context) {
 
     public void updateWear() {
         final WearWatchfaceManager watchfaceManager = new WearWatchfaceManager(context);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                watchfaceManager.updateWear();
-            }
-        }).start();
+        new Thread(() -> watchfaceManager.updateWear()).start();
     }
 }

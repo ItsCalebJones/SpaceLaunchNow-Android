@@ -1,14 +1,16 @@
-package me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary;
+package me.calebjones.spacelaunchnow.data.networking.responses.base;
 
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
 
 public class AgencyResponse extends BaseResponse {
     @SerializedName("results")
-    private Agency[] agencies;
+    private List<Agency> agencies;
 
-    public Agency[] getAgencies() {
+    public List<Agency> getAgencies() {
         return agencies;
     }
 }
