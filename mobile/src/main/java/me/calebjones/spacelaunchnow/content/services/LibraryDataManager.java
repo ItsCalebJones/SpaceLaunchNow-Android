@@ -23,23 +23,9 @@ public class LibraryDataManager extends BaseManager {
     }
 
     public void getFirstLaunchData(){
-        dataClientManager.getUpcomingLaunchesAll();
-//        dataClientManager.getLaunchesByDate("1950-01-01", Utils.getEndDate(1));
+        dataClientManager.getUpcomingLaunches();
     }
 
-    public void getAllLibraryData(){
-
-    }
-
-    public void getMissions(){
-        dataClientManager.getAllMissions();
-    }
-
-    public void getVehicleDetails(){
-        dataClientManager.getVehicles(null);
-        dataClientManager.getRockets();
-        dataClientManager.getRocketFamily();
-    }
 
     public void updateNextLaunchMini() {
         Timber.v("Sending Update Next Launch intent.");

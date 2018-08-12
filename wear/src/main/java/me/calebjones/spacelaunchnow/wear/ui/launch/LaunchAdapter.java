@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import io.realm.RealmResults;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.wear.ui.launchdetail.LaunchDetail;
 import me.calebjones.spacelaunchnow.wear.R;
 import me.calebjones.spacelaunchnow.wear.content.ContentManager;

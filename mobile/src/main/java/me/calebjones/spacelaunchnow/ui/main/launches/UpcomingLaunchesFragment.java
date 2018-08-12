@@ -51,7 +51,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
@@ -409,7 +409,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     public void getUpcomingLaunchData() {
         Timber.d("Sending GET_UP_LAUNCHES");
         DataClientManager dataClientManager = new DataClientManager(getContext());
-        dataClientManager.getUpcomingLaunchesAll();
+        dataClientManager.getUpcomingLaunches();
         getRealm().removeAllChangeListeners();
     }
 
@@ -621,19 +621,19 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
         final List<Launch> filteredModelList = new ArrayList<>();
         for (Launch model : models) {
             final String name = model.getName().toLowerCase();
-            final String rocketName = model.getRocket().getName().toLowerCase();
+            final String rocketName = model.getLauncher().getName().toLowerCase();
             final String locationName = model.getLocation().getName().toLowerCase();
             String missionName = null;
             String missionDescription = null;
             String agencyName = null;
 
-            if (model.getRocket().getAgencies() != null && model.getRocket().getAgencies().size() > 0){
-                agencyName = model.getRocket().getAgencies().get(0).getName().toLowerCase();
+            if (model.getLsp() != null){
+                agencyName = model.getLsp().getName().toLowerCase();
             }
 
-            if (model.getMissions().size() > 0) {
-                missionName = model.getMissions().get(0).getName().toLowerCase();
-                missionDescription = model.getMissions().get(0).getDescription().toLowerCase();
+            if (model.getMission() != null) {
+                missionName = model.getMission().getName().toLowerCase();
+                missionDescription = model.getMission().getDescription().toLowerCase();
             }
 
             if (rocketName.contains(query) || locationName.contains(query) || (agencyName != null && agencyName.contains(query)) || name.contains(query)) {

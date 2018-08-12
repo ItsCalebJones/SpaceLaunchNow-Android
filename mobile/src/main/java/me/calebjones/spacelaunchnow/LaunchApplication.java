@@ -7,6 +7,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -15,6 +17,8 @@ import android.widget.ImageView;
 import android.zetterstrom.com.forecast.ForecastClient;
 import android.zetterstrom.com.forecast.ForecastConfiguration;
 
+import com.anjlab.android.iab.v3.BillingProcessor;
+import com.anjlab.android.iab.v3.TransactionDetails;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.evernote.android.job.JobManager;
@@ -32,10 +36,10 @@ import com.twitter.sdk.android.tweetui.TweetUi;
 import java.util.Locale;
 import java.util.TimeZone;
 
+
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.exceptions.RealmMigrationNeededException;
 import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
@@ -46,9 +50,10 @@ import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.content.notifications.NotificationHelper;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
+import me.calebjones.spacelaunchnow.data.models.Products;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
-import me.calebjones.spacelaunchnow.data.models.realm.Migration;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
+import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -66,6 +71,7 @@ public class LaunchApplication extends Application {
     private Context context;
     private LibraryDataManager libraryDataManager;
     private FirebaseMessaging firebaseMessaging;
+    private BillingProcessor bp;
 
 
     @Override
@@ -195,26 +201,53 @@ public class LaunchApplication extends Application {
         RealmConfiguration config = new RealmConfiguration.Builder()
                 .schemaVersion(Constants.DB_SCHEMA_VERSION_2_6_0)
                 .modules(Realm.getDefaultModule(), new LaunchDataModule())
-                .migration(new Migration())
+                .deleteRealmIfMigrationNeeded()
                 .build();
 
+        Timber.d("Realm set Default");
+        Realm.setDefaultConfiguration(config);
+        Timber.d("Realm opened and closed successfully.");
+        setupData(false);
+        boolean isAvailable = BillingProcessor.isIabServiceAvailable(context);
+        if (isAvailable) {
+            bp = new BillingProcessor(this, getResources().getString(R.string.rsa_key), new BillingProcessor.IBillingHandler() {
+                @Override
+                public void onProductPurchased(@NonNull String productId, @Nullable TransactionDetails details) {
+                    Timber.d("onProductPurchased");
+                }
 
-        try {
-            Timber.d("Realm set Default");
-            Realm.setDefaultConfiguration(config);
-            Realm realm = Realm.getDefaultInstance();
-            realm.close();
-            Timber.d("Realm opened and closed successfully.");
-            setupData(false);
-        } catch (RealmMigrationNeededException | NullPointerException e) {
-            Timber.d("Realm Migration Exception");
-            Timber.e(e);
-            Realm.deleteRealm(config);
-            Realm.setDefaultConfiguration(config);
-            setupData(true);
-            Crashlytics.logException(e);
+                @Override
+                public void onPurchaseHistoryRestored() {
+                    Timber.d("onPurchaseHistoryRestored");
+                }
+
+                @Override
+                public void onBillingError(int errorCode, @Nullable Throwable error) {
+                    Timber.d("onBillingError");
+                }
+
+                @Override
+                public void onBillingInitialized() {
+                    Timber.d("onBillingInitialized");
+                    restorePurchases();
+                }
+            });
         }
 
+    }
+
+    private void restorePurchases() {
+        bp.loadOwnedPurchasesFromGoogle();
+        Timber.d("Purchase History Restored - Number of items purchased: %s", bp.listOwnedProducts().size());
+        if (bp != null && bp.listOwnedProducts().size() > 0) {
+            for (final String sku : bp.listOwnedProducts()) {
+                Timber.v("Purchase History - SKU: %s", sku);
+                Products product = SupporterHelper.getProduct(sku);
+                Realm realm = Realm.getDefaultInstance();
+                realm.executeTransaction(realm1 -> realm1.copyToRealmOrUpdate(product));
+                realm.close();
+            }
+        }
     }
 
 
@@ -262,18 +295,14 @@ public class LaunchApplication extends Application {
         Fabric.with(context, crashlyticsKit);
         Analytics.create(this);
 
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                // Initialize Fabric with the debug-disabled crashlytics.
-                Crashlytics.setString("Timezone", String.valueOf(TimeZone.getDefault().getDisplayName()));
-                Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
-                Crashlytics.setBool("is24", DateFormat.is24HourFormat(context));
-                Crashlytics.setBool("Network State", Utils.isNetworkAvailable(context));
-                Crashlytics.setString("Network Info", Connectivity.getNetworkStatus(context));
-                Crashlytics.setBool("Debug Logging", sharedPref.getBoolean("debug_logging", false));
-            }
+        new Thread(() -> {
+            // Initialize Fabric with the debug-disabled crashlytics.
+            Crashlytics.setString("Timezone", String.valueOf(TimeZone.getDefault().getDisplayName()));
+            Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
+            Crashlytics.setBool("is24", DateFormat.is24HourFormat(context));
+            Crashlytics.setBool("Network State", Utils.isNetworkAvailable(context));
+            Crashlytics.setString("Network Info", Connectivity.getNetworkStatus(context));
+            Crashlytics.setBool("Debug Logging", sharedPref.getBoolean("debug_logging", false));
         }).start();
     }
 

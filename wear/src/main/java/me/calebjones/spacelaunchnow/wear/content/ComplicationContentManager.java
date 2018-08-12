@@ -1,27 +1,20 @@
 package me.calebjones.spacelaunchnow.wear.content;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Network;
-import android.net.NetworkCapabilities;
-import android.net.NetworkRequest;
 import android.os.Handler;
-import android.os.Message;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import io.realm.RealmList;
-import io.realm.RealmResults;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.networking.RetrofitBuilder;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.WearService;
 import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchWearResponse;
@@ -31,10 +24,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import timber.log.Timber;
-
-import static me.calebjones.spacelaunchnow.wear.model.Constants.NETWORK_CONNECTED;
-import static me.calebjones.spacelaunchnow.wear.model.Constants.NETWORK_CONNECTED_SLOW;
-import static me.calebjones.spacelaunchnow.wear.model.Constants.NETWORK_UNAVAILABLE;
 
 
 public class ComplicationContentManager {

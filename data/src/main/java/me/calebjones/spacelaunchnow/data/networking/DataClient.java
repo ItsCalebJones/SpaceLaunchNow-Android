@@ -1,27 +1,14 @@
 package me.calebjones.spacelaunchnow.data.networking;
 
-import java.io.IOException;
-import java.util.List;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
-import io.realm.Realm;
 import me.calebjones.spacelaunchnow.data.helpers.Utils;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.LibraryService;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
-import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.AgencyResponse;
-import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
-import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LocationResponse;
-import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.MissionResponse;
-import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.PadResponse;
-import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.RocketFamilyResponse;
-import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.RocketResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import timber.log.Timber;
 
@@ -36,26 +23,11 @@ public class DataClient {
     private Retrofit libraryRetrofit;
     private Retrofit libraryRetrofitThreaded;
 
-    public LibraryService getLibraryServiceThreaded() {
-        return libraryServiceThreaded;
-    }
-
-    public LibraryService getLibraryServiceThreadedLowPriority() {
-        return libraryServiceThreadedLowPriority;
-    }
-
     public LibraryService getLibraryService() {
         return libraryService;
     }
 
-    public SpaceLaunchNowService getSpaceLaunchNowService() {
-        return spaceLaunchNowService;
-    }
-
     private Retrofit spaceLaunchNowRetrofit;
-    private BehaviorSubject<Boolean> networkInUse;
-
-
 
     private DataClient(String version, String token) {
 
@@ -103,47 +75,34 @@ public class DataClient {
         return mInstance;
     }
 
-    public Call<LaunchResponse> getLaunchById(int launchID, boolean isUIThread, Callback<LaunchResponse> callback) {
-        Call<LaunchResponse> call;
-        if (isUIThread) {
-            call = libraryService.getLaunchByID(launchID);
-        } else {
-            call = libraryServiceThreaded.getLaunchByID(launchID);
-        }
+    public Call<Launch> getLaunchById(int launchID, Callback<Launch> callback) {
+        Call<Launch> call;
 
-        call.enqueue(callback);
-
-        Timber.v("Creating getLaunchByID for Launch: %s", launchID);
-
-        return call;
-    }
-
-    public Call<LaunchResponse> getNextUpcomingLaunchesMini(Callback<LaunchResponse> callback) {
-        Call<LaunchResponse> call = libraryServiceThreaded.getNextUpcomingLaunchesMini(Utils.getStartDate(-1), Utils.getEndDate(10));
+        call = spaceLaunchNowService.getLaunchById(launchID);
 
         call.enqueue(callback);
 
         return call;
     }
 
-    public Call<LaunchResponse> getNextUpcomingLaunches(int offset, Callback<LaunchResponse> callback) {
-        Call<LaunchResponse> call = libraryService.getNextUpcomingLaunches(Utils.getStartDate(-2), Utils.getEndDate(30), offset, 10);
+    public Call<LaunchResponse> getNextUpcomingLaunchesMini(int limit, int offset, Callback<LaunchResponse> callback) {
+        Call<LaunchResponse> call = spaceLaunchNowService.getUpcomingLaunches(limit, offset, "list");
 
         call.enqueue(callback);
 
         return call;
     }
 
-    public Call<LaunchResponse> getUpcomingLaunches(int offset, Callback<LaunchResponse> callback) {
-        Call<LaunchResponse> call = libraryServiceThreaded.getUpcomingLaunches(offset);
+    public Call<LaunchResponse> getNextUpcomingLaunches(int limit, int offset, Callback<LaunchResponse> callback) {
+        Call<LaunchResponse> call = spaceLaunchNowService.getUpcomingLaunches(limit, offset, "detailed");
 
         call.enqueue(callback);
 
         return call;
     }
 
-    public Call<LaunchResponse> getUpcomingLaunchesAll(int offset, Callback<LaunchResponse> callback) {
-        Call<LaunchResponse> call = libraryServiceThreaded.getUpcomingLaunchesAll(offset);
+    public Call<LaunchResponse> getUpcomingLaunches(int limit, int offset, Callback<LaunchResponse> callback) {
+        Call<LaunchResponse> call = spaceLaunchNowService.getUpcomingLaunches(limit, offset, "detailed");
 
         call.enqueue(callback);
 
@@ -151,55 +110,7 @@ public class DataClient {
     }
 
     public Call<LaunchResponse> getLaunchesByDate(String startDate, String endDate, int offset, Callback<LaunchResponse> callback) {
-        Call<LaunchResponse> call = libraryServiceThreadedLowPriority.getLaunchesByDate(startDate, endDate, offset);
-
-        call.enqueue(callback);
-
-        return call;
-    }
-
-    public Call<AgencyResponse> getAllAgencies(int offset, Callback<AgencyResponse> callback) {
-        Call<AgencyResponse> call = libraryServiceThreaded.getAllAgency(offset);
-
-        call.enqueue(callback);
-
-        return call;
-    }
-
-    public Call<MissionResponse> getAllMissions(int offset, Callback<MissionResponse> callback) {
-        Call<MissionResponse> call = libraryServiceThreaded.getAllMisisons(offset);
-
-        call.enqueue(callback);
-
-        return call;
-    }
-
-    public Call<LocationResponse> getAllLocations(int offset, Callback<LocationResponse> callback) {
-        Call<LocationResponse> call = libraryServiceThreaded.getLocations(offset);
-
-        call.enqueue(callback);
-
-        return call;
-    }
-
-    public Call<LocationResponse> getLocationById(int locationID, Callback<LocationResponse> callback) {
-        Call<LocationResponse> call = libraryServiceThreaded.getLocationsById(locationID);
-
-        call.enqueue(callback);
-
-        return call;
-    }
-
-    public Call<PadResponse> getAllPads(int offset, Callback<PadResponse> callback) {
-        Call<PadResponse> call = libraryServiceThreaded.getPads(offset);
-
-        call.enqueue(callback);
-
-        return call;
-    }
-
-    public Call<PadResponse> getPadsByID(int padID, Callback<PadResponse> callback) {
-        Call<PadResponse> call = libraryServiceThreaded.getPadsById(padID);
+        Call<LaunchResponse> call = spaceLaunchNowService.getLaunchesByDate(startDate, endDate, offset);
 
         call.enqueue(callback);
 
@@ -214,27 +125,4 @@ public class DataClient {
         return call;
     }
 
-    public Call<VehicleResponse> getVehicles(String vehicle, Callback<VehicleResponse> callback){
-        Call<VehicleResponse> call = spaceLaunchNowService.getVehicle(vehicle);
-
-        call.enqueue(callback);
-
-        return call;
-    }
-
-    public Call<RocketResponse> getRockets(int offset, Callback<RocketResponse> callback) {
-        Call<RocketResponse> call = libraryServiceThreaded.getAllRockets(offset);
-
-        call.enqueue(callback);
-
-        return call;
-    }
-
-    public Call<RocketFamilyResponse> getRocketFamily(int offset, Callback<RocketFamilyResponse> callback) {
-        Call<RocketFamilyResponse> call = libraryServiceThreaded.getAllRocketFamily(offset);
-
-        call.enqueue(callback);
-
-        return call;
-    }
 }

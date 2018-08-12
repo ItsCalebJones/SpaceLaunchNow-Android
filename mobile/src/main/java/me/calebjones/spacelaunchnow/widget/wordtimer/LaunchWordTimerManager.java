@@ -12,7 +12,6 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.RemoteViews;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -23,7 +22,7 @@ import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.UniqueIdentifier;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -203,9 +202,9 @@ public class LaunchWordTimerManager {
 
     private String getLaunchName(Launch launchRealm) {
         //Replace with launch
-        if (launchRealm.getRocket() != null && launchRealm.getRocket().getName() != null) {
+        if (launchRealm.getLauncher() != null) {
             //Replace with mission name
-            return launchRealm.getRocket().getName();
+            return launchRealm.getLauncher().getName();
         } else {
             return null;
         }
@@ -213,9 +212,9 @@ public class LaunchWordTimerManager {
 
     private String getMissionName(Launch launchRealm) {
 
-        if (launchRealm.getMissions().size() > 0) {
+        if (launchRealm.getMission() != null) {
             //Replace with mission name
-            return launchRealm.getMissions().get(0).getName();
+            return launchRealm.getMission().getName();
         } else {
             return null;
         }

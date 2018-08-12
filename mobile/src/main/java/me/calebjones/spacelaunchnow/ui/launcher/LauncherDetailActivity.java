@@ -31,8 +31,8 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.data.DataSaver;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.SLNAgency;
-import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.RocketDetail;
+import me.calebjones.spacelaunchnow.data.models.main.Agency;
+import me.calebjones.spacelaunchnow.data.models.main.Launcher;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
@@ -56,7 +56,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
     private ImageView detail_profile_backdrop;
     private CircleImageView detail_profile_image;
     private VehicleDetailAdapter adapter;
-    private RealmResults<RocketDetail> rocketLaunches;
+    private RealmResults<Launcher> rocketLaunches;
     private AppBarLayout appBarLayout;
     private CollapsingToolbarLayout collapsingToolbar;
     private int mMaxScrollSize;
@@ -131,7 +131,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
     public void displayRockets() {
         Intent intent = getIntent();
         Gson gson = new Gson();
-        final SLNAgency launcher = gson.fromJson(intent.getStringExtra("json"), SLNAgency.class);
+        final Agency launcher = gson.fromJson(intent.getStringExtra("json"), Agency.class);
 
         if (launcher == null) {
             Toast.makeText(context, R.string.error_launch_details, Toast.LENGTH_SHORT).show();
@@ -151,7 +151,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
         detail_rocket.setText(name);
         detail_vehicle_agency.setText(agency);
 
-        rocketLaunches = getRealm().where(RocketDetail.class).contains("name", agency).findAll();
+        rocketLaunches = getRealm().where(Launcher.class).contains("name", agency).findAll();
         if (rocketLaunches.size() > 0) {
             adapter.clear();
             adapter.addItems(rocketLaunches);
@@ -163,16 +163,11 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
             @Override
             public void onResponse(Call<VehicleResponse> call, Response<VehicleResponse> response) {
                 if (response.isSuccessful()) {
-                    RocketDetail[] details = response.body().getVehicles();
+                    Launcher[] details = response.body().getVehicles();
                     if (details.length > 0) {
-                        getRealm().executeTransaction(new Realm.Transaction() {
-                            @Override
-                            public void execute(Realm realm) {
-                                getRealm().where(RocketDetail.class).contains("agency", finalAgency).findAll().deleteAllFromRealm();
-                            }
-                        });
+                        getRealm().executeTransaction(realm -> getRealm().where(Launcher.class).contains("agency", finalAgency).findAll().deleteAllFromRealm());
                         dataSaver.saveObjectsToRealm(details);
-                        rocketLaunches = getRealm().where(RocketDetail.class).contains("agency", finalAgency).findAll();
+                        rocketLaunches = getRealm().where(Launcher.class).contains("agency", finalAgency).findAll();
                         adapter.clear();
                         adapter.addItems(rocketLaunches);
                     } else {
@@ -191,8 +186,8 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
         });
 
 
-        applyProfileBackdrop(launcher.getImageURL());
-        applyProfileLogo(launcher.getNationURL());
+        applyProfileBackdrop(launcher.getImageUrl());
+        applyProfileLogo(launcher.getNationUrl());
     }
 
     private void applyProfileBackdrop(String drawableURL) {
@@ -208,40 +203,37 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
                 .centerCrop()
                 .listener(GlidePalette.with(drawableURL)
                         .use(palette)
-                        .intoCallBack(new BitmapPalette.CallBack() {
-                            @Override
-                            public void onPaletteLoaded(@Nullable Palette palette) {
-                                if (ListPreferences.getInstance(context).isNightModeActive(context)) {
-                                    if (palette != null) {
-                                        Palette.Swatch color = null;
-                                        if (palette.getDarkMutedSwatch() != null) {
-                                            color = palette.getDarkMutedSwatch();
-                                        } else if (palette.getDarkVibrantSwatch() != null){
-                                            color = palette.getDarkVibrantSwatch();
-                                        }
-                                        if (color != null) {
-                                            collapsingToolbar.setContentScrimColor(color.getRgb());
-                                            customOnOffsetChangedListener.updateStatusColor(color.getRgb());
-                                            appBarLayout.setBackgroundColor(color.getRgb());
-                                            adapter.updateColor(color.getRgb());
-                                            adapter.notifyDataSetChanged();
-                                        }
+                        .intoCallBack(palette1 -> {
+                            if (ListPreferences.getInstance(context).isNightModeActive(context)) {
+                                if (palette1 != null) {
+                                    Palette.Swatch color = null;
+                                    if (palette1.getDarkMutedSwatch() != null) {
+                                        color = palette1.getDarkMutedSwatch();
+                                    } else if (palette1.getDarkVibrantSwatch() != null){
+                                        color = palette1.getDarkVibrantSwatch();
                                     }
-                                } else {
-                                    if (palette != null) {
-                                        Palette.Swatch color = null;
-                                        if (palette.getVibrantSwatch() != null) {
-                                            color = palette.getVibrantSwatch();
-                                        } else if (palette.getMutedSwatch() != null){
-                                            color = palette.getMutedSwatch();
-                                        }
-                                        if (color != null) {
-                                            collapsingToolbar.setContentScrimColor(color.getRgb());
-                                            customOnOffsetChangedListener.updateStatusColor(color.getRgb());
-                                            appBarLayout.setBackgroundColor(color.getRgb());
-                                            adapter.updateColor(color.getRgb());
-                                            adapter.notifyDataSetChanged();
-                                        }
+                                    if (color != null) {
+                                        collapsingToolbar.setContentScrimColor(color.getRgb());
+                                        customOnOffsetChangedListener.updateStatusColor(color.getRgb());
+                                        appBarLayout.setBackgroundColor(color.getRgb());
+                                        adapter.updateColor(color.getRgb());
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                }
+                            } else {
+                                if (palette1 != null) {
+                                    Palette.Swatch color = null;
+                                    if (palette1.getVibrantSwatch() != null) {
+                                        color = palette1.getVibrantSwatch();
+                                    } else if (palette1.getMutedSwatch() != null){
+                                        color = palette1.getMutedSwatch();
+                                    }
+                                    if (color != null) {
+                                        collapsingToolbar.setContentScrimColor(color.getRgb());
+                                        customOnOffsetChangedListener.updateStatusColor(color.getRgb());
+                                        appBarLayout.setBackgroundColor(color.getRgb());
+                                        adapter.updateColor(color.getRgb());
+                                        adapter.notifyDataSetChanged();
                                     }
                                 }
                             }

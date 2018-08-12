@@ -54,7 +54,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -686,22 +686,18 @@ public class PreviousLaunchesFragment extends BaseFragment implements SwipeRefre
                 name = model.getName().toLowerCase();
             }
 
-            if (model.getRocket() != null) {
-                rocketName = model.getRocket().getName().toLowerCase();
-                if (model.getRocket().getAgencies() != null && model.getRocket().getAgencies().size() > 0) {
-                    agencyName = model.getRocket().getAgencies().get(0).getName().toLowerCase();
-                }
+            if (model.getLauncher() != null) {
+                rocketName = model.getLauncher().getName().toLowerCase();
+                agencyName = model.getLsp().getName().toLowerCase();
             }
 
             if (model.getLocation() != null) {
                 locationName = model.getLocation().getName().toLowerCase();
             }
 
-            if (model.getMissions() != null) {
-                if (model.getMissions().size() > 0) {
-                    missionName = model.getMissions().get(0).getName().toLowerCase();
-                    missionDescription = model.getMissions().get(0).getDescription().toLowerCase();
-                }
+            if (model.getMission() != null) {
+                missionName = model.getMission().getName().toLowerCase();
+                missionDescription = model.getMission().getDescription().toLowerCase();
             }
 
             if (rocketName.contains(query) || locationName.contains(query) || agencyName.contains(query) || name.contains(query)) {

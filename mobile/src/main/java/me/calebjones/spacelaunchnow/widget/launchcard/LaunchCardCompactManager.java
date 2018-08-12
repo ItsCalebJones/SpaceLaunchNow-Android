@@ -23,7 +23,7 @@ import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.UniqueIdentifier;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -187,14 +187,14 @@ public class LaunchCardCompactManager {
                     remoteViews.setTextViewText(R.id.widget_launch_mission, title[1].trim());
                 } else {
                     remoteViews.setTextViewText(R.id.widget_launch_rocket, launchRealm.getName());
-                    if (launchRealm.getMissions().size() > 0) {
-                        remoteViews.setTextViewText(R.id.widget_launch_mission, launchRealm.getMissions().get(0).getName());
+                    if (launchRealm.getMission() != null) {
+                        remoteViews.setTextViewText(R.id.widget_launch_mission, launchRealm.getMission().getName());
                     }
                 }
             } catch (ArrayIndexOutOfBoundsException exception) {
                 remoteViews.setTextViewText(R.id.widget_launch_rocket, launchRealm.getName());
-                if (launchRealm.getMissions().size() > 0) {
-                    remoteViews.setTextViewText(R.id.widget_launch_mission, launchRealm.getMissions().get(0).getName());
+                if (launchRealm.getMission() != null) {
+                    remoteViews.setTextViewText(R.id.widget_launch_mission, launchRealm.getMission().getName());
                 }
 
             }
@@ -217,8 +217,8 @@ public class LaunchCardCompactManager {
     }
 
     private void setCategoryIcon(Launch launch) {
-        if (launch.getMissions() != null && launch.getMissions().size() > 0) {
-            Utils.setCategoryIcon(remoteViews, launch.getMissions().get(0).getTypeName(), true, R.id.widget_categoryIcon);
+        if (launch.getMission() != null && launch.getMission() != null) {
+            Utils.setCategoryIcon(remoteViews, launch.getMission().getTypeName(), true, R.id.widget_categoryIcon);
         } else {
             remoteViews.setImageViewResource(R.id.widget_categoryIcon, R.drawable.ic_unknown_white);
         }
@@ -226,9 +226,9 @@ public class LaunchCardCompactManager {
 
     private String getMissionName(Launch launchRealm) {
 
-        if (launchRealm.getMissions().size() > 0) {
+        if (launchRealm.getMission() != null) {
             //Replace with mission name
-            return launchRealm.getMissions().get(0).getName();
+            return launchRealm.getMission().getName();
         } else {
             return null;
         }

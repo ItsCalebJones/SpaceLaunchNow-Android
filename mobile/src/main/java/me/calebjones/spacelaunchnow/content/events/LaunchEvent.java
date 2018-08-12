@@ -1,6 +1,6 @@
 package me.calebjones.spacelaunchnow.content.events;
 
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
 
 
 public class LaunchEvent {

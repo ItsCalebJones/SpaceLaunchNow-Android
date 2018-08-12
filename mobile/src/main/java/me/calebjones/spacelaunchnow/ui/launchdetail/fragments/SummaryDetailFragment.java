@@ -65,11 +65,10 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Pad;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Pad;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
-import me.calebjones.spacelaunchnow.ui.main.next.CardAdapter;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
@@ -260,12 +259,12 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     }
 
     private void fetchPastWeather() {
-        if (detailLaunch.getLocation().getPads().size() > 0) {
+        if (detailLaunch.getPad() != null) {
 
-            Pad pad = detailLaunch.getLocation().getPads().get(0);
+            Pad pad = detailLaunch.getPad();
 
-            double latitude = pad.getLatitude();
-            double longitude = pad.getLongitude();
+            double latitude = Double.parseDouble(pad.getLatitude());
+            double longitude = Double.parseDouble(pad.getLongitude());
 
             Unit unit;
 
@@ -302,12 +301,12 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
     private void fetchCurrentWeather() {
         // Sample WeatherLib client init
-        if (detailLaunch.getLocation().getPads().size() > 0) {
+        if (detailLaunch.getPad() != null) {
 
-            Pad pad = detailLaunch.getLocation().getPads().get(0);
+            Pad pad = detailLaunch.getPad();
 
-            double latitude = pad.getLatitude();
-            double longitude = pad.getLongitude();
+            double latitude = Double.parseDouble(pad.getLatitude());
+            double longitude = Double.parseDouble(pad.getLongitude());
 
             Unit unit;
 
@@ -565,9 +564,9 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
             double dlat = 0;
             double dlon = 0;
-            if (detailLaunch.getLocation() != null && detailLaunch.getLocation().getPads() != null) {
-                dlat = detailLaunch.getLocation().getPads().get(0).getLatitude();
-                dlon = detailLaunch.getLocation().getPads().get(0).getLongitude();
+            if (detailLaunch.getPad() != null) {
+                dlat = Double.parseDouble(detailLaunch.getPad().getLatitude());
+                dlon = Double.parseDouble(detailLaunch.getPad().getLongitude());
             }
 
             // Getting status
@@ -819,7 +818,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
             date.setText(dateText);
 
-            if (detailLaunch.getWindowstart() != null && detailLaunch.getWindowstart() != null) {
+            if (detailLaunch.getWindowStart() != null && detailLaunch.getWindowStart() != null) {
                 setWindowStamp();
             } else {
                 launchWindowText.setVisibility(View.GONE);
@@ -996,8 +995,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         }
         if (launchItem.getStatus() == 2) {
             countdownLayout.setVisibility(View.GONE);
-            if (launchItem.getRocket().getAgencies().size() > 0) {
-                contentTMinusStatus.setText(String.format(context.getString(R.string.pending_confirmed_go_specific), launchItem.getRocket().getAgencies().get(0).getName()));
+            if (launchItem.getLsp() != null) {
+                contentTMinusStatus.setText(String.format(context.getString(R.string.pending_confirmed_go_specific), launchItem.getLsp().getName()));
             } else {
                 contentTMinusStatus.setText(R.string.pending_confirmed_go);
             }
@@ -1054,8 +1053,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     private void setWindowStamp() {
         // Create a DateFormatter object for displaying date in specified format.
 
-        Date windowStart = detailLaunch.getWindowstart();
-        Date windowEnd = detailLaunch.getWindowend();
+        Date windowStart = detailLaunch.getWindowStart();
+        Date windowEnd = detailLaunch.getWindowEnd();
 
         boolean twentyFourHourMode = sharedPref.getBoolean("24_hour_mode", false);
         DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault());
@@ -1130,8 +1129,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
             Timber.d("FAB: %s ", location);
 
-            double dlat = detailLaunch.getLocation().getPads().get(0).getLatitude();
-            double dlon = detailLaunch.getLocation().getPads().get(0).getLongitude();
+            double dlat = Double.parseDouble(detailLaunch.getPad().getLatitude());
+            double dlon = Double.parseDouble(detailLaunch.getPad().getLongitude());
 
             Uri gmmIntentUri = Uri.parse("geo:" + dlat + ", " + dlon + "?z=12&q=" + dlat + ", " + dlon);
             Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
@@ -1140,7 +1139,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
             Analytics.getInstance().sendLaunchMapClicked(detailLaunch.getName());
 
             if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
-                Toast.makeText(context, "Loading " + detailLaunch.getLocation().getPads().get(0).getName(), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Loading " + detailLaunch.getPad().getName(), Toast.LENGTH_LONG).show();
                 context.startActivity(mapIntent);
             }
         }
