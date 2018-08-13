@@ -1,7 +1,6 @@
 package me.calebjones.spacelaunchnow.ui.main.vehicles.launcher;
 
 import android.content.Context;
-import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
@@ -115,7 +114,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
                         .intoBackground(holder.textContainer, GlidePalette.Swatch.RGB)
                         .crossfade(true))
                 .into(holder.picture);
-        holder.subTitle.setText(launcher.getLaunchers());
+        holder.subTitle.setText(launcher.getLaunchers_string());
         holder.name.setText(launcher.getName());
     }
 

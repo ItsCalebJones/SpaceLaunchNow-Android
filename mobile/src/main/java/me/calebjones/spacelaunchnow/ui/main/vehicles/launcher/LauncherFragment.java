@@ -60,9 +60,9 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
 
         view = inflater.inflate(R.layout.fragment_launch_vehicles, container, false);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.vehicle_detail_list);
-        coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.vehicle_coordinator);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
+        mRecyclerView = view.findViewById(R.id.vehicle_detail_list);
+        coordinatorLayout = view.findViewById(R.id.vehicle_coordinator);
+        swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setOnRefreshListener(this);
 
         if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
@@ -113,7 +113,7 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
         showLoading();
 
         SpaceLaunchNowService request = getSpaceLaunchNowRetrofit().create(SpaceLaunchNowService.class);
-        Call<AgencyResponse> call = request.getAgencies(true);
+        Call<AgencyResponse> call = request.getAgencies(true, "detailed");
 
         call.enqueue(new Callback<AgencyResponse>() {
             @Override

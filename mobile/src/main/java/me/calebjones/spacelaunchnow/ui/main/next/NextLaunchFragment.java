@@ -42,6 +42,7 @@ import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
+import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
 import me.calebjones.spacelaunchnow.content.data.next.NextLaunchDataRepository;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
@@ -143,12 +144,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         final int color;
         active = false;
 
-
-
         if (adapter == null) {
             adapter = new CardAdapter(context);
         }
-
 
         if (sharedPreference.isNightModeActive(context)) {
             color = R.color.darkPrimary;
@@ -214,7 +212,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         return view;
     }
 
-
     @Override
     public void onStart() {
         Timber.v("onStart");
@@ -243,7 +240,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             Timber.v("View is detached.");
         }
     }
-
 
     private void setUpSwitches() {
         customSwitch.setChecked(switchPreferences.getAllSwitch());
@@ -315,7 +311,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     public void fetchData(boolean forceRefresh) {
         Timber.v("Sending GET_UP_LAUNCHES");
-        nextLaunchDataRepository.getNextUpcomingLaunches(preferredCount, forceRefresh, new NextLaunchDataRepository.LaunchCallback() {
+        nextLaunchDataRepository.getNextUpcomingLaunches(preferredCount, forceRefresh, new Callbacks.NextLaunchesCallback() {
             @Override
             public void onLaunchesLoaded(RealmResults<Launch> launches) {
                 updateAdapter(launches);

@@ -31,7 +31,7 @@ import timber.log.Timber;
 /**
  * This adapter takes data from ListPreferences/LoaderService and applies it to RecyclerView
  */
-public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> implements FastScrollRecyclerView.SectionedAdapter {
+public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     public int position;
     private RealmList<Launch> launchList;
     private Context mContext;
@@ -96,7 +96,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
         String launchDate;
 
         position = i;
-        Timber.d("Binding launch: %s", launchItem.getId());
 
         //Retrieve missionType
         if (launchItem.getMission() != null) {
@@ -155,14 +154,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
     @Override
     public int getItemCount() {
         return launchList.size();
-    }
-
-    @NonNull
-    @Override
-    public String getSectionName(int position) {
-        Date date = launchList.get(position).getNet();
-
-        return parseDateToMMyyyy(date);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

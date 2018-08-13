@@ -254,7 +254,7 @@ dependencies {
     implementation 'com.codemybrainsout.onboarding:onboarder:1.0.4'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.borax12.materialdaterangepicker:library:1.9'
-    implementation 'com.simplecityapps:recyclerview-fastscroll:1.0.16'
+    implementation 'com.simplecityapps:recyclerview-fastscroll:1.0.18'
     implementation 'jp.wasabeef:glide-transformations:3.0.1'
 
     // If you want to use the GPU Filters
@@ -293,6 +293,7 @@ dependencies {
     //Rich Links
     implementation 'io.github.ponnamkarthik:richlinkpreview:1.0.8'
     implementation 'org.jsoup:jsoup:1.11.2'
+    implementation 'com.leocardz:link-preview:2.0.0@aar'
 
     implementation 'com.github.nekocode:Badge:2.0'
     // Firebase Messaging

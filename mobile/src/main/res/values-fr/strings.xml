@@ -184,8 +184,8 @@
     <string name="mission">Mission</string>
     <string name="agencies">Agences</string>
     <string name="error_launch_details">Erreur - Impossible de charger les détails du lanceur.</string>
-    <string name="height_full">Hauteur : %d Mètres</string>
-    <string name="diameter_full">Diamètre : %d Mètres</string>
+    <string name="height_full">Hauteur : %.1f Mètres</string>
+    <string name="diameter_full">Diamètre : %.1f Mètres</string>
     <string name="stage_full">Nombre max d\'étages : %d</string>
     <string name="mass_leo_full">Masse vers LEO : %d kg</string>
     <string name="mass_gto_full">Masse vers GTO : %d kg</string>

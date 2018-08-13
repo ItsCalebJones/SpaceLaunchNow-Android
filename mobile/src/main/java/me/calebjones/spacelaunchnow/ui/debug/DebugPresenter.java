@@ -21,7 +21,6 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.JobUtils;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
-import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.Products;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
@@ -35,14 +34,12 @@ public class DebugPresenter implements DebugContract.Presenter {
     private DebugContract.Navigator navigator;
     private ListPreferences sharedPreference;
     private Realm realm;
-    private LibraryDataManager libraryDataManager;
     private Context context;
 
     public DebugPresenter(Context context, DebugContract.View view, ListPreferences preferences) {
         debugView = view;
         debugView.setPresenter(this);
         sharedPreference = preferences;
-        libraryDataManager = new LibraryDataManager(context);
         this.context = context;
     }
 
@@ -116,7 +113,6 @@ public class DebugPresenter implements DebugContract.Presenter {
         }, new Realm.Transaction.OnSuccess() {
             @Override
             public void onSuccess() {
-                libraryDataManager.getFirstLaunchData();
             }
         });
         realm.close();
@@ -125,7 +121,6 @@ public class DebugPresenter implements DebugContract.Presenter {
 
     @Override
     public void syncNextLaunchClicked(Context context) {
-        libraryDataManager.updateNextLaunchMini();
     }
 
     @Override

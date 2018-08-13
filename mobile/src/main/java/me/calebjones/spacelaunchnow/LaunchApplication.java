@@ -48,7 +48,6 @@ import me.calebjones.spacelaunchnow.content.jobs.SyncJob;
 import me.calebjones.spacelaunchnow.content.jobs.SyncWearJob;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.content.notifications.NotificationHelper;
-import me.calebjones.spacelaunchnow.content.services.LibraryDataManager;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Products;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
@@ -69,7 +68,6 @@ public class LaunchApplication extends Application {
     private SharedPreferences sharedPref;
     protected volatile Analytics mAnalytics;
     private Context context;
-    private LibraryDataManager libraryDataManager;
     private FirebaseMessaging firebaseMessaging;
     private BillingProcessor bp;
 
@@ -120,7 +118,6 @@ public class LaunchApplication extends Application {
         Once.initialise(this);
 
         if (!Once.beenDone(Once.THIS_APP_INSTALL, "loadInitialData")) {
-            libraryDataManager.getFirstLaunchData();
             Once.markDone("loadInitialData");
         }
         Once.markDone("appOpen");
@@ -184,12 +181,8 @@ public class LaunchApplication extends Application {
             version = "1.3";
         }
         DataClient.create(version, getString(R.string.sln_token));
-        libraryDataManager = new LibraryDataManager(context);
         JobManager.create(context).addJobCreator(new DataJobCreator());
         startJobs();
-        if (update) {
-            libraryDataManager.getFirstLaunchData();
-        }
     }
 
 

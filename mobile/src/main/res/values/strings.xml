@@ -182,8 +182,8 @@
   <string name="mission">Mission</string>
   <string name="agencies">Agencies</string>
   <string name="error_launch_details">Error - Unable to load launcher details.</string>
-  <string name="height_full">Height: %d Meters</string>
-  <string name="diameter_full">Diameter: %d Meters</string>
+  <string name="height_full">Height: %.1f Meters</string>
+  <string name="diameter_full">Diameter: %.1f Meters</string>
   <string name="stage_full">Max Stages: %d</string>
   <string name="mass_leo_full">Mass to LEO: %d kg</string>
   <string name="mass_gto_full">Mass to GTO: %d kg</string>

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -20,12 +19,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.florent37.glidepalette.BitmapPalette;
 import com.github.florent37.glidepalette.GlidePalette;
 import com.google.gson.Gson;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import io.realm.Realm;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
@@ -84,15 +81,15 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
-        toolbarTitle = (TextView) findViewById(R.id.title_text);
-        detail_rocket = (TextView) findViewById(R.id.detail_sub_title);
-        detail_vehicle_agency = (TextView) findViewById(R.id.detail_title);
-        detail_profile_image = (CircleImageView) findViewById(R.id.detail_profile_image);
-        detail_profile_backdrop = (ImageView) findViewById(R.id.detail_profile_backdrop);
+        Toolbar toolbar = findViewById(R.id.detail_toolbar);
+        toolbarTitle = findViewById(R.id.title_text);
+        detail_rocket = findViewById(R.id.detail_sub_title);
+        detail_vehicle_agency = findViewById(R.id.detail_title);
+        detail_profile_image = findViewById(R.id.detail_profile_image);
+        detail_profile_backdrop = findViewById(R.id.detail_profile_backdrop);
         collapsingToolbar = findViewById(R.id.main_collapsing_bar);
         coordinatorLayout = findViewById(R.id.coordinatorLayout);
-        appBarLayout = (AppBarLayout) findViewById(R.id.detail_appbar);
+        appBarLayout = findViewById(R.id.detail_appbar);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
@@ -121,7 +118,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
             }
         }
         adapter = new VehicleDetailAdapter(context, this);
-        mRecyclerView = (RecyclerView) findViewById(R.id.vehicle_detail_list);
+        mRecyclerView = findViewById(R.id.vehicle_detail_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(adapter);
@@ -131,9 +128,9 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
     public void displayRockets() {
         Intent intent = getIntent();
         Gson gson = new Gson();
-        final Agency launcher = gson.fromJson(intent.getStringExtra("json"), Agency.class);
+        final Agency agency = gson.fromJson(intent.getStringExtra("json"), Agency.class);
 
-        if (launcher == null) {
+        if (agency == null) {
             Toast.makeText(context, R.string.error_launch_details, Toast.LENGTH_SHORT).show();
             Timber.e("Error - Unable to load launch details.");
             Intent homeIntent = new Intent(this, MainActivity.class);
@@ -141,53 +138,23 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
         }
 
         String name = "Unknown";
-        if (launcher != null) {
-            name = launcher.getLaunchers();
+        if (agency != null) {
+            name = agency.getLaunchers_string();
         }
-        String agency = "Unknown";
-        if (launcher != null) {
-            agency = launcher.getName();
+        String agencyName = "Unknown";
+        if (agency != null) {
+            agencyName = agency.getName();
         }
         detail_rocket.setText(name);
-        detail_vehicle_agency.setText(agency);
+        detail_vehicle_agency.setText(agencyName);
 
-        rocketLaunches = getRealm().where(Launcher.class).contains("name", agency).findAll();
-        if (rocketLaunches.size() > 0) {
+        if (agency.getLaunchers() != null) {
             adapter.clear();
-            adapter.addItems(rocketLaunches);
+            adapter.addItems(agency.getLaunchers());
         }
-        final DataSaver dataSaver = new DataSaver(context);
-//        swipeRefreshLayout.setRefreshing(true);
-        final String finalAgency = agency;
-        DataClient.getInstance().getVehiclesByAgency(agency, new Callback<VehicleResponse>() {
-            @Override
-            public void onResponse(Call<VehicleResponse> call, Response<VehicleResponse> response) {
-                if (response.isSuccessful()) {
-                    Launcher[] details = response.body().getVehicles();
-                    if (details.length > 0) {
-                        getRealm().executeTransaction(realm -> getRealm().where(Launcher.class).contains("agency", finalAgency).findAll().deleteAllFromRealm());
-                        dataSaver.saveObjectsToRealm(details);
-                        rocketLaunches = getRealm().where(Launcher.class).contains("agency", finalAgency).findAll();
-                        adapter.clear();
-                        adapter.addItems(rocketLaunches);
-                    } else {
-                        SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, "Error no launch vehicles found.");
-                    }
-                } else {
-                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, "Error loading launch vehicles.");
-                }
-            }
 
-            @Override
-            public void onFailure(Call<VehicleResponse> call, Throwable t) {
-//                swipeRefreshLayout.setRefreshing(false);
-                SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, String.format("Error: %s", t.getLocalizedMessage()));
-            }
-        });
-
-
-        applyProfileBackdrop(launcher.getImageUrl());
-        applyProfileLogo(launcher.getNationUrl());
+        applyProfileBackdrop(agency.getImageUrl());
+        applyProfileLogo(agency.getNationUrl());
     }
 
     private void applyProfileBackdrop(String drawableURL) {

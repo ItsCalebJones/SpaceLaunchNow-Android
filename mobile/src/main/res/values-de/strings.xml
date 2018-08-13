@@ -184,8 +184,8 @@ Danke!</string>
     <string name="mission">Mission</string>
     <string name="agencies">Organisationen</string>
     <string name="error_launch_details">Fehler - nicht in der Lage, Trägerraketendetails zu laden.</string>
-    <string name="height_full">Höhe: %d Meter</string>
-    <string name="diameter_full">Durchmesser: %d Meter</string>
+    <string name="height_full">Höhe: %.1f Meter</string>
+    <string name="diameter_full">Durchmesser: %.1f Meter</string>
     <string name="stage_full">Max Stufen: %d</string>
     <string name="mass_leo_full">Masse nach LEO: %d kg</string>
     <string name="mass_gto_full">Masse nach GTO: %d kg</string>

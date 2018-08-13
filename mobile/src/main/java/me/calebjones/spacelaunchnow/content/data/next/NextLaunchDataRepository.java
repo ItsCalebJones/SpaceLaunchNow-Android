@@ -1,7 +1,6 @@
 package me.calebjones.spacelaunchnow.content.data.next;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 
 import com.crashlytics.android.Crashlytics;
@@ -13,9 +12,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.Constants;
@@ -72,7 +71,7 @@ public class NextLaunchDataRepository {
     }
 
     @UiThread
-    public void getNextUpcomingLaunches(int count, boolean forceRefresh, LaunchCallback launchCallback){
+    public void getNextUpcomingLaunches(int count, boolean forceRefresh, Callbacks.NextLaunchesCallback nextLaunchesCallback){
         RealmResults<UpdateRecord> records = realm.where(UpdateRecord.class)
                 .equalTo("type", Constants.ACTION_GET_UP_LAUNCHES_ALL)
                 .or()
@@ -93,20 +92,20 @@ public class NextLaunchDataRepository {
             Timber.d("Time since last upcoming launches sync %s", timeSinceUpdate);
             if (timeSinceUpdate > timeMaxUpdate || forceRefresh) {
                 Timber.d("%s greater then %s - updating library data.", timeSinceUpdate, timeMaxUpdate);
-                getNextUpcomingLaunchesFromNetwork(count, launchCallback);
+                getNextUpcomingLaunchesFromNetwork(count, nextLaunchesCallback);
             } else {
-                launchCallback.onLaunchesLoaded(QueryBuilder.buildUpcomingSwitchQuery(context, realm));
+                nextLaunchesCallback.onLaunchesLoaded(QueryBuilder.buildUpcomingSwitchQuery(context, realm));
             }
             checkForStaleLaunches();
         } else {
-            getNextUpcomingLaunchesFromNetwork(count, launchCallback);
+            getNextUpcomingLaunchesFromNetwork(count, nextLaunchesCallback);
         }
     }
 
-    private void getNextUpcomingLaunchesFromNetwork(int count, LaunchCallback callback){
+    private void getNextUpcomingLaunchesFromNetwork(int count, Callbacks.NextLaunchesCallback callback){
 
         callback.onNetworkStateChanged(true);
-        dataLoader.getNextUpcomingLaunches(count, new NetworkCallback() {
+        dataLoader.getNextUpcomingLaunches(count, new Callbacks.NextNetworkCallback() {
             @Override
             public void onSuccess() {
                 callback.onNetworkStateChanged(false);
@@ -173,18 +172,6 @@ public class NextLaunchDataRepository {
             }
         }
         mRealm.close();
-    }
-
-    public interface NetworkCallback {
-        void onSuccess();
-        void onNetworkFailure(int code);
-        void onFailure(Throwable throwable);
-    }
-
-    public interface LaunchCallback {
-        void onLaunchesLoaded(RealmResults<Launch> launches);
-        void onNetworkStateChanged(boolean refreshing);
-        void onError(String message, @Nullable Throwable throwable);
     }
 }
 

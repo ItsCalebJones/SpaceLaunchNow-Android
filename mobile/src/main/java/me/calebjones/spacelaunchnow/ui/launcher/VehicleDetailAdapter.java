@@ -15,6 +15,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.request.RequestOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.realm.RealmList;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
@@ -28,12 +31,12 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
     public int position;
     private Context mContext;
     private Activity activity;
-    private RealmList<Launcher> items;
+    private List<Launcher> items;
     private RequestOptions requestOptions;
     private int backgroundColor = 0;
 
     public VehicleDetailAdapter(Context context, Activity activity) {
-        items = new RealmList<>();
+        items = new ArrayList<>();
         requestOptions = new RequestOptions()
                 .placeholder(R.drawable.placeholder)
                 .centerCrop();
@@ -41,7 +44,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
         this.activity = activity;
     }
 
-    public void addItems(RealmResults<Launcher> items) {
+    public void addItems(List<Launcher> items) {
         if (this.items != null) {
             this.items.addAll(items);
         } else {
@@ -97,11 +100,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
 
                 holder.vehicleImage.setVisibility(View.GONE);
             }
-            String vehicleName = launchVehicle.getName();
-            if (!launchVehicle.getVariant().equals("-")) {
-                vehicleName = vehicleName + " " + launchVehicle.getVariant();
-            }
-            holder.vehicleName.setText(vehicleName);
+            holder.vehicleName.setText(launchVehicle.getFullName());
             holder.vehicleFamily.setText(launchVehicle.getFamily());
 
             if (launchVehicle.getInfoUrl() != null

@@ -283,16 +283,14 @@ public class QueryBuilder {
                 } else {
                     firstGroup = false;
                 }
-                query.equalTo("rocket.agencies.id", 44)
-                        .or()
-                        .equalTo("location.pads.agencies.id", 44);
+                query.equalTo("lsp.id", 44);
             } else if (key.contains("SpaceX")) {
                 if (!firstGroup) {
                     query.or();
                 } else {
                     firstGroup = false;
                 }
-                query.equalTo("rocket.agencies.id", 121).or().contains("name", "Falcon");
+                query.equalTo("lsp.id", 121).or().contains("name", "Falcon");
 
             } else if (key.contains("ROSCOSMOS")) {
                 if (!firstGroup) {
@@ -300,17 +298,11 @@ public class QueryBuilder {
                 } else {
                     firstGroup = false;
                 }
-                query.equalTo("rocket.agencies.id", 111)
+                query.equalTo("lsp.id", 111)
                         .or()
-                        .equalTo("location.pads.agencies.id", 111)
+                        .equalTo("lsp.id", 163)
                         .or()
-                        .equalTo("rocket.agencies.id", 163)
-                        .or()
-                        .equalTo("location.pads.agencies.id", 163)
-                        .or()
-                        .equalTo("rocket.agencies.id", 63)
-                        .or()
-                        .equalTo("location.pads.agencies.id", 63);
+                        .equalTo("lsp.id", 63);
 
             } else if (key.contains("ULA")) {
                 if (!firstGroup) {
@@ -318,9 +310,7 @@ public class QueryBuilder {
                 } else {
                     firstGroup = false;
                 }
-                query.equalTo("rocket.agencies.id", 124)
-                        .or()
-                        .equalTo("location.pads.agencies.id", 124);
+                query.equalTo("lsp.id", 124);
 
             } else if (key.contains("Arianespace")) {
                 if (!firstGroup) {
@@ -328,9 +318,7 @@ public class QueryBuilder {
                 } else {
                     firstGroup = false;
                 }
-                query.equalTo("rocket.agencies.id", 115)
-                        .or()
-                        .equalTo("location.pads.agencies.id", 115);
+                query.equalTo("lsp.id", 115);
 
             } else if (key.contains("CASC")) {
                 if (!firstGroup) {
@@ -338,9 +326,7 @@ public class QueryBuilder {
                 } else {
                     firstGroup = false;
                 }
-                query.equalTo("rocket.agencies.id", 88)
-                        .or()
-                        .equalTo("location.pads.agencies.id", 88);
+                query.equalTo("lsp.id", 88);
 
             } else if (key.contains("ISRO")) {
                 if (!firstGroup) {
@@ -348,9 +334,7 @@ public class QueryBuilder {
                 } else {
                     firstGroup = false;
                 }
-                query.equalTo("rocket.agencies.id", 31)
-                        .or()
-                        .equalTo("location.pads.agencies.id", 31);
+                query.equalTo("lsp.id", 31);
             }
         }
         return query;
@@ -374,9 +358,9 @@ public class QueryBuilder {
             } else {
                 firstGroup = false;
             }
-            query.contains("location.pads.agencies.countryCode", key);
+            query.contains("location.countryCode", key);
             query.or();
-            query.contains("rocket.agencies.countryCode", key);
+            query.contains("lsp.countryCode", key);
         }
         return query;
     }
@@ -418,7 +402,7 @@ public class QueryBuilder {
             query.findAll();
         }
         if (switchPreferences.getTBDLaunchSwitch()) {
-            query.equalTo("tbddate", 0);
+            query.equalTo("tbddate", false);
             query.findAll();
         }
         query.sort("net", Sort.ASCENDING);
@@ -443,15 +427,13 @@ public class QueryBuilder {
         }
 
         if (switchPreferences.getTBDLaunchSwitch()) {
-            query.equalTo("tbddate", 0).findAll();
+            query.equalTo("tbddate", false).findAll();
         }
         query.beginGroup();
 
         if (switchPreferences.getSwitchNasa()) {
             first = false;
-            query.equalTo("rocket.agencies.id", 44)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 44);
+            query.equalTo("lsp.id", 44);
         }
 
         if (switchPreferences.getSwitchArianespace()) {
@@ -460,9 +442,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.agencies.id", 115)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 115);
+            query.equalTo("lsp.id", 115);
         }
 
         if (switchPreferences.getSwitchSpaceX()) {
@@ -471,9 +451,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.agencies.id", 121)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 121);
+            query.equalTo("lsp.id", 121);
         }
 
         if (switchPreferences.getSwitchULA()) {
@@ -482,9 +460,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.agencies.id", 124)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 124);
+            query.equalTo("lsp.id", 124);
         }
 
         if (switchPreferences.getSwitchRoscosmos()) {
@@ -493,17 +469,11 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.agencies.id", 111)
+            query.equalTo("lsp.id", 111)
                     .or()
-                    .equalTo("location.pads.agencies.id", 111)
+                    .equalTo("lsp.id", 163)
                     .or()
-                    .equalTo("rocket.agencies.id", 163)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 163)
-                    .or()
-                    .equalTo("rocket.agencies.id", 63)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 63);
+                    .equalTo("lsp.id", 63);
         }
         if (switchPreferences.getSwitchCASC()) {
             if (!first) {
@@ -511,9 +481,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.agencies.id", 88)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 88);
+            query.equalTo("lsp.id", 88);
         }
 
         if (switchPreferences.getSwitchISRO()) {
@@ -522,9 +490,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.agencies.id", 31)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 31);
+            query.equalTo("lsp.id", 31);
         }
 
         if (switchPreferences.getSwitchKSC()) {
@@ -585,9 +551,7 @@ public class QueryBuilder {
 
         if (switchPreferences.getSwitchNasa()) {
             first = false;
-            query.equalTo("rocket.agencies.id", 44)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 44);
+            query.equalTo("lsp.id", 44);
         }
 
         if (switchPreferences.getSwitchArianespace()) {
@@ -596,9 +560,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.agencies.id", 115)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 115);
+            query.equalTo("lsp.id", 115);
         }
 
         if (switchPreferences.getSwitchSpaceX()) {
@@ -607,9 +569,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.agencies.id", 121)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 121);
+            query.equalTo("lsp.id", 121);
         }
 
 
@@ -619,9 +579,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.agencies.id", 124)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 124);
+            query.equalTo("lsp.id", 124);
         }
 
         if (switchPreferences.getSwitchRoscosmos()) {
@@ -630,17 +588,11 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.agencies.id", 111)
+            query.equalTo("lsp.id", 111)
                     .or()
-                    .equalTo("location.pads.agencies.id", 111)
+                    .equalTo("lsp.id", 163)
                     .or()
-                    .equalTo("rocket.agencies.id", 163)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 163)
-                    .or()
-                    .equalTo("rocket.agencies.id", 63)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 63);
+                    .equalTo("lsp.id", 63);
         }
         if (switchPreferences.getSwitchCASC()) {
             if (!first) {
@@ -648,9 +600,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.agencies.id", 88)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 88);
+            query.equalTo("lsp.id", 88);
         }
 
         if (switchPreferences.getSwitchISRO()) {
@@ -659,9 +609,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.agencies.id", 31)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 31);
+            query.equalTo("lsp.id", 31);
         }
 
         if (switchPreferences.getSwitchKSC()) {
@@ -719,9 +667,7 @@ public class QueryBuilder {
 
         if (switchPreferences.getSwitchNasa()) {
             first = false;
-            query.equalTo("rocket.agencies.id", 44)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 44);
+            query.equalTo("lsp.id", 44);
         }
 
         if (switchPreferences.getSwitchArianespace()) {
@@ -730,9 +676,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.agencies.id", 115)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 115);
+            query.equalTo("lsp.id", 115);
         }
 
         if (switchPreferences.getSwitchSpaceX()) {
@@ -741,9 +685,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.agencies.id", 121)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 121);
+            query.equalTo("lsp.id", 121);
         }
 
         if (switchPreferences.getSwitchULA()) {
@@ -752,9 +694,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.agencies.id", 124)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 124);
+            query.equalTo("lsp.id", 124);
         }
 
         if (switchPreferences.getSwitchRoscosmos()) {
@@ -763,17 +703,11 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.agencies.id", 111)
+            query.equalTo("lsp.id", 111)
                     .or()
-                    .equalTo("location.pads.agencies.id", 111)
+                    .equalTo("lsp.id", 163)
                     .or()
-                    .equalTo("rocket.agencies.id", 163)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 163)
-                    .or()
-                    .equalTo("rocket.agencies.id", 63)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 63);
+                    .equalTo("lsp.id", 63);
         }
         if (switchPreferences.getSwitchCASC()) {
             if (!first) {
@@ -781,9 +715,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.agencies.id", 88)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 88);
+            query.equalTo("lsp.id", 88);
         }
 
         if (switchPreferences.getSwitchISRO()) {
@@ -792,9 +724,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.agencies.id", 31)
-                    .or()
-                    .equalTo("location.pads.agencies.id", 31);
+            query.equalTo("lsp.id", 31);
         }
 
         if (switchPreferences.getSwitchKSC()) {

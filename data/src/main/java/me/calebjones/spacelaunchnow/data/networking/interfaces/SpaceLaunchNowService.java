@@ -22,24 +22,26 @@ public interface SpaceLaunchNowService {
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/agencies/")
-    Call<AgencyResponse> getAgencies(@Query("featured") boolean featured);
+    Call<AgencyResponse> getAgencies(@Query("featured") boolean featured, @Query("mode") String mode);
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
-    @GET(version + "/launchers/")
+    @GET(version + "/launchers_string/")
     Call<VehicleResponse> getVehiclesByAgency(@Query("launch_agency__name") String agency);
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
-    @GET(version + "/launchers/")
+    @GET(version + "/launchers_string/")
     Call<VehicleResponse> getVehicle(@Query("full_name") String vehicle);
 
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/launch/upcoming/")
-    Call<LaunchResponse> getUpcomingLaunches(@Query("limit") int amount, @Query("offset") int offset, @Query("mode") String mode);
+    Call<LaunchResponse> getUpcomingLaunches(@Query("limit") int amount, @Query("offset") int offset,
+                                             @Query("mode") String mode, @Query("search") String search);
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/launch/previous/")
-    Call<LaunchResponse> getPreviousLaunches(@Query("limit") int amount, @Query("offset") int offset, @Query("mode") String mode);
+    Call<LaunchResponse> getPreviousLaunches(@Query("limit") int amount, @Query("offset") int offset,
+                                             @Query("mode") String mode, @Query("search") String search);
 
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
