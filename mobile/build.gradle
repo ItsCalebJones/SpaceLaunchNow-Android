@@ -217,6 +217,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-wearable:$rootProject.playServicesVersion"
     implementation "com.google.android.gms:play-services-gcm:$rootProject.playServicesVersion"
     implementation "com.google.android.gms:play-services-ads:$rootProject.playServicesVersion"
+    implementation "com.google.android.gms:play-services-maps:$rootProject.playServicesVersion"
 
     // Architecture and Tools
     implementation 'com.jonathanfinerty.once:once:1.2.2'

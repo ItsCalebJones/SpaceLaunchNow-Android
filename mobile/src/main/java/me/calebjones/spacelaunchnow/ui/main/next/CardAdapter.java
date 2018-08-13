@@ -698,6 +698,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
             }
 
             map_view.setVisibility(View.VISIBLE);
+            map.getUiSettings().setMapToolbarEnabled(true);
+            map.getUiSettings().setZoomGesturesEnabled(false);
             map.getUiSettings().setScrollGesturesEnabled(false);
             Timber.d("setMapLocation - Moving the camera.");
             // Add a marker for this item and set the camera
@@ -705,7 +707,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
             map.addMarker(new MarkerOptions()
                     .position(data.location)
                     .title(data.launch.getLocation().getName())
-                    .snippet(data.launch.getLocation().getPads().get(0).getName())
+                    .snippet(data.launch.getPad().getName())
                     .infoWindowAnchor(0.5f, 0.5f));
 
             // Set the map type back to normal.
