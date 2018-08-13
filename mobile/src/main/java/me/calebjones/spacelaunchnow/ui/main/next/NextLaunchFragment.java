@@ -145,7 +145,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         active = false;
 
         if (adapter == null) {
-            adapter = new CardAdapter(context);
+            adapter = new CardAdapter(context.getApplicationContext());
         }
 
         if (sharedPreference.isNightModeActive(context)) {
@@ -175,6 +175,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         }
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setRecyclerListener(adapter.mRecycleListener);
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {

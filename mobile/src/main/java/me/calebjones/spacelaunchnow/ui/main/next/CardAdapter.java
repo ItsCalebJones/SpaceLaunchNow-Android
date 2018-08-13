@@ -5,13 +5,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -19,7 +16,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
@@ -28,12 +24,11 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.crashlytics.android.Crashlytics;
-import com.mypopsy.maps.StaticMap;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -49,11 +44,14 @@ import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
-import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.CountDownTimer;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
 
 /**
  * Adapts UpcomingLaunch data to the LaunchFragment
@@ -161,46 +159,10 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 if (dlat == 0 && dlon == 0 || Double.isNaN(dlat) || Double.isNaN(dlon) || dlat == Double.NaN || dlon == Double.NaN) {
                     if (holder.map_view != null) {
                         holder.map_view.setVisibility(View.GONE);
-
                     }
                 } else {
                     holder.map_view.setVisibility(View.VISIBLE);
-                    final Resources res = context.getResources();
-                    final StaticMap map = new StaticMap()
-                            .center(dlat, dlon)
-                            .scale(1)
-                            .type(StaticMap.Type.ROADMAP)
-                            .zoom(5)
-                            .marker(dlat, dlon)
-                            .key(res.getString(R.string.GoogleMapsKey));
-
-                    //Strange but necessary to calculate the height/width
-                    holder.map_view.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                        public boolean onPreDraw() {
-                            map.size(holder.map_view.getWidth() / 2,
-                                    holder.map_view.getHeight() / 2);
-
-                            Timber.v("onPreDraw: %s", map.toString());
-                            GlideApp.with(context)
-                                    .load(map.toString())
-                                    .optionalCenterCrop()
-                                    .listener(new RequestListener<Drawable>() {
-                                        @Override
-                                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                            holder.map_view.setVisibility(View.GONE);
-                                            return false;
-                                        }
-
-                                        @Override
-                                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                            return false;
-                                        }
-                                    })
-                                    .into(holder.map_view);
-                            holder.map_view.getViewTreeObserver().removeOnPreDrawListener(this);
-                            return true;
-                        }
-                    });
+                    holder.bindView(new LaunchLocation(launchItem, new LatLng(dlat, dlon)));
                 }
 
                 if (launchItem.getProbability() != null && launchItem.getProbability() > 0) {
@@ -233,7 +195,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     holder.content_TMinus_status.setTypeface(Typeface.SANS_SERIF);
                     holder.content_TMinus_status.setTextColor(accentColor);
 
-                    holder.countdownView.setVisibility(View.VISIBLE);
+//                    holder.countdownView.setVisibility(View.VISIBLE);
                     long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
                     if (timeToFinish > 0) {
                         holder.timer = new CountDownTimer(timeToFinish, 1000) {
@@ -500,7 +462,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         return 0;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, OnMapReadyCallback {
         public TextView title;
         public TextView content;
         public TextView location;
@@ -519,18 +481,19 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         public TextView countdownSeconds;
         public LinearLayout content_mission_description_view;
         public ImageView categoryIcon;
+        public GoogleMap map;
         public CountDownTimer timer;
         public View countdownView;
         public View titleCard;
         public TextView contentForecast;
         public CardView cardView;
-
-        public ImageView map_view;
+        public View layout;
+        public MapView map_view;
 
         //Add content to the card
         public ViewHolder(View view) {
             super(view);
-
+            layout = view;
             categoryIcon = view.findViewById(R.id.categoryIcon);
             exploreButton = view.findViewById(R.id.exploreButton);
             shareButton = view.findViewById(R.id.shareButton);
@@ -564,6 +527,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
             exploreButton.setOnClickListener(this);
             watchButton.setOnClickListener(this);
             map_view.setOnClickListener(this);
+
+            if (map_view != null) {
+                // Initialise the MapView
+                map_view.onCreate(null);
+                // Set the map ready callback to receive the GoogleMap object
+                map_view.getMapAsync(this);
+                map_view.setVisibility(View.INVISIBLE);
+            }
         }
 
         //React to click events.
@@ -706,5 +677,83 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
             }
         }
 
+        @Override
+        public void onMapReady(GoogleMap googleMap) {
+            Timber.v("onMapReady called.");
+            MapsInitializer.initialize(context);
+            map = googleMap;
+            setMapLocation();
+        }
+
+        private void setMapLocation() {
+            if (map == null) {
+                Timber.d("setMapLocation - map is null");
+                return;
+            }
+
+            LaunchLocation data = (LaunchLocation) map_view.getTag();
+            if (data == null) {
+                Timber.d("setMapLocation - data is null");
+                return;
+            }
+
+            map_view.setVisibility(View.VISIBLE);
+            map.getUiSettings().setScrollGesturesEnabled(false);
+            Timber.d("setMapLocation - Moving the camera.");
+            // Add a marker for this item and set the camera
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(data.location, 7f));
+            map.addMarker(new MarkerOptions()
+                    .position(data.location)
+                    .title(data.launch.getLocation().getName())
+                    .snippet(data.launch.getLocation().getPads().get(0).getName())
+                    .infoWindowAnchor(0.5f, 0.5f));
+
+            // Set the map type back to normal.
+            map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        }
+
+        private void bindView(LaunchLocation item) {
+            Timber.d("bindView - %s", item.launch.getName());
+            // Store a reference of the ViewHolder object in the layout.
+            layout.setTag(this);
+            // Store a reference to the item in the mapView's tag. We use it to get the
+            // coordinate of a location, when setting the map location.
+            map_view.setTag(item);
+            map_view.onResume();
+            setMapLocation();
+        }
     }
+
+    private static class LaunchLocation {
+
+        public final Launch launch;
+        public final LatLng location;
+
+        LaunchLocation(Launch launch, LatLng location) {
+            this.launch = launch;
+            this.location = location;
+        }
+    }
+
+    /**
+     * RecycleListener that completely clears the {@link com.google.android.gms.maps.GoogleMap}
+     * attached to a row in the RecyclerView.
+     * Sets the map type to {@link com.google.android.gms.maps.GoogleMap#MAP_TYPE_NONE} and clears
+     * the map.
+     */
+    public RecyclerView.RecyclerListener mRecycleListener = new RecyclerView.RecyclerListener() {
+
+        @Override
+        public void onViewRecycled(RecyclerView.ViewHolder holder) {
+            CardAdapter.ViewHolder mapHolder = (CardAdapter.ViewHolder) holder;
+            if (mapHolder != null && mapHolder.map != null) {
+                Timber.d("Clearing map!");
+                // Clear the map and free up resources by changing the map type to none.
+                // Also reset the map when it gets reattached to layout, so the previous map would
+                // not be displayed.
+                mapHolder.map.clear();
+                mapHolder.map.setMapType(GoogleMap.MAP_TYPE_NONE);
+            }
+        }
+    };
 }
