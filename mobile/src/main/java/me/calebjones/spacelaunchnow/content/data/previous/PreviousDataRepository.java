@@ -42,15 +42,15 @@ public class PreviousDataRepository {
     }
 
     @UiThread
-    public void getPreviousLaunches(int count, String search, Callbacks.ListCallback launchCallback) {
-        getPreviousLaunchesFromNetwork(count, search, launchCallback);
+    public void getPreviousLaunches(int count, String search, String lspName, Integer launchId, Callbacks.ListCallback launchCallback) {
+        getPreviousLaunchesFromNetwork(count, search, lspName, launchId, launchCallback);
     }
 
 
-    private void getPreviousLaunchesFromNetwork(int count, String search, Callbacks.ListCallback callback) {
+    private void getPreviousLaunchesFromNetwork(int count, String search, String lspName, Integer launcherId, Callbacks.ListCallback callback) {
 
         callback.onNetworkStateChanged(true);
-        dataLoader.getPreviousLaunches(30, count, search, new Callbacks.ListNetworkCallback() {
+        dataLoader.getPreviousLaunches(30, count, search, lspName, launcherId, new Callbacks.ListNetworkCallback() {
             @Override
             public void onSuccess(List<Launch> launches, int next) {
                 callback.onNetworkStateChanged(false);

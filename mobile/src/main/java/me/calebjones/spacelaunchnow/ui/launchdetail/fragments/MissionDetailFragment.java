@@ -41,7 +41,6 @@ public class MissionDetailFragment extends RetroFitFragment {
 
     private Context context;
     public Launch detailLaunch;
-    private Launcher launchVehicle;
     @BindView(R.id.vehicle_spec_view)
     View vehicleSpecView;
     @BindView(R.id.payload_type)
@@ -133,7 +132,7 @@ public class MissionDetailFragment extends RetroFitFragment {
                 payloadWikiButton.setVisibility(View.GONE);
             }
 
-            launchVehicleView.setText(detailLaunch.getLauncher().getName());
+            launchVehicleView.setText(detailLaunch.getLauncher().getFullName());
             launchConfiguration.setText(detailLaunch.getLauncher().getVariant());
             launchFamily.setText(detailLaunch.getLauncher().getFamily());
             if (detailLaunch.getLauncher().getInfoUrl() != null && detailLaunch.getLauncher().getInfoUrl().length() > 0){
@@ -163,7 +162,7 @@ public class MissionDetailFragment extends RetroFitFragment {
             } else {
                 vehicleWikiButton.setVisibility(View.GONE);
             }
-            configureLaunchVehicle(launchVehicle);
+            configureLaunchVehicle(launch.getLauncher());
         } catch (NullPointerException e) {
             Timber.e(e);
         }

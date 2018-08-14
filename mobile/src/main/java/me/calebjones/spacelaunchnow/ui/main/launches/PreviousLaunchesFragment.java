@@ -153,7 +153,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
             nextOffset = 0;
             adapter.clear();
         }
-        previousDataRepository.getPreviousLaunches(nextOffset, searchTerm, new Callbacks.ListCallback() {
+        previousDataRepository.getPreviousLaunches(nextOffset, searchTerm, null, null, new Callbacks.ListCallback() {
             @Override
             public void onLaunchesLoaded(List<Launch> launches, int next) {
                 Timber.v("Offset - %s", next);

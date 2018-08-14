@@ -30,9 +30,9 @@ public class PreviousDataLoader {
         return dataSaver;
     }
 
-    public void getPreviousLaunches(int limit, int offset, String search, Callbacks.ListNetworkCallback networkCallback) {
+    public void getPreviousLaunches(int limit, int offset, String search, String lspName, Integer launcherId, Callbacks.ListNetworkCallback networkCallback) {
         Timber.i("Running getPreviousLaunches");
-        DataClient.getInstance().getPreviousLaunches(limit, offset, search, new Callback<LaunchResponse>() {
+        DataClient.getInstance().getPreviousLaunches(limit, offset, search, lspName, launcherId, new Callback<LaunchResponse>() {
             @Override
             public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
                 if (response.isSuccessful()) {

@@ -4,6 +4,11 @@
 
     <style name="BaseAppTheme.Launcher">
         <item name="android:windowBackground">@drawable/launcher_drawable</item>
+        <item name="spinnerStyle">@style/MySpinner</item>
+    </style>
+
+    <style name="MySpinner" parent="Base.Widget.AppCompat.Spinner">
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
     <style name="SpaceLaunchNowTweetStyle" parent="tw__TweetLightWithActionsStyle">

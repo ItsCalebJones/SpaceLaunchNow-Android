@@ -388,7 +388,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     holder.content_mission_description_view.setVisibility(View.GONE);
                 }
 
-                //If pad and agency exist add it to location, otherwise get whats always available
+                //If pad and agency_menu exist add it to location, otherwise get whats always available
                 if (launchItem.getLocation() != null) {
                     holder.location.setText(launchItem.getLocation().getName());
                 } else {

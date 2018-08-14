@@ -55,7 +55,7 @@ Bug fixes, work to support translations.
 #### Changelog
 * Add menu item to hide floating action button on Next launch screen.
 * Fixed a text issues on the countdown widget.
-* Fixed incorrect text showing up for the vehicle agency.
+* Fixed incorrect text showing up for the vehicle agency_menu.
 * Potentially fixed wrong launch displaying for widgets.
 * Integrate with Google's Firebase for Analytics and Crash logging.
 

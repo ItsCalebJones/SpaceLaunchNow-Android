@@ -96,34 +96,6 @@ public class WebNewsFragment extends Fragment {
                 articles = newArticles;
                 articleAdapter.addItems(articles);
                 swipeRefreshLayout.setRefreshing(false);
-                int index = 0;
-                for (Article article : articles) {
-                    if (article.getMediaUrl() == null) {
-                        TextCrawler textCrawler = new TextCrawler();
-                        int finalIndex = index;
-                        LinkPreviewCallback linkPreviewCallback = new LinkPreviewCallback() {
-                            @Override
-                            public void onPre() {
-
-                            }
-
-                            @Override
-                            public void onPos(SourceContent sourceContent, boolean b) {
-                                if (sourceContent.getImages() != null && sourceContent.getImages().size() > 0) {
-                                    Realm realm = Realm.getDefaultInstance();
-                                    realm.executeTransaction(realm1 -> {
-                                        article.setMediaUrl(sourceContent.getImages().get(0));
-                                        realm1.copyToRealmOrUpdate(article);
-                                    });
-                                    realm.close();
-                                    articleAdapter.updateItem(article, finalIndex);
-                                }
-                            }
-                        };
-                        textCrawler.makePreview(linkPreviewCallback, article.getLink(), 1);
-                    }
-                    index++;
-                }
             }
 
             @Override

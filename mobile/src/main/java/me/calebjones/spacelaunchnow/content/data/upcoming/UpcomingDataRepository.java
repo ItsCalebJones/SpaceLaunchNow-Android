@@ -28,14 +28,14 @@ public class UpcomingDataRepository {
 
 
     @UiThread
-    public void getUpcomingLaunches(int count, String search, Callbacks.ListCallback launchCallback) {
-        getUpcomingLaunchesFromNetwork(count, search, launchCallback);
+    public void getUpcomingLaunches(int count, String search, String lspName, Integer launcherId, Callbacks.ListCallback launchCallback) {
+        getUpcomingLaunchesFromNetwork(count, search, lspName, launcherId, launchCallback);
     }
 
-    private void getUpcomingLaunchesFromNetwork(int count, String search, Callbacks.ListCallback callback) {
+    private void getUpcomingLaunchesFromNetwork(int count, String search, String lspName, Integer launcherId, Callbacks.ListCallback callback) {
 
         callback.onNetworkStateChanged(true);
-        dataLoader.getUpcomingLaunches(30, count, search, new Callbacks.ListNetworkCallback() {
+        dataLoader.getUpcomingLaunches(30, count, search, lspName, launcherId, new Callbacks.ListNetworkCallback() {
             @Override
             public void onSuccess(List<Launch> launches, int next) {
                 callback.onNetworkStateChanged(false);

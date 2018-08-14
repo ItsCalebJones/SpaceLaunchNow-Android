@@ -2,10 +2,8 @@
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/launch_summary"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    android:tag="launch_summary"
     android:textAlignment="center"
     android:transitionGroup="true"
     tools:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -16,7 +14,18 @@
         android:layout_height="fill_parent"
         android:orientation="vertical">
 
+        <ImageView
+            android:id="@+id/lsp_logo"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_margin="@dimen/material_card_edge_margin"
+            android:padding="@dimen/material_card_edge_margin"
+            android:src="@drawable/placeholder"/>
+
         <android.support.v7.widget.CardView
+            android:id="@+id/lsp_card"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/material_card_edge_margin"
@@ -28,7 +37,6 @@
             card_view:cardUseCompatPadding="true">
 
             <LinearLayout
-                android:id="@+id/mission_agencies"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -39,20 +47,21 @@
                     android:background="?attr/titleBarColor"
                     android:orientation="vertical">
 
+
+
                     <TextView
-                        android:id="@+id/mission_agency_title"
+                        android:id="@+id/lsp_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
                         android:lines="1"
-                        android:text="@string/mission_agency"
                         android:textAlignment="center"
                         android:textColor="@color/dark_primary_text_color_selector"
                         android:textSize="@dimen/material_typography_regular_title_text_size"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/mission_agency_type"
+                        android:id="@+id/lsp_type"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="?attr/titleBarColor"
@@ -70,55 +79,44 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/mission_one"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:padding="@dimen/material_baseline_grid_0.5x"
                     android:weightSum="1">
 
-
                     <TextView
-                        android:id="@+id/mission_vehicle_agency_one"
+                        android:id="@+id/lsp_administrator"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:gravity="start"
-                        android:maxLines="2"
-                        android:paddingBottom="@dimen/material_baseline_grid_0.5x"
                         android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
                         android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:layout_marginTop="@dimen/material_baseline_grid_1x"
-                        android:text="@string/primary_agency"
                         android:textColor="?android:textColorSecondary"
-                        android:textAppearance="@style/MaterialTypography.Regular.Title"
-                        android:textSize="@dimen/material_typography_regular_subheading_text_size" />
+                        android:textAppearance="@style/MaterialTypography.Regular.Title"/>
 
                     <TextView
-                        android:id="@+id/mission_agency_type_one"
+                        android:id="@+id/lsp_founded_year"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:gravity="start"
-                        android:lines="1"
-                        android:paddingBottom="@dimen/material_card_supporting_text_padding_bottom"
                         android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
                         android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:text="@string/unknown_agency_type"
                         android:textColor="?android:textColorSecondary"
-                        android:textAppearance="@style/MaterialTypography.Regular.Caption" />
+                        android:textAppearance="@style/MaterialTypography.Regular.Subheading"/>
 
                     <TextView
-                        android:id="@+id/mission_agency_summary_one"
+                        android:id="@+id/lsp_summary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
-                        android:gravity="left"
+                        android:gravity="start"
                         android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
                         android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
                         android:textColor="?android:textColorSecondary"
-                        android:textAppearance="@style/MaterialTypography.Regular.Body1"
-                        android:visibility="gone" />
+                        android:textAppearance="@style/MaterialTypography.Regular.Body1"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -128,7 +126,7 @@
                         android:padding="@dimen/material_baseline_grid_0.5x">
 
                         <android.support.v7.widget.AppCompatButton
-                            android:id="@+id/mission_infoButton_one"
+                            android:id="@+id/lsp_infoButton_one"
                             style="@style/Base.Widget.AppCompat.Button.Colored"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -138,95 +136,7 @@
                             android:textSize="12sp" />
 
                         <android.support.v7.widget.AppCompatButton
-                            android:id="@+id/mission_wikiButton_one"
-                            style="@style/Base.Widget.AppCompat.Button.Colored"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="@string/wiki"
-                            android:textColor="@color/white"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/mission_two"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <View
-
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:background="@color/View_Separator"
-                        android:padding="12dp" />
-
-
-                    <TextView
-                        android:id="@+id/mission_vehicle_agency_two"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="start"
-                        android:lines="1"
-                        android:paddingBottom="@dimen/material_baseline_grid_0.5x"
-                        android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:paddingTop="@dimen/material_baseline_grid_1x"
-                        android:text="@string/secondary_agency"
-                        android:textAppearance="@style/MaterialTypography.Regular.Title"
-                        android:textColor="?android:textColorSecondary"
-                        android:textSize="@dimen/material_typography_regular_subheading_text_size" />
-
-                    <TextView
-                        android:id="@+id/mission_agency_type_two"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="start"
-                        android:lines="1"
-                        android:paddingBottom="@dimen/material_card_supporting_text_padding_bottom"
-                        android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:text="@string/unknown_agency_type"
-                        android:textAppearance="@style/MaterialTypography.Regular.Caption"
-                        android:textColor="?android:textColorSecondary" />
-
-                    <TextView
-                        android:id="@+id/mission_agency_summary_two"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="left"
-                        android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:text="@string/TsSKB_summary"
-                        android:textColor="?android:textColorSecondary"
-                        android:textAppearance="@style/MaterialTypography.Regular.Body1"
-                        android:visibility="gone" />
-
-                    <LinearLayout
-
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/material_baseline_grid_0.5x">
-
-                        <android.support.v7.widget.AppCompatButton
-                            android:id="@+id/mission_infoButton_two"
-                            style="@style/Base.Widget.AppCompat.Button.Colored"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="@string/info"
-                            android:textColor="@color/white"
-                            android:textSize="12sp" />
-
-                        <android.support.v7.widget.AppCompatButton
-                            android:id="@+id/mission_wikiButton_two"
+                            android:id="@+id/lsp_wikiButton_one"
                             style="@style/Base.Widget.AppCompat.Button.Colored"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -239,227 +149,18 @@
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
-        <android.support.v7.widget.CardView
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/lsp_agency"
+            android:visibility="gone"
+            style="@style/Base.Widget.AppCompat.Button.Colored"
+            android:layout_margin="@dimen/material_card_edge_margin"
+            android:padding="@dimen/material_card_edge_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/material_card_edge_margin"
-            android:animateLayoutChanges="true"
-            android:padding="@dimen/material_card_edge_margin"
-            card_view:cardCornerRadius="@dimen/card_view_corner_radius"
-            card_view:cardElevation="@dimen/material_card_elevation_resting"
-            card_view:cardPreventCornerOverlap="true"
-            card_view:cardUseCompatPadding="true">
-
-            <LinearLayout
-                android:id="@+id/vehicle_agencies"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="?attr/titleBarColor">
-
-                    <TextView
-                        android:id="@+id/vehicle_agency_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:lines="1"
-                        android:text="@string/vehicle_agency"
-                        android:textAlignment="center"
-                        android:textColor="@color/dark_primary_text_color_selector"
-                        android:textSize="@dimen/material_typography_regular_title_text_size"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/launch_agency_type"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="center"
-                        android:lines="1"
-                        android:singleLine="false"
-                        android:text=""
-                        android:textAlignment="center"
-                        android:paddingBottom="8dp"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
-                        android:paddingTop="4dp"
-                        android:textColor="@color/dark_primary_text_color_selector"
-                        android:textSize="@dimen/material_typography_regular_subheading_text_size" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/agency_one"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-
-                    <TextView
-                        android:id="@+id/launch_vehicle_agency_one"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="start"
-                        android:maxLines="2"
-                        android:paddingBottom="@dimen/material_baseline_grid_0.5x"
-                        android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:layout_marginTop="@dimen/material_card_supporting_text_padding_top"
-                        android:text="@string/primary_agency"
-                        android:textColor="?android:textColorSecondary"
-                        android:textAppearance="@style/MaterialTypography.Regular.Title"
-                        android:textSize="@dimen/material_typography_regular_subheading_text_size" />
-
-                    <TextView
-                        android:id="@+id/launch_agency_type_one"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="start"
-                        android:lines="1"
-                        android:paddingBottom="@dimen/material_baseline_grid_0.5x"
-                        android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:text="@string/unknown_agency_type"
-                        android:textColor="?android:textColorSecondary"
-                        android:textAppearance="@style/MaterialTypography.Regular.Caption" />
-
-                    <TextView
-                        android:id="@+id/launch_agency_summary_one"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="left"
-                        android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:text="@string/TsSKB_summary"
-                        android:textColor="?android:textColorSecondary"
-                        android:textAppearance="@style/MaterialTypography.Regular.Body1"
-                        android:visibility="gone" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/material_baseline_grid_0.5x">
-
-                        <android.support.v7.widget.AppCompatButton
-                            android:id="@+id/infoButton_one"
-                            style="@style/Base.Widget.AppCompat.Button.Colored"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="@string/info"
-                            android:textColor="@color/white"
-                            android:textSize="12sp" />
-
-                        <android.support.v7.widget.AppCompatButton
-                            android:id="@+id/wikiButton_one"
-                            style="@style/Base.Widget.AppCompat.Button.Colored"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="@string/wiki"
-                            android:textColor="@color/white"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/agency_two"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <View
-
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:background="@color/View_Separator"
-                        android:padding="12dp" />
-
-                    <TextView
-                        android:id="@+id/launch_vehicle_agency_two"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="start"
-                        android:maxLines="2"
-                        android:paddingBottom="@dimen/material_baseline_grid_0.5x"
-                        android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:paddingTop="@dimen/material_baseline_grid_1x"
-                        android:text="@string/secondary_agency"
-                        android:textColor="?android:textColorSecondary"
-                        android:textAppearance="@style/MaterialTypography.Regular.Title"
-                        android:textSize="@dimen/material_typography_regular_subheading_text_size" />
-
-                    <TextView
-                        android:id="@+id/launch_agency_type_two"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="start"
-                        android:lines="1"
-                        android:paddingBottom="@dimen/material_baseline_grid_0.5x"
-                        android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:text="@string/unknown_agency_type"
-                        android:textColor="?android:textColorSecondary"
-                        android:textAppearance="@style/MaterialTypography.Regular.Caption"
-                        />
-
-                    <TextView
-                        android:id="@+id/launch_agency_summary_two"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="left"
-                        android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
-                        android:text="@string/TsSKB_summary"
-                        android:textColor="?android:textColorSecondary"
-                        android:textAppearance="@style/MaterialTypography.Regular.Body1"
-                        android:visibility="gone" />
-
-                    <LinearLayout
-
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/material_baseline_grid_0.5x">
-
-                        <android.support.v7.widget.AppCompatButton
-                            android:id="@+id/infoButton_two"
-                            style="@style/Base.Widget.AppCompat.Button.Colored"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="@string/info"
-                            android:textColor="@color/white"
-                            android:textSize="12sp" />
-
-                        <android.support.v7.widget.AppCompatButton
-                            android:id="@+id/wikiButton_two"
-                            style="@style/Base.Widget.AppCompat.Button.Colored"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="@string/wiki"
-                            android:textColor="@color/white"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
+            android:gravity="center"
+            android:text="View Upcoming Launches"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

@@ -114,8 +114,8 @@ android {
     defaultConfig {
 
         applicationId "me.calebjones.spacelaunchnow"
-        manifestPlaceholders = [appNameLabel                   : "@string/app_name",
-                                manifestApplicationId          : "${applicationId}",]
+        manifestPlaceholders = [appNameLabel         : "@string/app_name",
+                                manifestApplicationId: "${applicationId}",]
 
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion

@@ -219,6 +219,7 @@
                             android:gravity="start"
                             android:maxLines="2"
                             android:paddingBottom="@dimen/material_baseline_grid_0.5x"
+                            android:paddingLeft="4dp"
                             android:textAppearance="@style/MaterialTypography.Regular.Body1"
                             android:textColor="?android:textColorSecondary" />
                     </LinearLayout>
@@ -250,6 +251,7 @@
                             android:gravity="start"
                             android:maxLines="2"
                             android:paddingBottom="@dimen/material_baseline_grid_0.5x"
+                            android:paddingLeft="4dp"
                             android:textAppearance="@style/MaterialTypography.Regular.Body1"
                             android:textColor="?android:textColorSecondary" />
                     </LinearLayout>

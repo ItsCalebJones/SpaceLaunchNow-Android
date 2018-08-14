@@ -30,9 +30,9 @@ public class UpcomingDataLoader {
         return dataSaver;
     }
 
-    public void getUpcomingLaunches(int limit, int offset, String search, Callbacks.ListNetworkCallback networkCallback) {
+    public void getUpcomingLaunches(int limit, int offset, String search, String lspName, Integer launchId, Callbacks.ListNetworkCallback networkCallback) {
         Timber.i("Running getUpcomingLaunches");
-        DataClient.getInstance().getUpcomingLaunches(limit, offset, search, new Callback<LaunchResponse>() {
+        DataClient.getInstance().getUpcomingLaunches(limit, offset, search, lspName, launchId, new Callback<LaunchResponse>() {
             @Override
             public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
                 if (response.isSuccessful()) {

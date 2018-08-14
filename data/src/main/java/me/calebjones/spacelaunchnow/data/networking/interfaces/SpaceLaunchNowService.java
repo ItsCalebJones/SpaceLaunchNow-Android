@@ -36,19 +36,24 @@ public interface SpaceLaunchNowService {
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/launch/upcoming/")
     Call<LaunchResponse> getUpcomingLaunches(@Query("limit") int amount, @Query("offset") int offset,
-                                             @Query("mode") String mode, @Query("search") String search);
+                                             @Query("mode") String mode, @Query("search") String search,
+                                             @Query("lsp__name") String lspName, @Query("launcher__id") Integer launcherId);
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/launch/previous/")
     Call<LaunchResponse> getPreviousLaunches(@Query("limit") int amount, @Query("offset") int offset,
-                                             @Query("mode") String mode, @Query("search") String search);
+                                             @Query("mode") String mode, @Query("search") String search,
+                                             @Query("lsp__name") String lspName, @Query("launcher__id") Integer launcherId);
 
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/launch/{id}/")
-    Call<Launch> getLaunchById(@Path("id") int id);
+    Call<Launch> getLaunchById(@Path("id") int id, @Query("mode") String mode);
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/launch/")
-    Call<LaunchResponse> getLaunchesByDate(@Query("net__lte") String startDate, @Query("net__gte") String endDate, int offset);
+    Call<LaunchResponse> getLaunchesByDate(@Query("limit") int amount, @Query("offset") int offset,
+                                           @Query("net__lte") String startDate, @Query("net__gte") String endDate,
+                                           @Query("launcher__id") Integer launcherId);
+
 }

@@ -2,6 +2,7 @@ package me.calebjones.spacelaunchnow.data.networking;
 
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.AgencyResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
 import retrofit2.Call;
@@ -59,7 +60,7 @@ public class DataClient {
     public Call<Launch> getLaunchById(int launchID, Callback<Launch> callback) {
         Call<Launch> call;
 
-        call = spaceLaunchNowService.getLaunchById(launchID);
+        call = spaceLaunchNowService.getLaunchById(launchID, "detailed");
 
         call.enqueue(callback);
 
@@ -67,7 +68,7 @@ public class DataClient {
     }
 
     public Call<LaunchResponse> getNextUpcomingLaunchesMini(int limit, int offset, Callback<LaunchResponse> callback) {
-        Call<LaunchResponse> call = spaceLaunchNowService.getUpcomingLaunches(limit, offset, "list", null);
+        Call<LaunchResponse> call = spaceLaunchNowService.getUpcomingLaunches(limit, offset, "list", null, null, null);
 
         call.enqueue(callback);
 
@@ -75,31 +76,31 @@ public class DataClient {
     }
 
     public Call<LaunchResponse> getNextUpcomingLaunches(int limit, int offset, Callback<LaunchResponse> callback) {
-        Call<LaunchResponse> call = spaceLaunchNowService.getUpcomingLaunches(limit, offset, "detailed", null);
+        Call<LaunchResponse> call = spaceLaunchNowService.getUpcomingLaunches(limit, offset, "detailed", null, null, null);
 
         call.enqueue(callback);
 
         return call;
     }
 
-    public Call<LaunchResponse> getUpcomingLaunches(int limit, int offset, String search, Callback<LaunchResponse> callback) {
-        Call<LaunchResponse> call = spaceLaunchNowService.getUpcomingLaunches(limit, offset, "detailed", search);
+    public Call<LaunchResponse> getUpcomingLaunches(int limit, int offset, String search, String lspName, Integer launchId, Callback<LaunchResponse> callback) {
+        Call<LaunchResponse> call = spaceLaunchNowService.getUpcomingLaunches(limit, offset, "detailed", search, lspName, launchId);
 
         call.enqueue(callback);
 
         return call;
     }
 
-    public Call<LaunchResponse> getPreviousLaunches(int limit, int offset, String search, Callback<LaunchResponse> callback) {
-        Call<LaunchResponse> call = spaceLaunchNowService.getPreviousLaunches(limit, offset, "detailed", search);
+    public Call<LaunchResponse> getPreviousLaunches(int limit, int offset, String search, String lspName, Integer launchId, Callback<LaunchResponse> callback) {
+        Call<LaunchResponse> call = spaceLaunchNowService.getPreviousLaunches(limit, offset, "detailed", search, lspName, launchId);
 
         call.enqueue(callback);
 
         return call;
     }
 
-    public Call<LaunchResponse> getLaunchesByDate(String startDate, String endDate, int offset, Callback<LaunchResponse> callback) {
-        Call<LaunchResponse> call = spaceLaunchNowService.getLaunchesByDate(startDate, endDate, offset);
+    public Call<LaunchResponse> getLaunchesByDate(int limit, int offset,String startDate, String endDate, Integer launchId, Callback<LaunchResponse> callback) {
+        Call<LaunchResponse> call = spaceLaunchNowService.getLaunchesByDate(limit, offset, startDate, endDate, launchId);
 
         call.enqueue(callback);
 
@@ -114,4 +115,11 @@ public class DataClient {
         return call;
     }
 
+    public Call<AgencyResponse> getFeaturedAgencies(Callback<AgencyResponse> callback) {
+        Call<AgencyResponse> call = spaceLaunchNowService.getAgencies(true, "list");
+
+        call.enqueue(callback);
+
+        return call;
+    }
 }

@@ -105,14 +105,6 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
             tryDefault(article.getLink(), holder.imageView);
 
-            if (article.getMediaUrl() == null) {
-                tryDefault(article.getLink(), holder.imageView);
-            } else {
-                GlideApp.with(context)
-                        .load(article.getMediaUrl())
-                        .placeholder(R.drawable.placeholder)
-                        .into(holder.imageView);
-            }
             BadgeDrawable.Builder siteDrawable =
                     new BadgeDrawable.Builder()
                             .type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
@@ -164,37 +156,44 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         if (link.contains("spaceflightnow")){
             GlideApp.with(context)
                     .load(context.getString(R.string.spaceflightnow_logo))
+                    .centerInside()
                     .placeholder(R.drawable.placeholder).centerInside()
                     .into(imageView);
         } else if (link.contains("spaceflight101")){
             GlideApp.with(context)
                     .load(context.getString(R.string.spaceflight_101))
+                    .centerInside()
                     .placeholder(R.drawable.placeholder)
                     .into(imageView);
         } else if (link.contains("spacenews")){
             GlideApp.with(context)
                     .load(context.getString(R.string.spacenews_logo))
+                    .centerInside()
                     .placeholder(R.drawable.placeholder).centerInside()
                     .into(imageView);
         } else if (link.contains("nasaspaceflight")){
             GlideApp.with(context)
                     .load(context.getString(R.string.nasaspaceflight_logo))
+                    .centerInside()
                     .placeholder(R.drawable.placeholder).centerInside()
                     .into(imageView);
         } else if (link.contains("nasa.gov")){
             GlideApp.with(context)
                     .load(context.getString(R.string.NASA_logo))
+                    .centerInside()
                     .placeholder(R.drawable.placeholder).centerInside()
                     .into(imageView);
         } else if (link.contains("spacex.com")){
             GlideApp.with(context)
                     .load(context.getString(R.string.spacex_logo))
+                    .centerInside()
                     .placeholder(R.drawable.placeholder).centerInside()
                     .fitCenter()
                     .into(imageView);
         } else {
             GlideApp.with(context)
                     .load(R.drawable.placeholder)
+                    .centerCrop()
                     .into(imageView);
         }
     }
