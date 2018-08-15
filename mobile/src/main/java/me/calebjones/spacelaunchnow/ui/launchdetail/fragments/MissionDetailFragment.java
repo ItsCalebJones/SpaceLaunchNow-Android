@@ -2,6 +2,7 @@ package me.calebjones.spacelaunchnow.ui.launchdetail.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,6 +31,7 @@ import me.calebjones.spacelaunchnow.data.models.main.Launcher;
 import me.calebjones.spacelaunchnow.data.models.main.Mission;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
+import me.calebjones.spacelaunchnow.ui.launches.LauncherLaunches;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import retrofit2.Call;
@@ -79,6 +81,8 @@ public class MissionDetailFragment extends RetroFitFragment {
     AppCompatButton vehicleInfoButton;
     @BindView(R.id.vehicle_wikiButton)
     AppCompatButton vehicleWikiButton;
+    @BindView(R.id.launcher_launches)
+    AppCompatButton launchesButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -185,6 +189,13 @@ public class MissionDetailFragment extends RetroFitFragment {
                 } else {
                     launchVehicleDescription.setVisibility(View.GONE);
                 }
+                launchesButton.setText(String.format("View %s Launches", launchVehicle.getName()));
+                launchesButton.setOnClickListener(v -> {
+                    Intent launches = new Intent(context, LauncherLaunches.class);
+                    launches.putExtra("launcherId", launchVehicle.getId());
+                    launches.putExtra("launcherName", launchVehicle.getName());
+                    context.startActivity(launches);
+                });
             } catch (NullPointerException e) {
                 Crashlytics.log(String.format("Error parsing launch vehicle %s", launchVehicle.getName()));
                 Crashlytics.logException(e);

@@ -69,9 +69,11 @@ public class LauncherLaunches extends BaseActivity implements SwipeRefreshLayout
     private EndlessRecyclerViewScrollListener scrollListener;
     private String searchTerm = null;
     private String lspName = null;
+    private String launcherName = null;
     private Integer launcherId = null;
     private ArrayList<String> agencyList;
     private List<Launch> launches;
+    private SwitchCompat switchCompat;
     public boolean canLoadMore;
     private boolean showUpcoming = true;
 
@@ -85,9 +87,11 @@ public class LauncherLaunches extends BaseActivity implements SwipeRefreshLayout
         setContentView(R.layout.activity_agency_launches);
         ButterKnife.bind(this);
         upcomingDataRepository = new UpcomingDataRepository(this, getRealm());
+        previousDataRepository = new PreviousDataRepository(this, getRealm());
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             lspName = extras.getString("lspName");
+            launcherName = extras.getString("launcherName");
             launcherId = extras.getInt("launcherId");
         }
         updateTitle();
@@ -139,7 +143,7 @@ public class LauncherLaunches extends BaseActivity implements SwipeRefreshLayout
             adapter.clear();
         }
         if (showUpcoming) {
-            upcomingDataRepository.getUpcomingLaunches(nextOffset, searchTerm, lspName,null, new Callbacks.ListCallback() {
+            upcomingDataRepository.getUpcomingLaunches(nextOffset, searchTerm, lspName, launcherId, new Callbacks.ListCallback() {
                 @Override
                 public void onLaunchesLoaded(List<Launch> launches, int next) {
                     Timber.v("Offset - %s", next);
@@ -164,7 +168,7 @@ public class LauncherLaunches extends BaseActivity implements SwipeRefreshLayout
                 }
             });
         } else {
-            previousDataRepository.getPreviousLaunches(nextOffset, searchTerm, lspName, null,  new Callbacks.ListCallback() {
+            previousDataRepository.getPreviousLaunches(nextOffset, searchTerm, lspName, launcherId, new Callbacks.ListCallback() {
                 @Override
                 public void onLaunchesLoaded(List<Launch> launches, int next) {
                     Timber.v("Offset - %s", next);
@@ -193,10 +197,16 @@ public class LauncherLaunches extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void updateTitle() {
-        if (lspName != null) {
-            toolbar.setTitle(lspName);
+        if (launcherName != null) {
+            toolbar.setTitle(launcherName);
         } else {
-            toolbar.setTitle("All");
+            toolbar.setTitle("Launches");
+        }
+
+        if (showUpcoming && switchCompat != null) {
+            switchCompat.setText("Upcoming");
+        } else if (switchCompat != null) {
+            switchCompat.setText("Previous");
         }
     }
 
@@ -206,9 +216,11 @@ public class LauncherLaunches extends BaseActivity implements SwipeRefreshLayout
         getMenuInflater().inflate(R.menu.launcher_menu, menu);
 
         MenuItem item = menu.findItem(R.id.toggleservice);
-        SwitchCompat switchCompat = (SwitchCompat) MenuItemCompat.getActionView(item);
+        switchCompat = (SwitchCompat) MenuItemCompat.getActionView(item);
+        switchCompat.setChecked(showUpcoming);
         switchCompat.setOnCheckedChangeListener((compoundButton, b) -> {
             showUpcoming = b;
+            fetchData(true);
         });
 
 

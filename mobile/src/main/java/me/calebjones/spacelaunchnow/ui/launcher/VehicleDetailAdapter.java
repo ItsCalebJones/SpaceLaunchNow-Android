@@ -23,6 +23,7 @@ import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.main.Launcher;
 import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
+import me.calebjones.spacelaunchnow.ui.launches.LauncherLaunches;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
@@ -158,6 +159,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
         public AppCompatButton infoButton;
         public AppCompatButton wikiButton;
         public TextView vehicleDescription;
+        public AppCompatButton launchesButton;
 
         //Add content to the card
         public ViewHolder(View view) {
@@ -181,7 +183,9 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
             titleContainer = view.findViewById(R.id.text_container);
             infoButton = view.findViewById(R.id.infoButton);
             wikiButton = view.findViewById(R.id.wikiButton);
+            launchesButton = view.findViewById(R.id.launcher_launches);
 
+            launchesButton.setOnClickListener(this);
             infoButton.setOnClickListener(this);
             wikiButton.setOnClickListener(this);
             vehicleImage.setOnClickListener(this);
@@ -207,6 +211,11 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
                         activity.startActivity(animateIntent);
                     }
                     break;
+                case R.id.launcher_launches:
+                    Intent launches = new Intent(activity, LauncherLaunches.class);
+                    launches.putExtra("launcherId", items.get(position).getId());
+                    launches.putExtra("launcherName", items.get(position).getName());
+                    activity.startActivity(launches);
             }
         }
     }
