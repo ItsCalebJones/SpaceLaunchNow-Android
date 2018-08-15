@@ -32,18 +32,76 @@ public interface SpaceLaunchNowService {
     @GET(version + "/launchers_string/")
     Call<VehicleResponse> getVehicle(@Query("full_name") String vehicle);
 
+    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
+    @GET(version + "/launch/upcoming/")
+    Call<LaunchResponse> getUpcomingLaunches(@Query("limit") int amount, @Query("offset") int offset,
+                                             @Query("mode") String mode);
+
+    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
+    @GET(version + "/launch/upcoming/")
+    Call<LaunchResponse> getUpcomingLaunches(@Query("limit") int amount, @Query("offset") int offset,
+                                             @Query("mode") String mode, @Query("search") String search);
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/launch/upcoming/")
     Call<LaunchResponse> getUpcomingLaunches(@Query("limit") int amount, @Query("offset") int offset,
                                              @Query("mode") String mode, @Query("search") String search,
-                                             @Query("lsp__name") String lspName, @Query("launcher__id") Integer launcherId);
+                                             @Query("lsp__name") String lspName,
+                                             @Query("launcher__id") Integer launcherId);
+
+    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
+    @GET(version + "/launch/upcoming/")
+    Call<LaunchResponse> getUpcomingLaunches(@Query("limit") int amount, @Query("offset") int offset,
+                                             @Query("mode") String mode, @Query("search") String search,
+                                             @Query("lsp__name") String lspName);
+
+    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
+    @GET(version + "/launch/upcoming/")
+    Call<LaunchResponse> getUpcomingLaunches(@Query("limit") int amount, @Query("offset") int offset,
+                                             @Query("mode") String mode,
+                                             @Query("launcher__id") Integer launcherId);
+
+    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
+    @GET(version + "/launch/upcoming/")
+    Call<LaunchResponse> getUpcomingLaunches(@Query("limit") int amount, @Query("offset") int offset,
+                                             @Query("mode") String mode, @Query("search") String search,
+                                             @Query("lsp__name") String lspName, @Query("lsp__id") Integer lspId,
+                                             @Query("launcher__id") Integer launcherId);
+
+    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
+    @GET(version + "/launch/previous/")
+    Call<LaunchResponse> getPreviousLaunches(@Query("limit") int amount, @Query("offset") int offset,
+                                             @Query("mode") String mode);
+
+    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
+    @GET(version + "/launch/previous/")
+    Call<LaunchResponse> getPreviousLaunches(@Query("limit") int amount, @Query("offset") int offset,
+                                             @Query("mode") String mode, @Query("search") String search);
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/launch/previous/")
     Call<LaunchResponse> getPreviousLaunches(@Query("limit") int amount, @Query("offset") int offset,
                                              @Query("mode") String mode, @Query("search") String search,
-                                             @Query("lsp__name") String lspName, @Query("launcher__id") Integer launcherId);
+                                             @Query("lsp__id") Integer lspId);
+
+    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
+    @GET(version + "/launch/previous/")
+    Call<LaunchResponse> getPreviousLaunches(@Query("limit") int amount, @Query("offset") int offset,
+                                             @Query("mode") String mode, @Query("search") String search,
+                                             @Query("lsp__name") String lspName);
+
+    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
+    @GET(version + "/launch/previous/")
+    Call<LaunchResponse> getPreviousLaunches(@Query("limit") int amount, @Query("offset") int offset,
+                                             @Query("mode") String mode, @Query("search") String search,
+                                             @Query("lsp__name") String lspName, @Query("lsp__id") Integer lspId);
+
+    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
+    @GET(version + "/launch/previous/")
+    Call<LaunchResponse> getPreviousLaunches(@Query("limit") int amount, @Query("offset") int offset,
+                                             @Query("mode") String mode, @Query("search") String search,
+                                             @Query("lsp__name") String lspName, @Query("lsp__id") Integer lspId,
+                                             @Query("launcher__id") Integer launcherId);
 
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})

@@ -133,6 +133,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="android.support.wearable.activity.ConfirmationActivity">
+        </activity>
+
         <service android:name=".services.DataLayerListenerService">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />

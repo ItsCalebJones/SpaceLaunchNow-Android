@@ -240,8 +240,8 @@ public class NextLaunchComplicationProvider extends ComplicationProviderService 
         if (launch != null) {
             openLaunchDetail = getOpenLaunchDetail(this, launch.getId(), complicationId);
 
-            Date windowClosed = launch.getWindowend();
-            Date windowOpen = launch.getWindowstart();
+            Date windowClosed = launch.getWindowEnd();
+            Date windowOpen = launch.getWindowStart();
 
             ComplicationText shortCountdownText;
             ComplicationText longCountdownText;
@@ -255,12 +255,9 @@ public class NextLaunchComplicationProvider extends ComplicationProviderService 
                     String agency = "Unk";
                     if (launch.getLsp() != null && launch.getLsp().getAbbrev() != null) {
                         agency = launch.getLsp().getAbbrev();
-                    } else if (launch.getMissions() != null && launch.getMissions().size() > 0) {
-                        if (launch.getRocket() != null
-                                && launch.getRocket().getAgencies() != null
-                                && launch.getRocket().getAgencies().size() >= 1
-                                && launch.getRocket().getAgencies().get(0) != null){
-                            Agency launchAgency = launch.getRocket().getAgencies().get(0);
+                    } else if (launch.getMission() != null) {
+                        if (launch.getLsp() != null ){
+                            Agency launchAgency = launch.getLsp();
                             if (launchAgency != null){
                                 agency = launchAgency.getAbbrev();
                             }

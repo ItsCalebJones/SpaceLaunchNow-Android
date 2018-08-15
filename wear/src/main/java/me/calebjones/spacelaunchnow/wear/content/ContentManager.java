@@ -14,7 +14,6 @@ import android.os.Message;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -23,8 +22,9 @@ import io.realm.RealmList;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.networking.RetrofitBuilder;
-import me.calebjones.spacelaunchnow.data.networking.interfaces.WearService;
-import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchWearResponse;
+import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchResponse;
+import me.calebjones.spacelaunchnow.wear.R;
 import me.calebjones.spacelaunchnow.wear.model.LaunchCategories;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -66,14 +66,14 @@ public class ContentManager {
     public ContentManager(Context context, ContentCallback callback) {
         this.context = context;
         realm = Realm.getDefaultInstance();
-        retrofit = RetrofitBuilder.getWearRetrofit();
+        retrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit(context.getString(R.string.sln_token));
         sharedPreferences = context.getSharedPreferences("timestamp", 0);
         this.contentCallback = callback;
     }
 
 
     @SuppressLint("HandlerLeak")
-    public void init(){
+    public void init() {
         mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         Network activeNetwork = mConnectivityManager.getActiveNetwork();
 
@@ -212,37 +212,31 @@ public class ContentManager {
     }
 
     public void getFreshData() {
-        final WearService request = retrofit.create(WearService.class);
-        Call<LaunchWearResponse> call;
+        final SpaceLaunchNowService request = retrofit.create(SpaceLaunchNowService.class);
+        Call<LaunchResponse> call;
         final RealmList<Launch> items = new RealmList<>();
 
         //Get Date String
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
 
-        call = request.getWearNextLaunch(fmt.format(date), 5);
+        call = request.getUpcomingLaunches(5, 0, "detailed");
         Timber.v("Calling - %s", call.request().url().url().toString());
-        call.enqueue(new Callback<LaunchWearResponse>() {
+        call.enqueue(new Callback<LaunchResponse>() {
 
             @Override
-            public void onResponse(Call<LaunchWearResponse> call, Response<LaunchWearResponse> response) {
+            public void onResponse(Call<LaunchResponse> call, final Response<LaunchResponse> response) {
                 if (response.isSuccessful()) {
                     Timber.v("Successful - %s", call.request().url().url().toString());
                     if (response.body() != null) {
-                        Launch[] launch = response.body().getLaunches();
-                        if (launch != null && launch.length > 0) {
-                            Collections.addAll(items, launch);
-                            realm.executeTransaction(new Realm.Transaction() {
-                                @Override
-                                public void execute(Realm realm) {
-                                    for (Launch item: items){
-                                        item.getLocation().setPrimaryID();
-                                    }
-                                    realm.copyToRealmOrUpdate(items);
-                                }
-                            });
-                            updateLastSync(0);
-                        }
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                realm.copyToRealmOrUpdate(response.body().getLaunches());
+                            }
+                        });
+                        updateLastSync(0);
+
                     }
                     contentCallback.dataLoaded();
                 } else {
@@ -257,7 +251,7 @@ public class ContentManager {
             }
 
             @Override
-            public void onFailure(Call<LaunchWearResponse> call, Throwable t) {
+            public void onFailure(Call<LaunchResponse> call, Throwable t) {
                 contentCallback.errorLoading(t.getLocalizedMessage());
                 Timber.e(t.getLocalizedMessage());
             }
@@ -266,34 +260,30 @@ public class ContentManager {
     }
 
     public void getFreshData(final int category) {
-        if (category == 0 ) {
+        if (category == 0) {
             getFreshData();
             return;
         }
-        final WearService request = retrofit.create(WearService.class);
-        Call<LaunchWearResponse> call;
+        final SpaceLaunchNowService request = retrofit.create(SpaceLaunchNowService.class);
+        Call<LaunchResponse> call;
         final RealmList<Launch> items = new RealmList<>();
 
         //Get Date String
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
 
-        call = request.getWearNextLaunch(fmt.format(date), category, 5);
+        call = request.getUpcomingLaunches(5, 0, "detailed", null, null, category, null);
         Timber.v("Calling - %s", call.request().url().url().toString());
-        call.enqueue(new Callback<LaunchWearResponse>() {
+        call.enqueue(new Callback<LaunchResponse>() {
 
             @Override
-            public void onResponse(Call<LaunchWearResponse> call, Response<LaunchWearResponse> response) {
+            public void onResponse(Call<LaunchResponse> call, final Response<LaunchResponse> response) {
                 if (response.isSuccessful()) {
                     Timber.v("Successful! - %s", call.request().url().url().toString());
-                    Collections.addAll(items, response.body().getLaunches());
                     realm.executeTransaction(new Realm.Transaction() {
                         @Override
                         public void execute(Realm realm) {
-                            for (Launch item: items){
-                                item.getLocation().setPrimaryID();
-                            }
-                            realm.copyToRealmOrUpdate(items);
+                            realm.copyToRealmOrUpdate(response.body().getLaunches());
                         }
                     });
                     updateLastSync(category);
@@ -310,7 +300,7 @@ public class ContentManager {
             }
 
             @Override
-            public void onFailure(Call<LaunchWearResponse> call, Throwable t) {
+            public void onFailure(Call<LaunchResponse> call, Throwable t) {
                 contentCallback.errorLoading(t.getLocalizedMessage());
                 Timber.e(t.getLocalizedMessage());
             }

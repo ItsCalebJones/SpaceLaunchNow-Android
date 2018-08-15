@@ -1,5 +1,6 @@
 package me.calebjones.spacelaunchnow.wear.ui.launchdetail;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatButton;
+import android.support.wearable.activity.ConfirmationActivity;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.ConfirmationOverlay;
 import android.view.View;
@@ -29,19 +31,16 @@ import com.google.android.wearable.playstore.PlayStoreAvailability;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Collections;
 import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.networking.RetrofitBuilder;
-import me.calebjones.spacelaunchnow.data.networking.interfaces.WearService;
-import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchWearResponse;
+import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
 import me.calebjones.spacelaunchnow.wear.R;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -82,6 +81,7 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
     private CountDownTimer timer;
     private String nodeId;
     private Retrofit retrofit;
+    private Context context;
 
     public static final String START_ACTIVITY = "/start-activity";
     private static final String START_ACTIVITY_CAPABILITY = "start_activity";
@@ -92,8 +92,9 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch_detail);
         ButterKnife.bind(this);
+        context = this;
         realm = Realm.getDefaultInstance();
-        retrofit = RetrofitBuilder.getWearRetrofit();
+        retrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit(this.getString(R.string.sln_token));
         swipeRefresh.setOnRefreshListener(this);
 
         // Get the Intent that started this activity and extract the string
@@ -114,7 +115,8 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
     private void loadData(int launchID) {
         RealmResults<Launch> launches = realm.where(Launch.class).equalTo("id", launchID).findAll();
         if (launches.size() > 0){
-            setupView(launches.first());
+            launch = launches.first();
+            setupView(launch);
         } else {
             Intent cancelIntent = new Intent();
             setResult(RESULT_CANCELED, cancelIntent);
@@ -156,25 +158,22 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
 
     @Override
     public void onRefresh() {
-        final WearService request = retrofit.create(WearService.class);
-        Call<LaunchWearResponse> call;
-        final RealmList<Launch> items = new RealmList<>();
-        call = request.getWearLaunchByID(launch.getId());
+        final SpaceLaunchNowService request = retrofit.create(SpaceLaunchNowService.class);
+        Call<Launch> call;
+        call = request.getLaunchById(launch.getId(), "detailed");
         Timber.v("Calling - %s", call.request().url().url().toString());
-        call.enqueue(new Callback<LaunchWearResponse>() {
+        call.enqueue(new Callback<Launch>() {
 
             @Override
-            public void onResponse(Call<LaunchWearResponse> call, Response<LaunchWearResponse> response) {
+            public void onResponse(Call<Launch> call, Response<Launch> response) {
                 if (response.isSuccessful()) {
                     Timber.v("Successful! - %s", call.request().url().url().toString());
-                    Collections.addAll(items, response.body().getLaunches());
+                    launch = response.body();
                     realm.executeTransaction(new Realm.Transaction() {
                         @Override
                         public void execute(Realm realm) {
-                            for (Launch item: items){
-                                item.getLocation().setPrimaryID();
-                            }
-                            realm.copyToRealmOrUpdate(items);
+
+                            realm.copyToRealmOrUpdate(launch);
                         }
                     });
                     loadData(launch.getId());
@@ -191,7 +190,7 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
             }
 
             @Override
-            public void onFailure(Call<LaunchWearResponse> call, Throwable t) {
+            public void onFailure(Call<Launch> call, Throwable t) {
                 swipeRefresh.setRefreshing(false);
                 Timber.e(t.getLocalizedMessage());
             }
@@ -200,13 +199,13 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
     }
 
     private void setupView(Launch launch) {
-        launchTitle.setText(launch.getRocket().getName());
+        launchTitle.setText(launch.getLauncher().getName());
 
         launchStatus.setText(getStatus(launch.getStatus()));
 
-        if (launch.getMissions() != null && launch.getMissions().size() > 0) {
-            launchMission.setText(launch.getMissions().get(0).getName());
-            launchMissionDescription.setText(launch.getMissions().get(0).getDescription());
+        if (launch.getMission() != null) {
+            launchMission.setText(launch.getMission().getName());
+            launchMissionDescription.setText(launch.getMission().getDescription());
         }
 
         long future = launch.getNetstamp();
@@ -345,6 +344,11 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
                 @Override
                 public void onSuccess(Integer integer) {
                     Timber.v("Successfully sent!");
+                    Intent openOnPhoneIntent = new Intent(context, ConfirmationActivity.class);
+                    openOnPhoneIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    openOnPhoneIntent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
+                            ConfirmationActivity.OPEN_ON_PHONE_ANIMATION);
+                    startActivity(openOnPhoneIntent);
                 }
             });
             sendTask.addOnCompleteListener(new OnCompleteListener<Integer>() {
