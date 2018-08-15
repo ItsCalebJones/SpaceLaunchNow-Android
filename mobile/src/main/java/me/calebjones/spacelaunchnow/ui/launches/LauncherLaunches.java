@@ -5,20 +5,17 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
-import android.widget.Spinner;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
@@ -34,18 +31,11 @@ import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecorati
 import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
 import me.calebjones.spacelaunchnow.content.data.previous.PreviousDataRepository;
 import me.calebjones.spacelaunchnow.content.data.upcoming.UpcomingDataRepository;
-import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
-import me.calebjones.spacelaunchnow.data.networking.DataClient;
-import me.calebjones.spacelaunchnow.data.networking.responses.base.AgencyResponse;
-import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchResponse;
 import me.calebjones.spacelaunchnow.ui.main.launches.ListAdapter;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.utils.views.EndlessRecyclerViewScrollListener;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import timber.log.Timber;
 
 public class LauncherLaunches extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
@@ -60,6 +50,8 @@ public class LauncherLaunches extends BaseActivity implements SwipeRefreshLayout
     CoordinatorLayout coordinator;
     @BindView(R.id.menu)
     FloatingActionButton menu;
+    @BindView(R.id.tabLayout)
+    TabLayout tabLayout;
 
     private LinearLayoutManager linearLayoutManager;
     private ListAdapter adapter;
@@ -73,7 +65,6 @@ public class LauncherLaunches extends BaseActivity implements SwipeRefreshLayout
     private Integer launcherId = null;
     private ArrayList<String> agencyList;
     private List<Launch> launches;
-    private SwitchCompat switchCompat;
     public boolean canLoadMore;
     private boolean showUpcoming = true;
 
@@ -117,6 +108,28 @@ public class LauncherLaunches extends BaseActivity implements SwipeRefreshLayout
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                Timber.v("Testing");
+                if (tab.getPosition() == 0){
+                    showUpcoming = true;
+                } else {
+                    showUpcoming = false;
+                }
+                fetchData(true);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
 
@@ -192,7 +205,6 @@ public class LauncherLaunches extends BaseActivity implements SwipeRefreshLayout
                     }
                 }
             });
-
         }
     }
 
@@ -202,27 +214,12 @@ public class LauncherLaunches extends BaseActivity implements SwipeRefreshLayout
         } else {
             toolbar.setTitle("Launches");
         }
-
-        if (showUpcoming && switchCompat != null) {
-            switchCompat.setText("Upcoming");
-        } else if (switchCompat != null) {
-            switchCompat.setText("Previous");
-        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.clear();
         getMenuInflater().inflate(R.menu.launcher_menu, menu);
-
-        MenuItem item = menu.findItem(R.id.toggleservice);
-        switchCompat = (SwitchCompat) MenuItemCompat.getActionView(item);
-        switchCompat.setChecked(showUpcoming);
-        switchCompat.setOnCheckedChangeListener((compoundButton, b) -> {
-            showUpcoming = b;
-            fetchData(true);
-        });
-
 
         return true;
     }

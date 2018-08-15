@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -28,6 +29,7 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
+import me.calebjones.spacelaunchnow.content.data.previous.PreviousDataRepository;
 import me.calebjones.spacelaunchnow.content.data.upcoming.UpcomingDataRepository;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
@@ -54,10 +56,13 @@ public class AgencyLaunches extends BaseActivity implements SwipeRefreshLayout.O
     CoordinatorLayout coordinator;
     @BindView(R.id.menu)
     FloatingActionButton menu;
+    @BindView(R.id.tabLayout)
+    TabLayout tabLayout;
 
     private LinearLayoutManager linearLayoutManager;
     private ListAdapter adapter;
     private UpcomingDataRepository upcomingDataRepository;
+    private PreviousDataRepository previousDataRepository;
     private int nextOffset = 0;
     private EndlessRecyclerViewScrollListener scrollListener;
     private String searchTerm = null;
@@ -65,6 +70,7 @@ public class AgencyLaunches extends BaseActivity implements SwipeRefreshLayout.O
     private ArrayList<String> agencyList;
     private List<Agency> agencies;
     public boolean canLoadMore;
+    private boolean showUpcoming = true;
 
     public AgencyLaunches() {
         super("Agency Activity");
@@ -76,6 +82,7 @@ public class AgencyLaunches extends BaseActivity implements SwipeRefreshLayout.O
         setContentView(R.layout.activity_agency_launches);
         ButterKnife.bind(this);
         upcomingDataRepository = new UpcomingDataRepository(this, getRealm());
+        previousDataRepository = new PreviousDataRepository(this, getRealm());
         Bundle extras = getIntent().getExtras();
         lspName = extras.getString("lspName");
         updateTitle();
@@ -101,6 +108,28 @@ public class AgencyLaunches extends BaseActivity implements SwipeRefreshLayout.O
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                Timber.v("Testing");
+                if (tab.getPosition() == 0){
+                    showUpcoming = true;
+                } else {
+                    showUpcoming = false;
+                }
+                fetchData(true);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         getFeaturedAgencies();
     }
 
@@ -147,30 +176,57 @@ public class AgencyLaunches extends BaseActivity implements SwipeRefreshLayout.O
             nextOffset = 0;
             adapter.clear();
         }
-        upcomingDataRepository.getUpcomingLaunches(nextOffset, searchTerm, lspName, null, new Callbacks.ListCallback() {
-            @Override
-            public void onLaunchesLoaded(List<Launch> launches, int next) {
-                Timber.v("Offset - %s", next);
-                nextOffset = next;
-                canLoadMore = next > 0;
-                updateAdapter(launches);
-                updateTitle();
-            }
-
-            @Override
-            public void onNetworkStateChanged(boolean refreshing) {
-                showNetworkLoading(refreshing);
-            }
-
-            @Override
-            public void onError(String message, @Nullable Throwable throwable) {
-                if (throwable != null) {
-                    Timber.e(throwable);
-                } else {
-                    Timber.e(message);
+        if (showUpcoming) {
+            upcomingDataRepository.getUpcomingLaunches(nextOffset, searchTerm, lspName, null, new Callbacks.ListCallback() {
+                @Override
+                public void onLaunchesLoaded(List<Launch> launches, int next) {
+                    Timber.v("Offset - %s", next);
+                    nextOffset = next;
+                    canLoadMore = next > 0;
+                    updateAdapter(launches);
+                    updateTitle();
                 }
-            }
-        });
+
+                @Override
+                public void onNetworkStateChanged(boolean refreshing) {
+                    showNetworkLoading(refreshing);
+                }
+
+                @Override
+                public void onError(String message, @Nullable Throwable throwable) {
+                    if (throwable != null) {
+                        Timber.e(throwable);
+                    } else {
+                        Timber.e(message);
+                    }
+                }
+            });
+        } else {
+            previousDataRepository.getPreviousLaunches(nextOffset, searchTerm, lspName, null, new Callbacks.ListCallback() {
+                @Override
+                public void onLaunchesLoaded(List<Launch> launches, int next) {
+                    Timber.v("Offset - %s", next);
+                    nextOffset = next;
+                    canLoadMore = next > 0;
+                    updateAdapter(launches);
+                    updateTitle();
+                }
+
+                @Override
+                public void onNetworkStateChanged(boolean refreshing) {
+                    showNetworkLoading(refreshing);
+                }
+
+                @Override
+                public void onError(String message, @Nullable Throwable throwable) {
+                    if (throwable != null) {
+                        Timber.e(throwable);
+                    } else {
+                        Timber.e(message);
+                    }
+                }
+            });
+        }
     }
 
     private void updateTitle() {
