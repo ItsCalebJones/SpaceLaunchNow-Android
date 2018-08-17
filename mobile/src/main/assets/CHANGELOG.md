@@ -5,7 +5,16 @@ A space launch tracker for Android using data from the Launch Library API.
 ## Changelog
 #### Updated 6-11-2018
 ---
-### Version 2.5.4 (Latest)
+### Version 2.6.0 (Latest)
+#### Overview
+Change over to using my own server to support future Blue Origin launches and additional data about SpaceX launches and LANDINGS. Coming soon!
+
+#### Changelog
+* Iconography changes to improve user experience.
+* Added a 'View More' buttons for launchers and agencies.
+* Moved away from using Launch Library API to our own server.
+---
+### Version 2.5.4 (
 #### Overview
 Slight changes to handling GDPR users and their choices. Starting work to support a UI revamp.
 
@@ -14,7 +23,7 @@ Slight changes to handling GDPR users and their choices. Starting work to suppor
 * Removed the 'Missions' page to make room for new UI changes.
 * Changes to Supporter page.
 * Fixed a few random crashes.
-
+---
 ### Version 2.5.0
 #### Overview
 Support for EU's General Data Protection Regulations, Space Launch Now will now ask for consent before showing personalized advertisements. If advertisements aren't your thing, you can always support Space Launch Now with an in-app-purchase.

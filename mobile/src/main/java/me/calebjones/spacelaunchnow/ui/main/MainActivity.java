@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ import com.michaelflisar.gdprdialog.GDPRSetup;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -257,37 +259,42 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
                                 .withIcon(FontAwesome.Icon.faw_rocket)
                                 .withIdentifier(R.id.menu_vehicle)
                                 .withSelectable(true),
-                        new DividerDrawerItem(),
-                        new ExpandableDrawerItem().withName(R.string.stay_connected).withIcon(CommunityMaterial.Icon.cmd_account).withDescription(R.string.connect_description).withIdentifier(19).withSelectable(false).withSubItems(
-                                new SecondaryDrawerItem()
-                                        .withIcon(CommunityMaterial.Icon.cmd_discord)
-                                        .withLevel(2)
-                                        .withName(R.string.discord)
-                                        .withDescription(R.string.discord_subtitle)
-                                        .withIdentifier(R.id.menu_discord)
-                                        .withSelectable(false),
-                                new SecondaryDrawerItem()
-                                        .withIcon(CommunityMaterial.Icon.cmd_twitter)
-                                        .withLevel(2)
-                                        .withName(R.string.twitter)
-                                        .withDescription(R.string.twitter_subtitle)
-                                        .withIdentifier(R.id.menu_twitter)
-                                        .withSelectable(false),
-                                new SecondaryDrawerItem()
-                                        .withIcon(CommunityMaterial.Icon.cmd_facebook)
-                                        .withLevel(2)
-                                        .withName(R.string.facebook)
-                                        .withDescription(R.string.facebook_subtitle)
-                                        .withIdentifier(R.id.menu_facebook)
-                                        .withSelectable(false),
-                                new SecondaryDrawerItem()
-                                        .withIcon(CommunityMaterial.Icon.cmd_web)
-                                        .withLevel(2)
-                                        .withName(R.string.website)
-                                        .withDescription(R.string.website_subtitle)
-                                        .withIdentifier(R.id.menu_website)
-                                        .withSelectable(false)
-                        ),
+                        new PrimaryDrawerItem()
+                                .withIcon(CommunityMaterial.Icon.cmd_discord)
+                                .withName(R.string.discord)
+                                .withIdentifier(R.id.menu_discord)
+                                .withSelectable(false),
+//                        new DividerDrawerItem(),
+//                        new ExpandableDrawerItem().withName(R.string.stay_connected).withIcon(CommunityMaterial.Icon.cmd_account).withDescription(R.string.connect_description).withIdentifier(19).withSelectable(false).withSubItems(
+//                                new SecondaryDrawerItem()
+//                                        .withIcon(CommunityMaterial.Icon.cmd_discord)
+//                                        .withLevel(2)
+//                                        .withName(R.string.discord)
+//                                        .withDescription(R.string.discord_subtitle)
+//                                        .withIdentifier(R.id.menu_discord)
+//                                        .withSelectable(false),
+//                                new SecondaryDrawerItem()
+//                                        .withIcon(CommunityMaterial.Icon.cmd_twitter)
+//                                        .withLevel(2)
+//                                        .withName(R.string.twitter)
+//                                        .withDescription(R.string.twitter_subtitle)
+//                                        .withIdentifier(R.id.menu_twitter)
+//                                        .withSelectable(false),
+//                                new SecondaryDrawerItem()
+//                                        .withIcon(CommunityMaterial.Icon.cmd_facebook)
+//                                        .withLevel(2)
+//                                        .withName(R.string.facebook)
+//                                        .withDescription(R.string.facebook_subtitle)
+//                                        .withIdentifier(R.id.menu_facebook)
+//                                        .withSelectable(false),
+//                                new SecondaryDrawerItem()
+//                                        .withIcon(CommunityMaterial.Icon.cmd_web)
+//                                        .withLevel(2)
+//                                        .withName(R.string.website)
+//                                        .withDescription(R.string.website_subtitle)
+//                                        .withIdentifier(R.id.menu_website)
+//                                        .withSelectable(false)
+//                        ),
                         new DividerDrawerItem(),
                         new ExpandableDrawerItem().withName(R.string.get_help).withIcon(GoogleMaterial.Icon.gmd_account_box).withDescription(R.string.help_description).withIdentifier(20).withSelectable(false).withSubItems(
                                 new SecondaryDrawerItem()
@@ -327,7 +334,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
             result.addStickyFooterItem(
                     new PrimaryDrawerItem().withName(R.string.supporter_title)
                             .withDescription(R.string.supporter_main)
-                            .withIcon(GoogleMaterial.Icon.gmd_mood)
+                            .withIcon(FontAwesome.Icon.faw_dollar_sign)
                             .withIdentifier(R.id.menu_support)
                             .withSelectable(false));
         }
@@ -418,6 +425,17 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
                                 }
                             }, 5000);
                         }
+                    } else if (Once.beenDone("appOpen", Amount.moreThan(5))) {
+                        if (!Once.beenDone("showDiscord")) {
+                            Once.markDone("showDiscord");
+                            final Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showDiscord();
+                                }
+                            }, 1000);
+                        }
                     } else if (Once.beenDone("appOpen", Amount.moreThan(7))
                             && Once.beenDone("appOpen", Amount.lessThan(13))) {
                         if (!Once.beenDone("showRemoveAdSeven") && !SupporterHelper.isSupporter()) {
@@ -473,6 +491,28 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
                     startActivity(new Intent(context, SupporterActivity.class));
                 });
         snackbar.show();
+    }
+
+    private void showDiscord() {
+        new MaterialDialog.Builder(this)
+                .title("Official Discord Server")
+                .icon(new IconicsDrawable(this)
+                        .icon(FontAwesome.Icon.faw_discord)
+                        .color(Color.rgb(114,137,218))
+                        .sizeDp(24))
+                .content("Join us on the Space Launch Now Discord server for live launch events and to share the latest news with spaceflight enthusiats!")
+                .negativeText("No thanks!")
+                .positiveText("Okay")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        String discordUrl = getString(R.string.discord_url);
+                        Intent discordIntent = new Intent(Intent.ACTION_VIEW);
+                        discordIntent.setData(Uri.parse(discordUrl));
+                        startActivity(discordIntent);
+                    }
+                })
+                .show();
     }
 
     private void showChangelogSnackbar() {

@@ -70,7 +70,7 @@ public class DataClientManager {
     public void getNextUpcomingLaunchesMini() {
         isNextLaunches = true;
         Timber.i("Running getNextUpcomingLaunchesMini");
-        DataClient.getInstance().getNextUpcomingLaunchesMini(10, 0, new Callback<LaunchResponse>() {
+        DataClient.getInstance().getNextUpcomingLaunchesMini(20, 0, new Callback<LaunchResponse>() {
             @Override
             public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
 

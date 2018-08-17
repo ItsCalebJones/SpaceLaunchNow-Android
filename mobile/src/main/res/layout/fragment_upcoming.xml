@@ -372,7 +372,7 @@
                 android:layout_marginBottom="@dimen/card_margin"
                 android:layout_marginRight="@dimen/card_margin"
                 app:elevation="@dimen/material_elevation_fab_resting"
-                app:srcCompat="@drawable/ic_filter" />
+                app:srcCompat="@drawable/ic_notifications_white" />
 
         </android.support.design.widget.CoordinatorLayout>
 

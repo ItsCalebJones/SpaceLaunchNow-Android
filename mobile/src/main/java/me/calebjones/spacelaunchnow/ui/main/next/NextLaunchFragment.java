@@ -473,7 +473,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         } else {
             Analytics.getInstance().sendButtonClicked("Hide Launch filters.");
             active = false;
-            FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_filter));
+            FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_notifications_white));
             mSwipeRefreshLayout.setEnabled(true);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 hideView();
