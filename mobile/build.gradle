@@ -219,6 +219,8 @@ dependencies {
     implementation "com.google.android.gms:play-services-ads:$rootProject.playServicesVersion"
     implementation "com.google.android.gms:play-services-maps:$rootProject.playServicesVersion"
 
+    implementation 'com.pixplicity.easyprefs:library:1.9.0'
+
     // Architecture and Tools
     implementation 'com.jonathanfinerty.once:once:1.2.2'
     implementation 'org.greenrobot:eventbus:3.1.1'

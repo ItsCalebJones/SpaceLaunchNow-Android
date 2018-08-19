@@ -5,6 +5,7 @@ import android.preference.PreferenceManager;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.pixplicity.easyprefs.library.Prefs;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -81,13 +82,14 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
     }
 
     private boolean isNotificationEnabled(String notificationType, boolean webcastAvailable) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean notificationEnabled = prefs.getBoolean("notifications_new_message", true);
-        boolean netstampChanged = prefs.getBoolean("notifications_launch_imminent_updates", true);
-        boolean webcastOnly = prefs.getBoolean("notifications_new_message_webcast", false);
-        boolean twentyFourHour = prefs.getBoolean("notifications_launch_day", true);
-        boolean oneHour = prefs.getBoolean("notifications_launch_imminent", true);
-        boolean tenMinutes = prefs.getBoolean("notifications_launch_minute", true);
+
+        boolean notificationEnabled = Prefs.getBoolean("notificationEnabled", true);
+        boolean netstampChanged = Prefs.getBoolean("netstampChanged", true);
+        boolean webcastOnly = Prefs.getBoolean("webcastOnly", false);
+        boolean twentyFourHour = Prefs.getBoolean("twentyFourHour", true);
+        boolean oneHour = Prefs.getBoolean("oneHour", true);
+        boolean tenMinutes = Prefs.getBoolean("tenMinutes", true);
+        boolean inFlight = Prefs.getBoolean("inFlight", true);
 
         if (notificationEnabled) {
 
@@ -110,6 +112,10 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
             }
 
             if (notificationType.contains("tenMinute") && tenMinutes) {
+                return true;
+            }
+
+            if (notificationType.contains("inFlight") && inFlight) {
                 return true;
             }
 

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -33,18 +34,10 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
         firebaseMessaging = FirebaseMessaging.getInstance();
         addPreferencesFromResource(R.xml.notification_preferences);
         Preference testPreference =  findPreference("notifications_new_message_test");
-        testPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Thread t = new Thread(new Runnable() {
-                    public void run() {
-                        sendTestNotification();
-                    }
-                });
-
-                t.start();
-                return true;
-            }
+        testPreference.setOnPreferenceClickListener(preference -> {
+            Thread t = new Thread(this::sendTestNotification);
+            t.start();
+            return true;
         });
         setName("Notifications Fragment");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -71,14 +64,60 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Timber.i("Notifications preference %s changed.", key);
-        if (key.equals("notifications_new_message")){
-            if (sharedPreferences.getBoolean(key, true)){
-                firebaseMessaging.subscribeToTopic("notifications_new_message");
+        if (key.equals("notificationEnabled")){
+            if (Prefs.getBoolean(key, true)){
+                firebaseMessaging.subscribeToTopic("notificationEnabled");
             } else {
-                firebaseMessaging.unsubscribeFromTopic("notifications_new_message");
+                firebaseMessaging.unsubscribeFromTopic("notificationEnabled");
             }
-        } else {
-            Analytics.getInstance().sendPreferenceEvent(key);
+        }
+
+        if (key.equals("netstampChanged")){
+            if (Prefs.getBoolean(key, true)){
+                firebaseMessaging.subscribeToTopic("netstampChanged");
+            } else {
+                firebaseMessaging.unsubscribeFromTopic("netstampChanged");
+            }
+        }
+
+        if (key.equals("webcastOnly")){
+            if (Prefs.getBoolean(key, true)){
+                firebaseMessaging.subscribeToTopic("webcastOnly");
+            } else {
+                firebaseMessaging.unsubscribeFromTopic("webcastOnly");
+            }
+        }
+
+        if (key.equals("twentyFourHour")){
+            if (Prefs.getBoolean(key, true)){
+                firebaseMessaging.subscribeToTopic("twentyFourHour");
+            } else {
+                firebaseMessaging.unsubscribeFromTopic("twentyFourHour");
+            }
+        }
+
+        if (key.equals("oneHour")){
+            if (Prefs.getBoolean(key, true)){
+                firebaseMessaging.subscribeToTopic("oneHour");
+            } else {
+                firebaseMessaging.unsubscribeFromTopic("oneHour");
+            }
+        }
+
+        if (key.equals("tenMinutes")){
+            if (Prefs.getBoolean(key, true)){
+                firebaseMessaging.subscribeToTopic("tenMinutes");
+            } else {
+                firebaseMessaging.unsubscribeFromTopic("tenMinutes");
+            }
+        }
+
+        if (key.equals("inFlight")){
+            if (Prefs.getBoolean(key, true)){
+                firebaseMessaging.subscribeToTopic("inFlight");
+            } else {
+                firebaseMessaging.unsubscribeFromTopic("inFlight");
+            }
         }
     }
 

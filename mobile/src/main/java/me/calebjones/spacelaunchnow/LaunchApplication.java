@@ -2,6 +2,7 @@ package me.calebjones.spacelaunchnow;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -27,6 +28,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.michaelflisar.gdprdialog.GDPR;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
+import com.pixplicity.easyprefs.library.Prefs;
 import com.twitter.sdk.android.core.DefaultLogger;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
@@ -78,6 +80,7 @@ public class LaunchApplication extends Application {
         context = this;
         firebaseMessaging = FirebaseMessaging.getInstance();
 
+        setupAndCheckOnce();
         setupAds();
         setupPreferences();
         setupCrashlytics();
@@ -88,7 +91,6 @@ public class LaunchApplication extends Application {
         setupTheme();
         setupDrawableLoader();
         checkSubscriptions();
-        setupAndCheckOnce();
         setupNotificationChannels();
         setupTwitter();
     }
@@ -243,13 +245,17 @@ public class LaunchApplication extends Application {
         }
     }
 
-
     private void setupPreferences() {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreference = ListPreferences.getInstance(this);
         switchPreferences = SwitchPreferences.getInstance(this);
+        new Prefs.Builder()
+                .setContext(this)
+                .setMode(ContextWrapper.MODE_PRIVATE)
+                .setPrefsName(getPackageName())
+                .setUseDefaultSharedPreference(true)
+                .build();
     }
-
 
     private void setupForecast() {
         ForecastConfiguration configuration =
@@ -258,7 +264,6 @@ public class LaunchApplication extends Application {
                         .build();
         ForecastClient.create(configuration);
     }
-
 
     private void setupNotification() {
         if (BuildConfig.DEBUG) {
@@ -271,8 +276,78 @@ public class LaunchApplication extends Application {
             firebaseMessaging.subscribeToTopic("production");
             firebaseMessaging.unsubscribeFromTopic("debug");
         }
+        migrateNotifications();
+
+        boolean notificationEnabled = Prefs.getBoolean("notificationEnabled", true);
+        boolean netstampChanged = Prefs.getBoolean("netstampChanged", true);
+        boolean webcastOnly = Prefs.getBoolean("webcastOnly", false);
+        boolean twentyFourHour = Prefs.getBoolean("twentyFourHour", true);
+        boolean oneHour = Prefs.getBoolean("oneHour", true);
+        boolean tenMinutes = Prefs.getBoolean("tenMinutes", true);
+        boolean inFlight = Prefs.getBoolean("inFlight", true);
+
+        if (notificationEnabled) {
+            firebaseMessaging.subscribeToTopic("notificationEnabled");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("notificationEnabled");
+        }
+
+        if (netstampChanged) {
+            firebaseMessaging.subscribeToTopic("netstampChanged");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("netstampChanged");
+        }
+
+        if (webcastOnly) {
+            firebaseMessaging.subscribeToTopic("webcastOnly");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("webcastOnly");
+        }
+
+        if (twentyFourHour) {
+            firebaseMessaging.subscribeToTopic("twentyFourHour");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("twentyFourHour");
+        }
+
+        if (oneHour) {
+            firebaseMessaging.subscribeToTopic("oneHour");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("oneHour");
+        }
+
+        if (tenMinutes) {
+            firebaseMessaging.subscribeToTopic("tenMinutes");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("tenMinutes");
+        }
+
+        if (inFlight) {
+            firebaseMessaging.subscribeToTopic("inFlight");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("inFlight");
+        }
+
     }
 
+    private void migrateNotifications() {
+        if (!Once.beenDone("migrateNotifications")) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            boolean notificationEnabled = prefs.getBoolean("notifications_new_message", true);
+            boolean netstampChanged = prefs.getBoolean("notifications_launch_imminent_updates", true);
+            boolean webcastOnly = prefs.getBoolean("notifications_new_message_webcast", false);
+            boolean twentyFourHour = prefs.getBoolean("notifications_launch_day", true);
+            boolean oneHour = prefs.getBoolean("notifications_launch_imminent", true);
+            boolean tenMinutes = prefs.getBoolean("notifications_launch_minute", true);
+
+            Prefs.putBoolean("notificationEnabled", notificationEnabled);
+            Prefs.putBoolean("netstampChanged", netstampChanged);
+            Prefs.putBoolean("webcastOnly", webcastOnly);
+            Prefs.putBoolean("twentyFourHour", twentyFourHour);
+            Prefs.putBoolean("oneHour", oneHour);
+            Prefs.putBoolean("tenMinutes", tenMinutes);
+        }
+    }
 
     private void setupCrashlytics() {
         /*
@@ -298,7 +373,6 @@ public class LaunchApplication extends Application {
             Crashlytics.setBool("Debug Logging", sharedPref.getBoolean("debug_logging", false));
         }).start();
     }
-
 
     private void startJobs() {
         new Thread(() -> {
