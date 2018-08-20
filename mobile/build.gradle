@@ -227,6 +227,7 @@ dependencies {
     }
     implementation 'com.jakewharton.timber:timber:4.6.0'
     implementation 'com.karumi:dexter:4.2.0'
+    implementation 'cz.kinst.jakub:android-stateful-layout-simple:2.0.7'
 
     // Billing
     implementation 'com.anjlab.android.iab.v3:library:1.0.44'

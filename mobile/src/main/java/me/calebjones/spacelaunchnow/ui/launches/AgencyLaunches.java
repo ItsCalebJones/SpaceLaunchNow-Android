@@ -25,6 +25,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecoration;
@@ -58,6 +59,8 @@ public class AgencyLaunches extends BaseActivity implements SwipeRefreshLayout.O
     FloatingActionButton menu;
     @BindView(R.id.tabLayout)
     TabLayout tabLayout;
+    @BindView(R.id.stateful_view)
+    SimpleStatefulLayout statefulView;
 
     private LinearLayoutManager linearLayoutManager;
     private ListAdapter adapter;
@@ -79,7 +82,7 @@ public class AgencyLaunches extends BaseActivity implements SwipeRefreshLayout.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_agency_launches);
+        setContentView(R.layout.activity_launches);
         ButterKnife.bind(this);
         upcomingDataRepository = new UpcomingDataRepository(this, getRealm());
         previousDataRepository = new PreviousDataRepository(this, getRealm());
@@ -176,6 +179,7 @@ public class AgencyLaunches extends BaseActivity implements SwipeRefreshLayout.O
             nextOffset = 0;
             adapter.clear();
         }
+        statefulView.showProgress();
         if (showUpcoming) {
             upcomingDataRepository.getUpcomingLaunches(nextOffset, searchTerm, lspName, null, new Callbacks.ListCallback() {
                 @Override
@@ -294,10 +298,12 @@ public class AgencyLaunches extends BaseActivity implements SwipeRefreshLayout.O
     private void updateAdapter(List<Launch> launches) {
 
         if (launches.size() > 0) {
+            statefulView.showContent();
             adapter.addItems(launches);
             adapter.notifyDataSetChanged();
 
         } else {
+            statefulView.showEmpty();
             if (adapter != null) {
                 adapter.clear();
             }

@@ -46,7 +46,6 @@ public class NextLaunchDataLoader {
                         Uri uri = Uri.parse(launchResponse.getNext());
                         String limit = uri.getQueryParameter("limit");
                         String offset = uri.getQueryParameter("offset");
-                        Timber.v("Test");
                     }
                 } else {
                     nextNetworkCallback.onNetworkFailure(response.code());

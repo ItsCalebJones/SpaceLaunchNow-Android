@@ -45,31 +45,6 @@ public class NextLaunchDataRepository {
         this.realm = realm;
     }
 
-    public RealmResults<Launch> getPreviousLaunchData(Realm realm) {
-        Timber.i("Syncing launch data...");
-        if (ListPreferences.getInstance(context).isFresh()){
-            realm.executeTransactionAsync(realm1 -> {
-                RealmResults<Launch> launches = null;
-                try {
-                    launches = QueryBuilder.buildPrevQuery(context, realm1);
-                    if (ListPreferences.getInstance(context).isFresh()) {
-                        Timber.d("%d launches to sync.", launches.size());
-                        realm1.copyToRealmOrUpdate(launches);
-                        ListPreferences.getInstance(context).isFresh(false);
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
-        try {
-            return QueryBuilder.buildPrevQueryAsync(context, realm);
-        } catch (ParseException e) {
-            Crashlytics.logException(e);
-            return null;
-        }
-    }
-
     @UiThread
     public void getNextUpcomingLaunches(int count, boolean forceRefresh, Callbacks.NextLaunchesCallback nextLaunchesCallback){
         RealmResults<UpdateRecord> records = realm.where(UpdateRecord.class)
@@ -88,10 +63,11 @@ public class NextLaunchDataRepository {
             Date currentDate = new Date();
             Date lastUpdateDate = record.getDate();
             long timeSinceUpdate = currentDate.getTime() - lastUpdateDate.getTime();
-            long timeMaxUpdate = TimeUnit.MINUTES.toMillis(1);
+            long timeMaxUpdate = TimeUnit.MINUTES.toMillis(10);
             Timber.d("Time since last upcoming launches sync %s", timeSinceUpdate);
             if (timeSinceUpdate > timeMaxUpdate || forceRefresh) {
                 Timber.d("%s greater then %s - updating library data.", timeSinceUpdate, timeMaxUpdate);
+                nextLaunchesCallback.onLaunchesLoaded(QueryBuilder.buildUpcomingSwitchQuery(context, realm));
                 getNextUpcomingLaunchesFromNetwork(count, nextLaunchesCallback);
             } else {
                 nextLaunchesCallback.onLaunchesLoaded(QueryBuilder.buildUpcomingSwitchQuery(context, realm));

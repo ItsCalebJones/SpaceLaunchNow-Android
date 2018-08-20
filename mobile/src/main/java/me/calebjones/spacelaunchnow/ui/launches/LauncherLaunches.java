@@ -7,11 +7,9 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +23,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecoration;
@@ -52,6 +51,8 @@ public class LauncherLaunches extends BaseActivity implements SwipeRefreshLayout
     FloatingActionButton menu;
     @BindView(R.id.tabLayout)
     TabLayout tabLayout;
+    @BindView(R.id.stateful_view)
+    SimpleStatefulLayout statefulView;
 
     private LinearLayoutManager linearLayoutManager;
     private ListAdapter adapter;
@@ -75,7 +76,7 @@ public class LauncherLaunches extends BaseActivity implements SwipeRefreshLayout
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_agency_launches);
+        setContentView(R.layout.activity_launches);
         ButterKnife.bind(this);
         upcomingDataRepository = new UpcomingDataRepository(this, getRealm());
         previousDataRepository = new PreviousDataRepository(this, getRealm());
@@ -112,7 +113,7 @@ public class LauncherLaunches extends BaseActivity implements SwipeRefreshLayout
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 Timber.v("Testing");
-                if (tab.getPosition() == 0){
+                if (tab.getPosition() == 0) {
                     showUpcoming = true;
                 } else {
                     showUpcoming = false;
@@ -155,6 +156,7 @@ public class LauncherLaunches extends BaseActivity implements SwipeRefreshLayout
             nextOffset = 0;
             adapter.clear();
         }
+        statefulView.showProgress();
         if (showUpcoming) {
             upcomingDataRepository.getUpcomingLaunches(nextOffset, searchTerm, lspName, launcherId, new Callbacks.ListCallback() {
                 @Override
@@ -263,10 +265,12 @@ public class LauncherLaunches extends BaseActivity implements SwipeRefreshLayout
     private void updateAdapter(List<Launch> launches) {
 
         if (launches.size() > 0) {
+            statefulView.showContent();
             adapter.addItems(launches);
             adapter.notifyDataSetChanged();
 
         } else {
+            statefulView.showEmpty();
             if (adapter != null) {
                 adapter.clear();
             }
