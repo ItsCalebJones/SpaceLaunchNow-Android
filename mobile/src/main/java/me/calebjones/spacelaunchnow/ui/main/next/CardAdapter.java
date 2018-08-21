@@ -557,28 +557,24 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     Timber.d("Watch: %s", launch.getVidURLs().size());
                     Analytics.getInstance().sendButtonClicked("Watch Button - Opening Dialogue");
                     if (launch.getVidURLs().size() > 0) {
-                        final DialogAdapter adapter = new DialogAdapter(new DialogAdapter.Callback() {
-
-                            @Override
-                            public void onListItemSelected(int index, MaterialSimpleListItem item, boolean longClick) {
-                                try {
-                                    if (longClick) {
-                                        Intent sendIntent = new Intent();
-                                        sendIntent.setAction(Intent.ACTION_SEND);
-                                        sendIntent.putExtra(Intent.EXTRA_TEXT, launch.getVidURLs().get(index).getVal()); // Simple text and URL to share
-                                        sendIntent.setType("text/plain");
-                                        context.startActivity(sendIntent);
-                                        Analytics.getInstance().sendButtonClickedWithURL("Watch Button - URL Long Clicked", launch.getVidURLs().get(index).getVal());
-                                    } else {
-                                        Uri watchUri = Uri.parse(launch.getVidURLs().get(index).getVal());
-                                        Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
-                                        context.startActivity(i);
-                                        Analytics.getInstance().sendButtonClickedWithURL("Watch Button - URL", launch.getVidURLs().get(index).getVal());
-                                    }
-                                } catch (ArrayIndexOutOfBoundsException e) {
-                                    Timber.e(e);
-                                    Toast.makeText(context, "Ops, an error occurred.", Toast.LENGTH_SHORT).show();
+                        final DialogAdapter adapter = new DialogAdapter((index, item, longClick) -> {
+                            try {
+                                if (longClick) {
+                                    Intent sendIntent1 = new Intent();
+                                    sendIntent1.setAction(Intent.ACTION_SEND);
+                                    sendIntent1.putExtra(Intent.EXTRA_TEXT, launch.getVidURLs().get(index).getVal()); // Simple text and URL to share
+                                    sendIntent1.setType("text/plain");
+                                    context.startActivity(sendIntent1);
+                                    Analytics.getInstance().sendButtonClickedWithURL("Watch Button - URL Long Clicked", launch.getVidURLs().get(index).getVal());
+                                } else {
+                                    Uri watchUri = Uri.parse(launch.getVidURLs().get(index).getVal());
+                                    Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
+                                    context.startActivity(i);
+                                    Analytics.getInstance().sendButtonClickedWithURL("Watch Button - URL", launch.getVidURLs().get(index).getVal());
                                 }
+                            } catch (ArrayIndexOutOfBoundsException e) {
+                                Timber.e(e);
+                                Toast.makeText(context, "Ops, an error occurred.", Toast.LENGTH_SHORT).show();
                             }
                         });
                         for (RealmStr s : launch.getVidURLs()) {
