@@ -2,7 +2,7 @@
 <resources>
     <string name="action_settings">Einstellungen</string>
     <string name="status_go">"Startfreigabe vorhanden"</string>
-    <string name="status_nogo">"Startfreigabe nicht vorhanden"</string>
+    <string name="status_nogo">"keine Startfreigabe vorhanden"</string>
     <string name="status_success">"Start war erfolgreich"</string>
     <string name="status_failure">"Start ist fehlgeschlagen"</string>
     <string name="spacex_summary">SpaceX entwirft, baut und startet fortschrittliche Raketen und Raumfahrzeuge. Das Unternehmen wurde 2002 gegründet, um Raumfahrt zu revolutionieren. Das ultimative Ziel von SpaceX ist, der Menschheit ein Leben auf anderen Planeten zu ermöglichen.</string>
@@ -93,7 +93,6 @@ Danke!</string>
     <string name="seconds">SEKUNDEN</string>
     <string name="min">MIN</string>
     <string name="sec">SEK</string>
-    <string name="launch_service_provider">Missions-Organisation</string>
     <string name="primary_agency">Primäre Organisation</string>
     <string name="unknown_agency_type">Unbekannter Organisations-Typ</string>
     <string name="info">INFO</string>
@@ -104,16 +103,16 @@ Danke!</string>
     <string name="unknown_payload">Unbekannte Fracht</string>
     <string name="launch_vehicle_summary">Trägerrakete Zusammenfassung</string>
     <string name="unknown_launch_vehicle">Unbekannte Trägerrakete</string>
-    <string name="family">Familie: </string>
-    <string name="configuration">Konfiguration: </string>
+    <string name="family">Familie:</string>
+    <string name="configuration">Konfiguration:</string>
     <string name="vehicle_specifications">Trägerrakete-Spezifikationen</string>
-    <string name="height">Höhe: </string>
-    <string name="diameter">Durchmesser: </string>
-    <string name="stages">Stufen: </string>
-    <string name="mass_to_leo">Masse nach LEO: </string>
-    <string name="mass_to_gto">Masse nach GEO: </string>
-    <string name="mass_at_launch">Masse zum Start: </string>
-    <string name="thrust_at_launch">Schub zum Start: </string>
+    <string name="height">Höhe:</string>
+    <string name="diameter">Durchmesser:</string>
+    <string name="stages">Stufen:</string>
+    <string name="mass_to_leo">Masse nach LEO:</string>
+    <string name="mass_to_gto">Masse nach GEO:</string>
+    <string name="mass_at_launch">Masse zum Start:</string>
+    <string name="thrust_at_launch">Schub zum Start:</string>
     <string name="watch_launch">Start ansehen</string>
     <string name="estimated_launch_date">Geschätztes Startdatum</string>
     <string name="nothing_here">Hier gibts nichts, neu laden vom Menü?</string>
@@ -185,7 +184,7 @@ Danke!</string>
     <string name="agencies">Organisationen</string>
     <string name="error_launch_details">Fehler - nicht in der Lage, Trägerraketendetails zu laden.</string>
     <string name="height_full">Höhe: %.1f Meter</string>
-    <string name="diameter_full">Durchmesser: %.1F:f Meter</string>
+    <string name="diameter_full">Durchmesser: %.1fMeter</string>
     <string name="stage_full">Max Stufen: %d</string>
     <string name="mass_leo_full">Masse nach LEO: %d kg</string>
     <string name="mass_gto_full">Masse nach GTO: %d kg</string>
@@ -254,7 +253,7 @@ Danke!</string>
     <string name="calendar_permissions_denied"><![CDATA[Kalenderzugriff verweigert, versuche neu auszuwählen oder Android Settings -> Apps zum Aktivieren.]]></string>
     <string name="current_calendar">"Aktueller Kalender: "</string>
     <string name="select_calendar">Wähle einen Kalender zum Hinzufügen von Raketenstart-Events</string>
-    <string name="default_calendar">Standard-Kalender: </string>
+    <string name="default_calendar">Standard-Kalender:</string>
     <string name="permission_denied">Erlaubnis verweigert</string>
     <string name="permission_denied_description"><![CDATA[Falls du dich umentscheidest, versuch es wieder zu aktivieren. Oder gehe zu Einstellungen -> Anwendungen -> Space Launch Now -> Permissions.]]></string>
     <string name="no_calendars_available">Kein Kalender zum synchronisieren der Raketenstart-Events vorhanden.</string>
@@ -387,4 +386,6 @@ Danke!</string>
     <string name="misc">Verschiedenes</string>
     <string name="launchers">Trägerrakete</string>
     <string name="orbiters">Orbiter</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="mission_agency">Missions-Organisation</string>
 </resources>
