@@ -13,8 +13,13 @@ Change over to using my own server to support future Blue Origin launches and ad
 * Iconography changes to improve user experience.
 * Added a 'View More' buttons for launchers and agencies.
 * Moved away from using Launch Library API to our own server.
+
+Special shoutout to the translators that have helped fully translate Space Launch Now into over five languages!
+
+Fosco85, Francescog91, Ndre85f, Ajtudela, Pedroleon, SwGustav, Ogoidmatos, Ludi.vogt, Bullinger.mathis, Lukas Affolter, Castelle.arnaud, Nem.meric, Arnaud.muller1308, Jaros.jan.j, Jirkatp, Peter.handless
+
 ---
-### Version 2.5.4 (
+### Version 2.5.4
 #### Overview
 Slight changes to handling GDPR users and their choices. Starting work to support a UI revamp.
 
