@@ -418,46 +418,26 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
                         if (!Once.beenDone("showRemoveAdThree") && !SupporterHelper.isSupporter()) {
                             Once.markDone("showRemoveAdThree");
                             final Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    showRemoveAd();
-                                }
-                            }, 5000);
+                            handler.postDelayed(() -> showRemoveAd(), 5000);
                         }
-                    } else if (Once.beenDone("appOpen", Amount.moreThan(5))) {
-                        if (!Once.beenDone("showDiscord")) {
+                    } else if (Once.beenDone("appOpen", Amount.moreThan(1))) {
+                        if (!Once.beenDone("showDiscord") && !Once.beenDone("discordResponse")) {
                             Once.markDone("showDiscord");
                             final Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    showDiscord();
-                                }
-                            }, 1000);
+                            handler.postDelayed(() -> showDiscord(), 1000);
                         }
                     } else if (Once.beenDone("appOpen", Amount.moreThan(7))
                             && Once.beenDone("appOpen", Amount.lessThan(13))) {
                         if (!Once.beenDone("showRemoveAdSeven") && !SupporterHelper.isSupporter()) {
                             Once.markDone("showRemoveAdSeven");
                             final Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    showRemoveAd();
-                                }
-                            }, 5000);
+                            handler.postDelayed(() -> showRemoveAd(), 5000);
                         }
                     } else if (Once.beenDone("appOpen", Amount.exactly(14))) {
                         if (!Once.beenDone("showRemoveAd14") && !SupporterHelper.isSupporter()) {
                             Once.markDone("showRemoveAd14");
                             final Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    showRemoveAd();
-                                }
-                            }, 5000);
+                            handler.postDelayed(() -> showRemoveAd(), 5000);
                         }
                     }
                 }
@@ -500,17 +480,19 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
                         .icon(FontAwesome.Icon.faw_discord)
                         .color(Color.rgb(114,137,218))
                         .sizeDp(24))
-                .content("Join us on the Space Launch Now Discord server for live launch events and to share the latest news with spaceflight enthusiats!")
+                .content("Join us on the Space Launch Now Discord server for live launch events and to share the latest news with spaceflight enthusiast!")
                 .negativeText("No thanks!")
                 .positiveText("Okay")
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        String discordUrl = getString(R.string.discord_url);
-                        Intent discordIntent = new Intent(Intent.ACTION_VIEW);
-                        discordIntent.setData(Uri.parse(discordUrl));
-                        startActivity(discordIntent);
-                    }
+                .onNegative((dialog, which) -> {
+                    Once.markDone("discordResponse");
+                    dialog.dismiss();
+                })
+                .onPositive((dialog, which) -> {
+                    Once.markDone("discordResponse");
+                    String discordUrl = getString(R.string.discord_url);
+                    Intent discordIntent = new Intent(Intent.ACTION_VIEW);
+                    discordIntent.setData(Uri.parse(discordUrl));
+                    startActivity(discordIntent);
                 })
                 .show();
     }

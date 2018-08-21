@@ -121,7 +121,7 @@ public class AgencyDetailFragment extends BaseFragment {
                     .into(lspLogo);
             lspName.setText(detailLaunch.getLsp().getName());
             lspType.setText(detailLaunch.getLsp().getType());
-            lspAdministrator.setText(String.format("Administrator: %s", detailLaunch.getLsp().getAdministrator()));
+            lspAdministrator.setText(String.format("%s", detailLaunch.getLsp().getAdministrator()));
             lspFoundedYear.setText(String.format("Founded in %s", detailLaunch.getLsp().getFoundingYear()));
             lspSummary.setText(detailLaunch.getLsp().getDescription());
             if (detailLaunch.getLsp().getInfoUrl() == null) {
