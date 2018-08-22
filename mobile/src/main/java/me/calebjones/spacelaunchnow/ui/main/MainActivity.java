@@ -480,9 +480,9 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
                         .icon(FontAwesome.Icon.faw_discord)
                         .color(Color.rgb(114,137,218))
                         .sizeDp(24))
-                .content("Join us on the Space Launch Now Discord server for live launch events and to share the latest news with spaceflight enthusiast!")
-                .negativeText("No thanks!")
-                .positiveText("Okay")
+                .content(R.string.join_discord)
+                .negativeText(R.string.button_no)
+                .positiveText(R.string.ok)
                 .onNegative((dialog, which) -> {
                     Once.markDone("discordResponse");
                     dialog.dismiss();
@@ -535,12 +535,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
                             .title(R.string.confirm_exit)
                             .negativeText(R.string.cancel)
                             .positiveText(R.string.exit)
-                            .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                    finish();
-                                }
-                            })
+                            .onPositive((dialog, which) -> finish())
                             .show();
                 } else {
                     super.onBackPressed();
@@ -724,55 +719,36 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
                 .content(R.string.feedback_description)
                 .neutralColor(ContextCompat.getColor(this, R.color.colorPrimary))
                 .negativeText(R.string.launch_data)
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        String url = getString(R.string.launch_library_reddit);
-                        Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(url));
-                        startActivity(i);
-                    }
+                .onNegative((dialog, which) -> {
+                    String url = getString(R.string.launch_library_reddit);
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
                 })
                 .positiveColor(ContextCompat.getColor(this, R.color.colorPrimary))
                 .positiveText(R.string.app_feedback)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.getBuilder()
-                                .title(R.string.need_support)
-                                .content(R.string.need_support_description)
-                                .neutralText(R.string.email)
-                                .negativeText(R.string.cancel)
-                                .positiveText(R.string.discord)
-                                .onNeutral(new MaterialDialog.SingleButtonCallback() {
-                                    @Override
-                                    public void onClick(MaterialDialog dialog, DialogAction which) {
-                                        Intent intent = new Intent(Intent.ACTION_SENDTO);
-                                        intent.setData(Uri.parse("mailto:"));
-                                        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@spacelaunchnow.me"});
-                                        intent.putExtra(Intent.EXTRA_SUBJECT, "Space Launch Now - Feedback");
+                .onPositive((dialog, which) -> dialog.getBuilder()
+                        .title(R.string.need_support)
+                        .content(R.string.need_support_description)
+                        .neutralText(R.string.email)
+                        .negativeText(R.string.cancel)
+                        .positiveText(R.string.discord)
+                        .onNeutral((dialog1, which1) -> {
+                            Intent intent = new Intent(Intent.ACTION_SENDTO);
+                            intent.setData(Uri.parse("mailto:"));
+                            intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@spacelaunchnow.me"});
+                            intent.putExtra(Intent.EXTRA_SUBJECT, "Space Launch Now - Feedback");
 
-                                        startActivity(Intent.createChooser(intent, "Email via..."));
-                                    }
-                                })
-                                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                    @Override
-                                    public void onClick(MaterialDialog dialog, DialogAction which) {
-                                        String url = getString(R.string.discord_url);
-                                        Intent i = new Intent(Intent.ACTION_VIEW);
-                                        i.setData(Uri.parse(url));
-                                        startActivity(i);
-                                    }
-                                })
-                                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                                    @Override
-                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .show();
-                    }
-                })
+                            startActivity(Intent.createChooser(intent, "Email via..."));
+                        })
+                        .onPositive((dialog12, which12) -> {
+                            String url = getString(R.string.discord_url);
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(url));
+                            startActivity(i);
+                        })
+                        .onNegative((dialog13, which13) -> dialog13.dismiss())
+                        .show())
                 .show();
     }
 

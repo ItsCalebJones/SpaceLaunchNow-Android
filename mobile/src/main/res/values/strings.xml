@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="action_settings">Settings</string>
     <string name="status_go">"Go for Launch"</string>
@@ -403,4 +404,6 @@
     <string name="consent_body">This application uses Google Firebase for analytics and Google AdMod for serving advertisements. Your anonymous usage data may be used to personalize advertisements within this application. You can withdraw permission at anytime from within the applications settings.</string>
     <string name="data_consent">Data Consent</string>
     <string name="supporter_main">Get Pro Features | Remove Ads</string>
+
+    <string name="join_discord">Join us on the Space Launch Now Discord server for live launch events and to share the latest news with spaceflight enthusiast!</string>
 </resources>
