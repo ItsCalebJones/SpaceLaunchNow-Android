@@ -833,14 +833,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
     @Override
     public void onConsentInfoUpdate(GDPRConsentState consentState, boolean isNewState) {
         GDPRConsent consent = consentState.getConsent();
-        FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         if (isNewState) {
-            Bundle bundle = new Bundle();
-            bundle.putString("GDPR_Consent", consent.name());
-            bundle.putString("GDPR_Location", consentState.getLocation().name());
-            firebaseAnalytics.logEvent("SLN_GDPR_EVENT", bundle);
-            firebaseAnalytics.setUserProperty("gdpr_consent", consent.name());
-            firebaseAnalytics.setUserProperty("gdpr_location", consentState.getLocation().name());
             // user just selected this consent, do whatever you want...
             switch (consent) {
                 case UNKNOWN:
@@ -851,13 +844,10 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
                         Intent intent = new Intent(this, SupporterActivity.class);
                         startActivity(intent);
                     }
-                    firebaseAnalytics.setAnalyticsCollectionEnabled(false);
                     break;
                 case NON_PERSONAL_CONSENT_ONLY:
-                    firebaseAnalytics.setAnalyticsCollectionEnabled(true);
                     break;
                 case PERSONAL_CONSENT:
-                    firebaseAnalytics.setAnalyticsCollectionEnabled(true);
                     break;
             }
         } else {
@@ -871,10 +861,8 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
                         Intent intent = new Intent(this, SupporterActivity.class);
                         startActivity(intent);
                     }
-                    FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(false);
                     break;
                 case NON_PERSONAL_CONSENT_ONLY:
-                    firebaseAnalytics.setAnalyticsCollectionEnabled(true);
                     break;
                 case PERSONAL_CONSENT:
                     // user restarted activity and consent was already given...

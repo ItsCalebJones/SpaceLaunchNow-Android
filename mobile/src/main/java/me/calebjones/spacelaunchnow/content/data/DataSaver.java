@@ -138,7 +138,6 @@ public class DataSaver {
             Analytics.getInstance().sendNetworkEvent(result.getAction(), result.getRequestURL(), result.isSuccessful());
         }
 
-        context.sendBroadcast(broadcastIntent);
         Realm mRealm = Realm.getDefaultInstance();
         mRealm.executeTransaction(realm -> {
                     UpdateRecord updateRecord = new UpdateRecord();
