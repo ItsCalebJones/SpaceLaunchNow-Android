@@ -404,12 +404,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
 
                 Once.markDone("showChangelog");
                 final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        showChangelogSnackbar();
-                    }
-                }, 1000);
+                handler.postDelayed(() -> showChangelogSnackbar(), 1000);
 
             }
             if (!SupporterHelper.isSupporter()) {

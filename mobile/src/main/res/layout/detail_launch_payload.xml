@@ -421,7 +421,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="View More Launches"
+            android:text="@string/view_more_launches"
             android:textColor="@color/white"
             android:textSize="12sp" />
 

@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="action_settings">Nastavení</string>
     <string name="status_go">"Start je povolen"</string>
@@ -92,6 +92,7 @@
     <string name="seconds">SEKUNDY</string>
     <string name="min">MIN</string>
     <string name="sec">SEK</string>
+    <string name="launch_service_provider">" Společnost zajištující startovní služby"</string>
     <string name="primary_agency">Primární agentura</string>
     <string name="unknown_agency_type">Neznámý typ agentury</string>
     <string name="info">INFO</string>
@@ -385,6 +386,24 @@
     <string name="misc">Různé</string>
     <string name="launchers">Kosmické lodě / rakety</string>
     <string name="orbiters">Orbitery</string>
+    <string name="translate_settings">Přidejte se k překladatelům Space Launch Now!</string>
+    <string name="translate">Přeložit</string>
+    <string name="news">Novinky</string>
+    <string name="get_help">Získat pomoc</string>
+    <string name="help_description">Pomoc a podpora</string>
+    <string name="gdpr_dialog_disagree_info">Rozumím tomu, že dokud se nestanu podporovatelem budou se mi zobrazovat reklamy i takové které nesouvysejí s tématem</string>
+    <string name="gdpr_dialog_disagree_no_ads">Prosimím, rozhodně jenom bez reklam</string>
+    <string name="gdpr_type_ads">Reklamy</string>
+    <string name="gdpr_type_cloud_database">Kloudová databáze</string>
+    <string name="gdpr_type_crash">Hlášení pádů aplikace</string>
+    <string name="gdpr_type_analytics">Report pro analýzu</string>
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Ahoj blank fragment</string>
+    <string name="space_launch_news">"Startovní novinky "</string>
+    <string name="consent_body">Fráze v angličtině (Spojené státy)
+
+Tato aplikace využívá nástroj Google Firebase pro analýzu a službu Google AdMod pro zobrazování reklam. Vaše anonymní údaje o využití mohou být použity k přizpůsobení reklam v rámci této aplikace. Oprávnění můžete kdykoli stáhnout z nastavení aplikací.</string>
+    <string name="data_consent">Souhlas se zpracováním dat</string>
+    <string name="supporter_main">Získat funkce PRO verze a odstranit reklamy</string>
     <string name="mission_agency">Pořádající agentura mise</string>
 </resources>
