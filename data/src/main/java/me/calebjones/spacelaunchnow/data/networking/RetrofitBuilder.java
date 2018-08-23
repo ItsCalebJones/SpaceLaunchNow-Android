@@ -28,6 +28,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
@@ -54,6 +55,7 @@ public class RetrofitBuilder {
                 .client(defaultClient())
                 .baseUrl(Constants.LIBRARY_BASE_URL + version + "/")
                 .addConverterFactory(GsonConverterFactory.create(getGson()))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
         return retrofit;
     }
@@ -110,16 +112,6 @@ public class RetrofitBuilder {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.API_BASE_URL)
                 .client(spaceLaunchNowClient(token))
-                .addConverterFactory(GsonConverterFactory.create(getGson()))
-                .build();
-        return retrofit;
-    }
-
-    public static Retrofit getWearRetrofit() {
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.LIBRARY_BASE_URL)
-                .client(defaultClient())
                 .addConverterFactory(GsonConverterFactory.create(getGson()))
                 .build();
         return retrofit;

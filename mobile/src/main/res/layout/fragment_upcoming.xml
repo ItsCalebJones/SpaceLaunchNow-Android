@@ -210,16 +210,6 @@
                                     app:buttonTint="@color/white" />
 
                                 <android.support.v7.widget.AppCompatCheckBox
-                                    android:id="@+id/cape_switch"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="6dp"
-                                    android:checked="false"
-                                    android:text="@string/cape_canaveral"
-                                    android:textColor="@color/white"
-                                    app:buttonTint="@color/white" />
-
-                                <android.support.v7.widget.AppCompatCheckBox
                                     android:id="@+id/ples_switch"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -382,7 +372,7 @@
                 android:layout_marginBottom="@dimen/card_margin"
                 android:layout_marginRight="@dimen/card_margin"
                 app:elevation="@dimen/material_elevation_fab_resting"
-                app:srcCompat="@drawable/ic_filter" />
+                app:srcCompat="@drawable/ic_notifications_white" />
 
         </android.support.design.widget.CoordinatorLayout>
 

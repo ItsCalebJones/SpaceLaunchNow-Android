@@ -23,6 +23,11 @@
         <item>7</item>
         <item>8</item>
     </string-array>
+    <string-array name="spinner_list_item_array">
+        <item>All</item>
+        <item>Upcoming</item>
+        <item>Previous</item>
+    </string-array>
 
     <integer-array name="widget_presets_values_text_primary">
         <item>0xDE000000</item>

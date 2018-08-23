@@ -2,7 +2,7 @@
 <resources>
     <string name="action_settings">Einstellungen</string>
     <string name="status_go">"Startfreigabe vorhanden"</string>
-    <string name="status_nogo">"Startfreigabe nicht vorhanden"</string>
+    <string name="status_nogo">"keine Startfreigabe vorhanden"</string>
     <string name="status_success">"Start war erfolgreich"</string>
     <string name="status_failure">"Start ist fehlgeschlagen"</string>
     <string name="spacex_summary">SpaceX entwirft, baut und startet fortschrittliche Raketen und Raumfahrzeuge. Das Unternehmen wurde 2002 gegründet, um Raumfahrt zu revolutionieren. Das ultimative Ziel von SpaceX ist, der Menschheit ein Leben auf anderen Planeten zu ermöglichen.</string>
@@ -93,7 +93,6 @@ Danke!</string>
     <string name="seconds">SEKUNDEN</string>
     <string name="min">MIN</string>
     <string name="sec">SEK</string>
-    <string name="mission_agency">Missions-Organisation</string>
     <string name="primary_agency">Primäre Organisation</string>
     <string name="unknown_agency_type">Unbekannter Organisations-Typ</string>
     <string name="info">INFO</string>
@@ -184,13 +183,13 @@ Danke!</string>
     <string name="mission">Mission</string>
     <string name="agencies">Organisationen</string>
     <string name="error_launch_details">Fehler - nicht in der Lage, Trägerraketendetails zu laden.</string>
-    <string name="height_full">Höhe: %s Meter</string>
-    <string name="diameter_full">Durchmesser: %s Meter</string>
+    <string name="height_full">Höhe: %.1f Meter</string>
+    <string name="diameter_full">Durchmesser: %.1fMeter</string>
     <string name="stage_full">Max Stufen: %d</string>
-    <string name="mass_leo_full">Masse nach LEO: %s kg</string>
-    <string name="mass_gto_full">Masse nach GTO: %s kg</string>
-    <string name="mass_launch_full">Masse zum Start: %s Tonnen</string>
-    <string name="thrust_full">Schub zum Start: %s kN</string>
+    <string name="mass_leo_full">Masse nach LEO: %d kg</string>
+    <string name="mass_gto_full">Masse nach GTO: %d kg</string>
+    <string name="mass_launch_full">Masse zum Start: %d Tonnen</string>
+    <string name="thrust_full">Schub zum Start: %d kN</string>
     <string name="upcoming">Kommend</string>
     <string name="previous">Vergangen</string>
     <string name="select_country">Wähle ein Land</string>
@@ -208,7 +207,7 @@ Danke!</string>
     <string name="error_loading_mission">Nicht in der Lage, Missionen zu laden.</string>
     <string name="updating_mission_data">Aktualisiere Missionsdaten... das könnte einige Sekunden dauern.</string>
     <string name="error_unknown_launch">Fehler - unbekannter Start</string>
-    <string name="weather_favorable">Wetter günstig: %s%%</string>
+    <string name="weather_favorable">Wetter günstig: %d%%</string>
     <string name="watch_webcast">Für aktuellen Status Live-Übertragung ansehen.</string>
     <string name="pending_confirmed_go_specific">Ausstehende Startfreigabe von %s</string>
     <string name="pending_confirmed_go">Ausstehende Startfreigabe von Startorganisation</string>
@@ -387,4 +386,6 @@ Danke!</string>
     <string name="misc">Verschiedenes</string>
     <string name="launchers">Trägerrakete</string>
     <string name="orbiters">Orbiter</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="mission_agency">Missions-Organisation</string>
 </resources>

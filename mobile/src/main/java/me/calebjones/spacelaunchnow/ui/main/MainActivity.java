@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ import com.michaelflisar.gdprdialog.GDPRSetup;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -77,7 +79,6 @@ import me.calebjones.spacelaunchnow.content.events.FilterViewEvent;
 import me.calebjones.spacelaunchnow.ui.changelog.ChangelogActivity;
 import me.calebjones.spacelaunchnow.ui.intro.OnboardingActivity;
 import me.calebjones.spacelaunchnow.ui.main.launches.LaunchesViewPager;
-import me.calebjones.spacelaunchnow.ui.main.missions.MissionFragment;
 import me.calebjones.spacelaunchnow.ui.main.news.NewsViewPager;
 import me.calebjones.spacelaunchnow.ui.main.next.NextLaunchFragment;
 import me.calebjones.spacelaunchnow.ui.main.vehicles.VehiclesViewPager;
@@ -101,7 +102,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
     private LaunchesViewPager mlaunchesViewPager;
-    private MissionFragment mMissionFragment;
     private NextLaunchFragment mUpcomingFragment;
     private NewsViewPager mNewsViewpagerFragment;
     private VehiclesViewPager mVehicleViewPager;
@@ -259,37 +259,42 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
                                 .withIcon(FontAwesome.Icon.faw_rocket)
                                 .withIdentifier(R.id.menu_vehicle)
                                 .withSelectable(true),
-                        new DividerDrawerItem(),
-                        new ExpandableDrawerItem().withName(R.string.stay_connected).withIcon(CommunityMaterial.Icon.cmd_account).withDescription(R.string.connect_description).withIdentifier(19).withSelectable(false).withSubItems(
-                                new SecondaryDrawerItem()
-                                        .withIcon(CommunityMaterial.Icon.cmd_discord)
-                                        .withLevel(2)
-                                        .withName(R.string.discord)
-                                        .withDescription(R.string.discord_subtitle)
-                                        .withIdentifier(R.id.menu_discord)
-                                        .withSelectable(false),
-                                new SecondaryDrawerItem()
-                                        .withIcon(CommunityMaterial.Icon.cmd_twitter)
-                                        .withLevel(2)
-                                        .withName(R.string.twitter)
-                                        .withDescription(R.string.twitter_subtitle)
-                                        .withIdentifier(R.id.menu_twitter)
-                                        .withSelectable(false),
-                                new SecondaryDrawerItem()
-                                        .withIcon(CommunityMaterial.Icon.cmd_facebook)
-                                        .withLevel(2)
-                                        .withName(R.string.facebook)
-                                        .withDescription(R.string.facebook_subtitle)
-                                        .withIdentifier(R.id.menu_facebook)
-                                        .withSelectable(false),
-                                new SecondaryDrawerItem()
-                                        .withIcon(CommunityMaterial.Icon.cmd_web)
-                                        .withLevel(2)
-                                        .withName(R.string.website)
-                                        .withDescription(R.string.website_subtitle)
-                                        .withIdentifier(R.id.menu_website)
-                                        .withSelectable(false)
-                        ),
+                        new PrimaryDrawerItem()
+                                .withIcon(CommunityMaterial.Icon.cmd_discord)
+                                .withName(R.string.discord)
+                                .withIdentifier(R.id.menu_discord)
+                                .withSelectable(false),
+//                        new DividerDrawerItem(),
+//                        new ExpandableDrawerItem().withName(R.string.stay_connected).withIcon(CommunityMaterial.Icon.cmd_account).withDescription(R.string.connect_description).withIdentifier(19).withSelectable(false).withSubItems(
+//                                new SecondaryDrawerItem()
+//                                        .withIcon(CommunityMaterial.Icon.cmd_discord)
+//                                        .withLevel(2)
+//                                        .withName(R.string.discord)
+//                                        .withDescription(R.string.discord_subtitle)
+//                                        .withIdentifier(R.id.menu_discord)
+//                                        .withSelectable(false),
+//                                new SecondaryDrawerItem()
+//                                        .withIcon(CommunityMaterial.Icon.cmd_twitter)
+//                                        .withLevel(2)
+//                                        .withName(R.string.twitter)
+//                                        .withDescription(R.string.twitter_subtitle)
+//                                        .withIdentifier(R.id.menu_twitter)
+//                                        .withSelectable(false),
+//                                new SecondaryDrawerItem()
+//                                        .withIcon(CommunityMaterial.Icon.cmd_facebook)
+//                                        .withLevel(2)
+//                                        .withName(R.string.facebook)
+//                                        .withDescription(R.string.facebook_subtitle)
+//                                        .withIdentifier(R.id.menu_facebook)
+//                                        .withSelectable(false),
+//                                new SecondaryDrawerItem()
+//                                        .withIcon(CommunityMaterial.Icon.cmd_web)
+//                                        .withLevel(2)
+//                                        .withName(R.string.website)
+//                                        .withDescription(R.string.website_subtitle)
+//                                        .withIdentifier(R.id.menu_website)
+//                                        .withSelectable(false)
+//                        ),
                         new DividerDrawerItem(),
                         new ExpandableDrawerItem().withName(R.string.get_help).withIcon(GoogleMaterial.Icon.gmd_account_box).withDescription(R.string.help_description).withIdentifier(20).withSelectable(false).withSubItems(
                                 new SecondaryDrawerItem()
@@ -329,7 +334,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
             result.addStickyFooterItem(
                     new PrimaryDrawerItem().withName(R.string.supporter_title)
                             .withDescription(R.string.supporter_main)
-                            .withIcon(GoogleMaterial.Icon.gmd_mood)
+                            .withIcon(FontAwesome.Icon.faw_dollar_sign)
                             .withIdentifier(R.id.menu_support)
                             .withSelectable(false));
         }
@@ -413,35 +418,26 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
                         if (!Once.beenDone("showRemoveAdThree") && !SupporterHelper.isSupporter()) {
                             Once.markDone("showRemoveAdThree");
                             final Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    showRemoveAd();
-                                }
-                            }, 5000);
+                            handler.postDelayed(() -> showRemoveAd(), 5000);
+                        }
+                    } else if (Once.beenDone("appOpen", Amount.moreThan(1))) {
+                        if (!Once.beenDone("showDiscord") && !Once.beenDone("discordResponse")) {
+                            Once.markDone("showDiscord");
+                            final Handler handler = new Handler();
+                            handler.postDelayed(() -> showDiscord(), 1000);
                         }
                     } else if (Once.beenDone("appOpen", Amount.moreThan(7))
                             && Once.beenDone("appOpen", Amount.lessThan(13))) {
                         if (!Once.beenDone("showRemoveAdSeven") && !SupporterHelper.isSupporter()) {
                             Once.markDone("showRemoveAdSeven");
                             final Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    showRemoveAd();
-                                }
-                            }, 5000);
+                            handler.postDelayed(() -> showRemoveAd(), 5000);
                         }
                     } else if (Once.beenDone("appOpen", Amount.exactly(14))) {
                         if (!Once.beenDone("showRemoveAd14") && !SupporterHelper.isSupporter()) {
                             Once.markDone("showRemoveAd14");
                             final Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    showRemoveAd();
-                                }
-                            }, 5000);
+                            handler.postDelayed(() -> showRemoveAd(), 5000);
                         }
                     }
                 }
@@ -475,6 +471,30 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
                     startActivity(new Intent(context, SupporterActivity.class));
                 });
         snackbar.show();
+    }
+
+    private void showDiscord() {
+        new MaterialDialog.Builder(this)
+                .title("Official Discord Server")
+                .icon(new IconicsDrawable(this)
+                        .icon(FontAwesome.Icon.faw_discord)
+                        .color(Color.rgb(114,137,218))
+                        .sizeDp(24))
+                .content(R.string.join_discord)
+                .negativeText(R.string.button_no)
+                .positiveText(R.string.ok)
+                .onNegative((dialog, which) -> {
+                    Once.markDone("discordResponse");
+                    dialog.dismiss();
+                })
+                .onPositive((dialog, which) -> {
+                    Once.markDone("discordResponse");
+                    String discordUrl = getString(R.string.discord_url);
+                    Intent discordIntent = new Intent(Intent.ACTION_VIEW);
+                    discordIntent.setData(Uri.parse(discordUrl));
+                    startActivity(discordIntent);
+                })
+                .show();
     }
 
     private void showChangelogSnackbar() {
@@ -515,12 +535,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
                             .title(R.string.confirm_exit)
                             .negativeText(R.string.cancel)
                             .positiveText(R.string.exit)
-                            .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                    finish();
-                                }
-                            })
+                            .onPositive((dialog, which) -> finish())
                             .show();
                 } else {
                     super.onBackPressed();
@@ -605,23 +620,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
                     mlaunchesViewPager = new LaunchesViewPager();
                     // Tell it who it is working with.
                     fm.beginTransaction().replace(R.id.flContent, mlaunchesViewPager, "LAUNCH_VIEWPAGER").commit();
-                }
-                if (rate != null) {
-                    rate.showRequest();
-                }
-
-                break;
-            case R.id.menu_missions:
-                mNavItemId = R.id.menu_missions;
-                setActionBarTitle(getString(R.string.missions));
-                // Check to see if we have retained the worker fragment.
-                mMissionFragment = (MissionFragment) fm.findFragmentByTag("MISSION_FRAGMENT");
-
-                // If not retained (or first time running), we need to create it.
-                if (mMissionFragment == null) {
-                    mMissionFragment = new MissionFragment();
-                    // Tell it who it is working with.
-                    fm.beginTransaction().replace(R.id.flContent, mMissionFragment, "MISSION_FRAGMENT").commit();
                 }
                 if (rate != null) {
                     rate.showRequest();
@@ -721,55 +719,36 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
                 .content(R.string.feedback_description)
                 .neutralColor(ContextCompat.getColor(this, R.color.colorPrimary))
                 .negativeText(R.string.launch_data)
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        String url = getString(R.string.launch_library_reddit);
-                        Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(url));
-                        startActivity(i);
-                    }
+                .onNegative((dialog, which) -> {
+                    String url = getString(R.string.launch_library_reddit);
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
                 })
                 .positiveColor(ContextCompat.getColor(this, R.color.colorPrimary))
                 .positiveText(R.string.app_feedback)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.getBuilder()
-                                .title(R.string.need_support)
-                                .content(R.string.need_support_description)
-                                .neutralText(R.string.email)
-                                .negativeText(R.string.cancel)
-                                .positiveText(R.string.discord)
-                                .onNeutral(new MaterialDialog.SingleButtonCallback() {
-                                    @Override
-                                    public void onClick(MaterialDialog dialog, DialogAction which) {
-                                        Intent intent = new Intent(Intent.ACTION_SENDTO);
-                                        intent.setData(Uri.parse("mailto:"));
-                                        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@spacelaunchnow.me"});
-                                        intent.putExtra(Intent.EXTRA_SUBJECT, "Space Launch Now - Feedback");
+                .onPositive((dialog, which) -> dialog.getBuilder()
+                        .title(R.string.need_support)
+                        .content(R.string.need_support_description)
+                        .neutralText(R.string.email)
+                        .negativeText(R.string.cancel)
+                        .positiveText(R.string.discord)
+                        .onNeutral((dialog1, which1) -> {
+                            Intent intent = new Intent(Intent.ACTION_SENDTO);
+                            intent.setData(Uri.parse("mailto:"));
+                            intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@spacelaunchnow.me"});
+                            intent.putExtra(Intent.EXTRA_SUBJECT, "Space Launch Now - Feedback");
 
-                                        startActivity(Intent.createChooser(intent, "Email via..."));
-                                    }
-                                })
-                                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                    @Override
-                                    public void onClick(MaterialDialog dialog, DialogAction which) {
-                                        String url = getString(R.string.discord_url);
-                                        Intent i = new Intent(Intent.ACTION_VIEW);
-                                        i.setData(Uri.parse(url));
-                                        startActivity(i);
-                                    }
-                                })
-                                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                                    @Override
-                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .show();
-                    }
-                })
+                            startActivity(Intent.createChooser(intent, "Email via..."));
+                        })
+                        .onPositive((dialog12, which12) -> {
+                            String url = getString(R.string.discord_url);
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(url));
+                            startActivity(i);
+                        })
+                        .onNegative((dialog13, which13) -> dialog13.dismiss())
+                        .show())
                 .show();
     }
 
@@ -854,14 +833,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
     @Override
     public void onConsentInfoUpdate(GDPRConsentState consentState, boolean isNewState) {
         GDPRConsent consent = consentState.getConsent();
-        FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         if (isNewState) {
-            Bundle bundle = new Bundle();
-            bundle.putString("GDPR_Consent", consent.name());
-            bundle.putString("GDPR_Location", consentState.getLocation().name());
-            firebaseAnalytics.logEvent("SLN_GDPR_EVENT", bundle);
-            firebaseAnalytics.setUserProperty("gdpr_consent", consent.name());
-            firebaseAnalytics.setUserProperty("gdpr_location", consentState.getLocation().name());
             // user just selected this consent, do whatever you want...
             switch (consent) {
                 case UNKNOWN:
@@ -872,13 +844,10 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
                         Intent intent = new Intent(this, SupporterActivity.class);
                         startActivity(intent);
                     }
-                    firebaseAnalytics.setAnalyticsCollectionEnabled(false);
                     break;
                 case NON_PERSONAL_CONSENT_ONLY:
-                    firebaseAnalytics.setAnalyticsCollectionEnabled(true);
                     break;
                 case PERSONAL_CONSENT:
-                    firebaseAnalytics.setAnalyticsCollectionEnabled(true);
                     break;
             }
         } else {
@@ -892,10 +861,8 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
                         Intent intent = new Intent(this, SupporterActivity.class);
                         startActivity(intent);
                     }
-                    FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(false);
                     break;
                 case NON_PERSONAL_CONSENT_ONLY:
-                    firebaseAnalytics.setAnalyticsCollectionEnabled(true);
                     break;
                 case PERSONAL_CONSENT:
                     // user restarted activity and consent was already given...

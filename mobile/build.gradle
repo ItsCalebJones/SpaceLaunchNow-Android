@@ -114,14 +114,14 @@ android {
     defaultConfig {
 
         applicationId "me.calebjones.spacelaunchnow"
-        manifestPlaceholders = [appNameLabel                   : "@string/app_name",
-                                manifestApplicationId          : "${applicationId}",]
+        manifestPlaceholders = [appNameLabel         : "@string/app_name",
+                                manifestApplicationId: "${applicationId}",]
 
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode appVersionCode
         versionName advancedVersioning.versionName
-        resConfigs "en", "fr", "de"
+        resConfigs "en", "fr", "de", "es", "es-rES", "it", "ru"
         multiDexEnabled true
         wearAppUnbundled true
 
@@ -201,7 +201,7 @@ dependencies {
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
 
     // Android Official Libraries
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.1'
     implementation "com.android.support:customtabs:$rootProject.supportLibraryVersion"
     implementation "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
     implementation "com.android.support:palette-v7:$rootProject.supportLibraryVersion"
@@ -217,6 +217,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-wearable:$rootProject.playServicesVersion"
     implementation "com.google.android.gms:play-services-gcm:$rootProject.playServicesVersion"
     implementation "com.google.android.gms:play-services-ads:$rootProject.playServicesVersion"
+    implementation "com.google.android.gms:play-services-maps:$rootProject.playServicesVersion"
 
     // Architecture and Tools
     implementation 'com.jonathanfinerty.once:once:1.2.2'
@@ -226,6 +227,7 @@ dependencies {
     }
     implementation 'com.jakewharton.timber:timber:4.6.0'
     implementation 'com.karumi:dexter:4.2.0'
+    implementation 'cz.kinst.jakub:android-stateful-layout-simple:2.0.7'
 
     // Billing
     implementation 'com.anjlab.android.iab.v3:library:1.0.44'
@@ -254,7 +256,7 @@ dependencies {
     implementation 'com.codemybrainsout.onboarding:onboarder:1.0.4'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.borax12.materialdaterangepicker:library:1.9'
-    implementation 'com.simplecityapps:recyclerview-fastscroll:1.0.16'
+    implementation 'com.simplecityapps:recyclerview-fastscroll:1.0.18'
     implementation 'jp.wasabeef:glide-transformations:3.0.1'
 
     // If you want to use the GPU Filters
@@ -288,11 +290,12 @@ dependencies {
     implementation 'com.twitter.sdk.android:twitter-core:3.1.1'
     implementation 'com.twitter.sdk.android:tweet-ui:3.1.1'
 
-    implementation "io.reactivex.rxjava2:rxjava:2.1.12"
-
+    implementation "io.reactivex.rxjava2:rxjava:2.1.15"
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     //Rich Links
     implementation 'io.github.ponnamkarthik:richlinkpreview:1.0.8'
     implementation 'org.jsoup:jsoup:1.11.2'
+    implementation 'com.leocardz:link-preview:2.0.0@aar'
 
     implementation 'com.github.nekocode:Badge:2.0'
     // Firebase Messaging

@@ -28,6 +28,11 @@
         <item name="material_drawer_selected">@color/material_drawer_dark_selected</item>
         <item name="material_drawer_selected_text">@color/colorAccent</item>
         <item name="material_drawer_header_selection_text">@color/material_drawer_header_selection_text</item>
+        <item name="spinnerStyle">@style/MySpinner.Dark</item>
+    </style>
+
+    <style name="MySpinner.Dark" parent="MySpinner">
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
     </style>
 
     <style name="BaseAppTheme.TranslucentStatus" parent="BaseAppTheme">

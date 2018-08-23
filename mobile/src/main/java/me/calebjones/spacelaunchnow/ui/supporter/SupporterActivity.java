@@ -68,7 +68,6 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     private BillingProcessor bp;
     private ImageView icon;
     private AppCompatSeekBar seekbar;
-    private TextView productTitle;
     private TextView productPrice;
     private Button okButton;
     private boolean isAvailable;
@@ -197,12 +196,11 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
 
         seekbar = view.findViewById(R.id.dialog_seekbar);
         icon = view.findViewById(R.id.dialog_icon);
-        productTitle = view.findViewById(R.id.product_title);
         productPrice = view.findViewById(R.id.product_price);
         okButton = view.findViewById(R.id.ok_button);
 
-        setIconPosition(0);
-        seekbar.setProgress(0);
+        setIconPosition(1);
+        seekbar.setProgress(1);
 
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -368,7 +366,6 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
 
     public void setIconPosition(int iconPosition) {
         SkuDetails details;
-        String title;
         String price = "(Unable to get price)";
         switch (iconPosition) {
             case 0:
@@ -376,11 +373,9 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
                 if (details != null){
                     price = String.format("(%s)", details.priceText);
                 }
-                title = "Ground Crew";
                 productPrice.setText(price);
-                productTitle.setText(title);
                 icon.setImageDrawable(new IconicsDrawable(this)
-                        .icon(FontAwesome.Icon.faw_people_carry)
+                        .icon(GoogleMaterial.Icon.gmd_local_drink)
                         .color(Color.BLACK)
                         .sizeDp(96));
                 break;
@@ -389,11 +384,9 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
                 if (details != null){
                     price = String.format("(%s)", details.priceText);
                 }
-                title = "Flight Controller";
                 productPrice.setText(price);
-                productTitle.setText(title);
                 icon.setImageDrawable(new IconicsDrawable(this)
-                        .icon(FontAwesome.Icon.faw_broadcast_tower)
+                        .icon(GoogleMaterial.Icon.gmd_local_cafe)
                         .color(Color.BLACK)
                         .sizeDp(96));
                 break;
@@ -402,11 +395,9 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
                 if (details != null){
                     price = String.format("(%s)", details.priceText);
                 }
-                title = "Launch Director";
                 productPrice.setText(price);
-                productTitle.setText(title);
                 icon.setImageDrawable(new IconicsDrawable(this)
-                        .icon(FontAwesome.Icon.faw_paper_plane2)
+                        .icon(GoogleMaterial.Icon.gmd_local_dining)
                         .color(Color.BLACK)
                         .sizeDp(96));
                 break;
@@ -415,9 +406,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
                 if (details != null){
                     price = String.format("(%s)", details.priceText);
                 }
-                title = "Elon? Is that you?";
                 productPrice.setText(price);
-                productTitle.setText(title);
                 icon.setImageResource(R.drawable.take_my_money);
                 break;
         }

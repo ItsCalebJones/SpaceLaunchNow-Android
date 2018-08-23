@@ -39,6 +39,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -47,7 +48,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
-import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.common.customviews.generate.OnFeedbackListener;
@@ -55,12 +55,12 @@ import me.calebjones.spacelaunchnow.common.customviews.generate.Rate;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.content.events.LaunchRequestEvent;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
-import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.RocketDetail;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Launcher;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.error.LibraryError;
-import me.calebjones.spacelaunchnow.data.networking.responses.launchlibrary.LaunchResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchResponse;
 import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.ui.launchdetail.TabsAdapter;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
@@ -209,51 +209,27 @@ public class LaunchDetailActivity extends BaseActivity
             }
             if (savedInstanceState == null) {
                 detailSwipeRefresh.setRefreshing(true);
-                DataClient.getInstance().getLaunchById(id, true, new Callback<LaunchResponse>() {
+                DataClient.getInstance().getLaunchById(id, new Callback<Launch>() {
                     @Override
-                    public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
+                    public void onResponse(Call<Launch> call, Response<Launch> response) {
                         if (response.isSuccessful()) {
-                            final RealmList<Launch> items = new RealmList<>(response.body().getLaunches());
-                            if (items.size() == 1) {
-                                final Launch item = items.first();
-                                getRealm().executeTransactionAsync(new Realm.Transaction() {
-                                    @Override
-                                    public void execute(Realm bgRealm) {
-                                        Launch previous = bgRealm.where(Launch.class)
-                                                .equalTo("id", item.getId())
-                                                .findFirst();
-                                        if (previous != null) {
-                                            item.setEventID(previous.getEventID());
-                                            item.setSyncCalendar(previous.syncCalendar());
-                                            item.setLaunchTimeStamp(previous.getLaunchTimeStamp());
-                                            item.setIsNotifiedDay(previous.getIsNotifiedDay());
-                                            item.setIsNotifiedHour(previous.getIsNotifiedHour());
-                                            item.setIsNotifiedTenMinute(previous.getIsNotifiedTenMinute());
-                                            item.setNotifiable(previous.isNotifiable());
-                                        }
-                                        item.getLocation().setPrimaryID();
-                                        bgRealm.copyToRealmOrUpdate(item);
-                                        Timber.v("Updated detailLaunch: %s", item.getId());
-                                    }
-
-                                }, new Realm.Transaction.OnSuccess() {
-                                    @Override
-                                    public void onSuccess() {
-                                        sendUpdateView(id);
-                                    }
-                                });
-                            }
+                            final Launch item = response.body();
+                            getRealm().executeTransactionAsync(bgRealm -> {
+                                Launch previous = bgRealm.where(Launch.class)
+                                        .equalTo("id", item.getId())
+                                        .findFirst();
+                                if (previous != null) {
+                                    item.setEventID(previous.getEventID());
+                                }
+                                bgRealm.copyToRealmOrUpdate(item);
+                                Timber.v("Updated detailLaunch: %s", item.getId());
+                            }, () -> sendUpdateView(id));
                         } else {
                             LibraryError error = ErrorUtil.parseLibraryError(response);
                             if (error.getMessage() != null && error.getMessage().contains("None found")) {
                                 final Launch launch = getRealm().where(Launch.class).equalTo("id", id).findFirst();
                                 if (launch != null) {
-                                    getRealm().executeTransaction(new Realm.Transaction() {
-                                        @Override
-                                        public void execute(Realm realm) {
-                                            launch.deleteFromRealm();
-                                        }
-                                    });
+                                    getRealm().executeTransaction(realm -> launch.deleteFromRealm());
                                 }
                                 Toast.makeText(LaunchDetailActivity.this, R.string.error_loading_launch, Toast.LENGTH_SHORT).show();
                                 onBackPressed();
@@ -264,7 +240,7 @@ public class LaunchDetailActivity extends BaseActivity
                     }
 
                     @Override
-                    public void onFailure(Call<LaunchResponse> call, Throwable t) {
+                    public void onFailure(Call<Launch> call, Throwable t) {
                         Launch item = getRealm().where(Launch.class)
                                 .equalTo("id", id)
                                 .findFirst();
@@ -277,16 +253,10 @@ public class LaunchDetailActivity extends BaseActivity
             }
         }
 
-        toolbar.setNavigationOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(context, MainActivity.class);
-                        startActivity(intent);
-
-                    }
+        toolbar.setNavigationOnClickListener(v -> {
+                    Intent intent = new Intent(context, MainActivity.class);
+                    startActivity(intent);
                 }
-
         );
         appBarLayout.addOnOffsetChangedListener(new CustomOnOffsetChangedListener(statusColor, getWindow()));
         appBarLayout.addOnOffsetChangedListener(this);
@@ -366,13 +336,13 @@ public class LaunchDetailActivity extends BaseActivity
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
         }
     }
 
 
-    private  void sendUpdateView(int id){
+    private void sendUpdateView(int id) {
         Launch item = getRealm().where(Launch.class)
                 .equalTo("id", id)
                 .findFirst();
@@ -388,24 +358,19 @@ public class LaunchDetailActivity extends BaseActivity
             this.launch = launch;
 
             EventBus.getDefault().post(new LaunchEvent(launch));
-            if (!this.isDestroyed() && launch != null && launch.getRocket() != null) {
+            if (!this.isDestroyed() && launch != null && launch.getLauncher() != null) {
                 Timber.v("Loading detailLaunch %s", launch.getId());
                 findProfileLogo();
-                if (launch.getRocket().getName() != null) {
-                    if (launch.getRocket().getImageURL() != null
-                            && launch.getRocket().getImageURL().length() > 0
-                            && !launch.getRocket().getImageURL().contains("placeholder")) {
-                        final String image =  launch.getRocket().getImageURL();
+                if (launch.getLauncher().getName() != null) {
+                    if (launch.getLauncher().getImageUrl() != null
+                            && launch.getLauncher().getImageUrl().length() > 0
+                            && !launch.getLauncher().getImageUrl().contains("placeholder")) {
+                        final String image = launch.getLauncher().getImageUrl();
                         GlideApp.with(this)
                                 .load(image)
                                 .placeholder(R.drawable.placeholder)
                                 .into(detail_profile_backdrop);
-                        detail_profile_backdrop.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                showImageFullscreen(image);
-                            }
-                        });
+                        detail_profile_backdrop.setOnClickListener(view -> showImageFullscreen(image));
                         getLaunchVehicle(launch, false);
                     } else {
                         getLaunchVehicle(launch, true);
@@ -462,35 +427,12 @@ public class LaunchDetailActivity extends BaseActivity
                     applyProfileLogo(getString(R.string.jpn_logo));
                 }
             }
-        } else if (launch.getLocation() != null && launch.getLocation().getPads() != null
-                && launch.getLocation().getPads().size() > 0
-                && launch.getLocation().getPads().get(0).getAgencies() != null
-                && launch.getLocation().getPads().get(0).getAgencies().size() > 0) {
-            locationCountryCode = launch.getLocation().getPads().
-                    get(0).getAgencies().get(0).getCountryCode();
-            agencyName = launch.getLocation().getPads().
-                    get(0).getAgencies().get(0).getName();
-            if (locationCountryCode.length() == 3) {
-                if (locationCountryCode.contains("USA")) {
-                    applyProfileLogo(getString(R.string.usa_flag));
-                } else if (locationCountryCode.contains("RUS")) {
-                    applyProfileLogo(getString(R.string.rus_logo));
-                } else if (locationCountryCode.contains("CHN")) {
-                    applyProfileLogo(getString(R.string.chn_logo));
-                } else if (locationCountryCode.contains("IND")) {
-                    applyProfileLogo(getString(R.string.ind_logo));
-                } else if (locationCountryCode.contains("JPN")) {
-                    applyProfileLogo(getString(R.string.jpn_logo));
-                }
-            }
         }
 
         Timber.v("LaunchDetailActivity - CountryCode: %s - LSP: %s - %s",
                 String.valueOf(locationCountryCode), locationCountryCode, agencyName);
 
-        if (launch.getLocation() != null && launch.getLocation().getPads() != null && launch.getLocation().getPads().size() > 0) {
-            location = (launch.getLocation().getPads().get(0).getName());
-        }
+        location = launch.getPad().getName();
         //Assigns the result of the two above checks.
         detail_mission_location.setText(location);
     }
@@ -512,20 +454,20 @@ public class LaunchDetailActivity extends BaseActivity
 
     private void getLaunchVehicle(Launch result, boolean setImage) {
         String query;
-        if (result.getRocket().getName().contains("Space Shuttle")) {
+        if (result.getLauncher().getName().contains("Space Shuttle")) {
             query = "Space Shuttle";
         } else {
-            query = result.getRocket().getName();
+            query = result.getLauncher().getName();
         }
-        RocketDetail launchVehicle = getRealm().where(RocketDetail.class)
+        Launcher launchVehicle = getRealm().where(Launcher.class)
                 .contains("name", query)
                 .findFirst();
         if (setImage) {
-            if (launchVehicle != null && launchVehicle.getImageURL()  != null && launchVehicle.getImageURL().length() > 0 && !launchVehicle.getImageURL().contains("placeholder")) {
+            if (launchVehicle != null && launchVehicle.getImageUrl() != null && launchVehicle.getImageUrl().length() > 0 && !launchVehicle.getImageUrl().contains("placeholder")) {
                 GlideApp.with(this)
-                        .load(launchVehicle.getImageURL())
+                        .load(launchVehicle.getImageUrl())
                         .into(detail_profile_backdrop);
-                Timber.d("Glide Loading: %s %s", launchVehicle.getName(), launchVehicle.getImageURL());
+                Timber.d("Glide Loading: %s %s", launchVehicle.getName(), launchVehicle.getImageUrl());
             }
         }
     }
@@ -571,7 +513,7 @@ public class LaunchDetailActivity extends BaseActivity
                     .scaleY(1).scaleX(1)
                     .start();
 
-            if(fabShowable) {
+            if (fabShowable) {
                 fabShare.show();
             }
         }
@@ -612,8 +554,7 @@ public class LaunchDetailActivity extends BaseActivity
                 df.toLocalizedPattern();
                 launchDate = df.format(date);
             }
-            if (launch.getLocation() != null && launch.getLocation().getPads() != null && launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().get(0).getAgencies() != null && launch.getLocation().getPads().
-                    get(0).getAgencies().size() > 0) {
+            if (launch.getLocation() != null) {
 
                 message = launch.getName() + " launching from "
                         + launch.getLocation().getName() + "\n\n"
@@ -659,7 +600,7 @@ public class LaunchDetailActivity extends BaseActivity
 
     @Override
     public void onBackPressed() {
-        if (youTubePlayer != null && isYouTubePlayerFullScreen){
+        if (youTubePlayer != null && isYouTubePlayerFullScreen) {
             youTubePlayer.setFullscreen(false);
         } else {
             super.onBackPressed();
@@ -667,7 +608,7 @@ public class LaunchDetailActivity extends BaseActivity
     }
 
     @Override
-    public void onLowMemory(){
+    public void onLowMemory() {
         Timber.v("onLowMemory");
 //        adView.destroy();
         super.onLowMemory();
@@ -684,7 +625,7 @@ public class LaunchDetailActivity extends BaseActivity
     }
 
 
-    public void showImageFullscreen(String backdropImage){
+    public void showImageFullscreen(String backdropImage) {
         if (backdropImage != null) {
             Intent animateIntent = new Intent(this, FullscreenImageActivity.class);
             animateIntent.putExtra("imageURL", backdropImage);

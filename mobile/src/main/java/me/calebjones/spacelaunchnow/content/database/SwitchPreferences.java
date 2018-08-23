@@ -533,24 +533,6 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
     }
 
     //Nasa Switch
-    public boolean getSwitchCape() {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_SWITCH_CAPE, true);
-    }
-
-    public void setSwitchCape(boolean key) {
-        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putBoolean(PREFS_SWITCH_CAPE, key);
-        this.prefsEditor.apply();
-        if (key) {
-            firebaseMessaging.subscribeToTopic("cape");
-        } else {
-            firebaseMessaging.unsubscribeFromTopic("cape");
-        }
-    }
-
-    //Nasa Switch
     public boolean getSwitchNasa() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         return this.sharedPrefs.getBoolean(PREFS_SWITCH_NASA, true);
@@ -703,7 +685,6 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         setSwitchULA(true);
         setSwitchArianespace(true);
         setSwitchCASC(true);
-        setSwitchCape(true);
         setSwitchKSC(true);
         setSwitchPles(true);
         setSwitchVan(true);
