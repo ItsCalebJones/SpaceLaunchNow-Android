@@ -4,17 +4,17 @@
     <item android:id="@+id/action_search"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always"
-        android:title="Search" />
+        android:title="@string/search" />
 
     <item android:id="@+id/action_date"
         android:icon="@drawable/ic_event"
         app:showAsAction="always"
-        android:title="Date" />
+        android:title="@string/date" />
 
     <item
         android:id="@+id/action_supporter"
         android:orderInCategory="95"
-        android:title="Remove Ads"
+        android:title="@string/remove_ads"
         android:textColor="?android:textColorPrimary"
         app:showAsAction="never" />
 
@@ -22,13 +22,13 @@
         android:id="@+id/return_home"
         android:orderInCategory="1"
         android:icon="@drawable/ic_action_home"
-        android:title="Home"
+        android:title="@string/home"
         app:showAsAction="ifRoom" />
 
     <item android:id="@+id/action_refresh"
         android:orderInCategory="2"
         app:showAsAction="never"
-        android:title="Refresh" />
+        android:title="@string/refresh" />
 
     <item
         android:id="@+id/action_settings"

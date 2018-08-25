@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="action_settings">Impostazioni</string>
     <string name="status_go">"Pronto al lancio"</string>
@@ -129,13 +129,19 @@
     <string name="support_description">Segui i miei progetti e contribuisci allo sviluppo futuro.</string>
     <string name="unknown_rocket_name">Nome del razzo sconosciuto</string>
     <string name="unknown_family">Famiglia sconosciuta</string>
+    <string name="become_a_supporter">Diventa un Supporter per sbloccare questo widget.</string>
     <string name="lower_days">giorni</string>
     <string name="lower_hours">ore</string>
     <string name="title_activity_settings">Impostazioni</string>
     <string name="title_activity_fullscreen_image">Space Launch Now</string>
+    <string name="title_activity_download">Download</string>
     <string name="title_activity_web_view_fallback">Space Launch Now</string>
+    <string name="intro_card_description">Tieniti aggiornato sui tuoi lanci orbitali, missioni e mezzi spaziali preferiti.</string>
     <string name="app_name">Space Launch Now</string>
     <string name="notification_card">Notifiche per i lanci</string>
+    <string name="vehicle_card_description">Conosci i mezzi che ci hanno portato in orbita.</string>
+    <string name="notification_card_description">Ricevi notifiche per i lanci a cui tieni.</string>
+    <string name="done">Fatto</string>
     <string name="error_loading_launch">Errore: Errore nel caricamento del lancio.</string>
     <string name="feedback_title">Invia dei suggerimenti</string>
     <string name="need_support">Necessiti del supporto?</string>
@@ -163,6 +169,9 @@
     <string name="select_launch_agency">Seleziona un\'azienda lanciatrice</string>
     <string name="error_loading_mission">Non è stato possibile caricare le missioni.</string>
     <string name="error_unknown_launch">Errore - Lancio sconosciuto</string>
+    <string name="weather_favorable">Meteo favorevole: %d%%</string>
+    <string name="pending_confirmed_go_specific">In attesa di conferma del GO da parte di %s</string>
+    <string name="waiting_on_launch_time_specific">In attesa dell\'esatto orario di lancio da parte di %s</string>
     <string name="unconfirmed">(Non confermato)</string>
     <string name="launch_info">Mantieni i lanci per 24 ore</string>
     <string name="home">Pagina principale</string>
@@ -184,6 +193,8 @@
     <string name="updated_version">Aggiornato alla versione</string>
     <string name="exit">Esci</string>
     <string name="error_orbiter_details">Errore - Non è stato possibile caricare i dettagli sul modulo orbitante.</string>
+    <string name="spacecraft_history">%s storia mezzo</string>
+    <string name="spacecraft_details">%s dettagli mezzo</string>
     <string name="night_mode_restart">Potrebbe essere necessario riavviare l\'app per rendere effettiva la modalità notturna.</string>
     <string name="day_mode_restart">Potrebbe essere necessario riavviare l\'app per rendere effettiva la modalità diurna.</string>
     <string name="supporter_feature">(Funzionalità per i Sostenitori)</string>
@@ -193,6 +204,7 @@
     <string name="select_calendar">Seleziona un calendario per aggiungere gli eventi di lancio.</string>
     <string name="default_calendar">Calendario predefinito:</string>
     <string name="permission_denied">Permesso negato</string>
+    <string name="calendar_permission_required_description">Questo permesso è richiesto per sincronizzare i lanci con il tuo calendario.</string>
     <string name="local_timezone">Fuso orario locale</string>
     <string name="local_timezone_off">Orari di lancio rappresentati in UTC.</string>
     <string name="time_format">Formato dell\'orario</string>
@@ -202,6 +214,18 @@
     <string name="night_mode_on">La modalità notturna è attiva.</string>
     <string name="night_mode_off">La modalità notturna è disattivata.</string>
     <string name="automatic_daynight">Notte/giorno automatico</string>
+    <string name="widget_themes">Temi del widget</string>
+    <string name="widget_themes_summary">Selezionalo tra alcuni temi widget predefiniti.</string>
+    <string name="widget_background">Sfondo del widget</string>
+    <string name="widget_background_summary">Seleziona il colore dello sfondo del widget.</string>
+    <string name="primary_text">Colore primario del testo</string>
+    <string name="primary_text_summary">Seleziona il colore primario del testo nel widget.</string>
+    <string name="secondary_text">Colore secondario del testo</string>
+    <string name="secondary_text_summary">Seleziona il colore secondario del testo nel widget</string>
+    <string name="hide_refresh">Nascondi l\'aggiornamento</string>
+    <string name="hide_refresh_summary">Nascondi il pulsante di aggiornamento</string>
+    <string name="round_corners">Angoli arrotondati</string>
+    <string name="round_corners_summary">Abilita gli angoli arrotondati per il widget</string>
     <string name="confirm_exit">Conferma l\'uscita</string>
     <string name="start_time">Orario di inizo</string>
     <string name="end_time">Orario di termine</string>
