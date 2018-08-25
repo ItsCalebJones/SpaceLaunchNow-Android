@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="widget_presets">
+        <item>Clair</item>
+        <item>Sombre</item>
+        <item>Clair - Transparent</item>
+        <item>Sombre - Transparent</item>
+        <item>Bleu \"Material\"</item>
+        <item>Rouge \"Material\"</item>
+        <item>Sarcelle \"Material\"</item>
+        <item>Orange \"Material\"</item>
+        <item>Personnalisée</item>
+    </string-array>
+    <string-array name="widget_presets_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </string-array>
+    <string-array name="spinner_list_item_array">
+        <item>Tous</item>
+        <item>À venir</item>
+        <item>Passés</item>
+    </string-array>
+</resources>

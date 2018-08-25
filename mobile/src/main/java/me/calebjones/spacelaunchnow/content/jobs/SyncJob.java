@@ -49,6 +49,7 @@ public class SyncJob extends Job {
                 .schedule();
     }
 
+    // TODO update this
     @NonNull
     @Override
     protected Result onRunJob(Params params) {
@@ -66,7 +67,6 @@ public class SyncJob extends Job {
                 Crashlytics.logException(e);
             }
         }
-        dataClientManager.getDataRepositoryManager().cleanDB();
 
         RealmConfiguration configuration = Realm.getDefaultConfiguration();
         if (configuration != null){

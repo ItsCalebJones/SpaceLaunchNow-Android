@@ -3,7 +3,6 @@ package me.calebjones.spacelaunchnow.ui.main.launches;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -25,7 +23,7 @@ import java.util.TimeZone;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
@@ -33,7 +31,7 @@ import timber.log.Timber;
 /**
  * This adapter takes data from ListPreferences/LoaderService and applies it to RecyclerView
  */
-public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> implements FastScrollRecyclerView.SectionedAdapter {
+public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     public int position;
     private RealmList<Launch> launchList;
     private Context mContext;
@@ -98,11 +96,10 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
         String launchDate;
 
         position = i;
-        Timber.d("Binding launch: %s", launchItem.getId());
 
         //Retrieve missionType
-        if (launchItem.getMissions().size() != 0) {
-            Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMissions().get(0).getTypeName(), night);
+        if (launchItem.getMission() != null) {
+            Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMission().getTypeName(), night);
         } else {
             if (night) {
                 holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
@@ -136,14 +133,14 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
                     holder.mission.setText(title[0].trim());
                 } else {
                     holder.title.setText(launchItem.getName());
-                    if (launchItem.getMissions().size() > 0) {
-                        holder.title.setText(launchItem.getMissions().get(0).getName());
+                    if (launchItem.getMission() != null) {
+                        holder.title.setText(launchItem.getMission().getName());
                     }
                 }
             } catch (ArrayIndexOutOfBoundsException exception) {
                 holder.title.setText(launchItem.getName());
-                if (launchItem.getMissions().size() > 0) {
-                    holder.title.setText(launchItem.getMissions().get(0).getName());
+                if (launchItem.getMission() != null) {
+                    holder.title.setText(launchItem.getMission().getName());
                 }
 
             }
@@ -157,14 +154,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> im
     @Override
     public int getItemCount() {
         return launchList.size();
-    }
-
-    @NonNull
-    @Override
-    public String getSectionName(int position) {
-        Date date = launchList.get(position).getNet();
-
-        return parseDateToMMyyyy(date);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

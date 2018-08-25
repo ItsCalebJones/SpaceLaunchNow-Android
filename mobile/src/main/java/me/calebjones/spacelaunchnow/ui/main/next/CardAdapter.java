@@ -5,13 +5,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -19,7 +16,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
@@ -28,12 +24,11 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.crashlytics.android.Crashlytics;
-import com.mypopsy.maps.StaticMap;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -46,14 +41,17 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.data.LaunchStatus;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
-import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.CountDownTimer;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
 
 /**
  * Adapts UpcomingLaunch data to the LaunchFragment
@@ -117,7 +115,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         return new ViewHolder(v);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "StringFormatMatches"})
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
         Launch launchItem = launchList.get(i);
@@ -128,11 +126,11 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         String title;
         try {
             if (launchItem.isValid()) {
-                if (launchItem.getRocket() != null) {
-                    if (launchItem.getRocket().getAgencies() != null && launchItem.getRocket().getAgencies().size() > 0) {
-                        title = launchItem.getRocket().getAgencies().get(0).getName() + " | " + (launchItem.getRocket().getName());
+                if (launchItem.getLauncher() != null) {
+                    if (launchItem.getLsp() != null) {
+                        title = launchItem.getLsp().getName() + " | " + (launchItem.getLauncher().getName());
                     } else {
-                        title = launchItem.getRocket().getName();
+                        title = launchItem.getLauncher().getName();
                     }
                 } else if (launchItem.getName() != null) {
                     title = launchItem.getName();
@@ -144,63 +142,27 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 holder.title.setText(title);
 
                 //Retrieve missionType
-                if (launchItem.getMissions().size() != 0) {
-                    Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMissions().get(0).getTypeName(), true);
+                if (launchItem.getMission() != null) {
+                    Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMission().getTypeName(), true);
                 } else {
                     holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
                 }
 
                 double dlat = 0;
                 double dlon = 0;
-                if (launchItem.getLocation() != null && launchItem.getLocation().getPads() != null) {
-                    dlat = launchItem.getLocation().getPads().get(0).getLatitude();
-                    dlon = launchItem.getLocation().getPads().get(0).getLongitude();
+                if (launchItem.getPad() != null) {
+                    dlat = Double.parseDouble(launchItem.getPad().getLatitude());
+                    dlon = Double.parseDouble(launchItem.getPad().getLongitude());
                 }
 
                 // Getting status
                 if (dlat == 0 && dlon == 0 || Double.isNaN(dlat) || Double.isNaN(dlon) || dlat == Double.NaN || dlon == Double.NaN) {
                     if (holder.map_view != null) {
                         holder.map_view.setVisibility(View.GONE);
-
                     }
                 } else {
                     holder.map_view.setVisibility(View.VISIBLE);
-                    final Resources res = context.getResources();
-                    final StaticMap map = new StaticMap()
-                            .center(dlat, dlon)
-                            .scale(1)
-                            .type(StaticMap.Type.ROADMAP)
-                            .zoom(5)
-                            .marker(dlat, dlon)
-                            .key(res.getString(R.string.GoogleMapsKey));
-
-                    //Strange but necessary to calculate the height/width
-                    holder.map_view.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                        public boolean onPreDraw() {
-                            map.size(holder.map_view.getWidth() / 2,
-                                    holder.map_view.getHeight() / 2);
-
-                            Timber.v("onPreDraw: %s", map.toString());
-                            GlideApp.with(context)
-                                    .load(map.toString())
-                                    .optionalCenterCrop()
-                                    .listener(new RequestListener<Drawable>() {
-                                        @Override
-                                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                            holder.map_view.setVisibility(View.GONE);
-                                            return false;
-                                        }
-
-                                        @Override
-                                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                            return false;
-                                        }
-                                    })
-                                    .into(holder.map_view);
-                            holder.map_view.getViewTreeObserver().removeOnPreDrawListener(this);
-                            return true;
-                        }
-                    });
+                    holder.bindView(new LaunchLocation(launchItem, new LatLng(dlat, dlon)));
                 }
 
                 if (launchItem.getProbability() != null && launchItem.getProbability() > 0) {
@@ -233,7 +195,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     holder.content_TMinus_status.setTypeface(Typeface.SANS_SERIF);
                     holder.content_TMinus_status.setTextColor(accentColor);
 
-                    holder.countdownView.setVisibility(View.VISIBLE);
+//                    holder.countdownView.setVisibility(View.VISIBLE);
                     long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
                     if (timeToFinish > 0) {
                         holder.timer = new CountDownTimer(timeToFinish, 1000) {
@@ -353,7 +315,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                         sdf.toLocalizedPattern();
                         Date date = launchItem.getNet();
                         String launchTime = sdf.format(date);
-                        if (launchItem.getTbddate() == 1){
+                        if (launchItem.getTbddate()){
                             launchTime = launchTime + context.getString(R.string.unconfirmed);
                         }
                         holder.launch_date_compact.setText(launchTime);
@@ -405,10 +367,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 }
 
 
-                if (launchItem.getMissions().size() > 0) {
-                    holder.content_mission.setText(launchItem.getMissions().get(0).getName());
-                    String description = launchItem.getMissions().
-                            get(0).getDescription();
+                if (launchItem.getMission() != null) {
+                    holder.content_mission.setText(launchItem.getMission().getName());
+                    String description = launchItem.getMission().getDescription();
                     if (description.length() > 0) {
                         holder.content_mission_description_view.setVisibility(View.VISIBLE);
                         holder.content_mission_description.setText(description);
@@ -427,7 +388,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     holder.content_mission_description_view.setVisibility(View.GONE);
                 }
 
-                //If pad and agency exist add it to location, otherwise get whats always available
+                //If pad and agency_menu exist add it to location, otherwise get whats always available
                 if (launchItem.getLocation() != null) {
                     holder.location.setText(launchItem.getLocation().getName());
                 } else {
@@ -452,8 +413,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         }
         if (launchItem.getStatus() == 2) {
             holder.countdownView.setVisibility(View.GONE);
-            if (launchItem.getRocket().getAgencies().size() > 0) {
-                holder.content_TMinus_status.setText(String.format(context.getString(R.string.pending_confirmed_go_specific), launchItem.getRocket().getAgencies().get(0).getName()));
+            if (launchItem.getLsp() != null) {
+                holder.content_TMinus_status.setText(String.format(context.getString(R.string.pending_confirmed_go_specific), launchItem.getLsp().getName()));
             } else {
                 holder.content_TMinus_status.setText(R.string.pending_confirmed_go);
             }
@@ -501,7 +462,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         return 0;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, OnMapReadyCallback {
         public TextView title;
         public TextView content;
         public TextView location;
@@ -520,18 +481,19 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         public TextView countdownSeconds;
         public LinearLayout content_mission_description_view;
         public ImageView categoryIcon;
+        public GoogleMap map;
         public CountDownTimer timer;
         public View countdownView;
         public View titleCard;
         public TextView contentForecast;
         public CardView cardView;
-
-        public ImageView map_view;
+        public View layout;
+        public MapView map_view;
 
         //Add content to the card
         public ViewHolder(View view) {
             super(view);
-
+            layout = view;
             categoryIcon = view.findViewById(R.id.categoryIcon);
             exploreButton = view.findViewById(R.id.exploreButton);
             shareButton = view.findViewById(R.id.shareButton);
@@ -565,6 +527,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
             exploreButton.setOnClickListener(this);
             watchButton.setOnClickListener(this);
             map_view.setOnClickListener(this);
+
+            if (map_view != null) {
+                // Initialise the MapView
+                map_view.onCreate(null);
+                // Set the map ready callback to receive the GoogleMap object
+                map_view.getMapAsync(this);
+                map_view.setVisibility(View.INVISIBLE);
+            }
         }
 
         //React to click events.
@@ -587,28 +557,24 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     Timber.d("Watch: %s", launch.getVidURLs().size());
                     Analytics.getInstance().sendButtonClicked("Watch Button - Opening Dialogue");
                     if (launch.getVidURLs().size() > 0) {
-                        final DialogAdapter adapter = new DialogAdapter(new DialogAdapter.Callback() {
-
-                            @Override
-                            public void onListItemSelected(int index, MaterialSimpleListItem item, boolean longClick) {
-                                try {
-                                    if (longClick) {
-                                        Intent sendIntent = new Intent();
-                                        sendIntent.setAction(Intent.ACTION_SEND);
-                                        sendIntent.putExtra(Intent.EXTRA_TEXT, launch.getVidURLs().get(index).getVal()); // Simple text and URL to share
-                                        sendIntent.setType("text/plain");
-                                        context.startActivity(sendIntent);
-                                        Analytics.getInstance().sendButtonClickedWithURL("Watch Button - URL Long Clicked", launch.getVidURLs().get(index).getVal());
-                                    } else {
-                                        Uri watchUri = Uri.parse(launch.getVidURLs().get(index).getVal());
-                                        Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
-                                        context.startActivity(i);
-                                        Analytics.getInstance().sendButtonClickedWithURL("Watch Button - URL", launch.getVidURLs().get(index).getVal());
-                                    }
-                                } catch (ArrayIndexOutOfBoundsException e) {
-                                    Timber.e(e);
-                                    Toast.makeText(context, "Ops, an error occurred.", Toast.LENGTH_SHORT).show();
+                        final DialogAdapter adapter = new DialogAdapter((index, item, longClick) -> {
+                            try {
+                                if (longClick) {
+                                    Intent sendIntent1 = new Intent();
+                                    sendIntent1.setAction(Intent.ACTION_SEND);
+                                    sendIntent1.putExtra(Intent.EXTRA_TEXT, launch.getVidURLs().get(index).getVal()); // Simple text and URL to share
+                                    sendIntent1.setType("text/plain");
+                                    context.startActivity(sendIntent1);
+                                    Analytics.getInstance().sendButtonClickedWithURL("Watch Button - URL Long Clicked", launch.getVidURLs().get(index).getVal());
+                                } else {
+                                    Uri watchUri = Uri.parse(launch.getVidURLs().get(index).getVal());
+                                    Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
+                                    context.startActivity(i);
+                                    Analytics.getInstance().sendButtonClickedWithURL("Watch Button - URL", launch.getVidURLs().get(index).getVal());
                                 }
+                            } catch (ArrayIndexOutOfBoundsException e) {
+                                Timber.e(e);
+                                Toast.makeText(context, "Ops, an error occurred.", Toast.LENGTH_SHORT).show();
                             }
                         });
                         for (RealmStr s : launch.getVidURLs()) {
@@ -638,8 +604,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 case R.id.shareButton:
                     String message;
                     if (launch.getVidURLs().size() > 0) {
-                        if (launch.getLocation() != null && launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
-                                get(0).getAgencies().size() > 0) {
+                        if (launch.getLocation() != null) {
 
                             message = launch.getName() + " launching from "
                                     + launch.getLocation().getName() + "\n\n"
@@ -654,8 +619,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                                     + launchDate;
                         }
                     } else {
-                        if (launch.getLocation() != null && launch.getLocation().getPads().size() > 0 && launch.getLocation().getPads().
-                                get(0).getAgencies().size() > 0) {
+                        if (launch.getLocation() != null) {
 
                             message = launch.getName() + " launching from "
                                     + launch.getLocation().getName() + "\n\n"
@@ -683,8 +647,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
 
                     Timber.d("FAB: %s ", location);
 
-                    double dlat = launchList.get(position).getLocation().getPads().get(0).getLatitude();
-                    double dlon = launchList.get(position).getLocation().getPads().get(0).getLongitude();
+                    double dlat = Double.parseDouble(launchList.get(position).getPad().getLatitude());
+                    double dlon = Double.parseDouble(launchList.get(position).getPad().getLongitude());
 
                     Uri gmmIntentUri = Uri.parse("geo:" + dlat + ", " + dlon + "?z=12&q=" + dlat + ", " + dlon);
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
@@ -693,7 +657,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     Analytics.getInstance().sendLaunchMapClicked(launch.getName());
 
                     if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
-                        Toast.makeText(context, "Loading " + launchList.get(position).getLocation().getPads().get(0).getName(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Loading " + launchList.get(position).getPad().getName(), Toast.LENGTH_LONG).show();
                         context.startActivity(mapIntent);
                     }
                     break;
@@ -709,5 +673,85 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
             }
         }
 
+        @Override
+        public void onMapReady(GoogleMap googleMap) {
+            Timber.v("onMapReady called.");
+            MapsInitializer.initialize(context);
+            map = googleMap;
+            setMapLocation();
+        }
+
+        private void setMapLocation() {
+            if (map == null) {
+                Timber.d("setMapLocation - map is null");
+                return;
+            }
+
+            LaunchLocation data = (LaunchLocation) map_view.getTag();
+            if (data == null) {
+                Timber.d("setMapLocation - data is null");
+                return;
+            }
+
+            map_view.setVisibility(View.VISIBLE);
+            map.getUiSettings().setMapToolbarEnabled(true);
+            map.getUiSettings().setZoomGesturesEnabled(false);
+            map.getUiSettings().setScrollGesturesEnabled(false);
+            Timber.d("setMapLocation - Moving the camera.");
+            // Add a marker for this item and set the camera
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(data.location, 7f));
+            map.addMarker(new MarkerOptions()
+                    .position(data.location)
+                    .title(data.launch.getLocation().getName())
+                    .snippet(data.launch.getPad().getName())
+                    .infoWindowAnchor(0.5f, 0.5f));
+
+            // Set the map type back to normal.
+            map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        }
+
+        private void bindView(LaunchLocation item) {
+            Timber.d("bindView - %s", item.launch.getName());
+            // Store a reference of the ViewHolder object in the layout.
+            layout.setTag(this);
+            // Store a reference to the item in the mapView's tag. We use it to get the
+            // coordinate of a location, when setting the map location.
+            map_view.setTag(item);
+            map_view.onResume();
+            setMapLocation();
+        }
     }
+
+    private static class LaunchLocation {
+
+        public final Launch launch;
+        public final LatLng location;
+
+        LaunchLocation(Launch launch, LatLng location) {
+            this.launch = launch;
+            this.location = location;
+        }
+    }
+
+    /**
+     * RecycleListener that completely clears the {@link com.google.android.gms.maps.GoogleMap}
+     * attached to a row in the RecyclerView.
+     * Sets the map type to {@link com.google.android.gms.maps.GoogleMap#MAP_TYPE_NONE} and clears
+     * the map.
+     */
+    public RecyclerView.RecyclerListener mRecycleListener = new RecyclerView.RecyclerListener() {
+
+        @Override
+        public void onViewRecycled(RecyclerView.ViewHolder holder) {
+            CardAdapter.ViewHolder mapHolder = (CardAdapter.ViewHolder) holder;
+            if (mapHolder != null && mapHolder.map != null) {
+                Timber.d("Clearing map!");
+                // Clear the map and free up resources by changing the map type to none.
+                // Also reset the map when it gets reattached to layout, so the previous map would
+                // not be displayed.
+                mapHolder.map.clear();
+                mapHolder.map.setMapType(GoogleMap.MAP_TYPE_NONE);
+            }
+        }
+    };
 }

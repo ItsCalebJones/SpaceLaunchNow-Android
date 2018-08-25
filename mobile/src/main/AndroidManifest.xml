@@ -45,8 +45,8 @@
         <activity
             android:name=".ui.main.MainActivity"
             android:configChanges="keyboardHidden"
-            android:theme="@style/BaseAppTheme.Launcher"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:theme="@style/BaseAppTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -163,12 +163,21 @@
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
                 <action android:name="com.google.android.gms.wearable.CAPABILITY_CHANGED" />
                 <action android:name="com.google.android.gms.wearable.CHANNEL_EVENT" />
-                <data android:host="*" android:scheme="wear" android:path="/verify_remote_launch_spacelaunchnow_wear_app"/>
-                <data android:scheme="wear" android:host="*" android:path="/start-activity" />
-                <data android:scheme="wear" android:host="*" android:path="/start-activity-supporter" />
+
+                <data
+                    android:host="*"
+                    android:path="/verify_remote_launch_spacelaunchnow_wear_app"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/start-activity"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/start-activity-supporter"
+                    android:scheme="wear" />
             </intent-filter>
         </service>
-
         <service
             android:name=".widget.launchlist.LaunchListWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
@@ -233,32 +242,34 @@
             android:name=".ui.changelog.ChangelogActivity"
             android:theme="@style/BaseAppTheme" />
 
-        <service
-            android:name=".content.services.AppFireBaseMessagingService">
+        <service android:name=".content.services.AppFireBaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".content.services.AppFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
-
-        <service
-            android:name=".content.services.AppFirebaseInstanceIDService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-            </intent-filter>
-        </service>
-
-
-        <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.
-     See README(https://goo.gl/l4GJaQ) for more. -->
+        <!--
+     Set custom default icon. This is used when no icon is set for incoming notification messages.
+     See README(https://goo.gl/l4GJaQ) for more.
+        -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_rocket" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="me.calebjones.spacelaunchnow.LAUNCH_UPDATE"/>
+            android:value="me.calebjones.spacelaunchnow.LAUNCH_UPDATE" />
 
+        <activity
+            android:name=".ui.launches.AgencyLaunches"
+            android:exported="true" />
+        <activity
+            android:name=".ui.launches.LauncherLaunches"
+            android:exported="true" />
     </application>
 
 </manifest>

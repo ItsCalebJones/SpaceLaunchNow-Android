@@ -21,6 +21,9 @@
 
 -keep class com.anjlab.android.iab.v3.** { *; }
 
+-dontwarn android.databinding.**
+-keep class android.databinding.** { *; }
+
 -dontwarn android.support.**
 -dontwarn com.google.android.gms.internal.**
 -keep public class com.google.android.gms.* { public *; }
