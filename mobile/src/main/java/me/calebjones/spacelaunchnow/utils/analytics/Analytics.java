@@ -1,28 +1,15 @@
 package me.calebjones.spacelaunchnow.utils.analytics;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.preference.PreferenceFragment;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
 
-import com.crashlytics.android.answers.AddToCartEvent;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
-import com.crashlytics.android.answers.FirebaseAnalyticsEvent;
-import com.crashlytics.android.answers.PurchaseEvent;
 import com.crashlytics.android.answers.SearchEvent;
 import com.crashlytics.android.answers.ShareEvent;
-import com.crashlytics.android.answers.StartCheckoutEvent;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-import java.math.BigDecimal;
-import java.util.Currency;
-
 import me.calebjones.spacelaunchnow.data.models.Products;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
-import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import timber.log.Timber;
 
 public class Analytics {

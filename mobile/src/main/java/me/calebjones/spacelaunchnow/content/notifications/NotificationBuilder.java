@@ -26,7 +26,7 @@ import java.util.concurrent.ExecutionException;
 import jonathanfinerty.once.Amount;
 import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -106,10 +106,10 @@ public class NotificationBuilder {
         NotificationCompat.WearableExtender wearableExtender =
                 new NotificationCompat.WearableExtender()
                         .setHintHideIcon(true);
-        if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
+        if (launch.getLauncher().getImageUrl() != null && launch.getLauncher().getImageUrl().length() > 0 && !launch.getLauncher().getImageUrl().contains("placeholder")) {
             Bitmap bitmap = null;
             try {
-                bitmap = Utils.getBitMapFromUrl(context, launch.getRocket().getImageURL());
+                bitmap = Utils.getBitMapFromUrl(context, launch.getLauncher().getImageUrl());
             } catch (ExecutionException | InterruptedException e) {
                 Timber.e(e);
                 Crashlytics.logException(e);
@@ -192,10 +192,10 @@ public class NotificationBuilder {
         }
 
 
-        if (launch.getRocket().getImageURL() != null && launch.getRocket().getImageURL().length() > 0 && !launch.getRocket().getImageURL().contains("placeholder")) {
+        if (launch.getLauncher().getImageUrl() != null && launch.getLauncher().getImageUrl().length() > 0 && !launch.getLauncher().getImageUrl().contains("placeholder")) {
             Bitmap bitmap = null;
             try {
-                bitmap = Utils.getBitMapFromUrl(context, launch.getRocket().getImageURL());
+                bitmap = Utils.getBitMapFromUrl(context, launch.getLauncher().getImageUrl());
             } catch (ExecutionException | InterruptedException e) {
                 Timber.e(e);
                 Crashlytics.logException(e);

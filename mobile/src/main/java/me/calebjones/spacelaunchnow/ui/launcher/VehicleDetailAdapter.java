@@ -15,11 +15,15 @@ import android.widget.TextView;
 
 import com.bumptech.glide.request.RequestOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.realm.RealmList;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.RocketDetail;
+import me.calebjones.spacelaunchnow.data.models.main.Launcher;
 import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
+import me.calebjones.spacelaunchnow.ui.launches.LauncherLaunches;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
@@ -28,12 +32,12 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
     public int position;
     private Context mContext;
     private Activity activity;
-    private RealmList<RocketDetail> items;
+    private List<Launcher> items;
     private RequestOptions requestOptions;
     private int backgroundColor = 0;
 
     public VehicleDetailAdapter(Context context, Activity activity) {
-        items = new RealmList<>();
+        items = new ArrayList<>();
         requestOptions = new RequestOptions()
                 .placeholder(R.drawable.placeholder)
                 .centerCrop();
@@ -41,7 +45,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
         this.activity = activity;
     }
 
-    public void addItems(RealmResults<RocketDetail> items) {
+    public void addItems(List<Launcher> items) {
         if (this.items != null) {
             this.items.addAll(items);
         } else {
@@ -65,7 +69,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        RocketDetail launchVehicle = items.get(holder.getAdapterPosition());
+        Launcher launchVehicle = items.get(holder.getAdapterPosition());
 
         if (launchVehicle != null) {
             holder.vehicleSpecView.setVisibility(View.VISIBLE);
@@ -75,47 +79,78 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
             } else {
                 holder.vehicleDescription.setVisibility(View.GONE);
             }
-            holder.vehicleSpecsHeight.setText(String.format(mContext.getString(R.string.height_full), launchVehicle.getLength()));
-            holder.vehicleSpecsDiameter.setText(String.format(mContext.getString(R.string.diameter_full), launchVehicle.getDiameter()));
-            holder.vehicleSpecsStages.setText(String.format(mContext.getString(R.string.stage_full), launchVehicle.getMaxStage()));
-            holder.vehicleSpecsLeo.setText(String.format(mContext.getString(R.string.mass_leo_full), launchVehicle.getLEOCapacity()));
-            holder.vehicleSpecsGto.setText(String.format(mContext.getString(R.string.mass_gto_full), launchVehicle.getGTOCapacity()));
-            holder.vehicleSpecsLaunchMass.setText(String.format(mContext.getString(R.string.mass_launch_full), launchVehicle.getLaunchMass()));
-            holder.vehicleSpecsThrust.setText(String.format(mContext.getString(R.string.thrust_full), launchVehicle.getTOThrust()));
+
+            if (launchVehicle.getLength() != null) {
+                holder.vehicleSpecsHeight.setText(String.format(mContext.getString(R.string.height_full), launchVehicle.getLength()));
+            } else {
+                holder.vehicleSpecsHeight.setText(mContext.getString(R.string.height));
+            }
+
+            if (launchVehicle.getDiameter() != null) {
+                holder.vehicleSpecsDiameter.setText(String.format(mContext.getString(R.string.diameter_full), launchVehicle.getDiameter()));
+            } else {
+                holder.vehicleSpecsDiameter.setText(mContext.getString(R.string.diameter));
+            }
+
+            if (launchVehicle.getMaxStage() != null) {
+                holder.vehicleSpecsStages.setText(String.format(mContext.getString(R.string.stage_full), launchVehicle.getMaxStage()));
+            } else {
+                holder.vehicleSpecsStages.setText(mContext.getString(R.string.stages));
+            }
+
+            if (launchVehicle.getLeoCapacity() != null) {
+                holder.vehicleSpecsLeo.setText(String.format(mContext.getString(R.string.mass_leo_full), launchVehicle.getLeoCapacity()));
+            } else {
+                holder.vehicleSpecsLeo.setText(mContext.getString(R.string.mass_to_leo));
+            }
+
+            if (launchVehicle.getGtoCapacity() != null) {
+                holder.vehicleSpecsGto.setText(String.format(mContext.getString(R.string.mass_gto_full), launchVehicle.getGtoCapacity()));
+            } else {
+                holder.vehicleSpecsGto.setText(mContext.getString(R.string.mass_to_gto));
+            }
+
+            if (launchVehicle.getLaunchMass() != null) {
+                holder.vehicleSpecsLaunchMass.setText(String.format(mContext.getString(R.string.mass_launch_full), launchVehicle.getLaunchMass()));
+            } else {
+                holder.vehicleSpecsLaunchMass.setText(mContext.getString(R.string.mass_at_launch));
+            }
+
+            if (launchVehicle.getToThrust() != null) {
+                holder.vehicleSpecsThrust.setText(String.format(mContext.getString(R.string.thrust_full), launchVehicle.getToThrust()));
+            } else {
+                holder.vehicleSpecsHeight.setText(mContext.getString(R.string.height));
+            }
 
 
             if (backgroundColor != 0) {
                 holder.titleContainer.setBackgroundColor(backgroundColor);
             }
-            if (launchVehicle.getImageURL() != null && launchVehicle.getImageURL().length() > 0) {
+            if (launchVehicle.getImageUrl() != null && launchVehicle.getImageUrl().length() > 0) {
                 holder.vehicleImage.setVisibility(View.VISIBLE);
                 GlideApp.with(mContext)
-                        .load(launchVehicle.getImageURL())
+                        .load(launchVehicle.getImageUrl())
                         .apply(requestOptions)
                         .into(holder.vehicleImage);
             } else {
 
                 holder.vehicleImage.setVisibility(View.GONE);
             }
-            String vehicleName = launchVehicle.getName();
-            if (!launchVehicle.getVariant().equals("-")) {
-                vehicleName = vehicleName + " " + launchVehicle.getVariant();
-            }
-            holder.vehicleName.setText(vehicleName);
+            holder.vehicleName.setText(launchVehicle.getFullName());
             holder.vehicleFamily.setText(launchVehicle.getFamily());
 
-            if (launchVehicle.getInfoURL() != null
-                    && launchVehicle.getInfoURL().length() > 0
-                    && !launchVehicle.getInfoURL().contains("null")) {
+            if (launchVehicle.getInfoUrl() != null
+                    && launchVehicle.getInfoUrl().length() > 0
+                    && !launchVehicle.getInfoUrl().contains("null")) {
                 holder.infoButton.setVisibility(View.VISIBLE);
             } else {
                 holder.infoButton.setVisibility(View.GONE);
             }
 
 
-            if (launchVehicle.getWikiURL() != null
-                    && launchVehicle.getWikiURL().length() > 0
-                    && !launchVehicle.getWikiURL().contains("null")) {
+            if (launchVehicle.getWikiUrl() != null
+                    && launchVehicle.getWikiUrl().length() > 0
+                    && !launchVehicle.getWikiUrl().contains("null")) {
                 holder.wikiButton.setVisibility(View.VISIBLE);
             } else {
                 holder.wikiButton.setVisibility(View.GONE);
@@ -159,6 +194,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
         public AppCompatButton infoButton;
         public AppCompatButton wikiButton;
         public TextView vehicleDescription;
+        public AppCompatButton launchesButton;
 
         //Add content to the card
         public ViewHolder(View view) {
@@ -182,7 +218,9 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
             titleContainer = view.findViewById(R.id.text_container);
             infoButton = view.findViewById(R.id.infoButton);
             wikiButton = view.findViewById(R.id.wikiButton);
+            launchesButton = view.findViewById(R.id.launcher_launches);
 
+            launchesButton.setOnClickListener(this);
             infoButton.setOnClickListener(this);
             wikiButton.setOnClickListener(this);
             vehicleImage.setOnClickListener(this);
@@ -194,20 +232,25 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
             final int position = getAdapterPosition();
             switch (v.getId()) {
                 case R.id.infoButton:
-                    Utils.openCustomTab(activity, mContext, items.get(position).getInfoURL());
+                    Utils.openCustomTab(activity, mContext, items.get(position).getInfoUrl());
                     break;
                 case R.id.wikiButton:
-                    Utils.openCustomTab(activity, mContext, items.get(position).getWikiURL());
+                    Utils.openCustomTab(activity, mContext, items.get(position).getWikiUrl());
                     break;
                 case R.id.item_icon:
                     Intent animateIntent = new Intent(activity, FullscreenImageActivity.class);
-                    animateIntent.putExtra("imageURL", items.get(position).getImageURL());
+                    animateIntent.putExtra("imageURL", items.get(position).getImageUrl());
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         activity.startActivity(animateIntent, ActivityOptions.makeSceneTransitionAnimation(activity, vehicleImage, "imageCover").toBundle());
                     } else {
                         activity.startActivity(animateIntent);
                     }
                     break;
+                case R.id.launcher_launches:
+                    Intent launches = new Intent(activity, LauncherLaunches.class);
+                    launches.putExtra("launcherId", items.get(position).getId());
+                    launches.putExtra("launcherName", items.get(position).getName());
+                    activity.startActivity(launches);
             }
         }
     }

@@ -23,7 +23,7 @@
         android:fragment="me.calebjones.spacelaunchnow.ui.settings.fragments.WearFragment"
         android:icon="@drawable/ic_wear"
         android:title="@string/wear"
-        android:summary="Change Android Wear watch face settings."
+        android:summary="@string/wear_settings"
         android:breadCrumbTitle="@string/wear"/>
     <header
         android:icon="@drawable/ic_about_black"

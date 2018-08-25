@@ -65,6 +65,7 @@ public class LaunchesViewPager extends Fragment {
             public void onTabReselected(TabLayout.Tab tab) {
 
             }
+
         });
         return inflatedView;
     }

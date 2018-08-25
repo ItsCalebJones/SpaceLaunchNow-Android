@@ -21,10 +21,10 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.RetroFitFragment;
-import me.calebjones.spacelaunchnow.data.models.spacelaunchnow.SLNAgency;
+import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
-import me.calebjones.spacelaunchnow.data.networking.responses.base.LauncherResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.AgencyResponse;
 import me.calebjones.spacelaunchnow.ui.launcher.LauncherDetailActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
@@ -38,7 +38,7 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
 
     private VehicleAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-    private List<SLNAgency> items = new ArrayList<>();
+    private List<Agency> items = new ArrayList<>();
     private Context context;
     private View view;
     private RecyclerView mRecyclerView;
@@ -60,9 +60,9 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
 
         view = inflater.inflate(R.layout.fragment_launch_vehicles, container, false);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.vehicle_detail_list);
-        coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.vehicle_coordinator);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
+        mRecyclerView = view.findViewById(R.id.vehicle_detail_list);
+        coordinatorLayout = view.findViewById(R.id.vehicle_coordinator);
+        swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setOnRefreshListener(this);
 
         if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
@@ -113,11 +113,11 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
         showLoading();
 
         SpaceLaunchNowService request = getSpaceLaunchNowRetrofit().create(SpaceLaunchNowService.class);
-        Call<LauncherResponse> call = request.getVehicleAgencies(true);
+        Call<AgencyResponse> call = request.getAgencies(true, "detailed");
 
-        call.enqueue(new Callback<LauncherResponse>() {
+        call.enqueue(new Callback<AgencyResponse>() {
             @Override
-            public void onResponse(Call<LauncherResponse> call, Response<LauncherResponse> response) {
+            public void onResponse(Call<AgencyResponse> call, Response<AgencyResponse> response) {
                 Timber.v("onResponse");
                 if (response.raw().cacheResponse() != null) {
                     Timber.v("Response pulled from cache.");
@@ -128,9 +128,9 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
                 }
 
                 if (response.isSuccessful()) {
-                    LauncherResponse jsonResponse = response.body();
+                    AgencyResponse jsonResponse = response.body();
                     Timber.v("Success %s", response.message());
-                    items = new ArrayList<>(Arrays.asList(jsonResponse.getLaunchers()));
+                    items = jsonResponse.getAgencies();
                     adapter.addItems(items);
                     Analytics.getInstance().sendNetworkEvent("LAUNCHER_INFORMATION", call.request().url().toString(), true);
 
@@ -142,7 +142,7 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
             }
 
             @Override
-            public void onFailure(Call<LauncherResponse> call, Throwable t) {
+            public void onFailure(Call<AgencyResponse> call, Throwable t) {
                 Timber.e(t.getMessage());
                 hideLoading();
                 SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, t.getLocalizedMessage());
@@ -163,20 +163,15 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
         }
     }
 
-    private OnItemClickListener recyclerRowClickListener = new OnItemClickListener() {
+    private OnItemClickListener recyclerRowClickListener = (v, position) -> {
+        Analytics.getInstance().sendButtonClicked("Launcher clicked", items.get(position).getName());
+        Gson gson = new Gson();
+        String jsonItem = gson.toJson(items.get(position));
 
-        @Override
-        public void onClick(View v, int position) {
-            Analytics.getInstance().sendButtonClicked("Launcher clicked", items.get(position).getName());
-            Gson gson = new Gson();
-            String jsonItem = gson.toJson(items.get(position));
-
-            Intent intent = new Intent(getActivity(), LauncherDetailActivity.class);
-            intent.putExtra("name", items.get(position).getName());
-            intent.putExtra("json", jsonItem);
-            startActivity(intent);
-        }
-
+        Intent intent = new Intent(getActivity(), LauncherDetailActivity.class);
+        intent.putExtra("name", items.get(position).getName());
+        intent.putExtra("json", jsonItem);
+        startActivity(intent);
     };
 
     @Override

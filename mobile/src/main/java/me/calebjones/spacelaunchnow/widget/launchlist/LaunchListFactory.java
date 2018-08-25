@@ -1,6 +1,5 @@
 package me.calebjones.spacelaunchnow.widget.launchlist;
 
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +23,7 @@ import io.realm.Sort;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
@@ -122,8 +121,8 @@ public class LaunchListFactory implements RemoteViewsService.RemoteViewsFactory 
         SimpleDateFormat sdf = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy");
 
         //Retrieve missionType
-        if (launch.getMissions().size() != 0) {
-            row.setImageViewResource(R.id.categoryIcon, Utils.getCategoryIcon(launch.getMissions().get(0).getTypeName()));
+        if (launch.getMission() != null) {
+            row.setImageViewResource(R.id.categoryIcon, Utils.getCategoryIcon(launch.getMission().getTypeName()));
         } else {
             row.setImageViewResource(R.id.categoryIcon, R.drawable.ic_unknown);
         }
@@ -163,14 +162,14 @@ public class LaunchListFactory implements RemoteViewsService.RemoteViewsFactory 
                     row.setTextViewText(R.id.mission, title[0].trim());
                 } else {
                     row.setTextViewText(R.id.launch_rocket, launch.getName());
-                    if (launch.getMissions().size() > 0) {
-                        row.setTextViewText(R.id.mission, launch.getMissions().get(0).getName());
+                    if (launch.getMission() != null) {
+                        row.setTextViewText(R.id.mission, launch.getMission().getName());
                     }
                 }
             } catch (ArrayIndexOutOfBoundsException exception) {
                 row.setTextViewText(R.id.launch_rocket, launch.getName());
-                if (launch.getMissions().size() > 0) {
-                    row.setTextViewText(R.id.mission, launch.getMissions().get(0).getName());
+                if (launch.getMission() != null) {
+                    row.setTextViewText(R.id.mission, launch.getMission().getName());
                 }
 
             }

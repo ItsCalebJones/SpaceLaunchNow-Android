@@ -17,9 +17,9 @@ import java.util.Map;
 
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.content.notifications.NotificationBuilder;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Location;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Rocket;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Launcher;
+import me.calebjones.spacelaunchnow.data.models.main.Location;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
@@ -46,9 +46,9 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
                 launch.setNet(dateFormat.parse(data.getString("launch_net")));
                 launch.setName(data.getString("launch_name"));
 
-                Rocket rocket = new Rocket();
-                rocket.setImageURL(data.getString("launch_image"));
-                launch.setRocket(rocket);
+                Launcher launcher = new Launcher();
+                launcher.setImageUrl(data.getString("launch_image"));
+                launch.setLauncher(launcher);
 
                 Location location = new Location();
                 location.setName(data.getString("launch_location"));

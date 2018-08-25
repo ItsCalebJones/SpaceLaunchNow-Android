@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import io.realm.RealmResults;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.wear.ui.launchdetail.LaunchDetail;
 import me.calebjones.spacelaunchnow.wear.R;
 import me.calebjones.spacelaunchnow.wear.content.ContentManager;
@@ -54,11 +54,8 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchViewHolder>{
         String[] title;
         String launchDate;
 
-        if (launch != null && launch.getMissions() != null
-                && launch.getMissions().size() > 0
-                && launch.getMissions().get(0) != null
-                && launch.getMissions().get(0).getTypeName() != null) {
-            Utils.setCategoryIcon(holder.launchIcon, launch.getMissions().get(0).getTypeName());
+        if (launch != null && launch.getMission() != null) {
+            Utils.setCategoryIcon(holder.launchIcon, launch.getMission().getTypeName());
         } else {
             holder.launchIcon.setImageResource(R.drawable.ic_unknown_white);
         }
@@ -84,15 +81,11 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchViewHolder>{
                     holder.launchMission.setText(title[0].trim());
                 } else {
                     holder.launchRocket.setText(launch.getName());
-                    if (launch.getMissions().size() > 0) {
-                        holder.launchMission.setText(launch.getMissions().get(0).getName());
-                    }
+                    holder.launchMission.setText(launch.getMission().getName());
                 }
             } catch (ArrayIndexOutOfBoundsException exception) {
                 holder.launchRocket.setText(launch.getName());
-                if (launch.getMissions().size() > 0) {
-                    holder.launchMission.setText(launch.getMissions().get(0).getName());
-                }
+                holder.launchMission.setText(launch.getMission().getName());
             }
         }
 

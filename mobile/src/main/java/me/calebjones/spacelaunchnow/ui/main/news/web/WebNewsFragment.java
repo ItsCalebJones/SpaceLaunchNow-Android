@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,15 +14,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.leocardz.link.preview.library.LinkPreviewCallback;
+import com.leocardz.link.preview.library.SourceContent;
+import com.leocardz.link.preview.library.TextCrawler;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.OrderedCollectionChangeSet;
-import io.realm.OrderedRealmCollectionChangeListener;
+import io.realm.Realm;
 import io.realm.RealmList;
-import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.news.Article;
-import me.calebjones.spacelaunchnow.content.repository.ArticleRepository;
+import me.calebjones.spacelaunchnow.content.data.articles.ArticleRepository;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 
 public class WebNewsFragment extends Fragment {

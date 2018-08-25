@@ -13,9 +13,6 @@ public class DataJobCreator implements JobCreator {
     @Override
     public Job create(String tag) {
         switch (tag) {
-            case UpdateJob.TAG:
-                Timber.v(UpdateJob.TAG);
-                return new UpdateJob();
             case UpdateWearJob.TAG:
                 Timber.v(UpdateWearJob.TAG);
                 return new UpdateWearJob();
@@ -34,9 +31,6 @@ public class DataJobCreator implements JobCreator {
             case SyncWidgetJob.TAG:
                 Timber.v(SyncWidgetJob.TAG);
                 return new SyncWidgetJob();
-            case LibraryDataJob.TAG:
-                Timber.v(LibraryDataJob.TAG);
-                return new LibraryDataJob();
             case UpdateLaunchListJob.TAG:
                 Timber.v(UpdateLaunchListJob.TAG);
                 return new UpdateLaunchListJob();

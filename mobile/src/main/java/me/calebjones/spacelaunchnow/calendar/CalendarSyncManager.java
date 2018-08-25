@@ -10,7 +10,7 @@ import io.realm.RealmList;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
 import me.calebjones.spacelaunchnow.content.services.BaseManager;
-import me.calebjones.spacelaunchnow.data.models.launchlibrary.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import timber.log.Timber;
 
@@ -89,13 +89,7 @@ public class CalendarSyncManager extends BaseManager {
         }
 
         for (final Launch launch : launchResults) {
-            if (launch.isUserToggledCalendar()) {
-                if (launch.syncCalendar()) {
-                    syncCalendar(launch);
-                }
-            } else {
                 syncCalendar(launch);
-            }
         }
         calendarUtil.deleteDuplicates(context, mRealm, "Space Launch Now", CalendarContract.Events.DESCRIPTION);
     }
@@ -107,25 +101,13 @@ public class CalendarSyncManager extends BaseManager {
                 Timber.e("Unable to update event %s, assuming deleted.", launchRealm.getName());
                 final Integer id = calendarUtil.addEvent(context, launchRealm);
                 if (id != null) {
-                    mRealm.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            launchRealm.setEventID(id);
-                            launchRealm.setSyncCalendar(true);
-                        }
-                    });
+                    mRealm.executeTransaction(realm -> launchRealm.setEventID(id));
                 }
             }
         } else {
             final Integer id = calendarUtil.addEvent(context, launchRealm);
             if (id != null) {
-                mRealm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        launchRealm.setEventID(id);
-                        launchRealm.setSyncCalendar(true);
-                    }
-                });
+                mRealm.executeTransaction(realm -> launchRealm.setEventID(id));
             }
         }
     }
@@ -142,9 +124,6 @@ public class CalendarSyncManager extends BaseManager {
                     @Override
                     public void execute(Realm realm) {
                         launchRealm.setEventID(null);
-                        if (!launchRealm.isUserToggledCalendar()) {
-                            launchRealm.setSyncCalendar(false);
-                        }
                     }
                 });
             }

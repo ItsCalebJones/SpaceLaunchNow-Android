@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="?android:attr/colorBackground">
 
     <TextView
         android:layout_width="match_parent"
@@ -36,14 +37,6 @@
         android:layout_marginBottom="@dimen/material_baseline_grid_1x"
         android:scaleType="fitCenter" />
 
-    <TextView
-        android:id="@+id/product_title"
-        style="@style/MaterialTypography.Dense.Subheading"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:maxLines="2"
-        android:textAlignment="center"
-        tools:text="$1.99" />
     <TextView
         android:id="@+id/product_price"
         style="@style/MaterialTypography.Dense.Caption"
