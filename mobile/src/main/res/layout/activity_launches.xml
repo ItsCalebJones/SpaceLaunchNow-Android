@@ -27,12 +27,12 @@
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Upcoming" />
+                android:text="@string/upcoming" />
 
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Previous" />
+                android:text="@string/previous" />
         </android.support.design.widget.TabLayout>
 
     </android.support.design.widget.AppBarLayout>
@@ -47,7 +47,7 @@
             android:id="@+id/stateful_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:emptyText="No launches found!"
+            app:emptyText="@string/no_launches"
             app:progressLayout="@layout/custom_progress">
 
             <LinearLayout

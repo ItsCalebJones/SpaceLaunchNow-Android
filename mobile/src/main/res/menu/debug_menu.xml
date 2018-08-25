@@ -3,27 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_alert"
+        android:icon="@drawable/ic_notifications_white"
+        app:showAsAction="ifRoom"
+        android:title="@string/alert" />
+    <item
         android:id="@+id/action_supporter"
         android:orderInCategory="95"
-        android:title="Remove Ads"
+        android:title="@string/remove_ads"
         android:textColor="?android:textColorPrimary"
         app:showAsAction="never" />
-
     <item
         android:id="@+id/action_FAB"
         android:orderInCategory="96"
-        android:title="Hide FAB"
+        android:title="@string/hide_fab"
         android:textColor="?android:textColorPrimary"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/action_alert"
-        android:icon="@drawable/ic_notifications_white"
-        app:showAsAction="always"
-        android:title="Alert" />
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_consent"
+        android:orderInCategory="105"
+        android:title="@string/data_consent"
         android:textColor="?android:textColorPrimary"
         app:showAsAction="never" />
     <item
@@ -31,10 +36,5 @@
         android:textColor="?android:textColorPrimary"
         android:title="Debug"
         />
-    <item
-        android:id="@+id/action_consent"
-        android:orderInCategory="105"
-        android:title="@string/data_consent"
-        android:textColor="?android:textColorPrimary"
-        app:showAsAction="never" />
+
 </menu>

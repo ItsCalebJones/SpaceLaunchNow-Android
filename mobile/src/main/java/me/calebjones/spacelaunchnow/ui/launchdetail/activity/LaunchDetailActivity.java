@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +20,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -32,6 +36,8 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.youtube.player.YouTubePlayer;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.mikepenz.iconics.IconicsDrawable;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -64,6 +70,7 @@ import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchRespons
 import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.ui.launchdetail.TabsAdapter;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
+import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -253,11 +260,14 @@ public class LaunchDetailActivity extends BaseActivity
             }
         }
 
-        toolbar.setNavigationOnClickListener(v -> {
-                    Intent intent = new Intent(context, MainActivity.class);
-                    startActivity(intent);
-                }
-        );
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setHomeButtonEnabled(true);
+                getSupportActionBar().setDisplayShowTitleEnabled(false);
+            }
+        }
         appBarLayout.addOnOffsetChangedListener(new CustomOnOffsetChangedListener(statusColor, getWindow()));
         appBarLayout.addOnOffsetChangedListener(this);
         mMaxScrollSize = appBarLayout.getTotalScrollRange();
@@ -596,6 +606,57 @@ public class LaunchDetailActivity extends BaseActivity
     @Override
     protected void onRestoreInstanceState(final Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.info_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            return true;
+        }
+        if (id == android.R.id.home) {
+            Intent intent = new Intent(context, MainActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
+        if (id == R.id.info) {
+            new MaterialDialog.Builder(this)
+                    .title(R.string.improve_our_data)
+                    .icon(new IconicsDrawable(this)
+                            .icon(FontAwesome.Icon.faw_discord)
+                            .color(Color.rgb(114, 137, 218))
+                            .sizeDp(24))
+                    .content(R.string.improve_our_data_content)
+                    .negativeText(R.string.button_no)
+                    .positiveText(R.string.ok)
+                    .onNegative((dialog, which) -> dialog.dismiss())
+                    .onPositive((dialog, which) -> {
+                        String discordUrl = getString(R.string.discord_url);
+                        Intent discordIntent = new Intent(Intent.ACTION_VIEW);
+                        discordIntent.setData(Uri.parse(discordUrl));
+                        startActivity(discordIntent);
+                    })
+                    .show();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

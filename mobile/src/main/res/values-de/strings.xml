@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="action_settings">Einstellungen</string>
     <string name="status_go">"Startfreigabe vorhanden"</string>
@@ -40,7 +40,7 @@ Danke!</string>
     <string name="notifications_settings">Stelle Startbenachrichtigungen und Planung ein.</string>
     <string name="appearance_settings">Stelle App-Darstellung, Widgets und Farben ein.</string>
     <string name="about_settings">App-Informationen über Lizenz, Bibliotheken, Changelog, usw.</string>
-    <string name="support_settings">Folge meinen Projekten und trage zur Entwicklung bei.</string>
+    <string name="support_settings">Schalte Pro Features frei und unterstütze zukünftige Entwicklungen.</string>
     <string name="wear_settings">Android Wear-Zifferblatt Einstellungen.</string>
     <string name="supporter_unlock_text">Danke, dass du erwägst, Space Launch Now zu unterstützen. Alle Support-Levels sind einmalige Käufe und schalten alle Pro-Features dauerhaft frei! Zahl was du willst, um alle Pro-Features freizuschalten!</string>
     <string name="thank_you_support">Danke für deinen andauernden Support!</string>
@@ -184,11 +184,11 @@ Danke!</string>
     <string name="agencies">Organisationen</string>
     <string name="error_launch_details">Fehler - nicht in der Lage, Trägerraketendetails zu laden.</string>
     <string name="height_full">Höhe: %.1f Meter</string>
-    <string name="diameter_full">Durchmesser: %.1fMeter</string>
+    <string name="diameter_full">Durchmesser: %.1f Meter</string>
     <string name="stage_full">Max Stufen: %d</string>
     <string name="mass_leo_full">Masse nach LEO: %d kg</string>
     <string name="mass_gto_full">Masse nach GTO: %d kg</string>
-    <string name="mass_launch_full">Masse zum Start: %d Tonnen</string>
+    <string name="mass_launch_full">Masse zum Start: %d kg</string>
     <string name="thrust_full">Schub zum Start: %d kN</string>
     <string name="upcoming">Kommend</string>
     <string name="previous">Vergangen</string>
@@ -336,7 +336,7 @@ Danke!</string>
     <string name="notifications">Benachrichtigungen</string>
     <string name="appearance">Erscheinung</string>
     <string name="wear">Uhr</string>
-    <string name="Support">Support</string>
+    <string name="Support">Werde Unterstützer</string>
     <string name="about">Info</string>
     <string name="watch_hour_mode">Zeitdarstellung</string>
     <string name="watch_hour_mode_on">Nutze 24-Stunden Zeitdarstellung.</string>
@@ -386,6 +386,17 @@ Danke!</string>
     <string name="misc">Verschiedenes</string>
     <string name="launchers">Trägerrakete</string>
     <string name="orbiters">Orbiter</string>
+    <string name="translate_settings">Hilf mit, Space Launch Now zu übersetzen!</string>
+    <string name="translate">Übersetzen</string>
+    <string name="news">Neuigkeiten</string>
+    <string name="get_help">Hol dir Hilfe</string>
+    <string name="gdpr_dialog_disagree_no_ads">Überhaupt keine Werbung, bitte.</string>
+    <string name="gdpr_type_ads">Werbung</string>
+    <string name="gdpr_type_crash">Absturzbericht</string>
+    <string name="gdpr_type_analytics">analytische Berichterstattung</string>
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="consent_body">Diese Anwendung nutzt Google Firebase zu analytischen Zwecken und Google AdMod zum Anbieten von Werbung. Deine anonymen Nutzerdaten können genutzt werden, um Anzeigen in dieser Anwendung zu personalisieren. Du kannst diese Berechtigung jederzeit in den Einstellung dieser App widerrufen.</string>
+    <string name="data_consent">Datenschutzerklärung</string>
+    <string name="supporter_main">Schalte Pro Features frei | Entferne Werbeanzeigen</string>
     <string name="mission_agency">Missions-Organisation</string>
 </resources>

@@ -113,16 +113,26 @@ public class AgencyDetailFragment extends BaseFragment {
 
             Timber.v("Setting up views...");
             lspCard.setVisibility(View.VISIBLE);
-            lspLogo.setVisibility(View.VISIBLE);
-            GlideApp.with(context)
-                    .load(detailLaunch.getLsp().getLogoUrl())
-                    .centerInside()
-                    .placeholder(R.drawable.placeholder)
-                    .into(lspLogo);
+
+            if (detailLaunch.getLsp().getLogoUrl() != null) {
+                lspLogo.setVisibility(View.VISIBLE);
+                GlideApp.with(context)
+                        .load(detailLaunch.getLsp().getLogoUrl())
+                        .centerInside()
+                        .into(lspLogo);
+            }
             lspName.setText(detailLaunch.getLsp().getName());
             lspType.setText(detailLaunch.getLsp().getType());
-            lspAdministrator.setText(String.format("%s", detailLaunch.getLsp().getAdministrator()));
-            lspFoundedYear.setText(String.format("Founded in %s", detailLaunch.getLsp().getFoundingYear()));
+            if (detailLaunch.getLsp().getAdministrator() != null) {
+                lspAdministrator.setText(String.format("%s", detailLaunch.getLsp().getAdministrator()));
+            } else {
+                lspAdministrator.setText(R.string.unknown_administrator);
+            }
+            if (detailLaunch.getLsp().getFoundingYear() != null) {
+                lspFoundedYear.setText(String.format(getString(R.string.founded_in), detailLaunch.getLsp().getFoundingYear()));
+            } else {
+                lspFoundedYear.setText(R.string.unknown_year);
+            }
             lspSummary.setText(detailLaunch.getLsp().getDescription());
             if (detailLaunch.getLsp().getInfoUrl() == null) {
                 lspInfoButtonOne.setVisibility(View.GONE);
