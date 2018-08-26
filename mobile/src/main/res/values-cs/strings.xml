@@ -405,5 +405,21 @@
 Tato aplikace využívá nástroj Google Firebase pro analýzu a službu Google AdMod pro zobrazování reklam. Vaše anonymní údaje o využití mohou být použity k přizpůsobení reklam v rámci této aplikace. Oprávnění můžete kdykoli stáhnout z nastavení aplikací.</string>
     <string name="data_consent">Souhlas se zpracováním dat</string>
     <string name="supporter_main">Získat funkce PRO verze a odstranit reklamy</string>
+    <string name="join_discord">Připojte se k nám na serveru Space Launch Now Discord a získejte aktuální události a sdílejte nejnovější zprávy s nadšenci do vesmírných letů!</string>
+    <string name="founded_in">Založeno v roce %s</string>
+    <string name="view_upcoming_launches">Zobrazit aktuální starty</string>
+    <string name="unknown_mission_or_payload">Neznámá mise nebo náklad</string>
+    <string name="view_more_launches">Zobrazit vice startů</string>
+    <string name="view_rocket_launches">Zobrazit %s startů</string>
+    <string name="refresh">Aktualizovat zobrazení</string>
+    <string name="search">Hledat</string>
+    <string name="date">Datum</string>
+    <string name="hide_fab">Skrýt FAB</string>
+    <string name="alert">Upozornění</string>
+    <string name="restore_purchase">Obnovit nákup</string>
+    <string name="unknown_administrator">Neznámý administrátor</string>
+    <string name="unknown_year">Rok založení - neznámý.</string>
+    <string name="improve_our_data">Pomozte zlepšit naše údaje</string>
+    <string name="improve_our_data_content">Pokud máte zájem o pomoc při zlepšování přesnosti našich údajů o vzdušném prostoru, připojte se k nám na serveru Space Launch Now Discord a požádejte o to, abyste se stal knihovníkem</string>
     <string name="mission_agency">Pořádající agentura mise</string>
 </resources>
