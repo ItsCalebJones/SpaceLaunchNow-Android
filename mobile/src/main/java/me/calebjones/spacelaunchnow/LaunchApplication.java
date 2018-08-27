@@ -169,12 +169,15 @@ public class LaunchApplication extends Application {
 
     private void setupData(final boolean update) {
         final String version;
+        boolean debug;
         if (sharedPreference.isDebugEnabled()) {
             version = "dev";
+            debug = true;
         } else {
             version = "1.3";
+            debug = false;
         }
-        DataClient.create(version, getString(R.string.sln_token));
+        DataClient.create(version, getString(R.string.sln_token), debug);
         JobManager.create(context).addJobCreator(new DataJobCreator());
         startJobs();
     }
