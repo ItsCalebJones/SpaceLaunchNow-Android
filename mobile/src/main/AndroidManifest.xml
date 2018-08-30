@@ -270,6 +270,10 @@
         <activity
             android:name=".ui.launches.LauncherLaunches"
             android:exported="true" />
+        <activity
+            android:name=".ui.launches.AgencyLaunchActivity"
+            android:label="@string/title_activity_agency_launch"
+            android:theme="@style/BaseAppTheme"></activity>
     </application>
 
 </manifest>

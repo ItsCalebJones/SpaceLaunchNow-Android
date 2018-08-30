@@ -21,4 +21,5 @@
     <dimen name="header_view_end_margin_right">14dp</dimen>
     <dimen name="header_view_start_margin_bottom">14dp</dimen>
     <dimen name="view_margins">16dp</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
 </resources>

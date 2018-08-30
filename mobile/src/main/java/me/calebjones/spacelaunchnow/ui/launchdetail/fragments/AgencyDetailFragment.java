@@ -28,7 +28,7 @@ import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
-import me.calebjones.spacelaunchnow.ui.launches.AgencyLaunches;
+import me.calebjones.spacelaunchnow.ui.launches.AgencyLaunchActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -191,7 +191,7 @@ public class AgencyDetailFragment extends BaseFragment {
 
     @OnClick(R.id.lsp_agency)
     public void onViewClicked() {
-        Intent intent = new Intent(context, AgencyLaunches.class);
+        Intent intent = new Intent(context, AgencyLaunchActivity.class);
         intent.putExtra("lspName", detailLaunch.getLsp().getName());
         startActivity(intent);
     }
