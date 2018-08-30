@@ -188,7 +188,7 @@
     <string name="stage_full">Max Stages: %d</string>
     <string name="mass_leo_full">Mass to LEO: %d kg</string>
     <string name="mass_gto_full">Mass to GTO: %d kg</string>
-    <string name="mass_launch_full">Mass at Launch: %d kg</string>
+    <string name="mass_launch_full">Mass at Launch: %d T</string>
     <string name="thrust_full">Thrust at Launch: %d kN</string>
     <string name="upcoming">Upcoming</string>
     <string name="previous">Previous</string>

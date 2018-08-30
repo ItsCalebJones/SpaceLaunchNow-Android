@@ -68,7 +68,7 @@ android {
     }
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
-    def appVersionCode = app.versionMajor * 10000 + app.versionMinor * 1000 + app.versionPatch * 100 + advancedVersioning.versionCode
+    def appVersionCode = app.versionMajor * 10000 + app.versionMinor * 1000 + app.versionPatch * 100000 + advancedVersioning.versionCode
 
     defaultConfig {
         flavorDimensions "release"

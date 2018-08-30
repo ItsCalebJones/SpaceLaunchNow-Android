@@ -74,6 +74,7 @@ public class AgencyLaunches extends BaseActivity implements SwipeRefreshLayout.O
     private List<Agency> agencies;
     public boolean canLoadMore;
     private boolean showUpcoming = true;
+    private boolean statefulStateContentShow = false;
 
     public AgencyLaunches() {
         super("Agency Activity");
@@ -99,6 +100,7 @@ public class AgencyLaunches extends BaseActivity implements SwipeRefreshLayout.O
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(this));
         recyclerView.setAdapter(adapter);
         swiperefresh.setOnRefreshListener(this);
+        statefulView.showProgress();
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
@@ -179,7 +181,6 @@ public class AgencyLaunches extends BaseActivity implements SwipeRefreshLayout.O
             nextOffset = 0;
             adapter.clear();
         }
-        statefulView.showProgress();
         if (showUpcoming) {
             upcomingDataRepository.getUpcomingLaunches(nextOffset, searchTerm, lspName, null, new Callbacks.ListCallback() {
                 @Override
@@ -298,12 +299,18 @@ public class AgencyLaunches extends BaseActivity implements SwipeRefreshLayout.O
     private void updateAdapter(List<Launch> launches) {
 
         if (launches.size() > 0) {
-            statefulView.showContent();
+            if (!statefulStateContentShow) {
+                statefulView.showContent();
+                statefulStateContentShow = true;
+            }
             adapter.addItems(launches);
             adapter.notifyDataSetChanged();
 
         } else {
-            statefulView.showEmpty();
+            if (statefulStateContentShow) {
+                statefulView.showEmpty();
+                statefulStateContentShow = false;
+            }
             if (adapter != null) {
                 adapter.clear();
             }

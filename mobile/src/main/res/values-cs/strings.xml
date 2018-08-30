@@ -188,7 +188,7 @@
     <string name="stage_full">Max. stupně: %d</string>
     <string name="mass_leo_full">Hmotnost na nízkou oběžnou dráhu: %d kg</string>
     <string name="mass_gto_full">Hmotnost na přechodnou dráhu ke geostacionární dráze: %d kg</string>
-    <string name="mass_launch_full">Hmotnost při startu: %d Tuny</string>
+    <string name="mass_launch_full">Hmotnost při startu: %d T</string>
     <string name="thrust_full">Tah při startu: %d kN</string>
     <string name="upcoming">Nadcházející</string>
     <string name="previous">Předcházející</string>
