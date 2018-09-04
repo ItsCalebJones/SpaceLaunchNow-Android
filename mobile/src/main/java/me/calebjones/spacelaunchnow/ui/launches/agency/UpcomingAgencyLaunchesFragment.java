@@ -29,7 +29,7 @@ import me.calebjones.spacelaunchnow.utils.views.EndlessRecyclerViewScrollListene
 import timber.log.Timber;
 
 
-public class UpcomingAgencyLaunchesFragment extends BaseFragment  {
+public class UpcomingAgencyLaunchesFragment extends BaseFragment {
 
     private static final String SEARCH_TERM = "searchTerm";
     private static final String LSP_NAME = "lspName";
@@ -66,7 +66,7 @@ public class UpcomingAgencyLaunchesFragment extends BaseFragment  {
      *
      * @param searchTerm Parameter 1.
      * @param lspName    Parameter 2.
-     * @return A new instance of fragment PreviousAgencyLaunchesFragment.
+     * @return A new instance of fragment PreviousLauncherLaunchesFragment.
      */
     // TODO: Rename and change types and number of parameters
     public static UpcomingAgencyLaunchesFragment newInstance(String searchTerm, String lspName) {
@@ -92,7 +92,7 @@ public class UpcomingAgencyLaunchesFragment extends BaseFragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_agency_launch, container, false);
+        View view = inflater.inflate(R.layout.fragment_launch_list, container, false);
         ButterKnife.bind(this, view);
 
         adapter = new ListAdapter(context);
@@ -178,10 +178,8 @@ public class UpcomingAgencyLaunchesFragment extends BaseFragment  {
             adapter.notifyDataSetChanged();
 
         } else {
-            if (statefulStateContentShow) {
-                statefulView.showEmpty();
-                statefulStateContentShow = false;
-            }
+            statefulView.showEmpty();
+            statefulStateContentShow = false;
             if (adapter != null) {
                 adapter.clear();
             }

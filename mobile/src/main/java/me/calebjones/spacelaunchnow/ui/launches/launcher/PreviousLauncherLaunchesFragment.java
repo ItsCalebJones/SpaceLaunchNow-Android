@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.ui.launches.agency;
+package me.calebjones.spacelaunchnow.ui.launches.launcher;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -31,13 +31,14 @@ import timber.log.Timber;
  * Activities that contain this fragment must implement the
  * {@link OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link PreviousAgencyLaunchesFragment#newInstance} factory method to
+ * Use the {@link PreviousLauncherLaunchesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PreviousAgencyLaunchesFragment extends BaseFragment {
+public class PreviousLauncherLaunchesFragment extends BaseFragment {
 
     private static final String SEARCH_TERM = "searchTerm";
     private static final String LSP_NAME = "lspName";
+    private static final String LAUNCHER_ID = "launcherId";
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -56,10 +57,11 @@ public class PreviousAgencyLaunchesFragment extends BaseFragment {
     public boolean canLoadMore;
     private boolean statefulStateContentShow = false;
     private Context context;
+    private Integer launcherId = null;
 
     private OnFragmentInteractionListener mListener;
 
-    public PreviousAgencyLaunchesFragment() {
+    public PreviousLauncherLaunchesFragment() {
         // Required empty public constructor
     }
 
@@ -72,11 +74,12 @@ public class PreviousAgencyLaunchesFragment extends BaseFragment {
      * @return A new instance of fragment PreviousLauncherLaunchesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PreviousAgencyLaunchesFragment newInstance(String searchTerm, String lspName) {
-        PreviousAgencyLaunchesFragment fragment = new PreviousAgencyLaunchesFragment();
+    public static PreviousLauncherLaunchesFragment newInstance(String searchTerm, String lspName, Integer launcherId) {
+        PreviousLauncherLaunchesFragment fragment = new PreviousLauncherLaunchesFragment();
         Bundle args = new Bundle();
         args.putString(SEARCH_TERM, searchTerm);
         args.putString(LSP_NAME, lspName);
+        args.putInt(LAUNCHER_ID, launcherId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -87,6 +90,7 @@ public class PreviousAgencyLaunchesFragment extends BaseFragment {
         if (getArguments() != null) {
             searchTerm = getArguments().getString(SEARCH_TERM);
             lspName = getArguments().getString(LSP_NAME);
+            launcherId = getArguments().getInt(LAUNCHER_ID);
         }
         context = getActivity();
         previousDataRepository = new PreviousDataRepository(context, getRealm());
@@ -144,7 +148,7 @@ public class PreviousAgencyLaunchesFragment extends BaseFragment {
             nextOffset = 0;
             adapter.clear();
         }
-        previousDataRepository.getPreviousLaunches(nextOffset, searchTerm, lspName, null, new Callbacks.ListCallback() {
+        previousDataRepository.getPreviousLaunches(nextOffset, searchTerm, lspName, launcherId, new Callbacks.ListCallback() {
             @Override
             public void onLaunchesLoaded(List<Launch> launches, int next) {
                 Timber.v("Offset - %s", next);

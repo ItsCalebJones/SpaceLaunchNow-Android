@@ -1,16 +1,17 @@
-package me.calebjones.spacelaunchnow.ui.launches.agency;
+package me.calebjones.spacelaunchnow.ui.launches.launcher;
+
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -20,24 +21,19 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
-import me.calebjones.spacelaunchnow.content.data.previous.PreviousDataRepository;
+import me.calebjones.spacelaunchnow.content.data.upcoming.UpcomingDataRepository;
+import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.ui.main.launches.ListAdapter;
 import me.calebjones.spacelaunchnow.utils.views.EndlessRecyclerViewScrollListener;
 import timber.log.Timber;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link PreviousAgencyLaunchesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class PreviousAgencyLaunchesFragment extends BaseFragment {
+
+public class UpcomingLauncherLaunchesFragment extends BaseFragment {
 
     private static final String SEARCH_TERM = "searchTerm";
     private static final String LSP_NAME = "lspName";
+    private static final String LAUNCHER_ID = "launcherId";
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -50,16 +46,19 @@ public class PreviousAgencyLaunchesFragment extends BaseFragment {
     private ListAdapter adapter;
     private String searchTerm = null;
     private String lspName = null;
-    private PreviousDataRepository previousDataRepository;
+    private UpcomingDataRepository upcomingDataRepository;
     private int nextOffset = 0;
     private EndlessRecyclerViewScrollListener scrollListener;
+    private ArrayList<String> agencyList;
+    private List<Agency> agencies;
     public boolean canLoadMore;
     private boolean statefulStateContentShow = false;
     private Context context;
+    private Integer launcherId = null;
 
-    private OnFragmentInteractionListener mListener;
+    private UpcomingLauncherLaunchesFragment.OnFragmentInteractionListener mListener;
 
-    public PreviousAgencyLaunchesFragment() {
+    public UpcomingLauncherLaunchesFragment() {
         // Required empty public constructor
     }
 
@@ -72,11 +71,12 @@ public class PreviousAgencyLaunchesFragment extends BaseFragment {
      * @return A new instance of fragment PreviousLauncherLaunchesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PreviousAgencyLaunchesFragment newInstance(String searchTerm, String lspName) {
-        PreviousAgencyLaunchesFragment fragment = new PreviousAgencyLaunchesFragment();
+    public static UpcomingLauncherLaunchesFragment newInstance(String searchTerm, String lspName, Integer launcherId) {
+        UpcomingLauncherLaunchesFragment fragment = new UpcomingLauncherLaunchesFragment();
         Bundle args = new Bundle();
         args.putString(SEARCH_TERM, searchTerm);
         args.putString(LSP_NAME, lspName);
+        args.putInt(LAUNCHER_ID, launcherId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -87,9 +87,10 @@ public class PreviousAgencyLaunchesFragment extends BaseFragment {
         if (getArguments() != null) {
             searchTerm = getArguments().getString(SEARCH_TERM);
             lspName = getArguments().getString(LSP_NAME);
+            launcherId = getArguments().getInt(LAUNCHER_ID);
         }
         context = getActivity();
-        previousDataRepository = new PreviousDataRepository(context, getRealm());
+        upcomingDataRepository = new UpcomingDataRepository(context, getRealm());
     }
 
     @Override
@@ -111,7 +112,7 @@ public class PreviousAgencyLaunchesFragment extends BaseFragment {
                 // Add whatever code is needed to append new items to the bottom of the list
                 if (canLoadMore) {
                     fetchData(false);
-                    mListener.showPreviousLoading(true);
+                    mListener.showUpcomingLoading(true);
                 }
             }
         };
@@ -121,11 +122,12 @@ public class PreviousAgencyLaunchesFragment extends BaseFragment {
         return view;
     }
 
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof UpcomingLauncherLaunchesFragment.OnFragmentInteractionListener) {
+            mListener = (UpcomingLauncherLaunchesFragment.OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -144,7 +146,7 @@ public class PreviousAgencyLaunchesFragment extends BaseFragment {
             nextOffset = 0;
             adapter.clear();
         }
-        previousDataRepository.getPreviousLaunches(nextOffset, searchTerm, lspName, null, new Callbacks.ListCallback() {
+        upcomingDataRepository.getUpcomingLaunches(nextOffset, searchTerm, lspName, launcherId, new Callbacks.ListCallback() {
             @Override
             public void onLaunchesLoaded(List<Launch> launches, int next) {
                 Timber.v("Offset - %s", next);
@@ -155,8 +157,7 @@ public class PreviousAgencyLaunchesFragment extends BaseFragment {
 
             @Override
             public void onNetworkStateChanged(boolean refreshing) {
-//                showNetworkLoading(refreshing);
-                mListener.showPreviousLoading(refreshing);
+                mListener.showUpcomingLoading(refreshing);
             }
 
             @Override
@@ -208,7 +209,7 @@ public class PreviousAgencyLaunchesFragment extends BaseFragment {
      */
     public interface OnFragmentInteractionListener {
 
-        void showPreviousLoading(boolean loading);
+        void showUpcomingLoading(boolean loading);
 
     }
 }

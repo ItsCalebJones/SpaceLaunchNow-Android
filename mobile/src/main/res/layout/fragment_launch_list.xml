@@ -1,4 +1,5 @@
-<android.support.design.widget.CoordinatorLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/coordinator"
@@ -11,7 +12,7 @@
             android:id="@+id/stateful_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:emptyText="@string/no_launches"
+            app:emptyLayout="@layout/empty_launches"
             app:progressLayout="@layout/custom_progress">
 
             <LinearLayout

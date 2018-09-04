@@ -19,11 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.RealmList;
-import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.main.Launcher;
 import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
-import me.calebjones.spacelaunchnow.ui.launches.LauncherLaunches;
+import me.calebjones.spacelaunchnow.ui.launches.launcher.LauncherLaunchActivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
@@ -247,7 +246,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
                     }
                     break;
                 case R.id.launcher_launches:
-                    Intent launches = new Intent(activity, LauncherLaunches.class);
+                    Intent launches = new Intent(activity, LauncherLaunchActivity.class);
                     launches.putExtra("launcherId", items.get(position).getId());
                     launches.putExtra("launcherName", items.get(position).getName());
                     activity.startActivity(launches);

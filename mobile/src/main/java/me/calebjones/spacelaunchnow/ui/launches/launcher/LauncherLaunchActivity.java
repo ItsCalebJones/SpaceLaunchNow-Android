@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.ui.launches;
+package me.calebjones.spacelaunchnow.ui.launches.launcher;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,7 +40,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class LauncherLaunchActivity extends AppCompatActivity implements UpcomingAgencyLaunchesFragment.OnFragmentInteractionListener, PreviousAgencyLaunchesFragment.OnFragmentInteractionListener, SwipeRefreshLayout.OnRefreshListener {
+public class LauncherLaunchActivity extends AppCompatActivity implements UpcomingLauncherLaunchesFragment.OnFragmentInteractionListener, PreviousLauncherLaunchesFragment.OnFragmentInteractionListener, SwipeRefreshLayout.OnRefreshListener {
 
 
     @BindView(R.id.toolbar)
@@ -59,14 +59,16 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
     FloatingActionButton menu;
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
-    private UpcomingAgencyLaunchesFragment upcomingFragment;
-    private PreviousAgencyLaunchesFragment previousFragment;
+    private UpcomingLauncherLaunchesFragment upcomingFragment;
+    private PreviousLauncherLaunchesFragment previousFragment;
     private ArrayList<String> agencyList;
     private List<Agency> agencies;
     private boolean upcomingLoading = false;
     private boolean previousLoading = false;
-    String lspName;
-    String searchTerm;
+    private String searchTerm = null;
+    private String lspName = null;
+    private String launcherName = null;
+    private Integer launcherId = null;
 
 
     @Override
@@ -75,9 +77,11 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
         setContentView(R.layout.activity_agency_launch);
         ButterKnife.bind(this);
 
-        Intent intent = getIntent();
-        if (null != intent) { //Null Checking
-            lspName = intent.getStringExtra("lspName");
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            lspName = extras.getString("lspName");
+            launcherName = extras.getString("launcherName");
+            launcherId = extras.getInt("launcherId");
         }
         setTitle();
 
@@ -94,7 +98,7 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
-        getFeaturedAgencies();
+        menu.setVisibility(View.GONE);
     }
 
     @Override
@@ -103,44 +107,7 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
         super.onResume();
     }
 
-    private void getFeaturedAgencies() {
-        DataClient.getInstance().getFeaturedAgencies(new Callback<AgencyResponse>() {
-            @Override
-            public void onResponse(Call<AgencyResponse> call, Response<AgencyResponse> response) {
-                if (response.isSuccessful()) {
-                    List<Agency> agencies = response.body().getAgencies();
-                    agencyList = new ArrayList<>();
-                    for (Agency agency : agencies) {
-                        agencyList.add(agency.getName());
-                    }
-                    menu.setVisibility(View.VISIBLE);
-                } else {
-                    menu.setVisibility(View.GONE);
-                }
-            }
 
-            @Override
-            public void onFailure(Call<AgencyResponse> call, Throwable t) {
-                menu.setVisibility(View.GONE);
-            }
-        });
-    }
-
-    private void showAgencyDialog() {
-        new MaterialDialog.Builder(this)
-                .title(R.string.select_launch_agency)
-                .content(R.string.select_launch_agency_description)
-                .items(agencyList)
-                .buttonRippleColorRes(R.color.colorAccentLight)
-                .itemsCallback((dialog, view, which, text) -> {
-                    lspName = String.valueOf(text);
-                    refresh();
-                })
-                .positiveText(R.string.filter)
-                .negativeText(R.string.close)
-                .icon(ContextCompat.getDrawable(this, R.mipmap.ic_launcher))
-                .show();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -206,12 +173,10 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
     }
 
     private void setTitle() {
-        if (lspName != null) {
-            toolbar.setTitle(lspName);
-        } else if (searchTerm != null) {
-            toolbar.setTitle(searchTerm);
+        if (launcherName != null) {
+            toolbar.setTitle(launcherName);
         } else {
-            toolbar.setTitle("Select an Agency");
+            toolbar.setTitle("Launches");
         }
     }
 
@@ -245,9 +210,9 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
 
             switch (position) {
                 case 0:
-                    return UpcomingAgencyLaunchesFragment.newInstance(searchTerm, lspName);
+                    return UpcomingLauncherLaunchesFragment.newInstance(searchTerm, lspName, launcherId);
                 case 1:
-                    return PreviousAgencyLaunchesFragment.newInstance(searchTerm, lspName);
+                    return PreviousLauncherLaunchesFragment.newInstance(searchTerm, lspName, launcherId);
                 default:
                     return null;
             }
@@ -264,10 +229,10 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
             // save the appropriate reference depending on position
             switch (position) {
                 case 0:
-                    upcomingFragment = (UpcomingAgencyLaunchesFragment) createdFragment;
+                    upcomingFragment = (UpcomingLauncherLaunchesFragment) createdFragment;
                     break;
                 case 1:
-                    previousFragment = (PreviousAgencyLaunchesFragment) createdFragment;
+                    previousFragment = (PreviousLauncherLaunchesFragment) createdFragment;
                     break;
             }
             return createdFragment;
@@ -277,11 +242,5 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
         public int getCount() {
             return 2;
         }
-    }
-
-
-    @OnClick(R.id.menu)
-    public void onViewClicked() {
-        showAgencyDialog();
     }
 }
