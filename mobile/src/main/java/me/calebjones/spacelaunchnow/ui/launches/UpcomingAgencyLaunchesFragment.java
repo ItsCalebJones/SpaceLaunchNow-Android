@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -22,6 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
 import me.calebjones.spacelaunchnow.content.data.upcoming.UpcomingDataRepository;
@@ -37,7 +39,7 @@ import retrofit2.Response;
 import timber.log.Timber;
 
 
-public class UpcomingAgencyLaunchesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class UpcomingAgencyLaunchesFragment extends BaseFragment  {
 
     private static final String SEARCH_TERM = "searchTerm";
     private static final String LSP_NAME = "lspName";
@@ -46,12 +48,8 @@ public class UpcomingAgencyLaunchesFragment extends Fragment implements SwipeRef
     RecyclerView recyclerView;
     @BindView(R.id.stateful_view)
     SimpleStatefulLayout statefulView;
-    @BindView(R.id.swipeRefresh)
-    SwipeRefreshLayout swipeRefresh;
-    @BindView(R.id.menu)
-    FloatingActionButton menu;
-    @BindView(R.id.constraintLayout)
-    ConstraintLayout constraintLayout;
+    @BindView(R.id.coordinator)
+    CoordinatorLayout coordinatorLayout;
 
     private LinearLayoutManager linearLayoutManager;
     private ListAdapter adapter;
@@ -98,6 +96,7 @@ public class UpcomingAgencyLaunchesFragment extends Fragment implements SwipeRef
             lspName = getArguments().getString(LSP_NAME);
         }
         context = getActivity();
+        upcomingDataRepository = new UpcomingDataRepository(context, getRealm());
     }
 
     @Override
@@ -111,7 +110,6 @@ public class UpcomingAgencyLaunchesFragment extends Fragment implements SwipeRef
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
         recyclerView.setAdapter(adapter);
-        swipeRefresh.setOnRefreshListener(this);
         statefulView.showProgress();
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
@@ -120,22 +118,16 @@ public class UpcomingAgencyLaunchesFragment extends Fragment implements SwipeRef
                 // Add whatever code is needed to append new items to the bottom of the list
                 if (canLoadMore) {
                     fetchData(false);
-                    swipeRefresh.setRefreshing(true);
+                    mListener.showUpcomingLoading(true);
                 }
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
-        getFeaturedAgencies();
+        fetchData(true);
         // Inflate the layout for this fragment
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -152,27 +144,6 @@ public class UpcomingAgencyLaunchesFragment extends Fragment implements SwipeRef
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    private void getFeaturedAgencies() {
-        DataClient.getInstance().getFeaturedAgencies(new Callback<AgencyResponse>() {
-            @Override
-            public void onResponse(Call<AgencyResponse> call, Response<AgencyResponse> response) {
-                if (response.isSuccessful()) {
-                    List<Agency> agencies = response.body().getAgencies();
-                    agencyList = new ArrayList<>();
-                    for (Agency agency : agencies) {
-                        agencyList.add(agency.getName());
-                    }
-                    menu.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<AgencyResponse> call, Throwable t) {
-
-            }
-        });
     }
 
     public void fetchData(boolean forceRefresh) {
@@ -192,7 +163,7 @@ public class UpcomingAgencyLaunchesFragment extends Fragment implements SwipeRef
 
             @Override
             public void onNetworkStateChanged(boolean refreshing) {
-                showNetworkLoading(refreshing);
+                mListener.showUpcomingLoading(refreshing);
             }
 
             @Override
@@ -228,28 +199,9 @@ public class UpcomingAgencyLaunchesFragment extends Fragment implements SwipeRef
         scrollListener.resetState();
     }
 
-    private void showNetworkLoading(boolean loading) {
-        if (loading) {
-            showLoading();
-        } else {
-            hideLoading();
-        }
-    }
-
-    private void showLoading() {
-        Timber.v("Show Loading...");
-        swipeRefresh.post(() -> swipeRefresh.setRefreshing(true));
-    }
-
-    private void hideLoading() {
-        Timber.v("Hide Loading...");
-        swipeRefresh.post(() -> swipeRefresh.setRefreshing(false));
-    }
-
-    @Override
-    public void onRefresh() {
-        searchTerm = null;
-        lspName = null;
+    public void onRefresh(String lspName, String searchTerm) {
+        this.searchTerm = searchTerm;
+        this.lspName = lspName;
         fetchData(true);
     }
 
@@ -264,11 +216,8 @@ public class UpcomingAgencyLaunchesFragment extends Fragment implements SwipeRef
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
 
-        void setLSPName(String lspName);
+        void showUpcomingLoading(boolean loading);
 
-        void setSearchTerm(String searchTerm);
     }
 }
