@@ -421,4 +421,10 @@
     <string name="unknown_year">Founding year - unknown.</string>
     <string name="improve_our_data">Help Improve our Data</string>
     <string name="improve_our_data_content">Interested in helping improve the accuracy of our spaceflight data? Join us on the Space Launch Now Discord server and ask about becoming a librarian.</string>
+    <string name="title_activity_agency_launch">AgencyLaunchActivity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="tab_text_3">Tab 3</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="no_launches_found">No launches found.</string>
 </resources>
