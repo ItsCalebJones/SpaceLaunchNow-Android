@@ -1,9 +1,9 @@
 package me.calebjones.spacelaunchnow.ui.launchdetail.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatButton;
@@ -22,21 +22,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.RetroFitFragment;
-import me.calebjones.spacelaunchnow.content.data.DataSaver;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
-import me.calebjones.spacelaunchnow.data.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.Result;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.Launcher;
 import me.calebjones.spacelaunchnow.data.models.main.Mission;
-import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
-import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
-import me.calebjones.spacelaunchnow.ui.launches.LauncherLaunches;
+import me.calebjones.spacelaunchnow.ui.launches.launcher.LauncherLaunchActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.Utils;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import timber.log.Timber;
 
 public class MissionDetailFragment extends RetroFitFragment {
@@ -166,6 +158,7 @@ public class MissionDetailFragment extends RetroFitFragment {
         }
     }
 
+    @SuppressLint("StringFormatMatches")
     private void configureLaunchVehicle(Launcher launchVehicle) {
         if (launchVehicle != null) {
             vehicleSpecView.setVisibility(View.VISIBLE);
@@ -214,7 +207,7 @@ public class MissionDetailFragment extends RetroFitFragment {
                 }
                 launchesButton.setText(String.format(getString(R.string.view_rocket_launches), launchVehicle.getName()));
                 launchesButton.setOnClickListener(v -> {
-                    Intent launches = new Intent(context, LauncherLaunches.class);
+                    Intent launches = new Intent(context, LauncherLaunchActivity.class);
                     launches.putExtra("launcherId", launchVehicle.getId());
                     launches.putExtra("launcherName", launchVehicle.getName());
                     context.startActivity(launches);

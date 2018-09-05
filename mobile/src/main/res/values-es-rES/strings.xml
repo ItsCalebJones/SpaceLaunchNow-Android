@@ -188,7 +188,7 @@
     <string name="stage_full">Máx. etapas: %d</string>
     <string name="mass_leo_full">Masa hasta LEO: %d kg</string>
     <string name="mass_gto_full">Masa hasta GTO: %d kg</string>
-    <string name="mass_launch_full">Masa en lanzamiento: %d kg</string>
+    <string name="mass_launch_full">Masa en lanzamiento: %d T</string>
     <string name="thrust_full">Empuje en lanzamiento: %d kN</string>
     <string name="upcoming">Próximos</string>
     <string name="previous">Anteriores</string>
