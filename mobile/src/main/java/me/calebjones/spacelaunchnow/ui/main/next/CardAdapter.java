@@ -26,7 +26,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -126,11 +125,11 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         String title;
         try {
             if (launchItem.isValid()) {
-                if (launchItem.getLauncher() != null) {
+                if (launchItem.getLauncherConfig() != null) {
                     if (launchItem.getLsp() != null) {
-                        title = launchItem.getLsp().getName() + " | " + (launchItem.getLauncher().getName());
+                        title = launchItem.getLsp().getName() + " | " + (launchItem.getLauncherConfig().getName());
                     } else {
-                        title = launchItem.getLauncher().getName();
+                        title = launchItem.getLauncherConfig().getName();
                     }
                 } else if (launchItem.getName() != null) {
                     title = launchItem.getName();
@@ -172,12 +171,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     holder.contentForecast.setVisibility(View.GONE);
                 }
 
-                holder.content_status.setText(LaunchStatus.getLaunchStatusTitle(context, launchItem.getStatus()));
+                holder.content_status.setText(LaunchStatus.getLaunchStatusTitle(context, launchItem.getStatus().getId()));
 
                 //If timestamp is available calculate TMinus and date.
-                if (launchItem.getNetstamp() > 0 && (launchItem.getStatus() == 1 || launchItem.getStatus() == 2)) {
-                    long longdate = launchItem.getNetstamp();
-                    longdate = longdate * 1000;
+                if (launchItem.getNet().getTime() > 0 && (launchItem.getStatus().getId() == 1 || launchItem.getStatus().getId() == 2)) {
+                    //TODO VERIFY THIS STILL WORKS
+                    long longdate = launchItem.getNet().getTime();
                     final Date date = new Date(longdate);
 
                     Calendar future = DateToCalendar(date);
@@ -189,7 +188,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                         holder.timer.cancel();
                     }
 
-                    final int status = launchItem.getStatus();
+                    final int status = launchItem.getStatus().getId();
                     final String hold = launchItem.getHoldreason();
 
                     holder.content_TMinus_status.setTypeface(Typeface.SANS_SERIF);
@@ -306,7 +305,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 }
 
                 //Get launch date
-                if (launchItem.getStatus() == 2) {
+                if (launchItem.getStatus().getId() == 2) {
 
                     if (launchItem.getNet() != null) {
                         //Get launch date
@@ -411,28 +410,28 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         if (holder.timer != null) {
             holder.timer.cancel();
         }
-        if (launchItem.getStatus() == 2) {
+        if (launchItem.getStatus().getId() == 2) {
             holder.countdownView.setVisibility(View.GONE);
             if (launchItem.getLsp() != null) {
                 holder.content_TMinus_status.setText(String.format(context.getString(R.string.pending_confirmed_go_specific), launchItem.getLsp().getName()));
             } else {
                 holder.content_TMinus_status.setText(R.string.pending_confirmed_go);
             }
-        } else if (launchItem.getStatus() == 3)  {
+        } else if (launchItem.getStatus().getId() == 3)  {
             holder.countdownView.setVisibility(View.GONE);
             holder.content_TMinus_status.setText("Launch was a success!");
-        } else if (launchItem.getStatus() == 4)  {
+        } else if (launchItem.getStatus().getId() == 4)  {
             holder.countdownView.setVisibility(View.GONE);
             holder.content_TMinus_status.setText("A launch failure has occurred.");
-        } else if (launchItem.getStatus() == 5)  {
+        } else if (launchItem.getStatus().getId() == 5)  {
                 holder.content_TMinus_status.setText("A hold has been placed on the launch.");
-        } else if (launchItem.getStatus() == 6)  {
+        } else if (launchItem.getStatus().getId() == 6)  {
             holder.countdownDays.setText("00");
             holder.countdownHours.setText("00");
             holder.countdownMinutes.setText("00");
             holder.countdownSeconds.setText("00");
             holder.content_TMinus_status.setText("The launch is currently in flight.");
-        } else if (launchItem.getStatus() == 7)  {
+        } else if (launchItem.getStatus().getId() == 7)  {
             holder.countdownView.setVisibility(View.GONE);
             holder.content_TMinus_status.setText("Launch was a partial failure, payload separated into an incorrect orbit.");
         }

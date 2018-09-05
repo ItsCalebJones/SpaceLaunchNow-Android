@@ -108,7 +108,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             }
         }
 
-        if (launchItem.getStatus() != null && launchItem.getStatus() == 2) {
+        if (launchItem.getStatus() != null && launchItem.getStatus().getId() == 2) {
             //Get launch date
             launchDate = sdf.format(launchItem.getNet());
 

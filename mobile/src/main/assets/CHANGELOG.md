@@ -11,7 +11,7 @@ Change over to using my own server to support future Blue Origin launches and ad
 
 #### Changelog
 * Iconography changes to improve user experience.
-* Added a 'View More' buttons for launchers and agencies.
+* Added a 'View More' buttons for launcherConfigs and agencies.
 * Moved away from using Launch Library API to our own server.
 
 Special shoutout to the translators that have helped fully translate Space Launch Now into over five languages!
@@ -121,7 +121,7 @@ Quick bug fix release - addressing a few issues.
 #### Changelog
 * Added an option to hide launches that have an unconfirmed date.
 * Fixed an issue with some users not receiving notifications.
-* Fixed issue where the incorrect launcher data was being shown.
+* Fixed issue where the incorrect launcherConfig data was being shown.
 * Fixed a few crashes.
 
 ---

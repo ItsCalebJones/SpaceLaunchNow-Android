@@ -24,7 +24,7 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.RetroFitFragment;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
-import me.calebjones.spacelaunchnow.data.models.main.Launcher;
+import me.calebjones.spacelaunchnow.data.models.main.LauncherConfig;
 import me.calebjones.spacelaunchnow.data.models.main.Mission;
 import me.calebjones.spacelaunchnow.ui.launches.launcher.LauncherLaunchActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
@@ -128,38 +128,38 @@ public class MissionDetailFragment extends RetroFitFragment {
                 payloadWikiButton.setVisibility(View.GONE);
             }
 
-            launchVehicleView.setText(detailLaunch.getLauncher().getFullName());
-            launchConfiguration.setText(detailLaunch.getLauncher().getVariant());
-            launchFamily.setText(detailLaunch.getLauncher().getFamily());
-            if (detailLaunch.getLauncher().getInfoUrl() != null && detailLaunch.getLauncher().getInfoUrl().length() > 0){
+            launchVehicleView.setText(detailLaunch.getLauncherConfig().getFullName());
+            launchConfiguration.setText(detailLaunch.getLauncherConfig().getVariant());
+            launchFamily.setText(detailLaunch.getLauncherConfig().getFamily());
+            if (detailLaunch.getLauncherConfig().getInfoUrl() != null && detailLaunch.getLauncherConfig().getInfoUrl().length() > 0){
                 vehicleInfoButton.setOnClickListener(view -> {
                     Activity activity = (Activity) context;
-                    Utils.openCustomTab(activity, context, detailLaunch.getLauncher().getInfoUrl());
+                    Utils.openCustomTab(activity, context, detailLaunch.getLauncherConfig().getInfoUrl());
                     Analytics.getInstance().sendButtonClickedWithURL("Vehicle Info",
-                            detailLaunch.getLauncher().getInfoUrl());
+                            detailLaunch.getLauncherConfig().getInfoUrl());
                 });
             } else {
                 vehicleInfoButton.setVisibility(View.GONE);
             }
 
-            if (detailLaunch.getLauncher().getWikiUrl() != null && detailLaunch.getLauncher().getWikiUrl().length() > 0){
+            if (detailLaunch.getLauncherConfig().getWikiUrl() != null && detailLaunch.getLauncherConfig().getWikiUrl().length() > 0){
                 vehicleWikiButton.setOnClickListener(view -> {
                     Activity activity = (Activity) context;
-                    Utils.openCustomTab(activity, context, detailLaunch.getLauncher().getWikiUrl());
+                    Utils.openCustomTab(activity, context, detailLaunch.getLauncherConfig().getWikiUrl());
                     Analytics.getInstance().sendButtonClickedWithURL("Vehicle Wiki",
-                            detailLaunch.getLauncher().getWikiUrl());
+                            detailLaunch.getLauncherConfig().getWikiUrl());
                 });
             } else {
                 vehicleWikiButton.setVisibility(View.GONE);
             }
-            configureLaunchVehicle(launch.getLauncher());
+            configureLaunchVehicle(launch.getLauncherConfig());
         } catch (NullPointerException e) {
             Timber.e(e);
         }
     }
 
     @SuppressLint("StringFormatMatches")
-    private void configureLaunchVehicle(Launcher launchVehicle) {
+    private void configureLaunchVehicle(LauncherConfig launchVehicle) {
         if (launchVehicle != null) {
             vehicleSpecView.setVisibility(View.VISIBLE);
             try {

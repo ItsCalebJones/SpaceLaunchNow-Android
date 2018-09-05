@@ -274,8 +274,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                 unit = Unit.SI;
             }
 
-            ForecastClient.getInstance()
-                    .getForecast(latitude, longitude, detailLaunch.getNetstamp(), null, unit, null, false, new Callback<Forecast>() {
+            ForecastClient.getInstance().getForecast(latitude, longitude, (int) detailLaunch.getNet().getTime()/1000, null, unit, null, false, new Callback<Forecast>() {
                         @Override
                         public void onResponse(Call<Forecast> forecastCall, Response<Forecast> response) {
                             if (response.isSuccessful()) {
@@ -613,7 +612,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
             Date mDate;
             String dateText = null;
 
-            if (launch.getStatus() == 1){
+            if (launch.getStatus().getId() == 1){
                 String go = context.getResources().getString(R.string.status_go);
                 if (detailLaunch.getProbability() != null && detailLaunch.getProbability() > 0) {
                     go = String.format("%s | Forecast - %s%%", go, detailLaunch.getProbability());
@@ -621,7 +620,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                 //GO for launch
                 launch_status.setText(go);
             } else {
-                launch_status.setText(LaunchStatus.getLaunchStatusTitle(context, detailLaunch.getStatus()));
+                launch_status.setText(LaunchStatus.getLaunchStatusTitle(context, detailLaunch.getStatus().getId()));
             }
 
             if (detailLaunch.getVidURLs() != null && detailLaunch.getVidURLs().size() > 0) {
@@ -851,9 +850,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
     private void setupCountdownTimer(Launch launch) {
         //If timestamp is available calculate TMinus and date.
-        if (launch.getNetstamp() > 0 && (launch.getStatus() == 1 || launch.getStatus() == 2)) {
-            long longdate = launch.getNetstamp();
-            longdate = longdate * 1000;
+        if (launch.getNet() != null && (launch.getStatus().getId() == 1 || launch.getStatus().getId() == 2)) {
+            long longdate = launch.getNet().getTime();
             final Date date = new Date(longdate);
 
             Calendar future = Utils.DateToCalendar(date);
@@ -865,7 +863,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                 timer.cancel();
             }
 
-            final int status = launch.getStatus();
+            final int status = launch.getStatus().getId();
             final String hold = launch.getHoldreason();
 
             final int nightColor = ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color);
@@ -993,28 +991,28 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         } else {
             contentTMinusStatus.setTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary));
         }
-        if (launchItem.getStatus() == 2) {
+        if (launchItem.getStatus().getId() == 2) {
             countdownLayout.setVisibility(View.GONE);
             if (launchItem.getLsp() != null) {
                 contentTMinusStatus.setText(String.format(context.getString(R.string.pending_confirmed_go_specific), launchItem.getLsp().getName()));
             } else {
                 contentTMinusStatus.setText(R.string.pending_confirmed_go);
             }
-        } else if (launchItem.getStatus() == 3)  {
+        } else if (launchItem.getStatus().getId() == 3)  {
             countdownLayout.setVisibility(View.GONE);
             contentTMinusStatus.setText("Launch was a success!");
-        } else if (launchItem.getStatus() == 4)  {
+        } else if (launchItem.getStatus().getId() == 4)  {
             countdownLayout.setVisibility(View.GONE);
             contentTMinusStatus.setText("A launch failure has occurred.");
-        } else if (launchItem.getStatus() == 5)  {
+        } else if (launchItem.getStatus().getId() == 5)  {
             contentTMinusStatus.setText("A hold has been placed on the launch.");
-        } else if (launchItem.getStatus() == 6)  {
+        } else if (launchItem.getStatus().getId() == 6)  {
             countdownDays.setText("00");
             countdownHours.setText("00");
             countdownMinutes.setText("00");
             countdownSeconds.setText("00");
             contentTMinusStatus.setText("The launch is currently in flight.");
-        } else if (launchItem.getStatus() == 7)  {
+        } else if (launchItem.getStatus().getId() == 7)  {
             countdownLayout.setVisibility(View.GONE);
             contentTMinusStatus.setText("Launch was a partial failure, payload separated into an incorrect orbit.");
         }

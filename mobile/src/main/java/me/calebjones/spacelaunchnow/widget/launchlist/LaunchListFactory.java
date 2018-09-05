@@ -132,7 +132,7 @@ public class LaunchListFactory implements RemoteViewsService.RemoteViewsFactory 
         row.setTextColor(R.id.launch_date, widgetSecondaryTextColor);
         row.setTextColor(R.id.location, widgetSecondaryTextColor);
 
-        if (launch.getStatus() != null && launch.getStatus() == 2) {
+        if (launch.getStatus() != null && launch.getStatus().getId() == 2) {
             //Get launch date
             sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
             Date date = launch.getNet();

@@ -398,7 +398,7 @@ public class QueryBuilder {
         RealmQuery<Launch> query = realm.where(Launch.class)
                 .greaterThanOrEqualTo("net", date);
         if (switchPreferences.getNoGoSwitch()) {
-            query.notEqualTo("status", 2);
+            query.notEqualTo("status.id", 2);
             query.findAll();
         }
         if (switchPreferences.getTBDLaunchSwitch()) {
@@ -423,7 +423,7 @@ public class QueryBuilder {
         query.findAll();
 
         if (switchPreferences.getNoGoSwitch()) {
-            query.notEqualTo("status", 2).findAll();
+            query.notEqualTo("status.id", 2).findAll();
         }
 
         if (switchPreferences.getTBDLaunchSwitch()) {
@@ -544,7 +544,7 @@ public class QueryBuilder {
         query.findAll();
 
         if (switchPreferences.getNoGoSwitch()) {
-            query.notEqualTo("status", 2).findAll();
+            query.notEqualTo("status.id", 2).findAll();
         }
 
         query.beginGroup();
@@ -660,7 +660,7 @@ public class QueryBuilder {
         query.findAll();
 
         if (switchPreferences.getNoGoSwitch()) {
-            query.notEqualTo("status", 2).findAll();
+            query.notEqualTo("status.id", 2).findAll();
         }
 
         query.beginGroup();

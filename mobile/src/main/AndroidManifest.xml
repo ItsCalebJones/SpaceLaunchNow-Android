@@ -77,7 +77,7 @@
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/CustomPreferenceTheme" />
         <activity android:name=".ui.orbiter.OrbiterDetailActivity" />
-        <activity android:name=".ui.launcher.LauncherDetailActivity" />
+        <activity android:name=".ui.launcherConfig.LauncherDetailActivity" />
 
         <receiver android:name=".content.receivers.UpdateUpcomingLaunchesReceiver">
             <intent-filter>
@@ -256,7 +256,7 @@
             android:value="me.calebjones.spacelaunchnow.LAUNCH_UPDATE" />
 
         <activity
-            android:name=".ui.launches.launcher.LauncherLaunchActivity"
+            android:name=".ui.launches.launcherConfig.LauncherLaunchActivity"
             android:theme="@style/BaseAppTheme" />
         <activity
             android:name=".ui.launches.agency.AgencyLaunchActivity"
