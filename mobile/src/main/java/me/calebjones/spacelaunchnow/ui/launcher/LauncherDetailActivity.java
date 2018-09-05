@@ -62,7 +62,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
     private CustomOnOffsetChangedListener customOnOffsetChangedListener;
 
     public LauncherDetailActivity() {
-        super("LauncherConfig Detail Activity");
+        super("Launcher Detail Activity");
     }
 
     @Override
