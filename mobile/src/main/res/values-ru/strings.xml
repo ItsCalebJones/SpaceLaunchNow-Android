@@ -37,7 +37,7 @@
     <string name="notifications_settings">Настраивайте уведомления о пусках и планируйте их график</string>
     <string name="appearance_settings">Изменяйте виджеты и цвет приложения</string>
     <string name="about_settings">Информация о лицензии, библиотеках, список изменений и т.д.</string>
-    <string name="support_settings">Следите за моими проектами и вносите вклад в их будущее.</string>
+    <string name="support_settings">Получите дополнительные функции и внесите вклад в будущее проекта.</string>
     <string name="wear_settings">Изменяйте настройки циферблата Android Wear.</string>
     <string name="thank_you_support">Большое спасибо за вашу продолжительную поддержку!</string>
     <string name="ok">ОК</string>
@@ -45,6 +45,7 @@
     <string name="thanks_support_development">Большое спасибо за поддержание разработки!</string>
     <string name="billing_error_code">код ошибки оплаты -</string>
     <string name="purchase_history">История покупок восстановлена.</string>
+    <string name="unable_to_start_billing">Не удалось обработать платеж.</string>
     <string name="no_purchase_history">Покупки восстановлены - никаких не найдено на этом аккаунте Google.</string>
     <string name="billing_not_available">Сервис оплаты Google Play недоступен.</string>
     <string name="whats_new">Что нового?</string>
@@ -57,9 +58,18 @@
     <string name="get_pro_features">Получите дополнительные функции</string>
     <string name="support_development">Поддержите разработку</string>
     <string name="weather_forecast">Прогноз погоды</string>
+    <string name="calendar_sync">Синхронизация с календарем</string>
+    <string name="calendar_sync_description">Автоматическая синхронизация предстоящих пусков с календарем.</string>
+    <string name="dynamic_watch_face">Динамический циферблат для смарт-часов</string>
+    <string name="dynamic_watch_face_description">Сменяющиеся фотографии ракет как фон на циферблате.</string>
     <string name="remove_ads">Убрать рекламу</string>
     <string name="remove_ads_description">Уберите все рекламные баннеры навсегда!</string>
     <string name="discord">Discord</string>
+    <string name="discord_description">Получите специальную роль в Discord сервере Space Launch Now.</string>
+    <string name="blur_brightness">Яркость</string>
+    <string name="blur_sampling">Сэмплинг</string>
+    <string name="blur_radius">Радиус</string>
+    <string name="blur_saturation">Насыщение</string>
     <string name="unknown_launch_location">Неизвестное место пуска</string>
     <string name="unknown_launch_date">Неизвестная дата пуска</string>
     <string name="unknown_launch_status">Неизвестный статус пуска</string>
@@ -75,9 +85,27 @@
     <string name="seconds">СЕКУНД</string>
     <string name="min">МИН</string>
     <string name="sec">СЕК</string>
+    <string name="launch_service_provider">Поставщик запуска</string>
+    <string name="primary_agency">Основное агентство</string>
+    <string name="unknown_agency_type">Неизвестный тип агентства</string>
     <string name="info">ИНФОРМАЦИЯ</string>
     <string name="wiki">ВИКИ</string>
+    <string name="secondary_agency">Второстепенное агентство</string>
+    <string name="vehicle_agency">Агентство ракеты-носителя</string>
     <string name="mission_details">Подробности миссии</string>
     <string name="unknown_payload">Неизвестная полезная нагрузка</string>
+    <string name="launch_vehicle_summary">Сводка по ракете-носителю</string>
+    <string name="unknown_launch_vehicle">Неизвестная ракета-носитель</string>
+    <string name="family">Семейство:</string>
+    <string name="configuration">Конфигурация:</string>
+    <string name="vehicle_specifications">Характеристики ракеты-носителя</string>
+    <string name="height">Высота:</string>
+    <string name="diameter">Диаметр:</string>
+    <string name="stages">Кол-во ступеней:</string>
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="unknown_administrator">Неизвестный администратор</string>
+    <string name="unknown_year">Год основания - неизвестен.</string>
+    <string name="improve_our_data">Помогите улучшить наши данные</string>
+    <string name="improve_our_data_content">Заинтересованы в улучшении точности представленных данных? Заходите на Discord сервер Space Launch Now и попросите стать помощником.</string>
+    <string name="mission_agency">Агентство миссии</string>
 </resources>

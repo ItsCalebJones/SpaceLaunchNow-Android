@@ -43,16 +43,19 @@ abstract public class RetroFitFragment extends BaseFragment {
         ListPreferences sharedPreference = ListPreferences.getInstance(context);
 
         String version;
+        String BASE_URL;
 
         if (sharedPreference.isDebugEnabled()) {
+            BASE_URL = Constants.API_DEBUG_BASE_URL;
             version = "dev";
         } else {
             version = "1.2.1";
+            BASE_URL = Constants.API_BASE_URL;
         }
 
         libraryRetrofit = RetrofitBuilder.getLibraryRetrofit(version);
         spaceLaunchNowRetrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_BASE_URL)
+                .baseUrl(BASE_URL)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create(getGson()))
                 .build();

@@ -19,11 +19,11 @@ public class DataClient {
 
     private Retrofit spaceLaunchNowRetrofit;
 
-    private DataClient(String version, String token) {
+    private DataClient(String version, String token, boolean debug) {
 
         libraryRetrofit = RetrofitBuilder.getLibraryRetrofit(version);
         libraryRetrofitThreaded = RetrofitBuilder.getLibraryRetrofitThreaded(version);
-        spaceLaunchNowRetrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit(token);
+        spaceLaunchNowRetrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit(token, debug);
         spaceLaunchNowService = spaceLaunchNowRetrofit.create(SpaceLaunchNowService.class);
 
     }
@@ -39,14 +39,14 @@ public class DataClient {
     /**
      * Applications must call create to configure the DataClient singleton
      */
-    public static void create(String version, String token) {
-        mInstance = new DataClient(version, token);
+    public static void create(String version, String token, boolean debug) {
+        mInstance = new DataClient(version, token, debug);
     }
 
     /**
      * Singleton accessor
      * <p/>
-     * Will throw an exception if {@link #create(String version, String token)} was never called
+     * Will throw an exception if {@link #create(String version, String token, boolean debug)} was never called
      *
      * @return the DataClient singleton
      */

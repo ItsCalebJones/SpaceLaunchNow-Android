@@ -202,9 +202,9 @@ public class LaunchWordTimerManager {
 
     private String getLaunchName(Launch launchRealm) {
         //Replace with launch
-        if (launchRealm.getLauncher() != null) {
+        if (launchRealm.getLauncherConfig() != null) {
             //Replace with mission name
-            return launchRealm.getLauncher().getName();
+            return launchRealm.getLauncherConfig().getName();
         } else {
             return null;
         }

@@ -4,8 +4,6 @@ package me.calebjones.spacelaunchnow.data.models.main;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -25,7 +23,7 @@ public class Agency extends RealmObject {
     @SerializedName("featured")
     @Expose
     public Boolean featured;
-    @SerializedName("launchers")
+    @SerializedName("launcherConfigs")
     @Expose
     public String launchers_string;
     @SerializedName("orbiters")
@@ -69,15 +67,15 @@ public class Agency extends RealmObject {
     public String type;
     @SerializedName("launcher_list")
     @Expose
-    public RealmList<Launcher> launchers;
+    public RealmList<LauncherConfig> launcherConfigs;
 
 
-    public RealmList<Launcher> getLaunchers() {
-        return launchers;
+    public RealmList<LauncherConfig> getLauncherConfigs() {
+        return launcherConfigs;
     }
 
-    public void setLaunchers(RealmList<Launcher> launchers) {
-        this.launchers = launchers;
+    public void setLauncherConfigs(RealmList<LauncherConfig> launcherConfigs) {
+        this.launcherConfigs = launcherConfigs;
     }
 
     public Integer getId() {

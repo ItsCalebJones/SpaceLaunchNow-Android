@@ -2,14 +2,14 @@ package me.calebjones.spacelaunchnow.data.networking.responses.base;
 
 import com.google.gson.annotations.SerializedName;
 
-import me.calebjones.spacelaunchnow.data.models.main.Launcher;
+import me.calebjones.spacelaunchnow.data.models.main.LauncherConfig;
 
 public class VehicleResponse extends BaseResponse {
 
     @SerializedName(value="results")
-    private Launcher[] vehicles;
+    private LauncherConfig[] vehicles;
 
-    public Launcher[] getVehicles() {
+    public LauncherConfig[] getVehicles() {
         return vehicles;
     }
 }

@@ -27,16 +27,7 @@ public class Launch extends RealmObject {
     public String imgUrl;
     @SerializedName("status")
     @Expose
-    public Integer status;
-    @SerializedName("netstamp")
-    @Expose
-    public Integer netstamp;
-    @SerializedName("wsstamp")
-    @Expose
-    public Integer wsstamp;
-    @SerializedName("westamp")
-    @Expose
-    public Integer westamp;
+    public Status status;
     @SerializedName("net")
     @Expose
     public Date net;
@@ -46,15 +37,6 @@ public class Launch extends RealmObject {
     @SerializedName("window_start")
     @Expose
     public Date windowStart;
-    @SerializedName("isonet")
-    @Expose
-    public String isonet;
-    @SerializedName("isostart")
-    @Expose
-    public String isostart;
-    @SerializedName("isoend")
-    @Expose
-    public String isoend;
     @SerializedName("inhold")
     @Expose
     public Boolean inhold;
@@ -76,9 +58,9 @@ public class Launch extends RealmObject {
     @SerializedName("hashtag")
     @Expose
     public String hashtag;
-    @SerializedName("launcher")
+    @SerializedName("launcher_config")
     @Expose
-    public Launcher launcher;
+    public LauncherConfig launcherConfig;
     @SerializedName("mission")
     @Expose
     public Mission mission;
@@ -97,6 +79,19 @@ public class Launch extends RealmObject {
     @SerializedName("vidURLs")
     @Expose
     public RealmList<RealmStr> vidURLs = null;
+    @SerializedName("launcher")
+    @Expose
+    public RealmList<Launcher> launchers;
+
+
+    public RealmList<Launcher> getLaunchers() {
+        return launchers;
+    }
+
+    public void setLaunchers(RealmList<Launcher> launchers) {
+        this.launchers = launchers;
+    }
+
 
     public Integer eventID;
     public Date lastUpdate;
@@ -149,36 +144,12 @@ public class Launch extends RealmObject {
         this.imgUrl = imgUrl;
     }
 
-    public Integer getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Status status) {
         this.status = status;
-    }
-
-    public Integer getNetstamp() {
-        return netstamp;
-    }
-
-    public void setNetstamp(Integer netstamp) {
-        this.netstamp = netstamp;
-    }
-
-    public Integer getWsstamp() {
-        return wsstamp;
-    }
-
-    public void setWsstamp(Integer wsstamp) {
-        this.wsstamp = wsstamp;
-    }
-
-    public Integer getWestamp() {
-        return westamp;
-    }
-
-    public void setWestamp(Integer westamp) {
-        this.westamp = westamp;
     }
 
     public Date getNet() {
@@ -203,30 +174,6 @@ public class Launch extends RealmObject {
 
     public void setWindowStart(Date windowStart) {
         this.windowStart = windowStart;
-    }
-
-    public String getIsonet() {
-        return isonet;
-    }
-
-    public void setIsonet(String isonet) {
-        this.isonet = isonet;
-    }
-
-    public String getIsostart() {
-        return isostart;
-    }
-
-    public void setIsostart(String isostart) {
-        this.isostart = isostart;
-    }
-
-    public String getIsoend() {
-        return isoend;
-    }
-
-    public void setIsoend(String isoend) {
-        this.isoend = isoend;
     }
 
     public Boolean getInhold() {
@@ -285,12 +232,12 @@ public class Launch extends RealmObject {
         this.hashtag = hashtag;
     }
 
-    public Launcher getLauncher() {
-        return launcher;
+    public LauncherConfig getLauncherConfig() {
+        return launcherConfig;
     }
 
-    public void setLauncher(Launcher launcher) {
-        this.launcher = launcher;
+    public void setLauncherConfig(LauncherConfig launcherConfig) {
+        this.launcherConfig = launcherConfig;
     }
 
     public Mission getMission() {

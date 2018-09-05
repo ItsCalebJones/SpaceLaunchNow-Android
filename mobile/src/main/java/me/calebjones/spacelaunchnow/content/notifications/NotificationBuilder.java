@@ -106,10 +106,10 @@ public class NotificationBuilder {
         NotificationCompat.WearableExtender wearableExtender =
                 new NotificationCompat.WearableExtender()
                         .setHintHideIcon(true);
-        if (launch.getLauncher().getImageUrl() != null && launch.getLauncher().getImageUrl().length() > 0 && !launch.getLauncher().getImageUrl().contains("placeholder")) {
+        if (launch.getLauncherConfig().getImageUrl() != null && launch.getLauncherConfig().getImageUrl().length() > 0 && !launch.getLauncherConfig().getImageUrl().contains("placeholder")) {
             Bitmap bitmap = null;
             try {
-                bitmap = Utils.getBitMapFromUrl(context, launch.getLauncher().getImageUrl());
+                bitmap = Utils.getBitMapFromUrl(context, launch.getLauncherConfig().getImageUrl());
             } catch (ExecutionException | InterruptedException e) {
                 Timber.e(e);
                 Crashlytics.logException(e);
@@ -192,10 +192,10 @@ public class NotificationBuilder {
         }
 
 
-        if (launch.getLauncher().getImageUrl() != null && launch.getLauncher().getImageUrl().length() > 0 && !launch.getLauncher().getImageUrl().contains("placeholder")) {
+        if (launch.getLauncherConfig().getImageUrl() != null && launch.getLauncherConfig().getImageUrl().length() > 0 && !launch.getLauncherConfig().getImageUrl().contains("placeholder")) {
             Bitmap bitmap = null;
             try {
-                bitmap = Utils.getBitMapFromUrl(context, launch.getLauncher().getImageUrl());
+                bitmap = Utils.getBitMapFromUrl(context, launch.getLauncherConfig().getImageUrl());
             } catch (ExecutionException | InterruptedException e) {
                 Timber.e(e);
                 Crashlytics.logException(e);

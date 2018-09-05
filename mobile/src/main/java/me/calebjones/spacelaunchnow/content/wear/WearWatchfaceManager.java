@@ -32,7 +32,7 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.services.BaseManager;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
-import me.calebjones.spacelaunchnow.data.models.main.Launcher;
+import me.calebjones.spacelaunchnow.data.models.main.LauncherConfig;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.transformations.SaturationTransformation;
@@ -81,25 +81,25 @@ public class WearWatchfaceManager extends BaseManager {
             RealmResults<Launch> launches = QueryBuilder.buildSwitchQuery(context, mRealm);
             Launch launch = launches.first();
 //            Launch launch = mRealm.where(Launch.class).greaterThan("net", new Date()).findAllSorted("net").first();
-            if (launch != null && launch.getName() != null && launch.getNetstamp() != null) {
+            if (launch != null && launch.getName() != null && launch.getNet() != null) {
                 Timber.v("Sending data to wear: %s", launch.getName());
 
                 boolean dynamic = sharedPref.getBoolean("supporter_dynamic_background", false);
                 boolean modify = sharedPref.getBoolean("wear_background_blur", true);
                 if (dynamic) {
-                    if (launch.getLauncher().getName() != null) {
-                        if (launch.getLauncher().getImageUrl() != null && launch.getLauncher().getImageUrl().length() > 0 && !launch.getLauncher().getImageUrl().contains("placeholder")) {
-                            Timber.v("Sending image %s", launch.getLauncher().getImageUrl());
-                            sendDataToWear(launch.getLauncher().getImageUrl(), launch, modify);
+                    if (launch.getLauncherConfig().getName() != null) {
+                        if (launch.getLauncherConfig().getImageUrl() != null && launch.getLauncherConfig().getImageUrl().length() > 0 && !launch.getLauncherConfig().getImageUrl().contains("placeholder")) {
+                            Timber.v("Sending image %s", launch.getLauncherConfig().getImageUrl());
+                            sendDataToWear(launch.getLauncherConfig().getImageUrl(), launch, modify);
                         } else {
                             String query;
-                            if (launch.getLauncher().getName().contains("Space Shuttle")) {
+                            if (launch.getLauncherConfig().getName().contains("Space Shuttle")) {
                                 query = "Space Shuttle";
                             } else {
-                                query = launch.getLauncher().getName();
+                                query = launch.getLauncherConfig().getName();
                             }
 
-                            Launcher launchVehicle = mRealm.where(Launcher.class)
+                            LauncherConfig launchVehicle = mRealm.where(LauncherConfig.class)
                                     .contains("name", query)
                                     .findFirst();
                             if (launchVehicle != null && launchVehicle.getImageUrl() != null && launchVehicle.getImageUrl().length() > 0) {
@@ -172,8 +172,9 @@ public class WearWatchfaceManager extends BaseManager {
 
 
                 Asset asset = createAssetFromBitmap(resource);
+                int i = (int) (new Date().getTime()/1000);
                 putImageReq.getDataMap().putString(NAME_KEY, launch.getName());
-                putImageReq.getDataMap().putInt(TIME_KEY, launch.getNetstamp());
+                putImageReq.getDataMap().putLong(TIME_KEY, (int) launch.getNet().getTime()/1000);
                 putImageReq.getDataMap().putLong(DATE_KEY, launch.getNet().getTime());
                 putImageReq.getDataMap().putLong("time", new Date().getTime());
                 putImageReq.getDataMap().putAsset(BACKGROUND_KEY, asset);
@@ -198,7 +199,7 @@ public class WearWatchfaceManager extends BaseManager {
 
                 Asset asset = createAssetFromBitmap(resource);
                 putImageReq.getDataMap().putString(NAME_KEY, launch.getName());
-                putImageReq.getDataMap().putInt(TIME_KEY, launch.getNetstamp());
+                putImageReq.getDataMap().putLong(TIME_KEY, (int) launch.getNet().getTime()/1000);
                 putImageReq.getDataMap().putLong(DATE_KEY, launch.getNet().getTime());
                 putImageReq.getDataMap().putLong("time", new Date().getTime());
                 putImageReq.getDataMap().putAsset(BACKGROUND_KEY, asset);

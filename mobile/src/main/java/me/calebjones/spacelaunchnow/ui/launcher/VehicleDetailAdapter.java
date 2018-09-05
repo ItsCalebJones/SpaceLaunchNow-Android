@@ -19,11 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.RealmList;
-import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.data.models.main.Launcher;
+import me.calebjones.spacelaunchnow.data.models.main.LauncherConfig;
 import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
-import me.calebjones.spacelaunchnow.ui.launches.LauncherLaunches;
+import me.calebjones.spacelaunchnow.ui.launches.launcher.LauncherLaunchActivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
@@ -32,7 +31,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
     public int position;
     private Context mContext;
     private Activity activity;
-    private List<Launcher> items;
+    private List<LauncherConfig> items;
     private RequestOptions requestOptions;
     private int backgroundColor = 0;
 
@@ -45,7 +44,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
         this.activity = activity;
     }
 
-    public void addItems(List<Launcher> items) {
+    public void addItems(List<LauncherConfig> items) {
         if (this.items != null) {
             this.items.addAll(items);
         } else {
@@ -69,7 +68,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        Launcher launchVehicle = items.get(holder.getAdapterPosition());
+        LauncherConfig launchVehicle = items.get(holder.getAdapterPosition());
 
         if (launchVehicle != null) {
             holder.vehicleSpecView.setVisibility(View.VISIBLE);
@@ -247,7 +246,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
                     }
                     break;
                 case R.id.launcher_launches:
-                    Intent launches = new Intent(activity, LauncherLaunches.class);
+                    Intent launches = new Intent(activity, LauncherLaunchActivity.class);
                     launches.putExtra("launcherId", items.get(position).getId());
                     launches.putExtra("launcherName", items.get(position).getName());
                     activity.startActivity(launches);

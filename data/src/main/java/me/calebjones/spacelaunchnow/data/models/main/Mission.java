@@ -18,12 +18,35 @@ public class Mission extends RealmObject {
     @SerializedName("description")
     @Expose
     public String description;
-    @SerializedName("type")
-    @Expose
-    public Integer type;
     @SerializedName("type_name")
     @Expose
+    public Integer type;
+    @SerializedName("type")
+    @Expose
     public String typeName;
+    @SerializedName("orbit")
+    @Expose
+    public String orbit;
+    @SerializedName("orbit_abbrev")
+    @Expose
+    public String orbitAbbrev;
+
+
+    public String getOrbit() {
+        return orbit;
+    }
+
+    public void setOrbit(String orbit) {
+        this.orbit = orbit;
+    }
+
+    public String getOrbitAbbrev() {
+        return orbitAbbrev;
+    }
+
+    public void setOrbitAbbrev(String orbitAbbrev) {
+        this.orbitAbbrev = orbitAbbrev;
+    }
 
     public Integer getId() {
         return id;

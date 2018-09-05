@@ -1,5 +1,6 @@
+[![discord](https://discordapp.com/api/guilds/380226438584074242/embed.png?style=shield)](https://discord.gg/WVfzEDW) [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=102)](https://github.com/ellerbrock/open-source-badge/) [![Semver](http://img.shields.io/SemVer/2.6.0.png)](http://semver.org/spec/v2.0.0.html)
 # SpaceLaunchNow
-A space launchCategory tracker for Android using data from the Launch Library API, the current roadmap can be viewed on [Trello](https://trello.com/b/DwLCfv7g/space-launchCategory-now).
+A space launch tracker for Android using data from the Launch Library API, the current roadmap can be viewed on [Trello](https://trello.com/b/DwLCfv7g/space-launchCategory-now).
 
 ## Data Sources
 

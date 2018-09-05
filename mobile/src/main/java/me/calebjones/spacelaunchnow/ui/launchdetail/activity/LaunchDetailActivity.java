@@ -45,7 +45,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -62,11 +61,10 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.content.events.LaunchRequestEvent;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
-import me.calebjones.spacelaunchnow.data.models.main.Launcher;
+import me.calebjones.spacelaunchnow.data.models.main.LauncherConfig;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.error.LibraryError;
-import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchResponse;
 import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.ui.launchdetail.TabsAdapter;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
@@ -368,14 +366,14 @@ public class LaunchDetailActivity extends BaseActivity
             this.launch = launch;
 
             EventBus.getDefault().post(new LaunchEvent(launch));
-            if (!this.isDestroyed() && launch != null && launch.getLauncher() != null) {
+            if (!this.isDestroyed() && launch != null && launch.getLauncherConfig() != null) {
                 Timber.v("Loading detailLaunch %s", launch.getId());
                 findProfileLogo();
-                if (launch.getLauncher().getName() != null) {
-                    if (launch.getLauncher().getImageUrl() != null
-                            && launch.getLauncher().getImageUrl().length() > 0
-                            && !launch.getLauncher().getImageUrl().contains("placeholder")) {
-                        final String image = launch.getLauncher().getImageUrl();
+                if (launch.getLauncherConfig().getName() != null) {
+                    if (launch.getLauncherConfig().getImageUrl() != null
+                            && launch.getLauncherConfig().getImageUrl().length() > 0
+                            && !launch.getLauncherConfig().getImageUrl().contains("placeholder")) {
+                        final String image = launch.getLauncherConfig().getImageUrl();
                         GlideApp.with(this)
                                 .load(image)
                                 .placeholder(R.drawable.placeholder)
@@ -464,12 +462,12 @@ public class LaunchDetailActivity extends BaseActivity
 
     private void getLaunchVehicle(Launch result, boolean setImage) {
         String query;
-        if (result.getLauncher().getName().contains("Space Shuttle")) {
+        if (result.getLauncherConfig().getName().contains("Space Shuttle")) {
             query = "Space Shuttle";
         } else {
-            query = result.getLauncher().getName();
+            query = result.getLauncherConfig().getName();
         }
-        Launcher launchVehicle = getRealm().where(Launcher.class)
+        LauncherConfig launchVehicle = getRealm().where(LauncherConfig.class)
                 .contains("name", query)
                 .findFirst();
         if (setImage) {

@@ -107,10 +107,18 @@ public class RetrofitBuilder {
     }
 
 
-    public static Retrofit getSpaceLaunchNowRetrofit(String token) {
+    public static Retrofit getSpaceLaunchNowRetrofit(String token, boolean debug) {
+
+        String BASE_URL;
+
+        if (debug) {
+            BASE_URL = Constants.API_DEBUG_BASE_URL;
+        } else {
+            BASE_URL = Constants.API_BASE_URL;
+        }
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_BASE_URL)
+                .baseUrl(BASE_URL)
                 .client(spaceLaunchNowClient(token))
                 .addConverterFactory(GsonConverterFactory.create(getGson()))
                 .build();
@@ -130,11 +138,9 @@ public class RetrofitBuilder {
         client.connectTimeout(15, TimeUnit.SECONDS);
         client.readTimeout(15, TimeUnit.SECONDS);
         client.writeTimeout(15, TimeUnit.SECONDS);
-        client.addInterceptor(new Interceptor() {
-            @Override public Response intercept(Chain chain) throws IOException {
-                Request request = chain.request().newBuilder().addHeader("Authorization", "Token " + token).build();
-                return chain.proceed(request);
-            }
+        client.addInterceptor(chain -> {
+            Request request = chain.request().newBuilder().addHeader("Authorization", "Token " + token).build();
+            return chain.proceed(request);
         });
         return client.build();
     }

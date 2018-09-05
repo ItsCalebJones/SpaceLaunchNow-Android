@@ -229,15 +229,6 @@
             </intent-filter>
         </receiver>
 
-        <service
-            android:name=".content.notifications.NotificationReceiver"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE">
-            <intent-filter>
-                <action android:name="com.onesignal.NotificationExtender" />
-            </intent-filter>
-        </service>
-
         <activity
             android:name=".ui.changelog.ChangelogActivity"
             android:theme="@style/BaseAppTheme" />
@@ -265,11 +256,12 @@
             android:value="me.calebjones.spacelaunchnow.LAUNCH_UPDATE" />
 
         <activity
-            android:name=".ui.launches.AgencyLaunches"
-            android:exported="true" />
+            android:name=".ui.launches.launcher.LauncherLaunchActivity"
+            android:theme="@style/BaseAppTheme" />
         <activity
-            android:name=".ui.launches.LauncherLaunches"
-            android:exported="true" />
+            android:name=".ui.launches.agency.AgencyLaunchActivity"
+            android:theme="@style/BaseAppTheme" />
+
     </application>
 
 </manifest>

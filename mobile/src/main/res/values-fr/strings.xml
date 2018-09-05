@@ -189,7 +189,7 @@
     <string name="stage_full">Nombre max d\'étages : %d</string>
     <string name="mass_leo_full">Masse vers LEO : %d kg</string>
     <string name="mass_gto_full">Masse vers GTO : %d kg</string>
-    <string name="mass_launch_full">Masse au lancement : %d kg</string>
+    <string name="mass_launch_full">Masse au lancement : %d T</string>
     <string name="thrust_full">Poussée au lancement : %d kN</string>
     <string name="upcoming">À venir</string>
     <string name="previous">Précédent</string>
