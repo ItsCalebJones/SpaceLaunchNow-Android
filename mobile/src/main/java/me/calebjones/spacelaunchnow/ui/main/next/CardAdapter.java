@@ -11,6 +11,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,6 +27,10 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -35,6 +40,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import cn.nekocode.badge.BadgeDrawable;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.data.LaunchStatus;
@@ -43,14 +51,10 @@ import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.CountDownTimer;
-import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
 
 /**
  * Adapts UpcomingLaunch data to the LaunchFragment
@@ -59,7 +63,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
 
     private static ListPreferences sharedPreference;
     public int position;
-    private String launchTime;
     private RealmList<Launch> launchList;
     private Context context;
     private Calendar rightNow;
@@ -122,6 +125,21 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             holder.cardView.setElevation(7);
         }
+        BadgeDrawable.Builder landingType =
+                new BadgeDrawable.Builder()
+                        .type(BadgeDrawable.TYPE_WITH_TWO_TEXT_COMPLEMENTARY)
+                        .badgeColor(accentColor)
+                        .textSize(36)
+                        .padding(16, 10, 16, 10, 32)
+                        .strokeWidth(4);
+
+        BadgeDrawable.Builder landingLocation =
+                new BadgeDrawable.Builder()
+                        .type(BadgeDrawable.TYPE_WITH_TWO_TEXT_COMPLEMENTARY)
+                        .badgeColor(accentColor)
+                        .textSize(36)
+                        .padding(16, 10, 16, 10, 32)
+                        .strokeWidth(4);
         String title;
         try {
             if (launchItem.isValid()) {
@@ -156,22 +174,33 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
 
                 // Getting status
                 if (dlat == 0 && dlon == 0 || Double.isNaN(dlat) || Double.isNaN(dlon) || dlat == Double.NaN || dlon == Double.NaN) {
-                    if (holder.map_view != null) {
-                        holder.map_view.setVisibility(View.GONE);
+                    if (holder.mapView != null) {
+                        holder.mapView.setVisibility(View.GONE);
                     }
                 } else {
-                    holder.map_view.setVisibility(View.VISIBLE);
+                    holder.mapView.setVisibility(View.VISIBLE);
                     holder.bindView(new LaunchLocation(launchItem, new LatLng(dlat, dlon)));
                 }
 
-                if (launchItem.getProbability() != null && launchItem.getProbability() > 0) {
-                    holder.contentForecast.setText(String.format(context.getString(R.string.weather_favorable), launchItem.getProbability()));
-                    holder.contentForecast.setVisibility(View.VISIBLE);
+                if (launchItem.getLanding() != null) {
+                    if (launchItem.getLanding().getLandingLocation() != null) {
+                        holder.landingLocation.setVisibility(View.VISIBLE);
+                        holder.landingLocation.setText(landingLocation.text2(launchItem.getLanding().getLandingLocation().getAbbrev()).text1("Landing").build().toSpannable());
+                    } else {
+                        holder.landingLocation.setVisibility(View.GONE);
+                    }
+                    if (launchItem.getLanding().getLandingLocation() != null) {
+                        holder.landingType.setVisibility(View.VISIBLE);
+                        holder.landingType.setText(landingType.text2(launchItem.getLanding().getLandingType().getAbbrev()).text1("Type").build().toSpannable());
+                    } else {
+                        holder.landingType.setVisibility(View.GONE);
+                    }
                 } else {
-                    holder.contentForecast.setVisibility(View.GONE);
+                    holder.landingLocation.setVisibility(View.GONE);
+                    holder.landingType.setVisibility(View.GONE);
                 }
 
-                holder.content_status.setText(LaunchStatus.getLaunchStatusTitle(context, launchItem.getStatus().getId()));
+                holder.contentStatus.setText(LaunchStatus.getLaunchStatusTitle(context, launchItem.getStatus().getId()));
 
                 //If timestamp is available calculate TMinus and date.
                 if (launchItem.getNet().getTime() > 0 && (launchItem.getStatus().getId() == 1 || launchItem.getStatus().getId() == 2)) {
@@ -191,8 +220,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     final int status = launchItem.getStatus().getId();
                     final String hold = launchItem.getHoldreason();
 
-                    holder.content_TMinus_status.setTypeface(Typeface.SANS_SERIF);
-                    holder.content_TMinus_status.setTextColor(accentColor);
+                    holder.contentTMinusStatus.setTypeface(Typeface.SANS_SERIF);
+                    holder.contentTMinusStatus.setTextColor(accentColor);
 
 //                    holder.countdownView.setVisibility(View.VISIBLE);
                     long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
@@ -203,23 +232,23 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                             @Override
                             public void onFinish() {
                                 Timber.v("Countdown finished.");
-                                holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
+                                holder.contentTMinusStatus.setTypeface(Typeface.DEFAULT);
                                 if (night) {
-                                    holder.content_TMinus_status.setTextColor(nightColor);
+                                    holder.contentTMinusStatus.setTextColor(nightColor);
                                 } else {
-                                    holder.content_TMinus_status.setTextColor(color);
+                                    holder.contentTMinusStatus.setTextColor(color);
                                 }
                                 if (status == 1) {
-                                    holder.content_TMinus_status.setText(R.string.watch_webcast);
+                                    holder.contentTMinusStatus.setText(R.string.watch_webcast);
 
                                 } else {
                                     if (hold != null && hold.length() > 1) {
-                                        holder.content_TMinus_status.setText(hold);
+                                        holder.contentTMinusStatus.setText(hold);
                                     } else {
-                                        holder.content_TMinus_status.setText(R.string.watch_webcast);
+                                        holder.contentTMinusStatus.setText(R.string.watch_webcast);
                                     }
                                 }
-                                holder.content_TMinus_status.setVisibility(View.VISIBLE);
+                                holder.contentTMinusStatus.setVisibility(View.VISIBLE);
                                 holder.countdownDays.setText("00");
                                 holder.countdownHours.setText("00");
                                 holder.countdownMinutes.setText("00");
@@ -293,7 +322,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                                 }
 
                                 // Hide status if countdown is active.
-                                holder.content_TMinus_status.setVisibility(View.GONE);
+                                holder.contentTMinusStatus.setVisibility(View.GONE);
                             }
                         }.start();
                     } else {
@@ -314,45 +343,16 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                         sdf.toLocalizedPattern();
                         Date date = launchItem.getNet();
                         String launchTime = sdf.format(date);
-                        if (launchItem.getTbddate()){
-                            launchTime = launchTime + context.getString(R.string.unconfirmed);
+                        if (launchItem.getTbddate()) {
+                            launchTime = launchTime + " " + context.getString(R.string.unconfirmed);
                         }
-                        holder.launch_date_compact.setText(launchTime);
-                        holder.launch_time.setVisibility(View.GONE);
+                        holder.launchDateCompact.setText(launchTime);
                     }
                 } else {
-                    if (launchItem.getNet() != null) {
-                        if (sharedPref.getBoolean("local_time", true)) {
-                            SimpleDateFormat sdf;
-                            if (sharedPref.getBoolean("24_hour_mode", false)) {
-                                sdf = new SimpleDateFormat("HH:mm zzz");
-                            } else {
-                                sdf = new SimpleDateFormat("h:mm a zzz");
-                            }
-                            sdf.toLocalizedPattern();
-                            Date date = launchItem.getNet();
-                            launchTime = sdf.format(date);
-                        } else {
-                            SimpleDateFormat sdf;
-                            if (sharedPref.getBoolean("24_hour_mode", false)) {
-                                sdf = new SimpleDateFormat("HH:mm zzz");
-                            } else {
-                                sdf = new SimpleDateFormat("h:mm a zzz");
-                            }
-                            Date date = launchItem.getNet();
-                            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                            launchTime = sdf.format(date);
-                        }
-                    } else {
-                        launchTime = "To be determined... ";
-                    }
-                    SimpleDateFormat sdf = Utils.getSimpleDateFormatForUI("MMMM d, yyyy");
+                    SimpleDateFormat sdf = Utils.getSimpleDateFormatForUI("MMMM d, yyyy HH:mm zzz");
                     sdf.toLocalizedPattern();
                     Date date = launchItem.getNet();
-                    holder.launch_date_compact.setText(sdf.format(date));
-                    holder.launch_time.setVisibility(View.GONE);
-                    holder.launch_time.setText("NET: " + launchTime);
-                    holder.launch_time.setVisibility(View.VISIBLE);
+                    holder.launchDateCompact.setText(sdf.format(date));
                 }
 
                 if (launchItem.getVidURLs() != null) {
@@ -367,24 +367,24 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
 
 
                 if (launchItem.getMission() != null) {
-                    holder.content_mission.setText(launchItem.getMission().getName());
+                    holder.contentMission.setText(launchItem.getMission().getName());
                     String description = launchItem.getMission().getDescription();
                     if (description.length() > 0) {
-                        holder.content_mission_description_view.setVisibility(View.VISIBLE);
-                        holder.content_mission_description.setText(description);
+                        holder.contentMissionDescriptionView.setVisibility(View.VISIBLE);
+                        holder.contentMissionDescription.setText(description);
                     }
                 } else {
                     String[] separated = launchItem.getName().split(" \\| ");
                     try {
                         if (separated.length > 0 && separated[1].length() > 4) {
-                            holder.content_mission.setText(separated[1].trim());
+                            holder.contentMission.setText(separated[1].trim());
                         } else {
-                            holder.content_mission.setText("Unknown Mission");
+                            holder.contentMission.setText("Unknown Mission");
                         }
                     } catch (ArrayIndexOutOfBoundsException exception) {
-                        holder.content_mission.setText("Unknown Mission");
+                        holder.contentMission.setText("Unknown Mission");
                     }
-                    holder.content_mission_description_view.setVisibility(View.GONE);
+                    holder.contentMissionDescriptionView.setVisibility(View.GONE);
                 }
 
                 //If pad and agency_menu exist add it to location, otherwise get whats always available
@@ -400,12 +400,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
     }
 
     private void showStatusDescription(Launch launchItem, ViewHolder holder) {
-        holder.content_TMinus_status.setVisibility(View.VISIBLE);
-        holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
+        holder.contentTMinusStatus.setVisibility(View.VISIBLE);
+        holder.contentTMinusStatus.setTypeface(Typeface.DEFAULT);
         if (night) {
-            holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color));
+            holder.contentTMinusStatus.setTextColor(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color));
         } else {
-            holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary));
+            holder.contentTMinusStatus.setTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary));
         }
         if (holder.timer != null) {
             holder.timer.cancel();
@@ -413,27 +413,27 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         if (launchItem.getStatus().getId() == 2) {
             holder.countdownView.setVisibility(View.GONE);
             if (launchItem.getLsp() != null) {
-                holder.content_TMinus_status.setText(String.format(context.getString(R.string.pending_confirmed_go_specific), launchItem.getLsp().getName()));
+                holder.contentTMinusStatus.setText(String.format(context.getString(R.string.pending_confirmed_go_specific), launchItem.getLsp().getName()));
             } else {
-                holder.content_TMinus_status.setText(R.string.pending_confirmed_go);
+                holder.contentTMinusStatus.setText(R.string.pending_confirmed_go);
             }
-        } else if (launchItem.getStatus().getId() == 3)  {
+        } else if (launchItem.getStatus().getId() == 3) {
             holder.countdownView.setVisibility(View.GONE);
-            holder.content_TMinus_status.setText("Launch was a success!");
-        } else if (launchItem.getStatus().getId() == 4)  {
+            holder.contentTMinusStatus.setText("Launch was a success!");
+        } else if (launchItem.getStatus().getId() == 4) {
             holder.countdownView.setVisibility(View.GONE);
-            holder.content_TMinus_status.setText("A launch failure has occurred.");
-        } else if (launchItem.getStatus().getId() == 5)  {
-                holder.content_TMinus_status.setText("A hold has been placed on the launch.");
-        } else if (launchItem.getStatus().getId() == 6)  {
+            holder.contentTMinusStatus.setText("A launch failure has occurred.");
+        } else if (launchItem.getStatus().getId() == 5) {
+            holder.contentTMinusStatus.setText("A hold has been placed on the launch.");
+        } else if (launchItem.getStatus().getId() == 6) {
             holder.countdownDays.setText("00");
             holder.countdownHours.setText("00");
             holder.countdownMinutes.setText("00");
             holder.countdownSeconds.setText("00");
-            holder.content_TMinus_status.setText("The launch is currently in flight.");
-        } else if (launchItem.getStatus().getId() == 7)  {
+            holder.contentTMinusStatus.setText("The launch is currently in flight.");
+        } else if (launchItem.getStatus().getId() == 7) {
             holder.countdownView.setVisibility(View.GONE);
-            holder.content_TMinus_status.setText("Launch was a partial failure, payload separated into an incorrect orbit.");
+            holder.contentTMinusStatus.setText("Launch was a partial failure, payload separated into an incorrect orbit.");
         }
     }
 
@@ -462,77 +462,76 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, OnMapReadyCallback {
-        public TextView title;
-        public TextView content;
-        public TextView location;
-        public TextView content_mission;
-        public TextView content_mission_description;
-        public TextView launch_date_compact;
-        public TextView launch_time;
-        public TextView content_status;
-        public TextView content_TMinus_status;
-        public TextView watchButton;
-        public TextView shareButton;
-        public TextView exploreButton;
-        public TextView countdownDays;
-        public TextView countdownHours;
-        public TextView countdownMinutes;
-        public TextView countdownSeconds;
-        public LinearLayout content_mission_description_view;
+        @BindView(R.id.categoryIcon)
         public ImageView categoryIcon;
+        @BindView(R.id.launch_rocket)
+        public TextView title;
+        @BindView(R.id.location)
+        public TextView location;
+        @BindView(R.id.launch_date_compact)
+        public TextView launchDateCompact;
+        @BindView(R.id.TitleCard)
+        public LinearLayout titleCard;
+        @BindView(R.id.map_view)
+        public MapView mapView;
+        @BindView(R.id.content_status)
+        public TextView contentStatus;
+        @BindView(R.id.content_TMinus_status)
+        public TextView contentTMinusStatus;
+        @BindView(R.id.countdown_days)
+        public TextView countdownDays;
+        @BindView(R.id.countdown_hours)
+        public TextView countdownHours;
+        @BindView(R.id.countdown_minutes)
+        public TextView countdownMinutes;
+        @BindView(R.id.countdown_seconds)
+        public TextView countdownSeconds;
+        @BindView(R.id.countdown_layout)
+        public LinearLayout countdownView;
+        @BindView(R.id.content_mission)
+        public TextView contentMission;
+        @BindView(R.id.content_mission_description)
+        public TextView contentMissionDescription;
+        @BindView(R.id.content_mission_description_view)
+        public LinearLayout contentMissionDescriptionView;
+        @BindView(R.id.watchButton)
+        public AppCompatButton watchButton;
+        @BindView(R.id.shareButton)
+        public AppCompatButton shareButton;
+        @BindView(R.id.exploreButton)
+        public AppCompatButton exploreButton;
+        @BindView(R.id.lnrLayout)
+        public LinearLayout lnrLayout;
+        @BindView(R.id.card_view)
+        public CardView cardView;
+        @BindView(R.id.landing_location)
+        TextView landingLocation;
+        @BindView(R.id.landing_type)
+        TextView landingType;
+        public View layout;
         public GoogleMap map;
         public CountDownTimer timer;
-        public View countdownView;
-        public View titleCard;
-        public TextView contentForecast;
-        public CardView cardView;
-        public View layout;
-        public MapView map_view;
 
         //Add content to the card
         public ViewHolder(View view) {
             super(view);
             layout = view;
-            categoryIcon = view.findViewById(R.id.categoryIcon);
-            exploreButton = view.findViewById(R.id.exploreButton);
-            shareButton = view.findViewById(R.id.shareButton);
-            watchButton = view.findViewById(R.id.watchButton);
-            title = view.findViewById(R.id.launch_rocket);
-            location = view.findViewById(R.id.location);
-            content_mission = view.findViewById(R.id.content_mission);
-            content_mission_description = view.findViewById(
-                    R.id.content_mission_description);
-            launch_date_compact = view.findViewById(R.id.launch_date_compact);
-            launch_time = view.findViewById(R.id.launch_date_full);
-            content_status = view.findViewById(R.id.content_status);
-            content_TMinus_status = view.findViewById(R.id.content_TMinus_status);
-            content_mission_description_view = view.findViewById(R.id.content_mission_description_view);
+            ButterKnife.bind(this, view);
 
-            countdownDays = view.findViewById(R.id.countdown_days);
-            countdownHours = view.findViewById(R.id.countdown_hours);
-            countdownMinutes = view.findViewById(R.id.countdown_minutes);
-            countdownSeconds = view.findViewById(R.id.countdown_seconds);
-            countdownView = view.findViewById(R.id.countdown_layout);
-            cardView = view.findViewById(R.id.card_view);
-            titleCard = view.findViewById(R.id.TitleCard);
-
-            contentForecast = view.findViewById(R.id.content_forecast);
-
-            map_view = view.findViewById(R.id.map_view);
-            map_view.setClickable(false);
+            mapView.setClickable(false);
 
             titleCard.setOnClickListener(this);
             shareButton.setOnClickListener(this);
             exploreButton.setOnClickListener(this);
             watchButton.setOnClickListener(this);
-            map_view.setOnClickListener(this);
+            mapView.setOnClickListener(this);
 
-            if (map_view != null) {
+            if (mapView != null) {
                 // Initialise the MapView
-                map_view.onCreate(null);
+                mapView.onCreate(null);
                 // Set the map ready callback to receive the GoogleMap object
-                map_view.getMapAsync(this);
-                map_view.setVisibility(View.INVISIBLE);
+                mapView.getMapAsync(this);
+                mapView.setVisibility(View.INVISIBLE);
             }
         }
 
@@ -686,13 +685,13 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 return;
             }
 
-            LaunchLocation data = (LaunchLocation) map_view.getTag();
+            LaunchLocation data = (LaunchLocation) mapView.getTag();
             if (data == null) {
                 Timber.d("setMapLocation - data is null");
                 return;
             }
 
-            map_view.setVisibility(View.VISIBLE);
+            mapView.setVisibility(View.VISIBLE);
             map.getUiSettings().setMapToolbarEnabled(true);
             map.getUiSettings().setZoomGesturesEnabled(false);
             map.getUiSettings().setScrollGesturesEnabled(false);
@@ -715,8 +714,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
             layout.setTag(this);
             // Store a reference to the item in the mapView's tag. We use it to get the
             // coordinate of a location, when setting the map location.
-            map_view.setTag(item);
-            map_view.onResume();
+            mapView.setTag(item);
+            mapView.onResume();
             setMapLocation();
         }
     }
@@ -733,24 +732,20 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
     }
 
     /**
-     * RecycleListener that completely clears the {@link com.google.android.gms.maps.GoogleMap}
+     * RecycleListener that completely clears the {@link GoogleMap}
      * attached to a row in the RecyclerView.
-     * Sets the map type to {@link com.google.android.gms.maps.GoogleMap#MAP_TYPE_NONE} and clears
+     * Sets the map type to {@link GoogleMap#MAP_TYPE_NONE} and clears
      * the map.
      */
-    public RecyclerView.RecyclerListener mRecycleListener = new RecyclerView.RecyclerListener() {
-
-        @Override
-        public void onViewRecycled(RecyclerView.ViewHolder holder) {
-            CardAdapter.ViewHolder mapHolder = (CardAdapter.ViewHolder) holder;
-            if (mapHolder != null && mapHolder.map != null) {
-                Timber.d("Clearing map!");
-                // Clear the map and free up resources by changing the map type to none.
-                // Also reset the map when it gets reattached to layout, so the previous map would
-                // not be displayed.
-                mapHolder.map.clear();
-                mapHolder.map.setMapType(GoogleMap.MAP_TYPE_NONE);
-            }
+    public RecyclerView.RecyclerListener mRecycleListener = holder -> {
+        ViewHolder mapHolder = (ViewHolder) holder;
+        if (mapHolder != null && mapHolder.map != null) {
+            Timber.d("Clearing map!");
+            // Clear the map and free up resources by changing the map type to none.
+            // Also reset the map when it gets reattached to layout, so the previous map would
+            // not be displayed.
+            mapHolder.map.clear();
+            mapHolder.map.setMapType(GoogleMap.MAP_TYPE_NONE);
         }
     };
 }

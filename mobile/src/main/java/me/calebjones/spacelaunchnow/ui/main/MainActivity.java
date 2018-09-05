@@ -247,10 +247,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
                                 .withIcon(GoogleMaterial.Icon.gmd_assignment)
                                 .withIdentifier(R.id.menu_launches)
                                 .withSelectable(true),
-//                        new PrimaryDrawerItem().withName(R.string.missions)
-//                                .withIcon(GoogleMaterial.Icon.gmd_satellite)
-//                                .withIdentifier(R.id.menu_missions)
-//                                .withSelectable(true),
                         new PrimaryDrawerItem().withName(R.string.news)
                                 .withIcon(CommunityMaterial.Icon.cmd_newspaper)
                                 .withIdentifier(R.id.menu_news)
@@ -264,37 +260,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
                                 .withName(R.string.discord)
                                 .withIdentifier(R.id.menu_discord)
                                 .withSelectable(false),
-//                        new DividerDrawerItem(),
-//                        new ExpandableDrawerItem().withName(R.string.stay_connected).withIcon(CommunityMaterial.Icon.cmd_account).withDescription(R.string.connect_description).withIdentifier(19).withSelectable(false).withSubItems(
-//                                new SecondaryDrawerItem()
-//                                        .withIcon(CommunityMaterial.Icon.cmd_discord)
-//                                        .withLevel(2)
-//                                        .withName(R.string.discord)
-//                                        .withDescription(R.string.discord_subtitle)
-//                                        .withIdentifier(R.id.menu_discord)
-//                                        .withSelectable(false),
-//                                new SecondaryDrawerItem()
-//                                        .withIcon(CommunityMaterial.Icon.cmd_twitter)
-//                                        .withLevel(2)
-//                                        .withName(R.string.twitter)
-//                                        .withDescription(R.string.twitter_subtitle)
-//                                        .withIdentifier(R.id.menu_twitter)
-//                                        .withSelectable(false),
-//                                new SecondaryDrawerItem()
-//                                        .withIcon(CommunityMaterial.Icon.cmd_facebook)
-//                                        .withLevel(2)
-//                                        .withName(R.string.facebook)
-//                                        .withDescription(R.string.facebook_subtitle)
-//                                        .withIdentifier(R.id.menu_facebook)
-//                                        .withSelectable(false),
-//                                new SecondaryDrawerItem()
-//                                        .withIcon(CommunityMaterial.Icon.cmd_web)
-//                                        .withLevel(2)
-//                                        .withName(R.string.website)
-//                                        .withDescription(R.string.website_subtitle)
-//                                        .withIdentifier(R.id.menu_website)
-//                                        .withSelectable(false)
-//                        ),
                         new DividerDrawerItem(),
                         new ExpandableDrawerItem().withName(R.string.get_help).withIcon(GoogleMaterial.Icon.gmd_account_box).withDescription(R.string.help_description).withIdentifier(20).withSelectable(false).withSubItems(
                                 new SecondaryDrawerItem()

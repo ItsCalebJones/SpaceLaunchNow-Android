@@ -58,6 +58,9 @@ public class Launch extends RealmObject {
     @SerializedName("hashtag")
     @Expose
     public String hashtag;
+    @SerializedName("landing")
+    @Expose
+    public Landing landing;
     @SerializedName("launcher_config")
     @Expose
     public LauncherConfig launcherConfig;
@@ -82,7 +85,16 @@ public class Launch extends RealmObject {
     @SerializedName("launcher")
     @Expose
     public RealmList<Launcher> launchers;
+    public Integer eventID;
+    public Date lastUpdate;
 
+    public Landing getLanding() {
+        return landing;
+    }
+
+    public void setLanding(Landing landing) {
+        this.landing = landing;
+    }
 
     public RealmList<Launcher> getLaunchers() {
         return launchers;
@@ -91,10 +103,6 @@ public class Launch extends RealmObject {
     public void setLaunchers(RealmList<Launcher> launchers) {
         this.launchers = launchers;
     }
-
-
-    public Integer eventID;
-    public Date lastUpdate;
 
     public Date getLastUpdate() {
         return lastUpdate;

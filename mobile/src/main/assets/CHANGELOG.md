@@ -1,5 +1,5 @@
 # Space Launch Now
-A space launch tracker for Android using data from the Launch Library API. 
+A space launch tracker for Android using data from the Launch Library API.
 
 [View the latest releases here.](https://github.com/ItsCalebJones/SpaceLaunchNow-Android/releases)
 ## Changelog

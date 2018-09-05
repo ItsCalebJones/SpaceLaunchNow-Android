@@ -100,12 +100,48 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <com.google.android.gms.maps.MapView
-                android:id="@+id/map_view"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
-                map:liteMode="true"
-                map:mapType="none" />
+                android:layout_height="180dp">
+
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/map_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    map:liteMode="true"
+                    map:mapType="none" />
+
+                <TextView
+                    android:id="@+id/landing_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingRight="@dimen/material_baseline_grid_0.5x"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/unknown"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+                    android:textColor="?android:textColorSecondary"
+                    android:textIsSelectable="false"
+
+                    android:layout_toStartOf="@id/landing_type"
+                    android:layout_alignParentBottom="true"/>
+                <TextView
+                    android:id="@+id/landing_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/material_baseline_grid_0.5x"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/unknown"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+                    android:textColor="?android:textColorSecondary"
+                    android:textIsSelectable="false"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"/>
+
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/content_status"
@@ -163,29 +199,6 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/launch_date_full"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:maxLines="2"
-                android:paddingBottom="@dimen/material_baseline_grid_0.5x"
-                android:singleLine="false"
-                android:text="@string/unknown_launch_date"
-                android:textAppearance="@style/MaterialTypography.Regular.Subheading"
-                android:textColor="?android:textColorSecondary" />
-
-            <TextView
-                android:id="@+id/content_forecast"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/unknown"
-                android:textAppearance="@style/MaterialTypography.Regular.Subheading"
-                android:textColor="?android:textColorSecondary"
-                android:textIsSelectable="false" />
-
             <LinearLayout
                 android:id="@+id/content_mission_description_view"
                 android:layout_width="match_parent"
@@ -220,6 +233,8 @@
                     android:paddingTop="8dp"
                     android:layout_marginStart="@dimen/material_baseline_grid_2.5x"
                     android:layout_marginEnd="@dimen/material_baseline_grid_2.5x"
+                    android:maxLines="3"
+                    android:ellipsize="end"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="14sp" />
             </LinearLayout>

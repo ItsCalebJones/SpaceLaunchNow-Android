@@ -99,12 +99,7 @@ public class LaunchApplication extends Application {
                 .debug(true)
                 .build();
         Twitter.initialize(config);
-        new Thread() {
-            @Override
-            public void run() {
-                TweetUi.getInstance();
-            }
-        }.start();
+        new Thread(TweetUi::getInstance).start();
     }
 
     private void setupNotificationChannels() {
