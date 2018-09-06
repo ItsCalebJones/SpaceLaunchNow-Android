@@ -7,17 +7,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
@@ -27,23 +25,16 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.nekocode.badge.BadgeDrawable;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.data.LaunchStatus;
@@ -52,6 +43,7 @@ import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.CountDownTimer;
@@ -114,7 +106,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.content_card_item, viewGroup, false);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.content_card, viewGroup, false);
         return new ViewHolder(v);
     }
 
@@ -123,24 +115,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
     public void onBindViewHolder(final ViewHolder holder, int i) {
         Launch launchItem = launchList.get(i);
         Timber.i("Binding %s", launchItem.getName());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            holder.cardView.setElevation(7);
-        }
-        BadgeDrawable.Builder landingType =
-                new BadgeDrawable.Builder()
-                        .type(BadgeDrawable.TYPE_WITH_TWO_TEXT_COMPLEMENTARY)
-                        .badgeColor(accentColor)
-                        .textSize(36)
-                        .padding(16, 10, 16, 10, 32)
-                        .strokeWidth(4);
-
-        BadgeDrawable.Builder landingLocation =
-                new BadgeDrawable.Builder()
-                        .type(BadgeDrawable.TYPE_WITH_TWO_TEXT_COMPLEMENTARY)
-                        .badgeColor(accentColor)
-                        .textSize(36)
-                        .padding(16, 10, 16, 10, 32)
-                        .strokeWidth(4);
         String title;
         try {
             if (launchItem.isValid()) {
@@ -173,35 +147,32 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     dlon = Double.parseDouble(launchItem.getPad().getLongitude());
                 }
 
-                // Getting status
-                if (dlat == 0 && dlon == 0 || Double.isNaN(dlat) || Double.isNaN(dlon) || dlat == Double.NaN || dlon == Double.NaN) {
-                    if (holder.mapView != null) {
-                        holder.mapView.setVisibility(View.GONE);
-                    }
-                } else {
-                    holder.mapView.setVisibility(View.VISIBLE);
-                    holder.bindView(new LaunchLocation(launchItem, new LatLng(dlat, dlon)));
-                }
 
                 if (launchItem.getLanding() != null) {
                     if (launchItem.getLanding().getLandingLocation() != null) {
-                        holder.landingLocation.setVisibility(View.VISIBLE);
-                        holder.landingLocation.setText(landingLocation.text2(launchItem.getLanding().getLandingLocation().getAbbrev()).text1("Landing").build().toSpannable());
+                        holder.backgroundLanding.setVisibility(View.VISIBLE);
+                        holder.landing.setVisibility(View.VISIBLE);
+                        holder.landingIcon.setVisibility(View.VISIBLE);
+                        holder.landing.setText(launchItem.getLanding().getLandingLocation().getAbbrev());
                     } else {
-                        holder.landingLocation.setVisibility(View.GONE);
-                    }
-                    if (launchItem.getLanding().getLandingLocation() != null) {
-                        holder.landingType.setVisibility(View.VISIBLE);
-                        holder.landingType.setText(landingType.text2(launchItem.getLanding().getLandingType().getAbbrev()).text1("Type").build().toSpannable());
-                    } else {
-                        holder.landingType.setVisibility(View.GONE);
+                        holder.backgroundLanding.setVisibility(View.INVISIBLE);
+                        holder.landing.setVisibility(View.INVISIBLE);
+                        holder.landingIcon.setVisibility(View.INVISIBLE);
                     }
                 } else {
-                    holder.landingLocation.setVisibility(View.GONE);
-                    holder.landingType.setVisibility(View.GONE);
+                    holder.backgroundLanding.setVisibility(View.INVISIBLE);
+                    holder.landing.setVisibility(View.INVISIBLE);
+                    holder.landingIcon.setVisibility(View.INVISIBLE);
                 }
 
-                holder.contentStatus.setText(LaunchStatus.getLaunchStatusTitle(context, launchItem.getStatus().getId()));
+                if (launchItem.getLauncherConfig().getImageUrl() != null) {
+                    holder.launchImage.setVisibility(View.VISIBLE);
+                    GlideApp.with(context).load(launchItem.getLauncherConfig().getImageUrl()).centerCrop().into(holder.launchImage);
+                } else {
+                    holder.launchImage.setVisibility(View.GONE);
+                }
+
+                holder.status.setText(LaunchStatus.getLaunchStatusTitle(context, launchItem.getStatus().getId()));
 
                 //If timestamp is available calculate TMinus and date.
                 if (launchItem.getNet().getTime() > 0 && (launchItem.getStatus().getId() == 1 || launchItem.getStatus().getId() == 2)) {
@@ -221,10 +192,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     final int status = launchItem.getStatus().getId();
                     final String hold = launchItem.getHoldreason();
 
-                    holder.contentTMinusStatus.setTypeface(Typeface.SANS_SERIF);
-                    holder.contentTMinusStatus.setTextColor(accentColor);
-
-//                    holder.countdownView.setVisibility(View.VISIBLE);
                     long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
                     if (timeToFinish > 0) {
                         holder.timer = new CountDownTimer(timeToFinish, 1000) {
@@ -233,23 +200,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                             @Override
                             public void onFinish() {
                                 Timber.v("Countdown finished.");
-                                holder.contentTMinusStatus.setTypeface(Typeface.DEFAULT);
-                                if (night) {
-                                    holder.contentTMinusStatus.setTextColor(nightColor);
-                                } else {
-                                    holder.contentTMinusStatus.setTextColor(color);
-                                }
-                                if (status == 1) {
-                                    holder.contentTMinusStatus.setText(R.string.watch_webcast);
-
-                                } else {
-                                    if (hold != null && hold.length() > 1) {
-                                        holder.contentTMinusStatus.setText(hold);
-                                    } else {
-                                        holder.contentTMinusStatus.setText(R.string.watch_webcast);
-                                    }
-                                }
-                                holder.contentTMinusStatus.setVisibility(View.VISIBLE);
                                 holder.countdownDays.setText("00");
                                 holder.countdownHours.setText("00");
                                 holder.countdownMinutes.setText("00");
@@ -321,17 +271,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                                 } else {
                                     holder.countdownSeconds.setText("00");
                                 }
-
-                                // Hide status if countdown is active.
-                                holder.contentTMinusStatus.setVisibility(View.GONE);
                             }
                         }.start();
-                    } else {
-                        showStatusDescription(launchItem, holder);
                     }
-
-                } else {
-                    showStatusDescription(launchItem, holder);
                 }
 
                 //Get launch date
@@ -375,7 +317,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     holder.contentMission.setText(launchItem.getMission().getName());
                     String description = launchItem.getMission().getDescription();
                     if (description.length() > 0) {
-                        holder.contentMissionDescriptionView.setVisibility(View.VISIBLE);
                         holder.contentMissionDescription.setText(description);
                     }
                 } else {
@@ -389,7 +330,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     } catch (ArrayIndexOutOfBoundsException exception) {
                         holder.contentMission.setText("Unknown Mission");
                     }
-                    holder.contentMissionDescriptionView.setVisibility(View.GONE);
                 }
 
                 //If pad and agency_menu exist add it to location, otherwise get whats always available
@@ -401,44 +341,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
             }
         } catch (NullPointerException e) {
             Crashlytics.logException(e);
-        }
-    }
-
-    private void showStatusDescription(Launch launchItem, ViewHolder holder) {
-        holder.contentTMinusStatus.setVisibility(View.VISIBLE);
-        holder.contentTMinusStatus.setTypeface(Typeface.DEFAULT);
-        if (night) {
-            holder.contentTMinusStatus.setTextColor(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color));
-        } else {
-            holder.contentTMinusStatus.setTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary));
-        }
-        if (holder.timer != null) {
-            holder.timer.cancel();
-        }
-        if (launchItem.getStatus().getId() == 2) {
-            holder.countdownView.setVisibility(View.GONE);
-            if (launchItem.getLsp() != null) {
-                holder.contentTMinusStatus.setText(String.format(context.getString(R.string.pending_confirmed_go_specific), launchItem.getLsp().getName()));
-            } else {
-                holder.contentTMinusStatus.setText(R.string.pending_confirmed_go);
-            }
-        } else if (launchItem.getStatus().getId() == 3) {
-            holder.countdownView.setVisibility(View.GONE);
-            holder.contentTMinusStatus.setText("Launch was a success!");
-        } else if (launchItem.getStatus().getId() == 4) {
-            holder.countdownView.setVisibility(View.GONE);
-            holder.contentTMinusStatus.setText("A launch failure has occurred.");
-        } else if (launchItem.getStatus().getId() == 5) {
-            holder.contentTMinusStatus.setText("A hold has been placed on the launch.");
-        } else if (launchItem.getStatus().getId() == 6) {
-            holder.countdownDays.setText("00");
-            holder.countdownHours.setText("00");
-            holder.countdownMinutes.setText("00");
-            holder.countdownSeconds.setText("00");
-            holder.contentTMinusStatus.setText("The launch is currently in flight.");
-        } else if (launchItem.getStatus().getId() == 7) {
-            holder.countdownView.setVisibility(View.GONE);
-            holder.contentTMinusStatus.setText("Launch was a partial failure, payload separated into an incorrect orbit.");
         }
     }
 
@@ -466,55 +368,47 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         return 0;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, OnMapReadyCallback {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
         @BindView(R.id.categoryIcon)
-        public ImageView categoryIcon;
+        ImageView categoryIcon;
         @BindView(R.id.launch_rocket)
-        public TextView title;
+        TextView title;
         @BindView(R.id.location)
-        public TextView location;
+        TextView location;
         @BindView(R.id.launch_date_compact)
-        public TextView launchDateCompact;
-        @BindView(R.id.TitleCard)
-        public LinearLayout titleCard;
-        @BindView(R.id.map_view)
-        public MapView mapView;
-        @BindView(R.id.content_status)
-        public TextView contentStatus;
-        @BindView(R.id.content_TMinus_status)
-        public TextView contentTMinusStatus;
+        TextView launchDateCompact;
+        @BindView(R.id.launch_image)
+        ImageView launchImage;
         @BindView(R.id.countdown_days)
-        public TextView countdownDays;
+        TextView countdownDays;
         @BindView(R.id.countdown_hours)
-        public TextView countdownHours;
+        TextView countdownHours;
         @BindView(R.id.countdown_minutes)
-        public TextView countdownMinutes;
+        TextView countdownMinutes;
         @BindView(R.id.countdown_seconds)
-        public TextView countdownSeconds;
+        TextView countdownSeconds;
         @BindView(R.id.countdown_layout)
-        public LinearLayout countdownView;
-        @BindView(R.id.content_mission)
-        public TextView contentMission;
-        @BindView(R.id.content_mission_description)
-        public TextView contentMissionDescription;
-        @BindView(R.id.content_mission_description_view)
-        public LinearLayout contentMissionDescriptionView;
+        LinearLayout countdownLayout;
+        @BindView(R.id.status)
+        TextView status;
         @BindView(R.id.watchButton)
-        public AppCompatButton watchButton;
+        Button watchButton;
         @BindView(R.id.shareButton)
-        public AppCompatButton shareButton;
+        Button shareButton;
         @BindView(R.id.exploreButton)
-        public AppCompatButton exploreButton;
-        @BindView(R.id.lnrLayout)
-        public LinearLayout lnrLayout;
-        @BindView(R.id.card_view)
-        public CardView cardView;
-        @BindView(R.id.landing_location)
-        TextView landingLocation;
-        @BindView(R.id.landing_type)
-        TextView landingType;
+        Button exploreButton;
+        @BindView(R.id.content_mission)
+        TextView contentMission;
+        @BindView(R.id.content_mission_description)
+        TextView contentMissionDescription;
+        @BindView(R.id.background_landing)
+        View backgroundLanding;
+        @BindView(R.id.landing_icon)
+        ImageView landingIcon;
+        @BindView(R.id.landing)
+        TextView landing;
         public View layout;
-        public GoogleMap map;
         public CountDownTimer timer;
 
         //Add content to the card
@@ -523,21 +417,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
             layout = view;
             ButterKnife.bind(this, view);
 
-            mapView.setClickable(false);
-
-            titleCard.setOnClickListener(this);
             shareButton.setOnClickListener(this);
             exploreButton.setOnClickListener(this);
             watchButton.setOnClickListener(this);
-            mapView.setOnClickListener(this);
-
-            if (mapView != null) {
-                // Initialise the MapView
-                mapView.onCreate(null);
-                // Set the map ready callback to receive the GoogleMap object
-                mapView.getMapAsync(this);
-                mapView.setVisibility(View.INVISIBLE);
-            }
         }
 
         //React to click events.
@@ -675,82 +557,5 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     break;
             }
         }
-
-        @Override
-        public void onMapReady(GoogleMap googleMap) {
-            Timber.v("onMapReady called.");
-            MapsInitializer.initialize(context);
-            map = googleMap;
-            setMapLocation();
-        }
-
-        private void setMapLocation() {
-            if (map == null) {
-                Timber.d("setMapLocation - map is null");
-                return;
-            }
-
-            LaunchLocation data = (LaunchLocation) mapView.getTag();
-            if (data == null) {
-                Timber.d("setMapLocation - data is null");
-                return;
-            }
-
-            mapView.setVisibility(View.VISIBLE);
-            map.getUiSettings().setMapToolbarEnabled(true);
-            map.getUiSettings().setZoomGesturesEnabled(false);
-            map.getUiSettings().setScrollGesturesEnabled(false);
-            Timber.d("setMapLocation - Moving the camera.");
-            // Add a marker for this item and set the camera
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(data.location, 7f));
-            map.addMarker(new MarkerOptions()
-                    .position(data.location)
-                    .title(data.launch.getLocation().getName())
-                    .snippet(data.launch.getPad().getName())
-                    .infoWindowAnchor(0.5f, 0.5f));
-
-            // Set the map type back to normal.
-            map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        }
-
-        private void bindView(LaunchLocation item) {
-            Timber.d("bindView - %s", item.launch.getName());
-            // Store a reference of the ViewHolder object in the layout.
-            layout.setTag(this);
-            // Store a reference to the item in the mapView's tag. We use it to get the
-            // coordinate of a location, when setting the map location.
-            mapView.setTag(item);
-            mapView.onResume();
-            setMapLocation();
-        }
     }
-
-    private static class LaunchLocation {
-
-        public final Launch launch;
-        public final LatLng location;
-
-        LaunchLocation(Launch launch, LatLng location) {
-            this.launch = launch;
-            this.location = location;
-        }
-    }
-
-    /**
-     * RecycleListener that completely clears the {@link GoogleMap}
-     * attached to a row in the RecyclerView.
-     * Sets the map type to {@link GoogleMap#MAP_TYPE_NONE} and clears
-     * the map.
-     */
-    public RecyclerView.RecyclerListener mRecycleListener = holder -> {
-        ViewHolder mapHolder = (ViewHolder) holder;
-        if (mapHolder != null && mapHolder.map != null) {
-            Timber.d("Clearing map!");
-            // Clear the map and free up resources by changing the map type to none.
-            // Also reset the map when it gets reattached to layout, so the previous map would
-            // not be displayed.
-            mapHolder.map.clear();
-            mapHolder.map.setMapType(GoogleMap.MAP_TYPE_NONE);
-        }
-    };
 }
