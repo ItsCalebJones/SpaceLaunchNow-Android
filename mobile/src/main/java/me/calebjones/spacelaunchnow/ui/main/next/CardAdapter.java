@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -340,7 +341,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                         //Get launch date
 
                         SimpleDateFormat sdf = Utils.getSimpleDateFormatForUI("MMMM d, yyyy");
-                        sdf.toLocalizedPattern();
                         Date date = launchItem.getNet();
                         String launchTime = sdf.format(date);
                         if (launchItem.getTbddate()) {
@@ -349,7 +349,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                         holder.launchDateCompact.setText(launchTime);
                     }
                 } else {
-                    SimpleDateFormat sdf = Utils.getSimpleDateFormatForUI("MMMM d, yyyy HH:mm zzz");
+                    SimpleDateFormat sdf;
+                    if (DateFormat.is24HourFormat(context)) {
+                        sdf = Utils.getSimpleDateFormatForUI("MMMM d, yyyy HH:mm zzz");
+                    } else {
+                        sdf = Utils.getSimpleDateFormatForUI("MMMM d, yyyy h:mm a zzz");
+                    }
                     sdf.toLocalizedPattern();
                     Date date = launchItem.getNet();
                     holder.launchDateCompact.setText(sdf.format(date));

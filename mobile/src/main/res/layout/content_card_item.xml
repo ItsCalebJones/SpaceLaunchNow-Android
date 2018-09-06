@@ -152,6 +152,16 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="@dimen/material_baseline_grid_2x"
+            android:layout_marginStart="@dimen/material_baseline_grid_2x"
+            android:layout_marginTop="8dp"
+            android:background="@color/View_Separator"
+            android:paddingBottom="8dp" />
+
 
         <LinearLayout
             android:layout_width="match_parent"
