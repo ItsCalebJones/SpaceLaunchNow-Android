@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/material_baseline_grid_1x"
     android:layout_marginEnd="8dp"
     android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
-    android:layout_marginBottom="@dimen/material_baseline_grid_1x"
     android:maxWidth="400dp"
-    app:cardCornerRadius="8dp">
+    android:layout_gravity="center"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
 
-    <android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <android.support.constraint.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -20,16 +24,14 @@
             android:id="@+id/group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:elevation="4dp"
             app:constraint_referenced_ids="launch_rocket,categoryIcon,location,launch_date_compact,background" />
 
         <View
             android:id="@+id/background"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:paddingBottom="4dp"
-
             android:background="?attr/titleBarColor"
+            android:paddingBottom="4dp"
             app:layout_constraintBottom_toBottomOf="@+id/launch_date_compact"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -39,9 +41,10 @@
 
         <ImageView
             android:id="@+id/categoryIcon"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:padding="@dimen/material_baseline_grid_2x"
+            app:layout_constraintBottom_toBottomOf="@+id/launch_date_compact"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_unknown_white" />
@@ -70,16 +73,16 @@
             android:id="@+id/location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="@dimen/material_baseline_grid_3x"
             android:layout_marginStart="4dp"
-            android:layout_marginTop="4dp"
             android:ellipsize="end"
             android:singleLine="true"
             android:text="@string/unknown_launch_location"
             android:textAppearance="@style/MaterialTypography.Regular.Subheading"
             android:textColor="@color/dark_primary_text_color_selector"
+            app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toTopOf="@+id/launch_date_compact"
-            app:layout_constraintEnd_toEndOf="@+id/background"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/categoryIcon"
             app:layout_constraintTop_toBottomOf="@+id/launch_rocket"
@@ -89,16 +92,17 @@
             android:id="@+id/launch_date_compact"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="@dimen/material_baseline_grid_3x"
             android:layout_marginStart="4dp"
             android:ellipsize="end"
-            android:paddingBottom="@dimen/material_baseline_grid_1x"
             android:singleLine="true"
+            android:paddingBottom="@dimen/material_baseline_grid_1x"
             android:text="@string/unknown_launch_date"
             android:textAppearance="@style/MaterialTypography.Regular.Subheading"
             android:textColor="@color/dark_primary_text_color_selector"
+            app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toTopOf="@+id/launch_image"
-            app:layout_constraintEnd_toEndOf="@+id/background"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/categoryIcon"
             app:layout_constraintTop_toBottomOf="@+id/location" />
@@ -110,6 +114,7 @@
             android:cropToPadding="false"
             android:scaleType="centerCrop"
             android:src="@drawable/placeholder"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/background" />
@@ -118,15 +123,16 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="26dp"
             android:background="@color/View_Separator"
-            android:paddingBottom="8dp"
-            android:visibility="invisible"
+            android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@+id/countdown_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view5" />
+            app:layout_constraintTop_toBottomOf="@+id/launch_image" />
 
         <include
             android:id="@+id/countdown_layout"
@@ -138,7 +144,8 @@
             app:layout_constraintBottom_toTopOf="@+id/divider2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divi" />
 
         <View
             android:id="@+id/divider2"
@@ -146,7 +153,7 @@
             android:layout_height="1dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             android:background="@color/View_Separator"
             android:paddingBottom="8dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -154,36 +161,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/countdown_layout" />
 
-        <View
-            android:id="@+id/view5"
+        <include
+            android:id="@+id/status_pill"
+            layout="@layout/status_pill"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:background="?attr/titleBarColor"
-            android:elevation="4dp"
-
-            android:paddingBottom="4dp"
-            app:layout_constrainedHeight="false"
-            app:layout_constrainedWidth="false"
-            app:layout_constraintBottom_toBottomOf="@id/divider"
-            app:layout_constraintTop_toBottomOf="@+id/launch_image" />
-
-        <TextView
-            android:id="@+id/status"
-            android:layout_width="wrap_content"
-            android:layout_height="27dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:elevation="4dp"
-            android:text="Go for Launch"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
             android:textColor="@color/dark_primary_text_color_selector"
-            android:textSize="20sp"
+            android:textSize="26sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/countdown_layout"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/view5"
-            app:layout_constraintTop_toTopOf="@+id/view5" />
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/launch_image" />
 
         <Button
             android:id="@+id/watchButton"
@@ -191,7 +184,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
             android:text="@string/watch_live"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -204,7 +197,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="24dp"
             android:layout_marginTop="8dp"
             android:text="@string/share"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -226,79 +219,47 @@
 
         <TextView
             android:id="@+id/content_mission"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="12dp"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:text="@string/unknown_mission"
             android:textAppearance="@style/MaterialTypography.Regular.Caption"
             android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="@+id/content_mission_description"
-            app:layout_constraintEnd_toStartOf="@+id/background_landing"
+            app:layout_constraintEnd_toStartOf="@+id/landing_pill"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider2" />
 
         <TextView
             android:id="@+id/content_mission_description"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:maxLines="3"
             android:text="Unknown Mission Description"
+            android:textAppearance="@style/MaterialTypography.Regular.Body1"
             android:textColor="?android:textColorSecondary"
-            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/background_landing" />
+            app:layout_constraintTop_toBottomOf="@+id/content_mission" />
 
-        <View
-            android:id="@+id/background_landing"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@drawable/rounded_colored"
-            android:textAlignment="textStart"
-            app:layout_constraintBottom_toBottomOf="@+id/landing_icon"
-            app:layout_constraintEnd_toEndOf="@+id/landing"
-            app:layout_constraintStart_toStartOf="@+id/landing_icon"
-            app:layout_constraintTop_toTopOf="@+id/landing" />
-
-        <ImageView
-            android:id="@+id/landing_icon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="12dp"
-            android:paddingBottom="4dp"
-            android:paddingEnd="4dp"
-            android:paddingStart="4dp"
-            android:paddingTop="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/landing"
-            app:layout_constraintTop_toBottomOf="@+id/divider2"
-            app:srcCompat="@drawable/ic_landing" />
-
-        <TextView
-            android:id="@+id/landing"
+        <include
+            android:id="@+id/landing_pill"
+            layout="@layout/landing_pill"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginEnd="@dimen/material_baseline_grid_2x"
-            android:layout_marginTop="12dp"
-            android:paddingBottom="8dp"
-            android:paddingEnd="8dp"
-            android:paddingStart="8dp"
-            android:paddingTop="8dp"
-            android:text="LZ1"
-            android:textAlignment="center"
-            android:textAppearance="@style/MaterialTypography.Locale.Subheading"
-            android:textColor="@color/dark_primary_text_color_selector"
-            android:textSize="16sp"
-            android:typeface="normal"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider2" />
-
 
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

@@ -110,7 +110,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     @BindView(R.id.countdown_seconds)
     TextView countdownSeconds;
     @BindView(R.id.countdown_layout)
-    LinearLayout countdownLayout;
+    View countdownLayout;
     @BindView(R.id.day_two)
     LinearLayout dayTwo;
     @BindView(R.id.day_three)

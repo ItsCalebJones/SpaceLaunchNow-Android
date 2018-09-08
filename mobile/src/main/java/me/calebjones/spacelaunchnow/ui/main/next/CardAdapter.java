@@ -5,11 +5,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -24,6 +28,9 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
@@ -36,6 +43,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.RealmList;
+import jp.wasabeef.glide.transformations.BlurTransformation;
+import jp.wasabeef.glide.transformations.ColorFilterTransformation;
+import jp.wasabeef.glide.transformations.gpu.BrightnessFilterTransformation;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.data.LaunchStatus;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
@@ -46,8 +56,11 @@ import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivit
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
+import me.calebjones.spacelaunchnow.utils.transformations.SaturationTransformation;
 import me.calebjones.spacelaunchnow.utils.views.CountDownTimer;
 import timber.log.Timber;
+
+import static me.calebjones.spacelaunchnow.utils.GlideOptions.bitmapTransform;
 
 /**
  * Adapts UpcomingLaunch data to the LaunchFragment
@@ -150,29 +163,40 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
 
                 if (launchItem.getLanding() != null) {
                     if (launchItem.getLanding().getLandingLocation() != null) {
-                        holder.backgroundLanding.setVisibility(View.VISIBLE);
-                        holder.landing.setVisibility(View.VISIBLE);
-                        holder.landingIcon.setVisibility(View.VISIBLE);
+                        holder.landingView.setVisibility(View.VISIBLE);
                         holder.landing.setText(launchItem.getLanding().getLandingLocation().getAbbrev());
                     } else {
-                        holder.backgroundLanding.setVisibility(View.INVISIBLE);
-                        holder.landing.setVisibility(View.INVISIBLE);
-                        holder.landingIcon.setVisibility(View.INVISIBLE);
+                        holder.landingView.setVisibility(View.INVISIBLE);
                     }
                 } else {
-                    holder.backgroundLanding.setVisibility(View.INVISIBLE);
-                    holder.landing.setVisibility(View.INVISIBLE);
-                    holder.landingIcon.setVisibility(View.INVISIBLE);
+                    holder.landingView.setVisibility(View.INVISIBLE);
+
                 }
 
                 if (launchItem.getLauncherConfig().getImageUrl() != null) {
                     holder.launchImage.setVisibility(View.VISIBLE);
-                    GlideApp.with(context).load(launchItem.getLauncherConfig().getImageUrl()).centerCrop().into(holder.launchImage);
+                    GlideApp.with(context)
+                            .load(launchItem.getLauncherConfig().getImageUrl())
+                            .placeholder(R.drawable.placeholder)
+                            .into(holder.launchImage);
+                } else if (launchItem.getLsp().getImageUrl() != null) {
+                    holder.launchImage.setVisibility(View.VISIBLE);
+                    GlideApp.with(context)
+                            .load(launchItem.getLsp().getImageUrl())
+                            .placeholder(R.drawable.placeholder)
+                            .into(holder.launchImage);
+                } else if (launchItem.getLsp().getLogoUrl() != null) {
+                    holder.launchImage.setVisibility(View.VISIBLE);
+                    GlideApp.with(context)
+                            .load(launchItem.getLsp().getLogoUrl())
+                            .placeholder(R.drawable.placeholder)
+                            .into(holder.launchImage);
                 } else {
                     holder.launchImage.setVisibility(View.GONE);
                 }
 
                 holder.status.setText(LaunchStatus.getLaunchStatusTitle(context, launchItem.getStatus().getId()));
+                holder.statusPill.setCardBackgroundColor(LaunchStatus.getLaunchStatusColor(context, launchItem.getStatus().getId()));
 
                 //If timestamp is available calculate TMinus and date.
                 if (launchItem.getNet().getTime() > 0 && (launchItem.getStatus().getId() == 1 || launchItem.getStatus().getId() == 2)) {
@@ -388,8 +412,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         TextView countdownMinutes;
         @BindView(R.id.countdown_seconds)
         TextView countdownSeconds;
-        @BindView(R.id.countdown_layout)
-        LinearLayout countdownLayout;
         @BindView(R.id.status)
         TextView status;
         @BindView(R.id.watchButton)
@@ -402,12 +424,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         TextView contentMission;
         @BindView(R.id.content_mission_description)
         TextView contentMissionDescription;
-        @BindView(R.id.background_landing)
-        View backgroundLanding;
         @BindView(R.id.landing_icon)
         ImageView landingIcon;
         @BindView(R.id.landing)
         TextView landing;
+        @BindView(R.id.landing_pill)
+        View landingView;
+        @BindView(R.id.status_pill)
+        CardView statusPill;
         public View layout;
         public CountDownTimer timer;
 
