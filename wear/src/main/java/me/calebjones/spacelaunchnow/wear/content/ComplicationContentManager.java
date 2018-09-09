@@ -55,7 +55,7 @@ public class ComplicationContentManager {
         this.context = context;
         this.contentCallback = callback;
         realm = Realm.getDefaultInstance();
-        retrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit(context.getString(R.string.sln_token));
+        retrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit(context.getString(R.string.sln_token), false);
         sharedPreferences = context.getSharedPreferences("timestamp", 0);
         mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
     }

@@ -5,7 +5,17 @@ A space launch tracker for Android using data from the Launch Library API.
 ## Changelog
 #### Updated 6-11-2018
 ---
-### Version 2.6.0 (Latest)
+### Version 2.6.2_BETA (Latest)
+#### Overview
+Finally, SpaceX landing information! It's a long time coming but its finally here.
+
+#### Changelog
+* Add labels for SpaceX landing information.
+* Add labels to indicate status of the launch.
+* Fix a few bugs.
+* Remove the Google Map view from the home page due to performance issues rendering multiple maps.
+
+### Version 2.6.0
 #### Overview
 Change over to using my own server to support future Blue Origin launches and additional data about SpaceX launches and LANDINGS. Coming soon!
 

@@ -94,7 +94,7 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
         ButterKnife.bind(this);
         context = this;
         realm = Realm.getDefaultInstance();
-        retrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit(this.getString(R.string.sln_token));
+        retrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit(this.getString(R.string.sln_token), false);
         swipeRefresh.setOnRefreshListener(this);
 
         // Get the Intent that started this activity and extract the string
@@ -208,8 +208,7 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
             launchMissionDescription.setText(launch.getMission().getDescription());
         }
 
-        long future = launch.getNetstamp();
-        future = future * 1000;
+        long future = launch.getNet().getTime();
         long timeToFinish = future - System.currentTimeMillis();
         if (timeToFinish > 0) {
             timer = new CountDownTimer(timeToFinish, 1000) {

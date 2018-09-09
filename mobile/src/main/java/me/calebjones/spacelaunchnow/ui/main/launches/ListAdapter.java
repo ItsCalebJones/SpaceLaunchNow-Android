@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,16 +12,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.content.data.LaunchStatus;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
@@ -145,6 +146,17 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
             }
         }
+
+        holder.status.setText(launchItem.getStatus().getName());
+        holder.statusCard.setCardBackgroundColor(LaunchStatus.getLaunchStatusColor(mContext, launchItem.getStatus().getId()));
+
+        if (launchItem.getLanding() != null && launchItem.getLanding().getLandingLocation() != null) {
+            holder.landingCard.setVisibility(View.VISIBLE);
+            holder.landingLocation.setText(launchItem.getLanding().getLandingLocation().getAbbrev());
+            holder.landingCard.setCardBackgroundColor(LaunchStatus.getLandingStatusColor(mContext, launchItem.getLanding()));
+        } else {
+            holder.landingCard.setVisibility(View.GONE);
+        }
     }
 
     public String parseDateToMMyyyy(Date date) {
@@ -157,18 +169,30 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView title, content, location, launch_date, mission;
-        public ImageView categoryIcon;
+        @BindView(R.id.status)
+        TextView status;
+        @BindView(R.id.status_pill_mini)
+        CardView statusCard;
+        @BindView(R.id.landing)
+        TextView landingLocation;
+        @BindView(R.id.landing_pill_mini)
+        CardView landingCard;
+        @BindView(R.id.launch_rocket)
+        TextView title;
+        @BindView(R.id.location)
+        TextView location;
+        @BindView(R.id.launch_date)
+        TextView launch_date;
+        @BindView(R.id.mission)
+        TextView mission;
+        @BindView(R.id.categoryIcon)
+        ImageView categoryIcon;
+
 
         //Add content to the card
         public ViewHolder(View view) {
             super(view);
-
-            categoryIcon = view.findViewById(R.id.categoryIcon);
-            title = view.findViewById(R.id.launch_rocket);
-            location = view.findViewById(R.id.location);
-            launch_date = view.findViewById(R.id.launch_date);
-            mission = view.findViewById(R.id.mission);
+            ButterKnife.bind(this, view);
 
             title.setOnClickListener(this);
             location.setOnClickListener(this);

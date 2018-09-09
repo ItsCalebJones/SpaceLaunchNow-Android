@@ -3,6 +3,7 @@ package me.calebjones.spacelaunchnow.content.data;
 import android.content.Context;
 
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.data.models.main.Landing;
 
 
 public class LaunchStatus {
@@ -39,27 +40,39 @@ public class LaunchStatus {
         switch (id) {
             case 1:
                 //GO for launch
-                return context.getResources().getColor(R.color.material_color_green_500);
+                return context.getResources().getColor(R.color.material_color_green_600);
             case 2:
-                //NO GO for launch
-                return context.getResources().getColor(R.color.material_color_red_500);
+                //TBD for launch
+                return context.getResources().getColor(R.color.material_color_amber_600);
             case 3:
                 //Success for launch
-                return context.getResources().getColor(R.color.material_color_green_800);
+                return context.getResources().getColor(R.color.material_color_green_900);
             case 4:
                 //Failure to launch
-                return context.getResources().getColor((R.color.material_color_red_900));
+                return context.getResources().getColor((R.color.material_color_red_500));
             case 5:
-                //Failure to launch
-                return context.getResources().getColor((R.color.material_color_yellow_500));
+                //HOLD
+                return context.getResources().getColor((R.color.material_color_amber_900));
             case 6:
-                //Failure to launch
-                return context.getResources().getColor(R.color.material_color_orange_500);
+                //In Flight
+                return context.getResources().getColor(R.color.material_color_blue_500);
             case 7:
-                //Failure to launch
-                return context.getResources().getColor(R.color.material_color_amber_800);
+                //Partial Failure
+                return context.getResources().getColor(R.color.material_color_blue_grey_500);
             default:
-                return context.getResources().getColor(R.color.material_color_purple_500);
+                return context.getResources().getColor(R.color.material_color_purple_800);
         }
+    }
+
+    public static int getLandingStatusColor(Context context, Landing landing)  {
+            if (landing.getSuccess() == null){
+                return context.getResources().getColor(R.color.material_color_blue_500);
+            } else if (landing.getSuccess()) {
+                return context.getResources().getColor(R.color.material_color_green_500);
+            } else if (!landing.getSuccess()) {
+                return context.getResources().getColor(R.color.material_color_red_500);
+            } else {
+                return context.getResources().getColor(R.color.material_color_blue_500);
+            }
     }
 }
