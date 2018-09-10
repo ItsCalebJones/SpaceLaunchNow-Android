@@ -188,6 +188,15 @@
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
+        <include
+            android:id="@+id/landing_card"
+            layout="@layout/landing_information"
+            android:layout_width="@dimen/max_width"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:animateLayoutChanges="true"
+            android:padding="@dimen/material_card_edge_margin"/>
+
         <android.support.v7.widget.CardView
             android:id="@+id/weather_card"
             android:layout_width="@dimen/max_width"

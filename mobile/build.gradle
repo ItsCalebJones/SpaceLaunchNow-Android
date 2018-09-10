@@ -259,6 +259,7 @@ dependencies {
     implementation 'com.borax12.materialdaterangepicker:library:1.9'
     implementation 'com.simplecityapps:recyclerview-fastscroll:1.0.18'
     implementation 'jp.wasabeef:glide-transformations:3.0.1'
+    implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
 
     // If you want to use the GPU Filters
     implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'

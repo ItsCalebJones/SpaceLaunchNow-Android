@@ -38,6 +38,8 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.mypopsy.maps.StaticMap;
 
+import net.cachapa.expandablelayout.ExpandableLayout;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -65,6 +67,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
+import me.calebjones.spacelaunchnow.data.models.main.Landing;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.Pad;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
@@ -81,11 +84,6 @@ import timber.log.Timber;
 
 public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer.OnInitializedListener {
 
-
-    @BindView(R.id.youTube_viewHolder)
-    LinearLayout youTubeViewHolder;
-    @BindView(R.id.countdown_separator)
-    View countdownSeparator;
     private SharedPreferences sharedPref;
     private ListPreferences sharedPreference;
     private Context context;
@@ -99,6 +97,48 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     private boolean youTubePlaying = false;
     private int youTubeProgress = 0;
 
+    @BindView(R.id.landing_information_subtitle)
+    TextView landingInformationSubtitle;
+    @BindView(R.id.countdown_status)
+    TextView countdownStatus;
+    @BindView(R.id.divider)
+    View divider;
+    @BindView(R.id.attempt_icon)
+    ImageView attemptIcon;
+    @BindView(R.id.success_icon)
+    ImageView successIcon;
+    @BindView(R.id.landing_type_description_expandable_layout)
+    ExpandableLayout landingTypeDescriptionExpandableLayout;
+    @BindView(R.id.landing_location_description_expandable_layout)
+    ExpandableLayout landingLocationDescriptionExpandableLayout;
+    @BindView(R.id.read_more)
+    AppCompatButton readMore;
+    @BindView(R.id.youTube_viewHolder)
+    LinearLayout youTubeViewHolder;
+    @BindView(R.id.countdown_separator)
+    View countdownSeparator;
+    @BindView(R.id.landing_information_title)
+    TextView landingInformationTitle;
+    @BindView(R.id.landing_attempt_title)
+    TextView landingAttemptTitle;
+    @BindView(R.id.landing_success_title)
+    TextView landingSuccessTitle;
+    @BindView(R.id.landing_description)
+    TextView landingDescription;
+    @BindView(R.id.landing_location_description)
+    TextView landingLocationDescription;
+    @BindView(R.id.landing_location)
+    TextView landingLocation;
+    @BindView(R.id.landing_location_title)
+    TextView landingLocationTitle;
+    @BindView(R.id.landing_type_title)
+    TextView landingTypeTitle;
+    @BindView(R.id.landing_type)
+    TextView landingType;
+    @BindView(R.id.landing_type_description)
+    TextView landingTypeDescription;
+    @BindView(R.id.landing_card)
+    View landingCard;
     @BindView(R.id.content_TMinus_status)
     TextView contentTMinusStatus;
     @BindView(R.id.countdown_days)
@@ -274,27 +314,27 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                 unit = Unit.SI;
             }
 
-            ForecastClient.getInstance().getForecast(latitude, longitude, (int) detailLaunch.getNet().getTime()/1000, null, unit, null, false, new Callback<Forecast>() {
-                        @Override
-                        public void onResponse(Call<Forecast> forecastCall, Response<Forecast> response) {
-                            if (response.isSuccessful()) {
-                                Forecast forecast = response.body();
-                                if (SummaryDetailFragment.this.isVisible()) {
-                                    Analytics.getInstance().sendWeatherEvent(detailLaunch.getName(), true, "Success");
-                                    updateWeatherView(forecast);
-                                }
-                            } else {
-                                Analytics.getInstance().sendWeatherEvent(detailLaunch.getName(), false, response.errorBody().toString());
-                                Timber.e("Error: %s", response.errorBody());
-                            }
+            ForecastClient.getInstance().getForecast(latitude, longitude, (int) detailLaunch.getNet().getTime() / 1000, null, unit, null, false, new Callback<Forecast>() {
+                @Override
+                public void onResponse(Call<Forecast> forecastCall, Response<Forecast> response) {
+                    if (response.isSuccessful()) {
+                        Forecast forecast = response.body();
+                        if (SummaryDetailFragment.this.isVisible()) {
+                            Analytics.getInstance().sendWeatherEvent(detailLaunch.getName(), true, "Success");
+                            updateWeatherView(forecast);
                         }
+                    } else {
+                        Analytics.getInstance().sendWeatherEvent(detailLaunch.getName(), false, response.errorBody().toString());
+                        Timber.e("Error: %s", response.errorBody());
+                    }
+                }
 
-                        @Override
-                        public void onFailure(Call<Forecast> forecastCall, Throwable t) {
-                            Analytics.getInstance().sendWeatherEvent(detailLaunch.getName(), false, t.getLocalizedMessage());
-                            Timber.e("ERROR: %s", t.getLocalizedMessage());
-                        }
-                    });
+                @Override
+                public void onFailure(Call<Forecast> forecastCall, Throwable t) {
+                    Analytics.getInstance().sendWeatherEvent(detailLaunch.getName(), false, t.getLocalizedMessage());
+                    Timber.e("ERROR: %s", t.getLocalizedMessage());
+                }
+            });
         }
     }
 
@@ -612,7 +652,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
             Date mDate;
             String dateText = null;
 
-            if (launch.getStatus().getId() == 1){
+            if (launch.getStatus().getId() == 1) {
                 String go = context.getResources().getString(R.string.status_go);
                 if (detailLaunch.getProbability() != null && detailLaunch.getProbability() > 0) {
                     go = String.format("%s | Forecast - %s%%", go, detailLaunch.getProbability());
@@ -822,6 +862,49 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
             } else {
                 launchWindowText.setVisibility(View.GONE);
             }
+
+            if (detailLaunch.getLanding() != null) {
+                landingCard.setVisibility(View.VISIBLE);
+                Landing landing = detailLaunch.getLanding();
+                if (landing.getAttempt() == null) {
+                    attemptIcon.setImageResource(R.drawable.ic_question_mark);
+                    successIcon.setVisibility(View.GONE);
+                    landingSuccessTitle.setVisibility(View.GONE);
+                } else if (landing.getAttempt()) {
+                    successIcon.setVisibility(View.VISIBLE);
+                    landingSuccessTitle.setVisibility(View.VISIBLE);
+                    attemptIcon.setImageResource(R.drawable.ic_checkmark);
+                    if (landing.getSuccess() == null){
+                        successIcon.setImageResource(R.drawable.ic_question_mark);
+                    } else if (landing.getSuccess()) {
+                        successIcon.setImageResource(R.drawable.ic_checkmark);
+                    } else if (!landing.getSuccess()) {
+                        successIcon.setImageResource(R.drawable.ic_failed);
+                    }
+                 } else if (!landing.getAttempt()) {
+                    attemptIcon.setImageResource(R.drawable.ic_failed);
+                    successIcon.setVisibility(View.GONE);
+                    landingSuccessTitle.setVisibility(View.GONE);
+                }
+
+
+
+                landingDescription.setText(landing.getDescription());
+
+                if (landing.getLandingType() != null) {
+                    landingType.setText(String.format("%s (%s)", landing.getLandingType().getName(), landing.getLandingType().getAbbrev()));
+                    landingTypeDescription.setText(landing.getLandingType().getDescription());
+                }
+
+                if (landing.getLandingLocation() != null) {
+                    landingLocation.setText(String.format("%s (%s)", landing.getLandingLocation().getName(), landing.getLandingLocation().getAbbrev()));
+                    landingLocationDescription.setText(landing.getLandingLocation().getDescription());
+                    landingInformationSubtitle.setText(landing.getLandingLocation().getAbbrev());
+                }
+
+            } else {
+                landingCard.setVisibility(View.GONE);
+            }
         } catch (NullPointerException e) {
             Timber.e(e);
         }
@@ -998,21 +1081,21 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
             } else {
                 contentTMinusStatus.setText(R.string.pending_confirmed_go);
             }
-        } else if (launchItem.getStatus().getId() == 3)  {
+        } else if (launchItem.getStatus().getId() == 3) {
             countdownLayout.setVisibility(View.GONE);
             contentTMinusStatus.setText("Launch was a success!");
-        } else if (launchItem.getStatus().getId() == 4)  {
+        } else if (launchItem.getStatus().getId() == 4) {
             countdownLayout.setVisibility(View.GONE);
             contentTMinusStatus.setText("A launch failure has occurred.");
-        } else if (launchItem.getStatus().getId() == 5)  {
+        } else if (launchItem.getStatus().getId() == 5) {
             contentTMinusStatus.setText("A hold has been placed on the launch.");
-        } else if (launchItem.getStatus().getId() == 6)  {
+        } else if (launchItem.getStatus().getId() == 6) {
             countdownDays.setText("00");
             countdownHours.setText("00");
             countdownMinutes.setText("00");
             countdownSeconds.setText("00");
             contentTMinusStatus.setText("The launch is currently in flight.");
-        } else if (launchItem.getStatus().getId() == 7)  {
+        } else if (launchItem.getStatus().getId() == 7) {
             countdownLayout.setVisibility(View.GONE);
             contentTMinusStatus.setText("Launch was a partial failure, payload separated into an incorrect orbit.");
         }
@@ -1157,5 +1240,17 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         } else {
             youTubeView.setVisibility(View.GONE);
         }
+    }
+
+
+    @OnClick(R.id.read_more)
+    public void onReadMoreClicked() {
+        if (landingLocationDescriptionExpandableLayout.isExpanded()) {
+            readMore.setText("Read More");
+        } else {
+            readMore.setText("Close");
+        }
+        landingLocationDescriptionExpandableLayout.toggle();
+        landingTypeDescriptionExpandableLayout.toggle();
     }
 }
