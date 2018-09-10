@@ -26,9 +26,6 @@ public class Agency extends RealmObject {
     @SerializedName("launcherConfigs")
     @Expose
     public String launchers_string;
-    @SerializedName("orbiters")
-    @Expose
-    public String orbiters;
     @SerializedName("description")
     @Expose
     public String description;
@@ -68,6 +65,9 @@ public class Agency extends RealmObject {
     @SerializedName("launcher_list")
     @Expose
     public RealmList<LauncherConfig> launcherConfigs;
+    @SerializedName("orbiter_list")
+    @Expose
+    public RealmList<Orbiter> orbiters;
 
 
     public RealmList<LauncherConfig> getLauncherConfigs() {
@@ -118,11 +118,11 @@ public class Agency extends RealmObject {
         this.launchers_string = launchers_string;
     }
 
-    public String getOrbiters() {
+    public RealmList<Orbiter> getOrbiters() {
         return orbiters;
     }
 
-    public void setOrbiters(String orbiters) {
+    public void setOrbiters(RealmList<Orbiter> orbiters) {
         this.orbiters = orbiters;
     }
 

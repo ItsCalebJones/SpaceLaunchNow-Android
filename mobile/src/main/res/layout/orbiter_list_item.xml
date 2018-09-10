@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <ImageView
+            android:id="@+id/orbiter_image"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/placeholder" />
+
+        <TextView
+            android:id="@+id/orbiter_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="?attr/titleBarColor"
+            android:gravity="center"
+            android:paddingBottom="@dimen/material_baseline_grid_1x"
+            android:text=""
+            android:textAlignment="center"
+            android:textColor="@color/dark_primary_text_color_selector"
+            android:textAppearance="@style/MaterialTypography.Regular.Title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/orbiter_image"
+            tools:text="Soyuz" />
+
+        <TextView
+            android:id="@+id/orbiter_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="?attr/titleBarColor"
+            android:gravity="center"
+            android:paddingBottom="@dimen/material_baseline_grid_1x"
+            android:text=""
+            android:textAlignment="center"
+            android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+            android:textColor="@color/dark_primary_text_color_selector"
+            tools:text="Russian Federal Space Agency (ROSCOSMOS)"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/orbiter_title" />
+
+        <LinearLayout
+            android:id="@+id/orbiter_description_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/material_baseline_grid_2x"
+            android:layout_marginRight="@dimen/material_baseline_grid_2x"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/orbiter_subtitle">
+
+
+            <TextView
+                android:id="@+id/orbiter_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/unknown_orbiter"
+                tools:text="Soyuz"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+            <View
+                style="@style/BaseAppTheme"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:background="@color/View_Separator"
+                android:padding="12dp" />
+
+            <TextView
+                android:id="@+id/orbiter_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="@dimen/material_baseline_grid_1x"
+                android:layout_marginEnd="@dimen/material_baseline_grid_1x"
+                tools:text="Soyuz is a series of spacecraft designed for the Soviet space programme by the Korolyov Design Bureau (now RKK Energia) in the 1960s that remains in service today. The Soyuz succeeded the Voskhod spacecraft and was originally built as part of the Soviet Manned Lunar programme. nn The Soyuz spacecraft is launched on a Soyuz rocket, the most frequently used and most reliable launch vehicle in the world to date. The Soyuz rocket design is based on the Vostok launcher, which in turn was based on the 8K74 or R-7A Semyorka, a Soviet intercontinental ballistic missile. All Soyuz spacecraft are launched from the Baikonur Cosmodrome in Kazakhstan."
+                android:text="@string/description_unavailable" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/material_baseline_grid_2x"
+            android:layout_marginRight="@dimen/material_baseline_grid_2x"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/orbiter_description_layout">
+
+            <TextView
+                android:id="@+id/orbiter_history"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/unknown_orbiter"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                tools:text="Soyuz History"/>
+
+            <View
+                style="@style/BaseAppTheme"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:background="@color/View_Separator"
+                android:padding="12dp" />
+
+            <TextView
+                android:id="@+id/orbiter_history_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_marginStart="@dimen/material_baseline_grid_1x"
+                android:layout_marginEnd="@dimen/material_baseline_grid_1x"
+                android:text="@string/description_unavailable"
+                tools:text="The Soyuz TMA-M is an upgrade of the baseline Soyuz-TMA, using a new computer, digital interior displays, updated docking equipment and vehicle's total mass has been reduced by 70 kilograms. This new version debuted on 7 October 2010 with the launch of TMA-01M, carrying the ISS Expedition 25 crew. The Soyuz TMA-08M set a new record for the fastest manned docking into space station, event utilized the new 6-hour fast rendezvous instead of the previous Soyuz launches which had, since 1986, taken two days."/>
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/wikiButton"
+                style="@style/Base.Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_margin="8dp"
+                android:gravity="center"
+                android:text="@string/wiki"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:visibility="visible" />
+        </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.v7.widget.CardView>

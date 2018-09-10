@@ -1,7 +1,6 @@
 package me.calebjones.spacelaunchnow.ui.main.vehicles.launcher;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.request.RequestOptions;
-import com.github.florent37.glidepalette.BitmapPalette;
 import com.github.florent37.glidepalette.GlidePalette;
 
 import java.util.ArrayList;
@@ -31,14 +29,14 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
 
     public int position;
     private Context mContext;
-    private List<Agency> launchers = new ArrayList<>();
+    private List<Agency> agencies = new ArrayList<>();
     private OnItemClickListener onItemClickListener;
     private boolean night = false;
     private RequestOptions requestOptions;
     private int palette;
 
     public VehicleAdapter(Context context) {
-        launchers = new ArrayList();
+        agencies = new ArrayList();
         this.mContext = context;
 
         night = ListPreferences.getInstance(mContext).isNightModeActive(mContext);
@@ -55,13 +53,13 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
     }
 
     public void addItems(List<Agency> items) {
-        if (this.launchers == null) {
-            this.launchers = items;
-        } else if (this.launchers.size() == 0) {
-            this.launchers.addAll(items);
+        if (this.agencies == null) {
+            this.agencies = items;
+        } else if (this.agencies.size() == 0) {
+            this.agencies.addAll(items);
         } else {
-            this.launchers.clear();
-            this.launchers.addAll(items);
+            this.agencies.clear();
+            this.agencies.addAll(items);
         }
         notifyDataSetChanged();
     }
@@ -79,7 +77,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        Agency launcher = launchers.get(i);
+        Agency launcher = agencies.get(i);
         Timber.v("onBindViewHolder %s", launcher.getName());
 
         GlideApp.with(mContext)
@@ -87,40 +85,37 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
                 .apply(requestOptions)
                 .listener(GlidePalette.with(launcher.getImageUrl())
                         .use(palette)
-                        .intoCallBack(new BitmapPalette.CallBack() {
-                            @Override
-                            public void onPaletteLoaded(@Nullable Palette palette) {
-                                Palette.Swatch color = null;
-                                if (palette != null) {
-                                    if (night) {
-                                        if (palette.getDarkMutedSwatch() != null) {
-                                            color = palette.getDarkMutedSwatch();
-                                        } else if (palette.getDarkVibrantSwatch() != null) {
-                                            color = palette.getDarkVibrantSwatch();
-                                        }
-                                    } else {
-                                        if (palette.getVibrantSwatch() != null) {
-                                            color = palette.getVibrantSwatch();
-                                        } else if (palette.getMutedSwatch() != null) {
-                                            color = palette.getMutedSwatch();
-                                        }
+                        .intoCallBack(palette -> {
+                            Palette.Swatch color = null;
+                            if (palette != null) {
+                                if (night) {
+                                    if (palette.getDarkMutedSwatch() != null) {
+                                        color = palette.getDarkMutedSwatch();
+                                    } else if (palette.getDarkVibrantSwatch() != null) {
+                                        color = palette.getDarkVibrantSwatch();
                                     }
-                                    if (color != null) {
-                                        holder.textContainer.setBackgroundColor(color.getRgb());
+                                } else {
+                                    if (palette.getVibrantSwatch() != null) {
+                                        color = palette.getVibrantSwatch();
+                                    } else if (palette.getMutedSwatch() != null) {
+                                        color = palette.getMutedSwatch();
                                     }
+                                }
+                                if (color != null) {
+                                    holder.textContainer.setBackgroundColor(color.getRgb());
                                 }
                             }
                         })
                         .intoBackground(holder.textContainer, GlidePalette.Swatch.RGB)
                         .crossfade(true))
                 .into(holder.picture);
-        holder.subTitle.setText(launcher.getLaunchers_string());
+        holder.subTitle.setText(launcher.getType());
         holder.name.setText(launcher.getName());
     }
 
     @Override
     public int getItemCount() {
-        return launchers.size();
+        return agencies.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

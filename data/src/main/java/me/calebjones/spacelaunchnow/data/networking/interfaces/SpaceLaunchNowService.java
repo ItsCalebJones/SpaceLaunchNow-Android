@@ -25,6 +25,10 @@ public interface SpaceLaunchNowService {
     Call<AgencyResponse> getAgencies(@Query("featured") boolean featured, @Query("mode") String mode);
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
+    @GET(version + "/agencies/")
+    Call<AgencyResponse> getAgenciesWithOrbiters(@Query("orbiters") boolean orbiters);
+
+    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/launchers_string/")
     Call<VehicleResponse> getVehiclesByAgency(@Query("launch_agency__name") String agency);
 

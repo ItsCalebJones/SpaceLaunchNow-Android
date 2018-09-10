@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:fontFamily="sans-serif-medium"
-                android:lines="1"
+                android:maxLines="2"
                 android:textAlignment="center"
                 android:textColor="@color/dark_primary_text_color_selector"
                 android:textSize="20sp" />

@@ -1,7 +1,6 @@
 package me.calebjones.spacelaunchnow.ui.main.vehicles.orbiter;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.request.RequestOptions;
-import com.github.florent37.glidepalette.BitmapPalette;
 import com.github.florent37.glidepalette.GlidePalette;
 
 import java.util.ArrayList;
@@ -19,6 +17,7 @@ import java.util.List;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.models.main.Orbiter;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
@@ -31,14 +30,14 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
 
     public int position;
     private Context mContext;
-    private List<Orbiter> orbiters = new ArrayList<Orbiter>();
+    private List<Agency> agencies = new ArrayList<Agency>();
     private OnItemClickListener onItemClickListener;
     private boolean night = false;
     private RequestOptions requestOptions;
     private int palette;
 
     public OrbiterAdapter(Context context) {
-        orbiters = new ArrayList();
+        agencies = new ArrayList();
         this.mContext = context;
 
         night = ListPreferences.getInstance(mContext).isNightModeActive(mContext);
@@ -54,14 +53,14 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
                 .centerCrop();
     }
 
-    public void addItems(List<Orbiter> items) {
-        if (this.orbiters == null) {
-            this.orbiters = items;
-        } else if (this.orbiters.size() == 0) {
-            this.orbiters.addAll(items);
+    public void addItems(List<Agency> items) {
+        if (this.agencies == null) {
+            this.agencies = items;
+        } else if (this.agencies.size() == 0) {
+            this.agencies.addAll(items);
         } else {
-            this.orbiters.clear();
-            this.orbiters.addAll(items);
+            this.agencies.clear();
+            this.agencies.addAll(items);
         }
         notifyDataSetChanged();
     }
@@ -79,47 +78,53 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        final Orbiter orbiter = orbiters.get(i);
-        Timber.v("onBindViewHolder %s", orbiter.getName());
+        final Agency agency = agencies.get(i);
+        Timber.v("onBindViewHolder %s", agency.getName());
 
-        GlideApp.with(mContext)
-                .load(orbiter.getImageURL())
-                .apply(requestOptions)
-                .listener(GlidePalette.with(orbiter.getImageURL())
-                        .use(palette)
-                        .intoCallBack(new BitmapPalette.CallBack() {
-                            @Override
-                            public void onPaletteLoaded(@Nullable Palette palette) {
-                                Palette.Swatch color = null;
-                                if (palette != null) {
-                                    if (night) {
-                                        if (palette.getDarkMutedSwatch() != null) {
-                                            color = palette.getDarkMutedSwatch();
-                                        } else if (palette.getDarkVibrantSwatch() != null) {
-                                            color = palette.getDarkVibrantSwatch();
+        holder.name.setText(agency.getName());
+        holder.subTitle.setText(agency.getType());
+
+        if (agency.getOrbiters() != null && agency.getOrbiters().size() > 0) {
+            Orbiter firstOrbiter = agency.getOrbiters().get(0);
+
+            if (firstOrbiter.getImageURL() != null) {
+                GlideApp.with(mContext)
+                        .load(firstOrbiter.getImageURL())
+                        .apply(requestOptions)
+                        .listener(GlidePalette.with(firstOrbiter.getImageURL())
+                                .use(palette)
+                                .intoCallBack(palette -> {
+                                    Palette.Swatch color = null;
+                                    if (palette != null) {
+                                        if (night) {
+                                            if (palette.getDarkMutedSwatch() != null) {
+                                                color = palette.getDarkMutedSwatch();
+                                            } else if (palette.getDarkVibrantSwatch() != null) {
+                                                color = palette.getDarkVibrantSwatch();
+                                            }
+                                        } else {
+                                            if (palette.getVibrantSwatch() != null) {
+                                                color = palette.getVibrantSwatch();
+                                            } else if (palette.getMutedSwatch() != null) {
+                                                color = palette.getMutedSwatch();
+                                            }
                                         }
-                                    } else {
-                                        if (palette.getVibrantSwatch() != null) {
-                                            color = palette.getVibrantSwatch();
-                                        } else if (palette.getMutedSwatch() != null) {
-                                            color = palette.getMutedSwatch();
+                                        if (color != null) {
+                                            holder.textContainer.setBackgroundColor(color.getRgb());
                                         }
                                     }
-                                    if (color != null) {
-                                        holder.textContainer.setBackgroundColor(color.getRgb());
-                                    }
-                                }
-                            }
-                        })
-                        .crossfade(true))
-                .into(holder.picture);
-        holder.name.setText(orbiter.getName());
-        holder.subTitle.setText(orbiter.getAgency());
+                                })
+                                .crossfade(true))
+                        .into(holder.picture);
+            }
+            holder.subTitle.setText(firstOrbiter.getName());
+        }
+
     }
 
     @Override
     public int getItemCount() {
-        return orbiters.size();
+        return agencies.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
