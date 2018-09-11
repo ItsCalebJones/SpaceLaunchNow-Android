@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:elevation="0dp"
     android:paddingBottom="@dimen/material_baseline_grid_1x"
     android:paddingTop="@dimen/material_baseline_grid_1x">
 
@@ -16,6 +17,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:animateLayoutChanges="true"
+        android:elevation="0dp"
+        app:cardUseCompatPadding="true"
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp">
 

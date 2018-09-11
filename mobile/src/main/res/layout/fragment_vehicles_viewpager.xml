@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:elevation="4dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,8 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentTop="true"
-        android:background="@color/colorPrimaryAlt"
-        app:tabBackground="@color/colorPrimaryAlt"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        app:tabBackground="@color/colorPrimary"
         app:tabGravity="fill"
         app:tabMode="fixed"
         app:tabSelectedTextColor="@color/dark_theme_primary_text_color"
@@ -20,6 +23,7 @@
 
         <android.support.v4.view.ViewPager
             android:id="@+id/viewpager"
+            android:elevation="0dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/tabLayout" />
