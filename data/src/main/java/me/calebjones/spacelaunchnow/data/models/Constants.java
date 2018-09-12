@@ -45,6 +45,7 @@ public final class Constants {
     public static String API_DEBUG_BASE_URL = "https://dev.spacelaunchnow.me/";
     public static String LIBRARY_BASE_URL = "https://launchlibrary.net/";
     public static String DEBUG_BASE_URL = "https://launchlibrary.net/";
+    public static String NEWS_BASE_URL = "https://api.spaceflightnewsapi.net";
 
     //These values are +1'd at runtime.
     public static final int DEFAULT_BLUR = 0;

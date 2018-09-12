@@ -1,27 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/swiperefresh"
+    android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <cz.kinst.jakub.view.SimpleStatefulLayout
-        android:id="@+id/stateful_view"
-        app:emptyLayout="@layout/empty_launches"
-        app:progressLayout="@layout/custom_progress"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swiperefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
+        <cz.kinst.jakub.view.SimpleStatefulLayout
+            android:id="@+id/stateful_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?android:colorBackground"
-            android:divider="#e1e8ed"
-            android:dividerHeight="1dp"
-            android:drawSelectorOnTop="false" />
+            app:emptyLayout="@layout/empty_launches"
+            app:progressLayout="@layout/custom_progress">
 
-    </cz.kinst.jakub.view.SimpleStatefulLayout>
-</android.support.v4.widget.SwipeRefreshLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?android:colorBackground"
+                android:divider="#e1e8ed"
+                android:dividerHeight="1dp"
+                android:drawSelectorOnTop="false" />
+
+        </cz.kinst.jakub.view.SimpleStatefulLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</android.support.design.widget.CoordinatorLayout>

@@ -2,6 +2,7 @@ package me.calebjones.spacelaunchnow.ui.main.news.web;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,16 +14,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.RetroFitFragment;
 import me.calebjones.spacelaunchnow.content.data.articles.ArticleRepository;
 import me.calebjones.spacelaunchnow.data.models.news.Article;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 
-public class WebNewsFragment extends Fragment {
+public class WebNewsFragment extends RetroFitFragment {
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -30,19 +35,21 @@ public class WebNewsFragment extends Fragment {
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.stateful_view)
     SimpleStatefulLayout statefulView;
+    @BindView(R.id.coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
 
     private Context context;
     private ArticleRepository articleRepository;
     private ArticleAdapter articleAdapter;
     private LinearLayoutManager linearLayoutManager;
-    private RealmList<Article> articles;
+    private List<Article> articles;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         context = getActivity();
-        articleRepository = new ArticleRepository(context);
+        articleRepository = new ArticleRepository(context, getNewsRetrofit());
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_news, container, false);
         ButterKnife.bind(this, view);
@@ -86,7 +93,7 @@ public class WebNewsFragment extends Fragment {
         swipeRefreshLayout.setRefreshing(true);
         articleRepository.getArticles(forced, new ArticleRepository.GetArticlesCallback() {
             @Override
-            public void onSuccess(RealmList<Article> newArticles) {
+            public void onSuccess(List<Article> newArticles) {
                 articles = newArticles;
                 statefulView.showContent();
                 articleAdapter.addItems(articles);
@@ -94,8 +101,11 @@ public class WebNewsFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Throwable throwable) {
-                statefulView.showEmpty();
+            public void onFailure(String error, boolean showContent) {
+                if (!showContent) {
+                    statefulView.showEmpty();
+                }
+                SnackbarHandler.showInfoSnackbar(context, coordinatorLayout, error);
                 swipeRefreshLayout.setRefreshing(false);
             }
 

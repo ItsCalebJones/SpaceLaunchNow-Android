@@ -1,39 +1,50 @@
 package me.calebjones.spacelaunchnow.content.data.articles.network;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+
+import java.lang.reflect.Type;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import me.calebjones.spacelaunchnow.data.models.news.NewsFeedResponse;
+import io.realm.RealmList;
+import me.calebjones.spacelaunchnow.data.helpers.Utils;
+import me.calebjones.spacelaunchnow.data.models.news.Article;
+import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
-import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NewsAPIClient {
 
     private final NewsService newsService;
     private Retrofit newsRetrofit;
 
-    public NewsAPIClient(){
-        OkHttpClient.Builder client = new OkHttpClient().newBuilder();
-        client.connectTimeout(15, TimeUnit.SECONDS);
-        client.readTimeout(15, TimeUnit.SECONDS);
-        client.writeTimeout(15, TimeUnit.SECONDS);
-
-        newsRetrofit = new Retrofit.Builder()
-                .baseUrl("https://feed.rssunify.com")
-                .client(client.build())
-                .addConverterFactory(SimpleXmlConverterFactory.create())
-                .build();
-
-        newsService = newsRetrofit.create(NewsService.class);
+    public NewsAPIClient(Retrofit newsRetrofit){
+        this.newsRetrofit = newsRetrofit;
+        newsService = this.newsRetrofit.create(NewsService.class);
     }
 
-    public Call<NewsFeedResponse> getNews(Callback<NewsFeedResponse> callback) {
-        Call<NewsFeedResponse> call;
-        call = newsService.getNews();
+    public Call<List<Article>> getNews(int limit, Callback<List<Article>> callback) {
+        Call<List<Article>> call;
+        call = newsService.getNews(limit);
         call.enqueue(callback);
         return call;
     }
+
+    public Call<Article> getArticle(Callback<Article> callback) {
+        Call<Article> call;
+        call = newsService.getArticle("5b98f79158ed93e183e0f834");
+        call.enqueue(callback);
+        return call;
+    }
+
 
 }
