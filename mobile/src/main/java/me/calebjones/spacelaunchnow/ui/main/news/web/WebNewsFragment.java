@@ -13,18 +13,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-
-import com.leocardz.link.preview.library.LinkPreviewCallback;
-import com.leocardz.link.preview.library.SourceContent;
-import com.leocardz.link.preview.library.TextCrawler;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Realm;
+import cz.kinst.jakub.view.SimpleStatefulLayout;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.data.models.news.Article;
 import me.calebjones.spacelaunchnow.content.data.articles.ArticleRepository;
+import me.calebjones.spacelaunchnow.data.models.news.Article;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 
 public class WebNewsFragment extends Fragment {
@@ -33,6 +28,8 @@ public class WebNewsFragment extends Fragment {
     RecyclerView recyclerView;
     @BindView(R.id.swiperefresh)
     SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.stateful_view)
+    SimpleStatefulLayout statefulView;
 
     private Context context;
     private ArticleRepository articleRepository;
@@ -56,12 +53,9 @@ public class WebNewsFragment extends Fragment {
         articleAdapter = new ArticleAdapter(context, getActivity());
         recyclerView.setAdapter(articleAdapter);
         getArticles(false);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getArticles(true);
-            }
-        });
+        swipeRefreshLayout.setOnRefreshListener(() -> getArticles(true));
+        statefulView.showProgress();
+        statefulView.setOfflineRetryOnClickListener(v -> getArticles(true));
         return view;
     }
 
@@ -94,17 +88,20 @@ public class WebNewsFragment extends Fragment {
             @Override
             public void onSuccess(RealmList<Article> newArticles) {
                 articles = newArticles;
+                statefulView.showContent();
                 articleAdapter.addItems(articles);
                 swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Throwable throwable) {
+                statefulView.showEmpty();
                 swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onNetworkFailure() {
+                statefulView.showOffline();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });

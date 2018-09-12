@@ -40,8 +40,8 @@ public class NewsViewPager extends Fragment {
         View inflatedView = inflater.inflate(R.layout.fragment_view_pager, container, false);
 
         tabLayout = inflatedView.findViewById(R.id.tabLayout);
-        tabLayout.addTab(tabLayout.newTab().setText("Twitter"));
         tabLayout.addTab(tabLayout.newTab().setText("Web"));
+        tabLayout.addTab(tabLayout.newTab().setText("Twitter"));
         viewPager = inflatedView.findViewById(R.id.viewpager);
 
         pagerAdapter = new PagerAdapter
@@ -82,8 +82,8 @@ public class NewsViewPager extends Fragment {
         public Fragment getItem(int position) {
 
             switch (position) {
-                case 0: return new TwitterFragment();
-                case 1: return new WebNewsFragment();
+                case 0: return new WebNewsFragment();
+                case 1: return new TwitterFragment();
                 default:
                     return null;
             }
