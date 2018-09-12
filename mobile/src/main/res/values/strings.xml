@@ -428,4 +428,7 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="no_launches_found">No launches found.</string>
     <string name="landing_information">Landing Information</string>
+    <string name="payload">Payload: %d (kg)</string>
+    <string name="spacecraft_format">%s Spacecraft</string>
+    <string name="crew_capacity">Crew Capacity: %s</string>
 </resources>

@@ -14,27 +14,6 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/landing_success_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:ellipsize="end"
-            android:gravity="start"
-            android:paddingBottom="8dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingTop="4dp"
-            android:singleLine="false"
-            android:text="Success:"
-            android:textAlignment="viewStart"
-            android:textAppearance="@style/MaterialTypography.Regular.Title"
-            android:textColor="?android:textColorSecondary"
-            app:layout_constraintEnd_toEndOf="@+id/landing_attempt_title"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/landing_attempt_title"
-            tools:text="Success:" />
-
-        <TextView
             android:id="@+id/landing_information_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -67,27 +46,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/landing_information_title" />
 
-        <ImageView
-            android:id="@+id/attempt_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="39dp"
-            android:src="@drawable/ic_failed"
-            app:layout_constraintBottom_toBottomOf="@+id/landing_attempt_title"
-            app:layout_constraintStart_toEndOf="@+id/landing_attempt_title"
-            app:layout_constraintTop_toTopOf="@+id/landing_attempt_title"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <ImageView
-            android:id="@+id/success_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="39dp"
-            android:layout_marginBottom="8dp"
-            android:src="@drawable/ic_question_mark"
-            app:layout_constraintBottom_toBottomOf="@+id/landing_success_title"
-            app:layout_constraintStart_toStartOf="@+id/attempt_icon"
-            app:layout_constraintTop_toTopOf="@+id/landing_success_title"
-            app:layout_constraintVertical_bias="0.0" />
-
         <TextView
             android:id="@+id/landing_attempt_title"
             android:layout_width="wrap_content"
@@ -108,6 +66,48 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/landing_information_subtitle"
             tools:text="Attempt: " />
+
+        <ImageView
+            android:id="@+id/attempt_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="39dp"
+            android:src="@drawable/ic_failed"
+            app:layout_constraintBottom_toBottomOf="@+id/landing_attempt_title"
+            app:layout_constraintStart_toEndOf="@+id/landing_attempt_title"
+            app:layout_constraintTop_toTopOf="@+id/landing_attempt_title"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/landing_success_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:paddingBottom="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="4dp"
+            android:singleLine="false"
+            android:text="Success:"
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/MaterialTypography.Regular.Title"
+            android:textColor="?android:textColorSecondary"
+            app:layout_constraintEnd_toEndOf="@+id/landing_attempt_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/landing_attempt_title"
+            tools:text="Success:" />
+
+        <ImageView
+            android:id="@+id/success_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="39dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_question_mark"
+            app:layout_constraintBottom_toBottomOf="@+id/landing_success_title"
+            app:layout_constraintStart_toStartOf="@+id/attempt_icon"
+            app:layout_constraintTop_toTopOf="@+id/landing_success_title"
+            app:layout_constraintVertical_bias="0.0" />
 
 
         <TextView
