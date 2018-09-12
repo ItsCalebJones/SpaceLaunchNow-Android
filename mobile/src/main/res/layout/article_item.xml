@@ -9,7 +9,6 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="140dp"
-        android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
         android:layout_marginEnd="@dimen/material_baseline_grid_1x"
         android:layout_marginStart="@dimen/material_baseline_grid_1x"
         android:layout_marginTop="@dimen/material_baseline_grid_1x"
