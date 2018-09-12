@@ -147,7 +147,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divi" />
+            app:layout_constraintTop_toBottomOf="@+id/divider" />
 
         <View
             android:id="@+id/divider2"

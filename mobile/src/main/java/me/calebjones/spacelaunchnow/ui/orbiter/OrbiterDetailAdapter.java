@@ -80,8 +80,8 @@ public class OrbiterDetailAdapter extends RecyclerView.Adapter<OrbiterDetailAdap
         Orbiter orbiter = items.get(holder.getAdapterPosition());
 
         //Set up vehicle card Information
-        holder.orbiterTitle.setText(String.format(context.getString(R.string.spacecraft_format), orbiter.getName()));
-        holder.orbiterSubtitle.setText(orbiter.getAgency());
+        holder.orbiterTitle.setText(orbiter.getName());
+        holder.orbiterSubtitle.setText(orbiter.getCapability());
 
         holder.orbiterName.setText(String.format(context.getString(R.string.spacecraft_details), orbiter.getName()));
         holder.orbiterDescription.setText(orbiter.getDetails());

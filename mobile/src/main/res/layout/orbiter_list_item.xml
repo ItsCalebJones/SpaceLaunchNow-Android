@@ -20,6 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="200dp"
             android:scaleType="centerCrop"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -68,6 +69,7 @@
             android:layout_marginTop="8dp"
             android:text="First Flight"
             android:textAppearance="@style/MaterialTypography.Regular.Title"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/in_use_icon"
             app:layout_constraintTop_toBottomOf="@+id/orbiter_subtitle" />
@@ -75,17 +77,18 @@
         <TextView
             android:id="@+id/first_flight_text"
             android:layout_width="0dp"
-            android:layout_height="29dp"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="16dp"
-            android:singleLine="true"
             android:ellipsize="end"
+            android:singleLine="true"
             android:textAlignment="viewStart"
             app:layout_constraintBottom_toTopOf="@+id/orbiter_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/first_flight_title"
             app:layout_constraintTop_toBottomOf="@+id/first_flight_title"
+            app:layout_constraintVertical_bias="0.0"
             tools:text="December 8th, 2010" />
 
 
@@ -141,6 +144,7 @@
             android:maxLines="2"
             android:text="@string/description_unavailable"
             android:textAlignment="viewStart"
+            android:textColor="?android:textColorSecondary"
             app:animation_duration="500"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -253,6 +257,7 @@
             android:maxLines="2"
             android:text="@string/description_unavailable"
             android:textAlignment="viewStart"
+            android:textColor="?android:textColorSecondary"
             app:animation_duration="500"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -274,14 +279,11 @@
         <TextView
             android:id="@+id/diameter"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_height="21dp"
             android:ellipsize="end"
             android:text="Diameter: Unknown (m)"
-            app:layout_constraintEnd_toStartOf="@+id/payload"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/height"
-            app:layout_constraintTop_toBottomOf="@+id/flight_life"
+            app:layout_constraintStart_toStartOf="@+id/height"
+            app:layout_constraintTop_toBottomOf="@+id/height"
             tools:text="Diameter: Unknown (m)" />
 
         <TextView
@@ -291,8 +293,6 @@
             android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:text="Height: Unknown (m)"
-            app:layout_constraintEnd_toStartOf="@+id/diameter"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="@+id/flight_life"
             app:layout_constraintTop_toBottomOf="@+id/flight_life"
@@ -302,13 +302,10 @@
             android:id="@+id/payload"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:text="Payload: Unknown (kg)"
-            app:layout_constraintEnd_toEndOf="@+id/flight_life"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/diameter"
-            app:layout_constraintTop_toBottomOf="@+id/flight_life"
+            app:layout_constraintStart_toStartOf="@+id/diameter"
+            app:layout_constraintTop_toBottomOf="@+id/diameter"
             tools:text="Payload: Unknown (kg)" />
 
         <TextView
@@ -341,7 +338,6 @@
             android:layout_height="50dp"
             android:layout_margin="8dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
             android:gravity="center"
             android:text="@string/wiki"
             android:textColor="@color/white"
@@ -349,14 +345,13 @@
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/diameter" />
+            app:layout_constraintTop_toBottomOf="@+id/payload" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/infoButton"
             style="@style/Base.Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_margin="8dp"
             android:layout_marginTop="8dp"
             android:gravity="center"
             android:text="@string/info"
@@ -365,7 +360,8 @@
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/wikiButton"
-            app:layout_constraintTop_toBottomOf="@+id/diameter" />
+            app:layout_constraintTop_toBottomOf="@+id/payload"
+            app:layout_constraintVertical_bias="0.0" />
 
     </android.support.constraint.ConstraintLayout>
 
