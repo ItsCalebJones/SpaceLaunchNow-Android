@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.RetroFitFragment;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
@@ -41,9 +44,14 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
     private List<Agency> items = new ArrayList<>();
     private Context context;
     private View view;
-    private RecyclerView mRecyclerView;
-    private CoordinatorLayout coordinatorLayout;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.stateful_view)
+    SimpleStatefulLayout statefulView;
+    @BindView(R.id.vehicle_detail_list)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.vehicle_coordinator)
+    CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.swiperefresh)
+    SwipeRefreshLayout swipeRefreshLayout;
 
 
     @Override
@@ -59,6 +67,7 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
         super.onCreateView(inflater, container, savedInstanceState);
 
         view = inflater.inflate(R.layout.fragment_launch_vehicles, container, false);
+        ButterKnife.bind(this, view);
 
         mRecyclerView = view.findViewById(R.id.vehicle_detail_list);
         coordinatorLayout = view.findViewById(R.id.vehicle_coordinator);
@@ -91,6 +100,8 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
         adapter.setOnItemClickListener(recyclerRowClickListener);
         mRecyclerView.setAdapter(adapter);
         Timber.v("Returning view.");
+        statefulView.showProgress();
+        statefulView.setOfflineRetryOnClickListener(v -> loadJSON());
         return view;
     }
 
@@ -100,12 +111,7 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
     public void onResume() {
         super.onResume();
         Timber.v("onResume");
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                loadJSON();
-            }
-        }, 100);
+        new Handler().postDelayed(() -> loadJSON(), 100);
     }
 
     private void loadJSON() {
@@ -131,9 +137,11 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
                     Timber.v("Success %s", response.message());
                     items = jsonResponse.getAgencies();
                     adapter.addItems(items);
+                    statefulView.showContent();
                     Analytics.getInstance().sendNetworkEvent("LAUNCHER_INFORMATION", call.request().url().toString(), true);
 
                 } else {
+                    statefulView.showEmpty();
                     Timber.e(ErrorUtil.parseSpaceLaunchNowError(response).message());
                     SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, ErrorUtil.parseSpaceLaunchNowError(response).message());
                 }
@@ -144,6 +152,7 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
             public void onFailure(Call<AgencyResponse> call, Throwable t) {
                 Timber.e(t.getMessage());
                 hideLoading();
+                statefulView.showOffline();
                 SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, t.getLocalizedMessage());
                 Analytics.getInstance().sendNetworkEvent("VEHICLE_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());
             }

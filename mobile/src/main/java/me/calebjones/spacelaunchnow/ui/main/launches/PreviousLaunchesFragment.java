@@ -1,9 +1,7 @@
 package me.calebjones.spacelaunchnow.ui.main.launches;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
@@ -20,22 +18,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.crashlytics.android.Crashlytics;
-import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
-import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.List;
 
-import io.realm.RealmResults;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
 import me.calebjones.spacelaunchnow.content.data.previous.PreviousDataRepository;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
-import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.views.EndlessRecyclerViewScrollListener;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
@@ -45,19 +39,25 @@ import java.lang.reflect.Field;
 public class PreviousLaunchesFragment extends BaseFragment implements SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
 
     private View view;
-    private RecyclerView mRecyclerView;
     private ListAdapter adapter;
     private LinearLayoutManager layoutManager;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     private Context context;
-    private CoordinatorLayout coordinatorLayout;
     private PreviousDataRepository previousDataRepository;
     private int nextOffset = 0;
     private EndlessRecyclerViewScrollListener scrollListener;
     private String searchTerm = null;
 
-    public boolean canLoadMore;
+    @BindView(R.id.stateful_view)
+    SimpleStatefulLayout statefulView;
+    @BindView(R.id.recycler_view)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
 
+    public boolean canLoadMore;
+    private boolean statefulStateContentShow = false;
     private static final Field sChildFragmentManagerField;
 
     @Override
@@ -71,26 +71,15 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         this.context = getContext();
-
         canLoadMore = true;
-
-        super.onCreateView(inflater, container, savedInstanceState);
-
         setHasOptionsMenu(true);
         adapter = new ListAdapter(getContext());
 
-        LayoutInflater lf = getActivity().getLayoutInflater();
+        view = inflater.inflate(R.layout.fragment_launches, container, false);
+        ButterKnife.bind(this, view);
 
-        view = lf.inflate(R.layout.fragment_launches, container, false);
-
-        coordinatorLayout = view.findViewById(R.id.coordinatorLayout);
-
-
-        /*Set up Pull to refresh*/
-        mSwipeRefreshLayout = view.findViewById(R.id.launches_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        mRecyclerView = view.findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
@@ -108,6 +97,8 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
             }
         };
         mRecyclerView.addOnScrollListener(scrollListener);
+        statefulView.showProgress();
+        statefulView.setOfflineRetryOnClickListener(v -> fetchData(true));
         return view;
     }
 
@@ -133,18 +124,22 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
     }
 
     private void updateAdapter(List<Launch> launches) {
-
         if (launches.size() > 0) {
+            if (!statefulStateContentShow) {
+                statefulView.showContent();
+                statefulStateContentShow = true;
+            }
             adapter.addItems(launches);
             adapter.notifyDataSetChanged();
 
         } else {
+            statefulView.showEmpty();
+            statefulStateContentShow = false;
             if (adapter != null) {
                 adapter.clear();
             }
         }
         scrollListener.resetState();
-
     }
 
     public void fetchData(boolean forceRefresh) {
@@ -169,6 +164,9 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
 
             @Override
             public void onError(String message, @Nullable Throwable throwable) {
+                statefulView.showOffline();
+                statefulStateContentShow = false;
+                showNetworkLoading(false);
                 if (throwable != null) {
                     Timber.e(throwable);
                 } else {

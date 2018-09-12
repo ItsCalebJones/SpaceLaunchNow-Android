@@ -105,6 +105,7 @@ public class UpcomingLauncherLaunchesFragment extends BaseFragment {
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
         recyclerView.setAdapter(adapter);
         statefulView.showProgress();
+        statefulView.setOfflineRetryOnClickListener(v -> fetchData(true));
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
@@ -162,6 +163,8 @@ public class UpcomingLauncherLaunchesFragment extends BaseFragment {
 
             @Override
             public void onError(String message, @Nullable Throwable throwable) {
+                statefulView.showOffline();
+                statefulStateContentShow = false;
                 if (throwable != null) {
                     Timber.e(throwable);
                 } else {

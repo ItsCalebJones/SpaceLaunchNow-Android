@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.RetroFitFragment;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
@@ -46,13 +49,18 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
     private Context context;
     private View view;
     private OrbiterAdapter adapter;
-    private RecyclerView mRecyclerView;
     private GridLayoutManager layoutManager;
-    private CoordinatorLayout coordinatorLayout;
-    private SwipeRefreshLayout swipeRefreshLayout;
-
     private List<Agency> items = new ArrayList<Agency>();
-    public static SparseArray<Bitmap> photoCache = new SparseArray<Bitmap>(1);
+
+
+    @BindView(R.id.stateful_view)
+    SimpleStatefulLayout statefulView;
+    @BindView(R.id.vehicle_detail_list)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.vehicle_coordinator)
+    CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.swiperefresh)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,21 +73,17 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
         view = inflater.inflate(R.layout.fragment_launch_vehicles, container, false);
-
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.vehicle_detail_list);
-        coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.vehicle_coordinator);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
+        ButterKnife.bind(this, view);
 
         swipeRefreshLayout.setOnRefreshListener(this);
 
         if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
-            layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 3);
+            layoutManager = new GridLayoutManager(context, 3);
         } else if (getResources().getBoolean(R.bool.landscape)  || getResources().getBoolean(R.bool.isTablet)) {
-            layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 2);
+            layoutManager = new GridLayoutManager(context, 2);
         } else {
-            layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 1);
+            layoutManager = new GridLayoutManager(context, 1);
         }
 
         mRecyclerView.setLayoutManager(layoutManager);
@@ -99,6 +103,8 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
         });
         adapter.setOnItemClickListener(recyclerRowClickListener);
         mRecyclerView.setAdapter(adapter);
+        statefulView.showProgress();
+        statefulView.setOfflineRetryOnClickListener(v -> loadJSON());
         return view;
     }
 
@@ -132,19 +138,23 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
                     AgencyResponse jsonResponse = response.body();
                     Timber.v("Success %s", response.message());
                     items = jsonResponse.getAgencies();
+                    statefulView.showContent();
                     adapter.addItems(items);
                     Analytics.getInstance().sendNetworkEvent("LAUNCHER_INFORMATION", call.request().url().toString(), true);
 
                 } else {
+                    statefulView.showEmpty();
                     Timber.e(ErrorUtil.parseSpaceLaunchNowError(response).message());
                     SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, ErrorUtil.parseSpaceLaunchNowError(response).message());
                 }
                 hideLoading();
+
             }
 
             @Override
             public void onFailure(Call<AgencyResponse> call, Throwable t) {
                 Timber.e(t.getMessage());
+                statefulView.showOffline();
                 hideLoading();
                 SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, t.getLocalizedMessage());
                 Analytics.getInstance().sendNetworkEvent("VEHICLE_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());

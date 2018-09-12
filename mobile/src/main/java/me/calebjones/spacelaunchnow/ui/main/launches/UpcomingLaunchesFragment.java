@@ -29,6 +29,9 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import cz.kinst.jakub.view.SimpleStatefulLayout;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
@@ -51,19 +54,25 @@ import timber.log.Timber;
 public class UpcomingLaunchesFragment extends BaseFragment implements SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
 
     private View view;
-    private RecyclerView mRecyclerView;
     private ListAdapter adapter;
     private LinearLayoutManager layoutManager;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     private Context context;
-    private CoordinatorLayout coordinatorLayout;
     private UpcomingDataRepository upcomingDataRepository;
     private int nextOffset = 0;
     private EndlessRecyclerViewScrollListener scrollListener;
     private String searchTerm = null;
 
-    public boolean canLoadMore;
+    @BindView(R.id.stateful_view)
+    SimpleStatefulLayout statefulView;
+    @BindView(R.id.recycler_view)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
 
+    public boolean canLoadMore;
+    private boolean statefulStateContentShow = false;
     private static final Field sChildFragmentManagerField;
 
     @Override
@@ -77,25 +86,14 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         this.context = getContext();
-
         canLoadMore = true;
-
-        super.onCreateView(inflater, container, savedInstanceState);
-
         setHasOptionsMenu(true);
         adapter = new ListAdapter(getContext());
 
-        LayoutInflater lf = getActivity().getLayoutInflater();
+        view = inflater.inflate(R.layout.fragment_launches, container, false);
+        ButterKnife.bind(this, view);
 
-        view = lf.inflate(R.layout.fragment_launches, container, false);
-
-        coordinatorLayout = view.findViewById(R.id.coordinatorLayout);
-
-        /*Set up Pull to refresh*/
-        mSwipeRefreshLayout = view.findViewById(R.id.launches_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-
-        mRecyclerView = view.findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
@@ -113,6 +111,8 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
             }
         };
         mRecyclerView.addOnScrollListener(scrollListener);
+        statefulView.showProgress();
+        statefulView.setOfflineRetryOnClickListener(v -> fetchData(true));
         return view;
     }
 
@@ -138,18 +138,22 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     }
 
     private void updateAdapter(List<Launch> launches) {
-
         if (launches.size() > 0) {
+            if (!statefulStateContentShow) {
+                statefulView.showContent();
+                statefulStateContentShow = true;
+            }
             adapter.addItems(launches);
             adapter.notifyDataSetChanged();
 
         } else {
+            statefulView.showEmpty();
+            statefulStateContentShow = false;
             if (adapter != null) {
                 adapter.clear();
             }
         }
         scrollListener.resetState();
-
     }
 
     public void fetchData(boolean forceRefresh) {
@@ -174,6 +178,9 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
 
             @Override
             public void onError(String message, @Nullable Throwable throwable) {
+                statefulView.showOffline();
+                statefulStateContentShow = false;
+                showNetworkLoading(false);
                 if (throwable != null) {
                     Timber.e(throwable);
                 } else {

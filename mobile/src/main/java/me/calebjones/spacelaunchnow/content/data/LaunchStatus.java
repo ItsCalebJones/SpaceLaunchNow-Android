@@ -43,16 +43,16 @@ public class LaunchStatus {
                 return context.getResources().getColor(R.color.material_color_green_600);
             case 2:
                 //TBD for launch
-                return context.getResources().getColor(R.color.material_color_amber_600);
+                return context.getResources().getColor(R.color.material_color_red_500);
             case 3:
                 //Success for launch
-                return context.getResources().getColor(R.color.material_color_green_900);
+                return context.getResources().getColor(R.color.material_color_green_800);
             case 4:
                 //Failure to launch
-                return context.getResources().getColor((R.color.material_color_red_500));
+                return context.getResources().getColor((R.color.material_color_red_700));
             case 5:
                 //HOLD
-                return context.getResources().getColor((R.color.material_color_amber_900));
+                return context.getResources().getColor((R.color.material_color_orange_500));
             case 6:
                 //In Flight
                 return context.getResources().getColor(R.color.material_color_blue_500);
