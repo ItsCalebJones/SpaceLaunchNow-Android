@@ -62,7 +62,7 @@ public class LaunchListFactory implements RemoteViewsService.RemoteViewsFactory 
         if (switchPreferences.getAllSwitch()) {
             RealmQuery<Launch> query = mRealm.where(Launch.class)
                     .greaterThanOrEqualTo("net", date);
-            if (switchPreferences.getNoGoSwitch()) {
+            if (switchPreferences.getTBDSwitch()) {
                 query.equalTo("status.id", 1);
             }
             launchRealms = query.sort("net", Sort.ASCENDING).findAll();

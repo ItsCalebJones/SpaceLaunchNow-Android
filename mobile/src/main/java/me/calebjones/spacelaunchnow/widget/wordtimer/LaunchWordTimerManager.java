@@ -95,7 +95,7 @@ public class LaunchWordTimerManager {
         if (switchPreferences.getAllSwitch()) {
             RealmQuery<Launch> query = mRealm.where(Launch.class)
                     .greaterThanOrEqualTo("net", date);
-            if (switchPreferences.getNoGoSwitch()) {
+            if (switchPreferences.getTBDSwitch()) {
                 query.equalTo("status.id", 1);
             }
             launchRealms = query.findAll().sort("net", Sort.ASCENDING);

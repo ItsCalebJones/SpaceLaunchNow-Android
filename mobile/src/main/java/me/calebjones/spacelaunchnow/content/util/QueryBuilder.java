@@ -397,12 +397,8 @@ public class QueryBuilder {
         Date date = calendar.getTime();
         RealmQuery<Launch> query = realm.where(Launch.class)
                 .greaterThanOrEqualTo("net", date);
-        if (switchPreferences.getNoGoSwitch()) {
+        if (switchPreferences.getTBDSwitch()) {
             query.notEqualTo("status.id", 2);
-            query.findAll();
-        }
-        if (switchPreferences.getTBDLaunchSwitch()) {
-            query.equalTo("tbddate", false);
             query.findAll();
         }
         query.sort("net", Sort.ASCENDING);
@@ -422,12 +418,8 @@ public class QueryBuilder {
                 .greaterThanOrEqualTo("net", date);
         query.findAll();
 
-        if (switchPreferences.getNoGoSwitch()) {
+        if (switchPreferences.getTBDSwitch()) {
             query.notEqualTo("status.id", 2).findAll();
-        }
-
-        if (switchPreferences.getTBDLaunchSwitch()) {
-            query.equalTo("tbddate", false).findAll();
         }
         query.beginGroup();
 
@@ -543,7 +535,7 @@ public class QueryBuilder {
 
         query.findAll();
 
-        if (switchPreferences.getNoGoSwitch()) {
+        if (switchPreferences.getTBDSwitch()) {
             query.notEqualTo("status.id", 2).findAll();
         }
 
@@ -659,7 +651,7 @@ public class QueryBuilder {
 
         query.findAll();
 
-        if (switchPreferences.getNoGoSwitch()) {
+        if (switchPreferences.getTBDSwitch()) {
             query.notEqualTo("status.id", 2).findAll();
         }
 
