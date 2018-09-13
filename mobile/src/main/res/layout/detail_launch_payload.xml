@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
@@ -19,10 +19,10 @@
             android:layout_margin="@dimen/material_card_edge_margin"
             android:animateLayoutChanges="true"
             android:padding="@dimen/material_card_edge_margin"
-            card_view:cardCornerRadius="@dimen/card_view_corner_radius"
-            card_view:cardElevation="@dimen/material_card_elevation_resting"
-            card_view:cardPreventCornerOverlap="true"
-            card_view:cardUseCompatPadding="true">
+            app:cardCornerRadius="@dimen/card_view_corner_radius"
+            app:cardElevation="@dimen/material_card_elevation_resting"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true">
 
             <LinearLayout
 
@@ -140,10 +140,10 @@
             android:layout_margin="@dimen/material_card_edge_margin"
             android:animateLayoutChanges="true"
             android:padding="@dimen/material_card_edge_margin"
-            card_view:cardCornerRadius="@dimen/card_view_corner_radius"
-            card_view:cardElevation="@dimen/material_card_elevation_resting"
-            card_view:cardPreventCornerOverlap="true"
-            card_view:cardUseCompatPadding="true">
+            app:cardCornerRadius="@dimen/card_view_corner_radius"
+            app:cardElevation="@dimen/material_card_elevation_resting"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true">
 
             <android.support.constraint.ConstraintLayout
 
@@ -167,9 +167,9 @@
                     android:textColor="@color/dark_primary_text_color_selector"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    card_view:layout_constraintBottom_toTopOf="@+id/family_title"
-                    card_view:layout_constraintEnd_toEndOf="@+id/launch_vehicle"
-                    card_view:layout_constraintStart_toStartOf="@+id/launch_vehicle" />
+                    app:layout_constraintBottom_toTopOf="@+id/family_title"
+                    app:layout_constraintEnd_toEndOf="@+id/launch_vehicle"
+                    app:layout_constraintStart_toStartOf="@+id/launch_vehicle" />
 
                 <TextView
                     android:id="@+id/launch_vehicle"
@@ -188,32 +188,28 @@
                     android:textAlignment="center"
                     android:textColor="@color/dark_primary_text_color_selector"
                     android:textSize="16sp"
-                    card_view:layout_constraintStart_toStartOf="parent"
-                    card_view:layout_constraintTop_toBottomOf="@+id/launch_vehicle_title" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_title" />
 
 
                 <TextView
                     android:id="@+id/family_title"
                     android:layout_width="wrap_content"
-                    android:layout_height="23dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
                     android:ellipsize="end"
                     android:gravity="start"
                     android:maxLines="2"
-                    android:paddingBottom="@dimen/material_baseline_grid_0.5x"
                     android:text="@string/family"
                     android:textAppearance="@style/MaterialTypography.Regular.Title"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="14sp"
-                    card_view:layout_constraintBaseline_toBaselineOf="@+id/launch_family"
-                    card_view:layout_constraintEnd_toStartOf="@+id/guideline"
-                    card_view:layout_constraintHorizontal_bias="0.0"
-                    card_view:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintBaseline_toBaselineOf="@+id/launch_family"
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <TextView
                     android:id="@+id/launch_family"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
@@ -224,12 +220,12 @@
                     android:paddingLeft="4dp"
                     android:textAppearance="@style/MaterialTypography.Regular.Body1"
                     android:textColor="?android:textColorSecondary"
-                    card_view:layout_constraintBottom_toBottomOf="@+id/family_title"
-                    card_view:layout_constraintEnd_toStartOf="@+id/flight_proven_title"
-                    card_view:layout_constraintHorizontal_bias="0.0"
-                    card_view:layout_constraintStart_toStartOf="@+id/guideline"
-                    card_view:layout_constraintTop_toTopOf="@+id/family_title"
-                    card_view:layout_constraintVertical_bias="0.0"
+                    app:layout_constraintBottom_toBottomOf="@+id/family_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/family_title"
+                    app:layout_constraintTop_toTopOf="@+id/family_title"
+                    app:layout_constraintVertical_bias="0.0"
                     tools:text="Falcon" />
 
 
@@ -237,25 +233,20 @@
                     android:id="@+id/configuration_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="20dp"
                     android:layout_marginTop="8dp"
                     android:ellipsize="end"
                     android:gravity="start"
                     android:maxLines="2"
-                    android:paddingBottom="@dimen/material_baseline_grid_0.5x"
                     android:text="@string/configuration"
                     android:textAppearance="@style/MaterialTypography.Regular.Title"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="14sp"
-                    card_view:layout_constraintEnd_toStartOf="@+id/guideline"
-                    card_view:layout_constraintHorizontal_bias="0.0"
-                    card_view:layout_constraintStart_toStartOf="parent"
-                    card_view:layout_constraintTop_toBottomOf="@+id/family_title" />
+                    app:layout_constraintStart_toStartOf="@+id/family_title"
+                    app:layout_constraintTop_toBottomOf="@+id/family_title" />
 
                 <TextView
                     android:id="@+id/launch_configuration"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
@@ -266,109 +257,37 @@
                     android:paddingLeft="4dp"
                     android:textAppearance="@style/MaterialTypography.Regular.Body1"
                     android:textColor="?android:textColorSecondary"
-                    card_view:layout_constraintBottom_toBottomOf="@+id/configuration_title"
-                    card_view:layout_constraintEnd_toStartOf="@+id/flight_proven_title"
-                    card_view:layout_constraintHorizontal_bias="0.0"
-                    card_view:layout_constraintStart_toStartOf="@+id/guideline"
-                    card_view:layout_constraintTop_toTopOf="@+id/configuration_title"
-                    card_view:layout_constraintVertical_bias="0.0"
+                    app:layout_constraintBottom_toBottomOf="@+id/configuration_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/configuration_title"
+                    app:layout_constraintTop_toTopOf="@+id/configuration_title"
                     tools:text="Block 5" />
 
 
                 <TextView
-                    android:id="@+id/serial_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:text="Serial Number:"
-                    android:textAppearance="@style/MaterialTypography.Regular.Title"
-                    android:textColor="?android:textColorSecondary"
-                    android:textSize="14sp"
-                    card_view:layout_constraintEnd_toStartOf="@+id/guideline"
-                    card_view:layout_constraintHorizontal_bias="0.0"
-                    card_view:layout_constraintStart_toStartOf="parent"
-                    card_view:layout_constraintTop_toBottomOf="@+id/configuration_title" />
-
-                <TextView
-                    android:id="@+id/serial_number_text"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:ellipsize="end"
-                    android:gravity="start"
-                    android:maxLines="2"
-                    android:paddingBottom="@dimen/material_baseline_grid_0.5x"
-                    android:paddingLeft="4dp"
-                    android:textAppearance="@style/MaterialTypography.Regular.Body1"
-                    android:textColor="?android:textColorSecondary"
-                    card_view:layout_constraintBottom_toBottomOf="@+id/serial_number"
-                    card_view:layout_constraintEnd_toStartOf="@+id/flight_proven_title"
-                    card_view:layout_constraintHorizontal_bias="0.0"
-                    card_view:layout_constraintStart_toStartOf="@+id/guideline"
-                    card_view:layout_constraintTop_toTopOf="@+id/serial_number"
-                    card_view:layout_constraintVertical_bias="0.0"
-                    tools:text="B1005" />
-
-                <TextView
-                    android:id="@+id/status_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:text="Status:"
-                    android:textAppearance="@style/MaterialTypography.Regular.Title"
-                    android:textColor="?android:textColorSecondary"
-                    android:textSize="14sp"
-                    card_view:layout_constraintEnd_toStartOf="@+id/guideline"
-                    card_view:layout_constraintHorizontal_bias="0.0"
-                    card_view:layout_constraintStart_toStartOf="parent"
-                    card_view:layout_constraintTop_toBottomOf="@+id/serial_number" />
-
-                <TextView
-                    android:id="@+id/status_text"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:ellipsize="end"
-                    android:gravity="start"
-                    android:maxLines="2"
-                    android:paddingBottom="@dimen/material_baseline_grid_0.5x"
-                    android:paddingLeft="4dp"
-                    android:textAppearance="@style/MaterialTypography.Regular.Body1"
-                    android:textColor="?android:textColorSecondary"
-                    card_view:layout_constraintBottom_toBottomOf="@+id/status_title"
-                    card_view:layout_constraintEnd_toStartOf="@+id/flight_proven_title"
-                    card_view:layout_constraintHorizontal_bias="0.0"
-                    card_view:layout_constraintStart_toStartOf="@+id/guideline"
-                    card_view:layout_constraintTop_toTopOf="@+id/status_title"
-                    card_view:layout_constraintVertical_bias="0.0"
-                    tools:text="Active" />
-
-                <TextView
                     android:id="@+id/launch_vehicle_description"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
                     android:ellipsize="end"
                     android:gravity="left"
                     android:textAppearance="@style/MaterialTypography.Regular.Body1"
                     android:textColor="?android:textColorSecondary"
-                    android:visibility="gone"
-                    card_view:layout_constraintBottom_toBottomOf="@+id/launch_vehicle"
-                    card_view:layout_constraintEnd_toStartOf="@+id/family_title"
-                    card_view:layout_constraintStart_toStartOf="@+id/family_title"
-                    card_view:layout_constraintTop_toBottomOf="@+id/launch_vehicle" />
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/configuration_title"
+                    tools:text="test sets set setsetse set set set set set " />
 
 
                 <TextView
                     android:id="@+id/launch_vehicle_specs_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:ellipsize="end"
                     android:gravity="start"
@@ -377,10 +296,10 @@
                     android:text="@string/vehicle_specifications"
                     android:textAppearance="@style/MaterialTypography.Regular.Title"
                     android:textColor="?android:textColorSecondary"
-                    android:textSize="@dimen/material_typography_regular_subheading_text_size"
-                    card_view:layout_constraintEnd_toEndOf="@+id/view"
-                    card_view:layout_constraintStart_toStartOf="parent"
-                    card_view:layout_constraintTop_toBottomOf="@+id/status_title" />
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="@+id/view"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/coreRecyclerView" />
 
                 <View
 
@@ -388,15 +307,15 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_marginBottom="31dp"
-                    android:layout_marginEnd="24dp"
+                    android:layout_marginEnd="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="30dp"
                     android:background="@color/View_Separator"
                     android:padding="12dp"
-                    card_view:layout_constraintBottom_toBottomOf="@+id/launch_vehicle_specs_height"
-                    card_view:layout_constraintEnd_toEndOf="parent"
-                    card_view:layout_constraintStart_toStartOf="parent"
-                    card_view:layout_constraintTop_toTopOf="@+id/launch_vehicle_specs_title" />
+                    app:layout_constraintBottom_toBottomOf="@+id/launch_vehicle_specs_height"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/launch_vehicle_specs_title" />
 
                 <TextView
                     android:id="@+id/launch_vehicle_specs_height"
@@ -410,9 +329,9 @@
                     android:singleLine="false"
                     android:text="@string/height"
                     android:textColor="?android:textColorSecondary"
-                    card_view:layout_constraintEnd_toEndOf="@+id/launch_vehicle_specs_diameter"
-                    card_view:layout_constraintStart_toStartOf="@+id/launch_vehicle_specs_diameter"
-                    card_view:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_title" />
+                    app:layout_constraintEnd_toEndOf="@+id/launch_vehicle_specs_diameter"
+                    app:layout_constraintStart_toStartOf="@+id/launch_vehicle_specs_diameter"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_title" />
 
                 <TextView
                     android:id="@+id/launch_vehicle_specs_diameter"
@@ -425,9 +344,9 @@
                     android:singleLine="false"
                     android:text="@string/diameter"
                     android:textColor="?android:textColorSecondary"
-                    card_view:layout_constraintEnd_toEndOf="@+id/launch_vehicle_specs_stages"
-                    card_view:layout_constraintStart_toStartOf="@+id/launch_vehicle_specs_stages"
-                    card_view:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_height" />
+                    app:layout_constraintEnd_toEndOf="@+id/launch_vehicle_specs_stages"
+                    app:layout_constraintStart_toStartOf="@+id/launch_vehicle_specs_stages"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_height" />
 
                 <TextView
                     android:id="@+id/launch_vehicle_specs_stages"
@@ -441,9 +360,9 @@
                     android:singleLine="false"
                     android:text="@string/stages"
                     android:textColor="?android:textColorSecondary"
-                    card_view:layout_constraintEnd_toEndOf="@+id/launch_vehicle_specs_leo"
-                    card_view:layout_constraintStart_toStartOf="@+id/launch_vehicle_specs_leo"
-                    card_view:layout_constraintTop_toTopOf="@+id/launch_vehicle_specs_diameter" />
+                    app:layout_constraintEnd_toEndOf="@+id/launch_vehicle_specs_leo"
+                    app:layout_constraintStart_toStartOf="@+id/launch_vehicle_specs_leo"
+                    app:layout_constraintTop_toTopOf="@+id/launch_vehicle_specs_diameter" />
 
                 <TextView
                     android:id="@+id/launch_vehicle_specs_leo"
@@ -456,9 +375,9 @@
                     android:singleLine="false"
                     android:text="@string/mass_to_leo"
                     android:textColor="?android:textColorSecondary"
-                    card_view:layout_constraintEnd_toEndOf="@+id/launch_vehicle_specs_gto"
-                    card_view:layout_constraintStart_toStartOf="@+id/launch_vehicle_specs_gto"
-                    card_view:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_stages" />
+                    app:layout_constraintEnd_toEndOf="@+id/launch_vehicle_specs_gto"
+                    app:layout_constraintStart_toStartOf="@+id/launch_vehicle_specs_gto"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_stages" />
 
                 <TextView
                     android:id="@+id/launch_vehicle_specs_gto"
@@ -472,9 +391,9 @@
                     android:singleLine="false"
                     android:text="@string/mass_to_gto"
                     android:textColor="?android:textColorSecondary"
-                    card_view:layout_constraintEnd_toEndOf="@+id/launch_vehicle_specs_launch_mass"
-                    card_view:layout_constraintStart_toStartOf="@+id/launch_vehicle_specs_launch_mass"
-                    card_view:layout_constraintTop_toTopOf="@+id/launch_vehicle_specs_leo" />
+                    app:layout_constraintEnd_toEndOf="@+id/launch_vehicle_specs_launch_mass"
+                    app:layout_constraintStart_toStartOf="@+id/launch_vehicle_specs_launch_mass"
+                    app:layout_constraintTop_toTopOf="@+id/launch_vehicle_specs_leo" />
 
                 <TextView
                     android:id="@+id/launch_vehicle_specs_launch_mass"
@@ -487,9 +406,9 @@
                     android:singleLine="false"
                     android:text="@string/mass_at_launch"
                     android:textColor="?android:textColorSecondary"
-                    card_view:layout_constraintEnd_toEndOf="@+id/launch_vehicle_specs_thrust"
-                    card_view:layout_constraintStart_toStartOf="@+id/launch_vehicle_specs_thrust"
-                    card_view:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_gto" />
+                    app:layout_constraintEnd_toEndOf="@+id/launch_vehicle_specs_thrust"
+                    app:layout_constraintStart_toStartOf="@+id/launch_vehicle_specs_thrust"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_gto" />
 
                 <TextView
                     android:id="@+id/launch_vehicle_specs_thrust"
@@ -505,9 +424,9 @@
                     android:singleLine="false"
                     android:text="@string/thrust_at_launch"
                     android:textColor="?android:textColorSecondary"
-                    card_view:layout_constraintEnd_toEndOf="@+id/launch_vehicle"
-                    card_view:layout_constraintStart_toStartOf="parent"
-                    card_view:layout_constraintTop_toTopOf="@+id/launch_vehicle_specs_launch_mass" />
+                    app:layout_constraintEnd_toEndOf="@+id/launch_vehicle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/launch_vehicle_specs_launch_mass" />
 
 
                 <android.support.v7.widget.AppCompatButton
@@ -516,15 +435,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:gravity="center"
                     android:text="@string/info"
                     android:textColor="@color/white"
                     android:textSize="12sp"
-                    card_view:layout_constraintBottom_toBottomOf="parent"
-                    card_view:layout_constraintStart_toStartOf="parent"
-                    card_view:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_thrust" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_thrust" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/vehicle_wikiButton"
@@ -532,74 +451,54 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:gravity="center"
                     android:text="@string/wiki"
                     android:textColor="@color/white"
                     android:textSize="12sp"
-                    card_view:layout_constraintBottom_toBottomOf="parent"
-                    card_view:layout_constraintStart_toEndOf="@+id/vehicle_infoButton"
-                    card_view:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_thrust" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/vehicle_infoButton"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_thrust" />
 
-                <TextView
-                    android:id="@+id/flight_proven_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_marginEnd="16dp"
-                    android:text="Flight Proven:"
-                    card_view:layout_constraintBottom_toBottomOf="@+id/flight_proven"
-                    card_view:layout_constraintEnd_toStartOf="@+id/flight_proven"
-                    card_view:layout_constraintTop_toTopOf="@+id/flight_proven" />
-
-                <ImageView
-                    android:id="@+id/flight_proven"
+                <android.support.constraint.Group
+                    android:id="@+id/vehicle_spec_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
+                    android:visibility="visible"
+                    app:constraint_referenced_ids="launch_vehicle_specs_title,view,launch_vehicle_specs_height,launch_vehicle_specs_diameter, launch_vehicle_specs_stages, launch_vehicle_specs_leo, launch_vehicle_specs_gto, launch_vehicle_specs_launch_mass, launch_vehicle_specs_thrust" />
+
+                <android.support.constraint.Group
+                    android:id="@+id/core_information_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:constraint_referenced_ids="core_information,view2,serial_number_title,serial_number_text,status_title,status_text,previous_title,previous_text,flight_proven,flight_proven_title" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/coreRecyclerView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    card_view:layout_constraintEnd_toEndOf="parent"
-                    card_view:layout_constraintTop_toBottomOf="@+id/launch_vehicle"
-                    card_view:srcCompat="@drawable/ic_question_mark" />
-
-                <android.support.constraint.Guideline
-                    android:id="@+id/guideline"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    card_view:layout_constraintGuide_end="280dp" />
-
-                <TextView
-                    android:id="@+id/textView13"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Previous Flights:"
-                    card_view:layout_constraintStart_toStartOf="@+id/flight_proven_title"
-                    tools:layout_editor_absoluteY="107dp" />
-
-                <TextView
-                    android:id="@+id/textView14"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    card_view:layout_constraintEnd_toEndOf="@+id/flight_proven"
-                    card_view:layout_constraintStart_toStartOf="@+id/flight_proven"
-                    tools:layout_editor_absoluteY="107dp"
-                    tools:text="3" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_description" />
 
             </android.support.constraint.ConstraintLayout>
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/launcher_launches"
-            android:visibility="visible"
             style="@style/Base.Widget.AppCompat.Button.Colored"
-            android:layout_margin="@dimen/material_card_edge_margin"
-            android:padding="@dimen/material_card_edge_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/material_card_edge_margin"
             android:gravity="center"
+            android:padding="@dimen/material_card_edge_margin"
             android:text="@string/view_more_launches"
             android:textColor="@color/white"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:visibility="visible" />
 
     </LinearLayout>
 

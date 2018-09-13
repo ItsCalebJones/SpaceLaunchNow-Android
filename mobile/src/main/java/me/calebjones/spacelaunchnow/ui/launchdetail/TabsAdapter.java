@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.AgencyDetailFragment;
-import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.MissionDetailFragment;
+import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.mission.MissionDetailFragment;
 import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.SummaryDetailFragment;
 
 public class TabsAdapter extends FragmentPagerAdapter {
