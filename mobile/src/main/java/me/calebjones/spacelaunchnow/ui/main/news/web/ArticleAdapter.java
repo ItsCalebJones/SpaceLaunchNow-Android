@@ -123,7 +123,6 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
                     new BadgeDrawable.Builder()
                             .type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
                             .badgeColor(color)
-                            .textSize(40)
                             .padding(8, 8, 8, 8, 8)
                             .strokeWidth(16);
 
@@ -131,7 +130,6 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
                     new BadgeDrawable.Builder()
                             .type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
                             .badgeColor(altColor)
-                            .textSize(32)
                             .padding(16, 8, 16, 8, 8)
                             .strokeWidth(16);
 
@@ -139,7 +137,6 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
                     new BadgeDrawable.Builder()
                             .type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
                             .badgeColor(altColor)
-                            .textSize(32)
                             .padding(16, 8, 16, 8, 8)
                             .strokeWidth(16);
 
@@ -151,6 +148,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
                 holder.tagText.setVisibility(View.VISIBLE);
                 String upperString = article.getTags().get(0).substring(0, 1).toUpperCase()
                         + article.getTags().get(0).substring(1);
+                upperString = Utils.ellipsize(upperString, 15);
                 tagDrawable.text1(upperString);
                 holder.tagText.setText(tagDrawable.build().toSpannable());
             } else {
@@ -161,6 +159,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
                 holder.tagTextAlt.setVisibility(View.VISIBLE);
                 String upperString = article.getTags().get(1).substring(0, 1).toUpperCase()
                         + article.getTags().get(1).substring(1);
+                upperString = Utils.ellipsize(upperString, 15);
                 altTagDrawable.text1(upperString);
                 holder.tagTextAlt.setText(altTagDrawable.build().toSpannable());
             } else {

@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,6 +43,7 @@ public class WebNewsFragment extends RetroFitFragment {
     private ArticleRepository articleRepository;
     private ArticleAdapter articleAdapter;
     private LinearLayoutManager linearLayoutManager;
+    private StaggeredGridLayoutManager layoutManager;
     private List<Article> articles;
 
 
@@ -53,11 +55,14 @@ public class WebNewsFragment extends RetroFitFragment {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_news, container, false);
         ButterKnife.bind(this, view);
-
-
-        linearLayoutManager = new LinearLayoutManager(context);
-        recyclerView.setLayoutManager(linearLayoutManager);
         articleAdapter = new ArticleAdapter(context, getActivity());
+        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
+            layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+            recyclerView.setLayoutManager(layoutManager);
+        } else {
+            linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+            recyclerView.setLayoutManager(linearLayoutManager);
+        }
         recyclerView.setAdapter(articleAdapter);
         getArticles(false);
         swipeRefreshLayout.setOnRefreshListener(() -> getArticles(true));

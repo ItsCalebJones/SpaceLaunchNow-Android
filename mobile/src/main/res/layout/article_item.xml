@@ -33,13 +33,16 @@
 
             <TextView
                 android:id="@+id/article_site"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/article_tag"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/article_image"
                 tools:text="Space.com" />
 
@@ -52,6 +55,9 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
+                android:maxLines="1"
+                android:maxLength="10"
+                android:ellipsize="end"
                 app:layout_constraintBottom_toTopOf="@+id/article_tag"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:text="Orion" />
@@ -64,6 +70,9 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
+                android:maxLines="1"
+                android:maxLength="10"
+                android:ellipsize="end"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:text="Spaceflight" />
@@ -76,8 +85,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:maxLines="2"
-                android:textColor="@color/white"
+                android:maxLines="3"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/article_image"
@@ -89,13 +97,17 @@
                 style="@style/MaterialTypography.Locale.Subheading"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
                 android:singleLine="true"
                 android:textAlignment="textStart"
-                android:textColor="@color/white"
+                app:layout_constraintBottom_toTopOf="@+id/article_site"
+                app:layout_constraintEnd_toStartOf="@+id/article_tag_alt"
                 app:layout_constraintStart_toEndOf="@+id/article_image"
                 app:layout_constraintTop_toBottomOf="@+id/article_title"
+                app:layout_constraintVertical_bias="0.0"
                 tools:text="Mon, 02 Apr 2018 23:13:07 GMT" />
 
         </android.support.constraint.ConstraintLayout>
