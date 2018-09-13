@@ -56,6 +56,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
 
+    private SearchView searchView;
     public boolean canLoadMore;
     private boolean statefulStateContentShow = false;
     private static final Field sChildFragmentManagerField;
@@ -90,7 +91,9 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
-                if (canLoadMore) {
+                Timber.v("onLoadMore - page: %s totalItemsCount: %s nextOffset: %s", page, totalItemsCount, nextOffset);
+                if (canLoadMore && nextOffset > 0) {
+                    Timber.v("onLoadMore - adding more!");
                     fetchData(false);
                     mSwipeRefreshLayout.setRefreshing(true);
                 }
@@ -153,7 +156,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
             public void onLaunchesLoaded(List<Launch> launches, int next) {
                 Timber.v("Offset - %s", next);
                 nextOffset = next;
-                canLoadMore = next > 0;
+                canLoadMore = nextOffset > 0;
                 updateAdapter(launches);
             }
 
@@ -250,7 +253,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
         }
 
         final MenuItem item = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(this);
     }
 
@@ -275,8 +278,10 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        Timber.v("onQueryTextSubmit - %s", query);
         searchTerm = query;
         fetchData(true);
+        searchView.clearFocus();
         return false;
     }
 }

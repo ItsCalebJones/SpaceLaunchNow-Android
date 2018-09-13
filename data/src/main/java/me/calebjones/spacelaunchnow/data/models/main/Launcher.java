@@ -18,6 +18,17 @@ public class Launcher extends RealmObject {
     @SerializedName("serial_number")
     @Expose
     public String serialNumber;
+    @SerializedName("status")
+    @Expose
+    public String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public Integer getId() {
         return id;

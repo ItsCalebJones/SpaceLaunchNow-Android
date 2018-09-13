@@ -25,6 +25,7 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.data.LaunchStatus;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Launcher;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
@@ -147,6 +148,25 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             }
         }
 
+        if (launchItem.getLaunchers() != null && launchItem.getLaunchers().size() > 0){
+            holder.launcherCard.setVisibility(View.VISIBLE);
+            Launcher launcher = launchItem.getLaunchers().get(0);
+            if (launcher != null) {
+                holder.launcher.setText(launcher.getSerialNumber());
+                if (launcher.getStatus().contains("active") && launcher.isFlightProven()){
+                    holder.launcherCard.setCardBackgroundColor(mContext.getResources().getColor(R.color.material_color_green_500));
+                } else if (launcher.getStatus().contains("active") && !launcher.isFlightProven()) {
+                    holder.launcherCard.setCardBackgroundColor(mContext.getResources().getColor(R.color.material_color_blue_500));
+                } else if (launcher.getStatus().contains("expended") || launcher.getStatus().contains("destroyed") || launcher.getStatus().contains("retired")){
+                    holder.launcherCard.setCardBackgroundColor(mContext.getResources().getColor(R.color.material_color_red_500));
+                } else {
+                    holder.launcherCard.setCardBackgroundColor(mContext.getResources().getColor(R.color.material_color_blue_grey_500));
+                }
+            }
+        } else {
+            holder.launcherCard.setVisibility(View.GONE);
+        }
+
         holder.status.setText(launchItem.getStatus().getName());
         holder.statusCard.setCardBackgroundColor(LaunchStatus.getLaunchStatusColor(mContext, launchItem.getStatus().getId()));
 
@@ -177,6 +197,10 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         TextView landingLocation;
         @BindView(R.id.landing_pill_mini)
         CardView landingCard;
+        @BindView(R.id.launcher)
+        TextView launcher;
+        @BindView(R.id.launcher_pill_mini)
+        CardView launcherCard;
         @BindView(R.id.launch_rocket)
         TextView title;
         @BindView(R.id.location)

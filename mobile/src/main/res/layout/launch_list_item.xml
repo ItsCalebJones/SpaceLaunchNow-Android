@@ -113,5 +113,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/status_pill_mini" />
 
+    <include
+        android:id="@+id/launcher_pill_mini"
+        layout="@layout/launcher_pill_mini"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="4dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landing_pill_mini" />
+
 
 </android.support.constraint.ConstraintLayout>

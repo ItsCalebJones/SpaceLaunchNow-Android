@@ -629,8 +629,7 @@ public class LaunchDetailActivity extends BaseActivity
             return true;
         }
         if (id == android.R.id.home) {
-            Intent intent = new Intent(context, MainActivity.class);
-            startActivity(intent);
+            onBackPressed();
             return true;
         }
 

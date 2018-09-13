@@ -71,6 +71,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
 
+    private SearchView searchView;
     public boolean canLoadMore;
     private boolean statefulStateContentShow = false;
     private static final Field sChildFragmentManagerField;
@@ -264,7 +265,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
         }
 
         final MenuItem item = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(this);
     }
 
@@ -291,6 +292,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     public boolean onQueryTextSubmit(String query) {
         searchTerm = query;
         fetchData(true);
+        searchView.clearFocus();
         return false;
     }
 }

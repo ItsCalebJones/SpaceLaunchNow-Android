@@ -2,11 +2,13 @@ package me.calebjones.spacelaunchnow.ui.main.news.web;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +51,10 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         this.context = context;
         this.activity = activity;
         color = ContextCompat.getColor(context, R.color.accent);
-        altColor = ContextCompat.getColor(context, R.color.material_color_blue_grey_500);
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(R.attr.titleBarColor, typedValue, true);
+        altColor = typedValue.data;
         String format = DateFormat.getBestDateTimePattern(Locale.getDefault(), "MMMM d, yyyy");
         outDateFormat = new SimpleDateFormat(format, Locale.getDefault());
     }
@@ -127,7 +132,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
                             .type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
                             .badgeColor(altColor)
                             .textSize(32)
-                            .padding(8, 8, 8, 8, 8)
+                            .padding(16, 8, 16, 8, 8)
                             .strokeWidth(16);
 
             BadgeDrawable.Builder altTagDrawable =
@@ -135,7 +140,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
                             .type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
                             .badgeColor(altColor)
                             .textSize(32)
-                            .padding(8, 8, 8, 8, 8)
+                            .padding(16, 8, 16, 8, 8)
                             .strokeWidth(16);
 
 
