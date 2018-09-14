@@ -50,9 +50,8 @@
 
     <TextView
         android:id="@+id/serial_number_text"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:ellipsize="end"
         android:gravity="start"
@@ -62,7 +61,6 @@
         android:textAppearance="@style/MaterialTypography.Regular.Body1"
         android:textColor="?android:textColorSecondary"
         app:layout_constraintBottom_toBottomOf="@+id/serial_number_title"
-        app:layout_constraintEnd_toStartOf="@+id/previous_title"
         app:layout_constraintStart_toEndOf="@+id/serial_number_title"
         app:layout_constraintTop_toTopOf="@+id/serial_number_title"
         tools:text="B1005" />
@@ -82,9 +80,8 @@
 
     <TextView
         android:id="@+id/status_text"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginEnd="8dp"
         android:ellipsize="end"
         android:gravity="start"
         android:maxLines="2"
@@ -93,8 +90,6 @@
         android:textAppearance="@style/MaterialTypography.Regular.Body1"
         android:textColor="?android:textColorSecondary"
         app:layout_constraintBottom_toBottomOf="@+id/status_title"
-        app:layout_constraintEnd_toStartOf="@+id/previous_title"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/serial_number_text"
         app:layout_constraintTop_toTopOf="@+id/status_title"
         app:layout_constraintVertical_bias="0.0"
@@ -106,7 +101,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="4dp"
-        android:text="Previous Flights:"
+        android:text="Flights:"
         android:textAppearance="@style/MaterialTypography.Regular.Title"
         android:textColor="?android:textColorSecondary"
         android:textSize="14sp"
@@ -137,10 +132,26 @@
         android:id="@+id/flight_proven_title"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
         android:text="Flight Proven:"
         android:textAppearance="@style/MaterialTypography.Regular.Title"
         android:textColor="?android:textColorSecondary"
         android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@+id/previous_title"
+        app:layout_constraintEnd_toStartOf="@+id/flight_proven"
         app:layout_constraintTop_toTopOf="@+id/serial_number_title" />
+
+    <Button
+        android:id="@+id/view_core_launches"
+        style="@style/Base.Widget.AppCompat.Button.Colored"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/material_card_edge_margin"
+        android:padding="@dimen/material_card_edge_margin"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/status_text"
+        tools:text="View B10018 Launches" />
 </android.support.constraint.ConstraintLayout>

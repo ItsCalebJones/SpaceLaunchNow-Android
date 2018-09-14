@@ -12,15 +12,26 @@ public class Launcher extends RealmObject {
     @SerializedName("id")
     @Expose
     public Integer id;
+    @SerializedName("previous_flights")
+    @Expose
+    public Integer previousFlights;
     @SerializedName("flight_proven")
     @Expose
-    public boolean flightProven;
+    public Boolean flightProven;
     @SerializedName("serial_number")
     @Expose
     public String serialNumber;
     @SerializedName("status")
     @Expose
     public String status;
+
+    public Integer getPreviousFlights() {
+        return previousFlights;
+    }
+
+    public void setPreviousFlights(Integer previousFlights) {
+        this.previousFlights = previousFlights;
+    }
 
     public String getStatus() {
         return status;
@@ -38,11 +49,11 @@ public class Launcher extends RealmObject {
         this.id = id;
     }
 
-    public boolean isFlightProven() {
+    public Boolean isFlightProven() {
         return flightProven;
     }
 
-    public void setFlightProven(boolean flightProven) {
+    public void setFlightProven(Boolean flightProven) {
         this.flightProven = flightProven;
     }
 

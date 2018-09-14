@@ -1,16 +1,19 @@
 package me.calebjones.spacelaunchnow.ui.launchdetail.fragments.mission;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,7 +52,18 @@ public class CoreInformationAdapter extends RecyclerView.Adapter<CoreInformation
         String cap = launcher.getStatus().substring(0, 1).toUpperCase() + launcher.getStatus().substring(1);
         holder.statusText.setText(cap);
         holder.previousText.setText("");
-//        holder.flightProven.setText(launcher.isFlightProven());
+        if (launcher.isFlightProven() == null){
+            holder.flightProven.setImageResource(R.drawable.ic_question_mark);
+        } else if (launcher.isFlightProven()) {
+            holder.flightProven.setImageResource(R.drawable.ic_checkmark);
+        } else if (!launcher.isFlightProven()) {
+            holder.flightProven.setImageResource(R.drawable.ic_failed);
+        }
+        holder.previousText.setText(String.format("%d",launcher.getPreviousFlights()));
+
+        holder.coreLaunches.setText(String.format("View %s Launches", launcher.getSerialNumber()));
+
+        holder.coreLaunches.setOnClickListener(v -> Timber.v("Coming soon!"));
     }
 
 
@@ -60,6 +74,8 @@ public class CoreInformationAdapter extends RecyclerView.Adapter<CoreInformation
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.view_core_launches)
+        AppCompatButton coreLaunches;
         @BindView(R.id.core_information)
         TextView coreNumber;
         @BindView(R.id.serial_number_text)
