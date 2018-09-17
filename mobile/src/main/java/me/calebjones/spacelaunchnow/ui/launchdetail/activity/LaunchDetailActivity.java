@@ -366,14 +366,14 @@ public class LaunchDetailActivity extends BaseActivity
             this.launch = launch;
 
             EventBus.getDefault().post(new LaunchEvent(launch));
-            if (!this.isDestroyed() && launch != null && launch.getLauncherConfig() != null) {
+            if (!this.isDestroyed() && launch != null && launch.getRocket().getConfiguration() != null) {
                 Timber.v("Loading detailLaunch %s", launch.getId());
                 findProfileLogo();
-                if (launch.getLauncherConfig().getName() != null) {
-                    if (launch.getLauncherConfig().getImageUrl() != null
-                            && launch.getLauncherConfig().getImageUrl().length() > 0
-                            && !launch.getLauncherConfig().getImageUrl().contains("placeholder")) {
-                        final String image = launch.getLauncherConfig().getImageUrl();
+                if (launch.getRocket().getConfiguration().getName() != null) {
+                    if (launch.getRocket().getConfiguration().getImageUrl() != null
+                            && launch.getRocket().getConfiguration().getImageUrl().length() > 0
+                            && !launch.getRocket().getConfiguration().getImageUrl().contains("placeholder")) {
+                        final String image = launch.getRocket().getConfiguration().getImageUrl();
                         GlideApp.with(this)
                                 .load(image)
                                 .placeholder(R.drawable.placeholder)
@@ -410,17 +410,17 @@ public class LaunchDetailActivity extends BaseActivity
         String agencyName = null;
         //This checks to see if a location is available
 
-        if (launch.getLsp() != null) {
-            locationCountryCode = launch.getLsp().getCountryCode();
-            agencyName = launch.getLsp().getName();
+        if (launch.getRocket().getConfiguration().getLaunchServiceProvider() != null) {
+            locationCountryCode = launch.getRocket().getConfiguration().getLaunchServiceProvider().getCountryCode();
+            agencyName = launch.getRocket().getConfiguration().getLaunchServiceProvider().getName();
             //Go through various CountryCodes and assign flag.
-            if (launch.getLsp().getAbbrev().contains("ASA")) {
+            if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev().contains("ASA")) {
                 applyProfileLogo(getString(R.string.ariane_logo));
-            } else if (launch.getLsp().getAbbrev().contains("SpX")) {
+            } else if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev().contains("SpX")) {
                 applyProfileLogo(getString(R.string.spacex_logo));
-            } else if (launch.getLsp().getAbbrev().contains("BA")) {
+            } else if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev().contains("BA")) {
                 applyProfileLogo(getString(R.string.Yuzhnoye_logo));
-            } else if (launch.getLsp().getAbbrev().contains("ULA")) {
+            } else if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev().contains("ULA")) {
                 applyProfileLogo(getString(R.string.ula_logo));
             } else if (locationCountryCode.length() == 3) {
                 if (locationCountryCode.contains("USA")) {
@@ -462,10 +462,10 @@ public class LaunchDetailActivity extends BaseActivity
 
     private void getLaunchVehicle(Launch result, boolean setImage) {
         String query;
-        if (result.getLauncherConfig().getName().contains("Space Shuttle")) {
+        if (result.getRocket().getConfiguration().getName().contains("Space Shuttle")) {
             query = "Space Shuttle";
         } else {
-            query = result.getLauncherConfig().getName();
+            query = result.getRocket().getConfiguration().getName();
         }
         LauncherConfig launchVehicle = getRealm().where(LauncherConfig.class)
                 .contains("name", query)
@@ -562,14 +562,14 @@ public class LaunchDetailActivity extends BaseActivity
                 df.toLocalizedPattern();
                 launchDate = df.format(date);
             }
-            if (launch.getLocation() != null) {
+            if (launch.getPad().getLocation() != null) {
 
                 message = launch.getName() + " launching from "
-                        + launch.getLocation().getName() + "\n\n"
+                        + launch.getPad().getLocation().getName() + "\n\n"
                         + launchDate;
-            } else if (launch.getLocation() != null) {
+            } else if (launch.getPad().getLocation() != null) {
                 message = launch.getName() + " launching from "
-                        + launch.getLocation().getName() + "\n\n"
+                        + launch.getPad().getLocation().getName() + "\n\n"
                         + launchDate;
             } else {
                 message = launch.getName()

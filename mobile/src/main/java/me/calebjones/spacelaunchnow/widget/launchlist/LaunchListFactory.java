@@ -176,12 +176,12 @@ public class LaunchListFactory implements RemoteViewsService.RemoteViewsFactory 
         }
 
         //If pad and agency exist add it to location, otherwise get whats always available
-        if (launch.getLocation() != null) {
-            row.setTextViewText(R.id.location, launch.getLocation().getName());
+        if (launch.getPad().getLocation() != null) {
+            row.setTextViewText(R.id.location, launch.getPad().getLocation().getName());
         } else {
             row.setTextViewText(R.id.location, "Click for more information.");
         }
-        row.setTextViewText(R.id.location, launch.getLocation().getName());
+        row.setTextViewText(R.id.location, launch.getPad().getLocation().getName());
 
         Intent exploreIntent = new Intent(context, LaunchDetailActivity.class);
         exploreIntent.putExtra("TYPE", "launch");

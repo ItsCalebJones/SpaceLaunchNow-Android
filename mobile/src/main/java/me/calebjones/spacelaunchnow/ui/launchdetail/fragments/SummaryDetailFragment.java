@@ -520,7 +520,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
             weatherSummaryDay.setVisibility(View.GONE);
         }
 
-        weatherLocation.setText(detailLaunch.getLocation().getName());
+        weatherLocation.setText(detailLaunch.getPad().getLocation().getName());
         weatherCard.setVisibility(View.VISIBLE);
 
         if (nightMode) {
@@ -863,48 +863,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                 launchWindowText.setVisibility(View.GONE);
             }
 
-            if (detailLaunch.getLanding() != null) {
-                landingCard.setVisibility(View.VISIBLE);
-                Landing landing = detailLaunch.getLanding();
-                if (landing.getAttempt() == null) {
-                    attemptIcon.setImageResource(R.drawable.ic_question_mark);
-                    successIcon.setVisibility(View.GONE);
-                    landingSuccessTitle.setVisibility(View.GONE);
-                } else if (landing.getAttempt()) {
-                    successIcon.setVisibility(View.VISIBLE);
-                    landingSuccessTitle.setVisibility(View.VISIBLE);
-                    attemptIcon.setImageResource(R.drawable.ic_checkmark);
-                    if (landing.getSuccess() == null){
-                        successIcon.setImageResource(R.drawable.ic_question_mark);
-                    } else if (landing.getSuccess()) {
-                        successIcon.setImageResource(R.drawable.ic_checkmark);
-                    } else if (!landing.getSuccess()) {
-                        successIcon.setImageResource(R.drawable.ic_failed);
-                    }
-                 } else if (!landing.getAttempt()) {
-                    attemptIcon.setImageResource(R.drawable.ic_failed);
-                    successIcon.setVisibility(View.GONE);
-                    landingSuccessTitle.setVisibility(View.GONE);
-                }
+            landingCard.setVisibility(View.GONE);
 
-
-
-                landingDescription.setText(landing.getDescription());
-
-                if (landing.getLandingType() != null) {
-                    landingType.setText(String.format("%s (%s)", landing.getLandingType().getName(), landing.getLandingType().getAbbrev()));
-                    landingTypeDescription.setText(landing.getLandingType().getDescription());
-                }
-
-                if (landing.getLandingLocation() != null) {
-                    landingLocation.setText(String.format("%s (%s)", landing.getLandingLocation().getName(), landing.getLandingLocation().getAbbrev()));
-                    landingLocationDescription.setText(landing.getLandingLocation().getDescription());
-                    landingInformationSubtitle.setText(landing.getLandingLocation().getAbbrev());
-                }
-
-            } else {
-                landingCard.setVisibility(View.GONE);
-            }
         } catch (NullPointerException e) {
             Timber.e(e);
         }
@@ -1076,8 +1036,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         }
         if (launchItem.getStatus().getId() == 2) {
             countdownLayout.setVisibility(View.GONE);
-            if (launchItem.getLsp() != null) {
-                contentTMinusStatus.setText(String.format(context.getString(R.string.pending_confirmed_go_specific), launchItem.getLsp().getName()));
+            if (launchItem.getRocket().getConfiguration().getLaunchServiceProvider() != null) {
+                contentTMinusStatus.setText(String.format(context.getString(R.string.pending_confirmed_go_specific), launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getName()));
             } else {
                 contentTMinusStatus.setText(R.string.pending_confirmed_go);
             }
@@ -1204,8 +1164,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
     @OnClick(R.id.map_view_summary)
     public void onViewClicked() {
-        if (detailLaunch != null && detailLaunch.isValid() && detailLaunch.getLocation() != null) {
-            String location = detailLaunch.getLocation().getName();
+        if (detailLaunch != null && detailLaunch.isValid() && detailLaunch.getPad().getLocation() != null) {
+            String location = detailLaunch.getPad().getLocation().getName();
             location = (location.substring(location.indexOf(",") + 1));
 
             Timber.d("FAB: %s ", location);

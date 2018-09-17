@@ -14,7 +14,7 @@ import retrofit2.http.Query;
 
 public interface SpaceLaunchNowService {
 
-    String version = "3.1.0";
+    String version = "3.2.0";
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/orbiters/")

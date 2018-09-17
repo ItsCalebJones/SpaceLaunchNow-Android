@@ -112,31 +112,31 @@ public class AgencyDetailFragment extends BaseFragment {
             Timber.v("Setting up views...");
             lspCard.setVisibility(View.VISIBLE);
 
-            if (detailLaunch.getLsp().getLogoUrl() != null) {
+            if (detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getLogoUrl() != null) {
                 lspLogo.setVisibility(View.VISIBLE);
                 GlideApp.with(context)
-                        .load(detailLaunch.getLsp().getLogoUrl())
+                        .load(detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getLogoUrl())
                         .centerInside()
                         .into(lspLogo);
             }
-            lspName.setText(detailLaunch.getLsp().getName());
-            lspType.setText(detailLaunch.getLsp().getType());
-            if (detailLaunch.getLsp().getAdministrator() != null) {
-                lspAdministrator.setText(String.format("%s", detailLaunch.getLsp().getAdministrator()));
+            lspName.setText(detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getName());
+            lspType.setText(detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getType());
+            if (detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getAdministrator() != null) {
+                lspAdministrator.setText(String.format("%s", detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getAdministrator()));
             } else {
                 lspAdministrator.setText(R.string.unknown_administrator);
             }
-            if (detailLaunch.getLsp().getFoundingYear() != null) {
-                lspFoundedYear.setText(String.format(getString(R.string.founded_in), detailLaunch.getLsp().getFoundingYear()));
+            if (detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getFoundingYear() != null) {
+                lspFoundedYear.setText(String.format(getString(R.string.founded_in), detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getFoundingYear()));
             } else {
                 lspFoundedYear.setText(R.string.unknown_year);
             }
-            lspSummary.setText(detailLaunch.getLsp().getDescription());
-            if (detailLaunch.getLsp().getInfoUrl() == null) {
+            lspSummary.setText(detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getDescription());
+            if (detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getInfoUrl() == null) {
                 lspInfoButtonOne.setVisibility(View.GONE);
             }
 
-            if (detailLaunch.getLsp().getWikiUrl() == null) {
+            if (detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getWikiUrl() == null) {
                 lspWikiButtonOne.setVisibility(View.GONE);
             }
             lspAgency.setVisibility(View.VISIBLE);
@@ -178,19 +178,19 @@ public class AgencyDetailFragment extends BaseFragment {
     @OnClick(R.id.lsp_infoButton_one)
     public void onLspInfoButtonOneClicked() {
         Activity activity = (Activity) context;
-        Utils.openCustomTab(activity, context, detailLaunch.getLsp().getInfoUrl());
+        Utils.openCustomTab(activity, context, detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getInfoUrl());
     }
 
     @OnClick(R.id.lsp_wikiButton_one)
     public void onLspWikiButtonOneClicked() {
         Activity activity = (Activity) context;
-        Utils.openCustomTab(activity, context, detailLaunch.getLsp().getWikiUrl());
+        Utils.openCustomTab(activity, context, detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getWikiUrl());
     }
 
     @OnClick(R.id.lsp_agency)
     public void onViewClicked() {
         Intent intent = new Intent(context, AgencyLaunchActivity.class);
-        intent.putExtra("lspName", detailLaunch.getLsp().getName());
+        intent.putExtra("lspName", detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getName());
         startActivity(intent);
     }
 }

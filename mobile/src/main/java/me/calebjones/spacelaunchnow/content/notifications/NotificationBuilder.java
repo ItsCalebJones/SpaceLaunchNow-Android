@@ -58,7 +58,7 @@ public class NotificationBuilder {
         String launchDate;
         String expandedText;
         String launchName = launch.getName();
-        String launchPad = launch.getLocation().getName();
+        String launchPad = launch.getPad().getLocation().getName();
         boolean isDoNotDisturb = sharedPref.getBoolean("do_not_disturb_status", false);
 
         if (isDoNotDisturb) {
@@ -106,10 +106,10 @@ public class NotificationBuilder {
         NotificationCompat.WearableExtender wearableExtender =
                 new NotificationCompat.WearableExtender()
                         .setHintHideIcon(true);
-        if (launch.getLauncherConfig().getImageUrl() != null && launch.getLauncherConfig().getImageUrl().length() > 0 && !launch.getLauncherConfig().getImageUrl().contains("placeholder")) {
+        if (launch.getRocket().getConfiguration().getImageUrl() != null && launch.getRocket().getConfiguration().getImageUrl().length() > 0 && !launch.getRocket().getConfiguration().getImageUrl().contains("placeholder")) {
             Bitmap bitmap = null;
             try {
-                bitmap = Utils.getBitMapFromUrl(context, launch.getLauncherConfig().getImageUrl());
+                bitmap = Utils.getBitMapFromUrl(context, launch.getRocket().getConfiguration().getImageUrl());
             } catch (ExecutionException | InterruptedException e) {
                 Timber.e(e);
                 Crashlytics.logException(e);
@@ -192,10 +192,10 @@ public class NotificationBuilder {
         }
 
 
-        if (launch.getLauncherConfig().getImageUrl() != null && launch.getLauncherConfig().getImageUrl().length() > 0 && !launch.getLauncherConfig().getImageUrl().contains("placeholder")) {
+        if (launch.getRocket().getConfiguration().getImageUrl() != null && launch.getRocket().getConfiguration().getImageUrl().length() > 0 && !launch.getRocket().getConfiguration().getImageUrl().contains("placeholder")) {
             Bitmap bitmap = null;
             try {
-                bitmap = Utils.getBitMapFromUrl(context, launch.getLauncherConfig().getImageUrl());
+                bitmap = Utils.getBitMapFromUrl(context, launch.getRocket().getConfiguration().getImageUrl());
             } catch (ExecutionException | InterruptedException e) {
                 Timber.e(e);
                 Crashlytics.logException(e);

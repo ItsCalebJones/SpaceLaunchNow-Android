@@ -134,31 +134,31 @@ public class MissionDetailFragment extends RetroFitFragment {
                 payloadWikiButton.setVisibility(View.GONE);
             }
 
-            launchVehicleView.setText(detailLaunch.getLauncherConfig().getFullName());
-            launchConfiguration.setText(detailLaunch.getLauncherConfig().getVariant());
-            launchFamily.setText(detailLaunch.getLauncherConfig().getFamily());
-            if (detailLaunch.getLauncherConfig().getInfoUrl() != null && detailLaunch.getLauncherConfig().getInfoUrl().length() > 0) {
+            launchVehicleView.setText(detailLaunch.getRocket().getConfiguration().getFullName());
+            launchConfiguration.setText(detailLaunch.getRocket().getConfiguration().getVariant());
+            launchFamily.setText(detailLaunch.getRocket().getConfiguration().getFamily());
+            if (detailLaunch.getRocket().getConfiguration().getInfoUrl() != null && detailLaunch.getRocket().getConfiguration().getInfoUrl().length() > 0) {
                 vehicleInfoButton.setOnClickListener(view -> {
                     Activity activity = (Activity) context;
-                    Utils.openCustomTab(activity, context, detailLaunch.getLauncherConfig().getInfoUrl());
+                    Utils.openCustomTab(activity, context, detailLaunch.getRocket().getConfiguration().getInfoUrl());
                     Analytics.getInstance().sendButtonClickedWithURL("Vehicle Info",
-                            detailLaunch.getLauncherConfig().getInfoUrl());
+                            detailLaunch.getRocket().getConfiguration().getInfoUrl());
                 });
             } else {
                 vehicleInfoButton.setVisibility(View.GONE);
             }
 
-            if (detailLaunch.getLauncherConfig().getWikiUrl() != null && detailLaunch.getLauncherConfig().getWikiUrl().length() > 0) {
+            if (detailLaunch.getRocket().getConfiguration().getWikiUrl() != null && detailLaunch.getRocket().getConfiguration().getWikiUrl().length() > 0) {
                 vehicleWikiButton.setOnClickListener(view -> {
                     Activity activity = (Activity) context;
-                    Utils.openCustomTab(activity, context, detailLaunch.getLauncherConfig().getWikiUrl());
+                    Utils.openCustomTab(activity, context, detailLaunch.getRocket().getConfiguration().getWikiUrl());
                     Analytics.getInstance().sendButtonClickedWithURL("Vehicle Wiki",
-                            detailLaunch.getLauncherConfig().getWikiUrl());
+                            detailLaunch.getRocket().getConfiguration().getWikiUrl());
                 });
             } else {
                 vehicleWikiButton.setVisibility(View.GONE);
             }
-            configureLaunchVehicle(launch.getLauncherConfig());
+            configureLaunchVehicle(launch.getRocket().getConfiguration());
 
             if (launch.getLaunchers() != null && launch.getLaunchers().size() > 0){
                 coreRecyclerView.setVisibility(View.VISIBLE);

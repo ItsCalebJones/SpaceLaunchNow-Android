@@ -166,8 +166,8 @@ public class LaunchCardCompactManager {
     private void setLocationName(Launch launchRealm) {
         String locationName = null;
 
-        if (launchRealm.getLocation() != null && launchRealm.getLocation().getName() != null) {
-            locationName = launchRealm.getLocation().getName();
+        if (launchRealm.getPad().getLocation() != null && launchRealm.getPad().getLocation().getName() != null) {
+            locationName = launchRealm.getPad().getLocation().getName();
         }
 
         if (locationName != null) {

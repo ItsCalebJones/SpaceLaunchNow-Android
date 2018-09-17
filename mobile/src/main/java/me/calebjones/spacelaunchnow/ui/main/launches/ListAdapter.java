@@ -121,8 +121,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         }
 
         //If pad and agency exist add it to location, otherwise get whats always available
-        if (launchItem.getLocation() != null) {
-            holder.location.setText(launchItem.getLocation().getName());
+        if (launchItem.getPad().getLocation() != null) {
+            holder.location.setText(launchItem.getPad().getLocation().getName());
         } else {
             holder.location.setText("Click for more information.");
         }
@@ -170,13 +170,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         holder.status.setText(launchItem.getStatus().getName());
         holder.statusCard.setCardBackgroundColor(LaunchStatus.getLaunchStatusColor(mContext, launchItem.getStatus().getId()));
 
-        if (launchItem.getLanding() != null && launchItem.getLanding().getLandingLocation() != null) {
-            holder.landingCard.setVisibility(View.VISIBLE);
-            holder.landingLocation.setText(launchItem.getLanding().getLandingLocation().getAbbrev());
-            holder.landingCard.setCardBackgroundColor(LaunchStatus.getLandingStatusColor(mContext, launchItem.getLanding()));
-        } else {
-            holder.landingCard.setVisibility(View.GONE);
-        }
+//        if (launchItem.getPad().getLanding() != null && launchItem.getLanding().getLandingLocation() != null) {
+//            holder.landingCard.setVisibility(View.VISIBLE);
+//            holder.landingLocation.setText(launchItem.getLanding().getLandingLocation().getAbbrev());
+//            holder.landingCard.setCardBackgroundColor(LaunchStatus.getLandingStatusColor(mContext, launchItem.getLanding()));
+//        } else {
+//            holder.landingCard.setVisibility(View.GONE);
+//        }
     }
 
     public String parseDateToMMyyyy(Date date) {

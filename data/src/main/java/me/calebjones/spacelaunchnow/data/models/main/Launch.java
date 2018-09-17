@@ -58,21 +58,9 @@ public class Launch extends RealmObject {
     @SerializedName("hashtag")
     @Expose
     public String hashtag;
-    @SerializedName("landing")
-    @Expose
-    public Landing landing;
-    @SerializedName("launcher_config")
-    @Expose
-    public LauncherConfig launcherConfig;
     @SerializedName("mission")
     @Expose
     public Mission mission;
-    @SerializedName("lsp")
-    @Expose
-    public Agency lsp;
-    @SerializedName("location")
-    @Expose
-    public Location location;
     @SerializedName("pad")
     @Expose
     public Pad pad;
@@ -85,15 +73,19 @@ public class Launch extends RealmObject {
     @SerializedName("launcher")
     @Expose
     public RealmList<Launcher> launchers;
+    @SerializedName("rocket")
+    @Expose
+    public Rocket rocket;
+
     public Integer eventID;
     public Date lastUpdate;
 
-    public Landing getLanding() {
-        return landing;
+    public Rocket getRocket() {
+        return rocket;
     }
 
-    public void setLanding(Landing landing) {
-        this.landing = landing;
+    public void setRocket(Rocket rocket) {
+        this.rocket = rocket;
     }
 
     public RealmList<Launcher> getLaunchers() {
@@ -240,36 +232,12 @@ public class Launch extends RealmObject {
         this.hashtag = hashtag;
     }
 
-    public LauncherConfig getLauncherConfig() {
-        return launcherConfig;
-    }
-
-    public void setLauncherConfig(LauncherConfig launcherConfig) {
-        this.launcherConfig = launcherConfig;
-    }
-
     public Mission getMission() {
         return mission;
     }
 
     public void setMission(Mission mission) {
         this.mission = mission;
-    }
-
-    public Agency getLsp() {
-        return lsp;
-    }
-
-    public void setLsp(Agency lsp) {
-        this.lsp = lsp;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
     }
 
     public Pad getPad() {

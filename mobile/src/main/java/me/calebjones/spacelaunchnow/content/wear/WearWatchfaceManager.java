@@ -87,16 +87,16 @@ public class WearWatchfaceManager extends BaseManager {
                 boolean dynamic = sharedPref.getBoolean("supporter_dynamic_background", false);
                 boolean modify = sharedPref.getBoolean("wear_background_blur", true);
                 if (dynamic) {
-                    if (launch.getLauncherConfig().getName() != null) {
-                        if (launch.getLauncherConfig().getImageUrl() != null && launch.getLauncherConfig().getImageUrl().length() > 0 && !launch.getLauncherConfig().getImageUrl().contains("placeholder")) {
-                            Timber.v("Sending image %s", launch.getLauncherConfig().getImageUrl());
-                            sendDataToWear(launch.getLauncherConfig().getImageUrl(), launch, modify);
+                    if (launch.getRocket().getConfiguration().getName() != null) {
+                        if (launch.getRocket().getConfiguration().getImageUrl() != null && launch.getRocket().getConfiguration().getImageUrl().length() > 0 && !launch.getRocket().getConfiguration().getImageUrl().contains("placeholder")) {
+                            Timber.v("Sending image %s", launch.getRocket().getConfiguration().getImageUrl());
+                            sendDataToWear(launch.getRocket().getConfiguration().getImageUrl(), launch, modify);
                         } else {
                             String query;
-                            if (launch.getLauncherConfig().getName().contains("Space Shuttle")) {
+                            if (launch.getRocket().getConfiguration().getName().contains("Space Shuttle")) {
                                 query = "Space Shuttle";
                             } else {
-                                query = launch.getLauncherConfig().getName();
+                                query = launch.getRocket().getConfiguration().getName();
                             }
 
                             LauncherConfig launchVehicle = mRealm.where(LauncherConfig.class)
