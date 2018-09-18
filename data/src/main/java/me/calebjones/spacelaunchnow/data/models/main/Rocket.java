@@ -16,6 +16,17 @@ public class Rocket extends RealmObject {
     @SerializedName("second_stage")
     @Expose
     public Stage  secondStage;
+    @SerializedName("reused")
+    @Expose
+    public Boolean reused;
+
+    public Boolean getReused() {
+        return reused;
+    }
+
+    public void setReused(Boolean reused) {
+        this.reused = reused;
+    }
 
     public LauncherConfig getConfiguration() {
         return configuration;

@@ -70,9 +70,6 @@ public class Launch extends RealmObject {
     @SerializedName("vidURLs")
     @Expose
     public RealmList<RealmStr> vidURLs = null;
-    @SerializedName("launcher")
-    @Expose
-    public RealmList<Launcher> launchers;
     @SerializedName("rocket")
     @Expose
     public Rocket rocket;
@@ -86,14 +83,6 @@ public class Launch extends RealmObject {
 
     public void setRocket(Rocket rocket) {
         this.rocket = rocket;
-    }
-
-    public RealmList<Launcher> getLaunchers() {
-        return launchers;
-    }
-
-    public void setLaunchers(RealmList<Launcher> launchers) {
-        this.launchers = launchers;
     }
 
     public Date getLastUpdate() {

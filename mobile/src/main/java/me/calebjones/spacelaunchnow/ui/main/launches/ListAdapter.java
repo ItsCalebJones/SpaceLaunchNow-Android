@@ -24,8 +24,10 @@ import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.data.LaunchStatus;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.data.models.main.Landing;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.Launcher;
+import me.calebjones.spacelaunchnow.data.models.main.Stage;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
@@ -148,39 +150,64 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             }
         }
 
-        if (launchItem.getLaunchers() != null && launchItem.getLaunchers().size() > 0){
+        //If there is only one first stage, set color and description for launcher and landing.
+        if (launchItem.getRocket().getFirstStage() != null && launchItem.getRocket().getFirstStage().size() == 1){
             holder.launcherCard.setVisibility(View.VISIBLE);
-            Launcher launcher = launchItem.getLaunchers().get(0);
-            if (launcher != null) {
-                holder.launcher.setText(launcher.getSerialNumber());
-                if (launcher.getStatus().contains("active") && launcher.isFlightProven()){
-                    holder.launcherCard.setCardBackgroundColor(mContext.getResources().getColor(R.color.material_color_green_500));
-                } else if (launcher.getStatus().contains("active") && !launcher.isFlightProven()) {
+            Stage firstStage = launchItem.getRocket().getFirstStage().first();
+            if (firstStage != null && firstStage.getLauncher() != null) {
+                Launcher launcher = firstStage.getLauncher();
+                try {
+                    if (launcher != null) {
+                        holder.launcher.setText(launcher.getSerialNumber());
+                        if (launcher.getStatus().contains("active") && launcher.isFlightProven()) {
+                            holder.launcherCard.setCardBackgroundColor(mContext.getResources().getColor(R.color.material_color_green_500));
+                        } else if (launcher.getStatus().contains("active") && !launcher.isFlightProven()) {
+                            holder.launcherCard.setCardBackgroundColor(mContext.getResources().getColor(R.color.material_color_blue_500));
+                        } else if (launcher.getStatus().contains("expended") || launcher.getStatus().contains("destroyed") || launcher.getStatus().contains("retired")) {
+                            holder.launcherCard.setCardBackgroundColor(mContext.getResources().getColor(R.color.material_color_red_500));
+                        } else {
+                            holder.launcherCard.setCardBackgroundColor(mContext.getResources().getColor(R.color.material_color_blue_grey_500));
+                        }
+                    }
+                } catch (NullPointerException exception){
+                    holder.launcherCard.setVisibility(View.GONE);
+                }
+
+                try {
+                    Landing landing = firstStage.getLanding();
+                    if (landing != null && landing.getLandingLocation() != null) {
+                        holder.landingCard.setVisibility(View.VISIBLE);
+                        holder.landingLocation.setText(landing.getLandingLocation().getAbbrev());
+                        holder.landingCard.setCardBackgroundColor(LaunchStatus.getLandingStatusColor(mContext, landing));
+                    } else {
+                        holder.landingCard.setVisibility(View.GONE);
+                    }
+                } catch (NullPointerException exception){
+                    holder.landingCard.setVisibility(View.GONE);
+                }
+            }
+
+            //If there is more then one first stage, set color and description for launcher and landing based on first but manually set text to multiple.
+        } else if (launchItem.getRocket().getFirstStage() != null && launchItem.getRocket().getFirstStage().size() > 1) {
+            holder.launcherCard.setVisibility(View.VISIBLE);
+            Stage firstStage = launchItem.getRocket().getFirstStage().first();
+            if (firstStage != null && firstStage.getLauncher() != null) {
+                Launcher launcher = firstStage.getLauncher();
+                if (launcher != null) {
+                    holder.launcher.setText("Multiple");
                     holder.launcherCard.setCardBackgroundColor(mContext.getResources().getColor(R.color.material_color_blue_500));
-                } else if (launcher.getStatus().contains("expended") || launcher.getStatus().contains("destroyed") || launcher.getStatus().contains("retired")){
-                    holder.launcherCard.setCardBackgroundColor(mContext.getResources().getColor(R.color.material_color_red_500));
-                } else {
-                    holder.launcherCard.setCardBackgroundColor(mContext.getResources().getColor(R.color.material_color_blue_grey_500));
                 }
             }
         } else {
             holder.launcherCard.setVisibility(View.GONE);
+            holder.landingCard.setVisibility(View.GONE);
         }
 
         holder.status.setText(launchItem.getStatus().getName());
         holder.statusCard.setCardBackgroundColor(LaunchStatus.getLaunchStatusColor(mContext, launchItem.getStatus().getId()));
 
-//        if (launchItem.getPad().getLanding() != null && launchItem.getLanding().getLandingLocation() != null) {
-//            holder.landingCard.setVisibility(View.VISIBLE);
-//            holder.landingLocation.setText(launchItem.getLanding().getLandingLocation().getAbbrev());
-//            holder.landingCard.setCardBackgroundColor(LaunchStatus.getLandingStatusColor(mContext, launchItem.getLanding()));
-//        } else {
-//            holder.landingCard.setVisibility(View.GONE);
-//        }
-    }
 
-    public String parseDateToMMyyyy(Date date) {
-        return new SimpleDateFormat("MMM yyyy").format(date);
+
     }
 
     @Override

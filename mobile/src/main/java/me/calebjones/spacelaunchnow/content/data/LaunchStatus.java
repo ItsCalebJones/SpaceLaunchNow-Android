@@ -68,7 +68,7 @@ public class LaunchStatus {
             if (landing.getSuccess() == null){
                 return context.getResources().getColor(R.color.material_color_blue_500);
             } else if (landing.getSuccess()) {
-                return context.getResources().getColor(R.color.material_color_green_500);
+                return context.getResources().getColor(R.color.material_color_green_800);
             } else if (!landing.getSuccess()) {
                 return context.getResources().getColor(R.color.material_color_red_500);
             } else {

@@ -160,11 +160,11 @@ public class MissionDetailFragment extends RetroFitFragment {
             }
             configureLaunchVehicle(launch.getRocket().getConfiguration());
 
-            if (launch.getLaunchers() != null && launch.getLaunchers().size() > 0){
+            if (launch.getRocket().getFirstStage() != null && launch.getRocket().getFirstStage().size() > 0){
                 coreRecyclerView.setVisibility(View.VISIBLE);
                 LinearLayoutManager layoutManager = new LinearLayoutManager(context);
                 coreRecyclerView.setLayoutManager(layoutManager);
-                CoreInformationAdapter coreInformationAdapter = new CoreInformationAdapter(launch.getLaunchers());
+                CoreInformationAdapter coreInformationAdapter = new CoreInformationAdapter(launch.getRocket().getFirstStage());
                 coreRecyclerView.setAdapter(coreInformationAdapter);
                 coreRecyclerView.setHasFixedSize(true);
             } else {

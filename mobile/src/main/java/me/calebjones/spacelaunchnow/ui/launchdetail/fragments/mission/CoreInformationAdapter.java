@@ -20,6 +20,7 @@ import butterknife.ButterKnife;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.main.Launcher;
+import me.calebjones.spacelaunchnow.data.models.main.Stage;
 import timber.log.Timber;
 
 /**
@@ -28,9 +29,9 @@ import timber.log.Timber;
 public class CoreInformationAdapter extends RecyclerView.Adapter<CoreInformationAdapter.ViewHolder> {
     public int position;
 
-    private List<Launcher> launcherList;
+    private List<Stage> launcherList;
 
-    public CoreInformationAdapter(List<Launcher> launchers) {
+    public CoreInformationAdapter(List<Stage> launchers) {
         launcherList = launchers;
         notifyDataSetChanged();
     }
@@ -46,24 +47,26 @@ public class CoreInformationAdapter extends RecyclerView.Adapter<CoreInformation
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Launcher launcher = launcherList.get(position);
-        holder.coreNumber.setText(String.format("Core #%d Information", position + 1));
-        holder.serialNumberText.setText(launcher.getSerialNumber());
-        String cap = launcher.getStatus().substring(0, 1).toUpperCase() + launcher.getStatus().substring(1);
-        holder.statusText.setText(cap);
-        holder.previousText.setText("");
-        if (launcher.isFlightProven() == null){
-            holder.flightProven.setImageResource(R.drawable.ic_question_mark);
-        } else if (launcher.isFlightProven()) {
-            holder.flightProven.setImageResource(R.drawable.ic_checkmark);
-        } else if (!launcher.isFlightProven()) {
-            holder.flightProven.setImageResource(R.drawable.ic_failed);
+        Stage stage = launcherList.get(position);
+        if (stage.getLauncher() != null) {
+            holder.coreNumber.setText(String.format("Core #%d Information", position + 1));
+            holder.serialNumberText.setText(stage.getLauncher().getSerialNumber());
+            String cap = stage.getLauncher().getStatus().substring(0, 1).toUpperCase() + stage.getLauncher().getStatus().substring(1);
+            holder.statusText.setText(cap);
+            holder.previousText.setText("");
+            if (stage.getLauncher().isFlightProven() == null) {
+                holder.flightProven.setImageResource(R.drawable.ic_question_mark);
+            } else if (stage.getLauncher().isFlightProven()) {
+                holder.flightProven.setImageResource(R.drawable.ic_checkmark);
+            } else if (!stage.getLauncher().isFlightProven()) {
+                holder.flightProven.setImageResource(R.drawable.ic_failed);
+            }
+            holder.previousText.setText(String.format("%d", stage.getLauncher().getPreviousFlights()));
+
+            holder.coreLaunches.setText(String.format("View %s Launches", stage.getLauncher().getSerialNumber()));
+
+            holder.coreLaunches.setOnClickListener(v -> Timber.v("Coming soon!"));
         }
-        holder.previousText.setText(String.format("%d",launcher.getPreviousFlights()));
-
-        holder.coreLaunches.setText(String.format("View %s Launches", launcher.getSerialNumber()));
-
-        holder.coreLaunches.setOnClickListener(v -> Timber.v("Coming soon!"));
     }
 
 

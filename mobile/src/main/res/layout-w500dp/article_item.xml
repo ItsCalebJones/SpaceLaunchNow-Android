@@ -80,11 +80,11 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:maxLines="3"
-                android:text="Article Article Goes Here Article Goes Here Article Goes Here Article Goes Here Goes Here"
-                android:textSize="30sp"
+                android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/article_image"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Article Goes Here" />
 
             <TextView
                 android:id="@+id/article_publication_date"
