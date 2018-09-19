@@ -30,6 +30,7 @@ import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecorati
 import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
 import me.calebjones.spacelaunchnow.content.data.previous.PreviousDataRepository;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.views.EndlessRecyclerViewScrollListener;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
@@ -126,7 +127,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
         super.onStop();
     }
 
-    private void updateAdapter(List<Launch> launches) {
+    private void updateAdapter(List<LaunchList> launches) {
         if (launches.size() > 0) {
             if (!statefulStateContentShow) {
                 statefulView.showContent();
@@ -151,9 +152,9 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
             nextOffset = 0;
             adapter.clear();
         }
-        previousDataRepository.getPreviousLaunches(nextOffset, searchTerm, null, null, new Callbacks.ListCallback() {
+        previousDataRepository.getPreviousLaunches(nextOffset, searchTerm, null, null, null, new Callbacks.ListCallbackMini() {
             @Override
-            public void onLaunchesLoaded(List<Launch> launches, int next) {
+            public void onLaunchesLoaded(List<LaunchList> launches, int next) {
                 Timber.v("Offset - %s", next);
                 nextOffset = next;
                 canLoadMore = nextOffset > 0;

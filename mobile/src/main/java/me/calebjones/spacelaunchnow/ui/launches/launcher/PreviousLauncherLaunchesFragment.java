@@ -22,6 +22,7 @@ import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecorati
 import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
 import me.calebjones.spacelaunchnow.content.data.previous.PreviousDataRepository;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 import me.calebjones.spacelaunchnow.ui.main.launches.ListAdapter;
 import me.calebjones.spacelaunchnow.utils.views.EndlessRecyclerViewScrollListener;
 import timber.log.Timber;
@@ -38,6 +39,7 @@ public class PreviousLauncherLaunchesFragment extends BaseFragment {
 
     private static final String SEARCH_TERM = "searchTerm";
     private static final String LSP_NAME = "lspName";
+    private static final String SERIAL_NUMBER = "serialNumber";
     private static final String LAUNCHER_ID = "launcherId";
 
     @BindView(R.id.recycler_view)
@@ -51,6 +53,7 @@ public class PreviousLauncherLaunchesFragment extends BaseFragment {
     private ListAdapter adapter;
     private String searchTerm = null;
     private String lspName = null;
+    private String serialNumber = null;
     private PreviousDataRepository previousDataRepository;
     private int nextOffset = 0;
     private EndlessRecyclerViewScrollListener scrollListener;
@@ -74,11 +77,12 @@ public class PreviousLauncherLaunchesFragment extends BaseFragment {
      * @return A new instance of fragment PreviousLauncherLaunchesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PreviousLauncherLaunchesFragment newInstance(String searchTerm, String lspName, Integer launcherId) {
+    public static PreviousLauncherLaunchesFragment newInstance(String searchTerm, String lspName, Integer launcherId, String serialNumber) {
         PreviousLauncherLaunchesFragment fragment = new PreviousLauncherLaunchesFragment();
         Bundle args = new Bundle();
         args.putString(SEARCH_TERM, searchTerm);
         args.putString(LSP_NAME, lspName);
+        args.putString(SERIAL_NUMBER, serialNumber);
         args.putInt(LAUNCHER_ID, launcherId);
         fragment.setArguments(args);
         return fragment;
@@ -91,6 +95,7 @@ public class PreviousLauncherLaunchesFragment extends BaseFragment {
             searchTerm = getArguments().getString(SEARCH_TERM);
             lspName = getArguments().getString(LSP_NAME);
             launcherId = getArguments().getInt(LAUNCHER_ID);
+            serialNumber = getArguments().getString(SERIAL_NUMBER);
         }
         context = getActivity();
         previousDataRepository = new PreviousDataRepository(context, getRealm());
@@ -149,9 +154,9 @@ public class PreviousLauncherLaunchesFragment extends BaseFragment {
             nextOffset = 0;
             adapter.clear();
         }
-        previousDataRepository.getPreviousLaunches(nextOffset, searchTerm, lspName, launcherId, new Callbacks.ListCallback() {
+        previousDataRepository.getPreviousLaunches(nextOffset, searchTerm, lspName, serialNumber, launcherId, new Callbacks.ListCallbackMini() {
             @Override
-            public void onLaunchesLoaded(List<Launch> launches, int next) {
+            public void onLaunchesLoaded(List<LaunchList> launches, int next) {
                 Timber.v("Offset - %s", next);
                 nextOffset = next;
                 canLoadMore = next > 0;
@@ -177,7 +182,7 @@ public class PreviousLauncherLaunchesFragment extends BaseFragment {
         });
     }
 
-    private void updateAdapter(List<Launch> launches) {
+    private void updateAdapter(List<LaunchList> launches) {
 
         if (launches.size() > 0) {
             if (!statefulStateContentShow) {
@@ -197,9 +202,10 @@ public class PreviousLauncherLaunchesFragment extends BaseFragment {
         scrollListener.resetState();
     }
 
-    public void onRefresh(String lspName, String searchTerm) {
+    public void onRefresh(String lspName, String searchTerm, String serialNumber) {
         this.searchTerm = searchTerm;
         this.lspName = lspName;
+        this.serialNumber = serialNumber;
         fetchData(true);
     }
 

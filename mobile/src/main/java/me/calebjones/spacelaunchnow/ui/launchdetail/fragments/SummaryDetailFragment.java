@@ -97,49 +97,13 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     private boolean youTubePlaying = false;
     private int youTubeProgress = 0;
 
-    @BindView(R.id.landing_information_subtitle)
-    TextView landingInformationSubtitle;
-    @BindView(R.id.countdown_status)
-    TextView countdownStatus;
-    @BindView(R.id.divider)
-    View divider;
-    @BindView(R.id.attempt_icon)
-    ImageView attemptIcon;
-    @BindView(R.id.success_icon)
-    ImageView successIcon;
-    @BindView(R.id.landing_type_description_expandable_layout)
-    ExpandableLayout landingTypeDescriptionExpandableLayout;
-    @BindView(R.id.landing_location_description_expandable_layout)
-    ExpandableLayout landingLocationDescriptionExpandableLayout;
-    @BindView(R.id.read_more)
-    AppCompatButton readMore;
+
 
     @BindView(R.id.youTube_viewHolder)
     LinearLayout youTubeViewHolder;
     @BindView(R.id.countdown_separator)
     View countdownSeparator;
-    @BindView(R.id.landing_information_title)
-    TextView landingInformationTitle;
-    @BindView(R.id.landing_attempt_title)
-    TextView landingAttemptTitle;
-    @BindView(R.id.landing_success_title)
-    TextView landingSuccessTitle;
-    @BindView(R.id.landing_description)
-    TextView landingDescription;
-    @BindView(R.id.landing_location_description)
-    TextView landingLocationDescription;
-    @BindView(R.id.landing_location)
-    TextView landingLocation;
-    @BindView(R.id.landing_location_title)
-    TextView landingLocationTitle;
-    @BindView(R.id.landing_type_title)
-    TextView landingTypeTitle;
-    @BindView(R.id.landing_type)
-    TextView landingType;
-    @BindView(R.id.landing_type_description)
-    TextView landingTypeDescription;
-    @BindView(R.id.landing_card)
-    View landingCard;
+
     @BindView(R.id.content_TMinus_status)
     TextView contentTMinusStatus;
     @BindView(R.id.countdown_days)
@@ -864,8 +828,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                 launchWindowText.setVisibility(View.GONE);
             }
 
-            landingCard.setVisibility(View.GONE);
-
         } catch (NullPointerException e) {
             Timber.e(e);
         }
@@ -1204,14 +1166,5 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     }
 
 
-    @OnClick(R.id.read_more)
-    public void onReadMoreClicked() {
-        if (landingLocationDescriptionExpandableLayout.isExpanded()) {
-            readMore.setText("Read More");
-        } else {
-            readMore.setText("Close");
-        }
-        landingLocationDescriptionExpandableLayout.toggle();
-        landingTypeDescriptionExpandableLayout.toggle();
-    }
+
 }

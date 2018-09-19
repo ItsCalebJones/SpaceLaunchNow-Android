@@ -24,18 +24,18 @@
             app:cardPreventCornerOverlap="true"
             app:cardUseCompatPadding="true">
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
 
+                android:id="@+id/linearLayout2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
 
                 <TextView
                     android:id="@+id/payload_status_title"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="12dp"
                     android:background="?attr/titleBarColor"
                     android:gravity="center"
                     android:paddingTop="8dp"
@@ -43,11 +43,14 @@
                     android:textAlignment="center"
                     android:textColor="@color/dark_primary_text_color_selector"
                     android:textSize="@dimen/material_typography_regular_title_text_size"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/payload_status"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="?attr/titleBarColor"
                     android:ellipsize="end"
@@ -60,12 +63,14 @@
                     android:text="@string/unknown_payload"
                     android:textAlignment="center"
                     android:textColor="@color/dark_primary_text_color_selector"
-                    android:textSize="@dimen/material_typography_regular_subheading_text_size" />
+                    android:textSize="@dimen/material_typography_regular_subheading_text_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/payload_status_title" />
 
                 <TextView
                     android:id="@+id/payload_type"
-
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:gravity="center"
@@ -77,12 +82,14 @@
                     android:text="@string/unknown_agency_type"
                     android:textAlignment="center"
                     android:textColor="?android:textColorSecondary"
-                    android:textSize="@dimen/material_typography_regular_subheading_text_size" />
+                    android:textSize="@dimen/material_typography_regular_subheading_text_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/payload_status" />
 
                 <TextView
                     android:id="@+id/payload_description"
-
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:gravity="center"
@@ -93,44 +100,48 @@
                     android:text=""
                     android:textAlignment="center"
                     android:textColor="?android:textColorSecondary"
-                    android:textSize="@dimen/material_typography_regular_subheading_text_size" />
+                    android:textSize="@dimen/material_typography_regular_subheading_text_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/payload_type" />
 
-                <LinearLayout
 
-                    android:layout_width="match_parent"
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/payload_infoButton"
+                    style="@style/Base.Widget.AppCompat.Button.Colored"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_marginBottom="@dimen/material_baseline_grid_1x"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1x"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:text="@string/info"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/payload_wikiButton"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/payload_description" />
 
-                    <android.support.v7.widget.AppCompatButton
-                        android:id="@+id/payload_infoButton"
-                        style="@style/Base.Widget.AppCompat.Button.Colored"
-                        android:layout_width="wrap_content"
-                        android:layout_height="50dp"
-                        android:layout_marginBottom="12dp"
-                        android:layout_marginLeft="12dp"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginTop="2dp"
-                        android:gravity="center"
-                        android:text="@string/info"
-                        android:textColor="@color/white"
-                        android:textSize="12sp" />
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/payload_wikiButton"
+                    style="@style/Base.Widget.AppCompat.Button.Colored"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/material_baseline_grid_1x"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:text="@string/wiki"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/payload_infoButton"
+                    app:layout_constraintTop_toBottomOf="@+id/payload_description" />
 
-                    <android.support.v7.widget.AppCompatButton
-                        android:id="@+id/payload_wikiButton"
-                        style="@style/Base.Widget.AppCompat.Button.Colored"
-                        android:layout_width="wrap_content"
-                        android:layout_height="50dp"
-                        android:layout_marginBottom="12dp"
-                        android:layout_marginLeft="12dp"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginTop="2dp"
-                        android:gravity="center"
-                        android:text="@string/wiki"
-                        android:textColor="@color/white"
-                        android:textSize="12sp" />
-                </LinearLayout>
 
-            </LinearLayout>
+            </android.support.constraint.ConstraintLayout>
 
         </android.support.v7.widget.CardView>
 
@@ -155,7 +166,6 @@
                     android:id="@+id/launch_vehicle_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="41dp"
                     android:background="?attr/titleBarColor"
                     android:gravity="center"
                     android:lines="1"
@@ -167,7 +177,6 @@
                     android:textColor="@color/dark_primary_text_color_selector"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/family_title"
                     app:layout_constraintEnd_toEndOf="@+id/launch_vehicle"
                     app:layout_constraintStart_toStartOf="@+id/launch_vehicle" />
 
@@ -188,6 +197,7 @@
                     android:textAlignment="center"
                     android:textColor="@color/dark_primary_text_color_selector"
                     android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_title" />
 
@@ -213,6 +223,7 @@
                     android:layout_height="0dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
                     android:ellipsize="end"
                     android:gravity="start"
                     android:maxLines="2"
@@ -224,7 +235,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@+id/family_title"
-                    app:layout_constraintTop_toTopOf="@+id/family_title"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle"
                     app:layout_constraintVertical_bias="0.0"
                     tools:text="Falcon" />
 
@@ -432,34 +443,40 @@
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/vehicle_infoButton"
                     style="@style/Base.Widget.AppCompat.Button.Colored"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="@dimen/material_baseline_grid_7x"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1x"
                     android:layout_marginTop="8dp"
                     android:gravity="center"
                     android:text="@string/info"
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/vehicle_wikiButton"
+                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_thrust" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/vehicle_wikiButton"
                     style="@style/Base.Widget.AppCompat.Button.Colored"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="@dimen/material_baseline_grid_7x"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1x"
                     android:layout_marginTop="8dp"
                     android:gravity="center"
                     android:text="@string/wiki"
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/vehicle_infoButton"
                     app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_thrust" />
+
 
                 <android.support.constraint.Group
                     android:id="@+id/vehicle_spec_view"
@@ -477,25 +494,26 @@
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/launcher_launches"
-                    style="@style/Base.Widget.AppCompat.Button.Colored"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                    android:theme="@style/PrimaryButtonTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/material_card_edge_margin"
                     android:gravity="center"
                     android:padding="@dimen/material_card_edge_margin"
                     android:text="@string/view_more_launches"
-                    android:textColor="@color/white"
                     android:textSize="12sp"
                     android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/vehicle_infoButton"/>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="parent" />
 
             </android.support.constraint.ConstraintLayout>
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/coreRecyclerView"
+            android:layout_margin="@dimen/material_card_edge_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp" />

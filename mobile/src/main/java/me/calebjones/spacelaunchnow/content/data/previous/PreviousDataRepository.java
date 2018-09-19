@@ -17,6 +17,7 @@ import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Result;
 import me.calebjones.spacelaunchnow.data.models.UpdateRecord;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import retrofit2.Call;
@@ -42,17 +43,17 @@ public class PreviousDataRepository {
     }
 
     @UiThread
-    public void getPreviousLaunches(int count, String search, String lspName, Integer launchId, Callbacks.ListCallback launchCallback) {
-        getPreviousLaunchesFromNetwork(count, search, lspName, launchId, launchCallback);
+    public void getPreviousLaunches(int count, String search, String lspName, String serialNumber, Integer launchId, Callbacks.ListCallbackMini launchCallback) {
+        getPreviousLaunchesFromNetwork(count, search, lspName, serialNumber, launchId,  launchCallback);
     }
 
 
-    private void getPreviousLaunchesFromNetwork(int count, String search, String lspName, Integer launcherId, Callbacks.ListCallback callback) {
+    private void getPreviousLaunchesFromNetwork(int count, String search, String lspName, String serialNumber, Integer launcherId, Callbacks.ListCallbackMini callback) {
 
         callback.onNetworkStateChanged(true);
-        dataLoader.getPreviousLaunches(30, count, search, lspName, launcherId, new Callbacks.ListNetworkCallback() {
+        dataLoader.getPreviousLaunches(30, count, search, lspName, serialNumber, launcherId, new Callbacks.ListNetworkCallbackMini() {
             @Override
-            public void onSuccess(List<Launch> launches, int next) {
+            public void onSuccess(List<LaunchList> launches, int next) {
                 callback.onNetworkStateChanged(false);
                 callback.onLaunchesLoaded(launches, next);
             }

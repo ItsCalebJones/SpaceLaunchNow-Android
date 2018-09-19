@@ -96,6 +96,7 @@
         <item name="colorAccent">@color/colorPrimary</item>
     </style>
 
+
     <style name="ToolBarWithNavigationBack" parent="AppTheme.AppBarOverlay">
         <item name="navigationIcon">@drawable/ic_arrow_back</item>
     </style>

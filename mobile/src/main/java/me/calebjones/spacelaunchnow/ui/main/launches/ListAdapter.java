@@ -26,6 +26,7 @@ import me.calebjones.spacelaunchnow.content.data.LaunchStatus;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.main.Landing;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 import me.calebjones.spacelaunchnow.data.models.main.Launcher;
 import me.calebjones.spacelaunchnow.data.models.main.Stage;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
@@ -37,7 +38,7 @@ import timber.log.Timber;
  */
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     public int position;
-    private RealmList<Launch> launchList;
+    private RealmList<LaunchList> launchList;
     private Context mContext;
     private Calendar rightNow;
     private SharedPreferences sharedPref;
@@ -69,7 +70,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         night = sharedPreference.isNightModeActive(mContext);
     }
 
-    public void addItems(List<Launch> launchList) {
+    public void addItems(List<LaunchList> launchList) {
 
         if (this.launchList != null) {
             this.launchList.addAll(launchList);
@@ -94,7 +95,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        final Launch launchItem = launchList.get(i);
+        final LaunchList launchItem = launchList.get(i);
 
         String[] title;
         String launchDate;
@@ -103,7 +104,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
         //Retrieve missionType
         if (launchItem.getMission() != null) {
-            Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMission().getTypeName(), night);
+            Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMissionType(), night);
         } else {
             if (night) {
                 holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
@@ -123,8 +124,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         }
 
         //If pad and agency exist add it to location, otherwise get whats always available
-        if (launchItem.getPad().getLocation() != null) {
-            holder.location.setText(launchItem.getPad().getLocation().getName());
+        if (launchItem.getLocation() != null) {
+            holder.location.setText(launchItem.getLocation());
         } else {
             holder.location.setText("Click for more information.");
         }
@@ -138,75 +139,36 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
                 } else {
                     holder.title.setText(launchItem.getName());
                     if (launchItem.getMission() != null) {
-                        holder.title.setText(launchItem.getMission().getName());
+                        holder.title.setText(launchItem.getMission());
                     }
                 }
             } catch (ArrayIndexOutOfBoundsException exception) {
                 holder.title.setText(launchItem.getName());
                 if (launchItem.getMission() != null) {
-                    holder.title.setText(launchItem.getMission().getName());
+                    holder.title.setText(launchItem.getMission());
                 }
 
             }
         }
 
-        //If there is only one first stage, set color and description for launcher and landing.
-        if (launchItem.getRocket().getFirstStage() != null && launchItem.getRocket().getFirstStage().size() == 1){
-            holder.launcherCard.setVisibility(View.VISIBLE);
-            Stage firstStage = launchItem.getRocket().getFirstStage().first();
-            if (firstStage != null && firstStage.getLauncher() != null) {
-                Launcher launcher = firstStage.getLauncher();
-                try {
-                    if (launcher != null) {
-                        holder.launcher.setText(launcher.getSerialNumber());
-                        if (launcher.getStatus().contains("active") && launcher.isFlightProven()) {
-                            holder.launcherCard.setCardBackgroundColor(mContext.getResources().getColor(R.color.material_color_green_500));
-                        } else if (launcher.getStatus().contains("active") && !launcher.isFlightProven()) {
-                            holder.launcherCard.setCardBackgroundColor(mContext.getResources().getColor(R.color.material_color_blue_500));
-                        } else if (launcher.getStatus().contains("expended") || launcher.getStatus().contains("destroyed") || launcher.getStatus().contains("retired")) {
-                            holder.launcherCard.setCardBackgroundColor(mContext.getResources().getColor(R.color.material_color_red_500));
-                        } else {
-                            holder.launcherCard.setCardBackgroundColor(mContext.getResources().getColor(R.color.material_color_blue_grey_500));
-                        }
-                    }
-                } catch (NullPointerException exception){
-                    holder.launcherCard.setVisibility(View.GONE);
-                }
+        if (launchItem.getLanding() != null) {
+            holder.landingCard.setVisibility(View.VISIBLE);
+            holder.landingLocation.setText(launchItem.getLanding());
+            holder.landingCard.setCardBackgroundColor(mContext.getResources().getColor(R.color.material_color_blue_500));
+        } else {
+            holder.landingCard.setVisibility(View.GONE);
+        }
 
-                try {
-                    Landing landing = firstStage.getLanding();
-                    if (landing != null && landing.getLandingLocation() != null) {
-                        holder.landingCard.setVisibility(View.VISIBLE);
-                        holder.landingLocation.setText(landing.getLandingLocation().getAbbrev());
-                        holder.landingCard.setCardBackgroundColor(LaunchStatus.getLandingStatusColor(mContext, landing));
-                    } else {
-                        holder.landingCard.setVisibility(View.GONE);
-                    }
-                } catch (NullPointerException exception){
-                    holder.landingCard.setVisibility(View.GONE);
-                }
-            }
-
-            //If there is more then one first stage, set color and description for launcher and landing based on first but manually set text to multiple.
-        } else if (launchItem.getRocket().getFirstStage() != null && launchItem.getRocket().getFirstStage().size() > 1) {
+        if (launchItem.getLauncher() != null) {
             holder.launcherCard.setVisibility(View.VISIBLE);
-            Stage firstStage = launchItem.getRocket().getFirstStage().first();
-            if (firstStage != null && firstStage.getLauncher() != null) {
-                Launcher launcher = firstStage.getLauncher();
-                if (launcher != null) {
-                    holder.launcher.setText("Multiple");
-                    holder.launcherCard.setCardBackgroundColor(mContext.getResources().getColor(R.color.material_color_blue_500));
-                }
-            }
+            holder.launcher.setText(launchItem.getLauncher());
+            holder.launcherCard.setCardBackgroundColor(mContext.getResources().getColor(R.color.material_color_blue_500));
         } else {
             holder.launcherCard.setVisibility(View.GONE);
-            holder.landingCard.setVisibility(View.GONE);
         }
 
         holder.status.setText(launchItem.getStatus().getName());
         holder.statusCard.setCardBackgroundColor(LaunchStatus.getLaunchStatusColor(mContext, launchItem.getStatus().getId()));
-
-
 
     }
 
@@ -254,7 +216,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         //React to click events.
         @Override
         public void onClick(View v) {
-            final Launch launch = launchList.get(getAdapterPosition());
+            final LaunchList launch = launchList.get(getAdapterPosition());
 
             Intent intent = new Intent(mContext, LaunchDetailActivity.class);
             intent.putExtra("TYPE", "launch");
@@ -263,13 +225,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         }
     }
 
-    public void animateTo(List<Launch> models) {
+    public void animateTo(List<LaunchList> models) {
         applyAndAnimateRemovals(models);
         applyAndAnimateAdditions(models);
         applyAndAnimateMovedItems(models);
     }
 
-    private void applyAndAnimateRemovals(List<Launch> newModels) {
+    private void applyAndAnimateRemovals(List<LaunchList> newModels) {
         for (int i = launchList.size() - 1; i >= 0; i--) {
             if (!newModels.contains(launchList.get(i))) {
                 removeItem(i);
@@ -277,18 +239,18 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         }
     }
 
-    private void applyAndAnimateAdditions(List<Launch> newModels) {
+    private void applyAndAnimateAdditions(List<LaunchList> newModels) {
         for (int i = 0, count = newModels.size(); i < count; i++) {
-            final Launch model = newModels.get(i);
+            final LaunchList model = newModels.get(i);
             if (!launchList.contains(model)) {
                 addItem(i, model);
             }
         }
     }
 
-    private void applyAndAnimateMovedItems(List<Launch> newModels) {
+    private void applyAndAnimateMovedItems(List<LaunchList> newModels) {
         for (int toPosition = newModels.size() - 1; toPosition >= 0; toPosition--) {
-            final Launch model = newModels.get(toPosition);
+            final LaunchList model = newModels.get(toPosition);
             final int fromPosition = launchList.indexOf(model);
             if (fromPosition >= 0 && fromPosition != toPosition) {
                 moveItem(fromPosition, toPosition);
@@ -296,13 +258,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         }
     }
 
-    public Launch removeItem(int position) {
-        Launch model = launchList.remove(position);
+    public LaunchList removeItem(int position) {
+        LaunchList model = launchList.remove(position);
         notifyItemRemoved(position);
         return model;
     }
 
-    public void addItem(int position, Launch model) {
+    public void addItem(int position, LaunchList model) {
         launchList.add(position, model);
         notifyItemInserted(position);
     }

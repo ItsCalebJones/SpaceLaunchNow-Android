@@ -10,6 +10,7 @@ import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Result;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchListResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,13 +31,13 @@ public class UpcomingDataLoader {
         return dataSaver;
     }
 
-    public void getUpcomingLaunches(int limit, int offset, String search, String lspName, Integer launchId, Callbacks.ListNetworkCallback networkCallback) {
-        Timber.i("Running getUpcomingLaunches");
-        DataClient.getInstance().getUpcomingLaunches(limit, offset, search, lspName, launchId, new Callback<LaunchResponse>() {
+    public void getUpcomingLaunchesList(int limit, int offset, String search, String lspName, String serialNumber, Integer launchId, Callbacks.ListNetworkCallbackMini networkCallback) {
+        Timber.i("Running getUpcomingLaunchesList");
+        DataClient.getInstance().getUpcomingLaunchesMini(limit, offset, search, lspName, serialNumber, launchId, new Callback<LaunchListResponse>() {
             @Override
-            public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
+            public void onResponse(Call<LaunchListResponse> call, Response<LaunchListResponse> response) {
                 if (response.isSuccessful()) {
-                    LaunchResponse launchResponse = response.body();
+                    LaunchListResponse launchResponse = response.body();
 
                     Timber.v("UpcomingLaunches Count: %s", launchResponse.getCount());
 
@@ -57,7 +58,7 @@ public class UpcomingDataLoader {
             }
 
             @Override
-            public void onFailure(Call<LaunchResponse> call, Throwable t) {
+            public void onFailure(Call<LaunchListResponse> call, Throwable t) {
                 networkCallback.onFailure(t);
                 dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, false, call, t.getLocalizedMessage()));
             }

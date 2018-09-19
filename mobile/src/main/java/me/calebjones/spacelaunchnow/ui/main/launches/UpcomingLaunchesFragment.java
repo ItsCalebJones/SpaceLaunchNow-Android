@@ -42,6 +42,7 @@ import me.calebjones.spacelaunchnow.content.data.upcoming.UpcomingDataRepository
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.views.EndlessRecyclerViewScrollListener;
@@ -138,7 +139,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
         super.onStop();
     }
 
-    private void updateAdapter(List<Launch> launches) {
+    private void updateAdapter(List<LaunchList> launches) {
         if (launches.size() > 0) {
             if (!statefulStateContentShow) {
                 statefulView.showContent();
@@ -163,9 +164,9 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
             nextOffset = 0;
             adapter.clear();
         }
-        upcomingDataRepository.getUpcomingLaunches(nextOffset, searchTerm, null, null, new Callbacks.ListCallback() {
+        upcomingDataRepository.getUpcomingLaunches(nextOffset, searchTerm, null, null,null, new Callbacks.ListCallbackMini() {
             @Override
-            public void onLaunchesLoaded(List<Launch> launches, int next) {
+            public void onLaunchesLoaded(List<LaunchList> launches, int next) {
                 Timber.v("Offset - %s", next);
                 nextOffset = next;
                 canLoadMore = next > 0;

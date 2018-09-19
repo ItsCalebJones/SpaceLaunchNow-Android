@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    android:textAlignment="center"
     android:layout_gravity="center"
+    android:textAlignment="center"
     android:transitionGroup="true"
     tools:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -17,10 +17,10 @@
         <android.support.v7.widget.CardView
             android:layout_width="@dimen/max_width"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_margin="@dimen/material_card_edge_margin"
             android:animateLayoutChanges="true"
             android:padding="@dimen/material_card_edge_margin"
-            android:layout_gravity="center"
             app:cardCornerRadius="@dimen/card_view_corner_radius"
             app:cardElevation="@dimen/material_card_elevation_resting"
             app:cardPreventCornerOverlap="true"
@@ -139,9 +139,9 @@
         <android.support.v7.widget.CardView
             android:layout_width="@dimen/max_width"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_margin="@dimen/material_card_edge_margin"
             android:animateLayoutChanges="true"
-            android:layout_gravity="center"
             android:padding="@dimen/material_card_edge_margin"
             app:cardCornerRadius="@dimen/card_view_corner_radius"
             app:cardElevation="@dimen/material_card_elevation_resting"
@@ -157,8 +157,7 @@
                 <TextView
                     android:id="@+id/launch_vehicle_title"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="41dp"
+                    android:layout_height="35dp"
                     android:background="?attr/titleBarColor"
                     android:gravity="center"
                     android:lines="1"
@@ -170,9 +169,9 @@
                     android:textColor="@color/dark_primary_text_color_selector"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/family_title"
                     app:layout_constraintEnd_toEndOf="@+id/launch_vehicle"
-                    app:layout_constraintStart_toStartOf="@+id/launch_vehicle" />
+                    app:layout_constraintStart_toStartOf="@+id/launch_vehicle"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/launch_vehicle"
@@ -201,6 +200,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
                     android:ellipsize="end"
                     android:gravity="start"
                     android:maxLines="2"
@@ -208,8 +208,8 @@
                     android:textAppearance="@style/MaterialTypography.Regular.Title"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="14sp"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/launch_family"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle" />
 
                 <TextView
                     android:id="@+id/launch_family"
@@ -303,7 +303,7 @@
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="@+id/view"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/coreRecyclerView" />
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_description" />
 
                 <View
 
@@ -438,14 +438,12 @@
                     style="@style/Base.Widget.AppCompat.Button.Colored"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:gravity="center"
                     android:text="@string/info"
                     android:textColor="@color/white"
                     android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_thrust" />
 
@@ -454,14 +452,12 @@
                     style="@style/Base.Widget.AppCompat.Button.Colored"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:gravity="center"
                     android:text="@string/wiki"
                     android:textColor="@color/white"
                     android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/vehicle_infoButton"
                     app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_thrust" />
 
@@ -479,31 +475,33 @@
                     android:visibility="visible"
                     app:constraint_referenced_ids="core_information,view2,serial_number_title,serial_number_text,status_title,status_text,previous_title,previous_text,flight_proven,flight_proven_title" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/coreRecyclerView"
-                    android:layout_width="0dp"
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/launcher_launches"
+                    style="@style/Base.Widget.AppCompat.Button.Colored"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_description" />
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/material_card_edge_margin"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center"
+                    android:padding="@dimen/material_card_edge_margin"
+                    android:text="@string/view_more_launches"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/vehicle_wikiButton" />
 
             </android.support.constraint.ConstraintLayout>
         </android.support.v7.widget.CardView>
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/launcher_launches"
-            style="@style/Base.Widget.AppCompat.Button.Colored"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/coreRecyclerView"
             android:layout_width="@dimen/max_width"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="@dimen/material_card_edge_margin"
-            android:gravity="center"
-            android:padding="@dimen/material_card_edge_margin"
-            android:text="@string/view_more_launches"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            android:visibility="visible" />
+            android:layout_marginTop="8dp" />
 
     </LinearLayout>
 

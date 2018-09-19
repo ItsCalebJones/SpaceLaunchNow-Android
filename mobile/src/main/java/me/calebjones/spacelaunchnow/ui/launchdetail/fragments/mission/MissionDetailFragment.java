@@ -13,9 +13,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+
+import net.cachapa.expandablelayout.ExpandableLayout;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -23,6 +26,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.RetroFitFragment;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
@@ -164,8 +168,8 @@ public class MissionDetailFragment extends RetroFitFragment {
                 coreRecyclerView.setVisibility(View.VISIBLE);
                 LinearLayoutManager layoutManager = new LinearLayoutManager(context);
                 coreRecyclerView.setLayoutManager(layoutManager);
-                CoreInformationAdapter coreInformationAdapter = new CoreInformationAdapter(launch.getRocket().getFirstStage());
-                coreRecyclerView.setAdapter(coreInformationAdapter);
+                StageInformationAdapter stageInformationAdapter = new StageInformationAdapter(launch.getRocket().getFirstStage(), context);
+                coreRecyclerView.setAdapter(stageInformationAdapter);
                 coreRecyclerView.setHasFixedSize(true);
             } else {
                 coreRecyclerView.setVisibility(View.GONE);
@@ -265,4 +269,5 @@ public class MissionDetailFragment extends RetroFitFragment {
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
+
 }

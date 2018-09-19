@@ -24,6 +24,7 @@ import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
 import me.calebjones.spacelaunchnow.content.data.upcoming.UpcomingDataRepository;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 import me.calebjones.spacelaunchnow.ui.main.launches.ListAdapter;
 import me.calebjones.spacelaunchnow.utils.views.EndlessRecyclerViewScrollListener;
 import timber.log.Timber;
@@ -143,9 +144,9 @@ public class UpcomingAgencyLaunchesFragment extends BaseFragment {
             nextOffset = 0;
             adapter.clear();
         }
-        upcomingDataRepository.getUpcomingLaunches(nextOffset, searchTerm, lspName, null, new Callbacks.ListCallback() {
+        upcomingDataRepository.getUpcomingLaunches(nextOffset, searchTerm, lspName, null, null, new Callbacks.ListCallbackMini() {
             @Override
-            public void onLaunchesLoaded(List<Launch> launches, int next) {
+            public void onLaunchesLoaded(List<LaunchList> launches, int next) {
                 Timber.v("Offset - %s", next);
                 nextOffset = next;
                 canLoadMore = next > 0;
@@ -170,7 +171,7 @@ public class UpcomingAgencyLaunchesFragment extends BaseFragment {
         });
     }
 
-    private void updateAdapter(List<Launch> launches) {
+    private void updateAdapter(List<LaunchList> launches) {
 
         if (launches.size() > 0) {
             if (!statefulStateContentShow) {

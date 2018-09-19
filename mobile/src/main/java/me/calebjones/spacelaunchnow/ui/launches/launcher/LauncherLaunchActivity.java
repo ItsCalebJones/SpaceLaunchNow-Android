@@ -68,6 +68,7 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
     private String searchTerm = null;
     private String lspName = null;
     private String launcherName = null;
+    private String serialNumber = null;
     private Integer launcherId = null;
 
 
@@ -82,6 +83,7 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
             lspName = extras.getString("lspName");
             launcherName = extras.getString("launcherName");
             launcherId = extras.getInt("launcherId");
+            serialNumber = extras.getString("serialNumber");
         }
         setTitle();
 
@@ -159,15 +161,16 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
     public void onRefresh() {
         lspName = null;
         searchTerm = null;
+        serialNumber = null;
         refresh();
     }
 
     private void refresh() {
         if (upcomingFragment != null) {
-            upcomingFragment.onRefresh(lspName, searchTerm);
+            upcomingFragment.onRefresh(lspName, searchTerm, serialNumber);
         }
         if (previousFragment != null) {
-            previousFragment.onRefresh(lspName, searchTerm);
+            previousFragment.onRefresh(lspName, searchTerm, serialNumber);
         }
         setTitle();
     }
@@ -175,6 +178,8 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
     private void setTitle() {
         if (launcherName != null) {
             toolbar.setTitle(launcherName);
+        } else if (serialNumber != null) {
+            toolbar.setTitle(serialNumber);
         } else {
             toolbar.setTitle("Launches");
         }
@@ -210,9 +215,9 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
 
             switch (position) {
                 case 0:
-                    return UpcomingLauncherLaunchesFragment.newInstance(searchTerm, lspName, launcherId);
+                    return UpcomingLauncherLaunchesFragment.newInstance(searchTerm, lspName, launcherId, serialNumber);
                 case 1:
-                    return PreviousLauncherLaunchesFragment.newInstance(searchTerm, lspName, launcherId);
+                    return PreviousLauncherLaunchesFragment.newInstance(searchTerm, lspName, launcherId, serialNumber);
                 default:
                     return null;
             }

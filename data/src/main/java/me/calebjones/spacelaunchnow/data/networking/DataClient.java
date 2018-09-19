@@ -3,6 +3,7 @@ package me.calebjones.spacelaunchnow.data.networking;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.AgencyResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchListResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
 import retrofit2.Call;
@@ -91,8 +92,24 @@ public class DataClient {
         return call;
     }
 
+    public Call<LaunchListResponse> getUpcomingLaunchesMini(int limit, int offset, String search, String lspName, String serialNumber, Integer launchId, Callback<LaunchListResponse> callback) {
+        Call<LaunchListResponse> call = spaceLaunchNowService.getUpcomingLaunchesMini(limit, offset, "list", search, lspName, serialNumber, launchId);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
     public Call<LaunchResponse> getPreviousLaunches(int limit, int offset, String search, String lspName, Integer launchId, Callback<LaunchResponse> callback) {
         Call<LaunchResponse> call = spaceLaunchNowService.getPreviousLaunches(limit, offset, "detailed", search, lspName, launchId);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<LaunchListResponse> getPreviousLaunchesMini(int limit, int offset, String search, String lspName, String serialNumber, Integer launchId, Callback<LaunchListResponse> callback) {
+        Call<LaunchListResponse> call = spaceLaunchNowService.getPreviousLaunchesMini(limit, offset, "list", search, lspName, serialNumber, launchId);
 
         call.enqueue(callback);
 
