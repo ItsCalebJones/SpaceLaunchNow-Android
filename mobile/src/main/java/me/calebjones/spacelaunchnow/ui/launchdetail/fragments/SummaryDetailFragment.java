@@ -113,6 +113,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     ExpandableLayout landingLocationDescriptionExpandableLayout;
     @BindView(R.id.read_more)
     AppCompatButton readMore;
+
     @BindView(R.id.youTube_viewHolder)
     LinearLayout youTubeViewHolder;
     @BindView(R.id.countdown_separator)

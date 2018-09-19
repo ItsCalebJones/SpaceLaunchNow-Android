@@ -203,15 +203,6 @@
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
-        <include
-            android:id="@+id/landing_card"
-            layout="@layout/landing_information"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/material_card_edge_margin"
-            android:animateLayoutChanges="true"
-            android:padding="@dimen/material_card_edge_margin"/>
-
         <android.support.v7.widget.CardView
             android:id="@+id/weather_card"
             android:layout_width="match_parent"

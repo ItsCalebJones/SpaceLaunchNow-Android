@@ -1,280 +1,274 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:cardCornerRadius="@dimen/card_view_corner_radius"
-    app:cardElevation="@dimen/material_card_elevation_resting"
-    app:cardPreventCornerOverlap="true"
-    app:cardUseCompatPadding="true">
+    android:layout_height="wrap_content">
 
-    <android.support.constraint.ConstraintLayout
+
+    <TextView
+        android:id="@+id/landing_information_title"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="?attr/titleBarColor"
+        android:gravity="center"
+        android:paddingBottom="@dimen/material_baseline_grid_1x"
+        android:text="Landing Location Information"
+        android:textAlignment="center"
+        android:textColor="@color/dark_primary_text_color_selector"
+        android:textSize="@dimen/material_typography_regular_title_text_size"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/landing_information_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="?attr/titleBarColor"
+        android:gravity="center"
+        android:paddingBottom="@dimen/material_baseline_grid_1x"
+        android:text="Unknown"
+        android:textAlignment="center"
+        android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+        android:textColor="@color/dark_primary_text_color_selector"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landing_information_title" />
+
+    <TextView
+        android:id="@+id/landing_attempt_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:paddingBottom="8dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="12dp"
+        android:paddingTop="4dp"
+        android:singleLine="false"
+        android:text="Attempt:"
+        android:textAlignment="viewStart"
+        android:textAppearance="@style/MaterialTypography.Regular.Title"
+        android:textColor="?android:textColorSecondary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landing_information_subtitle"
+        tools:text="Attempt: " />
+
+    <ImageView
+        android:id="@+id/attempt_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="39dp"
+        android:src="@drawable/ic_failed"
+        app:layout_constraintBottom_toBottomOf="@+id/landing_attempt_title"
+        app:layout_constraintStart_toEndOf="@+id/landing_attempt_title"
+        app:layout_constraintTop_toTopOf="@+id/landing_attempt_title"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/landing_success_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:paddingBottom="8dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="4dp"
+        android:singleLine="false"
+        android:text="Success:"
+        android:textAlignment="viewStart"
+        android:textAppearance="@style/MaterialTypography.Regular.Title"
+        android:textColor="?android:textColorSecondary"
+        app:layout_constraintEnd_toEndOf="@+id/landing_attempt_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landing_attempt_title"
+        tools:text="Success:" />
+
+    <ImageView
+        android:id="@+id/success_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="39dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/ic_question_mark"
+        app:layout_constraintBottom_toBottomOf="@+id/landing_success_title"
+        app:layout_constraintStart_toStartOf="@+id/attempt_icon"
+        app:layout_constraintTop_toTopOf="@+id/landing_success_title"
+        app:layout_constraintVertical_bias="0.0" />
+
+
+    <TextView
+        android:id="@+id/landing_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:padding="4dp"
+        android:text=""
+        android:textAppearance="@style/MaterialTypography.Regular.Body1"
+        android:textColor="?android:textColorSecondary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landing_success_title"
+        tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent condimentum aliquet diam eget efficitur. Duis quam felis, ultricies vitae lacus et, convallis pretium enim. Nunc nec sapien ac dolor aliquam elementum. Curabitur mollis, tellus eget semper tincidunt, elit quam feugiat arcu, eget luctus ligula massa ut nisi. Nam imperdiet mi sit amet iaculis tincidunt. Morbi egestas risus in nisi rutrum rhoncus. Fusce finibus dui sed nibh mollis commodo. Cras ac commodo magna, ac mollis ex. Etiam rhoncus purus eget dui ornare, ac dignissim magna mattis. Sed quis nisl condimentum, ullamcorper elit a, vehicula lorem. Nunc mi neque, viverra sit amet vehicula vitae, porttitor vehicula arcu. Sed non dapibus tortor, in aliquet est." />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="@dimen/material_baseline_grid_2x"
+        android:layout_marginStart="@dimen/material_baseline_grid_2x"
+        android:layout_marginTop="16dp"
+        android:background="@color/View_Separator"
+        android:padding="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/landing_type_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landing_description" />
+
+    <TextView
+        android:id="@+id/landing_type_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/material_baseline_grid_2x"
+        android:layout_marginTop="8dp"
+        android:text="Type:"
+        android:textAppearance="@style/MaterialTypography.Regular.Title"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+    <TextView
+        android:id="@+id/landing_type"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/material_baseline_grid_2x"
+        android:layout_marginStart="8dp"
+        android:ellipsize="end"
+        android:singleLine="false"
+        android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+        android:textColor="?android:textColorSecondary"
+        app:layout_constraintBottom_toBottomOf="@+id/landing_type_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/landing_type_title"
+        app:layout_constraintTop_toTopOf="@+id/landing_type_title"
+        tools:text="Autonomous Spaceport Drone Ship (ASDS)" />
+
+    <net.cachapa.expandablelayout.ExpandableLayout
+        android:id="@+id/landing_type_description_expandable_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:el_duration="1000"
+        app:el_expanded="false"
+        app:el_parallax="0.5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landing_type">
 
         <TextView
-            android:id="@+id/landing_information_title"
+            android:id="@+id/landing_type_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="?attr/titleBarColor"
-            android:gravity="center"
-            android:paddingBottom="@dimen/material_baseline_grid_1x"
-            android:text="Landing Location Information"
-            android:textAlignment="center"
-            android:textColor="@color/dark_primary_text_color_selector"
-            android:textSize="@dimen/material_typography_regular_title_text_size"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/landing_information_subtitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="?attr/titleBarColor"
-            android:gravity="center"
-            android:paddingBottom="@dimen/material_baseline_grid_1x"
-            android:text="Unknown"
-            android:textAlignment="center"
-            android:textColor="@color/dark_primary_text_color_selector"
-            android:textAppearance="@style/MaterialTypography.Regular.Subheading"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/landing_information_title" />
-
-        <TextView
-            android:id="@+id/landing_attempt_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginEnd="@dimen/material_baseline_grid_2x"
+            android:layout_marginStart="@dimen/material_baseline_grid_2x"
+            android:layout_marginTop="@dimen/material_baseline_grid_1x"
             android:ellipsize="end"
-            android:gravity="start"
-            android:paddingBottom="8dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="12dp"
-            android:paddingTop="4dp"
+            android:paddingBottom="@dimen/material_card_supporting_text_padding_bottom"
+            android:paddingLeft="@dimen/material_baseline_grid_1x"
+            android:paddingRight="@dimen/material_baseline_grid_1x"
             android:singleLine="false"
-            android:text="Attempt:"
-            android:textAlignment="viewStart"
-            android:textAppearance="@style/MaterialTypography.Regular.Title"
-            android:textColor="?android:textColorSecondary"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/landing_information_subtitle"
-            tools:text="Attempt: " />
-
-        <ImageView
-            android:id="@+id/attempt_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="39dp"
-            android:src="@drawable/ic_failed"
-            app:layout_constraintBottom_toBottomOf="@+id/landing_attempt_title"
-            app:layout_constraintStart_toEndOf="@+id/landing_attempt_title"
-            app:layout_constraintTop_toTopOf="@+id/landing_attempt_title"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/landing_success_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:ellipsize="end"
-            android:gravity="start"
-            android:paddingBottom="8dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingTop="4dp"
-            android:singleLine="false"
-            android:text="Success:"
-            android:textAlignment="viewStart"
-            android:textAppearance="@style/MaterialTypography.Regular.Title"
-            android:textColor="?android:textColorSecondary"
-            app:layout_constraintEnd_toEndOf="@+id/landing_attempt_title"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/landing_attempt_title"
-            tools:text="Success:" />
-
-        <ImageView
-            android:id="@+id/success_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="39dp"
-            android:layout_marginBottom="8dp"
-            android:src="@drawable/ic_question_mark"
-            app:layout_constraintBottom_toBottomOf="@+id/landing_success_title"
-            app:layout_constraintStart_toStartOf="@+id/attempt_icon"
-            app:layout_constraintTop_toTopOf="@+id/landing_success_title"
-            app:layout_constraintVertical_bias="0.0" />
-
-
-        <TextView
-            android:id="@+id/landing_description"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:padding="4dp"
             android:text=""
             android:textAppearance="@style/MaterialTypography.Regular.Body1"
             android:textColor="?android:textColorSecondary"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/landing_success_title"
-            tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent condimentum aliquet diam eget efficitur. Duis quam felis, ultricies vitae lacus et, convallis pretium enim. Nunc nec sapien ac dolor aliquam elementum. Curabitur mollis, tellus eget semper tincidunt, elit quam feugiat arcu, eget luctus ligula massa ut nisi. Nam imperdiet mi sit amet iaculis tincidunt. Morbi egestas risus in nisi rutrum rhoncus. Fusce finibus dui sed nibh mollis commodo. Cras ac commodo magna, ac mollis ex. Etiam rhoncus purus eget dui ornare, ac dignissim magna mattis. Sed quis nisl condimentum, ullamcorper elit a, vehicula lorem. Nunc mi neque, viverra sit amet vehicula vitae, porttitor vehicula arcu. Sed non dapibus tortor, in aliquet est." />
 
-        <View
-            android:id="@+id/divider"
+            tools:text="An autonomous spaceport drone ship parked a few hundred km downrange." />
+    </net.cachapa.expandablelayout.ExpandableLayout>
+
+    <TextView
+        android:id="@+id/landing_location_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/material_baseline_grid_2x"
+        android:layout_marginTop="8dp"
+        android:text="Location:"
+        android:textAppearance="@style/MaterialTypography.Regular.Title"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landing_type_description_expandable_layout" />
+
+    <TextView
+        android:id="@+id/landing_location"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/material_baseline_grid_2x"
+        android:layout_marginStart="8dp"
+        android:ellipsize="end"
+        android:singleLine="false"
+        android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+        android:textColor="?android:textColorSecondary"
+        app:layout_constraintBottom_toBottomOf="@+id/landing_location_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/landing_location_title"
+        app:layout_constraintTop_toTopOf="@+id/landing_location_title"
+        tools:text="Of Course I Still Love You (OCISLY)" />
+
+    <net.cachapa.expandablelayout.ExpandableLayout
+        android:id="@+id/landing_location_description_expandable_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:el_duration="1000"
+        app:el_expanded="false"
+        app:el_parallax="0.5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landing_location">
+
+        <TextView
+            android:id="@+id/landing_location_description"
+
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginEnd="@dimen/material_baseline_grid_2x"
-            android:layout_marginStart="@dimen/material_baseline_grid_2x"
-            android:layout_marginTop="16dp"
-            android:background="@color/View_Separator"
-            android:padding="12dp"
-            app:layout_constraintBottom_toTopOf="@+id/landing_type_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/landing_description" />
-
-        <TextView
-            android:id="@+id/landing_type_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/material_baseline_grid_2x"
-            android:layout_marginTop="8dp"
-            android:text="Type:"
-            android:textAppearance="@style/MaterialTypography.Regular.Title"
-            android:textColor="?android:textColorSecondary"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider" />
-
-        <TextView
-            android:id="@+id/landing_type"
-            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/material_baseline_grid_2x"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="@dimen/material_baseline_grid_2x"
+            android:layout_marginTop="@dimen/material_baseline_grid_1x"
             android:ellipsize="end"
+            android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
+            android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
             android:singleLine="false"
-            android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+            android:text=""
+            android:textAppearance="@style/MaterialTypography.Regular.Body1"
             android:textColor="?android:textColorSecondary"
-            app:layout_constraintBottom_toBottomOf="@+id/landing_type_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/landing_type_title"
-            app:layout_constraintTop_toTopOf="@+id/landing_type_title"
-            tools:text="Autonomous Spaceport Drone Ship (ASDS)" />
 
-        <net.cachapa.expandablelayout.ExpandableLayout
-            android:id="@+id/landing_type_description_expandable_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:el_duration="1000"
-            app:el_expanded="false"
-            app:el_parallax="0.5"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/landing_type">
+            tools:text="A autonomous spaceport drone ship parked a few hundred km downrange." />
+    </net.cachapa.expandablelayout.ExpandableLayout>
 
-            <TextView
-                android:id="@+id/landing_type_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/material_baseline_grid_2x"
-                android:layout_marginStart="@dimen/material_baseline_grid_2x"
-                android:layout_marginTop="@dimen/material_baseline_grid_1x"
-                android:ellipsize="end"
-                android:paddingBottom="@dimen/material_card_supporting_text_padding_bottom"
-                android:paddingLeft="@dimen/material_baseline_grid_1x"
-                android:paddingRight="@dimen/material_baseline_grid_1x"
-                android:singleLine="false"
-                android:text=""
-                android:textAppearance="@style/MaterialTypography.Regular.Body1"
-                android:textColor="?android:textColorSecondary"
-
-                tools:text="An autonomous spaceport drone ship parked a few hundred km downrange." />
-        </net.cachapa.expandablelayout.ExpandableLayout>
-
-        <TextView
-            android:id="@+id/landing_location_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/material_baseline_grid_2x"
-            android:layout_marginTop="8dp"
-            android:text="Location:"
-            android:textAppearance="@style/MaterialTypography.Regular.Title"
-            android:textColor="?android:textColorSecondary"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/landing_type_description_expandable_layout" />
-
-        <TextView
-            android:id="@+id/landing_location"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/material_baseline_grid_2x"
-            android:layout_marginStart="8dp"
-            android:ellipsize="end"
-            android:singleLine="false"
-            android:textAppearance="@style/MaterialTypography.Regular.Subheading"
-            android:textColor="?android:textColorSecondary"
-            app:layout_constraintBottom_toBottomOf="@+id/landing_location_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/landing_location_title"
-            app:layout_constraintTop_toTopOf="@+id/landing_location_title"
-            tools:text="Of Course I Still Love You (OCISLY)" />
-
-        <net.cachapa.expandablelayout.ExpandableLayout
-            android:id="@+id/landing_location_description_expandable_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:el_duration="1000"
-            app:el_expanded="false"
-            app:el_parallax="0.5"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/landing_location">
-
-            <TextView
-                android:id="@+id/landing_location_description"
-
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/material_baseline_grid_2x"
-                android:layout_marginStart="@dimen/material_baseline_grid_2x"
-                android:layout_marginTop="@dimen/material_baseline_grid_1x"
-                android:ellipsize="end"
-                android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
-                android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
-                android:singleLine="false"
-                android:text=""
-                android:textAppearance="@style/MaterialTypography.Regular.Body1"
-                android:textColor="?android:textColorSecondary"
-
-                tools:text="A autonomous spaceport drone ship parked a few hundred km downrange." />
-        </net.cachapa.expandablelayout.ExpandableLayout>
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/read_more"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginTop="8dp"
-            android:text="Read More"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/landing_location_description_expandable_layout" />
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/read_more"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="8dp"
+        android:text="Read More"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landing_location_description_expandable_layout" />
 
 
-    </android.support.constraint.ConstraintLayout>
-</android.support.v7.widget.CardView>
+</>

@@ -140,6 +140,15 @@
         app:layout_constraintEnd_toStartOf="@+id/flight_proven"
         app:layout_constraintTop_toTopOf="@+id/serial_number_title" />
 
+    <include
+        android:id="@+id/landing_card"
+        layout="@layout/landing_information"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/material_card_edge_margin"
+        android:animateLayoutChanges="true"
+        android:padding="@dimen/material_card_edge_margin"/>
+
     <Button
         android:id="@+id/view_core_launches"
         style="@style/Base.Widget.AppCompat.Button.Colored"
