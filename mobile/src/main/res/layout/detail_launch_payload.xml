@@ -19,7 +19,7 @@
             android:layout_margin="@dimen/material_card_edge_margin"
             android:animateLayoutChanges="true"
             android:padding="@dimen/material_card_edge_margin"
-            app:cardCornerRadius="@dimen/card_view_corner_radius"
+            app:cardCornerRadius="4dp"
             app:cardElevation="@dimen/material_card_elevation_resting"
             app:cardPreventCornerOverlap="true"
             app:cardUseCompatPadding="true">
@@ -35,7 +35,6 @@
                     android:id="@+id/payload_status_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
                     android:background="?attr/titleBarColor"
                     android:gravity="center"
                     android:paddingTop="8dp"
@@ -80,7 +79,7 @@
                     android:paddingTop="@dimen/material_card_supporting_text_padding_top"
                     android:singleLine="false"
                     android:text="@string/unknown_agency_type"
-                    android:textAlignment="center"
+                    android:textAlignment="textStart"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="@dimen/material_typography_regular_subheading_text_size"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -98,12 +97,13 @@
                     android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
                     android:singleLine="false"
                     android:text=""
-                    android:textAlignment="center"
+                    android:textAlignment="textStart"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="@dimen/material_typography_regular_subheading_text_size"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/payload_type" />
+                    app:layout_constraintTop_toBottomOf="@+id/payload_type"
+                    tools:text="hjkbjlhbkvbjk " />
 
 
                 <android.support.v7.widget.AppCompatButton

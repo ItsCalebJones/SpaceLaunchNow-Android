@@ -157,7 +157,7 @@
                 <TextView
                     android:id="@+id/launch_vehicle_title"
                     android:layout_width="0dp"
-                    android:layout_height="35dp"
+                    android:layout_height="wrap_content"
                     android:background="?attr/titleBarColor"
                     android:gravity="center"
                     android:lines="1"
@@ -436,7 +436,7 @@
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/vehicle_infoButton"
                     style="@style/Base.Widget.AppCompat.Button.Colored"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
@@ -444,20 +444,25 @@
                     android:text="@string/info"
                     android:textColor="@color/white"
                     android:textSize="12sp"
+                    app:layout_constraintEnd_toStartOf="@+id/vehicle_wikiButton"
+                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_thrust" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/vehicle_wikiButton"
                     style="@style/Base.Widget.AppCompat.Button.Colored"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:gravity="center"
                     android:text="@string/wiki"
                     android:textColor="@color/white"
                     android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/vehicle_infoButton"
                     app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_thrust" />
 
@@ -473,11 +478,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="visible"
-                    app:constraint_referenced_ids="core_information,view2,serial_number_title,serial_number_text,status_title,status_text,previous_title,previous_text,flight_proven,flight_proven_title" />
+                    app:constraint_referenced_ids="core_information,serial_number_title,serial_number_text,status_title,status_text,previous_title,previous_text,flight_proven,flight_proven_title" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/launcher_launches"
-                    style="@style/Base.Widget.AppCompat.Button.Colored"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                    android:theme="@style/PrimaryButtonTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -486,7 +492,6 @@
                     android:gravity="center"
                     android:padding="@dimen/material_card_edge_margin"
                     android:text="@string/view_more_launches"
-                    android:textColor="@color/white"
                     android:textSize="12sp"
                     android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"

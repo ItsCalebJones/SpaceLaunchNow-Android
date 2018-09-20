@@ -100,10 +100,9 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
 
     @BindView(R.id.youTube_viewHolder)
-    LinearLayout youTubeViewHolder;
+    View youTubeViewHolder;
     @BindView(R.id.countdown_separator)
     View countdownSeparator;
-
     @BindView(R.id.content_TMinus_status)
     TextView contentTMinusStatus;
     @BindView(R.id.countdown_days)
@@ -116,12 +115,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     TextView countdownSeconds;
     @BindView(R.id.countdown_layout)
     View countdownLayout;
-    @BindView(R.id.day_two)
-    LinearLayout dayTwo;
-    @BindView(R.id.day_three)
-    LinearLayout dayThree;
-    @BindView(R.id.day_four)
-    LinearLayout dayFour;
     @BindView(R.id.launch_summary)
     NestedScrollView launchSummary;
     @BindView(R.id.map_view_summary)
@@ -183,7 +176,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     @BindView(R.id.day_four_day)
     TextView dayFourDay;
     @BindView(R.id.three_day_forecast)
-    LinearLayout threeDayForecast;
+    View threeDayForecast;
     @BindView(R.id.day_two_weather_wind_speed_icon)
     WeatherIconView dayTwoWeatherWindIcon;
     @BindView(R.id.day_three_weather_wind_speed_icon)
@@ -639,6 +632,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                     Timber.v("Loading %s", youTubeURL);
                     mapView.setVisibility(View.GONE);
                     youTubeViewHolder.setVisibility(View.VISIBLE);
+                    errorMessage.setVisibility(View.GONE);
                     final LaunchDetailActivity mainActivity = (LaunchDetailActivity) getActivity();
                     youTubePlayerFragment.initialize(context.getResources().getString(R.string.GoogleMapsKey), new YouTubePlayer.OnInitializedListener() {
                         @Override
