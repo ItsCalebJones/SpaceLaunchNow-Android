@@ -27,6 +27,7 @@ import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.ui.launchdetail.OnFragmentInteractionListener;
 import me.calebjones.spacelaunchnow.ui.launches.agency.AgencyLaunchActivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -57,6 +58,7 @@ public class AgencyDetailFragment extends BaseFragment {
     private SharedPreferences sharedPref;
     private static ListPreferences sharedPreference;
     private Context context;
+    private OnFragmentInteractionListener mListener;
 
     public static Launch detailLaunch;
 
@@ -86,6 +88,8 @@ public class AgencyDetailFragment extends BaseFragment {
 
         if (detailLaunch != null && detailLaunch.isValid()) {
             setUpViews(detailLaunch);
+        } else {
+            mListener.sendLaunchToFragment(OnFragmentInteractionListener.AGENCY);
         }
 
         return view;
@@ -95,16 +99,17 @@ public class AgencyDetailFragment extends BaseFragment {
     public void onResume() {
         if (detailLaunch != null && detailLaunch.isValid()) {
             setUpViews(detailLaunch);
+        } else {
+            mListener.sendLaunchToFragment(OnFragmentInteractionListener.AGENCY);
         }
         super.onResume();
     }
 
-    private void setLaunch(Launch launch) {
+    public void setLaunch(Launch launch) {
         detailLaunch = launch;
         setUpViews(launch);
     }
 
-    // TODO redo for payloads
     private void setUpViews(Launch launch) {
         try {
             detailLaunch = launch;
@@ -112,6 +117,7 @@ public class AgencyDetailFragment extends BaseFragment {
             Timber.v("Setting up views...");
             lspCard.setVisibility(View.VISIBLE);
 
+            lspAgency.setText(String.format(this.getString(R.string.view_rocket_launches), launch.getRocket().getConfiguration().getLaunchServiceProvider().getName()));
             if (detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getLogoUrl() != null) {
                 lspLogo.setVisibility(View.VISIBLE);
                 GlideApp.with(context)
@@ -156,25 +162,6 @@ public class AgencyDetailFragment extends BaseFragment {
         return new AgencyDetailFragment();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(LaunchEvent event) {
-        setLaunch(event.launch);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Timber.v("On Start");
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        Timber.v("On Stop");
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
     @OnClick(R.id.lsp_infoButton_one)
     public void onLspInfoButtonOneClicked() {
         Activity activity = (Activity) context;
@@ -192,5 +179,22 @@ public class AgencyDetailFragment extends BaseFragment {
         Intent intent = new Intent(context, AgencyLaunchActivity.class);
         intent.putExtra("lspName", detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getName());
         startActivity(intent);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 }

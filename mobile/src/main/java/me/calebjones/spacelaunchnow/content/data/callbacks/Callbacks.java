@@ -29,7 +29,7 @@ public class Callbacks {
     }
 
     public interface ListNetworkCallbackMini {
-        void onSuccess(List<LaunchList> launches, int next);
+        void onSuccess(List<LaunchList> launches, int next, int total);
         void onNetworkFailure(int code);
         void onFailure(Throwable throwable);
     }
@@ -41,7 +41,7 @@ public class Callbacks {
     }
 
     public interface ListCallbackMini {
-        void onLaunchesLoaded(List<LaunchList> launches, int nextOffset);
+        void onLaunchesLoaded(List<LaunchList> launches, int nextOffset, int total);
         void onNetworkStateChanged(boolean refreshing);
         void onError(String message, @Nullable Throwable throwable);
     }

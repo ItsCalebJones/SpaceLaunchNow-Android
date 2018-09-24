@@ -45,10 +45,11 @@ public class UpcomingDataLoader {
                         Uri uri = Uri.parse(launchResponse.getNext());
                         String limit = uri.getQueryParameter("limit");
                         String nextOffset = uri.getQueryParameter("offset");
+                        String total = uri.getQueryParameter("offset");
                         int next = Integer.valueOf(nextOffset);
-                        networkCallback.onSuccess(launchResponse.getLaunches(), next);
+                        networkCallback.onSuccess(launchResponse.getLaunches(), next, launchResponse.getCount());
                     } else {
-                        networkCallback.onSuccess(launchResponse.getLaunches(), 0);
+                        networkCallback.onSuccess(launchResponse.getLaunches(), 0, launchResponse.getCount());
                     }
                 } else {
                     networkCallback.onNetworkFailure(response.code());

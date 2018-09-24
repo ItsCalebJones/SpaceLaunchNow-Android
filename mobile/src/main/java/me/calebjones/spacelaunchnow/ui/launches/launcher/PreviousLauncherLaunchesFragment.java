@@ -156,11 +156,12 @@ public class PreviousLauncherLaunchesFragment extends BaseFragment {
         }
         previousDataRepository.getPreviousLaunches(nextOffset, searchTerm, lspName, serialNumber, launcherId, new Callbacks.ListCallbackMini() {
             @Override
-            public void onLaunchesLoaded(List<LaunchList> launches, int next) {
+            public void onLaunchesLoaded(List<LaunchList> launches, int next, int total) {
                 Timber.v("Offset - %s", next);
                 nextOffset = next;
                 canLoadMore = next > 0;
                 updateAdapter(launches);
+                mListener.setPreviousBadge(total);
             }
 
             @Override
@@ -223,5 +224,6 @@ public class PreviousLauncherLaunchesFragment extends BaseFragment {
 
         void showPreviousLoading(boolean loading);
 
+        void setPreviousBadge(int count);
     }
 }

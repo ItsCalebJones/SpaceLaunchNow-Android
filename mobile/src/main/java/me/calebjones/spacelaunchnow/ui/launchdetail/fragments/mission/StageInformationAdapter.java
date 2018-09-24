@@ -81,6 +81,11 @@ public class StageInformationAdapter extends RecyclerView.Adapter<StageInformati
             holder.viewCoreLaunches.setVisibility(View.GONE);
         }
 
+        holder.landingGroup.setVisibility(View.GONE);
+        holder.landingLocationGroup.setVisibility(View.GONE);
+        holder.landingTypeGroup.setVisibility(View.GONE);
+        holder.landingMore.setVisibility(View.GONE);
+
         if (stage.getLanding() != null) {
             holder.landingGroup.setVisibility(View.VISIBLE);
             Landing landing = stage.getLanding();
@@ -101,37 +106,61 @@ public class StageInformationAdapter extends RecyclerView.Adapter<StageInformati
                 holder.flightProven.setImageResource(R.drawable.ic_failed);
             }
 
-            holder.landingDescription.setText(landing.getDescription());
-            holder.landingDescription.setOnClickListener(v -> {
-                if (!holder.landingDescription.isExpanded()) {
-                    holder.landingDescription.expand();
-                }
-            });
+            if (landing.getDescription().length() != 0) {
+                holder.landingDescription.setText(landing.getDescription());
+                holder.landingDescription.setOnClickListener(v -> {
+                    if (!holder.landingDescription.isExpanded()) {
+                        holder.landingDescription.expand();
+                    }
+                });
+            } else {
+                holder.landingDescription.setVisibility(View.GONE);
+            }
 
-            holder.landingType.setText(landing.getLandingType().getName());
-            holder.landingLocation.setText(landing.getLandingLocation().getName());
+            if (landing.getLandingType() != null && landing.getLandingType().getName() != null) {
+                holder.landingType.setText(landing.getLandingType().getName());
+                holder.landingLocationGroup.setVisibility(View.VISIBLE);
+            }
 
-            holder.landingMore.setOnClickListener((View v) -> {
-                MaterialDialog dialog = new MaterialDialog.Builder(context)
-                        .title("Additional Landing Information")
-                        .customView(R.layout.landing_information, true)
-                        .positiveText("Close")
-                        .show();
-                View view = dialog.getCustomView();
+            if (landing.getLandingLocation() != null && landing.getLandingLocation().getName() != null) {
+                holder.landingLocation.setText(landing.getLandingLocation().getName());
+                holder.landingTypeGroup.setVisibility(View.VISIBLE);
+            }
 
-                TextView landingType = view.findViewById(R.id.landing_type);
-                TextView landingTypeDescription = view.findViewById(R.id.landing_type_description);
-                TextView landingLocation = view.findViewById(R.id.landing_location);
-                TextView landingLocationDescription = view.findViewById(R.id.landing_location_description);
+            if (landing.getLandingLocation() != null
+                    && landing.getLandingLocation().getName() != null
+                    && landing.getLandingLocation().getDescription() != null
+                    && landing.getLandingType() != null
+                    && landing.getLandingType().getName() != null
+                    && landing.getLandingType().getDescription() != null) {
+                holder.landingMore.setVisibility(View.VISIBLE);
+                holder.landingMore.setOnClickListener((View v) -> {
+                    MaterialDialog dialog = new MaterialDialog.Builder(context)
+                            .title("Additional Landing Information")
+                            .customView(R.layout.landing_information, true)
+                            .positiveText("Close")
+                            .show();
+                    View view = dialog.getCustomView();
 
-                landingType.setText(landing.getLandingType().getName());
-                landingTypeDescription.setText(landing.getLandingType().getDescription());
-                landingLocation.setText(landing.getLandingLocation().getName());
-                landingLocationDescription.setText(landing.getLandingLocation().getDescription());
-            });
+                    TextView landingType = view.findViewById(R.id.landing_type);
+                    TextView landingTypeDescription = view.findViewById(R.id.landing_type_description);
+                    TextView landingLocation = view.findViewById(R.id.landing_location);
+                    TextView landingLocationDescription = view.findViewById(R.id.landing_location_description);
+
+                    landingType.setText(landing.getLandingType().getName());
+                    landingTypeDescription.setText(landing.getLandingType().getDescription());
+                    landingLocation.setText(landing.getLandingLocation().getName());
+                    landingLocationDescription.setText(landing.getLandingLocation().getDescription());
+                });
+            } else {
+                holder.landingMore.setVisibility(View.GONE);
+            }
 
         } else {
             holder.landingGroup.setVisibility(View.GONE);
+            holder.landingLocationGroup.setVisibility(View.GONE);
+            holder.landingTypeGroup.setVisibility(View.GONE);
+            holder.landingMore.setVisibility(View.GONE);
         }
     }
 
@@ -175,14 +204,22 @@ public class StageInformationAdapter extends RecyclerView.Adapter<StageInformati
         ExpandableTextView landingDescription;
         @BindView(R.id.landing_type)
         TextView landingType;
+        @BindView(R.id.landing_type_title)
+        TextView landingTypeTitle;
         @BindView(R.id.landing_location)
         TextView landingLocation;
+        @BindView(R.id.landing_location_title)
+        TextView landingLocationTitle;
         @BindView(R.id.landing_more)
         Button landingMore;
         @BindView(R.id.view_core_launches)
         Button viewCoreLaunches;
         @BindView(R.id.landing_group)
         Group landingGroup;
+        @BindView(R.id.landing_group_landingtype)
+        Group landingLocationGroup;
+        @BindView(R.id.landing_group_landinglocation)
+        Group landingTypeGroup;
         @BindView(R.id.details)
         TextView details;
 
@@ -192,16 +229,5 @@ public class StageInformationAdapter extends RecyclerView.Adapter<StageInformati
             super(view);
             ButterKnife.bind(this, view);
         }
-
-//        @OnClick(R.id.read_more)
-//        public void onReadMoreClicked() {
-//            if (landingLocationDescriptionExpandableLayout.isExpanded()) {
-//                readMore.setText("Read More");
-//            } else {
-//                readMore.setText("Close");
-//            }
-//            landingLocationDescriptionExpandableLayout.toggle();
-//            landingTypeDescriptionExpandableLayout.toggle();
-//        }
     }
 }
