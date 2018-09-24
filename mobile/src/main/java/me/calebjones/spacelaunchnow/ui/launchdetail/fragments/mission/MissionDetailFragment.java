@@ -33,6 +33,7 @@ import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.LauncherConfig;
 import me.calebjones.spacelaunchnow.data.models.main.Mission;
+import me.calebjones.spacelaunchnow.ui.launchdetail.OnFragmentInteractionListener;
 import me.calebjones.spacelaunchnow.ui.launches.launcher.LauncherLaunchActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
@@ -48,6 +49,8 @@ public class MissionDetailFragment extends RetroFitFragment {
     TextView payloadType;
     @BindView(R.id.payload_description)
     TextView payloadDescription;
+    @BindView(R.id.orbit)
+    TextView orbit;
     @BindView(R.id.payload_status)
     TextView payloadStatus;
     @BindView(R.id.payload_infoButton)
@@ -83,6 +86,7 @@ public class MissionDetailFragment extends RetroFitFragment {
     @BindView(R.id.launcher_launches)
     AppCompatButton launchesButton;
 
+    private OnFragmentInteractionListener mListener;
     private Context context;
     public Launch detailLaunch;
 
@@ -110,6 +114,8 @@ public class MissionDetailFragment extends RetroFitFragment {
     public void onResume() {
         if (detailLaunch != null && detailLaunch.isValid()) {
             setUpViews(detailLaunch);
+        } else {
+            mListener.sendLaunchToFragment(OnFragmentInteractionListener.MISSION);
         }
         super.onResume();
     }
@@ -129,6 +135,12 @@ public class MissionDetailFragment extends RetroFitFragment {
                 payloadStatus.setText(mission.getName());
                 payloadDescription.setText(mission.getDescription());
                 payloadType.setText(mission.getTypeName());
+                if (mission.getOrbit() != null && mission.getOrbitAbbrev() != null) {
+                    orbit.setVisibility(View.VISIBLE);
+                    orbit.setText(String.format("%s (%s)", mission.getOrbit(), mission.getOrbitAbbrev()));
+                } else {
+                    orbit.setVisibility(View.GONE);
+                }
                 payloadInfoButton.setVisibility(View.GONE);
                 payloadWikiButton.setVisibility(View.GONE);
             } else {
@@ -181,7 +193,6 @@ public class MissionDetailFragment extends RetroFitFragment {
         }
     }
 
-    @SuppressLint("StringFormatMatches")
     private void configureLaunchVehicle(LauncherConfig launchVehicle) {
         if (launchVehicle != null) {
             vehicleSpecView.setVisibility(View.VISIBLE);
@@ -253,21 +264,21 @@ public class MissionDetailFragment extends RetroFitFragment {
         return new MissionDetailFragment();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(LaunchEvent event) {
-        setLaunch(event.launch);
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 
 }

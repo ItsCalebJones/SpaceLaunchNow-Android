@@ -51,12 +51,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.realm.Realm;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
@@ -71,7 +75,10 @@ import me.calebjones.spacelaunchnow.data.models.main.Landing;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.Pad;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
+import me.calebjones.spacelaunchnow.ui.launchdetail.OnFragmentInteractionListener;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.ui.launches.launcher.UpcomingLauncherLaunchesFragment;
+import me.calebjones.spacelaunchnow.ui.main.next.CardAdapter;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
@@ -96,11 +103,12 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     private Dialog dialog;
     private boolean youTubePlaying = false;
     private int youTubeProgress = 0;
+    private OnFragmentInteractionListener mListener;
 
-
-
-    @BindView(R.id.youTube_viewHolder)
-    View youTubeViewHolder;
+    @BindView(R.id.weather_title)
+    TextView weatherTitle;
+    @BindView(R.id.countdown_status)
+    TextView countdownStatus;
     @BindView(R.id.countdown_separator)
     View countdownSeparator;
     @BindView(R.id.content_TMinus_status)
@@ -200,6 +208,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     @BindView(R.id.youtube_view)
     View youTubeView;
 
+    public Disposable var;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -247,6 +257,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         }
         if (detailLaunch != null && detailLaunch.isValid()) {
             setUpViews(detailLaunch);
+        } else {
+            mListener.sendLaunchToFragment(OnFragmentInteractionListener.SUMMARY);
         }
         super.onResume();
     }
@@ -257,6 +269,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     }
 
     private void fetchPastWeather() {
+        weatherTitle.setText("Launch Day Weather");
         if (detailLaunch.getPad() != null) {
 
             Pad pad = detailLaunch.getPad();
@@ -631,7 +644,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                 if (youTubeURL != null) {
                     Timber.v("Loading %s", youTubeURL);
                     mapView.setVisibility(View.GONE);
-                    youTubeViewHolder.setVisibility(View.VISIBLE);
+                    youTubeView.setVisibility(View.VISIBLE);
                     errorMessage.setVisibility(View.GONE);
                     final LaunchDetailActivity mainActivity = (LaunchDetailActivity) getActivity();
                     youTubePlayerFragment.initialize(context.getResources().getString(R.string.GoogleMapsKey), new YouTubePlayer.OnInitializedListener() {
@@ -705,6 +718,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                                     if (youTubeURL.contains("live")) {
                                         errorMessage.setVisibility(View.VISIBLE);
                                         errorMessage.setText(String.format("Live Broadcast %s", s));
+                                    } else {
+                                        errorMessage.setVisibility(View.GONE);
                                     }
                                     checkState();
                                 }
@@ -730,6 +745,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                                     if (youTubeURL.contains("live")) {
                                         errorMessage.setVisibility(View.VISIBLE);
                                         errorMessage.setText("Broadcast may not be live.");
+                                    } else {
+                                        errorMessage.setVisibility(View.GONE);
                                     }
                                     if (errorReason.ordinal() == 4) {
                                         Toast.makeText(mainActivity, "Playback paused by YouTube while view is obstructed.", Toast.LENGTH_SHORT).show();
@@ -870,112 +887,45 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
             final int color = ContextCompat.getColor(context, R.color.colorTextSecondary);
             final int accentColor = ContextCompat.getColor(context, R.color.colorAccent);
 
-            contentTMinusStatus.setTypeface(Typeface.SANS_SERIF);
-            contentTMinusStatus.setTextColor(accentColor);
-
-            countdownLayout.setVisibility(View.VISIBLE);
+            contentTMinusStatus.setVisibility(View.GONE);
             long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
-            if (timeToFinish > 0) {
+            if (timeToFinish > 0 && launch.getStatus().getId() == 1) {
                 timer = new CountDownTimer(timeToFinish, 1000) {
                     StringBuilder time = new StringBuilder();
 
                     @Override
                     public void onFinish() {
                         Timber.v("Countdown finished.");
-                        contentTMinusStatus.setTypeface(Typeface.DEFAULT);
-                        if (sharedPreference.isNightModeActive(context)) {
-                            contentTMinusStatus.setTextColor(nightColor);
-                        } else {
-                            contentTMinusStatus.setTextColor(color);
-                        }
-                        if (status == 1) {
-                            contentTMinusStatus.setText("Watch Live webcast for up to date status.");
-
-                        } else {
-                            if (hold != null && hold.length() > 1) {
-                                contentTMinusStatus.setText(hold);
-                            } else {
-                                contentTMinusStatus.setText("Watch Live webcast for up to date status.");
-                            }
-                        }
-                        contentTMinusStatus.setVisibility(View.VISIBLE);
                         countdownDays.setText("00");
                         countdownHours.setText("00");
                         countdownMinutes.setText("00");
                         countdownSeconds.setText("00");
+                        countdownStatus.setVisibility(View.VISIBLE);
+                        countdownStatus.setText("+");
+                        countUpTimer(longdate);
                     }
 
                     @Override
                     public void onTick(long millisUntilFinished) {
                         time.setLength(0);
-
-                        // Calculate the Days/Hours/Mins/Seconds numerically.
-                        long longDays = millisUntilFinished / 86400000;
-                        long longHours = (millisUntilFinished / 3600000) % 24;
-                        long longMins = (millisUntilFinished / 60000) % 60;
-                        long longSeconds = (millisUntilFinished / 1000) % 60;
-
-                        String days = String.valueOf(longDays);
-                        String hours;
-                        String minutes;
-                        String seconds;
-
-                        // Translate those numerical values to string values.
-                        if (longHours < 10) {
-                            hours = "0" + String.valueOf(longHours);
-                        } else {
-                            hours = String.valueOf(longHours);
-                        }
-
-                        if (longMins < 10) {
-                            minutes = "0" + String.valueOf(longMins);
-                        } else {
-                            minutes = String.valueOf(longMins);
-                        }
-
-                        if (longSeconds < 10) {
-                            seconds = "0" + String.valueOf(longSeconds);
-                        } else {
-                            seconds = String.valueOf(longSeconds);
-                        }
-
-
-                        // Update the views
-                        if (Integer.valueOf(days) > 0) {
-                            countdownDays.setText(days);
-                        } else {
-                            countdownDays.setText("00");
-                        }
-
-                        if (Integer.valueOf(hours) > 0) {
-                            countdownHours.setText(hours);
-                        } else if (Integer.valueOf(days) > 0) {
-                            countdownHours.setText("00");
-                        } else {
-                            countdownHours.setText("00");
-                        }
-
-                        if (Integer.valueOf(minutes) > 0) {
-                            countdownMinutes.setText(minutes);
-                        } else if (Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
-                            countdownMinutes.setText("00");
-                        } else {
-                            countdownMinutes.setText("00");
-                        }
-
-                        if (Integer.valueOf(seconds) > 0) {
-                            countdownSeconds.setText(seconds);
-                        } else if (Integer.valueOf(minutes) > 0 || Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
-                            countdownSeconds.setText("00");
-                        } else {
-                            countdownSeconds.setText("00");
-                        }
-
-                        // Hide status if countdown is active.
-                        contentTMinusStatus.setVisibility(View.GONE);
+                        setCountdownView(millisUntilFinished);
                     }
                 }.start();
+            } else if (launch.getStatus().getId() == 3 || launch.getStatus().getId() == 4 || launch.getStatus().getId() == 7) {
+                countdownDays.setText("00");
+                countdownHours.setText("00");
+                countdownMinutes.setText("00");
+                countdownSeconds.setText("00");
+                showStatusDescription(launch);
+            } else if (launch.getStatus().getId() == 6 || launch.getStatus().getId() == 1) {
+                countdownStatus.setVisibility(View.VISIBLE);
+                countdownStatus.setText("+");
+                countUpTimer(longdate);
             } else {
+                countdownDays.setText("- -");
+                countdownHours.setText("- -");
+                countdownMinutes.setText("- -");
+                countdownSeconds.setText("- -");
                 showStatusDescription(launch);
             }
         } else {
@@ -983,38 +933,122 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         }
     }
 
+    private void countUpTimer(long longdate) {
+        var = Observable
+                .interval(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+                .subscribe(
+                        time -> {
+                            Calendar currentTime = Calendar.getInstance();
+                            long timeSince = currentTime.getTimeInMillis() - longdate;
+                            setCountdownView(timeSince);
+                        });
+    }
+
+    private void setCountdownView(long millisUntilFinished) {
+        // Calculate the Days/Hours/Mins/Seconds numerically.
+        long longDays = millisUntilFinished / 86400000;
+        long longHours = (millisUntilFinished / 3600000) % 24;
+        long longMins = (millisUntilFinished / 60000) % 60;
+        long longSeconds = (millisUntilFinished / 1000) % 60;
+
+        String days;
+        String hours;
+        String minutes;
+        String seconds;
+
+        if (longDays < 10) {
+            days = "0" + String.valueOf(longDays);
+        } else {
+            days = String.valueOf(longDays);
+        }
+
+
+        // Translate those numerical values to string values.
+        if (longHours < 10) {
+            hours = "0" + String.valueOf(longHours);
+        } else {
+            hours = String.valueOf(longHours);
+        }
+
+        if (longMins < 10) {
+            minutes = "0" + String.valueOf(longMins);
+        } else {
+            minutes = String.valueOf(longMins);
+        }
+
+        if (longSeconds < 10) {
+            seconds = "0" + String.valueOf(longSeconds);
+        } else {
+            seconds = String.valueOf(longSeconds);
+        }
+
+
+        // Update the views
+        if (Integer.valueOf(days) > 0) {
+            countdownDays.setText(days);
+        } else {
+            countdownDays.setText("00");
+        }
+
+        if (Integer.valueOf(hours) > 0) {
+            countdownHours.setText(hours);
+        } else if (Integer.valueOf(days) > 0) {
+            countdownHours.setText("00");
+        } else {
+            countdownHours.setText("00");
+        }
+
+        if (Integer.valueOf(minutes) > 0) {
+            countdownMinutes.setText(minutes);
+        } else if (Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
+            countdownMinutes.setText("00");
+        } else {
+            countdownMinutes.setText("00");
+        }
+
+        if (Integer.valueOf(seconds) > 0) {
+            countdownSeconds.setText(seconds);
+        } else if (Integer.valueOf(minutes) > 0 || Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
+            countdownSeconds.setText("00");
+        } else {
+            countdownSeconds.setText("00");
+        }
+    }
+
+
     private void showStatusDescription(Launch launchItem) {
         contentTMinusStatus.setVisibility(View.VISIBLE);
-        contentTMinusStatus.setTypeface(Typeface.DEFAULT);
-        if (sharedPreference.isNightModeActive(context)) {
-            contentTMinusStatus.setTextColor(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color));
-        } else {
-            contentTMinusStatus.setTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary));
-        }
         if (launchItem.getStatus().getId() == 2) {
-            countdownLayout.setVisibility(View.GONE);
             if (launchItem.getRocket().getConfiguration().getLaunchServiceProvider() != null) {
                 contentTMinusStatus.setText(String.format(context.getString(R.string.pending_confirmed_go_specific), launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getName()));
             } else {
                 contentTMinusStatus.setText(R.string.pending_confirmed_go);
             }
         } else if (launchItem.getStatus().getId() == 3) {
-            countdownLayout.setVisibility(View.GONE);
             contentTMinusStatus.setText("Launch was a success!");
         } else if (launchItem.getStatus().getId() == 4) {
             countdownLayout.setVisibility(View.GONE);
-            contentTMinusStatus.setText("A launch failure has occurred.");
+
+            if (launchItem.getFailreason() != null){
+                contentTMinusStatus.setText(launchItem.getFailreason());
+            } else {
+                contentTMinusStatus.setText("A launch failure has occurred.");
+            }
         } else if (launchItem.getStatus().getId() == 5) {
-            contentTMinusStatus.setText("A hold has been placed on the launch.");
+            if (launchItem.getHoldreason() != null){
+                contentTMinusStatus.setText(launchItem.getHoldreason());
+            } else {
+                contentTMinusStatus.setText("A hold has been placed on the launch.");
+            }
         } else if (launchItem.getStatus().getId() == 6) {
-            countdownDays.setText("00");
-            countdownHours.setText("00");
-            countdownMinutes.setText("00");
-            countdownSeconds.setText("00");
-            contentTMinusStatus.setText("The launch is currently in flight.");
+            contentTMinusStatus.setText("Launch is in flight.");
         } else if (launchItem.getStatus().getId() == 7) {
             countdownLayout.setVisibility(View.GONE);
-            contentTMinusStatus.setText("Launch was a partial failure, payload separated into an incorrect orbit.");
+            if (launchItem.getFailreason() != null){
+                contentTMinusStatus.setText(launchItem.getFailreason());
+            } else {
+                contentTMinusStatus.setText("A partial launch failure has occurred.");
+            }
         }
     }
 
@@ -1102,23 +1136,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         return new SummaryDetailFragment();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(LaunchEvent event) {
-        setLaunch(event.launch);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
     @OnClick(R.id.map_view_summary)
     public void onViewClicked() {
         if (detailLaunch != null && detailLaunch.isValid() && detailLaunch.getPad().getLocation() != null) {
@@ -1159,6 +1176,20 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         }
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
 
-
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
 }

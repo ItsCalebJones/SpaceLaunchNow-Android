@@ -166,7 +166,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
         }
         upcomingDataRepository.getUpcomingLaunches(nextOffset, searchTerm, null, null,null, new Callbacks.ListCallbackMini() {
             @Override
-            public void onLaunchesLoaded(List<LaunchList> launches, int next) {
+            public void onLaunchesLoaded(List<LaunchList> launches, int next, int total) {
                 Timber.v("Offset - %s", next);
                 nextOffset = next;
                 canLoadMore = next > 0;

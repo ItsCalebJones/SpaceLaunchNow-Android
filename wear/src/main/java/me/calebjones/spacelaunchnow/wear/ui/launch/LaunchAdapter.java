@@ -90,8 +90,8 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchViewHolder>{
         }
 
         //If pad and agency exist add it to location, otherwise get whats always available
-        if (launch.getLocation() != null) {
-            holder.launchLocation.setText(launch.getLocation().getName());
+        if (launch.getPad().getLocation() != null) {
+            holder.launchLocation.setText(launch.getPad().getLocation().getName());
         } else {
             holder.launchLocation.setText("Unknown Launch Location");
         }

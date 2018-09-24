@@ -181,7 +181,7 @@
     <string name="unknown_location">Unknown Location</string>
     <string name="details">Details</string>
     <string name="mission">Mission</string>
-    <string name="agencies">Agencies</string>
+    <string name="agencies">Agency</string>
     <string name="error_launch_details">Error - Unable to load launcher details.</string>
     <string name="height_full">Height: %.1f Meters</string>
     <string name="diameter_full">Diameter: %.1f Meters</string>
@@ -431,4 +431,5 @@
     <string name="payload">Payload: %d (kg)</string>
     <string name="spacecraft_format">%s Spacecraft</string>
     <string name="crew_capacity">Crew Capacity: %s</string>
+    <string name="current_weather">Current Weather Forecast</string>
 </resources>

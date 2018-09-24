@@ -39,10 +39,6 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.IconicsDrawable;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
@@ -66,6 +62,7 @@ import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.error.LibraryError;
 import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
+import me.calebjones.spacelaunchnow.ui.launchdetail.OnFragmentInteractionListener;
 import me.calebjones.spacelaunchnow.ui.launchdetail.TabsAdapter;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
@@ -82,7 +79,7 @@ import retrofit2.Response;
 import timber.log.Timber;
 
 public class LaunchDetailActivity extends BaseActivity
-        implements AppBarLayout.OnOffsetChangedListener {
+        implements AppBarLayout.OnOffsetChangedListener, OnFragmentInteractionListener {
 
     private static final int PERCENTAGE_TO_ANIMATE_AVATAR = 20;
     @BindView(R.id.fab_share)
@@ -201,6 +198,17 @@ public class LaunchDetailActivity extends BaseActivity
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
+        appBarLayout.addOnOffsetChangedListener(new CustomOnOffsetChangedListener(statusColor, getWindow()));
+        appBarLayout.addOnOffsetChangedListener(this);
+        mMaxScrollSize = appBarLayout.getTotalScrollRange();
+
+        tabAdapter = new TabsAdapter(getSupportFragmentManager(), context);
+
+        viewPager.setAdapter(tabAdapter);
+        viewPager.setOffscreenPageLimit(3);
+
+        tabLayout.setupWithViewPager(viewPager);
+
         //Grab information from Intent
         Intent mIntent = getIntent();
         String type = mIntent.getStringExtra("TYPE");
@@ -266,16 +274,9 @@ public class LaunchDetailActivity extends BaseActivity
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
             }
         }
-        appBarLayout.addOnOffsetChangedListener(new CustomOnOffsetChangedListener(statusColor, getWindow()));
-        appBarLayout.addOnOffsetChangedListener(this);
-        mMaxScrollSize = appBarLayout.getTotalScrollRange();
 
-        tabAdapter = new TabsAdapter(getSupportFragmentManager(), context);
 
-        viewPager.setAdapter(tabAdapter);
-        viewPager.setOffscreenPageLimit(3);
 
-        tabLayout.setupWithViewPager(viewPager);
     }
 
     private void showFeedback() {
@@ -365,7 +366,7 @@ public class LaunchDetailActivity extends BaseActivity
         try {
             this.launch = launch;
 
-            EventBus.getDefault().post(new LaunchEvent(launch));
+            tabAdapter.updateLaunches(launch);
             if (!this.isDestroyed() && launch != null && launch.getRocket().getConfiguration() != null) {
                 Timber.v("Loading detailLaunch %s", launch.getId());
                 findProfileLogo();
@@ -492,8 +493,20 @@ public class LaunchDetailActivity extends BaseActivity
         scanner.close();
     }
 
-    public Launch getLaunch() {
-        return launch;
+    public void sendLaunchToFragment(int fragment) {
+        if (launch != null) {
+            switch (fragment) {
+                case OnFragmentInteractionListener.AGENCY:
+                    tabAdapter.updatAgencyLaunch(launch);
+                    break;
+                case OnFragmentInteractionListener.MISSION:
+                    tabAdapter.updateMissionLaunch(launch);
+                    break;
+                case OnFragmentInteractionListener.SUMMARY:
+                    tabAdapter.updateSummaryLaunch(launch);
+                    break;
+            }
+        }
     }
 
     @Override
@@ -530,14 +543,12 @@ public class LaunchDetailActivity extends BaseActivity
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
         Timber.v("LaunchDetailActivity onStart!");
         customTabActivityHelper.bindCustomTabsService(this);
     }
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
         Timber.v("LaunchDetailActivity onStop!");
         customTabActivityHelper.unbindCustomTabsService(this);
         super.onStop();
@@ -589,11 +600,6 @@ public class LaunchDetailActivity extends BaseActivity
         } else {
             SnackbarHandler.showErrorSnackbar(this, rootview, "Error - unable to share this launch.");
         }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(LaunchRequestEvent event) {
-        EventBus.getDefault().post(new LaunchEvent(launch));
     }
 
     @Override

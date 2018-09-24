@@ -21,9 +21,9 @@
         <android.support.v7.widget.CardView
             android:layout_width="@dimen/max_width"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_margin="@dimen/material_card_edge_margin"
             android:animateLayoutChanges="true"
-            android:layout_gravity="center"
             android:padding="@dimen/material_card_edge_margin"
             android:visibility="visible"
             card_view:cardCornerRadius="4dp"
@@ -36,6 +36,7 @@
                 android:id="@+id/constraint_countdown"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="visible"
                 android:weightSum="1">
 
 
@@ -49,6 +50,7 @@
                     android:paddingBottom="8dp"
                     android:paddingTop="4dp"
                     android:singleLine="false"
+                    android:text="Failed"
                     android:textAlignment="center"
                     android:textColor="@color/dark_primary_text_color_selector"
                     android:textSize="20sp"
@@ -62,7 +64,8 @@
                 <FrameLayout
                     android:id="@+id/youtube_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="120dp"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/error_message" />
@@ -226,14 +229,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/launch_window_text" />
 
-                <android.support.constraint.Group
-                    android:id="@+id/youTube_viewHolder"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:constraint_referenced_ids="error_message, youtube_view" />
-
-
             </android.support.constraint.ConstraintLayout>
         </android.support.v7.widget.CardView>
 
@@ -241,6 +236,7 @@
             android:id="@+id/weather_card"
             android:layout_width="@dimen/max_width"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginBottom="@dimen/material_baseline_grid_4x"
             android:layout_marginEnd="@dimen/material_card_edge_margin"
             android:layout_marginStart="@dimen/material_card_edge_margin"
@@ -250,9 +246,8 @@
             android:paddingEnd="@dimen/material_card_edge_margin"
             android:paddingStart="@dimen/material_card_edge_margin"
             android:paddingTop="@dimen/material_card_edge_margin"
-            app:cardCornerRadius="4dp"
-            android:layout_gravity="center"
             android:visibility="gone"
+            app:cardCornerRadius="4dp"
             card_view:cardElevation="@dimen/material_card_elevation_resting"
             card_view:cardPreventCornerOverlap="true"
             card_view:cardUseCompatPadding="true">
@@ -263,15 +258,33 @@
                 android:layout_height="match_parent">
 
 
+                <TextView
+                    android:id="@+id/weather_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/titleBarColor"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:padding="@dimen/material_baseline_grid_1x"
+                    android:text="@string/current_weather"
+                    android:textAlignment="center"
+                    android:textColor="@color/dark_primary_text_color_selector"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <com.github.pwittchen.weathericonview.WeatherIconView
                     android:id="@+id/weather_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/material_baseline_grid_2x"
-                    android:layout_marginTop="8dp"
+                    android:minHeight="100dp"
+                    android:minWidth="100dp"
                     android:scaleType="centerCrop"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/weather_title"
                     app:weatherIconColor="@android:color/black"
                     app:weatherIconResource="@drawable/ic_unknown"
                     app:weatherIconSize="100" />
@@ -279,15 +292,16 @@
 
                 <com.github.pwittchen.weathericonview.WeatherIconView
                     android:id="@+id/weather_percip_chance_icon"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="12dp"
                     android:gravity="center|left"
                     android:scaleType="centerCrop"
-                    app:layout_constraintBottom_toTopOf="@+id/weather_wind_speed_icon"
+                    app:layout_constraintBottom_toBottomOf="@+id/weather_icon"
                     app:layout_constraintStart_toEndOf="@+id/weather_icon"
                     app:layout_constraintTop_toTopOf="@+id/weather_icon"
+                    app:layout_constraintVertical_bias="0.39"
                     app:weatherIconResource="@string/wi_umbrella"
                     app:weatherIconSize="30" />
 
@@ -296,6 +310,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginStart="4dp"
                     android:gravity="left|center"
                     android:text="--"
                     android:textColor="?android:textColorSecondary"
@@ -311,13 +326,11 @@
 
                 <com.github.pwittchen.weathericonview.WeatherIconView
                     android:id="@+id/weather_wind_speed_icon"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginStart="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
                     android:gravity="center|left"
                     android:scaleType="centerCrop"
-                    app:layout_constraintBottom_toBottomOf="@+id/weather_icon"
                     app:layout_constraintStart_toEndOf="@+id/weather_icon"
                     app:layout_constraintTop_toBottomOf="@+id/weather_percip_chance_icon"
                     app:weatherIconResource="@string/wi_windy"
@@ -328,6 +341,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginStart="4dp"
                     android:gravity="left|center"
                     android:text="--"
                     android:textColor="?android:textColorSecondary"
@@ -347,7 +361,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="24dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
                     android:gravity="center"
                     android:paddingTop="8dp"
                     android:text="--"
@@ -356,7 +370,7 @@
                     android:textSize="40dp"
                     android:textStyle="normal"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/weather_icon"
                     tools:text="82 F" />
 
                 <TextView
@@ -396,7 +410,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="32dp"
                     android:layout_marginStart="32dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="12dp"
                     android:gravity="center|left"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="15sp"
@@ -456,7 +470,6 @@
                     android:id="@+id/day_two_low_high"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:gravity="center"
                     android:text="-- | --"
@@ -507,7 +520,7 @@
                     android:id="@+id/day_two_weather_wind_speed_icon"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="24dp"
                     android:layout_marginTop="4dp"
                     android:gravity="center"
                     android:scaleType="centerCrop"
@@ -619,7 +632,7 @@
                     android:id="@+id/day_three_weather_wind_speed_icon"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="24dp"
                     android:layout_marginTop="4dp"
                     android:gravity="center"
                     android:scaleType="centerCrop"
@@ -645,7 +658,6 @@
                     app:layout_constraintEnd_toStartOf="@+id/day_four_weather_wind_speed_icon"
                     app:layout_constraintStart_toEndOf="@+id/day_three_weather_wind_speed_icon"
                     app:layout_constraintTop_toTopOf="@+id/day_three_weather_wind_speed_icon"
-                    app:layout_constraintVertical_bias="0.75"
                     tools:text="9 MpH" />
 
 
@@ -731,7 +743,7 @@
                     android:id="@+id/day_four_weather_wind_speed_icon"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="24dp"
                     android:layout_marginTop="4dp"
                     android:gravity="center"
                     android:scaleType="centerCrop"
@@ -747,7 +759,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginTop="8dp"
                     android:text="--"
                     android:textAlignment="textStart"
                     android:textColor="?android:textColorSecondary"

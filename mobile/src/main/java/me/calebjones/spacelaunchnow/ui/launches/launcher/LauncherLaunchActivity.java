@@ -35,6 +35,7 @@ import me.calebjones.spacelaunchnow.ui.launches.agency.PreviousAgencyLaunchesFra
 import me.calebjones.spacelaunchnow.ui.launches.agency.UpcomingAgencyLaunchesFragment;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity;
+import me.calebjones.spacelaunchnow.utils.views.BadgeTabLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,7 +47,7 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.tabs)
-    TabLayout tabLayout;
+    BadgeTabLayout tabLayout;
     @BindView(R.id.appbar)
     AppBarLayout appbar;
     @BindView(R.id.container)
@@ -96,6 +97,7 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
 
         // Set up the ViewPager with the sections adapter.
         viewPager.setAdapter(mSectionsPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
         swipeRefresh.setOnRefreshListener(this);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -203,6 +205,20 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
         swipeRefresh.post(() -> swipeRefresh.setRefreshing(false));
     }
 
+    @Override
+    public void setUpcomingBadge(int count) {
+        if (tabLayout != null && count > 0) {
+            tabLayout.with(0).badge(true).badgeCount(count).name("UPCOMING").build();
+        }
+    }
+
+    @Override
+    public void setPreviousBadge(int count) {
+        if (tabLayout != null && count > 0) {
+            tabLayout.with(1).badge(true).badgeCount(count).name("PREVIOUS").build();
+        }
+    }
+
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -241,6 +257,17 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
                     break;
             }
             return createdFragment;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return getApplicationContext().getString(R.string.upcoming);
+                case 1:
+                    return getApplicationContext().getString(R.string.previous);
+            }
+            return null;
         }
 
         @Override

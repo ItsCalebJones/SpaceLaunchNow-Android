@@ -199,7 +199,7 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
     }
 
     private void setupView(Launch launch) {
-        launchTitle.setText(launch.getLauncherConfig().getName());
+        launchTitle.setText(launch.getRocket().getConfiguration().getName());
 
         launchStatus.setText(getStatus(launch.getStatus().getId()));
 

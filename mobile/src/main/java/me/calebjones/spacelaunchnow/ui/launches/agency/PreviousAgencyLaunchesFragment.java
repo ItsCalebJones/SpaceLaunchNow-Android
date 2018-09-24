@@ -114,6 +114,7 @@ public class PreviousAgencyLaunchesFragment extends BaseFragment {
                 if (canLoadMore) {
                     fetchData(false);
                     mListener.showPreviousLoading(true);
+
                 }
             }
         };
@@ -149,11 +150,12 @@ public class PreviousAgencyLaunchesFragment extends BaseFragment {
 
         previousDataRepository.getPreviousLaunches(nextOffset, searchTerm, lspName, null, null, new Callbacks.ListCallbackMini() {
             @Override
-            public void onLaunchesLoaded(List<LaunchList> launches, int next) {
+            public void onLaunchesLoaded(List<LaunchList> launches, int next, int total) {
                 Timber.v("Offset - %s", next);
                 nextOffset = next;
                 canLoadMore = next > 0;
                 updateAdapter(launches);
+                mListener.setPreviousBadge(total);
             }
 
             @Override
@@ -214,6 +216,8 @@ public class PreviousAgencyLaunchesFragment extends BaseFragment {
     public interface OnFragmentInteractionListener {
 
         void showPreviousLoading(boolean loading);
+
+        void setPreviousBadge(int count);
 
     }
 }

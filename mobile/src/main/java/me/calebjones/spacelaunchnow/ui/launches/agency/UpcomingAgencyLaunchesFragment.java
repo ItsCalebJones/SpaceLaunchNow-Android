@@ -146,11 +146,12 @@ public class UpcomingAgencyLaunchesFragment extends BaseFragment {
         }
         upcomingDataRepository.getUpcomingLaunches(nextOffset, searchTerm, lspName, null, null, new Callbacks.ListCallbackMini() {
             @Override
-            public void onLaunchesLoaded(List<LaunchList> launches, int next) {
+            public void onLaunchesLoaded(List<LaunchList> launches, int next, int total) {
                 Timber.v("Offset - %s", next);
                 nextOffset = next;
                 canLoadMore = next > 0;
                 updateAdapter(launches);
+                mListener.setUpcomingBadge(total);
             }
 
             @Override
@@ -210,6 +211,8 @@ public class UpcomingAgencyLaunchesFragment extends BaseFragment {
     public interface OnFragmentInteractionListener {
 
         void showUpcomingLoading(boolean loading);
+
+        void setUpcomingBadge(int count);
 
     }
 }

@@ -66,7 +66,7 @@
             <TextView
                 android:id="@+id/serial_number_text"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:ellipsize="end"
                 android:gravity="start"
@@ -96,7 +96,7 @@
             <TextView
                 android:id="@+id/status_text"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="start"
                 android:maxLines="2"
@@ -242,12 +242,11 @@
                 android:maxLines="3"
                 android:text=""
                 android:textAppearance="@style/MaterialTypography.Regular.Body1"
-                android:textColor="?android:textColorSecondary"
 
+                android:textColor="?android:textColorSecondary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/landing_success_title"
-                tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent condimentum aliquet diam eget efficitur. Duis quam felis, ultricies vitae lacus et, convallis pretium enim. Nunc nec sapien ac dolor aliquam elementum. Curabitur mollis, tellus eget semper tincidunt, elit quam feugiat arcu, eget luctus ligula massa ut nisi. Nam imperdiet mi sit amet iaculis tincidunt. Morbi egestas risus in nisi rutrum rhoncus. Fusce finibus dui sed nibh mollis commodo. Cras ac commodo magna, ac mollis ex. Etiam rhoncus purus eget dui ornare, ac dignissim magna mattis. Sed quis nisl condimentum, ullamcorper elit a, vehicula lorem. Nunc mi neque, viverra sit amet vehicula vitae, porttitor vehicula arcu. Sed non dapibus tortor, in aliquet est." />
+                app:layout_constraintTop_toBottomOf="@+id/landing_success_title" />
 
             <View
                 android:id="@+id/divider"
@@ -256,9 +255,8 @@
                 android:layout_marginBottom="4dp"
                 android:layout_marginEnd="12dp"
                 android:layout_marginStart="12dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="@dimen/material_baseline_grid_1x"
                 android:background="@color/View_Separator"
-                android:padding="12dp"
                 app:layout_constraintBottom_toTopOf="@+id/landing_type_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -342,8 +340,9 @@
                 style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/material_card_edge_margin"
-                android:layout_marginTop="8dp"
+                android:layout_marginBottom="@dimen/material_baseline_grid_1x"
+                android:layout_marginEnd="@dimen/material_baseline_grid_1x"
+                android:layout_marginStart="@dimen/material_baseline_grid_1x"
                 android:textSize="12sp"
                 android:theme="@style/PrimaryButtonTheme"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -357,8 +356,20 @@
                 android:id="@+id/landing_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids="landing_more,landing_location, landing_location_title, landing_type, landing_type_title, divider, landing_description,
+                app:constraint_referenced_ids="landing_location, landing_location_title, landing_type, landing_type_title, divider,
                 success_icon, landing_success_title, attempt_icon, landing_attempt_title, divider3" />
+
+            <android.support.constraint.Group
+                android:id="@+id/landing_group_landingtype"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="landing_type, landing_type_title" />
+
+            <android.support.constraint.Group
+                android:id="@+id/landing_group_landinglocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="landing_location, landing_location_title" />
 
             <TextView
                 android:id="@+id/details"
