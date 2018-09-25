@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +28,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.nekocode.badge.BadgeDrawable;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
@@ -71,6 +73,7 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
     private String launcherName = null;
     private String serialNumber = null;
     private Integer launcherId = null;
+    private int color;
 
 
     @Override
@@ -78,7 +81,7 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agency_launch);
         ButterKnife.bind(this);
-
+        color = ContextCompat.getColor(this, R.color.accent);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             lspName = extras.getString("lspName");
@@ -208,14 +211,32 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
     @Override
     public void setUpcomingBadge(int count) {
         if (tabLayout != null && count > 0) {
-            tabLayout.with(0).badge(true).badgeCount(count).name("UPCOMING").build();
+            final BadgeDrawable drawable =
+                    new BadgeDrawable.Builder()
+                            .type(BadgeDrawable.TYPE_NUMBER)
+                            .badgeColor(color)
+                            .number(count)
+                            .padding(8, 8, 8, 8, 8)
+                            .strokeWidth(16)
+                            .build();
+
+            tabLayout.getTabAt(0).setText(TextUtils.concat("Upcoming ", drawable.toSpannable()));
         }
     }
 
     @Override
     public void setPreviousBadge(int count) {
         if (tabLayout != null && count > 0) {
-            tabLayout.with(1).badge(true).badgeCount(count).name("PREVIOUS").build();
+            final BadgeDrawable drawable =
+                    new BadgeDrawable.Builder()
+                            .type(BadgeDrawable.TYPE_NUMBER)
+                            .badgeColor(color)
+                            .number(count)
+                            .padding(8, 8, 8, 8, 8)
+                            .strokeWidth(16)
+                            .build();
+
+            tabLayout.getTabAt(1).setText(TextUtils.concat("Previous ", drawable.toSpannable()));
         }
     }
 

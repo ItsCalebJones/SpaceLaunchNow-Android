@@ -154,7 +154,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         if (launchItem.getLanding() != null) {
             holder.landingCard.setVisibility(View.VISIBLE);
             holder.landingLocation.setText(launchItem.getLanding());
-            holder.landingCard.setCardBackgroundColor(mContext.getResources().getColor(R.color.material_color_blue_500));
+            holder.landingCard.setCardBackgroundColor(LaunchStatus.getLandingStatusColor(mContext, launchItem.getLandingSuccess()));
         } else {
             holder.landingCard.setVisibility(View.GONE);
         }

@@ -54,7 +54,7 @@
                 android:id="@+id/serial_number_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 android:text="Serial Number:"
                 android:textAppearance="@style/MaterialTypography.Regular.Title"
@@ -84,13 +84,12 @@
                 android:id="@+id/status_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_marginTop="4dp"
                 android:text="Status:"
                 android:textAppearance="@style/MaterialTypography.Regular.Title"
                 android:textColor="?android:textColorSecondary"
                 android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/serial_number_title"
                 app:layout_constraintTop_toBottomOf="@+id/serial_number_title" />
 
             <TextView
@@ -114,9 +113,9 @@
                 android:id="@+id/previous_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="4dp"
-                android:text="Previous Flights:"
+                android:text="Flights:"
                 android:textAlignment="textEnd"
                 android:textAppearance="@style/MaterialTypography.Regular.Title"
                 android:textColor="?android:textColorSecondary"
@@ -140,7 +139,7 @@
                 android:id="@+id/flight_proven"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="24dp"
                 app:layout_constraintBottom_toBottomOf="@+id/flight_proven_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/flight_proven_title"
@@ -151,6 +150,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:text="Flight Proven:"
                 android:textAlignment="viewEnd"
@@ -174,13 +174,13 @@
                 android:padding="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/details" />
+                app:layout_constraintTop_toBottomOf="@+id/landing_information_title" />
 
             <TextView
                 android:id="@+id/landing_attempt_title"
-                android:layout_width="120dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 android:ellipsize="end"
                 android:gravity="start"
@@ -206,10 +206,10 @@
 
             <TextView
                 android:id="@+id/landing_success_title"
-                android:layout_width="120dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
                 android:ellipsize="end"
                 android:gravity="start"
                 android:singleLine="false"
@@ -218,16 +218,19 @@
                 android:textAppearance="@style/MaterialTypography.Regular.Title"
                 android:textColor="?android:textColorSecondary"
                 android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/landing_attempt_title" />
+                app:layout_constraintEnd_toStartOf="@+id/success_icon"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/attempt_icon"
+                app:layout_constraintTop_toTopOf="@+id/landing_attempt_title" />
 
             <ImageView
                 android:id="@+id/success_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
+                android:layout_marginEnd="24dp"
                 android:src="@drawable/ic_question_mark"
                 app:layout_constraintBottom_toBottomOf="@+id/landing_success_title"
-                app:layout_constraintStart_toStartOf="@+id/attempt_icon"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/landing_success_title" />
 
 
@@ -235,38 +238,24 @@
                 android:id="@+id/landing_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 android:ellipsize="end"
                 android:maxLines="3"
                 android:text=""
-                android:textAppearance="@style/MaterialTypography.Regular.Body1"
 
+                android:textAppearance="@style/MaterialTypography.Regular.Body1"
                 android:textColor="?android:textColorSecondary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/landing_success_title" />
-
-            <View
-                android:id="@+id/divider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="@dimen/material_baseline_grid_1x"
-                android:background="@color/View_Separator"
-                app:layout_constraintBottom_toTopOf="@+id/landing_type_title"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/landing_description" />
+                app:layout_constraintTop_toBottomOf="@+id/landing_location_title" />
 
             <TextView
                 android:id="@+id/landing_type_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/material_baseline_grid_2x"
+                android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 android:text="Type:"
                 android:textAppearance="@style/MaterialTypography.Regular.Title"
@@ -274,16 +263,17 @@
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="@+id/landing_location_title"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/divider" />
+                app:layout_constraintTop_toBottomOf="@+id/landing_success_title" />
 
             <TextView
                 android:id="@+id/landing_type"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="24dp"
                 android:layout_marginStart="8dp"
                 android:ellipsize="end"
                 android:singleLine="false"
+                android:textAlignment="textEnd"
                 android:textAppearance="@style/MaterialTypography.Regular.Subheading"
                 android:textColor="?android:textColorSecondary"
                 android:textSize="14sp"
@@ -296,7 +286,7 @@
                 android:id="@+id/landing_location_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/material_baseline_grid_2x"
+                android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 android:text="Location:"
                 android:textAppearance="@style/MaterialTypography.Regular.Title"
@@ -309,10 +299,11 @@
                 android:id="@+id/landing_location"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="24dp"
                 android:layout_marginStart="8dp"
                 android:ellipsize="end"
                 android:singleLine="false"
+                android:textAlignment="textEnd"
                 android:textAppearance="@style/MaterialTypography.Regular.Subheading"
                 android:textColor="?android:textColorSecondary"
                 android:textSize="14sp"
@@ -328,12 +319,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/material_card_edge_margin"
-                android:layout_marginTop="8dp"
                 android:text="Read More"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/landing_location" />
+                app:layout_constraintTop_toBottomOf="@+id/landing_description" />
 
             <Button
                 android:id="@+id/view_core_launches"
@@ -375,15 +365,29 @@
                 android:id="@+id/details"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginTop="8dp"
                 android:ellipsize="end"
                 android:maxLines="3"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/previous_text"
+                app:layout_constraintStart_toStartOf="@+id/status_title"
                 app:layout_constraintTop_toBottomOf="@+id/status_title"
                 tools:text="En-route to Cape Canaveral." />
+
+            <TextView
+                android:id="@+id/landing_information_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="Landing Information"
+                android:textColor="?android:textColorSecondary"
+                android:textAppearance="@style/MaterialTypography.Regular.Title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/details" />
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

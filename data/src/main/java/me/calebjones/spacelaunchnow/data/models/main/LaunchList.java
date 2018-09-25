@@ -52,6 +52,17 @@ public class LaunchList extends RealmObject {
     @SerializedName("launcher")
     @Expose
     public String launcher;
+    @SerializedName("landing_success")
+    @Expose
+    public Integer landingSuccess;
+
+    public Integer getLandingSuccess() {
+        return landingSuccess;
+    }
+
+    public void setLandingSuccess(Integer landingSuccess) {
+        this.landingSuccess = landingSuccess;
+    }
 
     public Integer getId() {
         return id;

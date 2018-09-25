@@ -24,6 +24,7 @@
         android:paddingStart="4dp"
         android:paddingTop="2dp"
         android:text=""
+        android:maxLines="2"
         android:textAlignment="center"
         android:textAppearance="@style/MaterialTypography.Locale.Caption"
         android:textColor="@color/dark_primary_text_color_selector"

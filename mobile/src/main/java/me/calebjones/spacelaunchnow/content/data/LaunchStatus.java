@@ -64,15 +64,17 @@ public class LaunchStatus {
         }
     }
 
-    public static int getLandingStatusColor(Context context, Landing landing)  {
-            if (landing.getSuccess() == null){
-                return context.getResources().getColor(R.color.material_color_blue_500);
-            } else if (landing.getSuccess()) {
-                return context.getResources().getColor(R.color.material_color_green_800);
-            } else if (!landing.getSuccess()) {
-                return context.getResources().getColor(R.color.material_color_red_500);
-            } else {
-                return context.getResources().getColor(R.color.material_color_blue_500);
-            }
+    public static int getLandingStatusColor(Context context, Integer landing) {
+        if (landing == null) {
+            return context.getResources().getColor(R.color.material_color_blue_500);
+        } else if (landing == 1) {
+            return context.getResources().getColor(R.color.material_color_green_800);
+        } else if (landing == 2) {
+            return context.getResources().getColor(R.color.material_color_red_700);
+        } else if (landing == 3) {
+            return context.getResources().getColor(R.color.material_color_blue_grey_500);
+        } else {
+            return context.getResources().getColor(R.color.material_color_blue_500);
+        }
     }
 }
