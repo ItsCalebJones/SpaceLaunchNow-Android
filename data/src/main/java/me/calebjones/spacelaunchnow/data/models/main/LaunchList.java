@@ -52,9 +52,20 @@ public class LaunchList extends RealmObject {
     @SerializedName("launcher")
     @Expose
     public String launcher;
+    @SerializedName("orbit")
+    @Expose
+    public String orbit;
     @SerializedName("landing_success")
     @Expose
     public Integer landingSuccess;
+
+    public String getOrbit() {
+        return orbit;
+    }
+
+    public void setOrbit(String orbit) {
+        this.orbit = orbit;
+    }
 
     public Integer getLandingSuccess() {
         return landingSuccess;
