@@ -220,7 +220,7 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
                             .strokeWidth(16)
                             .build();
 
-            tabLayout.getTabAt(0).setText(TextUtils.concat("Upcoming ", drawable.toSpannable()));
+            tabLayout.getTabAt(0).setText(TextUtils.concat(getString(R.string.upcoming_with_space), drawable.toSpannable()));
         }
     }
 
@@ -236,7 +236,7 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
                             .strokeWidth(16)
                             .build();
 
-            tabLayout.getTabAt(1).setText(TextUtils.concat("Previous ", drawable.toSpannable()));
+            tabLayout.getTabAt(1).setText(TextUtils.concat(getString(R.string.previous_with_space), drawable.toSpannable()));
         }
     }
 

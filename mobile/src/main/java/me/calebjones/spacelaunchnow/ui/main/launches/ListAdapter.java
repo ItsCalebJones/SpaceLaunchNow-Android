@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -24,11 +23,7 @@ import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.data.LaunchStatus;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.main.Landing;
-import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
-import me.calebjones.spacelaunchnow.data.models.main.Launcher;
-import me.calebjones.spacelaunchnow.data.models.main.Stage;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
@@ -160,10 +155,10 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         }
 
         if (launchItem.getOrbit() != null) {
-            holder.launcherCard.setVisibility(View.VISIBLE);
-            holder.launcher.setText(launchItem.getOrbit());
+            holder.orbitCard.setVisibility(View.VISIBLE);
+            holder.orbitName.setText(launchItem.getOrbit());
         } else {
-            holder.launcherCard.setVisibility(View.GONE);
+            holder.orbitCard.setVisibility(View.GONE);
         }
 
         holder.status.setText(launchItem.getStatus().getName());
@@ -186,9 +181,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         @BindView(R.id.landing_pill_mini)
         CardView landingCard;
         @BindView(R.id.launcher)
-        TextView launcher;
+        TextView orbitName;
         @BindView(R.id.launcher_pill_mini)
-        CardView launcherCard;
+        CardView orbitCard;
         @BindView(R.id.launch_rocket)
         TextView title;
         @BindView(R.id.location)

@@ -32,6 +32,7 @@ import me.calebjones.spacelaunchnow.ui.launcher.LauncherDetailActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
+import okhttp3.CacheControl;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -101,7 +102,7 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
         mRecyclerView.setAdapter(adapter);
         Timber.v("Returning view.");
         statefulView.showProgress();
-        statefulView.setOfflineRetryOnClickListener(v -> loadJSON());
+        statefulView.setOfflineRetryOnClickListener(v -> loadJSON(false));
         return view;
     }
 
@@ -111,10 +112,10 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
     public void onResume() {
         super.onResume();
         Timber.v("onResume");
-        new Handler().postDelayed(() -> loadJSON(), 100);
+        new Handler().postDelayed(() -> loadJSON(false), 100);
     }
 
-    private void loadJSON() {
+    private void loadJSON(boolean forceRefresh) {
         Timber.v("Loading vehicles...");
         showLoading();
 
@@ -185,6 +186,6 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
     @Override
     public void onRefresh() {
         Analytics.getInstance().sendButtonClicked("Launcher Refresh");
-        loadJSON();
+        loadJSON(true);
     }
 }
