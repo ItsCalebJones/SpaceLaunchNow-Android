@@ -146,6 +146,4 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
             onItemClickListener.onClick(v, getAdapterPosition());
         }
     }
-
-
 }
