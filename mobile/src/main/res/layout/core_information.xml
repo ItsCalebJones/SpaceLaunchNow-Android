@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <android.support.v7.widget.CardView
+    <androidx.appcompat.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/material_card_edge_margin"
@@ -389,5 +389,5 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/details" />
         </android.support.constraint.ConstraintLayout>
-    </android.support.v7.widget.CardView>
+    </androidx.appcompat.widget.CardView>
 </LinearLayout>

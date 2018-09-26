@@ -2,7 +2,7 @@ package me.calebjones.spacelaunchnow.wear.ui.launch;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.support.wear.widget.drawer.WearableNavigationDrawerView;
 
 import java.util.ArrayList;

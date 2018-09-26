@@ -1,6 +1,6 @@
 package me.calebjones.spacelaunchnow.wear.ui.launch;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.appcompat.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;

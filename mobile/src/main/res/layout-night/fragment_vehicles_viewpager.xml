@@ -17,7 +17,7 @@
         app:tabSelectedTextColor="@color/dark_theme_primary_text_color"
         app:tabMode="fixed" />
 
-    <android.support.v4.view.ViewPager
+    <androidx.core.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_below="@id/tabLayout"
         android:layout_width="match_parent"

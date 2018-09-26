@@ -1,13 +1,13 @@
 package me.calebjones.spacelaunchnow.content.data.previous;
 
 import android.content.Context;
-import android.support.annotation.UiThread;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.UiThread;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;

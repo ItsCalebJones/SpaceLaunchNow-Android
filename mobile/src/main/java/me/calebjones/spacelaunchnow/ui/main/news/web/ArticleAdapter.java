@@ -3,10 +3,10 @@ package me.calebjones.spacelaunchnow.ui.main.news.web;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
 import android.text.format.DateFormat;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -15,23 +15,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.leocardz.link.preview.library.LinkPreviewCallback;
-import com.leocardz.link.preview.library.SourceContent;
-import com.leocardz.link.preview.library.TextCrawler;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.nekocode.badge.BadgeDrawable;
 import io.realm.OrderedCollectionChangeSet;
-import io.realm.Realm;
-import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.news.Article;
 import me.calebjones.spacelaunchnow.utils.GlideApp;

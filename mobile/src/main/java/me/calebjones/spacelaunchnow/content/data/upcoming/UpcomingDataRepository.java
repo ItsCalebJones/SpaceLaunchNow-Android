@@ -1,10 +1,10 @@
 package me.calebjones.spacelaunchnow.content.data.upcoming;
 
 import android.content.Context;
-import android.support.annotation.UiThread;
 
 import java.util.List;
 
+import androidx.annotation.UiThread;
 import io.realm.Realm;
 import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;

@@ -1,6 +1,6 @@
 package me.calebjones.spacelaunchnow.ui.debug;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class DebugNavigator implements DebugContract.Navigator {
 

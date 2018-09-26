@@ -46,7 +46,7 @@
         android:textAlignment="center"
         tools:text="$1.99" />
 
-    <android.support.v7.widget.AppCompatSeekBar
+    <androidx.appcompat.widget.AppCompatSeekBar
         android:id="@+id/dialog_seekbar"
         style="@style/Widget.AppCompat.SeekBar.Discrete"
         android:layout_width="match_parent"

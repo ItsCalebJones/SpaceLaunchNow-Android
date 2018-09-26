@@ -1,18 +1,9 @@
 package me.calebjones.spacelaunchnow.common;
 
-import android.app.ActivityManager;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.TypedValue;
-
-import java.util.TimeZone;
+import androidx.appcompat.app.AppCompatActivity;
 
 import io.realm.Realm;
-import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import timber.log.Timber;
 

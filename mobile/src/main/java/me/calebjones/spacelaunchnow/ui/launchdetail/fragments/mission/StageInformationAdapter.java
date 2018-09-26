@@ -2,9 +2,6 @@ package me.calebjones.spacelaunchnow.ui.launchdetail.fragments.mission;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.constraint.Group;
-import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +13,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.List;
 
+import androidx.constraintlayout.widget.Group;
+import androidx.recyclerview.widget.RecyclerView;
 import at.blogc.android.views.ExpandableTextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;

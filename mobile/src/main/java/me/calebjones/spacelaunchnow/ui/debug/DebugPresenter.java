@@ -6,9 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ShareCompat;
-import android.support.v4.content.FileProvider;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ShareCompat;
+import androidx.core.content.FileProvider;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
@@ -59,12 +60,7 @@ public class DebugPresenter implements DebugContract.Presenter {
         sharedPreference.setDebugSupporter(selected);
         realm = Realm.getDefaultInstance();
         if (selected) {
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    realm.copyToRealmOrUpdate(SupporterHelper.getProduct(SupporterHelper.SKU_TWO_DOLLAR));
-                }
-            });
+            realm.executeTransaction(realm -> realm.copyToRealmOrUpdate(SupporterHelper.getProduct(SupporterHelper.SKU_TWO_DOLLAR)));
             realm.beginTransaction();
             realm.copyToRealmOrUpdate(SupporterHelper.getProduct(SupporterHelper.SKU_TWO_DOLLAR));
             realm.commitTransaction();
@@ -75,12 +71,7 @@ public class DebugPresenter implements DebugContract.Presenter {
             editor.apply();
             UpdateWearJob.scheduleJobNow();
         } else {
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    realm.delete(Products.class);
-                }
-            });
+            realm.executeTransaction(realm -> realm.delete(Products.class));
             realm.close();
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor editor = preferences.edit();

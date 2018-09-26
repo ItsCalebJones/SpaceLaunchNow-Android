@@ -1,7 +1,6 @@
 package me.calebjones.spacelaunchnow.content.util;
 
 import android.graphics.PorterDuff;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,7 @@ import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.recyclerview.widget.RecyclerView;
 import me.calebjones.spacelaunchnow.R;
 
 public class DialogAdapter extends RecyclerView.Adapter<DialogAdapter.SimpleListVH> implements MDAdapter {
