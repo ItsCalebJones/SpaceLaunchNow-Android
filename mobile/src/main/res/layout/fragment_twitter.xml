@@ -17,7 +17,7 @@
             app:emptyLayout="@layout/empty_launches"
             app:progressLayout="@layout/custom_progress">
 
-            <androidx.appcompat.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

@@ -208,6 +208,7 @@ dependencies {
 
     // Android Official Libraries
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation 'androidx.browser:browser:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.palette:palette:1.0.0'
@@ -251,7 +252,7 @@ dependencies {
     implementation 'com.github.ItsCalebJones:GDPRDialog:54231db'
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.github.jrvansuita:MaterialAbout:0.2.1'
+    implementation 'com.github.jrvansuita:MaterialAbout:0.2.3'
     implementation 'com.github.mukeshsolanki:MarkdownView-Android:1.0.4'
     implementation 'com.jaredrummler:colorpicker:1.0.1'
     implementation 'com.andkulikov:transitionseverywhere:1.7.7'

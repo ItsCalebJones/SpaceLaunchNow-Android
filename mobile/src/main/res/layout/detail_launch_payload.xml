@@ -13,7 +13,7 @@
         android:layout_height="fill_parent"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/material_card_edge_margin"
@@ -24,7 +24,7 @@
             app:cardPreventCornerOverlap="true"
             app:cardUseCompatPadding="true">
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
 
                 android:id="@+id/linearLayout2"
                 android:layout_width="match_parent"
@@ -121,7 +121,7 @@
                     tools:text="hjkbjlhbkvbjk " />
 
 
-                <android.support.v7.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/payload_infoButton"
                     style="@style/Base.Widget.AppCompat.Button.Colored"
                     android:layout_width="0dp"
@@ -138,7 +138,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/payload_description" />
 
-                <android.support.v7.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/payload_wikiButton"
                     style="@style/Base.Widget.AppCompat.Button.Colored"
                     android:layout_width="0dp"
@@ -156,11 +156,11 @@
                     app:layout_constraintTop_toBottomOf="@+id/payload_description" />
 
 
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.appcompat.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
-        <androidx.appcompat.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/material_card_edge_margin"
@@ -171,7 +171,7 @@
             app:cardPreventCornerOverlap="true"
             app:cardUseCompatPadding="true">
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
 
                 android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
@@ -453,7 +453,7 @@
                     app:layout_constraintTop_toTopOf="@+id/launch_vehicle_specs_launch_mass" />
 
 
-                <android.support.v7.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/vehicle_infoButton"
                     style="@style/Base.Widget.AppCompat.Button.Colored"
                     android:layout_width="0dp"
@@ -471,7 +471,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_thrust" />
 
-                <android.support.v7.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/vehicle_wikiButton"
                     style="@style/Base.Widget.AppCompat.Button.Colored"
                     android:layout_width="0dp"
@@ -491,21 +491,21 @@
                     app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_thrust" />
 
 
-                <android.support.constraint.Group
+                <androidx.constraintlayout.widget.Group
                     android:id="@+id/vehicle_spec_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="visible"
                     app:constraint_referenced_ids="launch_vehicle_specs_title,view,launch_vehicle_specs_height,launch_vehicle_specs_diameter, launch_vehicle_specs_stages, launch_vehicle_specs_leo, launch_vehicle_specs_gto, launch_vehicle_specs_launch_mass, launch_vehicle_specs_thrust" />
 
-                <android.support.constraint.Group
+                <androidx.constraintlayout.widget.Group
                     android:id="@+id/core_information_group"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="visible"
                     app:constraint_referenced_ids="core_information,view2,serial_number_title,serial_number_text,status_title,status_text,previous_title,previous_text,flight_proven,flight_proven_title" />
 
-                <android.support.v7.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/launcher_launches"
                     style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                     android:layout_width="match_parent"
@@ -520,10 +520,10 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="parent" />
 
-            </android.support.constraint.ConstraintLayout>
-        </androidx.appcompat.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
 
-        <androidx.appcompat.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/coreRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

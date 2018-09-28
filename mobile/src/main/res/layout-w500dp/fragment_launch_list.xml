@@ -15,18 +15,18 @@
             app:emptyLayout="@layout/empty_launches"
             app:progressLayout="@layout/custom_progress">
 
-            <androidx.appcompat.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="@dimen/max_width"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 app:cardElevation="8dp"
                 app:cardCornerRadius="0dp">
 
-                <androidx.appcompat.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
-            </androidx.appcompat.widget.CardView>
+            </androidx.cardview.widget.CardView>
         </cz.kinst.jakub.view.SimpleStatefulLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -106,7 +106,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
 
-    <androidx.appcompat.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/vehicle_detail_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
