@@ -17,7 +17,7 @@
 #}
 
 -keep class me.calebjones.spacelaunchnow.data.** { *; }
-
+-dontwarn java.lang.invoke.**
 -keepattributes Signature
 -keepattributes *Annotation*
 -keep class okhttp3.** { *; }

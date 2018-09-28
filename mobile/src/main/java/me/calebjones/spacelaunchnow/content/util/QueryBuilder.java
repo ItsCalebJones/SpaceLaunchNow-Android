@@ -23,360 +23,6 @@ import timber.log.Timber;
 public class QueryBuilder {
     public static boolean first = true;
 
-    public static RealmResults<Launch> buildPrevQueryAsync(Context context, Realm realm) throws ParseException {
-        SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
-        ListPreferences listPreferences = ListPreferences.getInstance(context);
-
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
-        String start = listPreferences.getStartDate();
-        String end = listPreferences.getEndDate();
-
-        Date sDate;
-        Date eDate;
-
-        sDate = df.parse(start);
-        eDate = df.parse(end);
-
-        RealmQuery<Launch> query = realm.where(Launch.class).between("net", sDate, eDate).findAll().where();
-
-        Integer[] countryFilter = switchPreferences.getPrevCountryFiltered();
-        Integer[] agencyFilter = switchPreferences.getPrevAgencyFiltered();
-        Integer[] locationFilter = switchPreferences.getPrevLocationFiltered();
-        Integer[] vehicleFilter = switchPreferences.getPrevVehicleFiltered();
-
-        if (countryFilter != null && countryFilter.length > 0) {
-            query = filterCountry(query, switchPreferences.getPrevCountryFilteredArray()).findAll().where();
-        }
-
-        if (agencyFilter != null && agencyFilter.length > 0) {
-            query = filterAgency(query, switchPreferences.getPrevAgencyFilteredArray()).findAll().where();
-        }
-
-        if (locationFilter != null && locationFilter.length > 0) {
-            query = filterLocation(query, switchPreferences.getPrevLocationFilteredArray()).findAll().where();
-        }
-
-        if (vehicleFilter != null && vehicleFilter.length > 0) {
-            query = filterVehicle(query, switchPreferences.getPrevVehicleFilteredArray());
-        }
-
-        Timber.v("Returning Query");
-        query.sort("net", Sort.DESCENDING);
-        return query.findAllAsync();
-    }
-
-    public static RealmResults<Launch> buildPrevQuery(Context context, Realm realm) throws ParseException {
-        SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
-        ListPreferences listPreferences = ListPreferences.getInstance(context);
-
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
-        String start = listPreferences.getStartDate();
-        String end = listPreferences.getEndDate();
-
-        Date sDate;
-        Date eDate;
-
-        sDate = df.parse(start);
-        eDate = df.parse(end);
-
-        RealmQuery<Launch> query = realm.where(Launch.class).between("net", sDate, eDate).findAll().where();
-
-        Integer[] countryFilter = switchPreferences.getPrevCountryFiltered();
-        Integer[] agencyFilter = switchPreferences.getPrevAgencyFiltered();
-        Integer[] locationFilter = switchPreferences.getPrevLocationFiltered();
-        Integer[] vehicleFilter = switchPreferences.getPrevVehicleFiltered();
-
-        if (countryFilter != null && countryFilter.length > 0) {
-            query = filterCountry(query, switchPreferences.getPrevCountryFilteredArray()).findAll().where();
-        }
-
-        if (agencyFilter != null && agencyFilter.length > 0) {
-            query = filterAgency(query, switchPreferences.getPrevAgencyFilteredArray()).findAll().where();
-        }
-
-        if (locationFilter != null && locationFilter.length > 0) {
-            query = filterLocation(query, switchPreferences.getPrevLocationFilteredArray()).findAll().where();
-        }
-
-        if (vehicleFilter != null && vehicleFilter.length > 0) {
-            query = filterVehicle(query, switchPreferences.getPrevVehicleFilteredArray());
-        }
-
-        Timber.v("Returning Query");
-        query.sort("net", Sort.DESCENDING);
-        return query.findAll();
-    }
-
-    public static RealmResults<Launch> buildUpQueryAsync(Context context, Realm realm) {
-        SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
-
-        Date date = new Date();
-
-        RealmQuery<Launch> query = realm.where(Launch.class).greaterThanOrEqualTo("net", date).findAll().where();
-
-        verifyUpSwitches(context, switchPreferences);
-
-        Integer[] countryFilter = switchPreferences.getUpCountryFiltered();
-        Integer[] agencyFilter = switchPreferences.getUpAgencyFiltered();
-        Integer[] locationFilter = switchPreferences.getUpLocationFiltered();
-        Integer[] vehicleFilter = switchPreferences.getUpVehicleFiltered();
-
-        if (countryFilter != null && countryFilter.length > 0) {
-            ArrayList<String> array = switchPreferences.getUpCountryFilteredArray();
-            if (array != null && array.size() > 0) {
-                query = filterCountry(query, array).findAll().where();
-            } else {
-                Crashlytics.logException(new Throwable("Error - array is null."));
-            }
-        }
-
-        if (agencyFilter != null && agencyFilter.length > 0) {
-            query = filterAgency(query, switchPreferences.getUpAgencyFilteredArray()).findAll().where();
-        }
-
-        if (locationFilter != null && locationFilter.length > 0) {
-            query = filterLocation(query, switchPreferences.getUpLocationFilteredArray()).findAll().where();
-        }
-
-        if (vehicleFilter != null && vehicleFilter.length > 0) {
-            query = filterVehicle(query, switchPreferences.getUpVehicleFilteredArray());
-
-        }
-
-        Timber.v("Returning Query");
-        query.sort("net", Sort.ASCENDING);
-        return query.findAllAsync();
-    }
-
-    private static void verifyUpSwitches(Context context, SwitchPreferences switchPreferences) {
-        Integer[] countryFilter = switchPreferences.getUpCountryFiltered();
-        Integer[] agencyFilter = switchPreferences.getUpAgencyFiltered();
-        Integer[] locationFilter = switchPreferences.getUpLocationFiltered();
-        Integer[] vehicleFilter = switchPreferences.getUpVehicleFiltered();
-        ArrayList<String> agencyArray = switchPreferences.getUpAgencyFilteredArray();
-        ArrayList<String> countryArray = switchPreferences.getUpCountryFilteredArray();
-        ArrayList<String> locationArray = switchPreferences.getUpLocationFilteredArray();
-        ArrayList<String> vehicleArray = switchPreferences.getUpVehicleFilteredArray();
-
-        if (countryArray != null && countryFilter != null && countryArray.size() != countryFilter.length) {
-            Crashlytics.log("Country Array: " + countryArray + " Country Filter " + countryFilter);
-            Toast.makeText(context, "UNKNOWN ERROR - Resetting Country filter.", Toast.LENGTH_SHORT).show();
-            switchPreferences.resetAllUpFilters();
-            if (switchPreferences.isUpFiltered()) {
-                switchPreferences.setUpFiltered(false);
-            }
-        }
-
-        if (agencyArray != null && agencyFilter != null && agencyArray.size() != agencyFilter.length) {
-            Crashlytics.log("LauncherAgency Array: " + agencyArray + " LauncherAgency Filter " + agencyFilter);
-            Toast.makeText(context, "UNKNOWN ERROR - Resetting LauncherAgency filter.", Toast.LENGTH_SHORT).show();
-            switchPreferences.resetAllUpFilters();
-            if (switchPreferences.isUpFiltered()) {
-                switchPreferences.setUpFiltered(false);
-            }
-        }
-
-        if (locationArray != null && locationFilter != null && locationArray.size() != locationFilter.length) {
-            Crashlytics.log("Location Array: " + locationArray + " Location Filter " + locationFilter);
-            Toast.makeText(context, "UNKNOWN ERROR - Resetting Location filter.", Toast.LENGTH_SHORT).show();
-            switchPreferences.resetAllUpFilters();
-            if (switchPreferences.isUpFiltered()) {
-                switchPreferences.setUpFiltered(false);
-            }
-        }
-
-        if (vehicleArray != null && vehicleFilter != null && vehicleArray.size() != vehicleFilter.length) {
-            Crashlytics.log("Vehicle Array: " + vehicleArray + " Vehicle Filter " + vehicleFilter);
-            Toast.makeText(context, "UNKNOWN ERROR - Resetting Vehicle filter.", Toast.LENGTH_SHORT).show();
-            switchPreferences.resetAllUpFilters();
-            if (switchPreferences.isUpFiltered()) {
-                switchPreferences.setUpFiltered(false);
-            }
-        }
-    }
-
-    public static RealmResults<Launch> buildUpQuery(Context context, Realm realm) {
-        SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
-
-        Date date = new Date();
-
-        RealmQuery<Launch> query = realm.where(Launch.class).greaterThanOrEqualTo("net", date).findAll().where();
-
-        Integer[] countryFilter = switchPreferences.getUpCountryFiltered();
-        Integer[] agencyFilter = switchPreferences.getUpAgencyFiltered();
-        Integer[] locationFilter = switchPreferences.getUpLocationFiltered();
-        Integer[] vehicleFilter = switchPreferences.getUpVehicleFiltered();
-
-        if (countryFilter != null && countryFilter.length > 0) {
-            ArrayList<String> array = switchPreferences.getUpCountryFilteredArray();
-            if (array != null && array.size() > 0) {
-                query = filterCountry(query, array).findAll().where();
-            } else {
-                Crashlytics.logException(new Throwable("Error - array is null."));
-            }
-        }
-
-        if (agencyFilter != null && agencyFilter.length > 0) {
-            query = filterAgency(query, switchPreferences.getUpAgencyFilteredArray()).findAll().where();
-        }
-
-        if (locationFilter != null && locationFilter.length > 0) {
-            query = filterLocation(query, switchPreferences.getUpLocationFilteredArray()).findAll().where();
-        }
-
-        if (vehicleFilter != null && vehicleFilter.length > 0) {
-            query = filterVehicle(query, switchPreferences.getUpVehicleFilteredArray());
-
-        }
-
-        Timber.v("Returning Query");
-        query.sort("net", Sort.ASCENDING);
-        return query.findAllAsync();
-
-    }
-
-    private static RealmQuery<Launch> filterVehicle(RealmQuery<Launch> query, ArrayList<String> vehicleFilter) {
-        boolean firstGroup = true;
-        for (String key : vehicleFilter) {
-            if (key.contains("SLV")) {
-                key = "SLV";
-            }
-            Timber.v("Vehicle key: %s", key);
-            if (!firstGroup) {
-                query.or();
-            } else {
-                firstGroup = false;
-            }
-            query.contains("rocket.name", key);
-        }
-        return query;
-    }
-
-    private static RealmQuery<Launch> filterLocation(RealmQuery<Launch> query, ArrayList<String> locationFilter) {
-        boolean firstGroup = true;
-        for (String key : locationFilter) {
-            String[] parts = key.split(",");
-            key = parts[0];
-            if (key.length() > 5) {
-                key = key.substring(0, 5);
-            }
-            Timber.v("Location key: %s", key);
-            if (!firstGroup) {
-                query.or();
-            } else {
-                firstGroup = false;
-            }
-            query.beginsWith("location.name", key);
-        }
-        return query;
-    }
-
-    private static RealmQuery<Launch> filterAgency(RealmQuery<Launch> query, ArrayList<String> agencyFilter) {
-        boolean firstGroup = true;
-        for (String key : agencyFilter) {
-            Timber.v("LauncherAgency key: %s", key);
-            if (key.contains("NASA")) {
-                if (!firstGroup) {
-                    query.or();
-                } else {
-                    firstGroup = false;
-                }
-                query.equalTo("lsp.id", 44);
-            } else if (key.contains("SpaceX")) {
-                if (!firstGroup) {
-                    query.or();
-                } else {
-                    firstGroup = false;
-                }
-                query.equalTo("lsp.id", 121).or().contains("name", "Falcon");
-
-            } else if (key.contains("ROSCOSMOS")) {
-                if (!firstGroup) {
-                    query.or();
-                } else {
-                    firstGroup = false;
-                }
-                query.equalTo("lsp.id", 111)
-                        .or()
-                        .equalTo("lsp.id", 163)
-                        .or()
-                        .equalTo("lsp.id", 63);
-
-            } else if (key.contains("ULA")) {
-                if (!firstGroup) {
-                    query.or();
-                } else {
-                    firstGroup = false;
-                }
-                query.equalTo("lsp.id", 124);
-
-            } else if (key.contains("Arianespace")) {
-                if (!firstGroup) {
-                    query.or();
-                } else {
-                    firstGroup = false;
-                }
-                query.equalTo("lsp.id", 115);
-
-            } else if (key.contains("CASC")) {
-                if (!firstGroup) {
-                    query.or();
-                } else {
-                    firstGroup = false;
-                }
-                query.equalTo("lsp.id", 88);
-
-            } else if (key.contains("ISRO")) {
-                if (!firstGroup) {
-                    query.or();
-                } else {
-                    firstGroup = false;
-                }
-                query.equalTo("lsp.id", 31);
-            }
-        }
-        return query;
-    }
-
-    private static RealmQuery<Launch> filterCountry(RealmQuery<Launch> query, ArrayList<String> countryFilter) {
-        boolean firstGroup = true;
-        for (String key : countryFilter) {
-            Timber.v("Country key: %s", key);
-            if (key.contains("China")) {
-                key = "CHN";
-            } else if (key.contains("Russia")) {
-                key = "RUS";
-            } else if (key.contains("India")) {
-                key = "IND";
-            } else if (key.contains("Multi")) {
-                key = ",";
-            }
-            if (!firstGroup) {
-                query.or();
-            } else {
-                firstGroup = false;
-            }
-            query.contains("location.countryCode", key);
-            query.or();
-            query.contains("lsp.countryCode", key);
-        }
-        return query;
-    }
-
-
-    public static RealmResults<Launch> buildUpcomingSwitchQueryAsync(Context context, Realm realm) {
-        SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
-        RealmQuery<Launch> query;
-        if (switchPreferences.getAllSwitch()) {
-            query = getAllUpcomingQuery(context, realm);
-        } else {
-            query = getSortedUpcomingQuery(context, realm);
-        }
-        return query.findAllAsync();
-    }
-
     public static RealmResults<Launch> buildUpcomingSwitchQuery(Context context, Realm realm) {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
         RealmQuery<Launch> query;
@@ -397,12 +43,8 @@ public class QueryBuilder {
         Date date = calendar.getTime();
         RealmQuery<Launch> query = realm.where(Launch.class)
                 .greaterThanOrEqualTo("net", date);
-        if (switchPreferences.getNoGoSwitch()) {
-            query.notEqualTo("status", 2);
-            query.findAll();
-        }
-        if (switchPreferences.getTBDLaunchSwitch()) {
-            query.equalTo("tbddate", false);
+        if (switchPreferences.getTBDSwitch()) {
+            query.notEqualTo("status.id", 2);
             query.findAll();
         }
         query.sort("net", Sort.ASCENDING);
@@ -422,18 +64,14 @@ public class QueryBuilder {
                 .greaterThanOrEqualTo("net", date);
         query.findAll();
 
-        if (switchPreferences.getNoGoSwitch()) {
-            query.notEqualTo("status", 2).findAll();
-        }
-
-        if (switchPreferences.getTBDLaunchSwitch()) {
-            query.equalTo("tbddate", false).findAll();
+        if (switchPreferences.getTBDSwitch()) {
+            query.notEqualTo("status.id", 2).findAll();
         }
         query.beginGroup();
 
         if (switchPreferences.getSwitchNasa()) {
             first = false;
-            query.equalTo("lsp.id", 44);
+            query.equalTo("rocket.configuration.launchServiceProvider.id", 44);
         }
 
         if (switchPreferences.getSwitchArianespace()) {
@@ -442,7 +80,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("lsp.id", 115);
+            query.equalTo("rocket.configuration.launchServiceProvider.id", 115);
         }
 
         if (switchPreferences.getSwitchSpaceX()) {
@@ -451,7 +89,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("lsp.id", 121);
+            query.equalTo("rocket.configuration.launchServiceProvider.id", 121);
         }
 
         if (switchPreferences.getSwitchULA()) {
@@ -460,7 +98,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("lsp.id", 124);
+            query.equalTo("rocket.configuration.launchServiceProvider.id", 124);
         }
 
         if (switchPreferences.getSwitchRoscosmos()) {
@@ -469,11 +107,11 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("lsp.id", 111)
+            query.equalTo("rocket.configuration.launchServiceProvider.id", 111)
                     .or()
-                    .equalTo("lsp.id", 163)
+                    .equalTo("rocket.configuration.launchServiceProvider.id", 163)
                     .or()
-                    .equalTo("lsp.id", 63);
+                    .equalTo("rocket.configuration.launchServiceProvider.id", 63);
         }
         if (switchPreferences.getSwitchCASC()) {
             if (!first) {
@@ -481,7 +119,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("lsp.id", 88);
+            query.equalTo("rocket.configuration.launchServiceProvider.id", 88);
         }
 
         if (switchPreferences.getSwitchISRO()) {
@@ -490,7 +128,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("lsp.id", 31);
+            query.equalTo("rocket.configuration.launchServiceProvider.id", 31);
         }
 
         if (switchPreferences.getSwitchKSC()) {
@@ -499,7 +137,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("location.id", 17);
+            query.equalTo("pad.location.id", 17);
         }
 
         if (switchPreferences.getSwitchKSC()) {
@@ -508,7 +146,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("location.id", 16);
+            query.equalTo("pad.location.id", 16);
         }
 
         if (switchPreferences.getSwitchPles()) {
@@ -517,14 +155,14 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("location.id", 11);
+            query.equalTo("pad.location.id", 11);
         }
 
         if (switchPreferences.getSwitchVan()) {
             if (!first) {
                 query.or();
             }
-            query.equalTo("location.id", 18);
+            query.equalTo("pad.location.id", 18);
         }
 
         query.endGroup();
@@ -543,15 +181,15 @@ public class QueryBuilder {
 
         query.findAll();
 
-        if (switchPreferences.getNoGoSwitch()) {
-            query.notEqualTo("status", 2).findAll();
+        if (switchPreferences.getTBDSwitch()) {
+            query.notEqualTo("status.id", 2).findAll();
         }
 
         query.beginGroup();
 
         if (switchPreferences.getSwitchNasa()) {
             first = false;
-            query.equalTo("lsp.id", 44);
+            query.equalTo("rocket.configuration.launchServiceProvider.id", 44);
         }
 
         if (switchPreferences.getSwitchArianespace()) {
@@ -560,7 +198,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("lsp.id", 115);
+            query.equalTo("rocket.configuration.launchServiceProvider.id", 115);
         }
 
         if (switchPreferences.getSwitchSpaceX()) {
@@ -569,7 +207,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("lsp.id", 121);
+            query.equalTo("rocket.configuration.launchServiceProvider.id", 121);
         }
 
 
@@ -579,7 +217,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("lsp.id", 124);
+            query.equalTo("rocket.configuration.launchServiceProvider.id", 124);
         }
 
         if (switchPreferences.getSwitchRoscosmos()) {
@@ -588,11 +226,11 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("lsp.id", 111)
+            query.equalTo("rocket.configuration.launchServiceProvider.id", 111)
                     .or()
-                    .equalTo("lsp.id", 163)
+                    .equalTo("rocket.configuration.launchServiceProvider.id", 163)
                     .or()
-                    .equalTo("lsp.id", 63);
+                    .equalTo("rocket.configuration.launchServiceProvider.id", 63);
         }
         if (switchPreferences.getSwitchCASC()) {
             if (!first) {
@@ -600,7 +238,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("lsp.id", 88);
+            query.equalTo("rocket.configuration.launchServiceProvider.id", 88);
         }
 
         if (switchPreferences.getSwitchISRO()) {
@@ -609,7 +247,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("lsp.id", 31);
+            query.equalTo("rocket.configuration.launchServiceProvider.id", 31);
         }
 
         if (switchPreferences.getSwitchKSC()) {
@@ -618,7 +256,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("location.id", 17);
+            query.equalTo("pad.location.id", 17);
         }
 
         if (switchPreferences.getSwitchKSC()) {
@@ -627,7 +265,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("location.id", 16);
+            query.equalTo("pad.location.id", 16);
         }
 
         if (switchPreferences.getSwitchPles()) {
@@ -636,14 +274,14 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("location.id", 11);
+            query.equalTo("pad.location.id", 11);
         }
 
         if (switchPreferences.getSwitchVan()) {
             if (!first) {
                 query.or();
             }
-            query.equalTo("location.id", 18);
+            query.equalTo("pad.location.id", 18);
         }
 
         query.endGroup();
@@ -659,15 +297,15 @@ public class QueryBuilder {
 
         query.findAll();
 
-        if (switchPreferences.getNoGoSwitch()) {
-            query.notEqualTo("status", 2).findAll();
+        if (switchPreferences.getTBDSwitch()) {
+            query.notEqualTo("status.id", 2).findAll();
         }
 
         query.beginGroup();
 
         if (switchPreferences.getSwitchNasa()) {
             first = false;
-            query.equalTo("lsp.id", 44);
+            query.equalTo("rocket.configuration.launchServiceProvider.id", 44);
         }
 
         if (switchPreferences.getSwitchArianespace()) {
@@ -676,7 +314,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("lsp.id", 115);
+            query.equalTo("rocket.configuration.launchServiceProvider.id", 115);
         }
 
         if (switchPreferences.getSwitchSpaceX()) {
@@ -685,7 +323,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("lsp.id", 121);
+            query.equalTo("rocket.configuration.launchServiceProvider.id", 121);
         }
 
         if (switchPreferences.getSwitchULA()) {
@@ -694,7 +332,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("lsp.id", 124);
+            query.equalTo("rocket.configuration.launchServiceProvider.id", 124);
         }
 
         if (switchPreferences.getSwitchRoscosmos()) {
@@ -703,11 +341,11 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("lsp.id", 111)
+            query.equalTo("rocket.configuration.launchServiceProvider.id", 111)
                     .or()
-                    .equalTo("lsp.id", 163)
+                    .equalTo("rocket.configuration.launchServiceProvider.id", 163)
                     .or()
-                    .equalTo("lsp.id", 63);
+                    .equalTo("rocket.configuration.launchServiceProvider.id", 63);
         }
         if (switchPreferences.getSwitchCASC()) {
             if (!first) {
@@ -715,7 +353,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("lsp.id", 88);
+            query.equalTo("rocket.configuration.launchServiceProvider.id", 88);
         }
 
         if (switchPreferences.getSwitchISRO()) {
@@ -724,7 +362,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("lsp.id", 31);
+            query.equalTo("rocket.configuration.launchServiceProvider.id", 31);
         }
 
         if (switchPreferences.getSwitchKSC()) {
@@ -733,7 +371,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("location.id", 17);
+            query.equalTo("pad.location.id", 17);
         }
 
         if (switchPreferences.getSwitchKSC()) {
@@ -742,7 +380,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("location.id", 16);
+            query.equalTo("pad.location.id", 16);
         }
 
         if (switchPreferences.getSwitchPles()) {
@@ -751,14 +389,14 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("location.id", 11);
+            query.equalTo("pad.location.id", 11);
         }
 
         if (switchPreferences.getSwitchVan()) {
             if (!first) {
                 query.or();
             }
-            query.equalTo("location.id", 18);
+            query.equalTo("pad.location.id", 18);
         }
 
         query.endGroup();

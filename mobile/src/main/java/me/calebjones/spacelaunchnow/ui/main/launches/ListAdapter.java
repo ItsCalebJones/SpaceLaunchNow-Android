@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,18 +12,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.content.data.LaunchStatus;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
@@ -33,7 +33,7 @@ import timber.log.Timber;
  */
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     public int position;
-    private RealmList<Launch> launchList;
+    private RealmList<LaunchList> launchList;
     private Context mContext;
     private Calendar rightNow;
     private SharedPreferences sharedPref;
@@ -65,7 +65,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         night = sharedPreference.isNightModeActive(mContext);
     }
 
-    public void addItems(List<Launch> launchList) {
+    public void addItems(List<LaunchList> launchList) {
 
         if (this.launchList != null) {
             this.launchList.addAll(launchList);
@@ -90,7 +90,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        final Launch launchItem = launchList.get(i);
+        final LaunchList launchItem = launchList.get(i);
 
         String[] title;
         String launchDate;
@@ -99,7 +99,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
         //Retrieve missionType
         if (launchItem.getMission() != null) {
-            Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMission().getTypeName(), night);
+            Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMissionType(), night);
         } else {
             if (night) {
                 holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
@@ -108,7 +108,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             }
         }
 
-        if (launchItem.getStatus() != null && launchItem.getStatus() == 2) {
+        if (launchItem.getStatus() != null && launchItem.getStatus().getId() == 2) {
             //Get launch date
             launchDate = sdf.format(launchItem.getNet());
 
@@ -120,7 +120,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
         //If pad and agency exist add it to location, otherwise get whats always available
         if (launchItem.getLocation() != null) {
-            holder.location.setText(launchItem.getLocation().getName());
+            holder.location.setText(launchItem.getLocation());
         } else {
             holder.location.setText("Click for more information.");
         }
@@ -134,21 +134,36 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
                 } else {
                     holder.title.setText(launchItem.getName());
                     if (launchItem.getMission() != null) {
-                        holder.title.setText(launchItem.getMission().getName());
+                        holder.title.setText(launchItem.getMission());
                     }
                 }
             } catch (ArrayIndexOutOfBoundsException exception) {
                 holder.title.setText(launchItem.getName());
                 if (launchItem.getMission() != null) {
-                    holder.title.setText(launchItem.getMission().getName());
+                    holder.title.setText(launchItem.getMission());
                 }
 
             }
         }
-    }
 
-    public String parseDateToMMyyyy(Date date) {
-        return new SimpleDateFormat("MMM yyyy").format(date);
+        if (launchItem.getLanding() != null) {
+            holder.landingCard.setVisibility(View.VISIBLE);
+            holder.landingLocation.setText(launchItem.getLanding());
+            holder.landingCard.setCardBackgroundColor(LaunchStatus.getLandingStatusColor(mContext, launchItem.getLandingSuccess()));
+        } else {
+            holder.landingCard.setVisibility(View.GONE);
+        }
+
+        if (launchItem.getOrbit() != null) {
+            holder.orbitCard.setVisibility(View.VISIBLE);
+            holder.orbitName.setText(launchItem.getOrbit());
+        } else {
+            holder.orbitCard.setVisibility(View.GONE);
+        }
+
+        holder.status.setText(launchItem.getStatus().getName());
+        holder.statusCard.setCardBackgroundColor(LaunchStatus.getLaunchStatusColor(mContext, launchItem.getStatus().getId()));
+
     }
 
     @Override
@@ -157,18 +172,34 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView title, content, location, launch_date, mission;
-        public ImageView categoryIcon;
+        @BindView(R.id.status)
+        TextView status;
+        @BindView(R.id.status_pill_mini)
+        CardView statusCard;
+        @BindView(R.id.landing)
+        TextView landingLocation;
+        @BindView(R.id.landing_pill_mini)
+        CardView landingCard;
+        @BindView(R.id.launcher)
+        TextView orbitName;
+        @BindView(R.id.launcher_pill_mini)
+        CardView orbitCard;
+        @BindView(R.id.launch_rocket)
+        TextView title;
+        @BindView(R.id.location)
+        TextView location;
+        @BindView(R.id.launch_date)
+        TextView launch_date;
+        @BindView(R.id.mission)
+        TextView mission;
+        @BindView(R.id.categoryIcon)
+        ImageView categoryIcon;
+
 
         //Add content to the card
         public ViewHolder(View view) {
             super(view);
-
-            categoryIcon = view.findViewById(R.id.categoryIcon);
-            title = view.findViewById(R.id.launch_rocket);
-            location = view.findViewById(R.id.location);
-            launch_date = view.findViewById(R.id.launch_date);
-            mission = view.findViewById(R.id.mission);
+            ButterKnife.bind(this, view);
 
             title.setOnClickListener(this);
             location.setOnClickListener(this);
@@ -179,7 +210,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         //React to click events.
         @Override
         public void onClick(View v) {
-            final Launch launch = launchList.get(getAdapterPosition());
+            final LaunchList launch = launchList.get(getAdapterPosition());
 
             Intent intent = new Intent(mContext, LaunchDetailActivity.class);
             intent.putExtra("TYPE", "launch");
@@ -188,13 +219,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         }
     }
 
-    public void animateTo(List<Launch> models) {
+    public void animateTo(List<LaunchList> models) {
         applyAndAnimateRemovals(models);
         applyAndAnimateAdditions(models);
         applyAndAnimateMovedItems(models);
     }
 
-    private void applyAndAnimateRemovals(List<Launch> newModels) {
+    private void applyAndAnimateRemovals(List<LaunchList> newModels) {
         for (int i = launchList.size() - 1; i >= 0; i--) {
             if (!newModels.contains(launchList.get(i))) {
                 removeItem(i);
@@ -202,18 +233,18 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         }
     }
 
-    private void applyAndAnimateAdditions(List<Launch> newModels) {
+    private void applyAndAnimateAdditions(List<LaunchList> newModels) {
         for (int i = 0, count = newModels.size(); i < count; i++) {
-            final Launch model = newModels.get(i);
+            final LaunchList model = newModels.get(i);
             if (!launchList.contains(model)) {
                 addItem(i, model);
             }
         }
     }
 
-    private void applyAndAnimateMovedItems(List<Launch> newModels) {
+    private void applyAndAnimateMovedItems(List<LaunchList> newModels) {
         for (int toPosition = newModels.size() - 1; toPosition >= 0; toPosition--) {
-            final Launch model = newModels.get(toPosition);
+            final LaunchList model = newModels.get(toPosition);
             final int fromPosition = launchList.indexOf(model);
             if (fromPosition >= 0 && fromPosition != toPosition) {
                 moveItem(fromPosition, toPosition);
@@ -221,13 +252,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         }
     }
 
-    public Launch removeItem(int position) {
-        Launch model = launchList.remove(position);
+    public LaunchList removeItem(int position) {
+        LaunchList model = launchList.remove(position);
         notifyItemRemoved(position);
         return model;
     }
 
-    public void addItem(int position, Launch model) {
+    public void addItem(int position, LaunchList model) {
         launchList.add(position, model);
         notifyItemInserted(position);
     }

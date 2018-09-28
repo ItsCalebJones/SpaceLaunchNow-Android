@@ -62,8 +62,8 @@ public class LaunchListFactory implements RemoteViewsService.RemoteViewsFactory 
         if (switchPreferences.getAllSwitch()) {
             RealmQuery<Launch> query = mRealm.where(Launch.class)
                     .greaterThanOrEqualTo("net", date);
-            if (switchPreferences.getNoGoSwitch()) {
-                query.equalTo("status", 1);
+            if (switchPreferences.getTBDSwitch()) {
+                query.equalTo("status.id", 1);
             }
             launchRealms = query.sort("net", Sort.ASCENDING).findAll();
             Timber.v("loadLaunches - Realm query created.");
@@ -132,7 +132,7 @@ public class LaunchListFactory implements RemoteViewsService.RemoteViewsFactory 
         row.setTextColor(R.id.launch_date, widgetSecondaryTextColor);
         row.setTextColor(R.id.location, widgetSecondaryTextColor);
 
-        if (launch.getStatus() != null && launch.getStatus() == 2) {
+        if (launch.getStatus() != null && launch.getStatus().getId() == 2) {
             //Get launch date
             sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
             Date date = launch.getNet();
@@ -176,12 +176,12 @@ public class LaunchListFactory implements RemoteViewsService.RemoteViewsFactory 
         }
 
         //If pad and agency exist add it to location, otherwise get whats always available
-        if (launch.getLocation() != null) {
-            row.setTextViewText(R.id.location, launch.getLocation().getName());
+        if (launch.getPad().getLocation() != null) {
+            row.setTextViewText(R.id.location, launch.getPad().getLocation().getName());
         } else {
             row.setTextViewText(R.id.location, "Click for more information.");
         }
-        row.setTextViewText(R.id.location, launch.getLocation().getName());
+        row.setTextViewText(R.id.location, launch.getPad().getLocation().getName());
 
         Intent exploreIntent = new Intent(context, LaunchDetailActivity.class);
         exploreIntent.putExtra("TYPE", "launch");

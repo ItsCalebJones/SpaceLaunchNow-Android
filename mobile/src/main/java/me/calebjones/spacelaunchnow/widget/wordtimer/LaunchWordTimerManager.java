@@ -95,8 +95,8 @@ public class LaunchWordTimerManager {
         if (switchPreferences.getAllSwitch()) {
             RealmQuery<Launch> query = mRealm.where(Launch.class)
                     .greaterThanOrEqualTo("net", date);
-            if (switchPreferences.getNoGoSwitch()) {
-                query.equalTo("status", 1);
+            if (switchPreferences.getTBDSwitch()) {
+                query.equalTo("status.id", 1);
             }
             launchRealms = query.findAll().sort("net", Sort.ASCENDING);
             Timber.v("loadLaunches - Realm query created.");
@@ -202,9 +202,9 @@ public class LaunchWordTimerManager {
 
     private String getLaunchName(Launch launchRealm) {
         //Replace with launch
-        if (launchRealm.getLauncher() != null) {
+        if (launchRealm.getRocket().getConfiguration() != null) {
             //Replace with mission name
-            return launchRealm.getLauncher().getName();
+            return launchRealm.getRocket().getConfiguration().getName();
         } else {
             return null;
         }

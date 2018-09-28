@@ -57,8 +57,8 @@ public class LaunchCardCompactManager {
         if (switchPreferences.getAllSwitch()) {
             RealmQuery<Launch> query = mRealm.where(Launch.class)
                     .greaterThanOrEqualTo("net", date);
-            if (switchPreferences.getNoGoSwitch()) {
-                query.equalTo("status", 1);
+            if (switchPreferences.getTBDSwitch()) {
+                query.equalTo("status.id", 1);
             }
             launchRealms = query.sort("net", Sort.ASCENDING).findAll();
             Timber.v("loadLaunches - Realm query created.");
@@ -166,8 +166,8 @@ public class LaunchCardCompactManager {
     private void setLocationName(Launch launchRealm) {
         String locationName = null;
 
-        if (launchRealm.getLocation() != null && launchRealm.getLocation().getName() != null) {
-            locationName = launchRealm.getLocation().getName();
+        if (launchRealm.getPad().getLocation() != null && launchRealm.getPad().getLocation().getName() != null) {
+            locationName = launchRealm.getPad().getLocation().getName();
         }
 
         if (locationName != null) {

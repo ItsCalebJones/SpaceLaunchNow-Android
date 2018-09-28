@@ -1,51 +1,64 @@
 package me.calebjones.spacelaunchnow.data.models.news;
 
-import org.simpleframework.xml.Attribute;
-import org.simpleframework.xml.Element;
-import org.simpleframework.xml.Namespace;
-import org.simpleframework.xml.Path;
-import org.simpleframework.xml.Root;
-import org.simpleframework.xml.Text;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
+import java.util.List;
 
-import io.realm.RealmObject;
-import io.realm.RealmResults;
-import io.realm.annotations.Index;
-import io.realm.annotations.LinkingObjects;
-import io.realm.annotations.PrimaryKey;
+public class Article {
 
-@Root(strict = false, name="item")
-public class Article extends RealmObject {
+    @SerializedName("tags")
+    @Expose
+    public List<String> tags = null;
+    @SerializedName("categories")
+    @Expose
+    public List<String> categories = null;
+    @SerializedName("news_site_long")
+    @Expose
+    public String newsSite;
+    @SerializedName("title")
+    @Expose
+    public String title;
+    @SerializedName("url")
+    @Expose
+    public String url;
+    @SerializedName("id")
+    @Expose
+    public String id;
+    @SerializedName("date_published")
+    @Expose
+    public Date datePublished;
+    @SerializedName("date_Added")
+    @Expose
+    public Date dateAdded;
+    @SerializedName("featured_image")
+    @Expose
+    public String featuredImage;
 
-    @PrimaryKey
-    @Element(name = "title")
-    private String title;
+    public List<String> getTags() {
+        return tags;
+    }
 
-    @Element(name = "link")
-    private String link;
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
 
-    @Element(name = "description")
-    private String description;
+    public List<String> getCategories() {
+        return categories;
+    }
 
-    @Element(name = "guid", required = false)
-    private String guid;
+    public void setCategories(List<String> categories) {
+        this.categories = categories;
+    }
 
-    @Element(name = "pubDate", required = false)
-    private String pubDate;
+    public String getNewsSite() {
+        return newsSite;
+    }
 
-    @Element(name = "content", required = false)
-    private String content;
-
-    @Index
-    private Date date;
-
-    @Path("enclosure")
-    @Attribute(name = "url", required = false)
-    private String mediaUrl;
-
-    @LinkingObjects("articles")
-    private final RealmResults<Channel> channel = null;
+    public void setNewsSite(String newsSite) {
+        this.newsSite = newsSite;
+    }
 
     public String getTitle() {
         return title;
@@ -55,55 +68,43 @@ public class Article extends RealmObject {
         this.title = title;
     }
 
-    public String getLink() {
-        return link;
+    public String getUrl() {
+        return url;
     }
 
-    public void setLink(String link) {
-        this.link = link;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public String getDescription() {
-        return description;
+    public String getId() {
+        return id;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getGuid() {
-        return guid;
+    public Date getDatePublished() {
+        return datePublished;
     }
 
-    public void setGuid(String guid) {
-        this.guid = guid;
+    public void setDatePublished(Date datePublished) {
+        this.datePublished = datePublished;
     }
 
-    public String getPubDate() {
-        return pubDate;
+    public Date getDateAdded() {
+        return dateAdded;
     }
 
-    public void setPubDate(String pubDate) {
-        this.pubDate = pubDate;
+    public void setDateAdded(Date dateAdded) {
+        this.dateAdded = dateAdded;
     }
 
-    public RealmResults<Channel> getChannel() {
-        return channel;
+    public String getFeaturedImage() {
+        return featuredImage;
     }
 
-    public String getMediaUrl() {
-        return mediaUrl;
-    }
-
-    public void setMediaUrl(String mediaUrl) {
-        this.mediaUrl = mediaUrl;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
+    public void setFeaturedImage(String featuredImage) {
+        this.featuredImage = featuredImage;
     }
 }

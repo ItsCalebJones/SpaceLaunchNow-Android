@@ -23,12 +23,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.RetroFitFragment;
+import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.models.main.Orbiter;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.AgencyResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.OrbiterResponse;
+import me.calebjones.spacelaunchnow.ui.launcher.LauncherDetailActivity;
 import me.calebjones.spacelaunchnow.ui.orbiter.OrbiterDetailActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
@@ -43,13 +49,18 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
     private Context context;
     private View view;
     private OrbiterAdapter adapter;
-    private RecyclerView mRecyclerView;
     private GridLayoutManager layoutManager;
-    private CoordinatorLayout coordinatorLayout;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private List<Agency> items = new ArrayList<Agency>();
 
-    private List<Orbiter> items = new ArrayList<Orbiter>();
-    public static SparseArray<Bitmap> photoCache = new SparseArray<Bitmap>(1);
+
+    @BindView(R.id.stateful_view)
+    SimpleStatefulLayout statefulView;
+    @BindView(R.id.vehicle_detail_list)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.vehicle_coordinator)
+    CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.swiperefresh)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,21 +73,17 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
         view = inflater.inflate(R.layout.fragment_launch_vehicles, container, false);
-
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.vehicle_detail_list);
-        coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.vehicle_coordinator);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
+        ButterKnife.bind(this, view);
 
         swipeRefreshLayout.setOnRefreshListener(this);
 
         if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
-            layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 3);
+            layoutManager = new GridLayoutManager(context, 3);
         } else if (getResources().getBoolean(R.bool.landscape)  || getResources().getBoolean(R.bool.isTablet)) {
-            layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 2);
+            layoutManager = new GridLayoutManager(context, 2);
         } else {
-            layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 1);
+            layoutManager = new GridLayoutManager(context, 1);
         }
 
         mRecyclerView.setLayoutManager(layoutManager);
@@ -96,18 +103,15 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
         });
         adapter.setOnItemClickListener(recyclerRowClickListener);
         mRecyclerView.setAdapter(adapter);
+        statefulView.showProgress();
+        statefulView.setOfflineRetryOnClickListener(v -> loadJSON());
         return view;
     }
 
     @Override
     public void onResume() {
         if (adapter.getItemCount() == 0) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    loadJSON();
-                }
-            }, 100);
+            new Handler().postDelayed(() -> loadJSON(), 100);
         }
         super.onResume();
     }
@@ -117,33 +121,43 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
         showLoading();
 
         SpaceLaunchNowService request = getSpaceLaunchNowRetrofit().create(SpaceLaunchNowService.class);
-        Call<OrbiterResponse> call = request.getOrbiter();
-        call.enqueue(new Callback<OrbiterResponse>() {
+        Call<AgencyResponse> call = request.getAgenciesWithOrbiters(true);
+        call.enqueue(new Callback<AgencyResponse>() {
             @Override
-            public void onResponse(Call<OrbiterResponse> call, Response<OrbiterResponse> response) {
+            public void onResponse(Call<AgencyResponse> call, Response<AgencyResponse> response) {
+                Timber.v("onResponse");
+                if (response.raw().cacheResponse() != null) {
+                    Timber.v("Response pulled from cache.");
+                }
+
+                if (response.raw().networkResponse() != null) {
+                    Timber.v("Response pulled from network.");
+                }
+
                 if (response.isSuccessful()) {
+                    AgencyResponse jsonResponse = response.body();
                     Timber.v("Success %s", response.message());
-                    OrbiterResponse jsonResponse = response.body();
-                    items = new ArrayList<>(Arrays.asList(jsonResponse.getOrbiters()));
+                    items = jsonResponse.getAgencies();
+                    statefulView.showContent();
                     adapter.addItems(items);
-                    Analytics.getInstance().sendNetworkEvent("ORBITER_INFORMATION", call.request().url().toString(), true);
+                    Analytics.getInstance().sendNetworkEvent("LAUNCHER_INFORMATION", call.request().url().toString(), true);
+
                 } else {
+                    statefulView.showEmpty();
                     Timber.e(ErrorUtil.parseSpaceLaunchNowError(response).message());
-                    if (OrbiterFragment.this.getUserVisibleHint()) {
-                        SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, ErrorUtil.parseSpaceLaunchNowError(response).message());
-                    }
+                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, ErrorUtil.parseSpaceLaunchNowError(response).message());
                 }
                 hideLoading();
+
             }
 
             @Override
-            public void onFailure(Call<OrbiterResponse> call, Throwable t) {
+            public void onFailure(Call<AgencyResponse> call, Throwable t) {
                 Timber.e(t.getMessage());
+                statefulView.showOffline();
                 hideLoading();
-                if (OrbiterFragment.this.getUserVisibleHint()) {
-                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, t.getLocalizedMessage());
-                }
-                Analytics.getInstance().sendNetworkEvent("ORBITER_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());
+                SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, t.getLocalizedMessage());
+                Analytics.getInstance().sendNetworkEvent("VEHICLE_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());
             }
         });
     }
@@ -160,41 +174,15 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
         }
     }
 
-    private OnItemClickListener recyclerRowClickListener = new OnItemClickListener() {
+    private OnItemClickListener recyclerRowClickListener = (v, position) -> {
+        Analytics.getInstance().sendButtonClicked("Launcher clicked", items.get(position).getName());
+        Gson gson = new Gson();
+        String jsonItem = gson.toJson(items.get(position));
 
-        @Override
-        public void onClick(View v, int position) {
-
-            Gson gson = new Gson();
-            String jsonItem = gson.toJson(items.get(position));
-            Analytics.getInstance().sendButtonClicked("Orbiter clicked", items.get(position).getName());
-
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                Timber.d("Starting Activity at %s", position);
-
-                Intent detailIntent = new Intent(getActivity(), OrbiterDetailActivity.class);
-                detailIntent.putExtra("position", position + 1);
-                detailIntent.putExtra("family", items.get(position).getName());
-                detailIntent.putExtra("agency", items.get(position).getAgency());
-                detailIntent.putExtra("json", jsonItem);
-
-                ImageView coverImage = (ImageView) v.findViewById(R.id.picture);
-                ((ViewGroup) coverImage.getParent()).setTransitionGroup(false);
-                photoCache.put(position, coverImage.getDrawingCache());
-
-                // Setup the transition to the detail activity
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(),
-                        new Pair<View, String>(coverImage, "cover" + position + 1));
-
-                startActivity(detailIntent, options.toBundle());
-            } else {
-                Intent intent = new Intent(getActivity(), OrbiterDetailActivity.class);
-                intent.putExtra("family", items.get(position).getName());
-                intent.putExtra("agency", items.get(position).getAgency());
-                intent.putExtra("json", jsonItem);
-                startActivity(intent);
-            }
-        }
+        Intent intent = new Intent(getActivity(), OrbiterDetailActivity.class);
+        intent.putExtra("name", items.get(position).getName());
+        intent.putExtra("json", jsonItem);
+        startActivity(intent);
     };
 
     @Override

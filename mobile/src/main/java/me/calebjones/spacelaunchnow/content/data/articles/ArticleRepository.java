@@ -2,20 +2,16 @@ package me.calebjones.spacelaunchnow.content.data.articles;
 
 import android.content.Context;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.Sort;
 import me.calebjones.spacelaunchnow.data.models.news.Article;
-import me.calebjones.spacelaunchnow.data.models.news.NewsFeedResponse;
 import me.calebjones.spacelaunchnow.content.data.articles.network.NewsAPIClient;
+import me.calebjones.spacelaunchnow.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 import timber.log.Timber;
 
 public class ArticleRepository {
@@ -24,71 +20,48 @@ public class ArticleRepository {
     private Realm realm;
     private NewsAPIClient newsAPIClient;
 
-    public ArticleRepository(Context context) {
+    public ArticleRepository(Context context, Retrofit newsRetrofit) {
         this.context = context;
         this.realm = Realm.getDefaultInstance();
-        newsAPIClient = new NewsAPIClient();
+        newsAPIClient = new NewsAPIClient(newsRetrofit);
     }
 
     public void getArticles(boolean forceRefresh, final GetArticlesCallback callback) {
-        Date currentDate = new Date();
-        currentDate.setTime(currentDate.getTime() - 1000 * 60 * 60);
-        RealmList<Article> articles = new RealmList();
-        articles.addAll(realm.where(Article.class).sort("date", Sort.DESCENDING).findAll());
-
-        if (articles.size() == 0 || forceRefresh) {
-            newsAPIClient.getNews(new Callback<NewsFeedResponse>() {
-                @Override
-                public void onResponse(Call<NewsFeedResponse> call, Response<NewsFeedResponse> response) {
-                    Timber.v("Hello");
-                    if (response.isSuccessful()) {
-                        final NewsFeedResponse newsResponse = response.body();
-                        if (newsResponse != null) {
-                            realm.executeTransaction(realm -> {
-                                RealmList<Article> finalArticles = new RealmList();
-                                SimpleDateFormat inDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.US);
-                                SimpleDateFormat altDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm Z", Locale.US);
-                                for (Article article: newsResponse.getChannel().getArticles()){
-                                    try {
-                                        Date pubDate = inDateFormat.parse(article.getPubDate());
-                                        article.setDate(pubDate);
-                                        finalArticles.add(article);
-                                    } catch (ParseException e) {
-                                        try {
-                                            Date pubDate = altDateFormat.parse(article.getPubDate());
-                                            article.setDate(pubDate);
-                                            finalArticles.add(article);
-                                        } catch (ParseException f){
-                                            Timber.e(f, "Unable to parse %s", article.getTitle());
-                                        }
-                                    }
-                                }
-                                realm.copyToRealmOrUpdate(finalArticles);
-                                callback.onSuccess(finalArticles);
-                            });
-
-                        }
-                    } else {
-                        callback.onNetworkFailure();
+        newsAPIClient.getNews(30, new Callback<List<Article>>() {
+            @Override
+            public void onResponse(Call<List<Article>> call, Response<List<Article>> response) {
+                if (response.raw().cacheResponse() != null) {
+                    Timber.v("Response pulled from cache.");
+                    if (!Utils.isNetworkAvailable(context)) {
+                        callback.onFailure("Offline: Showing cached results.", true);
                     }
                 }
 
-                @Override
-                public void onFailure(Call<NewsFeedResponse> call, Throwable t) {
-                    callback.onFailure(t);
+                if (response.raw().networkResponse() != null) {
+                    Timber.v("Response pulled from network.");
                 }
-            });
-        } else {
-            callback.onSuccess(articles);
-        }
+
+
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.body());
+
+                } else {
+                    callback.onNetworkFailure();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Article>> call, Throwable t) {
+                callback.onFailure(t.getLocalizedMessage(), false);
+            }
+        });
     }
 
 
-
     public interface GetArticlesCallback {
-        void onSuccess(RealmList<Article> articles);
+        void onSuccess(List<Article> articles);
 
-        void onFailure(Throwable throwable);
+        void onFailure(String error, boolean showContent);
 
         void onNetworkFailure();
 

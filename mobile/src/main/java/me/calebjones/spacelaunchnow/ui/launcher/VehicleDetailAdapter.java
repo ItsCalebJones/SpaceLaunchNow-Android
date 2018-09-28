@@ -5,7 +5,11 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.Group;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +22,11 @@ import com.bumptech.glide.request.RequestOptions;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.data.models.main.Launcher;
+import me.calebjones.spacelaunchnow.data.models.main.LauncherConfig;
 import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.ui.launches.launcher.LauncherLaunchActivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
@@ -31,7 +37,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
     public int position;
     private Context mContext;
     private Activity activity;
-    private List<Launcher> items;
+    private List<LauncherConfig> items;
     private RequestOptions requestOptions;
     private int backgroundColor = 0;
 
@@ -44,7 +50,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
         this.activity = activity;
     }
 
-    public void addItems(List<Launcher> items) {
+    public void addItems(List<LauncherConfig> items) {
         if (this.items != null) {
             this.items.addAll(items);
         } else {
@@ -68,9 +74,11 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        Launcher launchVehicle = items.get(holder.getAdapterPosition());
+        LauncherConfig launchVehicle = items.get(holder.getAdapterPosition());
 
         if (launchVehicle != null) {
+
+            holder.launchesButton.setText(String.format(mContext.getString(R.string.view_rocket_launches), launchVehicle.getFullName()));
             holder.vehicleSpecView.setVisibility(View.VISIBLE);
             if (launchVehicle.getDescription() != null && launchVehicle.getDescription().length() > 0) {
                 holder.vehicleDescription.setVisibility(View.VISIBLE);
@@ -118,12 +126,13 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
             if (launchVehicle.getToThrust() != null) {
                 holder.vehicleSpecsThrust.setText(String.format(mContext.getString(R.string.thrust_full), launchVehicle.getToThrust()));
             } else {
-                holder.vehicleSpecsHeight.setText(mContext.getString(R.string.height));
+                holder.vehicleSpecsThrust.setText(mContext.getString(R.string.height));
             }
 
 
             if (backgroundColor != 0) {
-                holder.titleContainer.setBackgroundColor(backgroundColor);
+                holder.vehicleName.setBackgroundColor(backgroundColor);
+                holder.vehicleFamily.setBackgroundColor(backgroundColor);
             }
             if (launchVehicle.getImageUrl() != null && launchVehicle.getImageUrl().length() > 0) {
                 holder.vehicleImage.setVisibility(View.VISIBLE);
@@ -154,12 +163,6 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
             } else {
                 holder.wikiButton.setVisibility(View.GONE);
             }
-
-            if (holder.infoButton.getVisibility() == View.GONE && holder.wikiButton.getVisibility() == View.GONE) {
-                holder.button_layout.setVisibility(View.GONE);
-            } else {
-                holder.button_layout.setVisibility(View.VISIBLE);
-            }
         }
     }
 
@@ -171,53 +174,51 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
 
     public void updateColor(int color) {
 
-            backgroundColor = color;
+        backgroundColor = color;
 
-            backgroundColor = color;
+        backgroundColor = color;
 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public ImageView vehicleImage;
-        public View vehicleSpecView, vehicleContainer, button_layout;
-        public TextView vehicleName;
-        public TextView vehicleFamily;
-        public TextView vehicleSpecsHeight;
-        public TextView vehicleSpecsDiameter;
-        public TextView vehicleSpecsStages;
-        public TextView vehicleSpecsLeo;
-        public TextView vehicleSpecsGto;
-        public TextView vehicleSpecsLaunchMass;
-        public TextView vehicleSpecsThrust;
-        public View titleContainer;
-        public AppCompatButton infoButton;
-        public AppCompatButton wikiButton;
-        public TextView vehicleDescription;
-        public AppCompatButton launchesButton;
+
+        @BindView(R.id.imageView)
+        ImageView vehicleImage;
+        @BindView(R.id.launch_vehicle_title)
+        TextView vehicleName;
+        @BindView(R.id.launch_vehicle)
+        TextView vehicleFamily;
+        @BindView(R.id.launch_vehicle_description)
+        TextView vehicleDescription;
+
+        @BindView(R.id.launch_vehicle_specs_height)
+        TextView vehicleSpecsHeight;
+        @BindView(R.id.launch_vehicle_specs_diameter)
+        TextView vehicleSpecsDiameter;
+        @BindView(R.id.launch_vehicle_specs_stages)
+        TextView vehicleSpecsStages;
+        @BindView(R.id.launch_vehicle_specs_leo)
+        TextView vehicleSpecsLeo;
+        @BindView(R.id.launch_vehicle_specs_gto)
+        TextView vehicleSpecsGto;
+        @BindView(R.id.launch_vehicle_specs_launch_mass)
+        TextView vehicleSpecsLaunchMass;
+        @BindView(R.id.launch_vehicle_specs_thrust)
+        TextView vehicleSpecsThrust;
+        @BindView(R.id.vehicle_infoButton)
+        AppCompatButton infoButton;
+        @BindView(R.id.vehicle_wikiButton)
+        AppCompatButton wikiButton;
+        @BindView(R.id.vehicle_spec_view)
+        Group vehicleSpecView;
+        @BindView(R.id.launcher_launches)
+        AppCompatButton launchesButton;
 
         //Add content to the card
         public ViewHolder(View view) {
             super(view);
-
+            ButterKnife.bind(this, view);
             view.setOnClickListener(this);
-            vehicleContainer = view.findViewById(R.id.vehicle_container);
-            vehicleSpecView = view.findViewById(R.id.vehicle_spec_view);
-            vehicleImage = view.findViewById(R.id.item_icon);
-            vehicleName = view.findViewById(R.id.item_title);
-            vehicleFamily = view.findViewById(R.id.text_subtitle);
-            vehicleSpecsStages = view.findViewById(R.id.launch_vehicle_specs_stages);
-            vehicleSpecsHeight = view.findViewById(R.id.launch_vehicle_specs_height);
-            vehicleSpecsDiameter = view.findViewById(R.id.launch_vehicle_specs_diameter);
-            vehicleSpecsLeo = view.findViewById(R.id.launch_vehicle_specs_leo);
-            vehicleSpecsGto = view.findViewById(R.id.launch_vehicle_specs_gto);
-            vehicleSpecsLaunchMass = view.findViewById(R.id.launch_vehicle_specs_launch_mass);
-            vehicleSpecsThrust = view.findViewById(R.id.launch_vehicle_specs_thrust);
-            vehicleDescription = view.findViewById(R.id.launch_vehicle_description);
-            button_layout = view.findViewById(R.id.button_layout);
-            titleContainer = view.findViewById(R.id.text_container);
-            infoButton = view.findViewById(R.id.infoButton);
-            wikiButton = view.findViewById(R.id.wikiButton);
-            launchesButton = view.findViewById(R.id.launcher_launches);
 
             launchesButton.setOnClickListener(this);
             infoButton.setOnClickListener(this);
@@ -236,7 +237,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
                 case R.id.wikiButton:
                     Utils.openCustomTab(activity, mContext, items.get(position).getWikiUrl());
                     break;
-                case R.id.item_icon:
+                case R.id.imageView:
                     Intent animateIntent = new Intent(activity, FullscreenImageActivity.class);
                     animateIntent.putExtra("imageURL", items.get(position).getImageUrl());
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

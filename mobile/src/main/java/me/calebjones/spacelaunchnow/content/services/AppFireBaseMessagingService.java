@@ -18,8 +18,10 @@ import java.util.Map;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.content.notifications.NotificationBuilder;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
-import me.calebjones.spacelaunchnow.data.models.main.Launcher;
+import me.calebjones.spacelaunchnow.data.models.main.LauncherConfig;
 import me.calebjones.spacelaunchnow.data.models.main.Location;
+import me.calebjones.spacelaunchnow.data.models.main.Pad;
+import me.calebjones.spacelaunchnow.data.models.main.Rocket;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
@@ -46,13 +48,17 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
                 launch.setNet(dateFormat.parse(data.getString("launch_net")));
                 launch.setName(data.getString("launch_name"));
 
-                Launcher launcher = new Launcher();
-                launcher.setImageUrl(data.getString("launch_image"));
-                launch.setLauncher(launcher);
+                LauncherConfig launcherConfig = new LauncherConfig();
+                launcherConfig.setImageUrl(data.getString("launch_image"));
+                Rocket rocket = new Rocket();
+                rocket.setConfiguration(launcherConfig);
+                launch.setRocket(rocket);
 
                 Location location = new Location();
                 location.setName(data.getString("launch_location"));
-                launch.setLocation(location);
+                Pad pad = new Pad();
+                pad.setLocation(location);
+                launch.setPad(pad);
 
                 if (background.contains("true")) {
                     if (isNotificationEnabled(data.getString("notification_type"), data.getString("webcast").contains("true"))) {

@@ -201,7 +201,7 @@ dependencies {
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
 
     // Android Official Libraries
-    implementation 'com.android.support.constraint:constraint-layout:1.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation "com.android.support:customtabs:$rootProject.supportLibraryVersion"
     implementation "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
     implementation "com.android.support:palette-v7:$rootProject.supportLibraryVersion"
@@ -259,6 +259,8 @@ dependencies {
     implementation 'com.borax12.materialdaterangepicker:library:1.9'
     implementation 'com.simplecityapps:recyclerview-fastscroll:1.0.18'
     implementation 'jp.wasabeef:glide-transformations:3.0.1'
+    implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
+    implementation 'at.blogc:expandabletextview:1.0.5'
 
     // If you want to use the GPU Filters
     implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'

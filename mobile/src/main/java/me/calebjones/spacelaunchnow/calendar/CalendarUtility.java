@@ -85,7 +85,7 @@ public class CalendarUtility {
         event.calendarId = calendarItem.getId();
         event.title = launch.getName();
         event.description = description;
-        event.location = launch.getLocation().getName();
+        event.location = launch.getPad().getLocation().getName();
         if (startDate != null && endDate != null) {
             event.startDate = startDate.getTime();
             event.endDate = endDate.getTime();
@@ -140,7 +140,7 @@ public class CalendarUtility {
             Date endDate = launch.getWindowEnd();
 
             calEvent.put(CalendarContract.Events.DESCRIPTION, description);
-            calEvent.put(CalendarContract.Events.EVENT_LOCATION, launch.getLocation().getName());
+            calEvent.put(CalendarContract.Events.EVENT_LOCATION, launch.getPad().getLocation().getName());
             if (startDate != null && endDate != null) {
                 calEvent.put(CalendarContract.Events.DTSTART, startDate.getTime());
                 calEvent.put(CalendarContract.Events.DTEND, endDate.getTime());

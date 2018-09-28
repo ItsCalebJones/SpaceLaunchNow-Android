@@ -4,22 +4,57 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.view.ViewGroup;
 
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.AgencyDetailFragment;
-import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.MissionDetailFragment;
+import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.mission.MissionDetailFragment;
 import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.SummaryDetailFragment;
+import me.calebjones.spacelaunchnow.ui.launches.launcher.PreviousLauncherLaunchesFragment;
+import me.calebjones.spacelaunchnow.ui.launches.launcher.UpcomingLauncherLaunchesFragment;
 
 public class TabsAdapter extends FragmentPagerAdapter {
 
-    private SummaryDetailFragment summaryFragment = SummaryDetailFragment.newInstance();
-    private MissionDetailFragment missionFragment = MissionDetailFragment.newInstance();
-    private AgencyDetailFragment agencyFragment = AgencyDetailFragment.newInstance();
+    public SummaryDetailFragment summaryFragment;
+    public MissionDetailFragment missionFragment;
+    public AgencyDetailFragment agencyFragment;
     private Context context;
 
     public TabsAdapter(FragmentManager fragmentManager, Context context) {
         super(fragmentManager);
         this.context = context;
+    }
+
+    public void updateLaunches(Launch launch) {
+        if (summaryFragment != null) {
+            summaryFragment.setLaunch(launch);
+        }
+        if (missionFragment != null) {
+            missionFragment.setLaunch(launch);
+        }
+        if (agencyFragment != null) {
+            agencyFragment.setLaunch(launch);
+        }
+    }
+
+    public void updateSummaryLaunch(Launch launch) {
+        if (summaryFragment != null) {
+            summaryFragment.setLaunch(launch);
+        }
+    }
+
+    public void updatAgencyLaunch(Launch launch) {
+        if (agencyFragment != null) {
+            agencyFragment.setLaunch(launch);
+        }
+    }
+
+
+    public void updateMissionLaunch(Launch launch) {
+        if (missionFragment != null) {
+            missionFragment.setLaunch(launch);
+        }
     }
 
     @Override
@@ -28,16 +63,39 @@ public class TabsAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public Fragment getItem(int i) {
-        switch (i) {
+    public Fragment getItem(int position) {
+        switch (position) {
             case 0:
-                return summaryFragment;
+                return SummaryDetailFragment.newInstance();
             case 1:
-                return missionFragment;
+                return MissionDetailFragment.newInstance();
             case 2:
-                return agencyFragment;
+                return AgencyDetailFragment.newInstance();
         }
         return null;
+    }
+
+    // Here we can finally safely save a reference to the created
+    // Fragment, no matter where it came from (either getItem() or
+    // FragmentManger). Simply save the returned Fragment from
+    // super.instantiateItem() into an appropriate reference depending
+    // on the ViewPager position.
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        Fragment createdFragment = (Fragment) super.instantiateItem(container, position);
+        // save the appropriate reference depending on position
+        switch (position) {
+            case 0:
+                summaryFragment = (SummaryDetailFragment) createdFragment;
+                break;
+            case 1:
+                missionFragment = (MissionDetailFragment) createdFragment;
+                break;
+            case 2:
+                agencyFragment = (AgencyDetailFragment) createdFragment;
+                break;
+        }
+        return createdFragment;
     }
 
     @Override

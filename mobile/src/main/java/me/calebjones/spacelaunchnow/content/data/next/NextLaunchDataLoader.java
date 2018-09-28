@@ -31,7 +31,7 @@ public class NextLaunchDataLoader {
     }
 
     public void getNextUpcomingLaunches(int limit, Callbacks.NextNetworkCallback nextNetworkCallback) {
-        Timber.i("Running getUpcomingLaunches");
+        Timber.i("Running getUpcomingLaunchesList");
         DataClient.getInstance().getNextUpcomingLaunches(limit, 0, new Callback<LaunchResponse>() {
             @Override
             public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {

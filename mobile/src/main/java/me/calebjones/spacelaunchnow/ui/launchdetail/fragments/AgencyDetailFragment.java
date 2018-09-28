@@ -27,6 +27,7 @@ import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.ui.launchdetail.OnFragmentInteractionListener;
 import me.calebjones.spacelaunchnow.ui.launches.agency.AgencyLaunchActivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -57,6 +58,7 @@ public class AgencyDetailFragment extends BaseFragment {
     private SharedPreferences sharedPref;
     private static ListPreferences sharedPreference;
     private Context context;
+    private OnFragmentInteractionListener mListener;
 
     public static Launch detailLaunch;
 
@@ -86,6 +88,8 @@ public class AgencyDetailFragment extends BaseFragment {
 
         if (detailLaunch != null && detailLaunch.isValid()) {
             setUpViews(detailLaunch);
+        } else {
+            mListener.sendLaunchToFragment(OnFragmentInteractionListener.AGENCY);
         }
 
         return view;
@@ -95,16 +99,17 @@ public class AgencyDetailFragment extends BaseFragment {
     public void onResume() {
         if (detailLaunch != null && detailLaunch.isValid()) {
             setUpViews(detailLaunch);
+        } else {
+            mListener.sendLaunchToFragment(OnFragmentInteractionListener.AGENCY);
         }
         super.onResume();
     }
 
-    private void setLaunch(Launch launch) {
+    public void setLaunch(Launch launch) {
         detailLaunch = launch;
         setUpViews(launch);
     }
 
-    // TODO redo for payloads
     private void setUpViews(Launch launch) {
         try {
             detailLaunch = launch;
@@ -112,31 +117,32 @@ public class AgencyDetailFragment extends BaseFragment {
             Timber.v("Setting up views...");
             lspCard.setVisibility(View.VISIBLE);
 
-            if (detailLaunch.getLsp().getLogoUrl() != null) {
+            lspAgency.setText(String.format(this.getString(R.string.view_rocket_launches), launch.getRocket().getConfiguration().getLaunchServiceProvider().getName()));
+            if (detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getLogoUrl() != null) {
                 lspLogo.setVisibility(View.VISIBLE);
                 GlideApp.with(context)
-                        .load(detailLaunch.getLsp().getLogoUrl())
+                        .load(detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getLogoUrl())
                         .centerInside()
                         .into(lspLogo);
             }
-            lspName.setText(detailLaunch.getLsp().getName());
-            lspType.setText(detailLaunch.getLsp().getType());
-            if (detailLaunch.getLsp().getAdministrator() != null) {
-                lspAdministrator.setText(String.format("%s", detailLaunch.getLsp().getAdministrator()));
+            lspName.setText(detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getName());
+            lspType.setText(detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getType());
+            if (detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getAdministrator() != null) {
+                lspAdministrator.setText(String.format("%s", detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getAdministrator()));
             } else {
                 lspAdministrator.setText(R.string.unknown_administrator);
             }
-            if (detailLaunch.getLsp().getFoundingYear() != null) {
-                lspFoundedYear.setText(String.format(getString(R.string.founded_in), detailLaunch.getLsp().getFoundingYear()));
+            if (detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getFoundingYear() != null) {
+                lspFoundedYear.setText(String.format(getString(R.string.founded_in), detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getFoundingYear()));
             } else {
                 lspFoundedYear.setText(R.string.unknown_year);
             }
-            lspSummary.setText(detailLaunch.getLsp().getDescription());
-            if (detailLaunch.getLsp().getInfoUrl() == null) {
+            lspSummary.setText(detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getDescription());
+            if (detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getInfoUrl() == null) {
                 lspInfoButtonOne.setVisibility(View.GONE);
             }
 
-            if (detailLaunch.getLsp().getWikiUrl() == null) {
+            if (detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getWikiUrl() == null) {
                 lspWikiButtonOne.setVisibility(View.GONE);
             }
             lspAgency.setVisibility(View.VISIBLE);
@@ -156,41 +162,39 @@ public class AgencyDetailFragment extends BaseFragment {
         return new AgencyDetailFragment();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(LaunchEvent event) {
-        setLaunch(event.launch);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Timber.v("On Start");
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        Timber.v("On Stop");
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
     @OnClick(R.id.lsp_infoButton_one)
     public void onLspInfoButtonOneClicked() {
         Activity activity = (Activity) context;
-        Utils.openCustomTab(activity, context, detailLaunch.getLsp().getInfoUrl());
+        Utils.openCustomTab(activity, context, detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getInfoUrl());
     }
 
     @OnClick(R.id.lsp_wikiButton_one)
     public void onLspWikiButtonOneClicked() {
         Activity activity = (Activity) context;
-        Utils.openCustomTab(activity, context, detailLaunch.getLsp().getWikiUrl());
+        Utils.openCustomTab(activity, context, detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getWikiUrl());
     }
 
     @OnClick(R.id.lsp_agency)
     public void onViewClicked() {
         Intent intent = new Intent(context, AgencyLaunchActivity.class);
-        intent.putExtra("lspName", detailLaunch.getLsp().getName());
+        intent.putExtra("lspName", detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getName());
         startActivity(intent);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 }
