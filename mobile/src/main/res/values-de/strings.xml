@@ -1,8 +1,8 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="action_settings">Einstellungen</string>
     <string name="status_go">"Startfreigabe vorhanden"</string>
-    <string name="status_nogo">"Startfreigabe nicht vorhanden"</string>
+    <string name="status_nogo">"keine Startfreigabe vorhanden"</string>
     <string name="status_success">"Start war erfolgreich"</string>
     <string name="status_failure">"Start ist fehlgeschlagen"</string>
     <string name="spacex_summary">SpaceX entwirft, baut und startet fortschrittliche Raketen und Raumfahrzeuge. Das Unternehmen wurde 2002 gegründet, um Raumfahrt zu revolutionieren. Das ultimative Ziel von SpaceX ist, der Menschheit ein Leben auf anderen Planeten zu ermöglichen.</string>
@@ -28,8 +28,8 @@
     <string name="slide_three_description">Lerne die Raketen kennen, die Menschen in Orbit gebracht haben.</string>
     <string name="thank_you">Diese App, Space Launch Now, hat als einfaches Wochenendprojekt begonnen. Im Verlaufe eines Jahres hat die App knapp 10.000 aktive Nutzer erlangt. Ich bin unglaublich dankbar für jeden, der sich die Zeit genommen hat, Bugs zu berichten, Feedback zu geben, an BETA\'s teilgenommen hat und Supporter geworden ist.</string>
     <string name="player_error">Fehler beim Initialisieren des YouTube-Players aufgetreten: %s</string>
-    <string name="please_rate">Hey there! Du scheinst die App zu mögen. Würde es dir was ausmachen, im Play Store vorbeizuschauen und eine Bewertung dazulassen? Das würde uns sehr helfen!
-\n\nWenn du die App stattdessen nicht leiden kannst, würden wir sehr gerne dein Feedback hören, damit wir es verbessern können.
+    <string name="please_rate">Hey there! Dir scheint die App zu gefallen. Würde es dir was ausmachen, im Play Store vorbeizuschauen und eine Bewertung dazulassen? Das würde uns sehr helfen!
+\n\nWenn du die App stattdessen nicht leiden kannst, würden wir sehr gerne dein Feedback hören, damit wir sie verbessern können.
 Danke!</string>
     <string name="please_rate_short">Hey, du scheinst die App zu mögen. Mit einer 5-Sterne Bewertung würdest du uns sehr helfen! Andernfalls wenn du einen Vorschlag hast - lass es uns wissen.</string>
     <string name="button_yes">Bewerte!</string>
@@ -40,9 +40,9 @@ Danke!</string>
     <string name="notifications_settings">Stelle Startbenachrichtigungen und Planung ein.</string>
     <string name="appearance_settings">Stelle App-Darstellung, Widgets und Farben ein.</string>
     <string name="about_settings">App-Informationen über Lizenz, Bibliotheken, Changelog, usw.</string>
-    <string name="support_settings">Folge meinen Projekten und trage zur Entwicklung bei.</string>
+    <string name="support_settings">Schalte Pro Features frei und unterstütze zukünftige Entwicklungen.</string>
     <string name="wear_settings">Android Wear-Zifferblatt Einstellungen.</string>
-    <string name="supporter_unlock_text">Danke, dass du erwägst, Space Launch Now zu unterstützen. Alle Support-Levels sind einmalige Käufe und schalten alle Pro-Features dauerhaft frei! Zahl was du willst, um alle Pro-Features freizuschalten!</string>
+    <string name="supporter_unlock_text">Danke, dass du erwägst, Space Launch Now zu unterstützen. \n\nAlle Support-Levels sind einmalige Käufe und schalten alle Pro-Features dauerhaft frei. Zahl was du willst, um alle Pro-Features freizuschalten!</string>
     <string name="thank_you_support">Danke für deinen andauernden Support!</string>
     <string name="ok">OK</string>
     <string name="issues_connecting_billing">Probleme beim Verbinden mit Google Play Billing</string>
@@ -93,7 +93,7 @@ Danke!</string>
     <string name="seconds">SEKUNDEN</string>
     <string name="min">MIN</string>
     <string name="sec">SEK</string>
-    <string name="launch_service_provider">Missions-Organisation</string>
+    <string name="launch_service_provider">Launch Anbieter</string>
     <string name="primary_agency">Primäre Organisation</string>
     <string name="unknown_agency_type">Unbekannter Organisations-Typ</string>
     <string name="info">INFO</string>
@@ -104,16 +104,16 @@ Danke!</string>
     <string name="unknown_payload">Unbekannte Fracht</string>
     <string name="launch_vehicle_summary">Trägerrakete Zusammenfassung</string>
     <string name="unknown_launch_vehicle">Unbekannte Trägerrakete</string>
-    <string name="family">Familie: </string>
-    <string name="configuration">Konfiguration: </string>
+    <string name="family">Familie:</string>
+    <string name="configuration">Konfiguration:</string>
     <string name="vehicle_specifications">Trägerrakete-Spezifikationen</string>
-    <string name="height">Höhe: </string>
-    <string name="diameter">Durchmesser: </string>
-    <string name="stages">Stufen: </string>
-    <string name="mass_to_leo">Masse nach LEO: </string>
-    <string name="mass_to_gto">Masse nach GEO: </string>
-    <string name="mass_at_launch">Masse zum Start: </string>
-    <string name="thrust_at_launch">Schub zum Start: </string>
+    <string name="height">Höhe:</string>
+    <string name="diameter">Durchmesser:</string>
+    <string name="stages">Stufen:</string>
+    <string name="mass_to_leo">Masse nach LEO:</string>
+    <string name="mass_to_gto">Masse nach GEO:</string>
+    <string name="mass_at_launch">Masse zum Start:</string>
+    <string name="thrust_at_launch">Schub zum Start:</string>
     <string name="watch_launch">Start ansehen</string>
     <string name="estimated_launch_date">Geschätztes Startdatum</string>
     <string name="nothing_here">Hier gibts nichts, neu laden vom Menü?</string>
@@ -185,11 +185,11 @@ Danke!</string>
     <string name="agencies">Organisationen</string>
     <string name="error_launch_details">Fehler - nicht in der Lage, Trägerraketendetails zu laden.</string>
     <string name="height_full">Höhe: %.1f Meter</string>
-    <string name="diameter_full">Durchmesser: %.1F:f Meter</string>
+    <string name="diameter_full">Durchmesser: %.1f Meter</string>
     <string name="stage_full">Max Stufen: %d</string>
     <string name="mass_leo_full">Masse nach LEO: %d kg</string>
     <string name="mass_gto_full">Masse nach GTO: %d kg</string>
-    <string name="mass_launch_full">Masse zum Start: %d Tonnen</string>
+    <string name="mass_launch_full">Masse zum Start: %d T</string>
     <string name="thrust_full">Schub zum Start: %d kN</string>
     <string name="upcoming">Kommend</string>
     <string name="previous">Vergangen</string>
@@ -254,7 +254,7 @@ Danke!</string>
     <string name="calendar_permissions_denied"><![CDATA[Kalenderzugriff verweigert, versuche neu auszuwählen oder Android Settings -> Apps zum Aktivieren.]]></string>
     <string name="current_calendar">"Aktueller Kalender: "</string>
     <string name="select_calendar">Wähle einen Kalender zum Hinzufügen von Raketenstart-Events</string>
-    <string name="default_calendar">Standard-Kalender: </string>
+    <string name="default_calendar">Standard-Kalender:</string>
     <string name="permission_denied">Erlaubnis verweigert</string>
     <string name="permission_denied_description"><![CDATA[Falls du dich umentscheidest, versuch es wieder zu aktivieren. Oder gehe zu Einstellungen -> Anwendungen -> Space Launch Now -> Permissions.]]></string>
     <string name="no_calendars_available">Kein Kalender zum synchronisieren der Raketenstart-Events vorhanden.</string>
@@ -306,7 +306,7 @@ Danke!</string>
     <string name="wifi_only">Ausschließlich WLAN</string>
     <string name="wifi_only_summary">Startdetails werden nicht synchronisiert, es sei denn, eine WLAN-Verbindung ist vorhanden.</string>
     <string name="launch_tracking">Startverfolgung</string>
-    <string name="calendar_settings">Kalender Einstellungen</string>
+    <string name="calendar_settings">Kalendereinstellungen</string>
     <string name="auto_calendar">Sync Kalender automatisch</string>
     <string name="auto_calendar_summary">Erlaube Eintrag des nächsten Raketenstarts in Kalender.</string>
     <string name="event_count">Anzahl Ereignisse</string>
@@ -337,7 +337,7 @@ Danke!</string>
     <string name="notifications">Benachrichtigungen</string>
     <string name="appearance">Erscheinung</string>
     <string name="wear">Uhr</string>
-    <string name="Support">Support</string>
+    <string name="Support">Werde Unterstützer</string>
     <string name="about">Info</string>
     <string name="watch_hour_mode">Zeitdarstellung</string>
     <string name="watch_hour_mode_on">Nutze 24-Stunden Zeitdarstellung.</string>
@@ -387,4 +387,38 @@ Danke!</string>
     <string name="misc">Verschiedenes</string>
     <string name="launchers">Trägerrakete</string>
     <string name="orbiters">Orbiter</string>
+    <string name="translate_settings">Hilf mit, Space Launch Now zu übersetzen!</string>
+    <string name="translate">Übersetzen</string>
+    <string name="news">Neuigkeiten</string>
+    <string name="get_help">Hol dir Hilfe</string>
+    <string name="help_description">Hilfe und Support</string>
+    <string name="gdpr_dialog_disagree_info">Ich verstehe, dass ich weiterhin Anzeigen sehen werde, solange ich kein Supporter bin, diese aber möglicherweise nicht für meine Interessen relevant sind.</string>
+    <string name="gdpr_dialog_disagree_no_ads">Überhaupt keine Werbung, bitte.</string>
+    <string name="gdpr_type_ads">Werbung</string>
+    <string name="gdpr_type_cloud_database">Cloud Database</string>
+    <string name="gdpr_type_crash">Absturzbericht</string>
+    <string name="gdpr_type_analytics">analytische Berichterstattung</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="space_launch_news">Space Launch News</string>
+    <string name="consent_body">Diese Anwendung nutzt Google Firebase zu analytischen Zwecken und Google AdMod zum Anbieten von Werbung. Deine anonymen Nutzerdaten können genutzt werden, um Anzeigen in dieser Anwendung zu personalisieren. Du kannst diese Berechtigung jederzeit in den Einstellung dieser App widerrufen.</string>
+    <string name="data_consent">Datenschutzerklärung</string>
+    <string name="supporter_main">Schalte Pro Features frei | Entferne Werbeanzeigen</string>
+    <string name="join_discord">Trete dem Space Launch Now Discord Server bei, um dich während Raketenstarts zu unterhalten und die neuesten Nachrichten mit Raumfahrt-Enthusiasten auszutauschen!</string>
+    <string name="founded_in">Gegründet in %s</string>
+    <string name="view_upcoming_launches">Kommende Starts anzeigen</string>
+    <string name="unknown_mission_or_payload">Unbekannte Mission oder Nutzlast</string>
+    <string name="view_more_launches">Weitere Starts anzeigen</string>
+    <string name="view_rocket_launches">%s Starts anzeigen</string>
+    <string name="refresh">Aktualisieren</string>
+    <string name="search">Suchen</string>
+    <string name="date">Datum</string>
+    <string name="hide_fab">Verstecke FAB</string>
+    <string name="alert">Alarm</string>
+    <string name="restore_purchase">Kauf wiederherstellen</string>
+    <string name="unknown_administrator">Unbekannter Administrator</string>
+    <string name="unknown_year">Gründungsjahr - unbekannt</string>
+    <string name="improve_our_data">Hilf mit, unsere Daten zu verbessern</string>
+    <string name="improve_our_data_content">Interessiert, die Genauigkeit unserer Raumfahrtdaten zu verbessern? Trete dem Space Launch Now Discord Server bei und erkundige dich über eine Bibliothekarrolle.</string>
+    <string name="mission_agency">Missions-Organisation</string>
 </resources>

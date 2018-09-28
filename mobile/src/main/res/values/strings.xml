@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="action_settings">Settings</string>
     <string name="status_go">"Go for Launch"</string>
@@ -187,7 +188,7 @@
     <string name="stage_full">Max Stages: %d</string>
     <string name="mass_leo_full">Mass to LEO: %d kg</string>
     <string name="mass_gto_full">Mass to GTO: %d kg</string>
-    <string name="mass_launch_full">Mass at Launch: %d Tons</string>
+    <string name="mass_launch_full">Mass at Launch: %d T</string>
     <string name="thrust_full">Thrust at Launch: %d kN</string>
     <string name="upcoming">Upcoming</string>
     <string name="previous">Previous</string>
@@ -403,4 +404,27 @@
     <string name="consent_body">This application uses Google Firebase for analytics and Google AdMod for serving advertisements. Your anonymous usage data may be used to personalize advertisements within this application. You can withdraw permission at anytime from within the applications settings.</string>
     <string name="data_consent">Data Consent</string>
     <string name="supporter_main">Get Pro Features | Remove Ads</string>
+
+    <string name="join_discord">Join us on the Space Launch Now Discord server for live launch events and to share the latest news with spaceflight enthusiast!</string>
+    <string name="founded_in">Founded in %s</string>
+    <string name="view_upcoming_launches">View Upcoming Launches</string>
+    <string name="unknown_mission_or_payload">Unknown Mission or Payload</string>
+    <string name="view_more_launches">View More Launches</string>
+    <string name="view_rocket_launches">View %s Launches</string>
+    <string name="refresh">Refresh</string>
+    <string name="search">Search</string>
+    <string name="date">Date</string>
+    <string name="hide_fab">Hide FAB</string>
+    <string name="alert">Alert</string>
+    <string name="restore_purchase">Restore Purchase</string>
+    <string name="unknown_administrator">Unknown Administrator</string>
+    <string name="unknown_year">Founding year - unknown.</string>
+    <string name="improve_our_data">Help Improve our Data</string>
+    <string name="improve_our_data_content">Interested in helping improve the accuracy of our spaceflight data? Join us on the Space Launch Now Discord server and ask about becoming a librarian.</string>
+    <string name="title_activity_agency_launch">AgencyLaunchActivity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="tab_text_3">Tab 3</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="no_launches_found">No launches found.</string>
 </resources>

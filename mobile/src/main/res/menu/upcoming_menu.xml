@@ -4,17 +4,17 @@
     <item android:id="@+id/action_search"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always"
-        android:title="Search" />
+        android:title="@string/search" />
 
     <item android:id="@+id/action_refresh"
         android:orderInCategory="2"
         app:showAsAction="never"
-        android:title="Refresh" />
+        android:title="@string/refresh" />
 
     <item
         android:id="@+id/action_supporter"
         android:orderInCategory="95"
-        android:title="Remove Ads"
+        android:title="@string/remove_ads"
         android:textColor="?android:textColorPrimary"
         app:showAsAction="never" />
 

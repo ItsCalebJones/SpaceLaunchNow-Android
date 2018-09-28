@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -28,8 +27,7 @@ import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
-import me.calebjones.spacelaunchnow.ui.launches.AgencyLaunches;
-import me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity;
+import me.calebjones.spacelaunchnow.ui.launches.agency.AgencyLaunchActivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
@@ -113,16 +111,26 @@ public class AgencyDetailFragment extends BaseFragment {
 
             Timber.v("Setting up views...");
             lspCard.setVisibility(View.VISIBLE);
-            lspLogo.setVisibility(View.VISIBLE);
-            GlideApp.with(context)
-                    .load(detailLaunch.getLsp().getLogoUrl())
-                    .centerInside()
-                    .placeholder(R.drawable.placeholder)
-                    .into(lspLogo);
+
+            if (detailLaunch.getLsp().getLogoUrl() != null) {
+                lspLogo.setVisibility(View.VISIBLE);
+                GlideApp.with(context)
+                        .load(detailLaunch.getLsp().getLogoUrl())
+                        .centerInside()
+                        .into(lspLogo);
+            }
             lspName.setText(detailLaunch.getLsp().getName());
             lspType.setText(detailLaunch.getLsp().getType());
-            lspAdministrator.setText(String.format("Administrator: %s", detailLaunch.getLsp().getAdministrator()));
-            lspFoundedYear.setText(String.format("Founded in %s", detailLaunch.getLsp().getFoundingYear()));
+            if (detailLaunch.getLsp().getAdministrator() != null) {
+                lspAdministrator.setText(String.format("%s", detailLaunch.getLsp().getAdministrator()));
+            } else {
+                lspAdministrator.setText(R.string.unknown_administrator);
+            }
+            if (detailLaunch.getLsp().getFoundingYear() != null) {
+                lspFoundedYear.setText(String.format(getString(R.string.founded_in), detailLaunch.getLsp().getFoundingYear()));
+            } else {
+                lspFoundedYear.setText(R.string.unknown_year);
+            }
             lspSummary.setText(detailLaunch.getLsp().getDescription());
             if (detailLaunch.getLsp().getInfoUrl() == null) {
                 lspInfoButtonOne.setVisibility(View.GONE);
@@ -181,7 +189,7 @@ public class AgencyDetailFragment extends BaseFragment {
 
     @OnClick(R.id.lsp_agency)
     public void onViewClicked() {
-        Intent intent = new Intent(context, AgencyLaunches.class);
+        Intent intent = new Intent(context, AgencyLaunchActivity.class);
         intent.putExtra("lspName", detailLaunch.getLsp().getName());
         startActivity(intent);
     }

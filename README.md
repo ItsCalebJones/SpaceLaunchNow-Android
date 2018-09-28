@@ -1,9 +1,17 @@
+[![discord](https://discordapp.com/api/guilds/380226438584074242/embed.png?style=shield)](https://discord.gg/WVfzEDW) [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=102)](https://github.com/ellerbrock/open-source-badge/) [![Semver](http://img.shields.io/SemVer/2.6.0.png)](http://semver.org/spec/v2.0.0.html)
 # SpaceLaunchNow
-A space launchCategory tracker for Android using data from the Launch Library API, the current roadmap can be viewed on [Trello](https://trello.com/b/DwLCfv7g/space-launchCategory-now).
+A space launch tracker for Android using data from the Launch Library API, the current roadmap can be viewed on [Trello](https://trello.com/b/DwLCfv7g/space-launchCategory-now).
 
 ## Data Sources
 
 A majority of the data is currently sourced from [Launch Libary](https://launchlibrary.net/) a wonderful set of API's and Librarians that are constantly tracking and updating launches around the world. Additionally I utilize [Space Launch Now - Server](https://github.com/ItsCalebJones/SpaceLaunchNow-Server) to provide additional vehicle data and push notifications for launch times.
+
+## Translations
+Space Launch Now is now translated into five languages, huge thanks to those that have contributed. If you are interested in helping improve the translations feel free to take a look [here](https://spacelaunchnow.oneskyapp.com).
+
+Thanks to the following translators for their work:
+
+Fosco85, Francescog91, Ndre85f, Ajtudela, Pedroleon, SwGustav, Ogoidmatos, Ludi.vogt, Bullinger.mathis, Lukas Affolter, Castelle.arnaud, Nem.meric, Arnaud.muller1308, Jaros.jan.j, Jirkatp, Peter.handless
 
 ## Screenshot
 

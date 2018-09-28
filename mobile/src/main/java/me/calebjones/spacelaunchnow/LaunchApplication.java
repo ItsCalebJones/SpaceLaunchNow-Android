@@ -68,7 +68,6 @@ public class LaunchApplication extends Application {
     private static ListPreferences sharedPreference;
     private SwitchPreferences switchPreferences;
     private SharedPreferences sharedPref;
-    protected volatile Analytics mAnalytics;
     private Context context;
     private FirebaseMessaging firebaseMessaging;
     private BillingProcessor bp;
@@ -128,12 +127,7 @@ public class LaunchApplication extends Application {
 
     private void setupAds() {
         GDPR.getInstance().init(this);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                MobileAds.initialize(context, "ca-app-pub-9824528399164059~9700152528");
-            }
-        }).start();
+        new Thread(() -> MobileAds.initialize(context, "ca-app-pub-9824528399164059~9700152528")).start();
     }
 
 

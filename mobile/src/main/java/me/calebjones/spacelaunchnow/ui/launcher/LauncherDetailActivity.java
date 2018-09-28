@@ -2,6 +2,8 @@ package me.calebjones.spacelaunchnow.ui.launcher;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -13,17 +15,22 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewPropertyAnimator;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.florent37.glidepalette.GlidePalette;
 import com.google.gson.Gson;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.mikepenz.iconics.IconicsDrawable;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.RealmResults;
+import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.data.DataSaver;
@@ -176,7 +183,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
                                     Palette.Swatch color = null;
                                     if (palette1.getDarkMutedSwatch() != null) {
                                         color = palette1.getDarkMutedSwatch();
-                                    } else if (palette1.getDarkVibrantSwatch() != null){
+                                    } else if (palette1.getDarkVibrantSwatch() != null) {
                                         color = palette1.getDarkVibrantSwatch();
                                     }
                                     if (color != null) {
@@ -192,7 +199,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
                                     Palette.Swatch color = null;
                                     if (palette1.getVibrantSwatch() != null) {
                                         color = palette1.getVibrantSwatch();
-                                    } else if (palette1.getMutedSwatch() != null){
+                                    } else if (palette1.getMutedSwatch() != null) {
                                         color = palette1.getMutedSwatch();
                                     }
                                     if (color != null) {
@@ -224,6 +231,8 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.info_menu, menu);
         return true;
     }
 
@@ -244,6 +253,26 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
         if (id == android.R.id.home) {
             onBackPressed();
             return true;
+        }
+
+        if (id == R.id.info) {
+            new MaterialDialog.Builder(this)
+                    .title(R.string.improve_our_data)
+                    .icon(new IconicsDrawable(this)
+                            .icon(FontAwesome.Icon.faw_discord)
+                            .color(Color.rgb(114, 137, 218))
+                            .sizeDp(24))
+                    .content(R.string.improve_our_data_content)
+                    .negativeText(R.string.button_no)
+                    .positiveText(R.string.ok)
+                    .onNegative((dialog, which) -> dialog.dismiss())
+                    .onPositive((dialog, which) -> {
+                        String discordUrl = getString(R.string.discord_url);
+                        Intent discordIntent = new Intent(Intent.ACTION_VIEW);
+                        discordIntent.setData(Uri.parse(discordUrl));
+                        startActivity(discordIntent);
+                    })
+                    .show();
         }
 
         return super.onOptionsItemSelected(item);

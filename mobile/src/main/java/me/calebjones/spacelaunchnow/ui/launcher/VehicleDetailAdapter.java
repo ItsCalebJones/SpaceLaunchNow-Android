@@ -19,11 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.RealmList;
-import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.main.Launcher;
 import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
-import me.calebjones.spacelaunchnow.ui.launches.LauncherLaunches;
+import me.calebjones.spacelaunchnow.ui.launches.launcher.LauncherLaunchActivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
@@ -79,13 +78,48 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
             } else {
                 holder.vehicleDescription.setVisibility(View.GONE);
             }
-            holder.vehicleSpecsHeight.setText(String.format(mContext.getString(R.string.height_full), launchVehicle.getLength()));
-            holder.vehicleSpecsDiameter.setText(String.format(mContext.getString(R.string.diameter_full), launchVehicle.getDiameter()));
-            holder.vehicleSpecsStages.setText(String.format(mContext.getString(R.string.stage_full), launchVehicle.getMaxStage()));
-            holder.vehicleSpecsLeo.setText(String.format(mContext.getString(R.string.mass_leo_full), launchVehicle.getLeoCapacity()));
-            holder.vehicleSpecsGto.setText(String.format(mContext.getString(R.string.mass_gto_full), launchVehicle.getGtoCapacity()));
-            holder.vehicleSpecsLaunchMass.setText(String.format(mContext.getString(R.string.mass_launch_full), launchVehicle.getLaunchMass()));
-            holder.vehicleSpecsThrust.setText(String.format(mContext.getString(R.string.thrust_full), launchVehicle.getToThrust()));
+
+            if (launchVehicle.getLength() != null) {
+                holder.vehicleSpecsHeight.setText(String.format(mContext.getString(R.string.height_full), launchVehicle.getLength()));
+            } else {
+                holder.vehicleSpecsHeight.setText(mContext.getString(R.string.height));
+            }
+
+            if (launchVehicle.getDiameter() != null) {
+                holder.vehicleSpecsDiameter.setText(String.format(mContext.getString(R.string.diameter_full), launchVehicle.getDiameter()));
+            } else {
+                holder.vehicleSpecsDiameter.setText(mContext.getString(R.string.diameter));
+            }
+
+            if (launchVehicle.getMaxStage() != null) {
+                holder.vehicleSpecsStages.setText(String.format(mContext.getString(R.string.stage_full), launchVehicle.getMaxStage()));
+            } else {
+                holder.vehicleSpecsStages.setText(mContext.getString(R.string.stages));
+            }
+
+            if (launchVehicle.getLeoCapacity() != null) {
+                holder.vehicleSpecsLeo.setText(String.format(mContext.getString(R.string.mass_leo_full), launchVehicle.getLeoCapacity()));
+            } else {
+                holder.vehicleSpecsLeo.setText(mContext.getString(R.string.mass_to_leo));
+            }
+
+            if (launchVehicle.getGtoCapacity() != null) {
+                holder.vehicleSpecsGto.setText(String.format(mContext.getString(R.string.mass_gto_full), launchVehicle.getGtoCapacity()));
+            } else {
+                holder.vehicleSpecsGto.setText(mContext.getString(R.string.mass_to_gto));
+            }
+
+            if (launchVehicle.getLaunchMass() != null) {
+                holder.vehicleSpecsLaunchMass.setText(String.format(mContext.getString(R.string.mass_launch_full), launchVehicle.getLaunchMass()));
+            } else {
+                holder.vehicleSpecsLaunchMass.setText(mContext.getString(R.string.mass_at_launch));
+            }
+
+            if (launchVehicle.getToThrust() != null) {
+                holder.vehicleSpecsThrust.setText(String.format(mContext.getString(R.string.thrust_full), launchVehicle.getToThrust()));
+            } else {
+                holder.vehicleSpecsHeight.setText(mContext.getString(R.string.height));
+            }
 
 
             if (backgroundColor != 0) {
@@ -212,7 +246,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
                     }
                     break;
                 case R.id.launcher_launches:
-                    Intent launches = new Intent(activity, LauncherLaunches.class);
+                    Intent launches = new Intent(activity, LauncherLaunchActivity.class);
                     launches.putExtra("launcherId", items.get(position).getId());
                     launches.putExtra("launcherName", items.get(position).getName());
                     activity.startActivity(launches);

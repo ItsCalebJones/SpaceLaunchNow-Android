@@ -145,7 +145,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         active = false;
 
         if (adapter == null) {
-            adapter = new CardAdapter(context.getApplicationContext());
+            adapter = new CardAdapter(context);
         }
 
         if (sharedPreference.isNightModeActive(context)) {

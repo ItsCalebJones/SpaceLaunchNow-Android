@@ -11,7 +11,7 @@
     <ImageView
         android:id="@+id/launcher"
         android:layout_width="wrap_content"
-        android:layout_height="400dp"
+        android:layout_height="100dp"
         app:srcCompat="@drawable/launcher"
         android:layout_centerHorizontal="true"/>
 

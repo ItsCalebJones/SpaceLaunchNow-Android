@@ -1,9 +1,9 @@
 package me.calebjones.spacelaunchnow.ui.launchdetail.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatButton;
@@ -22,21 +22,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.RetroFitFragment;
-import me.calebjones.spacelaunchnow.content.data.DataSaver;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
-import me.calebjones.spacelaunchnow.data.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.Result;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.Launcher;
 import me.calebjones.spacelaunchnow.data.models.main.Mission;
-import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
-import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
-import me.calebjones.spacelaunchnow.ui.launches.LauncherLaunches;
+import me.calebjones.spacelaunchnow.ui.launches.launcher.LauncherLaunchActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.Utils;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import timber.log.Timber;
 
 public class MissionDetailFragment extends RetroFitFragment {
@@ -130,7 +122,7 @@ public class MissionDetailFragment extends RetroFitFragment {
                 payloadInfoButton.setVisibility(View.GONE);
                 payloadWikiButton.setVisibility(View.GONE);
             } else {
-                payloadStatus.setText("Unknown Mission or Payload");
+                payloadStatus.setText(R.string.unknown_mission_or_payload);
 
                 payloadInfoButton.setVisibility(View.GONE);
                 payloadWikiButton.setVisibility(View.GONE);
@@ -140,28 +132,22 @@ public class MissionDetailFragment extends RetroFitFragment {
             launchConfiguration.setText(detailLaunch.getLauncher().getVariant());
             launchFamily.setText(detailLaunch.getLauncher().getFamily());
             if (detailLaunch.getLauncher().getInfoUrl() != null && detailLaunch.getLauncher().getInfoUrl().length() > 0){
-                vehicleInfoButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Activity activity = (Activity) context;
-                        Utils.openCustomTab(activity, context, detailLaunch.getLauncher().getInfoUrl());
-                        Analytics.getInstance().sendButtonClickedWithURL("Vehicle Info",
-                                detailLaunch.getLauncher().getInfoUrl());
-                    }
+                vehicleInfoButton.setOnClickListener(view -> {
+                    Activity activity = (Activity) context;
+                    Utils.openCustomTab(activity, context, detailLaunch.getLauncher().getInfoUrl());
+                    Analytics.getInstance().sendButtonClickedWithURL("Vehicle Info",
+                            detailLaunch.getLauncher().getInfoUrl());
                 });
             } else {
                 vehicleInfoButton.setVisibility(View.GONE);
             }
 
             if (detailLaunch.getLauncher().getWikiUrl() != null && detailLaunch.getLauncher().getWikiUrl().length() > 0){
-                vehicleWikiButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Activity activity = (Activity) context;
-                        Utils.openCustomTab(activity, context, detailLaunch.getLauncher().getWikiUrl());
-                        Analytics.getInstance().sendButtonClickedWithURL("Vehicle Wiki",
-                                detailLaunch.getLauncher().getWikiUrl());
-                    }
+                vehicleWikiButton.setOnClickListener(view -> {
+                    Activity activity = (Activity) context;
+                    Utils.openCustomTab(activity, context, detailLaunch.getLauncher().getWikiUrl());
+                    Analytics.getInstance().sendButtonClickedWithURL("Vehicle Wiki",
+                            detailLaunch.getLauncher().getWikiUrl());
                 });
             } else {
                 vehicleWikiButton.setVisibility(View.GONE);
@@ -172,26 +158,56 @@ public class MissionDetailFragment extends RetroFitFragment {
         }
     }
 
+    @SuppressLint("StringFormatMatches")
     private void configureLaunchVehicle(Launcher launchVehicle) {
         if (launchVehicle != null) {
             vehicleSpecView.setVisibility(View.VISIBLE);
             try {
-                launchVehicleSpecsHeight.setText(String.format("Height: %s Meters", launchVehicle.getLength()));
-                launchVehicleSpecsDiameter.setText(String.format("Diameter: %s Meters", launchVehicle.getDiameter()));
-                launchVehicleSpecsStages.setText(String.format("Stages: %d", launchVehicle.getMaxStage()));
-                launchVehicleSpecsLeo.setText(String.format("Payload to LEO: %s kg", launchVehicle.getLeoCapacity()));
-                launchVehicleSpecsGto.setText(String.format("Payload to GTO: %s kg", launchVehicle.getGtoCapacity()));
-                launchVehicleSpecsLaunchMass.setText(String.format("Mass at Launch: %s Tons", launchVehicle.getLaunchMass()));
-                launchVehicleSpecsThrust.setText(String.format("Thrust at Launch: %s kN", launchVehicle.getToThrust()));
+                if (launchVehicle.getLength() != null) {
+                    launchVehicleSpecsHeight.setText(String.format(context.getString(R.string.height_full), launchVehicle.getLength()));
+                } else {
+                    launchVehicleSpecsHeight.setText(context.getString(R.string.height));
+                }
+
+                if (launchVehicle.getDiameter() != null) {
+                    launchVehicleSpecsDiameter.setText(String.format(context.getString(R.string.diameter_full), launchVehicle.getDiameter()));
+                } else {
+                    launchVehicleSpecsDiameter.setText(context.getString(R.string.diameter));
+                }
+
+                if (launchVehicle.getMaxStage() != null) {
+                    launchVehicleSpecsStages.setText(String.format(context.getString(R.string.stage_full), launchVehicle.getMaxStage()));
+                } else {
+                    launchVehicleSpecsStages.setText(context.getString(R.string.stages));
+                }
+
+                if (launchVehicle.getLeoCapacity() != null) {
+                    launchVehicleSpecsLeo.setText(String.format(context.getString(R.string.mass_leo_full), launchVehicle.getLeoCapacity()));
+                } else {
+                    launchVehicleSpecsLeo.setText(context.getString(R.string.mass_to_leo));
+                }
+
+                if (launchVehicle.getGtoCapacity() != null) {
+                    launchVehicleSpecsGto.setText(String.format(context.getString(R.string.mass_gto_full), launchVehicle.getGtoCapacity()));
+                } else {
+                    launchVehicleSpecsGto.setText(context.getString(R.string.mass_to_gto));
+                }
+
+                if (launchVehicle.getLaunchMass() != null) {
+                    launchVehicleSpecsLaunchMass.setText(String.format(context.getString(R.string.mass_launch_full), launchVehicle.getLaunchMass()));
+                } else {
+                    launchVehicleSpecsLaunchMass.setText(context.getString(R.string.mass_at_launch));
+                }
+
                 if (launchVehicle.getDescription() != null && launchVehicle.getDescription().length() > 0) {
                     launchVehicleDescription.setText(launchVehicle.getDescription());
                     launchVehicleDescription.setVisibility(View.VISIBLE);
                 } else {
                     launchVehicleDescription.setVisibility(View.GONE);
                 }
-                launchesButton.setText(String.format("View %s Launches", launchVehicle.getName()));
+                launchesButton.setText(String.format(getString(R.string.view_rocket_launches), launchVehicle.getName()));
                 launchesButton.setOnClickListener(v -> {
-                    Intent launches = new Intent(context, LauncherLaunches.class);
+                    Intent launches = new Intent(context, LauncherLaunchActivity.class);
                     launches.putExtra("launcherId", launchVehicle.getId());
                     launches.putExtra("launcherName", launchVehicle.getName());
                     context.startActivity(launches);
