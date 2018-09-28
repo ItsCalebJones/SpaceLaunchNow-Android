@@ -1,48 +1,32 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/coordinatorLayout"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent">
-
-  <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_feed_content"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:paddingLeft="2dp"
-    android:paddingRight="2dp"
-    tools:context="${relativePackage}.${activityClass}">
+    android:layout_height="fill_parent">
+
 
     <android.support.v4.widget.SwipeRefreshLayout
-      android:id="@+id/launches_swipe_refresh_layout"
-      android:layout_width="fill_parent"
-      android:layout_height="fill_parent">
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
+        <cz.kinst.jakub.view.SimpleStatefulLayout
+            android:id="@+id/stateful_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:emptyLayout="@layout/empty_launches"
+            app:progressLayout="@layout/custom_progress">
 
-      <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false" />
 
-        <android.support.v7.widget.RecyclerView
-          xmlns:android="http://schemas.android.com/apk/res/android"
-          android:id="@+id/recycler_view"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:clipToPadding="false" />
-
-        <include layout="@layout/empty_launch" />
-
-
-      </FrameLayout>
-
+        </cz.kinst.jakub.view.SimpleStatefulLayout>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <FrameLayout
-      android:id="@+id/fl_interceptor"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:descendantFocusability="blocksDescendants" />
-
-  </FrameLayout>
 </android.support.design.widget.CoordinatorLayout>

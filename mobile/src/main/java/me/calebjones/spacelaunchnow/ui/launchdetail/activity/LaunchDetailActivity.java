@@ -39,13 +39,8 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.IconicsDrawable;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -62,12 +57,12 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.content.events.LaunchRequestEvent;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
-import me.calebjones.spacelaunchnow.data.models.main.Launcher;
+import me.calebjones.spacelaunchnow.data.models.main.LauncherConfig;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.error.LibraryError;
-import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchResponse;
 import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
+import me.calebjones.spacelaunchnow.ui.launchdetail.OnFragmentInteractionListener;
 import me.calebjones.spacelaunchnow.ui.launchdetail.TabsAdapter;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
@@ -84,7 +79,7 @@ import retrofit2.Response;
 import timber.log.Timber;
 
 public class LaunchDetailActivity extends BaseActivity
-        implements AppBarLayout.OnOffsetChangedListener {
+        implements AppBarLayout.OnOffsetChangedListener, OnFragmentInteractionListener {
 
     private static final int PERCENTAGE_TO_ANIMATE_AVATAR = 20;
     @BindView(R.id.fab_share)
@@ -203,6 +198,17 @@ public class LaunchDetailActivity extends BaseActivity
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
+        appBarLayout.addOnOffsetChangedListener(new CustomOnOffsetChangedListener(statusColor, getWindow()));
+        appBarLayout.addOnOffsetChangedListener(this);
+        mMaxScrollSize = appBarLayout.getTotalScrollRange();
+
+        tabAdapter = new TabsAdapter(getSupportFragmentManager(), context);
+
+        viewPager.setAdapter(tabAdapter);
+        viewPager.setOffscreenPageLimit(3);
+
+        tabLayout.setupWithViewPager(viewPager);
+
         //Grab information from Intent
         Intent mIntent = getIntent();
         String type = mIntent.getStringExtra("TYPE");
@@ -268,16 +274,9 @@ public class LaunchDetailActivity extends BaseActivity
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
             }
         }
-        appBarLayout.addOnOffsetChangedListener(new CustomOnOffsetChangedListener(statusColor, getWindow()));
-        appBarLayout.addOnOffsetChangedListener(this);
-        mMaxScrollSize = appBarLayout.getTotalScrollRange();
 
-        tabAdapter = new TabsAdapter(getSupportFragmentManager(), context);
 
-        viewPager.setAdapter(tabAdapter);
-        viewPager.setOffscreenPageLimit(3);
 
-        tabLayout.setupWithViewPager(viewPager);
     }
 
     private void showFeedback() {
@@ -367,15 +366,15 @@ public class LaunchDetailActivity extends BaseActivity
         try {
             this.launch = launch;
 
-            EventBus.getDefault().post(new LaunchEvent(launch));
-            if (!this.isDestroyed() && launch != null && launch.getLauncher() != null) {
+            tabAdapter.updateLaunches(launch);
+            if (!this.isDestroyed() && launch != null && launch.getRocket().getConfiguration() != null) {
                 Timber.v("Loading detailLaunch %s", launch.getId());
                 findProfileLogo();
-                if (launch.getLauncher().getName() != null) {
-                    if (launch.getLauncher().getImageUrl() != null
-                            && launch.getLauncher().getImageUrl().length() > 0
-                            && !launch.getLauncher().getImageUrl().contains("placeholder")) {
-                        final String image = launch.getLauncher().getImageUrl();
+                if (launch.getRocket().getConfiguration().getName() != null) {
+                    if (launch.getRocket().getConfiguration().getImageUrl() != null
+                            && launch.getRocket().getConfiguration().getImageUrl().length() > 0
+                            && !launch.getRocket().getConfiguration().getImageUrl().contains("placeholder")) {
+                        final String image = launch.getRocket().getConfiguration().getImageUrl();
                         GlideApp.with(this)
                                 .load(image)
                                 .placeholder(R.drawable.placeholder)
@@ -412,17 +411,17 @@ public class LaunchDetailActivity extends BaseActivity
         String agencyName = null;
         //This checks to see if a location is available
 
-        if (launch.getLsp() != null) {
-            locationCountryCode = launch.getLsp().getCountryCode();
-            agencyName = launch.getLsp().getName();
+        if (launch.getRocket().getConfiguration().getLaunchServiceProvider() != null) {
+            locationCountryCode = launch.getRocket().getConfiguration().getLaunchServiceProvider().getCountryCode();
+            agencyName = launch.getRocket().getConfiguration().getLaunchServiceProvider().getName();
             //Go through various CountryCodes and assign flag.
-            if (launch.getLsp().getAbbrev().contains("ASA")) {
+            if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev().contains("ASA")) {
                 applyProfileLogo(getString(R.string.ariane_logo));
-            } else if (launch.getLsp().getAbbrev().contains("SpX")) {
+            } else if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev().contains("SpX")) {
                 applyProfileLogo(getString(R.string.spacex_logo));
-            } else if (launch.getLsp().getAbbrev().contains("BA")) {
+            } else if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev().contains("BA")) {
                 applyProfileLogo(getString(R.string.Yuzhnoye_logo));
-            } else if (launch.getLsp().getAbbrev().contains("ULA")) {
+            } else if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev().contains("ULA")) {
                 applyProfileLogo(getString(R.string.ula_logo));
             } else if (locationCountryCode.length() == 3) {
                 if (locationCountryCode.contains("USA")) {
@@ -464,12 +463,12 @@ public class LaunchDetailActivity extends BaseActivity
 
     private void getLaunchVehicle(Launch result, boolean setImage) {
         String query;
-        if (result.getLauncher().getName().contains("Space Shuttle")) {
+        if (result.getRocket().getConfiguration().getName().contains("Space Shuttle")) {
             query = "Space Shuttle";
         } else {
-            query = result.getLauncher().getName();
+            query = result.getRocket().getConfiguration().getName();
         }
-        Launcher launchVehicle = getRealm().where(Launcher.class)
+        LauncherConfig launchVehicle = getRealm().where(LauncherConfig.class)
                 .contains("name", query)
                 .findFirst();
         if (setImage) {
@@ -494,8 +493,20 @@ public class LaunchDetailActivity extends BaseActivity
         scanner.close();
     }
 
-    public Launch getLaunch() {
-        return launch;
+    public void sendLaunchToFragment(int fragment) {
+        if (launch != null) {
+            switch (fragment) {
+                case OnFragmentInteractionListener.AGENCY:
+                    tabAdapter.updatAgencyLaunch(launch);
+                    break;
+                case OnFragmentInteractionListener.MISSION:
+                    tabAdapter.updateMissionLaunch(launch);
+                    break;
+                case OnFragmentInteractionListener.SUMMARY:
+                    tabAdapter.updateSummaryLaunch(launch);
+                    break;
+            }
+        }
     }
 
     @Override
@@ -532,14 +543,12 @@ public class LaunchDetailActivity extends BaseActivity
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
         Timber.v("LaunchDetailActivity onStart!");
         customTabActivityHelper.bindCustomTabsService(this);
     }
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
         Timber.v("LaunchDetailActivity onStop!");
         customTabActivityHelper.unbindCustomTabsService(this);
         super.onStop();
@@ -564,14 +573,14 @@ public class LaunchDetailActivity extends BaseActivity
                 df.toLocalizedPattern();
                 launchDate = df.format(date);
             }
-            if (launch.getLocation() != null) {
+            if (launch.getPad().getLocation() != null) {
 
                 message = launch.getName() + " launching from "
-                        + launch.getLocation().getName() + "\n\n"
+                        + launch.getPad().getLocation().getName() + "\n\n"
                         + launchDate;
-            } else if (launch.getLocation() != null) {
+            } else if (launch.getPad().getLocation() != null) {
                 message = launch.getName() + " launching from "
-                        + launch.getLocation().getName() + "\n\n"
+                        + launch.getPad().getLocation().getName() + "\n\n"
                         + launchDate;
             } else {
                 message = launch.getName()
@@ -591,11 +600,6 @@ public class LaunchDetailActivity extends BaseActivity
         } else {
             SnackbarHandler.showErrorSnackbar(this, rootview, "Error - unable to share this launch.");
         }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(LaunchRequestEvent event) {
-        EventBus.getDefault().post(new LaunchEvent(launch));
     }
 
     @Override
@@ -631,8 +635,7 @@ public class LaunchDetailActivity extends BaseActivity
             return true;
         }
         if (id == android.R.id.home) {
-            Intent intent = new Intent(context, MainActivity.class);
-            startActivity(intent);
+            onBackPressed();
             return true;
         }
 

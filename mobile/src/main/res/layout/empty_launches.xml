@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -13,18 +14,16 @@
             android:id="@+id/launcher"
             android:layout_width="wrap_content"
             android:layout_height="100dp"
-            app:srcCompat="@drawable/launcher"
-            android:layout_centerHorizontal="true"/>
+            android:layout_gravity="center"
+            app:srcCompat="@mipmap/ic_launcher" />
+
         <TextView
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/no_launches_found"
-            android:id="@+id/textView"
             android:layout_gravity="center"
-            android:layout_below="@+id/launcher"
-            android:layout_centerHorizontal="true"
-            />
+            android:text="@string/no_launches"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

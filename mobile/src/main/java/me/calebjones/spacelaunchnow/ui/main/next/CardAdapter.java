@@ -5,17 +5,24 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.Build;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
@@ -24,34 +31,45 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.realm.RealmList;
+import jp.wasabeef.glide.transformations.BlurTransformation;
+import jp.wasabeef.glide.transformations.ColorFilterTransformation;
+import jp.wasabeef.glide.transformations.gpu.BrightnessFilterTransformation;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.data.LaunchStatus;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
+import me.calebjones.spacelaunchnow.data.models.main.Landing;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Stage;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
-import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
-import me.calebjones.spacelaunchnow.utils.views.CountDownTimer;
+import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
+import me.calebjones.spacelaunchnow.utils.transformations.SaturationTransformation;
+import me.calebjones.spacelaunchnow.utils.views.CountDownTimer;
 import timber.log.Timber;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
+
+import static me.calebjones.spacelaunchnow.utils.GlideOptions.bitmapTransform;
 
 /**
  * Adapts UpcomingLaunch data to the LaunchFragment
@@ -60,7 +78,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
 
     private static ListPreferences sharedPreference;
     public int position;
-    private String launchTime;
     private RealmList<Launch> launchList;
     private Context context;
     private Calendar rightNow;
@@ -111,7 +128,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.content_card_item, viewGroup, false);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.content_card, viewGroup, false);
         return new ViewHolder(v);
     }
 
@@ -120,17 +137,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
     public void onBindViewHolder(final ViewHolder holder, int i) {
         Launch launchItem = launchList.get(i);
         Timber.i("Binding %s", launchItem.getName());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            holder.cardView.setElevation(7);
-        }
         String title;
         try {
             if (launchItem.isValid()) {
-                if (launchItem.getLauncher() != null) {
-                    if (launchItem.getLsp() != null) {
-                        title = launchItem.getLsp().getName() + " | " + (launchItem.getLauncher().getName());
+                if (launchItem.getRocket().getConfiguration() != null) {
+                    if (launchItem.getRocket().getConfiguration().getLaunchServiceProvider() != null) {
+                        title = launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getName() + " | " + (launchItem.getRocket().getConfiguration().getName());
                     } else {
-                        title = launchItem.getLauncher().getName();
+                        title = launchItem.getRocket().getConfiguration().getName();
                     }
                 } else if (launchItem.getName() != null) {
                     title = launchItem.getName();
@@ -155,32 +169,62 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     dlon = Double.parseDouble(launchItem.getPad().getLongitude());
                 }
 
-                // Getting status
-                if (dlat == 0 && dlon == 0 || Double.isNaN(dlat) || Double.isNaN(dlon) || dlat == Double.NaN || dlon == Double.NaN) {
-                    if (holder.map_view != null) {
-                        holder.map_view.setVisibility(View.GONE);
+                holder.landingView.setVisibility(View.INVISIBLE);
+                if (launchItem.getRocket().getFirstStage() != null && launchItem.getRocket().getFirstStage().size() >= 1){
+                    if (launchItem.getRocket().getFirstStage().size() > 1){
+                        String stagesText = "";
+                        for (Stage stage :  launchItem.getRocket().getFirstStage()){
+                            if (stage.getLanding().getLandingLocation() != null) {
+                                stagesText = stagesText + stage.getLanding().getLandingLocation().getAbbrev() + " ";
+                            }
+                        }
+                        holder.landingView.setVisibility(View.VISIBLE);
+                        holder.landing.setText(stagesText);
+                    } else if (launchItem.getRocket().getFirstStage().size() == 1){
+                        if (launchItem.getRocket().getFirstStage().first().getLanding() != null){
+                            Landing landing = launchItem.getRocket().getFirstStage().first().getLanding();
+                            if (landing.getLandingLocation() != null) {
+                                holder.landingView.setVisibility(View.VISIBLE);
+                                holder.landing.setText(landing.getLandingLocation().getAbbrev());
+                            }
+                        }
                     }
-                } else {
-                    holder.map_view.setVisibility(View.VISIBLE);
-                    holder.bindView(new LaunchLocation(launchItem, new LatLng(dlat, dlon)));
                 }
 
-                if (launchItem.getProbability() != null && launchItem.getProbability() > 0) {
-                    holder.contentForecast.setText(String.format(context.getString(R.string.weather_favorable), launchItem.getProbability()));
-                    holder.contentForecast.setVisibility(View.VISIBLE);
+                if (launchItem.getRocket().getConfiguration().getImageUrl() != null) {
+                    holder.launchImage.setVisibility(View.VISIBLE);
+                    GlideApp.with(context)
+                            .load(launchItem.getRocket().getConfiguration().getImageUrl())
+                            .placeholder(R.drawable.placeholder)
+                            .into(holder.launchImage);
+                } else if (launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getImageUrl() != null) {
+                    holder.launchImage.setVisibility(View.VISIBLE);
+                    GlideApp.with(context)
+                            .load(launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getImageUrl())
+                            .placeholder(R.drawable.placeholder)
+                            .into(holder.launchImage);
+                } else if (launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getLogoUrl() != null) {
+                    holder.launchImage.setVisibility(View.VISIBLE);
+                    GlideApp.with(context)
+                            .load(launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getLogoUrl())
+                            .placeholder(R.drawable.placeholder)
+                            .into(holder.launchImage);
                 } else {
-                    holder.contentForecast.setVisibility(View.GONE);
+                    holder.launchImage.setVisibility(View.GONE);
                 }
 
-                holder.content_status.setText(LaunchStatus.getLaunchStatusTitle(context, launchItem.getStatus()));
+                holder.status.setText(LaunchStatus.getLaunchStatusTitle(context, launchItem.getStatus().getId()));
+                holder.statusPill.setCardBackgroundColor(LaunchStatus.getLaunchStatusColor(context, launchItem.getStatus().getId()));
 
                 //If timestamp is available calculate TMinus and date.
-                if (launchItem.getNetstamp() > 0 && (launchItem.getStatus() == 1 || launchItem.getStatus() == 2)) {
-                    long longdate = launchItem.getNetstamp();
-                    longdate = longdate * 1000;
+                holder.countdownStatus.setText("");
+                holder.countdownStatus.setVisibility(View.GONE);
+                if (launchItem.getNet().getTime() > 0) {
+                    //TODO VERIFY THIS STILL WORKS
+                    long longdate = launchItem.getNet().getTime();
                     final Date date = new Date(longdate);
 
-                    Calendar future = DateToCalendar(date);
+                    Calendar launchDate = DateToCalendar(date);
                     Calendar now = rightNow;
 
                     now.setTimeInMillis(System.currentTimeMillis());
@@ -189,171 +233,78 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                         holder.timer.cancel();
                     }
 
-                    final int status = launchItem.getStatus();
+                    if (holder.var != null){
+                        holder.var.dispose();
+                    }
+
+                    final int status = launchItem.getStatus().getId();
                     final String hold = launchItem.getHoldreason();
 
-                    holder.content_TMinus_status.setTypeface(Typeface.SANS_SERIF);
-                    holder.content_TMinus_status.setTextColor(accentColor);
+                    long timeToFinish = launchDate.getTimeInMillis() - now.getTimeInMillis();
 
-//                    holder.countdownView.setVisibility(View.VISIBLE);
-                    long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
-                    if (timeToFinish > 0) {
+                    if (timeToFinish > 0 && launchItem.getStatus().getId() == 1) {
                         holder.timer = new CountDownTimer(timeToFinish, 1000) {
                             StringBuilder time = new StringBuilder();
 
                             @Override
                             public void onFinish() {
                                 Timber.v("Countdown finished.");
-                                holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
-                                if (night) {
-                                    holder.content_TMinus_status.setTextColor(nightColor);
-                                } else {
-                                    holder.content_TMinus_status.setTextColor(color);
-                                }
-                                if (status == 1) {
-                                    holder.content_TMinus_status.setText(R.string.watch_webcast);
-
-                                } else {
-                                    if (hold != null && hold.length() > 1) {
-                                        holder.content_TMinus_status.setText(hold);
-                                    } else {
-                                        holder.content_TMinus_status.setText(R.string.watch_webcast);
-                                    }
-                                }
-                                holder.content_TMinus_status.setVisibility(View.VISIBLE);
                                 holder.countdownDays.setText("00");
                                 holder.countdownHours.setText("00");
                                 holder.countdownMinutes.setText("00");
                                 holder.countdownSeconds.setText("00");
+                                holder.countdownStatus.setVisibility(View.VISIBLE);
+                                holder.countdownStatus.setText("+");
+                                countUpTimer(holder, longdate);
                             }
 
                             @Override
                             public void onTick(long millisUntilFinished) {
                                 time.setLength(0);
-
-                                // Calculate the Days/Hours/Mins/Seconds numerically.
-                                long longDays = millisUntilFinished / 86400000;
-                                long longHours = (millisUntilFinished / 3600000) % 24;
-                                long longMins = (millisUntilFinished / 60000) % 60;
-                                long longSeconds = (millisUntilFinished / 1000) % 60;
-
-                                String days = String.valueOf(longDays);
-                                String hours;
-                                String minutes;
-                                String seconds;
-
-                                // Translate those numerical values to string values.
-                                if (longHours < 10) {
-                                    hours = "0" + String.valueOf(longHours);
-                                } else {
-                                    hours = String.valueOf(longHours);
-                                }
-
-                                if (longMins < 10) {
-                                    minutes = "0" + String.valueOf(longMins);
-                                } else {
-                                    minutes = String.valueOf(longMins);
-                                }
-
-                                if (longSeconds < 10) {
-                                    seconds = "0" + String.valueOf(longSeconds);
-                                } else {
-                                    seconds = String.valueOf(longSeconds);
-                                }
-
-
-                                // Update the views
-                                if (Integer.valueOf(days) > 0) {
-                                    holder.countdownDays.setText(days);
-                                } else {
-                                    holder.countdownDays.setText("00");
-                                }
-
-                                if (Integer.valueOf(hours) > 0) {
-                                    holder.countdownHours.setText(hours);
-                                } else if (Integer.valueOf(days) > 0) {
-                                    holder.countdownHours.setText("00");
-                                } else {
-                                    holder.countdownHours.setText("00");
-                                }
-
-                                if (Integer.valueOf(minutes) > 0) {
-                                    holder.countdownMinutes.setText(minutes);
-                                } else if (Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
-                                    holder.countdownMinutes.setText("00");
-                                } else {
-                                    holder.countdownMinutes.setText("00");
-                                }
-
-                                if (Integer.valueOf(seconds) > 0) {
-                                    holder.countdownSeconds.setText(seconds);
-                                } else if (Integer.valueOf(minutes) > 0 || Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
-                                    holder.countdownSeconds.setText("00");
-                                } else {
-                                    holder.countdownSeconds.setText("00");
-                                }
-
-                                // Hide status if countdown is active.
-                                holder.content_TMinus_status.setVisibility(View.GONE);
+                                setCountdownView(millisUntilFinished, holder);
                             }
                         }.start();
+                    } else if (launchItem.getStatus().getId() == 3 || launchItem.getStatus().getId() == 4 || launchItem.getStatus().getId() == 7) {
+                        holder.countdownDays.setText("00");
+                        holder.countdownHours.setText("00");
+                        holder.countdownMinutes.setText("00");
+                        holder.countdownSeconds.setText("00");
+                    } else if (launchItem.getStatus().getId() == 6 || launchItem.getStatus().getId() == 1) {
+                        holder.countdownStatus.setVisibility(View.VISIBLE);
+                        holder.countdownStatus.setText("+");
+                        countUpTimer(holder, longdate);
                     } else {
-                        showStatusDescription(launchItem, holder);
+                        holder.countdownDays.setText("- -");
+                        holder.countdownHours.setText("- -");
+                        holder.countdownMinutes.setText("- -");
+                        holder.countdownSeconds.setText("- -");
                     }
-
-                } else {
-                    showStatusDescription(launchItem, holder);
                 }
 
                 //Get launch date
-                if (launchItem.getStatus() == 2) {
+                if (launchItem.getStatus().getId() == 2) {
 
                     if (launchItem.getNet() != null) {
                         //Get launch date
 
                         SimpleDateFormat sdf = Utils.getSimpleDateFormatForUI("MMMM d, yyyy");
-                        sdf.toLocalizedPattern();
                         Date date = launchItem.getNet();
                         String launchTime = sdf.format(date);
-                        if (launchItem.getTbddate()){
-                            launchTime = launchTime + context.getString(R.string.unconfirmed);
+                        if (launchItem.getTbddate()) {
+                            launchTime = launchTime + " " + context.getString(R.string.unconfirmed);
                         }
-                        holder.launch_date_compact.setText(launchTime);
-                        holder.launch_time.setVisibility(View.GONE);
+                        holder.launchDateCompact.setText(launchTime);
                     }
                 } else {
-                    if (launchItem.getNet() != null) {
-                        if (sharedPref.getBoolean("local_time", true)) {
-                            SimpleDateFormat sdf;
-                            if (sharedPref.getBoolean("24_hour_mode", false)) {
-                                sdf = new SimpleDateFormat("HH:mm zzz");
-                            } else {
-                                sdf = new SimpleDateFormat("h:mm a zzz");
-                            }
-                            sdf.toLocalizedPattern();
-                            Date date = launchItem.getNet();
-                            launchTime = sdf.format(date);
-                        } else {
-                            SimpleDateFormat sdf;
-                            if (sharedPref.getBoolean("24_hour_mode", false)) {
-                                sdf = new SimpleDateFormat("HH:mm zzz");
-                            } else {
-                                sdf = new SimpleDateFormat("h:mm a zzz");
-                            }
-                            Date date = launchItem.getNet();
-                            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                            launchTime = sdf.format(date);
-                        }
+                    SimpleDateFormat sdf;
+                    if (DateFormat.is24HourFormat(context)) {
+                        sdf = Utils.getSimpleDateFormatForUI("MMMM d, yyyy HH:mm zzz");
                     } else {
-                        launchTime = "To be determined... ";
+                        sdf = Utils.getSimpleDateFormatForUI("MMMM d, yyyy h:mm a zzz");
                     }
-                    SimpleDateFormat sdf = Utils.getSimpleDateFormatForUI("MMMM d, yyyy");
                     sdf.toLocalizedPattern();
                     Date date = launchItem.getNet();
-                    holder.launch_date_compact.setText(sdf.format(date));
-                    holder.launch_time.setVisibility(View.GONE);
-                    holder.launch_time.setText("NET: " + launchTime);
-                    holder.launch_time.setVisibility(View.VISIBLE);
+                    holder.launchDateCompact.setText(sdf.format(date));
                 }
 
                 if (launchItem.getVidURLs() != null) {
@@ -368,29 +319,27 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
 
 
                 if (launchItem.getMission() != null) {
-                    holder.content_mission.setText(launchItem.getMission().getName());
+                    holder.contentMission.setText(launchItem.getMission().getName());
                     String description = launchItem.getMission().getDescription();
                     if (description.length() > 0) {
-                        holder.content_mission_description_view.setVisibility(View.VISIBLE);
-                        holder.content_mission_description.setText(description);
+                        holder.contentMissionDescription.setText(description);
                     }
                 } else {
                     String[] separated = launchItem.getName().split(" \\| ");
                     try {
                         if (separated.length > 0 && separated[1].length() > 4) {
-                            holder.content_mission.setText(separated[1].trim());
+                            holder.contentMission.setText(separated[1].trim());
                         } else {
-                            holder.content_mission.setText("Unknown Mission");
+                            holder.contentMission.setText("Unknown Mission");
                         }
                     } catch (ArrayIndexOutOfBoundsException exception) {
-                        holder.content_mission.setText("Unknown Mission");
+                        holder.contentMission.setText("Unknown Mission");
                     }
-                    holder.content_mission_description_view.setVisibility(View.GONE);
                 }
 
                 //If pad and agency_menu exist add it to location, otherwise get whats always available
-                if (launchItem.getLocation() != null) {
-                    holder.location.setText(launchItem.getLocation().getName());
+                if (launchItem.getPad().getLocation() != null) {
+                    holder.location.setText(launchItem.getPad().getLocation().getName());
                 } else {
                     holder.location.setText("");
                 }
@@ -400,41 +349,85 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         }
     }
 
-    private void showStatusDescription(Launch launchItem, ViewHolder holder) {
-        holder.content_TMinus_status.setVisibility(View.VISIBLE);
-        holder.content_TMinus_status.setTypeface(Typeface.DEFAULT);
-        if (night) {
-            holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color));
+    private void countUpTimer(ViewHolder holder, long longdate) {
+        holder.var = Observable
+                .interval(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+                .subscribe(
+                        time -> {
+                            Calendar currentTime = Calendar.getInstance();
+                            long timeSince = currentTime.getTimeInMillis() - longdate;
+                            setCountdownView(timeSince, holder);
+                        });
+    }
+
+    private void setCountdownView(long millisUntilFinished, ViewHolder holder) {
+        // Calculate the Days/Hours/Mins/Seconds numerically.
+        long longDays = millisUntilFinished / 86400000;
+        long longHours = (millisUntilFinished / 3600000) % 24;
+        long longMins = (millisUntilFinished / 60000) % 60;
+        long longSeconds = (millisUntilFinished / 1000) % 60;
+
+        String days;
+        String hours;
+        String minutes;
+        String seconds;
+
+        if (longDays < 10) {
+            days = "0" + String.valueOf(longDays);
         } else {
-            holder.content_TMinus_status.setTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary));
+            days = String.valueOf(longDays);
         }
-        if (holder.timer != null) {
-            holder.timer.cancel();
+
+
+        // Translate those numerical values to string values.
+        if (longHours < 10) {
+            hours = "0" + String.valueOf(longHours);
+        } else {
+            hours = String.valueOf(longHours);
         }
-        if (launchItem.getStatus() == 2) {
-            holder.countdownView.setVisibility(View.GONE);
-            if (launchItem.getLsp() != null) {
-                holder.content_TMinus_status.setText(String.format(context.getString(R.string.pending_confirmed_go_specific), launchItem.getLsp().getName()));
-            } else {
-                holder.content_TMinus_status.setText(R.string.pending_confirmed_go);
-            }
-        } else if (launchItem.getStatus() == 3)  {
-            holder.countdownView.setVisibility(View.GONE);
-            holder.content_TMinus_status.setText("Launch was a success!");
-        } else if (launchItem.getStatus() == 4)  {
-            holder.countdownView.setVisibility(View.GONE);
-            holder.content_TMinus_status.setText("A launch failure has occurred.");
-        } else if (launchItem.getStatus() == 5)  {
-                holder.content_TMinus_status.setText("A hold has been placed on the launch.");
-        } else if (launchItem.getStatus() == 6)  {
+
+        if (longMins < 10) {
+            minutes = "0" + String.valueOf(longMins);
+        } else {
+            minutes = String.valueOf(longMins);
+        }
+
+        if (longSeconds < 10) {
+            seconds = "0" + String.valueOf(longSeconds);
+        } else {
+            seconds = String.valueOf(longSeconds);
+        }
+
+
+        // Update the views
+        if (Integer.valueOf(days) > 0) {
+            holder.countdownDays.setText(days);
+        } else {
             holder.countdownDays.setText("00");
+        }
+
+        if (Integer.valueOf(hours) > 0) {
+            holder.countdownHours.setText(hours);
+        } else if (Integer.valueOf(days) > 0) {
             holder.countdownHours.setText("00");
+        } else {
+            holder.countdownHours.setText("00");
+        }
+
+        if (Integer.valueOf(minutes) > 0) {
+            holder.countdownMinutes.setText(minutes);
+        } else if (Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
             holder.countdownMinutes.setText("00");
+        } else {
+            holder.countdownMinutes.setText("00");
+        }
+
+        if (Integer.valueOf(seconds) > 0) {
+            holder.countdownSeconds.setText(seconds);
+        } else if (Integer.valueOf(minutes) > 0 || Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
             holder.countdownSeconds.setText("00");
-            holder.content_TMinus_status.setText("The launch is currently in flight.");
-        } else if (launchItem.getStatus() == 7)  {
-            holder.countdownView.setVisibility(View.GONE);
-            holder.content_TMinus_status.setText("Launch was a partial failure, payload separated into an incorrect orbit.");
+        } else {
+            holder.countdownSeconds.setText("00");
         }
     }
 
@@ -462,79 +455,61 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         return 0;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, OnMapReadyCallback {
-        public TextView title;
-        public TextView content;
-        public TextView location;
-        public TextView content_mission;
-        public TextView content_mission_description;
-        public TextView launch_date_compact;
-        public TextView launch_time;
-        public TextView content_status;
-        public TextView content_TMinus_status;
-        public TextView watchButton;
-        public TextView shareButton;
-        public TextView exploreButton;
-        public TextView countdownDays;
-        public TextView countdownHours;
-        public TextView countdownMinutes;
-        public TextView countdownSeconds;
-        public LinearLayout content_mission_description_view;
-        public ImageView categoryIcon;
-        public GoogleMap map;
-        public CountDownTimer timer;
-        public View countdownView;
-        public View titleCard;
-        public TextView contentForecast;
-        public CardView cardView;
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        @BindView(R.id.categoryIcon)
+        ImageView categoryIcon;
+        @BindView(R.id.launch_rocket)
+        TextView title;
+        @BindView(R.id.location)
+        TextView location;
+        @BindView(R.id.launch_date_compact)
+        TextView launchDateCompact;
+        @BindView(R.id.launch_image)
+        ImageView launchImage;
+        @BindView(R.id.countdown_days)
+        TextView countdownDays;
+        @BindView(R.id.countdown_hours)
+        TextView countdownHours;
+        @BindView(R.id.countdown_minutes)
+        TextView countdownMinutes;
+        @BindView(R.id.countdown_seconds)
+        TextView countdownSeconds;
+        @BindView(R.id.countdown_status)
+        TextView countdownStatus;
+        @BindView(R.id.status)
+        TextView status;
+        @BindView(R.id.watchButton)
+        Button watchButton;
+        @BindView(R.id.shareButton)
+        Button shareButton;
+        @BindView(R.id.exploreButton)
+        Button exploreButton;
+        @BindView(R.id.content_mission)
+        TextView contentMission;
+        @BindView(R.id.content_mission_description)
+        TextView contentMissionDescription;
+        @BindView(R.id.landing_icon)
+        ImageView landingIcon;
+        @BindView(R.id.landing)
+        TextView landing;
+        @BindView(R.id.landing_pill)
+        View landingView;
+        @BindView(R.id.status_pill)
+        CardView statusPill;
         public View layout;
-        public MapView map_view;
+        public CountDownTimer timer;
+        public Disposable var;
 
         //Add content to the card
         public ViewHolder(View view) {
             super(view);
             layout = view;
-            categoryIcon = view.findViewById(R.id.categoryIcon);
-            exploreButton = view.findViewById(R.id.exploreButton);
-            shareButton = view.findViewById(R.id.shareButton);
-            watchButton = view.findViewById(R.id.watchButton);
-            title = view.findViewById(R.id.launch_rocket);
-            location = view.findViewById(R.id.location);
-            content_mission = view.findViewById(R.id.content_mission);
-            content_mission_description = view.findViewById(
-                    R.id.content_mission_description);
-            launch_date_compact = view.findViewById(R.id.launch_date_compact);
-            launch_time = view.findViewById(R.id.launch_date_full);
-            content_status = view.findViewById(R.id.content_status);
-            content_TMinus_status = view.findViewById(R.id.content_TMinus_status);
-            content_mission_description_view = view.findViewById(R.id.content_mission_description_view);
+            ButterKnife.bind(this, view);
 
-            countdownDays = view.findViewById(R.id.countdown_days);
-            countdownHours = view.findViewById(R.id.countdown_hours);
-            countdownMinutes = view.findViewById(R.id.countdown_minutes);
-            countdownSeconds = view.findViewById(R.id.countdown_seconds);
-            countdownView = view.findViewById(R.id.countdown_layout);
-            cardView = view.findViewById(R.id.card_view);
-            titleCard = view.findViewById(R.id.TitleCard);
-
-            contentForecast = view.findViewById(R.id.content_forecast);
-
-            map_view = view.findViewById(R.id.map_view);
-            map_view.setClickable(false);
-
-            titleCard.setOnClickListener(this);
             shareButton.setOnClickListener(this);
             exploreButton.setOnClickListener(this);
             watchButton.setOnClickListener(this);
-            map_view.setOnClickListener(this);
-
-            if (map_view != null) {
-                // Initialise the MapView
-                map_view.onCreate(null);
-                // Set the map ready callback to receive the GoogleMap object
-                map_view.getMapAsync(this);
-                map_view.setVisibility(View.INVISIBLE);
-            }
         }
 
         //React to click events.
@@ -604,14 +579,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 case R.id.shareButton:
                     String message;
                     if (launch.getVidURLs().size() > 0) {
-                        if (launch.getLocation() != null) {
+                        if (launch.getPad().getLocation() != null) {
 
                             message = launch.getName() + " launching from "
-                                    + launch.getLocation().getName() + "\n\n"
+                                    + launch.getPad().getLocation().getName() + "\n\n"
                                     + launchDate;
-                        } else if (launch.getLocation() != null) {
+                        } else if (launch.getPad().getLocation() != null) {
                             message = launch.getName() + " launching from "
-                                    + launch.getLocation().getName() + "\n\n"
+                                    + launch.getPad().getLocation().getName() + "\n\n"
                                     + launchDate;
                         } else {
                             message = launch.getName()
@@ -619,14 +594,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                                     + launchDate;
                         }
                     } else {
-                        if (launch.getLocation() != null) {
+                        if (launch.getPad().getLocation() != null) {
 
                             message = launch.getName() + " launching from "
-                                    + launch.getLocation().getName() + "\n\n"
+                                    + launch.getPad().getLocation().getName() + "\n\n"
                                     + launchDate;
-                        } else if (launch.getLocation() != null) {
+                        } else if (launch.getPad().getLocation() != null) {
                             message = launch.getName() + " launching from "
-                                    + launch.getLocation().getName() + "\n\n"
+                                    + launch.getPad().getLocation().getName() + "\n\n"
                                     + launchDate;
                         } else {
                             message = launch.getName()
@@ -641,26 +616,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                             .startChooser();
                     Analytics.getInstance().sendLaunchShared("Explore Button", launch.getName() + "-" + launch.getId().toString());
                     break;
-                case R.id.map_view:
-                    String location = launchList.get(position).getLocation().getName();
-                    location = (location.substring(location.indexOf(",") + 1));
-
-                    Timber.d("FAB: %s ", location);
-
-                    double dlat = Double.parseDouble(launchList.get(position).getPad().getLatitude());
-                    double dlon = Double.parseDouble(launchList.get(position).getPad().getLongitude());
-
-                    Uri gmmIntentUri = Uri.parse("geo:" + dlat + ", " + dlon + "?z=12&q=" + dlat + ", " + dlon);
-                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                    mapIntent.setPackage("com.google.android.apps.maps");
-
-                    Analytics.getInstance().sendLaunchMapClicked(launch.getName());
-
-                    if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
-                        Toast.makeText(context, "Loading " + launchList.get(position).getPad().getName(), Toast.LENGTH_LONG).show();
-                        context.startActivity(mapIntent);
-                    }
-                    break;
                 case R.id.TitleCard:
                     Timber.d("Explore: %s", launchList.get(position).getId());
                     Analytics.getInstance().sendButtonClicked("Title Card", launch.getName());
@@ -672,86 +627,5 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     break;
             }
         }
-
-        @Override
-        public void onMapReady(GoogleMap googleMap) {
-            Timber.v("onMapReady called.");
-            MapsInitializer.initialize(context);
-            map = googleMap;
-            setMapLocation();
-        }
-
-        private void setMapLocation() {
-            if (map == null) {
-                Timber.d("setMapLocation - map is null");
-                return;
-            }
-
-            LaunchLocation data = (LaunchLocation) map_view.getTag();
-            if (data == null) {
-                Timber.d("setMapLocation - data is null");
-                return;
-            }
-
-            map_view.setVisibility(View.VISIBLE);
-            map.getUiSettings().setMapToolbarEnabled(true);
-            map.getUiSettings().setZoomGesturesEnabled(false);
-            map.getUiSettings().setScrollGesturesEnabled(false);
-            Timber.d("setMapLocation - Moving the camera.");
-            // Add a marker for this item and set the camera
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(data.location, 7f));
-            map.addMarker(new MarkerOptions()
-                    .position(data.location)
-                    .title(data.launch.getLocation().getName())
-                    .snippet(data.launch.getPad().getName())
-                    .infoWindowAnchor(0.5f, 0.5f));
-
-            // Set the map type back to normal.
-            map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        }
-
-        private void bindView(LaunchLocation item) {
-            Timber.d("bindView - %s", item.launch.getName());
-            // Store a reference of the ViewHolder object in the layout.
-            layout.setTag(this);
-            // Store a reference to the item in the mapView's tag. We use it to get the
-            // coordinate of a location, when setting the map location.
-            map_view.setTag(item);
-            map_view.onResume();
-            setMapLocation();
-        }
     }
-
-    private static class LaunchLocation {
-
-        public final Launch launch;
-        public final LatLng location;
-
-        LaunchLocation(Launch launch, LatLng location) {
-            this.launch = launch;
-            this.location = location;
-        }
-    }
-
-    /**
-     * RecycleListener that completely clears the {@link com.google.android.gms.maps.GoogleMap}
-     * attached to a row in the RecyclerView.
-     * Sets the map type to {@link com.google.android.gms.maps.GoogleMap#MAP_TYPE_NONE} and clears
-     * the map.
-     */
-    public RecyclerView.RecyclerListener mRecycleListener = new RecyclerView.RecyclerListener() {
-
-        @Override
-        public void onViewRecycled(RecyclerView.ViewHolder holder) {
-            CardAdapter.ViewHolder mapHolder = (CardAdapter.ViewHolder) holder;
-            if (mapHolder != null && mapHolder.map != null) {
-                Timber.d("Clearing map!");
-                // Clear the map and free up resources by changing the map type to none.
-                // Also reset the map when it gets reattached to layout, so the previous map would
-                // not be displayed.
-                mapHolder.map.clear();
-                mapHolder.map.setMapType(GoogleMap.MAP_TYPE_NONE);
-            }
-        }
-    };
 }

@@ -14,13 +14,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,18 +33,20 @@ import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.AgencyResponse;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity;
+import me.calebjones.spacelaunchnow.utils.views.BadgeTabLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class AgencyLaunchActivity extends AppCompatActivity implements UpcomingAgencyLaunchesFragment.OnFragmentInteractionListener, PreviousAgencyLaunchesFragment.OnFragmentInteractionListener, SwipeRefreshLayout.OnRefreshListener {
+public class AgencyLaunchActivity extends AppCompatActivity implements UpcomingAgencyLaunchesFragment.OnFragmentInteractionListener,
+        PreviousAgencyLaunchesFragment.OnFragmentInteractionListener, SwipeRefreshLayout.OnRefreshListener {
 
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.tabs)
-    TabLayout tabLayout;
+    BadgeTabLayout tabLayout;
     @BindView(R.id.appbar)
     AppBarLayout appbar;
     @BindView(R.id.container)
@@ -88,10 +90,8 @@ public class AgencyLaunchActivity extends AppCompatActivity implements UpcomingA
 
         // Set up the ViewPager with the sections adapter.
         viewPager.setAdapter(mSectionsPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
         swipeRefresh.setOnRefreshListener(this);
-
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
         getFeaturedAgencies();
     }
 
@@ -122,6 +122,20 @@ public class AgencyLaunchActivity extends AppCompatActivity implements UpcomingA
                 menu.setVisibility(View.GONE);
             }
         });
+    }
+
+    @Override
+    public void setUpcomingBadge(int count) {
+        if (tabLayout != null && count > 0) {
+            tabLayout.with(0).badge(true).badgeCount(count).name("UPCOMING").build();
+        }
+    }
+
+    @Override
+    public void setPreviousBadge(int count) {
+        if (tabLayout != null && count > 0) {
+            tabLayout.with(1).badge(true).badgeCount(count).name("PREVIOUS").build();
+        }
     }
 
     private void showAgencyDialog() {
@@ -269,6 +283,17 @@ public class AgencyLaunchActivity extends AppCompatActivity implements UpcomingA
                     break;
             }
             return createdFragment;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return getApplicationContext().getString(R.string.upcoming);
+                case 1:
+                    return getApplicationContext().getString(R.string.previous);
+            }
+            return null;
         }
 
         @Override

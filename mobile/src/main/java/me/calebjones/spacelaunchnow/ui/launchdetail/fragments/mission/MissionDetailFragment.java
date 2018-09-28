@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.ui.launchdetail.fragments;
+package me.calebjones.spacelaunchnow.ui.launchdetail.fragments.mission;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -6,13 +6,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.Group;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+
+import net.cachapa.expandablelayout.ExpandableLayout;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -20,27 +26,31 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.RetroFitFragment;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
-import me.calebjones.spacelaunchnow.data.models.main.Launcher;
+import me.calebjones.spacelaunchnow.data.models.main.LauncherConfig;
 import me.calebjones.spacelaunchnow.data.models.main.Mission;
+import me.calebjones.spacelaunchnow.ui.launchdetail.OnFragmentInteractionListener;
 import me.calebjones.spacelaunchnow.ui.launches.launcher.LauncherLaunchActivity;
-import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.Utils;
+import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import timber.log.Timber;
 
 public class MissionDetailFragment extends RetroFitFragment {
 
-    private Context context;
-    public Launch detailLaunch;
+    @BindView(R.id.coreRecyclerView)
+    RecyclerView coreRecyclerView;
     @BindView(R.id.vehicle_spec_view)
-    View vehicleSpecView;
+    Group vehicleSpecView;
     @BindView(R.id.payload_type)
     TextView payloadType;
     @BindView(R.id.payload_description)
     TextView payloadDescription;
+    @BindView(R.id.orbit)
+    TextView orbit;
     @BindView(R.id.payload_status)
     TextView payloadStatus;
     @BindView(R.id.payload_infoButton)
@@ -76,6 +86,10 @@ public class MissionDetailFragment extends RetroFitFragment {
     @BindView(R.id.launcher_launches)
     AppCompatButton launchesButton;
 
+    private OnFragmentInteractionListener mListener;
+    private Context context;
+    public Launch detailLaunch;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +114,8 @@ public class MissionDetailFragment extends RetroFitFragment {
     public void onResume() {
         if (detailLaunch != null && detailLaunch.isValid()) {
             setUpViews(detailLaunch);
+        } else {
+            mListener.sendLaunchToFragment(OnFragmentInteractionListener.MISSION);
         }
         super.onResume();
     }
@@ -119,6 +135,12 @@ public class MissionDetailFragment extends RetroFitFragment {
                 payloadStatus.setText(mission.getName());
                 payloadDescription.setText(mission.getDescription());
                 payloadType.setText(mission.getTypeName());
+                if (mission.getOrbit() != null && mission.getOrbitAbbrev() != null) {
+                    orbit.setVisibility(View.VISIBLE);
+                    orbit.setText(String.format("%s (%s)", mission.getOrbit(), mission.getOrbitAbbrev()));
+                } else {
+                    orbit.setVisibility(View.GONE);
+                }
                 payloadInfoButton.setVisibility(View.GONE);
                 payloadWikiButton.setVisibility(View.GONE);
             } else {
@@ -128,38 +150,50 @@ public class MissionDetailFragment extends RetroFitFragment {
                 payloadWikiButton.setVisibility(View.GONE);
             }
 
-            launchVehicleView.setText(detailLaunch.getLauncher().getFullName());
-            launchConfiguration.setText(detailLaunch.getLauncher().getVariant());
-            launchFamily.setText(detailLaunch.getLauncher().getFamily());
-            if (detailLaunch.getLauncher().getInfoUrl() != null && detailLaunch.getLauncher().getInfoUrl().length() > 0){
+            launchVehicleView.setText(detailLaunch.getRocket().getConfiguration().getFullName());
+            launchConfiguration.setText(detailLaunch.getRocket().getConfiguration().getVariant());
+            launchFamily.setText(detailLaunch.getRocket().getConfiguration().getFamily());
+            if (detailLaunch.getRocket().getConfiguration().getInfoUrl() != null && detailLaunch.getRocket().getConfiguration().getInfoUrl().length() > 0) {
                 vehicleInfoButton.setOnClickListener(view -> {
                     Activity activity = (Activity) context;
-                    Utils.openCustomTab(activity, context, detailLaunch.getLauncher().getInfoUrl());
+                    Utils.openCustomTab(activity, context, detailLaunch.getRocket().getConfiguration().getInfoUrl());
                     Analytics.getInstance().sendButtonClickedWithURL("Vehicle Info",
-                            detailLaunch.getLauncher().getInfoUrl());
+                            detailLaunch.getRocket().getConfiguration().getInfoUrl());
                 });
             } else {
                 vehicleInfoButton.setVisibility(View.GONE);
             }
 
-            if (detailLaunch.getLauncher().getWikiUrl() != null && detailLaunch.getLauncher().getWikiUrl().length() > 0){
+            if (detailLaunch.getRocket().getConfiguration().getWikiUrl() != null && detailLaunch.getRocket().getConfiguration().getWikiUrl().length() > 0) {
                 vehicleWikiButton.setOnClickListener(view -> {
                     Activity activity = (Activity) context;
-                    Utils.openCustomTab(activity, context, detailLaunch.getLauncher().getWikiUrl());
+                    Utils.openCustomTab(activity, context, detailLaunch.getRocket().getConfiguration().getWikiUrl());
                     Analytics.getInstance().sendButtonClickedWithURL("Vehicle Wiki",
-                            detailLaunch.getLauncher().getWikiUrl());
+                            detailLaunch.getRocket().getConfiguration().getWikiUrl());
                 });
             } else {
                 vehicleWikiButton.setVisibility(View.GONE);
             }
-            configureLaunchVehicle(launch.getLauncher());
+            configureLaunchVehicle(launch.getRocket().getConfiguration());
+
+            if (launch.getRocket().getFirstStage() != null && launch.getRocket().getFirstStage().size() > 0){
+                coreRecyclerView.setVisibility(View.VISIBLE);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+                coreRecyclerView.setLayoutManager(layoutManager);
+                StageInformationAdapter stageInformationAdapter = new StageInformationAdapter(launch.getRocket().getFirstStage(), context);
+                coreRecyclerView.setAdapter(stageInformationAdapter);
+                coreRecyclerView.setHasFixedSize(true);
+            } else {
+                coreRecyclerView.setVisibility(View.GONE);
+            }
+
+
         } catch (NullPointerException e) {
             Timber.e(e);
         }
     }
 
-    @SuppressLint("StringFormatMatches")
-    private void configureLaunchVehicle(Launcher launchVehicle) {
+    private void configureLaunchVehicle(LauncherConfig launchVehicle) {
         if (launchVehicle != null) {
             vehicleSpecView.setVisibility(View.VISIBLE);
             try {
@@ -230,20 +264,21 @@ public class MissionDetailFragment extends RetroFitFragment {
         return new MissionDetailFragment();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(LaunchEvent event) {
-        setLaunch(event.launch);
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
 }

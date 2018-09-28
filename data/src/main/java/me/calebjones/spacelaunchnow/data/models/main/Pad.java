@@ -33,6 +33,17 @@ public class Pad extends RealmObject {
     @SerializedName("longitude")
     @Expose
     public String longitude;
+    @SerializedName("location")
+    @Expose
+    public Location location;
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
 
     public Integer getId() {
         return id;

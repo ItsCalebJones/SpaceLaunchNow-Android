@@ -27,8 +27,14 @@ import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.PathInterpolator;
 
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class Utils {
 
@@ -102,6 +108,24 @@ public class Utils {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
+
+    public static class EpochDateConverter extends TypeAdapter<Date> {
+        @Override
+        public void write(JsonWriter out, Date value) throws IOException {
+            if (value == null)
+                out.nullValue();
+            else
+                out.value(value.getTime() / 1000);
+        }
+
+        @Override
+        public Date read(JsonReader in) throws IOException {
+            if (in != null)
+                return new Date(in.nextLong() * 1000);
+            else
+                return null;
+        }
     }
 
 }

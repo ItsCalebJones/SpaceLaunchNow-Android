@@ -90,14 +90,10 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     AppCompatCheckBox customSwitch;
     @BindView(R.id.tbd_launch)
     SwitchCompat tbdLaunchSwitch;
-    @BindView(R.id.no_go_launch)
-    SwitchCompat noGoSwitch;
     @BindView(R.id.persist_last_launch)
     SwitchCompat persistLastSwitch;
-    @BindView(R.id.no_go_info)
-    AppCompatImageView noGoInfo;
     @BindView(R.id.tbd_info)
-    AppCompatImageView tbdInfo;
+    AppCompatImageView noGoInfo;
     @BindView(R.id.last_launch_info)
     AppCompatImageView lastLaunchInfo;
     @BindView(R.id.action_notification_settings)
@@ -133,7 +129,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         switchPreferences = SwitchPreferences.getInstance(context);
         nextLaunchDataRepository = new NextLaunchDataRepository(context, getRealm());
-        preferredCount = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
         setScreenName("Next Launch Fragment");
     }
 
@@ -176,21 +171,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setRecyclerListener(adapter.mRecycleListener);
-        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                int topRowVerticalPosition =
-                        (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
-                mSwipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
-
-            }
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
 
         //If preference is for small card, landscape tablets get three others get two.
         if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
@@ -255,8 +235,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         plesSwitch.setChecked(switchPreferences.getSwitchPles());
         vanSwitch.setChecked(switchPreferences.getSwitchVan());
         kscSwitch.setChecked(switchPreferences.getSwitchKSC());
-        noGoSwitch.setChecked(switchPreferences.getNoGoSwitch());
-        tbdLaunchSwitch.setChecked(switchPreferences.getTBDLaunchSwitch());
+        tbdLaunchSwitch.setChecked(switchPreferences.getTBDSwitch());
         persistLastSwitch.setChecked(switchPreferences.getPersistSwitch());
     }
 
@@ -313,6 +292,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     public void fetchData(boolean forceRefresh) {
         Timber.v("Sending GET_UP_LAUNCHES");
+        preferredCount = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
         nextLaunchDataRepository.getNextUpcomingLaunches(preferredCount, forceRefresh, new Callbacks.NextLaunchesCallback() {
             @Override
             public void onLaunchesLoaded(RealmResults<Launch> launches) {
@@ -338,7 +318,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     private void updateAdapter(RealmResults<Launch> launches) {
         adapter.clear();
-
+        preferredCount = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
         if (launches.size() >= preferredCount) {
             no_data.setVisibility(View.GONE);
             setLayoutManager(preferredCount);
@@ -615,16 +595,10 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         setUpSwitches();
     }
 
-    @OnClick(R.id.no_go_launch)
+    @OnClick(R.id.tbd_launch)
     public void noGoSwitch() {
         confirm();
-        switchPreferences.setNoGoSwitch(noGoSwitch.isChecked());
-    }
-
-    @OnClick(R.id.tbd_launch)
-    public void tbdLaunchSwitch() {
-        confirm();
-        switchPreferences.setTBDLaunchSwitch(tbdLaunchSwitch.isChecked());
+        switchPreferences.setNoGoSwitch(tbdLaunchSwitch.isChecked());
     }
 
     @OnClick(R.id.persist_last_launch)
@@ -641,16 +615,13 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         startActivity(intent);
     }
 
-    @OnClick({R.id.no_go_info, R.id.tbd_info, R.id.last_launch_info})
+    @OnClick({R.id.tbd_info, R.id.last_launch_info})
     public void onViewClicked(View view) {
         MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
         dialog.positiveText("Ok");
         switch (view.getId()) {
-            case R.id.no_go_info:
-                dialog.title(R.string.no_go).content(R.string.no_go_description).show();
-                break;
             case R.id.tbd_info:
-                dialog.title(R.string.to_be_determined).content(R.string.to_be_determined_description).show();
+                dialog.title(R.string.no_go).content(R.string.no_go_description).show();
                 break;
             case R.id.last_launch_info:
                 dialog.title(R.string.launch_info).content(R.string.launch_info_description).show();

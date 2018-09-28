@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +28,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.nekocode.badge.BadgeDrawable;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
@@ -35,6 +37,7 @@ import me.calebjones.spacelaunchnow.ui.launches.agency.PreviousAgencyLaunchesFra
 import me.calebjones.spacelaunchnow.ui.launches.agency.UpcomingAgencyLaunchesFragment;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity;
+import me.calebjones.spacelaunchnow.utils.views.BadgeTabLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,7 +49,7 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.tabs)
-    TabLayout tabLayout;
+    BadgeTabLayout tabLayout;
     @BindView(R.id.appbar)
     AppBarLayout appbar;
     @BindView(R.id.container)
@@ -68,7 +71,9 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
     private String searchTerm = null;
     private String lspName = null;
     private String launcherName = null;
+    private String serialNumber = null;
     private Integer launcherId = null;
+    private int color;
 
 
     @Override
@@ -76,12 +81,13 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agency_launch);
         ButterKnife.bind(this);
-
+        color = ContextCompat.getColor(this, R.color.accent);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             lspName = extras.getString("lspName");
             launcherName = extras.getString("launcherName");
             launcherId = extras.getInt("launcherId");
+            serialNumber = extras.getString("serialNumber");
         }
         setTitle();
 
@@ -94,6 +100,7 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
 
         // Set up the ViewPager with the sections adapter.
         viewPager.setAdapter(mSectionsPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
         swipeRefresh.setOnRefreshListener(this);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -159,15 +166,16 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
     public void onRefresh() {
         lspName = null;
         searchTerm = null;
+        serialNumber = null;
         refresh();
     }
 
     private void refresh() {
         if (upcomingFragment != null) {
-            upcomingFragment.onRefresh(lspName, searchTerm);
+            upcomingFragment.onRefresh(lspName, searchTerm, serialNumber);
         }
         if (previousFragment != null) {
-            previousFragment.onRefresh(lspName, searchTerm);
+            previousFragment.onRefresh(lspName, searchTerm, serialNumber);
         }
         setTitle();
     }
@@ -175,6 +183,8 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
     private void setTitle() {
         if (launcherName != null) {
             toolbar.setTitle(launcherName);
+        } else if (serialNumber != null) {
+            toolbar.setTitle(serialNumber);
         } else {
             toolbar.setTitle("Launches");
         }
@@ -198,6 +208,38 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
         swipeRefresh.post(() -> swipeRefresh.setRefreshing(false));
     }
 
+    @Override
+    public void setUpcomingBadge(int count) {
+        if (tabLayout != null && count > 0) {
+            final BadgeDrawable drawable =
+                    new BadgeDrawable.Builder()
+                            .type(BadgeDrawable.TYPE_NUMBER)
+                            .badgeColor(color)
+                            .number(count)
+                            .padding(8, 8, 8, 8, 8)
+                            .strokeWidth(16)
+                            .build();
+
+            tabLayout.getTabAt(0).setText(TextUtils.concat(getString(R.string.upcoming_with_space), drawable.toSpannable()));
+        }
+    }
+
+    @Override
+    public void setPreviousBadge(int count) {
+        if (tabLayout != null && count > 0) {
+            final BadgeDrawable drawable =
+                    new BadgeDrawable.Builder()
+                            .type(BadgeDrawable.TYPE_NUMBER)
+                            .badgeColor(color)
+                            .number(count)
+                            .padding(8, 8, 8, 8, 8)
+                            .strokeWidth(16)
+                            .build();
+
+            tabLayout.getTabAt(1).setText(TextUtils.concat(getString(R.string.previous_with_space), drawable.toSpannable()));
+        }
+    }
+
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -210,9 +252,9 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
 
             switch (position) {
                 case 0:
-                    return UpcomingLauncherLaunchesFragment.newInstance(searchTerm, lspName, launcherId);
+                    return UpcomingLauncherLaunchesFragment.newInstance(searchTerm, lspName, launcherId, serialNumber);
                 case 1:
-                    return PreviousLauncherLaunchesFragment.newInstance(searchTerm, lspName, launcherId);
+                    return PreviousLauncherLaunchesFragment.newInstance(searchTerm, lspName, launcherId, serialNumber);
                 default:
                     return null;
             }
@@ -236,6 +278,17 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
                     break;
             }
             return createdFragment;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return getApplicationContext().getString(R.string.upcoming);
+                case 1:
+                    return getApplicationContext().getString(R.string.previous);
+            }
+            return null;
         }
 
         @Override

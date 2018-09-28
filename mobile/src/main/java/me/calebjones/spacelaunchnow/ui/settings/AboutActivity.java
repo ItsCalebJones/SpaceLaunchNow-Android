@@ -76,27 +76,22 @@ public class AboutActivity extends AppCompatActivity {
                 .addAction(new IconicsDrawable(this)
                                 .icon(CommunityMaterial.Icon.cmd_android_debug_bridge)
                                 .sizeDp(24).toBitmap(),
-                        "Debug", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                new MaterialDialog.Builder(context)
-                                        .title("Enter Support Code")
-                                        .content("To debug the application - please enter the code from support.")
-                                        .inputType(InputType.TYPE_CLASS_NUMBER)
-                                        .inputRangeRes(1,100, R.color.accent)
-                                        .input("Support Code", null, new MaterialDialog.InputCallback() {
-                                            @Override
-                                            public void onInput(MaterialDialog dialog, CharSequence input) {
-                                                // Do something
-                                                if(!input.equals("") && DebugAuthManager.getAuthResult(input)){
-                                                    goToDebug();
-                                                } else {
-                                                    Toast.makeText(context, "Error - code was invalid.", Toast.LENGTH_LONG).show();
-                                                }
-                                            }
-                                        }).show();
-                            }
-                        }
+                        "Debug", view -> new MaterialDialog.Builder(context)
+                                .title("Enter Support Code")
+                                .content("To debug the application - please enter the code from support.")
+                                .inputType(InputType.TYPE_CLASS_NUMBER)
+                                .inputRangeRes(1,100, R.color.accent)
+                                .input("Support Code", null, new MaterialDialog.InputCallback() {
+                                    @Override
+                                    public void onInput(MaterialDialog dialog, CharSequence input) {
+                                        // Do something
+                                        if(!input.equals("") && DebugAuthManager.getAuthResult(input)){
+                                            goToDebug();
+                                        } else {
+                                            Toast.makeText(context, "Error - code was invalid.", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                }).show()
                 )
                 .addShareAction("Checkout " + R.string.app_name)
                 .addUpdateAction()
@@ -112,58 +107,52 @@ public class AboutActivity extends AppCompatActivity {
                                 .sizeDp(24)
                                 .toBitmap(),
                         "Privacy Policy",
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                try {
-                                    StringBuilder buf = new StringBuilder();
-                                    InputStream json = context.getAssets().open("PRIVACY.md");
-                                    BufferedReader in = new BufferedReader(new InputStreamReader(json, "UTF-8"));
+                        view -> {
+                            try {
+                                StringBuilder buf = new StringBuilder();
+                                InputStream json = context.getAssets().open("PRIVACY.md");
+                                BufferedReader in = new BufferedReader(new InputStreamReader(json, "UTF-8"));
 
-                                    String str;
-                                    while((str = in.readLine()) != null) {
-                                        buf.append(str).append("\n");
-                                    }
-
-                                    in.close();
-                                    new MaterialDialog.Builder(context)
-                                            .title("Privacy Policy")
-                                            .content(buf.toString())
-                                            .positiveText("Got it.")
-                                            .show();
-                                } catch (IOException var6) {
-                                    var6.printStackTrace();
+                                String str;
+                                while((str = in.readLine()) != null) {
+                                    buf.append(str).append("\n");
                                 }
 
+                                in.close();
+                                new MaterialDialog.Builder(context)
+                                        .title("Privacy Policy")
+                                        .content(buf.toString())
+                                        .positiveText("Got it.")
+                                        .show();
+                            } catch (IOException var6) {
+                                var6.printStackTrace();
                             }
+
                         })
                 .addAction(new IconicsDrawable(this)
                                 .icon(CommunityMaterial.Icon.cmd_file_check)
                                 .sizeDp(24)
                                 .toBitmap(),
                         "Terms of Use",
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                try {
-                                    StringBuilder buf = new StringBuilder();
-                                    InputStream json = context.getAssets().open("TERMS.md");
-                                    BufferedReader in = new BufferedReader(new InputStreamReader(json, "UTF-8"));
+                        view -> {
+                            try {
+                                StringBuilder buf = new StringBuilder();
+                                InputStream json = context.getAssets().open("TERMS.md");
+                                BufferedReader in = new BufferedReader(new InputStreamReader(json, "UTF-8"));
 
-                                    String str;
-                                    while((str = in.readLine()) != null) {
-                                        buf.append(str).append("\n");
-                                    }
-
-                                    in.close();
-                                    new MaterialDialog.Builder(context)
-                                            .title("Terms of Use")
-                                            .content(buf.toString())
-                                            .positiveText("Got it.")
-                                            .show();
-                                } catch (IOException var6) {
-                                    var6.printStackTrace();
+                                String str;
+                                while((str = in.readLine()) != null) {
+                                    buf.append(str).append("\n");
                                 }
+
+                                in.close();
+                                new MaterialDialog.Builder(context)
+                                        .title("Terms of Use")
+                                        .content(buf.toString())
+                                        .positiveText("Got it.")
+                                        .show();
+                            } catch (IOException var6) {
+                                var6.printStackTrace();
                             }
                         })
                 .setWrapScrollView(true)

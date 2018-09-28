@@ -869,7 +869,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor.apply();
     }
 
-    public boolean getNoGoSwitch() {
+    public boolean getTBDSwitch() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         return this.sharedPrefs.getBoolean(PREFS_NO_GO_SWITCH, true);
     }

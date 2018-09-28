@@ -22,6 +22,7 @@ import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecorati
 import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
 import me.calebjones.spacelaunchnow.content.data.previous.PreviousDataRepository;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 import me.calebjones.spacelaunchnow.ui.main.launches.ListAdapter;
 import me.calebjones.spacelaunchnow.utils.views.EndlessRecyclerViewScrollListener;
 import timber.log.Timber;
@@ -104,6 +105,7 @@ public class PreviousAgencyLaunchesFragment extends BaseFragment {
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
         recyclerView.setAdapter(adapter);
         statefulView.showProgress();
+        statefulView.setOfflineRetryOnClickListener(v -> fetchData(true));
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
@@ -112,6 +114,7 @@ public class PreviousAgencyLaunchesFragment extends BaseFragment {
                 if (canLoadMore) {
                     fetchData(false);
                     mListener.showPreviousLoading(true);
+
                 }
             }
         };
@@ -144,13 +147,15 @@ public class PreviousAgencyLaunchesFragment extends BaseFragment {
             nextOffset = 0;
             adapter.clear();
         }
-        previousDataRepository.getPreviousLaunches(nextOffset, searchTerm, lspName, null, new Callbacks.ListCallback() {
+
+        previousDataRepository.getPreviousLaunches(nextOffset, searchTerm, lspName, null, null, new Callbacks.ListCallbackMini() {
             @Override
-            public void onLaunchesLoaded(List<Launch> launches, int next) {
+            public void onLaunchesLoaded(List<LaunchList> launches, int next, int total) {
                 Timber.v("Offset - %s", next);
                 nextOffset = next;
                 canLoadMore = next > 0;
                 updateAdapter(launches);
+                mListener.setPreviousBadge(total);
             }
 
             @Override
@@ -161,6 +166,8 @@ public class PreviousAgencyLaunchesFragment extends BaseFragment {
 
             @Override
             public void onError(String message, @Nullable Throwable throwable) {
+                statefulView.showOffline();
+                statefulStateContentShow = false;
                 if (throwable != null) {
                     Timber.e(throwable);
                 } else {
@@ -170,7 +177,7 @@ public class PreviousAgencyLaunchesFragment extends BaseFragment {
         });
     }
 
-    private void updateAdapter(List<Launch> launches) {
+    private void updateAdapter(List<LaunchList> launches) {
 
         if (launches.size() > 0) {
             if (!statefulStateContentShow) {
@@ -209,6 +216,8 @@ public class PreviousAgencyLaunchesFragment extends BaseFragment {
     public interface OnFragmentInteractionListener {
 
         void showPreviousLoading(boolean loading);
+
+        void setPreviousBadge(int count);
 
     }
 }

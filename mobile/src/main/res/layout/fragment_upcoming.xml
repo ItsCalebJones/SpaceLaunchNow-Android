@@ -1,6 +1,7 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/coordinatorLayout"
+    android:elevation="0dp"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
@@ -277,42 +278,12 @@
 
 
                             <android.support.v7.widget.SwitchCompat
-                                android:id="@+id/no_go_launch"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight=".80"
-                                android:checked="true"
-                                android:text="@string/hide_no_go_launches"
-                                android:textColor="@color/white"
-                                app:buttonTint="@color/white" />
-
-                            <android.support.v7.widget.AppCompatImageView
-                                android:id="@+id/no_go_info"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight=".20"
-                                android:background="?attr/selectableItemBackgroundBorderless"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:src="@drawable/ic_about" />
-
-                        </LinearLayout>
-
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
-                            android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
-                            android:orientation="horizontal">
-
-                            <android.support.v7.widget.SwitchCompat
                                 android:id="@+id/tbd_launch"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight=".80"
                                 android:checked="true"
-                                android:text="@string/hide_tbd_launches"
+                                android:text="@string/to_be_determined"
                                 android:textColor="@color/white"
                                 app:buttonTint="@color/white" />
 
@@ -325,7 +296,9 @@
                                 android:clickable="true"
                                 android:focusable="true"
                                 android:src="@drawable/ic_about" />
+
                         </LinearLayout>
+
 
                         <LinearLayout
                             android:layout_width="match_parent"

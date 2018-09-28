@@ -3,6 +3,8 @@ package me.calebjones.spacelaunchnow.data.models.main;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 import io.realm.RealmObject;
 
 public class Orbiter extends RealmObject {
@@ -34,9 +36,52 @@ public class Orbiter extends RealmObject {
     @SerializedName("wiki_link")
     @Expose
     public String wikiLink;
+    @SerializedName("info_link")
+    @Expose
+    public String infoLink;
     @SerializedName("capability")
     @Expose
     public String capability;
+    @SerializedName("maiden_flight")
+    @Expose
+    public Date maidenFlight;
+    @SerializedName("height")
+    @Expose
+    public Float height;
+    @SerializedName("diameter")
+    @Expose
+    public Float diameter;
+    @SerializedName("human_rated")
+    @Expose
+    public Boolean humanRated;
+    @SerializedName("in_use")
+    @Expose
+    public Boolean inUse;
+    @SerializedName("crew_capacity")
+    @Expose
+    public Integer crewCapacity;
+    @SerializedName("payload_capacity")
+    @Expose
+    public Integer payloadCapacity;
+    @SerializedName("flight_life")
+    @Expose
+    public String flightLife;
+
+    public String getInfoLink() {
+        return infoLink;
+    }
+
+    public void setInfoLink(String infoLink) {
+        this.infoLink = infoLink;
+    }
+
+    public Boolean getInUse() {
+        return inUse;
+    }
+
+    public void setInUse(Boolean inUse) {
+        this.inUse = inUse;
+    }
 
     public String getName() {
         return name;
@@ -108,5 +153,61 @@ public class Orbiter extends RealmObject {
 
     public void setCapability(String capability) {
         this.capability = capability;
+    }
+
+    public Date getMaidenFlight() {
+        return maidenFlight;
+    }
+
+    public void setMaidenFlight(Date maidenFlight) {
+        this.maidenFlight = maidenFlight;
+    }
+
+    public Float getHeight() {
+        return height;
+    }
+
+    public void setHeight(Float height) {
+        this.height = height;
+    }
+
+    public Float getDiameter() {
+        return diameter;
+    }
+
+    public void setDiameter(Float diameter) {
+        this.diameter = diameter;
+    }
+
+    public Boolean getHumanRated() {
+        return humanRated;
+    }
+
+    public void setHumanRated(Boolean humanRated) {
+        this.humanRated = humanRated;
+    }
+
+    public Integer getCrewCapacity() {
+        return crewCapacity;
+    }
+
+    public void setCrewCapacity(Integer crewCapacity) {
+        this.crewCapacity = crewCapacity;
+    }
+
+    public Integer getPayloadCapacity() {
+        return payloadCapacity;
+    }
+
+    public void setPayloadCapacity(Integer payloadCapacity) {
+        this.payloadCapacity = payloadCapacity;
+    }
+
+    public String getFlightLife() {
+        return flightLife;
+    }
+
+    public void setFlightLife(String flightLife) {
+        this.flightLife = flightLife;
     }
 }

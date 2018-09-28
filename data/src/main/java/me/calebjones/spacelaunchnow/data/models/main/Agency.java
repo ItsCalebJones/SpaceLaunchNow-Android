@@ -4,8 +4,6 @@ package me.calebjones.spacelaunchnow.data.models.main;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -25,12 +23,9 @@ public class Agency extends RealmObject {
     @SerializedName("featured")
     @Expose
     public Boolean featured;
-    @SerializedName("launchers")
+    @SerializedName("launcherConfigs")
     @Expose
     public String launchers_string;
-    @SerializedName("orbiters")
-    @Expose
-    public String orbiters;
     @SerializedName("description")
     @Expose
     public String description;
@@ -69,15 +64,18 @@ public class Agency extends RealmObject {
     public String type;
     @SerializedName("launcher_list")
     @Expose
-    public RealmList<Launcher> launchers;
+    public RealmList<LauncherConfig> launcherConfigs;
+    @SerializedName("orbiter_list")
+    @Expose
+    public RealmList<Orbiter> orbiters;
 
 
-    public RealmList<Launcher> getLaunchers() {
-        return launchers;
+    public RealmList<LauncherConfig> getLauncherConfigs() {
+        return launcherConfigs;
     }
 
-    public void setLaunchers(RealmList<Launcher> launchers) {
-        this.launchers = launchers;
+    public void setLauncherConfigs(RealmList<LauncherConfig> launcherConfigs) {
+        this.launcherConfigs = launcherConfigs;
     }
 
     public Integer getId() {
@@ -120,11 +118,11 @@ public class Agency extends RealmObject {
         this.launchers_string = launchers_string;
     }
 
-    public String getOrbiters() {
+    public RealmList<Orbiter> getOrbiters() {
         return orbiters;
     }
 
-    public void setOrbiters(String orbiters) {
+    public void setOrbiters(RealmList<Orbiter> orbiters) {
         this.orbiters = orbiters;
     }
 

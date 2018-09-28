@@ -1,17 +1,28 @@
 # Space Launch Now
-A space launch tracker for Android using data from the Launch Library API. 
+A space launch tracker for Android using data from the Launch Library API.
 
 [View the latest releases here.](https://github.com/ItsCalebJones/SpaceLaunchNow-Android/releases)
 ## Changelog
 #### Updated 6-11-2018
 ---
-### Version 2.6.0 (Latest)
+### Version 2.6.2 (Latest)
+#### Overview
+Finally, SpaceX landing information! It's a long time coming but its finally here. 
+
+#### Changelog
+* Add labels for SpaceX landing information.
+* Add labels to indicate status of the launch.
+* Add labels to indicate intended orbit.
+* Fix a whole lotta  bugs.
+* Remove the Google Map view from the home page due to performance issues rendering multiple maps.
+
+### Version 2.6.0
 #### Overview
 Change over to using my own server to support future Blue Origin launches and additional data about SpaceX launches and LANDINGS. Coming soon!
 
 #### Changelog
 * Iconography changes to improve user experience.
-* Added a 'View More' buttons for launchers and agencies.
+* Added a 'View More' buttons for launcherConfigs and agencies.
 * Moved away from using Launch Library API to our own server.
 
 Special shoutout to the translators that have helped fully translate Space Launch Now into over five languages!
@@ -121,7 +132,7 @@ Quick bug fix release - addressing a few issues.
 #### Changelog
 * Added an option to hide launches that have an unconfirmed date.
 * Fixed an issue with some users not receiving notifications.
-* Fixed issue where the incorrect launcher data was being shown.
+* Fixed issue where the incorrect launcherConfig data was being shown.
 * Fixed a few crashes.
 
 ---

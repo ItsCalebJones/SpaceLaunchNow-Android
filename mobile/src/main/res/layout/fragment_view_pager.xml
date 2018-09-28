@@ -13,10 +13,10 @@
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/colorPrimaryAlt"
+        android:background="@color/colorPrimary"
         android:elevation="8dp"
         app:tabGravity="fill"
-        app:tabBackground="@color/colorPrimaryAlt"
+        app:tabBackground="@color/colorPrimary"
         app:tabTextColor="@color/dark_theme_secondary_text_color"
         app:tabSelectedTextColor="@color/dark_theme_primary_text_color"
         app:tabMode="fixed" />

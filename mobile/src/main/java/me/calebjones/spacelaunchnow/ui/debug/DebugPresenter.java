@@ -95,25 +95,19 @@ public class DebugPresenter implements DebugContract.Presenter {
         sharedPreference.setDebugLaunch(selected);
         if (selected) {
             sharedPreference.setDebugLaunch(true);
-            DataClient.create("dev", context.getString(R.string.sln_token));
+            DataClient.create("dev", context.getString(R.string.sln_token), true);
         } else {
             sharedPreference.setDebugLaunch(false);
-            DataClient.create("1.3", context.getString(R.string.sln_token));
+            DataClient.create("1.3", context.getString(R.string.sln_token), false);
         }
 
 
         //Delete from Database
         realm = Realm.getDefaultInstance();
-        realm.executeTransactionAsync(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                RealmResults<Launch> results = realm.where(Launch.class).findAll();
-                results.deleteAllFromRealm();
-            }
-        }, new Realm.Transaction.OnSuccess() {
-            @Override
-            public void onSuccess() {
-            }
+        realm.executeTransactionAsync(realm -> {
+            RealmResults<Launch> results = realm.where(Launch.class).findAll();
+            results.deleteAllFromRealm();
+        }, () -> {
         });
         realm.close();
 

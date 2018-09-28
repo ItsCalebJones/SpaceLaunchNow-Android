@@ -60,7 +60,7 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchViewHolder>{
             holder.launchIcon.setImageResource(R.drawable.ic_unknown_white);
         }
 
-        if (launch.getStatus() != null && launch.getStatus() == 2) {
+        if (launch.getStatus() != null && launch.getStatus().getId() == 2) {
             //Get launch date
             sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
             Date date = launch.getNet();
@@ -90,8 +90,8 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchViewHolder>{
         }
 
         //If pad and agency exist add it to location, otherwise get whats always available
-        if (launch.getLocation() != null) {
-            holder.launchLocation.setText(launch.getLocation().getName());
+        if (launch.getPad().getLocation() != null) {
+            holder.launchLocation.setText(launch.getPad().getLocation().getName());
         } else {
             holder.launchLocation.setText("Unknown Launch Location");
         }

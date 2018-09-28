@@ -3,6 +3,7 @@ package me.calebjones.spacelaunchnow.data.networking.interfaces;
 import me.calebjones.spacelaunchnow.data.BuildConfig;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.AgencyResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchListResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.OrbiterResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
@@ -14,7 +15,7 @@ import retrofit2.http.Query;
 
 public interface SpaceLaunchNowService {
 
-    String version = "3.0.0";
+    String version = "3.2.0";
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/orbiters/")
@@ -23,6 +24,10 @@ public interface SpaceLaunchNowService {
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/agencies/")
     Call<AgencyResponse> getAgencies(@Query("featured") boolean featured, @Query("mode") String mode);
+
+    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
+    @GET(version + "/agencies/")
+    Call<AgencyResponse> getAgenciesWithOrbiters(@Query("orbiters") boolean orbiters);
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/launchers_string/")
@@ -48,6 +53,13 @@ public interface SpaceLaunchNowService {
                                              @Query("mode") String mode, @Query("search") String search,
                                              @Query("lsp__name") String lspName,
                                              @Query("launcher_config__id") Integer launcherId);
+
+    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
+    @GET(version + "/launch/upcoming/")
+    Call<LaunchListResponse> getUpcomingLaunchesMini(@Query("limit") int amount, @Query("offset") int offset,
+                                                     @Query("mode") String mode, @Query("search") String search,
+                                                     @Query("lsp__name") String lspName, @Query("serial_number") String serialNumber,
+                                                     @Query("launcher_config__id") Integer launcherId);
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/launch/upcoming/")
@@ -95,6 +107,13 @@ public interface SpaceLaunchNowService {
     Call<LaunchResponse> getPreviousLaunches(@Query("limit") int amount, @Query("offset") int offset,
                                              @Query("mode") String mode, @Query("search") String search,
                                              @Query("lsp__name") String lspName, @Query("launcher_config__id") Integer lspId);
+
+    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
+    @GET(version + "/launch/previous/")
+    Call<LaunchListResponse> getPreviousLaunchesMini(@Query("limit") int amount, @Query("offset") int offset,
+                                                     @Query("mode") String mode, @Query("search") String search,
+                                                     @Query("lsp__name") String lspName, @Query("serial_number") String serialNumber,
+                                                     @Query("launcher_config__id") Integer lspId);
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/launch/previous/")

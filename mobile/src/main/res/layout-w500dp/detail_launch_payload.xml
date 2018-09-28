@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
     android:textAlignment="center"
     android:transitionGroup="true"
     tools:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -17,36 +18,40 @@
             android:layout_width="@dimen/max_width"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_margin="@dimen/material_card_edge_margin"
             android:animateLayoutChanges="true"
-            card_view:cardCornerRadius="@dimen/card_view_corner_radius"
-            card_view:cardElevation="@dimen/material_card_elevation_resting"
-            card_view:cardPreventCornerOverlap="true"
-            card_view:cardUseCompatPadding="true">
+            android:padding="@dimen/material_card_edge_margin"
+            app:cardCornerRadius="@dimen/card_view_corner_radius"
+            app:cardElevation="@dimen/material_card_elevation_resting"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true">
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
 
+                android:id="@+id/linearLayout2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
+
 
                 <TextView
                     android:id="@+id/payload_status_title"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
                     android:background="?attr/titleBarColor"
                     android:gravity="center"
                     android:paddingTop="8dp"
                     android:text="@string/mission_details"
                     android:textAlignment="center"
                     android:textColor="@color/dark_primary_text_color_selector"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textSize="@dimen/material_typography_regular_title_text_size"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/payload_status"
-
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="?attr/titleBarColor"
                     android:ellipsize="end"
@@ -59,76 +64,101 @@
                     android:text="@string/unknown_payload"
                     android:textAlignment="center"
                     android:textColor="@color/dark_primary_text_color_selector"
-                    android:textSize="16sp" />
+                    android:textSize="@dimen/material_typography_regular_subheading_text_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/payload_status_title" />
+
+                <TextView
+                    android:id="@+id/orbit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="16dp"
+                    android:textAlignment="textStart"
+                    android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+                    android:textColor="?android:textColorSecondary"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/payload_type"
+                    tools:text="Low Earth Orbit" />
 
                 <TextView
                     android:id="@+id/payload_type"
-
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
                     android:ellipsize="end"
                     android:gravity="center"
-                    android:paddingBottom="2dp"
-                    android:paddingTop="4dp"
                     android:singleLine="false"
                     android:text="@string/unknown_agency_type"
-                    android:textAlignment="center"
+                    android:textAlignment="textStart"
+                    android:textAppearance="@style/MaterialTypography.Regular.Title"
                     android:textColor="?android:textColorSecondary"
-                    android:textSize="15sp" />
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/payload_status" />
 
                 <TextView
                     android:id="@+id/payload_description"
-
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
                     android:ellipsize="end"
                     android:gravity="center"
-                    android:paddingBottom="12dp"
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:paddingTop="4dp"
+                    android:paddingBottom="@dimen/material_baseline_grid_1x"
                     android:singleLine="false"
                     android:text=""
-                    android:textAlignment="center"
+                    android:textAlignment="textStart"
                     android:textColor="?android:textColorSecondary"
-                    android:textSize="15sp" />
+                    android:textSize="@dimen/material_typography_regular_subheading_text_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/orbit"
+                    tools:text="hjkbjlhbkvbjk " />
 
-                <LinearLayout
 
-                    android:layout_width="match_parent"
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/payload_infoButton"
+                    style="@style/Base.Widget.AppCompat.Button.Colored"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_marginBottom="@dimen/material_baseline_grid_1x"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1x"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:text="@string/info"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/payload_wikiButton"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/payload_description" />
 
-                    <android.support.v7.widget.AppCompatButton
-                        android:id="@+id/payload_infoButton"
-                        style="@style/Base.Widget.AppCompat.Button.Colored"
-                        android:layout_width="wrap_content"
-                        android:layout_height="50dp"
-                        android:layout_marginBottom="12dp"
-                        android:layout_marginLeft="12dp"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginTop="2dp"
-                        android:gravity="center"
-                        android:text="@string/info"
-                        android:textColor="@color/white"
-                        android:textSize="12sp" />
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/payload_wikiButton"
+                    style="@style/Base.Widget.AppCompat.Button.Colored"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/material_baseline_grid_1x"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:text="@string/wiki"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/payload_infoButton"
+                    app:layout_constraintTop_toBottomOf="@+id/payload_description" />
 
-                    <android.support.v7.widget.AppCompatButton
-                        android:id="@+id/payload_wikiButton"
-                        style="@style/Base.Widget.AppCompat.Button.Colored"
-                        android:layout_width="wrap_content"
-                        android:layout_height="50dp"
-                        android:layout_marginBottom="12dp"
-                        android:layout_marginLeft="12dp"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginTop="2dp"
-                        android:gravity="center"
-                        android:text="@string/wiki"
-                        android:textColor="@color/white"
-                        android:textSize="12sp" />
-                </LinearLayout>
 
-            </LinearLayout>
+            </android.support.constraint.ConstraintLayout>
 
         </android.support.v7.widget.CardView>
 
@@ -136,25 +166,26 @@
             android:layout_width="@dimen/max_width"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_margin="@dimen/material_card_edge_margin"
             android:animateLayoutChanges="true"
-            card_view:cardCornerRadius="@dimen/card_view_corner_radius"
-            card_view:cardElevation="@dimen/material_card_elevation_resting"
-            card_view:cardPreventCornerOverlap="true"
-            card_view:cardUseCompatPadding="true">
+            android:padding="@dimen/material_card_edge_margin"
+            app:cardCornerRadius="@dimen/card_view_corner_radius"
+            app:cardElevation="@dimen/material_card_elevation_resting"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true">
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
 
+                android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/launch_vehicle_title"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="?attr/titleBarColor"
                     android:gravity="center"
-
                     android:lines="1"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
@@ -163,11 +194,14 @@
                     android:textAlignment="center"
                     android:textColor="@color/dark_primary_text_color_selector"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="@+id/launch_vehicle"
+                    app:layout_constraintStart_toStartOf="@+id/launch_vehicle"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/launch_vehicle"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="?attr/titleBarColor"
                     android:ellipsize="end"
@@ -181,252 +215,320 @@
                     android:text="@string/unknown_launch_vehicle"
                     android:textAlignment="center"
                     android:textColor="@color/dark_primary_text_color_selector"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_title" />
 
-                <LinearLayout
+
+                <TextView
+                    android:id="@+id/family_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
+                    android:ellipsize="end"
+                    android:gravity="start"
+                    android:maxLines="2"
+                    android:text="@string/family"
+                    android:textAppearance="@style/MaterialTypography.Regular.Title"
+                    android:textColor="?android:textColorSecondary"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle" />
+
+                <TextView
+                    android:id="@+id/launch_family"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:ellipsize="end"
+                    android:gravity="start"
+                    android:maxLines="2"
+                    android:paddingBottom="@dimen/material_baseline_grid_0.5x"
+                    android:paddingLeft="4dp"
+                    android:textAppearance="@style/MaterialTypography.Regular.Body1"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintBottom_toBottomOf="@+id/family_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/family_title"
+                    app:layout_constraintTop_toTopOf="@+id/family_title"
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:text="Falcon" />
+
+
+                <TextView
+                    android:id="@+id/configuration_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:ellipsize="end"
+                    android:gravity="start"
+                    android:maxLines="2"
+                    android:text="@string/configuration"
+                    android:textAppearance="@style/MaterialTypography.Regular.Title"
+                    android:textColor="?android:textColorSecondary"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="@+id/family_title"
+                    app:layout_constraintTop_toBottomOf="@+id/family_title" />
+
+                <TextView
+                    android:id="@+id/launch_configuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:ellipsize="end"
+                    android:gravity="start"
+                    android:maxLines="2"
+                    android:paddingBottom="@dimen/material_baseline_grid_0.5x"
+                    android:paddingLeft="4dp"
+                    android:textAppearance="@style/MaterialTypography.Regular.Body1"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintBottom_toBottomOf="@+id/configuration_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/configuration_title"
+                    app:layout_constraintTop_toTopOf="@+id/configuration_title"
+                    tools:text="Block 5" />
+
+
+                <TextView
+                    android:id="@+id/launch_vehicle_description"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:textAppearance="@style/MaterialTypography.Regular.Body1"
+                    android:textColor="?android:textColorSecondary"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/configuration_title"
+                    tools:text="test sets set setsetse set set set set set " />
+
+
+                <TextView
+                    android:id="@+id/launch_vehicle_specs_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/material_baseline_grid_3x"
+                    android:layout_marginTop="8dp"
+                    android:ellipsize="end"
+                    android:gravity="start"
+                    android:lines="1"
+                    android:text="@string/vehicle_specifications"
+                    android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="@+id/view"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_description" />
+
+                <View
+
+                    android:id="@+id/view"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="31dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="30dp"
+                    android:background="@color/View_Separator"
+                    android:padding="12dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/launch_vehicle_specs_height"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/launch_vehicle_specs_title" />
+
+                <TextView
+                    android:id="@+id/launch_vehicle_specs_height"
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:text="@string/height"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="@+id/launch_vehicle_specs_diameter"
+                    app:layout_constraintStart_toStartOf="@+id/launch_vehicle_specs_diameter"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_title" />
+
+                <TextView
+                    android:id="@+id/launch_vehicle_specs_diameter"
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:text="@string/diameter"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="@+id/launch_vehicle_specs_stages"
+                    app:layout_constraintStart_toStartOf="@+id/launch_vehicle_specs_stages"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_height" />
+
+                <TextView
+                    android:id="@+id/launch_vehicle_specs_stages"
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:text="@string/stages"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="@+id/launch_vehicle_specs_leo"
+                    app:layout_constraintStart_toStartOf="@+id/launch_vehicle_specs_leo"
+                    app:layout_constraintTop_toTopOf="@+id/launch_vehicle_specs_diameter" />
+
+                <TextView
+                    android:id="@+id/launch_vehicle_specs_leo"
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:text="@string/mass_to_leo"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="@+id/launch_vehicle_specs_gto"
+                    app:layout_constraintStart_toStartOf="@+id/launch_vehicle_specs_gto"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_stages" />
+
+                <TextView
+                    android:id="@+id/launch_vehicle_specs_gto"
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:text="@string/mass_to_gto"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="@+id/launch_vehicle_specs_launch_mass"
+                    app:layout_constraintStart_toStartOf="@+id/launch_vehicle_specs_launch_mass"
+                    app:layout_constraintTop_toTopOf="@+id/launch_vehicle_specs_leo" />
+
+                <TextView
+                    android:id="@+id/launch_vehicle_specs_launch_mass"
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:text="@string/mass_at_launch"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="@+id/launch_vehicle_specs_thrust"
+                    app:layout_constraintStart_toStartOf="@+id/launch_vehicle_specs_thrust"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_gto" />
+
+                <TextView
+                    android:id="@+id/launch_vehicle_specs_thrust"
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="18dp"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:text="@string/thrust_at_launch"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="@+id/launch_vehicle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/launch_vehicle_specs_launch_mass" />
+
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/vehicle_infoButton"
+                    style="@style/Base.Widget.AppCompat.Button.Colored"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:text="@string/info"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toStartOf="@+id/vehicle_wikiButton"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_thrust" />
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/vehicle_wikiButton"
+                    style="@style/Base.Widget.AppCompat.Button.Colored"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:text="@string/wiki"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/vehicle_infoButton"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_thrust" />
+
+                <android.support.constraint.Group
+                    android:id="@+id/vehicle_spec_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:constraint_referenced_ids="launch_vehicle_specs_title,view,launch_vehicle_specs_height,launch_vehicle_specs_diameter, launch_vehicle_specs_stages, launch_vehicle_specs_leo, launch_vehicle_specs_gto, launch_vehicle_specs_launch_mass, launch_vehicle_specs_thrust" />
+
+                <android.support.constraint.Group
+                    android:id="@+id/core_information_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:constraint_referenced_ids="core_information,serial_number_title,serial_number_text,status_title,status_text,previous_title,previous_text,flight_proven,flight_proven_title" />
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/launcher_launches"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/material_baseline_grid_2.5x"
-                    android:layout_marginStart="@dimen/material_baseline_grid_2.5x"
-                    android:orientation="vertical">
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/material_card_edge_margin"
+                    android:gravity="center"
+                    android:text="@string/view_more_launches"
+                    android:textSize="12sp"
+                    android:theme="@style/PrimaryButtonTheme"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/vehicle_wikiButton" />
 
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginTop="@dimen/material_baseline_grid_1x"
-                            android:ellipsize="end"
-                            android:gravity="start"
-                            android:maxLines="2"
-                            android:paddingBottom="@dimen/material_baseline_grid_0.5x"
-                            android:text="@string/family"
-                            android:textAppearance="@style/MaterialTypography.Regular.Title"
-                            android:textColor="?android:textColorSecondary"
-                            android:textSize="@dimen/material_typography_regular_subheading_text_size" />
-
-                        <TextView
-                            android:id="@+id/launch_family"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/material_baseline_grid_1x"
-                            android:ellipsize="end"
-                            android:gravity="start"
-                            android:maxLines="2"
-                            android:paddingBottom="@dimen/material_baseline_grid_0.5x"
-                            android:paddingLeft="4dp"
-                            android:textAppearance="@style/MaterialTypography.Regular.Body1"
-                            android:textColor="?android:textColorSecondary" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/material_baseline_grid_1x"
-                            android:ellipsize="end"
-                            android:gravity="start"
-                            android:maxLines="2"
-                            android:paddingBottom="@dimen/material_baseline_grid_0.5x"
-                            android:text="@string/configuration"
-                            android:textAppearance="@style/MaterialTypography.Regular.Title"
-                            android:textColor="?android:textColorSecondary"
-                            android:textSize="@dimen/material_typography_regular_subheading_text_size" />
-
-                        <TextView
-                            android:id="@+id/launch_configuration"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/material_baseline_grid_1x"
-                            android:ellipsize="end"
-                            android:gravity="start"
-                            android:maxLines="2"
-                            android:paddingBottom="@dimen/material_baseline_grid_0.5x"
-                            android:paddingLeft="4dp"
-                            android:textAppearance="@style/MaterialTypography.Regular.Body1"
-                            android:textColor="?android:textColorSecondary" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/launch_vehicle_description"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/material_baseline_grid_1x"
-                        android:ellipsize="end"
-                        android:gravity="start"
-                        android:maxLines="2"
-                        android:paddingBottom="@dimen/material_baseline_grid_0.5x"
-                        android:textAppearance="@style/MaterialTypography.Regular.Body1"
-                        android:textColor="?android:textColorSecondary"
-                        android:visibility="gone" />
-
-                    <LinearLayout
-                        android:id="@+id/vehicle_spec_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/launch_vehicle_specs_title"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/material_baseline_grid_1x"
-                            android:ellipsize="end"
-                            android:gravity="start"
-                            android:lines="1"
-                            android:paddingBottom="@dimen/material_baseline_grid_0.5x"
-                            android:text="@string/vehicle_specifications"
-                            android:textAppearance="@style/MaterialTypography.Regular.Title"
-                            android:textColor="?android:textColorSecondary"
-                            android:textSize="@dimen/material_typography_regular_subheading_text_size" />
-
-                        <View
-
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginBottom="4dp"
-                            android:layout_marginTop="4dp"
-                            android:background="@color/View_Separator"
-                            android:padding="12dp" />
-
-                        <TextView
-                            android:id="@+id/launch_vehicle_specs_height"
-
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:gravity="left"
-                            android:lines="1"
-                            android:singleLine="false"
-                            android:text="@string/height"
-                            android:textColor="?android:textColorSecondary" />
-
-                        <TextView
-                            android:id="@+id/launch_vehicle_specs_diameter"
-
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:gravity="left"
-                            android:lines="1"
-                            android:singleLine="false"
-                            android:text="@string/diameter"
-                            android:textColor="?android:textColorSecondary" />
-
-                        <TextView
-                            android:id="@+id/launch_vehicle_specs_stages"
-
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:gravity="left"
-                            android:lines="1"
-                            android:singleLine="false"
-                            android:text="@string/stages"
-                            android:textColor="?android:textColorSecondary" />
-
-                        <TextView
-                            android:id="@+id/launch_vehicle_specs_leo"
-
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:gravity="left"
-                            android:lines="1"
-                            android:singleLine="false"
-                            android:text="@string/mass_to_leo"
-                            android:textColor="?android:textColorSecondary" />
-
-                        <TextView
-                            android:id="@+id/launch_vehicle_specs_gto"
-
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:gravity="left"
-                            android:lines="1"
-                            android:singleLine="false"
-                            android:text="@string/mass_to_gto"
-                            android:textColor="?android:textColorSecondary" />
-
-                        <TextView
-                            android:id="@+id/launch_vehicle_specs_launch_mass"
-
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:gravity="left"
-                            android:lines="1"
-                            android:singleLine="false"
-                            android:text="@string/mass_at_launch"
-                            android:textColor="?android:textColorSecondary" />
-
-                        <TextView
-                            android:id="@+id/launch_vehicle_specs_thrust"
-
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/material_baseline_grid_1x"
-                            android:ellipsize="end"
-                            android:gravity="left"
-                            android:lines="1"
-                            android:singleLine="false"
-                            android:text="@string/thrust_at_launch"
-                            android:textColor="?android:textColorSecondary" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/material_baseline_grid_0.5x">
-
-                    <android.support.v7.widget.AppCompatButton
-                        android:id="@+id/vehicle_infoButton"
-                        style="@style/Base.Widget.AppCompat.Button.Colored"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/info"
-                        android:textColor="@color/white"
-                        android:textSize="12sp" />
-
-                    <android.support.v7.widget.AppCompatButton
-                        android:id="@+id/vehicle_wikiButton"
-                        style="@style/Base.Widget.AppCompat.Button.Colored"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/wiki"
-                        android:textColor="@color/white"
-                        android:textSize="12sp" />
-                </LinearLayout>
-            </LinearLayout>
+            </android.support.constraint.ConstraintLayout>
         </android.support.v7.widget.CardView>
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/launcher_launches"
-            android:visibility="visible"
-            android:layout_gravity="center"
-            style="@style/Base.Widget.AppCompat.Button.Colored"
-            android:layout_margin="@dimen/material_card_edge_margin"
-            android:padding="@dimen/material_card_edge_margin"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/coreRecyclerView"
             android:layout_width="@dimen/max_width"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="View More Launches"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp" />
 
     </LinearLayout>
 

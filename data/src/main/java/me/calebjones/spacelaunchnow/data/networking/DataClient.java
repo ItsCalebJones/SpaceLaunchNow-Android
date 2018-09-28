@@ -3,6 +3,7 @@ package me.calebjones.spacelaunchnow.data.networking;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.AgencyResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchListResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
 import retrofit2.Call;
@@ -19,11 +20,11 @@ public class DataClient {
 
     private Retrofit spaceLaunchNowRetrofit;
 
-    private DataClient(String version, String token) {
+    private DataClient(String version, String token, boolean debug) {
 
         libraryRetrofit = RetrofitBuilder.getLibraryRetrofit(version);
         libraryRetrofitThreaded = RetrofitBuilder.getLibraryRetrofitThreaded(version);
-        spaceLaunchNowRetrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit(token);
+        spaceLaunchNowRetrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit(token, debug);
         spaceLaunchNowService = spaceLaunchNowRetrofit.create(SpaceLaunchNowService.class);
 
     }
@@ -39,14 +40,14 @@ public class DataClient {
     /**
      * Applications must call create to configure the DataClient singleton
      */
-    public static void create(String version, String token) {
-        mInstance = new DataClient(version, token);
+    public static void create(String version, String token, boolean debug) {
+        mInstance = new DataClient(version, token, debug);
     }
 
     /**
      * Singleton accessor
      * <p/>
-     * Will throw an exception if {@link #create(String version, String token)} was never called
+     * Will throw an exception if {@link #create(String version, String token, boolean debug)} was never called
      *
      * @return the DataClient singleton
      */
@@ -91,8 +92,24 @@ public class DataClient {
         return call;
     }
 
+    public Call<LaunchListResponse> getUpcomingLaunchesMini(int limit, int offset, String search, String lspName, String serialNumber, Integer launchId, Callback<LaunchListResponse> callback) {
+        Call<LaunchListResponse> call = spaceLaunchNowService.getUpcomingLaunchesMini(limit, offset, "list", search, lspName, serialNumber, launchId);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
     public Call<LaunchResponse> getPreviousLaunches(int limit, int offset, String search, String lspName, Integer launchId, Callback<LaunchResponse> callback) {
         Call<LaunchResponse> call = spaceLaunchNowService.getPreviousLaunches(limit, offset, "detailed", search, lspName, launchId);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<LaunchListResponse> getPreviousLaunchesMini(int limit, int offset, String search, String lspName, String serialNumber, Integer launchId, Callback<LaunchListResponse> callback) {
+        Call<LaunchListResponse> call = spaceLaunchNowService.getPreviousLaunchesMini(limit, offset, "list", search, lspName, serialNumber, launchId);
 
         call.enqueue(callback);
 

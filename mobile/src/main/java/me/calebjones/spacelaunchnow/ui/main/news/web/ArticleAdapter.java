@@ -2,11 +2,13 @@ package me.calebjones.spacelaunchnow.ui.main.news.web;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,7 @@ import com.leocardz.link.preview.library.TextCrawler;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -38,8 +41,8 @@ import timber.log.Timber;
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder> {
 
     private Context context;
-    private RealmList<Article> articles;
-    private int color;
+    private List<Article> articles;
+    private int color, altColor;
     private SimpleDateFormat inDateFormat;
     private SimpleDateFormat outDateFormat;
     private Activity activity;
@@ -48,12 +51,15 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         this.context = context;
         this.activity = activity;
         color = ContextCompat.getColor(context, R.color.accent);
-        inDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.US);
-        String format = DateFormat.getBestDateTimePattern(Locale.getDefault(), "h:mm a - MMMM d, yyyy");
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(R.attr.titleBarColor, typedValue, true);
+        altColor = typedValue.data;
+        String format = DateFormat.getBestDateTimePattern(Locale.getDefault(), "MMMM d, yyyy");
         outDateFormat = new SimpleDateFormat(format, Locale.getDefault());
     }
 
-    public void addItems(final RealmList<Article> articles) {
+    public void addItems(final List<Article> articles) {
         this.articles = articles;
         notifyDataSetChanged();
     }
@@ -103,43 +109,66 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         if (article != null) {
             holder.titleText.setText(article.getTitle());
 
-            tryDefault(article.getLink(), holder.imageView);
+            if (article.getFeaturedImage() != null) {
+                GlideApp.with(context)
+                        .load(article.getFeaturedImage())
+                        .centerCrop()
+                        .placeholder(R.drawable.placeholder)
+                        .into(holder.imageView);
+            } else {
+                tryDefault(article.getUrl(), holder.imageView);
+            }
 
             BadgeDrawable.Builder siteDrawable =
                     new BadgeDrawable.Builder()
                             .type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
                             .badgeColor(color)
-                            .textSize(40)
-                            .padding(16, 16, 16, 16, 16)
+                            .padding(8, 8, 8, 8, 8)
                             .strokeWidth(16);
 
-            String link = article.getLink();
+            BadgeDrawable.Builder tagDrawable =
+                    new BadgeDrawable.Builder()
+                            .type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
+                            .badgeColor(altColor)
+                            .padding(16, 8, 16, 8, 8)
+                            .strokeWidth(16);
 
-            if (link.contains("spaceflightnow")) {
-                siteDrawable.text1("Space Flight Now");
-            } else if (link.contains("spaceflight101")) {
-                siteDrawable.text1("Space Flight 101");
-            } else if (link.contains("spacenews")) {
-                siteDrawable.text1("Space News");
-            } else if (link.contains("nasaspaceflight")) {
-                siteDrawable.text1("NASA Spaceflight");
-            } else if (link.contains("nasa.gov")) {
-                siteDrawable.text1("NASA.Gov");
-            } else if (link.contains("spacex.com")) {
-                siteDrawable.text1("SpaceX");
+            BadgeDrawable.Builder altTagDrawable =
+                    new BadgeDrawable.Builder()
+                            .type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
+                            .badgeColor(altColor)
+                            .padding(16, 8, 16, 8, 8)
+                            .strokeWidth(16);
+
+
+
+            siteDrawable.text1(article.getNewsSite());
+
+            if (article.getTags() != null && article.getTags().size() > 0) {
+                holder.tagText.setVisibility(View.VISIBLE);
+                String upperString = article.getTags().get(0).substring(0, 1).toUpperCase()
+                        + article.getTags().get(0).substring(1);
+                upperString = Utils.ellipsize(upperString, 15);
+                tagDrawable.text1(upperString);
+                holder.tagText.setText(tagDrawable.build().toSpannable());
             } else {
-                siteDrawable.text1("Unknown");
+                holder.tagText.setVisibility(View.GONE);
+            }
+
+            if (article.getTags() != null && article.getTags().size() > 1) {
+                holder.tagTextAlt.setVisibility(View.VISIBLE);
+                String upperString = article.getTags().get(1).substring(0, 1).toUpperCase()
+                        + article.getTags().get(1).substring(1);
+                upperString = Utils.ellipsize(upperString, 15);
+                altTagDrawable.text1(upperString);
+                holder.tagTextAlt.setText(altTagDrawable.build().toSpannable());
+            } else {
+                holder.tagTextAlt.setVisibility(View.GONE);
             }
 
             holder.siteText.setText(siteDrawable.build().toSpannable());
 
-            try {
-                Date pubDate = inDateFormat.parse(article.getPubDate());
-                holder.publicationDate.setText(outDateFormat.format(pubDate));
-            } catch (ParseException e) {
-                e.printStackTrace();
-                holder.publicationDate.setText(article.getPubDate());
-            }
+            holder.publicationDate.setText(outDateFormat.format(article.getDatePublished()));
         }
     }
 
@@ -206,6 +235,10 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         TextView titleText;
         @BindView(R.id.article_site)
         TextView siteText;
+        @BindView(R.id.article_tag)
+        TextView tagText;
+        @BindView(R.id.article_tag_alt)
+        TextView tagTextAlt;
         @BindView(R.id.article_publication_date)
         TextView publicationDate;
         @BindView(R.id.article_image)
@@ -215,7 +248,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
         @OnClick(R.id.rootview)
         void onClick() {
-            Utils.openCustomTab(activity, context, articles.get(getAdapterPosition()).getLink());
+            Utils.openCustomTab(activity, context, articles.get(getAdapterPosition()).getUrl());
         }
 
         public ViewHolder(View itemView) {

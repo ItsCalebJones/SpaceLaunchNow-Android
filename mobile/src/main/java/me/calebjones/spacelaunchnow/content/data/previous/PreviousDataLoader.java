@@ -10,6 +10,7 @@ import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Result;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchListResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,13 +31,13 @@ public class PreviousDataLoader {
         return dataSaver;
     }
 
-    public void getPreviousLaunches(int limit, int offset, String search, String lspName, Integer launcherId, Callbacks.ListNetworkCallback networkCallback) {
+    public void getPreviousLaunches(int limit, int offset, String search, String lspName, String serialNumber, Integer launcherId, Callbacks.ListNetworkCallbackMini networkCallback) {
         Timber.i("Running getPreviousLaunches");
-        DataClient.getInstance().getPreviousLaunches(limit, offset, search, lspName, launcherId, new Callback<LaunchResponse>() {
+        DataClient.getInstance().getPreviousLaunchesMini(limit, offset, search, lspName, serialNumber, launcherId, new Callback<LaunchListResponse>() {
             @Override
-            public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
+            public void onResponse(Call<LaunchListResponse> call, Response<LaunchListResponse> response) {
                 if (response.isSuccessful()) {
-                    LaunchResponse launchResponse = response.body();
+                    LaunchListResponse launchResponse = response.body();
 
                     Timber.v("Previous Launch Count: %s", launchResponse.getCount());
 
@@ -45,9 +46,9 @@ public class PreviousDataLoader {
                         String limit = uri.getQueryParameter("limit");
                         String nextOffset = uri.getQueryParameter("offset");
                         int next = Integer.valueOf(nextOffset);
-                        networkCallback.onSuccess(launchResponse.getLaunches(), next);
+                        networkCallback.onSuccess(launchResponse.getLaunches(), next, launchResponse.getCount());
                     } else {
-                        networkCallback.onSuccess(launchResponse.getLaunches(), 0);
+                        networkCallback.onSuccess(launchResponse.getLaunches(), 0, launchResponse.getCount());
                     }
                 } else {
                     networkCallback.onNetworkFailure(response.code());
@@ -57,7 +58,7 @@ public class PreviousDataLoader {
             }
 
             @Override
-            public void onFailure(Call<LaunchResponse> call, Throwable t) {
+            public void onFailure(Call<LaunchListResponse> call, Throwable t) {
                 networkCallback.onFailure(t);
                 dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, false, call, t.getLocalizedMessage()));
             }

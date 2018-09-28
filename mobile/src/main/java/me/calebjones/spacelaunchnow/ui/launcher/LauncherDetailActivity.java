@@ -30,24 +30,16 @@ import com.mikepenz.iconics.IconicsDrawable;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.RealmResults;
-import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
-import me.calebjones.spacelaunchnow.content.data.DataSaver;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
-import me.calebjones.spacelaunchnow.data.models.main.Launcher;
-import me.calebjones.spacelaunchnow.data.networking.DataClient;
-import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
+import me.calebjones.spacelaunchnow.data.models.main.LauncherConfig;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.views.CustomOnOffsetChangedListener;
-import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import timber.log.Timber;
 
 public class LauncherDetailActivity extends BaseActivity implements AppBarLayout.OnOffsetChangedListener {
@@ -60,7 +52,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
     private ImageView detail_profile_backdrop;
     private CircleImageView detail_profile_image;
     private VehicleDetailAdapter adapter;
-    private RealmResults<Launcher> rocketLaunches;
+    private RealmResults<LauncherConfig> rocketLaunches;
     private AppBarLayout appBarLayout;
     private CollapsingToolbarLayout collapsingToolbar;
     private int mMaxScrollSize;
@@ -155,9 +147,9 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
         detail_rocket.setText(name);
         detail_vehicle_agency.setText(agencyName);
 
-        if (agency.getLaunchers() != null) {
+        if (agency.getLauncherConfigs() != null) {
             adapter.clear();
-            adapter.addItems(agency.getLaunchers());
+            adapter.addItems(agency.getLauncherConfigs());
         }
 
         applyProfileBackdrop(agency.getImageUrl());

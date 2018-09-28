@@ -12,14 +12,15 @@
         android:id="@+id/launcher"
         android:layout_width="wrap_content"
         android:layout_height="100dp"
-        app:srcCompat="@drawable/launcher"
+        app:srcCompat="@mipmap/ic_launcher"
+        android:layout_gravity="center"
         android:layout_centerHorizontal="true"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/nothing_here"
+        android:text="@string/no_launches"
         android:id="@+id/textView"
         android:layout_below="@+id/launcher"
         android:layout_centerHorizontal="true"

@@ -18,11 +18,13 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import okhttp3.Cache;
+import okhttp3.CacheControl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -30,6 +32,7 @@ import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import timber.log.Timber;
 
 import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
 import static android.os.Process.THREAD_PRIORITY_LESS_FAVORABLE;
@@ -40,12 +43,13 @@ import static android.os.Process.THREAD_PRIORITY_MORE_FAVORABLE;
 public class RetrofitBuilder {
 
     private static Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
-        @Override public okhttp3.Response intercept(Chain chain) throws IOException {
+        @Override
+        public okhttp3.Response intercept(Chain chain) throws IOException {
             okhttp3.Response originalResponse = chain.proceed(chain.request());
-                int maxAge = 60 * 60 * 24 * 3; // Three day cache
-                return originalResponse.newBuilder()
-                        .header("Cache-Control", "public, max-age=" + maxAge)
-                        .build();
+            int maxAge = 60 * 60 * 24 * 3; // Three day cache
+            return originalResponse.newBuilder()
+                    .header("Cache-Control", "public, max-age=" + maxAge)
+                    .build();
         }
     };
 
@@ -64,12 +68,9 @@ public class RetrofitBuilder {
         Executor httpExecutor = Executors.newCachedThreadPool(new ThreadFactory() {
             @Override
             public Thread newThread(final Runnable r) {
-                return new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        android.os.Process.setThreadPriority(THREAD_PRIORITY_BACKGROUND);
-                        r.run();
-                    }
+                return new Thread(() -> {
+                    android.os.Process.setThreadPriority(THREAD_PRIORITY_BACKGROUND);
+                    r.run();
                 }, "Retrofit-Idle-Background");
             }
         });
@@ -84,18 +85,10 @@ public class RetrofitBuilder {
     }
 
     public static Retrofit getLibraryRetrofitLowestThreaded(String version) {
-        Executor httpExecutor = Executors.newCachedThreadPool(new ThreadFactory() {
-            @Override
-            public Thread newThread(final Runnable r) {
-                return new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        android.os.Process.setThreadPriority(THREAD_PRIORITY_MORE_FAVORABLE);
-                        r.run();
-                    }
-                }, "Retrofit-Idle-Background");
-            }
-        });
+        Executor httpExecutor = Executors.newCachedThreadPool(r -> new Thread(() -> {
+            android.os.Process.setThreadPriority(THREAD_PRIORITY_MORE_FAVORABLE);
+            r.run();
+        }, "Retrofit-Idle-Background"));
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.LIBRARY_BASE_URL + version + "/")
@@ -107,10 +100,18 @@ public class RetrofitBuilder {
     }
 
 
-    public static Retrofit getSpaceLaunchNowRetrofit(String token) {
+    public static Retrofit getSpaceLaunchNowRetrofit(String token, boolean debug) {
+
+        String BASE_URL;
+
+        if (debug) {
+            BASE_URL = Constants.API_DEBUG_BASE_URL;
+        } else {
+            BASE_URL = Constants.API_BASE_URL;
+        }
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_BASE_URL)
+                .baseUrl(BASE_URL)
                 .client(spaceLaunchNowClient(token))
                 .addConverterFactory(GsonConverterFactory.create(getGson()))
                 .build();
@@ -130,16 +131,14 @@ public class RetrofitBuilder {
         client.connectTimeout(15, TimeUnit.SECONDS);
         client.readTimeout(15, TimeUnit.SECONDS);
         client.writeTimeout(15, TimeUnit.SECONDS);
-        client.addInterceptor(new Interceptor() {
-            @Override public Response intercept(Chain chain) throws IOException {
-                Request request = chain.request().newBuilder().addHeader("Authorization", "Token " + token).build();
-                return chain.proceed(request);
-            }
+        client.addInterceptor(chain -> {
+            Request request = chain.request().newBuilder().addHeader("Authorization", "Token " + token).build();
+            return chain.proceed(request);
         });
         return client.build();
     }
 
-    public static Gson getGson(){
+    public static Gson getGson() {
         return new GsonBuilder()
                 .setDateFormat("MMMM dd, yyyy HH:mm:ss zzz")
                 .setExclusionStrategies(new ExclusionStrategy() {
@@ -174,7 +173,7 @@ public class RetrofitBuilder {
                 .create();
     }
 
-    private static Type getToken(){
+    private static Type getToken() {
         return new TypeToken<RealmList<RealmStr>>() {
         }.getType();
     }
