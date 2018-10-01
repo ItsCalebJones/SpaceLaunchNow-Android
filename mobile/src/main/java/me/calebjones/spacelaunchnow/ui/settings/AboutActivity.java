@@ -98,7 +98,7 @@ public class AboutActivity extends AppCompatActivity {
                 .setActionsColumnsCount(2)
 
                 .addAction(new IconicsDrawable(this).icon(CommunityMaterial.Icon.cmd_google_translate).sizeDp(24).toBitmap(),
-                        "Translate", "https://spacelaunchnow.oneskyapp.com/")
+                        "Translate", "https://goo.gl/forms/qcH1cbZC2psOst3P2")
                 .addChangeLogAction(new Intent(this, ChangelogActivity.class))
                 .addIntroduceAction(new Intent(this, OnboardingActivity.class))
                 .addRemoveAdsAction(new Intent(this, SupporterActivity.class))
