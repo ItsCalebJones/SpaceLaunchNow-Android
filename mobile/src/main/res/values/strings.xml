@@ -434,4 +434,5 @@
     <string name="current_weather">Current Weather Forecast</string>
     <string name="upcoming_with_space">Upcoming</string>
     <string name="previous_with_space">Previous</string>
+    <string name="watch">Watch</string>
 </resources>

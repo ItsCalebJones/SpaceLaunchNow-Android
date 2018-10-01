@@ -54,34 +54,11 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/notification_preferences">
-        <RingtonePreference
-            android:defaultValue="content://settings/system/notification_sound"
+        <Preference
             android:dependency="notificationEnabled"
-            android:key="notifications_new_message_ringtone"
-            android:ringtoneType="notification"
-            android:summary="@string/ringtone_summary"
-            android:title="@string/ringtone" />
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:dependency="notificationEnabled"
-            android:key="notifications_new_message_heads_up"
-            android:summary="@string/priority_summary"
-            android:title="@string/priority" />
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:dependency="notificationEnabled"
-            android:key="notifications_new_message_vibrate"
-            android:summary="@string/vibration_summary"
-            android:title="@string/vibration" />
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:dependency="notificationEnabled"
-            android:key="notifications_new_message_led"
-            android:summary="@string/led_summary"
-            android:title="@string/led" />
+            android:key="manage_notification_channel"
+            android:summary="Change priorities, ringtones, etc."
+            android:title="Manage Notification Channels" />
 
         <Preference
             android:defaultValue="true"

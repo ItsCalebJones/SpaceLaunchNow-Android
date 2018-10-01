@@ -266,7 +266,7 @@ dependencies {
 
     // If you want to use the GPU Filters
     implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
-    implementation('com.mikepenz:materialdrawer:6.0.2@aar') {
+    implementation ("com.mikepenz:materialdrawer:6.0.6@aar") {
         transitive = true
     }
 

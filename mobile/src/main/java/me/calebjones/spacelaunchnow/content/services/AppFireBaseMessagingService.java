@@ -1,7 +1,6 @@
 package me.calebjones.spacelaunchnow.content.services;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.content.Context;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -30,11 +29,7 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        // TODO(developer): Handle FCM messages here.
-        // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Timber.d("From: %s", remoteMessage.getFrom());
-
-
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
@@ -44,33 +39,30 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
             SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy HH:mm:ss zzz", Locale.ENGLISH);
             try {
                 String background = data.getString("background");
-                Launch launch = new Launch();
-                launch.setId(Integer.valueOf(data.getString("launch_id")));
-                launch.setNet(dateFormat.parse(data.getString("launch_net")));
-                launch.setName(data.getString("launch_name"));
+                String notificationType = data.getString("notification_type");
 
-                LauncherConfig launcherConfig = new LauncherConfig();
-                launcherConfig.setImageUrl(data.getString("launch_image"));
-                Rocket rocket = new Rocket();
-                rocket.setConfiguration(launcherConfig);
-                launch.setRocket(rocket);
-
-                Location location = new Location();
-                location.setName(data.getString("launch_location"));
-                Pad pad = new Pad();
-                pad.setLocation(location);
-                launch.setPad(pad);
+                if (notificationType.contains("news")){
+                    return;
+                }
 
                 if (background.contains("true")) {
-                    if (isNotificationEnabled(data.getString("notification_type"), data.getString("webcast").contains("true"))) {
-                        Calendar future = Utils.DateToCalendar(launch.getNet());
-                        Calendar now = Calendar.getInstance();
-                        long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
+                    Launch launch = new Launch();
+                    launch.setId(Integer.valueOf(data.getString("launch_id")));
+                    launch.setNet(dateFormat.parse(data.getString("launch_net")));
+                    launch.setName(data.getString("launch_name"));
 
-                        if (timeToFinish > 0) {
-                            NotificationBuilder.notifyUser(getApplicationContext(), launch, timeToFinish, data.getString("notification_type"));
-                        }
-                    }
+                    LauncherConfig launcherConfig = new LauncherConfig();
+                    launcherConfig.setImageUrl(data.getString("launch_image"));
+                    Rocket rocket = new Rocket();
+                    rocket.setConfiguration(launcherConfig);
+                    launch.setRocket(rocket);
+
+                    Location location = new Location();
+                    location.setName(data.getString("launch_location"));
+                    Pad pad = new Pad();
+                    pad.setLocation(location);
+                    launch.setPad(pad);
+                    checkNotificationType(launch, notificationType, data.getString("webcast").contains("true"));
                 }
             } catch (JSONException | ParseException e) {
                 // Error parsing additional data
@@ -83,11 +75,10 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
             Timber.d("Message Notification Body: %s", remoteMessage.getNotification().getBody());
         }
 
-        // Also if you intend on generating your own notifications as a result of a received FCM
-        // message, here is where that should be initiated. See sendNotification method below.
     }
 
-    private boolean isNotificationEnabled(String notificationType, boolean webcastAvailable) {
+    //TODO break this out into calling various methods inside NotificationBuilder for various types instead of returning a boolean
+    private void checkNotificationType(Launch launch, String notificationType, boolean webcastAvailable) {
 
         boolean notificationEnabled = Prefs.getBoolean("notificationEnabled", true);
         boolean netstampChanged = Prefs.getBoolean("netstampChanged", true);
@@ -96,39 +87,49 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
         boolean oneHour = Prefs.getBoolean("oneHour", true);
         boolean tenMinutes = Prefs.getBoolean("tenMinutes", true);
         boolean inFlight = Prefs.getBoolean("inFlight", true);
+        boolean success = Prefs.getBoolean("success", true);
+        boolean oneMinute = Prefs.getBoolean("oneMinute", true);
 
         if (notificationEnabled) {
+            Context context = getApplicationContext();
 
             if (notificationType.contains("netstampChanged") && netstampChanged) {
                 Timber.i("Netstamp Changed enabled.");
-                return true;
+                NotificationBuilder.notifyUserLaunchScheduleChanged(context, launch);
+            }
+
+            if (notificationType.contains("inFlight") && inFlight) {
+                NotificationBuilder.notifyUserInFlight(context, launch);
+            }
+
+            if (notificationType.contains("success") && success) {
+                NotificationBuilder.notifyUserSuccess(context, launch);
+            }
+
+            if (BuildConfig.DEBUG && notificationType.contains("test")) {
+                NotificationBuilder.notifyUserTest(context, launch);
             }
 
             if (webcastOnly && !webcastAvailable) {
                 Timber.i("Webcast is required for to post notification - none available therefore skipping.");
-                return false;
+                return;
             }
 
             if (notificationType.contains("twentyFourHour") && twentyFourHour) {
-                return true;
+                NotificationBuilder.notifyUserTwentyFourHours(context, launch);
             }
 
             if (notificationType.contains("oneHour") && oneHour) {
-                return true;
+                NotificationBuilder.notifyUserOneHour(context, launch);
             }
 
             if (notificationType.contains("tenMinute") && tenMinutes) {
-                return true;
+                NotificationBuilder.notifyUserTenMinutes(context, launch);
             }
 
-            if (notificationType.contains("inFlight") && inFlight) {
-                return true;
-            }
-
-            if (BuildConfig.DEBUG && notificationType.contains("test")) {
-                return true;
+            if (notificationType.contains("oneMinute") && oneMinute) {
+                NotificationBuilder.notifyUserOneMinute(context, launch);
             }
         }
-        return false;
     }
 }

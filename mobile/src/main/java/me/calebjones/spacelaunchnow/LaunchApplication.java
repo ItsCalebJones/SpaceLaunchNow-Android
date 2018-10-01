@@ -276,7 +276,9 @@ public class LaunchApplication extends Application {
         boolean twentyFourHour = Prefs.getBoolean("twentyFourHour", true);
         boolean oneHour = Prefs.getBoolean("oneHour", true);
         boolean tenMinutes = Prefs.getBoolean("tenMinutes", true);
+        boolean oneMinute = Prefs.getBoolean("oneMinute", true);
         boolean inFlight = Prefs.getBoolean("inFlight", true);
+        boolean success = Prefs.getBoolean("success", true);
 
         if (notificationEnabled) {
             firebaseMessaging.subscribeToTopic("notificationEnabled");
@@ -318,6 +320,18 @@ public class LaunchApplication extends Application {
             firebaseMessaging.subscribeToTopic("inFlight");
         } else {
             firebaseMessaging.unsubscribeFromTopic("inFlight");
+        }
+
+        if (success) {
+            firebaseMessaging.subscribeToTopic("success");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("success");
+        }
+
+        if (oneMinute) {
+            firebaseMessaging.subscribeToTopic("oneMinute");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("oneMinute");
         }
 
     }

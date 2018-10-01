@@ -1,10 +1,13 @@
 package me.calebjones.spacelaunchnow.ui.settings.fragments;
 
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.support.v4.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.pixplicity.easyprefs.library.Prefs;
@@ -19,8 +22,10 @@ import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.notifications.NotificationBuilder;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.utils.Utils;
-import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import timber.log.Timber;
+
+import static me.calebjones.spacelaunchnow.content.notifications.NotificationHelper.CHANNEL_LAUNCH_REMINDER;
+import static me.calebjones.spacelaunchnow.content.notifications.NotificationHelper.CHANNEL_LAUNCH_REMINDER_NAME;
 
 public class NotificationsFragment extends BaseSettingFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -44,6 +49,24 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
             context = getContext();
         } else {
             context = getActivity();
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Preference manageNotifications =  findPreference("manage_notification_channel");
+            manageNotifications.setOnPreferenceClickListener(preference -> {
+                Intent notificationSettings = new Intent();
+                notificationSettings.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+
+                //for Android 5-7
+                notificationSettings.putExtra("app_package", context.getPackageName());
+                notificationSettings.putExtra("app_uid", context.getApplicationInfo().uid);
+
+                // for Android O
+                notificationSettings.putExtra("android.provider.extra.APP_PACKAGE", context.getPackageName());
+
+                startActivity(notificationSettings);
+                return true;
+            });
         }
     }
 
@@ -112,11 +135,27 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
             }
         }
 
+        if (key.equals("oneMinute")){
+            if (Prefs.getBoolean(key, true)){
+                firebaseMessaging.subscribeToTopic("oneMinute");
+            } else {
+                firebaseMessaging.unsubscribeFromTopic("oneMinute");
+            }
+        }
+
         if (key.equals("inFlight")){
             if (Prefs.getBoolean(key, true)){
                 firebaseMessaging.subscribeToTopic("inFlight");
             } else {
                 firebaseMessaging.unsubscribeFromTopic("inFlight");
+            }
+        }
+
+        if (key.equals("success")){
+            if (Prefs.getBoolean(key, true)){
+                firebaseMessaging.subscribeToTopic("success");
+            } else {
+                firebaseMessaging.unsubscribeFromTopic("success");
             }
         }
     }
@@ -127,13 +166,9 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
                 .greaterThanOrEqualTo("net", new Date())
                 .sort("net", Sort.ASCENDING).findFirst();
 
-        Calendar future = Utils.DateToCalendar(launch.getNet());
-        Calendar now = Calendar.getInstance();
-
-        now.setTimeInMillis(System.currentTimeMillis());
-        long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
-
-        NotificationBuilder.notifyUser(context, launch, timeToFinish, "oneHour");
+        if (launch != null) {
+            NotificationBuilder.buildNotification(context, launch, launch.getName(), String.format("This is a test notification! (Channel - %s)", CHANNEL_LAUNCH_REMINDER_NAME), CHANNEL_LAUNCH_REMINDER);
+        }
         realm.close();
     }
 }
