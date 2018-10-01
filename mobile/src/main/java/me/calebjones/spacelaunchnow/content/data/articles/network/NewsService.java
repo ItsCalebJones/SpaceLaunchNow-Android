@@ -11,7 +11,13 @@ import retrofit2.http.Query;
 public interface NewsService {
 
     @GET("/articles/")
-    Call<List<Article>> getNews(@Query("limit") int amount);
+    Call<List<Article>> getNews(@Query("limit") int amount,
+                                @Query("page") int page);
+
+    @GET("/articles/")
+    Call<List<Article>> getNewsBySite(@Query("limit") int amount,
+                                      @Query("page") int page,
+                                      @Query("news_site") String sites);
 
     @GET("/article/{id}")
     Call<Article> getArticle(@Path("id") String id);
