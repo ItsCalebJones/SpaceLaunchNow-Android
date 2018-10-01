@@ -142,10 +142,9 @@ public class NotificationBuilder {
         if (isDoNotDisturb) {
             mBuilder.setChannelId(CHANNEL_LAUNCH_SILENT);
         } else if (channelId.contains(CHANNEL_LAUNCH_IMMINENT)) {
-
-            mBuilder.setChannelId(CHANNEL_LAUNCH_IMMINENT).setSound(alarmSound);
+            mBuilder.setChannelId(CHANNEL_LAUNCH_IMMINENT).setSound(alarmSound).setCategory(NotificationCompat.CATEGORY_ALARM);
         } else {
-            mBuilder.setChannelId(channelId).setSound(alarmSound);
+            mBuilder.setChannelId(channelId).setSound(alarmSound).setCategory(NotificationCompat.CATEGORY_EVENT);
         }
 
         if (launch.getRocket().getConfiguration().getImageUrl() != null
