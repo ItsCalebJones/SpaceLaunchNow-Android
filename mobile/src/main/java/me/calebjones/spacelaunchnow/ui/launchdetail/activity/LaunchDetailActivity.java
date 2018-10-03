@@ -164,12 +164,7 @@ public class LaunchDetailActivity extends BaseActivity
                 .setTriggerCount(10)
                 .setMinimumInstallTime(TimeUnit.DAYS.toMillis(3))
                 .setMessage(R.string.please_rate_short)
-                .setFeedbackAction(new OnFeedbackListener() {
-                    @Override
-                    public void onFeedbackTapped() {
-                        showFeedback();
-                    }
-                })
+                .setFeedbackAction(() -> showFeedback())
                 .setSnackBarParent(rootview)
                 .build();
 

@@ -180,7 +180,7 @@ public class MissionDetailFragment extends RetroFitFragment {
                 coreRecyclerView.setVisibility(View.VISIBLE);
                 LinearLayoutManager layoutManager = new LinearLayoutManager(context);
                 coreRecyclerView.setLayoutManager(layoutManager);
-                StageInformationAdapter stageInformationAdapter = new StageInformationAdapter(launch.getRocket().getFirstStage(), context);
+                StageInformationAdapter stageInformationAdapter = new StageInformationAdapter(launch, context);
                 coreRecyclerView.setAdapter(stageInformationAdapter);
                 coreRecyclerView.setHasFixedSize(true);
             } else {

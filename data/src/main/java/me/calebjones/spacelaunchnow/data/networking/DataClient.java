@@ -68,8 +68,8 @@ public class DataClient {
         return call;
     }
 
-    public Call<LaunchResponse> getNextUpcomingLaunchesMini(int limit, int offset, Callback<LaunchResponse> callback) {
-        Call<LaunchResponse> call = spaceLaunchNowService.getUpcomingLaunches(limit, offset, "list", null, null, null);
+    public Call<LaunchResponse> getNextUpcomingLaunchesForWidgets(int limit, int offset, Callback<LaunchResponse> callback) {
+        Call<LaunchResponse> call = spaceLaunchNowService.getUpcomingLaunches(limit, offset, "detailed", null, null, null);
 
         call.enqueue(callback);
 
