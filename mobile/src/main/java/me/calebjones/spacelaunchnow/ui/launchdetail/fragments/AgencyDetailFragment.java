@@ -124,6 +124,8 @@ public class AgencyDetailFragment extends BaseFragment {
                         .load(detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getLogoUrl())
                         .centerInside()
                         .into(lspLogo);
+            } else {
+                lspLogo.setVisibility(View.GONE);
             }
             lspName.setText(detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getName());
             lspType.setText(detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getType());
