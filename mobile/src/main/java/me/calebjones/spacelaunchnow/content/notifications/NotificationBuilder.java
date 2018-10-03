@@ -300,7 +300,7 @@ public class NotificationBuilder {
         String expandedText;
 
         title = launch.getName();
-        expandedText = String.format("Launch attempt in less than 24 hours on %s", getTimeFormatted(context, launch.getNet()));
+        expandedText = String.format(context.getString(R.string.notification_twenty_four_hours), getTimeFormatted(context, launch.getNet()));
 
         buildNotification(context, launch, title, expandedText, CHANNEL_LAUNCH_REMINDER);
     }
@@ -310,7 +310,7 @@ public class NotificationBuilder {
         String expandedText;
 
         title = launch.getName();
-        expandedText = String.format("Launch attempt in less than one hour at %s", getTimeFormatted(context, launch.getNet()));
+        expandedText = String.format(context.getString(R.string.notification_one_hour), getTimeFormatted(context, launch.getNet()));
 
         buildNotification(context, launch, title, expandedText, CHANNEL_LAUNCH_IMMINENT);
     }
@@ -324,7 +324,7 @@ public class NotificationBuilder {
         } else {
             title = launch.getName();
         }
-        expandedText = String.format("Launch attempt in less than ten minutes at %s", getTimeFormatted(context, launch.getNet()));
+        expandedText = String.format(context.getString(R.string.notification_ten_minutes), getTimeFormatted(context, launch.getNet()));
 
         buildNotification(context, launch, title, expandedText, CHANNEL_LAUNCH_IMMINENT);
     }
@@ -338,7 +338,7 @@ public class NotificationBuilder {
         } else {
             title = launch.getName();
         }
-        expandedText = String.format("Launch attempt in less than one minute at %s", getTimeFormatted(context, launch.getNet()));
+        expandedText = String.format(context.getString(R.string.notification_one_minute), getTimeFormatted(context, launch.getNet()));
 
         buildNotification(context, launch, title, expandedText, CHANNEL_LAUNCH_IMMINENT);
     }
@@ -352,7 +352,7 @@ public class NotificationBuilder {
         } else {
             title = launch.getName();
         }
-        expandedText = "Liftoff! Launch vehicle is now in flight!";
+        expandedText = context.getString(R.string.notification_launch_liftoff);
 
         buildNotification(context, launch, title, expandedText, CHANNEL_LAUNCH_IMMINENT);
     }
@@ -362,7 +362,7 @@ public class NotificationBuilder {
         String expandedText;
 
         title = launch.getName();
-        expandedText = "Launch was successful!";
+        expandedText = context.getString(R.string.notification_launch_successful);
 
         buildNotification(context, launch, title, expandedText, CHANNEL_LAUNCH_REMINDER);
     }
@@ -372,7 +372,7 @@ public class NotificationBuilder {
         String expandedText;
 
         title = "" + launch.getName();
-        expandedText = String.format("SCHEDULE UPDATE: Next attempt no earlier then %s", getTimeFormattedLong(context, launch.getNet()));
+        expandedText = String.format(context.getString(R.string.notification_schedule_changed), getTimeFormattedLong(context, launch.getNet()));
 
         buildNotification(context, launch, title, expandedText, CHANNEL_LAUNCH_REMINDER);
     }

@@ -20,14 +20,14 @@
             android:defaultValue="true"
             android:dependency="notificationEnabled"
             android:key="inFlight"
-            android:summary="Receive notifications when a launch is confirmed in-flight."
-            android:title="In Flight" />
+            android:summary="@string/settings_in_flight_summary"
+            android:title="@string/settings_in_flight" />
         <SwitchPreference
             android:defaultValue="true"
             android:dependency="notificationEnabled"
             android:key="success"
-            android:summary="Receive notifications when a launch is confirmed successful."
-            android:title="Success" />
+            android:summary="@string/settings_success_summary"
+            android:title="@string/settings_success" />
         <SwitchPreference
             android:defaultValue="false"
             android:dependency="notificationEnabled"
@@ -116,8 +116,8 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="oneMinute"
-            android:summaryOff="Do not notify when a Launch is within one minute."
-            android:summaryOn="Receive notification when a Launch is within one minute."
-            android:title="One Minute" />
+            android:summaryOff="@string/settings_one_minute_off"
+            android:summaryOn="@string/settings_one_minute_on"
+            android:title="@string/settings_one_minute" />
     </PreferenceCategory>
 </PreferenceScreen>

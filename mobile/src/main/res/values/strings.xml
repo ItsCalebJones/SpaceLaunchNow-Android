@@ -435,4 +435,18 @@
     <string name="upcoming_with_space">Upcoming</string>
     <string name="previous_with_space">Previous</string>
     <string name="watch">Watch</string>
+    <string name="notification_schedule_changed">SCHEDULE UPDATE: Next attempt no earlier then %s</string>
+    <string name="notification_launch_successful">Launch was successful!</string>
+    <string name="notification_launch_liftoff">Liftoff! Launch vehicle is now in flight!</string>
+    <string name="notification_one_minute">Launch attempt in less than one minute at %s</string>
+    <string name="notification_ten_minutes">Launch attempt in less than ten minutes at %s</string>
+    <string name="notification_one_hour">Launch attempt in less than one hour at %s</string>
+    <string name="notification_twenty_four_hours">Launch attempt in less than 24 hours on %s</string>
+    <string name="settings_in_flight">In Flight</string>
+    <string name="settings_in_flight_summary">Receive notifications when a launch is confirmed in-flight.</string>
+    <string name="settings_success">Success</string>
+    <string name="settings_success_summary">Receive notifications when a launch is confirmed successful.</string>
+    <string name="settings_one_minute">One Minute</string>
+    <string name="settings_one_minute_on">Receive notification when a Launch is within one minute.</string>
+    <string name="settings_one_minute_off">Do not notify when a Launch is within one minute.</string>
 </resources>
