@@ -5,7 +5,17 @@ A space launch tracker for Android using data from the Launch Library API.
 ## Changelog
 #### Updated 6-11-2018
 ---
-### Version 2.6.2 (Latest)
+### Version 2.6.3 (Latest)
+#### Overview
+Add In Flight and Launch Success notification types and other small fixes.
+
+#### Changelog
+* Add new notifications for in-flight and success.
+* Redid the notification system to make it easier for adding new types.
+* Made it easier to edit notification channels on Android 8 and above.
+* Links to Translator application directly in the application.
+
+### Version 2.6.2
 #### Overview
 Finally, SpaceX landing information! It's a long time coming but its finally here. 
 

@@ -219,6 +219,8 @@ dependencies {
     implementation "com.google.android.gms:play-services-ads:$rootProject.playServicesVersion"
     implementation "com.google.android.gms:play-services-maps:$rootProject.playServicesVersion"
 
+    implementation 'com.pixplicity.easyprefs:library:1.9.0'
+
     // Architecture and Tools
     implementation 'com.jonathanfinerty.once:once:1.2.2'
     implementation 'org.greenrobot:eventbus:3.1.1'
@@ -245,7 +247,7 @@ dependencies {
 
     implementation 'com.android.support:support-v4:27.1.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    implementation 'com.github.jrvansuita:MaterialAbout:0.2.1'
+    implementation 'com.github.jrvansuita:MaterialAbout:0.2.3'
     implementation 'com.github.mukeshsolanki:MarkdownView-Android:1.0.4'
     implementation 'com.jaredrummler:colorpicker:1.0.1'
     implementation 'com.andkulikov:transitionseverywhere:1.7.7'
@@ -264,7 +266,7 @@ dependencies {
 
     // If you want to use the GPU Filters
     implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
-    implementation('com.mikepenz:materialdrawer:6.0.2@aar') {
+    implementation ("com.mikepenz:materialdrawer:6.0.6@aar") {
         transitive = true
     }
 

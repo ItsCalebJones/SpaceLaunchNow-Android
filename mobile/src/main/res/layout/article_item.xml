@@ -6,25 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:layout_marginEnd="@dimen/material_baseline_grid_1x"
-        android:layout_marginStart="@dimen/material_baseline_grid_1x"
-        android:layout_marginTop="@dimen/material_baseline_grid_1x"
-        android:elevation="2dp"
-        app:cardCornerRadius="4dp"
-        app:cardUseCompatPadding="true"
-        app:cardPreventCornerOverlap="true">
-
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="140dp">
 
             <ImageView
                 android:id="@+id/article_image"
                 android:layout_width="140dp"
                 android:layout_height="match_parent"
+                android:layout_margin="@dimen/material_baseline_grid_0.5x"
                 android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -33,49 +23,54 @@
 
             <TextView
                 android:id="@+id/article_site"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_alignParentEnd="true"
                 android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:singleLine="true"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/article_tag"
+                app:layout_constraintEnd_toStartOf="@+id/article_tag_alt"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/article_image"
-                tools:text="Space.com" />
+                tools:text="NASA Space" />
 
 
             <TextView
                 android:id="@+id/article_tag_alt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginBottom="8dp"
+                android:layout_alignParentEnd="true"
                 android:layout_marginEnd="8dp"
-                android:maxLines="1"
-                android:maxLength="10"
+                android:layout_marginBottom="8dp"
                 android:ellipsize="end"
-                app:layout_constraintBottom_toTopOf="@+id/article_tag"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:text="Orion" />
+                android:maxLength="10"
+                android:maxLines="1"
+                android:singleLine="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/article_tag"
+                app:layout_constraintWidth_max="80dp"
+                tools:text="ISS" />
 
             <TextView
                 android:id="@+id/article_tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginBottom="8dp"
+                android:layout_alignParentEnd="true"
                 android:layout_marginEnd="8dp"
-                android:maxLines="1"
-                android:maxLength="10"
+                android:layout_marginBottom="8dp"
                 android:ellipsize="end"
+                android:maxLength="10"
+                android:maxLines="1"
+                android:singleLine="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                tools:text="Spaceflight" />
+                app:layout_constraintWidth_max="80dp"
+                tools:text="Htv " />
 
             <TextView
                 android:id="@+id/article_title"
@@ -97,20 +92,19 @@
                 style="@style/MaterialTypography.Locale.Subheading"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
                 android:singleLine="true"
                 android:textAlignment="textStart"
                 app:layout_constraintBottom_toTopOf="@+id/article_site"
-                app:layout_constraintEnd_toStartOf="@+id/article_tag_alt"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/article_image"
                 app:layout_constraintTop_toBottomOf="@+id/article_title"
                 app:layout_constraintVertical_bias="0.0"
                 tools:text="Mon, 02 Apr 2018 23:13:07 GMT" />
 
         </android.support.constraint.ConstraintLayout>
-    </android.support.v7.widget.CardView>
 
 </android.support.design.widget.CoordinatorLayout>
