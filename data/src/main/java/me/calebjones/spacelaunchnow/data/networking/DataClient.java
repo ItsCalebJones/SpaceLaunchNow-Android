@@ -69,15 +69,15 @@ public class DataClient {
     }
 
     public Call<LaunchResponse> getNextUpcomingLaunchesForWidgets(int limit, int offset, Callback<LaunchResponse> callback) {
-        Call<LaunchResponse> call = spaceLaunchNowService.getUpcomingLaunches(limit, offset, "detailed", null, null, null);
+        Call<LaunchResponse> call = spaceLaunchNowService.getUpcomingLaunches(limit, offset, "detailed", null, null, null, null, null);
 
         call.enqueue(callback);
 
         return call;
     }
 
-    public Call<LaunchResponse> getNextUpcomingLaunches(int limit, int offset, Callback<LaunchResponse> callback) {
-        Call<LaunchResponse> call = spaceLaunchNowService.getUpcomingLaunches(limit, offset, "detailed", null, null, null);
+    public Call<LaunchResponse> getNextUpcomingLaunches(int limit, int offset, String location_ids, String lsp_ids, Callback<LaunchResponse> callback) {
+        Call<LaunchResponse> call = spaceLaunchNowService.getUpcomingLaunches(limit, offset, "detailed", null, null, null, lsp_ids, location_ids);
 
         call.enqueue(callback);
 
@@ -85,7 +85,7 @@ public class DataClient {
     }
 
     public Call<LaunchResponse> getUpcomingLaunches(int limit, int offset, String search, String lspName, Integer launchId, Callback<LaunchResponse> callback) {
-        Call<LaunchResponse> call = spaceLaunchNowService.getUpcomingLaunches(limit, offset, "detailed", search, lspName, launchId);
+        Call<LaunchResponse> call = spaceLaunchNowService.getUpcomingLaunches(limit, offset, "detailed", search, lspName, launchId, null, null);
 
         call.enqueue(callback);
 

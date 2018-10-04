@@ -30,9 +30,11 @@ public class NextLaunchDataLoader {
         return dataSaver;
     }
 
-    public void getNextUpcomingLaunches(int limit, Callbacks.NextNetworkCallback nextNetworkCallback) {
+    public void getNextUpcomingLaunches(int limit, String locationIds, String lspIDs, Callbacks.NextNetworkCallback nextNetworkCallback) {
         Timber.i("Running getUpcomingLaunchesList");
-        DataClient.getInstance().getNextUpcomingLaunches(limit, 0, new Callback<LaunchResponse>() {
+
+        // TODO: Pass in filters to retrieve.
+        DataClient.getInstance().getNextUpcomingLaunches(20, 0, locationIds, lspIDs, new Callback<LaunchResponse>() {
             @Override
             public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
                 if (response.isSuccessful()) {
