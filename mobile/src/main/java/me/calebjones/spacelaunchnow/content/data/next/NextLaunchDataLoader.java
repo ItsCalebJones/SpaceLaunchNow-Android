@@ -34,7 +34,7 @@ public class NextLaunchDataLoader {
         Timber.i("Running getUpcomingLaunchesList");
 
         // TODO: Pass in filters to retrieve.
-        DataClient.getInstance().getNextUpcomingLaunches(20, 0, locationIds, lspIDs, new Callback<LaunchResponse>() {
+        DataClient.getInstance().getNextUpcomingLaunches(limit, 0, locationIds, lspIDs, new Callback<LaunchResponse>() {
             @Override
             public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
                 if (response.isSuccessful()) {

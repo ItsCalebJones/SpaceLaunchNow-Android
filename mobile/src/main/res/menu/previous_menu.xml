@@ -6,6 +6,11 @@
         app:showAsAction="always"
         android:title="@string/search" />
 
+    <item android:id="@+id/filter"
+        android:icon="@drawable/ic_filter"
+        app:showAsAction="always"
+        android:title="Filter" />
+
     <item android:id="@+id/action_date"
         android:icon="@drawable/ic_event"
         app:showAsAction="always"

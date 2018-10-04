@@ -107,10 +107,14 @@ public class FilterBuilder {
             for (int i = list.size() - 1; i >= 0; i--) {
                 int num = list.get(i);
                 sb.append(num);
-                sb.append(",");
+                if (i != 0) {
+                    sb.append(",");
+                }
             }
-        } else {
+        } else if (list.size() == 1) {
             sb.append(list.get(0));
+        } else {
+            return null;
         }
         return  sb.toString();
     }

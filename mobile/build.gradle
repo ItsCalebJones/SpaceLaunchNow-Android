@@ -245,6 +245,8 @@ dependencies {
 
     implementation 'com.github.ItsCalebJones:GDPRDialog:54231db'
 
+    implementation 'com.andkulikov:transitionseverywhere:1.8.0'
+
     implementation 'com.android.support:support-v4:27.1.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.github.jrvansuita:MaterialAbout:0.2.3'
