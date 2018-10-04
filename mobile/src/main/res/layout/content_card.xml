@@ -182,18 +182,14 @@
             style="@style/Base.Widget.AppCompat.Button.Colored"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="@dimen/material_baseline_grid_1x"
             android:layout_marginBottom="8dp"
             android:drawableStart="@drawable/ic_live"
             android:drawablePadding="4dp"
             android:singleLine="true"
             android:text="@string/watch"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/exploreButton"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/content_mission_description"
             app:layout_constraintTop_toBottomOf="@+id/content_mission_description"
             app:layout_constraintWidth_max="120dp" />
 
@@ -203,27 +199,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="@dimen/material_baseline_grid_1x"
             android:layout_marginBottom="8dp"
             android:text="@string/share"
             android:textColor="?android:textColorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/content_mission_description" />
+            app:layout_constraintEnd_toEndOf="@+id/content_mission_description"
+            app:layout_constraintTop_toBottomOf="@+id/content_mission_description"
+            app:layout_constraintWidth_max="120dp" />
 
-        <Button
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/exploreButton"
             style="@style/Base.Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:text="@string/explore"
             android:textColor="?android:textColorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/shareButton"
-            app:layout_constraintTop_toBottomOf="@+id/content_mission_description" />
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/watchButton"
+            app:layout_constraintTop_toBottomOf="@+id/content_mission_description"
+            app:layout_constraintWidth_max="120dp" />
 
         <TextView
             android:id="@+id/content_mission"
@@ -258,7 +256,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/content_mission" />
+            app:layout_constraintTop_toBottomOf="@+id/content_mission"
+            tools:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." />
 
         <include
             android:id="@+id/landing_pill"

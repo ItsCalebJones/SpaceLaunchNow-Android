@@ -44,7 +44,6 @@ public class WebNewsFragment extends RetroFitFragment {
     private ArticleRepository articleRepository;
     private ArticleAdapter articleAdapter;
     private LinearLayoutManager linearLayoutManager;
-    private StaggeredGridLayoutManager layoutManager;
     private List<Article> articles;
     private int page = 1;
     private boolean canLoadMore = true;
@@ -61,18 +60,8 @@ public class WebNewsFragment extends RetroFitFragment {
         View view = inflater.inflate(R.layout.fragment_news, container, false);
         ButterKnife.bind(this, view);
         articleAdapter = new ArticleAdapter(context, getActivity());
-        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
-            layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-            recyclerView.setLayoutManager(layoutManager);
-        } else {
-            linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-            recyclerView.setLayoutManager(linearLayoutManager);
-        }
-        recyclerView.setAdapter(articleAdapter);
-        getFirstPage();
-        swipeRefreshLayout.setOnRefreshListener(() -> getFirstPage());
-        statefulView.showProgress();
-        statefulView.setOfflineRetryOnClickListener(v -> getArticles(true, page));
+        linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(linearLayoutManager);
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
@@ -83,6 +72,12 @@ public class WebNewsFragment extends RetroFitFragment {
                 }
             }
         };
+        recyclerView.setAdapter(articleAdapter);
+        getFirstPage();
+        swipeRefreshLayout.setOnRefreshListener(() -> getFirstPage());
+        statefulView.showProgress();
+        statefulView.setOfflineRetryOnClickListener(v -> getArticles(true, page));
+
         recyclerView.addOnScrollListener(scrollListener);
         return view;
     }
