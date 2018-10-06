@@ -212,6 +212,9 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
     @Override
     public void onRefresh() {
         searchTerm = null;
+        searchView.setQuery("", false);
+        searchView.clearFocus();
+        searchView.setIconified(true);
         fetchData(true);
     }
 
@@ -247,7 +250,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.upcoming_menu, menu);
+        inflater.inflate(R.menu.list_menu, menu);
 
         if (SupporterHelper.isSupporter()) {
             menu.removeItem(R.id.action_supporter);
