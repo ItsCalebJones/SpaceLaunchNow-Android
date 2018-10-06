@@ -130,7 +130,7 @@ public class ComplicationContentManager {
         Call<LaunchResponse> call;
         final RealmList<Launch> items = new RealmList<>();
 
-        call = request.getUpcomingLaunches(10, 0, "detailed", null, null, agency);
+        call = request.getUpcomingLaunches(10, 0, "detailed", null, null, agency, null, null);
         Timber.v("Calling - %s", call.request().url().url().toString());
         call.enqueue(new Callback<LaunchResponse>() {
 
