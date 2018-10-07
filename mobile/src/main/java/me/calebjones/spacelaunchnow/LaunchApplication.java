@@ -46,6 +46,7 @@ import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.jobs.DataJobCreator;
+import me.calebjones.spacelaunchnow.content.jobs.SyncCalendarJob;
 import me.calebjones.spacelaunchnow.content.jobs.SyncJob;
 import me.calebjones.spacelaunchnow.content.jobs.SyncWearJob;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
@@ -385,6 +386,7 @@ public class LaunchApplication extends Application {
             SyncJob.schedulePeriodicJob(context);
             SyncWearJob.scheduleJob();
             UpdateWearJob.scheduleJobNow();
+            SyncCalendarJob.scheduleDailyJob();
         }).start();
     }
 
