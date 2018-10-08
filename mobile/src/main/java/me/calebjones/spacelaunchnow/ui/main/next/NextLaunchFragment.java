@@ -16,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatCheckBox;
@@ -120,7 +121,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     private int preferredCount;
     private NextLaunchDataRepository nextLaunchDataRepository;
     private CallBackListener callBackListener;
-    private boolean active;
+    private boolean filterViewShowing;
     private boolean switchChanged;
 
     @Override
@@ -147,7 +148,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final int color;
-        active = false;
+        filterViewShowing = false;
 
         if (adapter == null) {
             adapter = new CardAdapter(context);
@@ -199,9 +200,16 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.activity_main_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
+        ViewCompat.setNestedScrollingEnabled(mRecyclerView, false);
+
         //Enable no data by default
         no_data.setVisibility(View.VISIBLE);
+        viewMoreLaunches.setVisibility(View.GONE);
         return view;
+    }
+
+    public boolean isFilterShown(){
+        return filterViewShowing;
     }
 
     @Override
@@ -331,17 +339,21 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         preferredCount = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
         if (launches.size() >= preferredCount) {
             no_data.setVisibility(View.GONE);
+            viewMoreLaunches.setVisibility(View.VISIBLE);
             setLayoutManager(preferredCount);
             adapter.addItems(launches.subList(0, preferredCount));
             adapter.notifyDataSetChanged();
 
         } else if (launches.size() > 0) {
             no_data.setVisibility(View.GONE);
+            viewMoreLaunches.setVisibility(View.VISIBLE);
             setLayoutManager(preferredCount);
             adapter.addItems(launches);
             adapter.notifyDataSetChanged();
 
         } else {
+            no_data.setVisibility(View.VISIBLE);
+            viewMoreLaunches.setVisibility(View.GONE);
             if (adapter != null) {
                 adapter.clear();
             }
@@ -376,7 +388,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         Bundle bundle = getArguments();
         if (bundle != null) {
             if (bundle.getBoolean("SHOW_FILTERS")) {
-                if (!active) {
+                if (!filterViewShowing) {
                     new Handler().postDelayed(this::checkFilter, 500);
                 }
             }
@@ -447,12 +459,12 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
 
-    private void checkFilter() {
+    public void checkFilter() {
 
-        if (!active) {
+        if (!filterViewShowing) {
             Analytics.getInstance().sendButtonClicked("Show Launch filters.");
             switchChanged = false;
-            active = true;
+            filterViewShowing = true;
             mSwipeRefreshLayout.setEnabled(false);
             FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_close));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -462,7 +474,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             }
         } else {
             Analytics.getInstance().sendButtonClicked("Hide Launch filters.");
-            active = false;
+            filterViewShowing = false;
             FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_notifications_white));
             mSwipeRefreshLayout.setEnabled(true);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

@@ -474,9 +474,17 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else if (mNavItemId != R.id.menu_next_launch) {
+            drawer.setSelection(R.id.menu_next_launch);
+        } else if (mNavItemId == R.id.menu_next_launch) {
+            if(mUpcomingFragment != null){
+                if (mUpcomingFragment.isFilterShown()){
+                    mUpcomingFragment.checkFilter();
+                }
+            }
         } else {
             if (getFragmentManager().getBackStackEntryCount() != 0) {
                 getFragmentManager().popBackStack();
@@ -544,7 +552,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         FragmentManager fm = getSupportFragmentManager();
         switch (itemId) {
             case R.id.menu_next_launch:
-                drawer.setSelection(R.id.menu_next_launch);
                 mNavItemId = R.id.menu_next_launch;
                 // Check to see if we have retained the worker fragment.
                 mUpcomingFragment = (NextLaunchFragment) fm.findFragmentByTag("NEXT_LAUNCH");
@@ -563,7 +570,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 }
                 break;
             case R.id.menu_launches:
-                drawer.setSelection(R.id.menu_launches);
                 mNavItemId = R.id.menu_launches;
                 // Check to see if we have retained the worker fragment.
                 mlaunchesViewPager = (LaunchesViewPager) fm.findFragmentByTag("LAUNCH_VIEWPAGER");
@@ -580,7 +586,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
                 break;
             case R.id.menu_news:
-                drawer.setSelection(R.id.menu_news);
                 mNavItemId = R.id.menu_news;
                 setActionBarTitle(getString(R.string.space_launch_news));
                 // Check to see if we have retained the worker fragment.
@@ -598,7 +603,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
                 break;
             case R.id.menu_vehicle:
-                drawer.setSelection(R.id.menu_vehicle);
                 mNavItemId = R.id.menu_vehicle;
                 setActionBarTitle(getString(R.string.vehicles));
                 // Check to see if we have retained the worker fragment.
@@ -876,6 +880,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
     @Override
     public void onNavigateToLaunches() {
-        navigate(R.id.menu_launches);
+        drawer.setSelection(R.id.menu_launches);
     }
 }
