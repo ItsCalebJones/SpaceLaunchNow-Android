@@ -54,6 +54,10 @@
         <item name="colorAccent">@color/darkPrimary</item>
     </style>
 
+    <style name="ExploreButtonTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorAccent">@color/md_blue_grey_500</item>
+    </style>
+
     <style name="CustomPreferenceTheme" parent="@style/PreferenceActivity">
         <item name="colorPrimary">@color/darkPrimary</item>
         <item name="colorPrimaryDark">@color/darkPrimary_dark</item>

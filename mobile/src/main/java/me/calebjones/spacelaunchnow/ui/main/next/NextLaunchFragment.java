@@ -651,7 +651,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         }
     }
 
-    @OnClick(R.id.view_more_launches)
+    @OnClick({R.id.view_more_launches, R.id.view_more_launches2})
     public void onViewClicked() {
         callBackListener.onNavigateToLaunches();
     }
