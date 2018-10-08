@@ -98,6 +98,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     AppCompatImageView lastLaunchInfo;
     @BindView(R.id.action_notification_settings)
     AppCompatButton notificationsSettings;
+    @BindView(R.id.view_more_launches)
+    AppCompatButton viewMoreLaunches;
 
     private View view;
     private RecyclerView mRecyclerView;
@@ -117,7 +119,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     private Context context;
     private int preferredCount;
     private NextLaunchDataRepository nextLaunchDataRepository;
-
+    private CallBackListener callBackListener;
     private boolean active;
     private boolean switchChanged;
 
@@ -130,6 +132,14 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         switchPreferences = SwitchPreferences.getInstance(context);
         nextLaunchDataRepository = new NextLaunchDataRepository(context, getRealm());
         setScreenName("Next Launch Fragment");
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        //getActivity() is fully created in onActivityCreated and instanceOf differentiate it between different Activities
+        if (getActivity() instanceof CallBackListener)
+            callBackListener = (CallBackListener) getActivity();
     }
 
 
@@ -306,7 +316,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
             @Override
             public void onError(String message, @Nullable Throwable throwable) {
-                if (throwable != null){
+                if (throwable != null) {
                     Timber.e(throwable);
                 } else {
                     Timber.e(message);
@@ -338,8 +348,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         }
     }
 
-    private void showNetworkLoading(boolean loading){
-        if (loading){
+    private void showNetworkLoading(boolean loading) {
+        if (loading) {
             showLoading();
         } else {
             hideLoading();
@@ -627,6 +637,15 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 dialog.title(R.string.launch_info).content(R.string.launch_info_description).show();
                 break;
         }
+    }
+
+    @OnClick(R.id.view_more_launches)
+    public void onViewClicked() {
+        callBackListener.onNavigateToLaunches();
+    }
+
+    public interface CallBackListener {
+        void onNavigateToLaunches();// pass any parameter in your onCallBack which you want to return
     }
 }
 

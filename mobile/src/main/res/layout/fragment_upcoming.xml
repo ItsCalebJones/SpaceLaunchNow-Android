@@ -1,9 +1,10 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout"
-    android:elevation="0dp"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:elevation="0dp">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/activity_main_swipe_refresh_layout"
@@ -14,12 +15,42 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view"
+            <android.support.v4.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:columnWidth="320dp"
-                android:visibility="visible" />
+                android:fillViewport="true">
+
+                <RelativeLayout
+                    android:id="@+id/container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    >
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:columnWidth="320dp"
+                        android:visibility="visible" />
+
+                    <android.support.v7.widget.AppCompatButton
+                        android:id="@+id/view_more_launches"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/material_baseline_grid_1x"
+                        android:gravity="center"
+                        android:text="@string/view_more_launches"
+                        android:textSize="12sp"
+                        android:theme="@style/PrimaryButtonTheme"
+                        android:visibility="visible"
+                        android:layout_below="@id/recycler_view"
+                        android:layout_alignParentBottom="true" />
+
+                </RelativeLayout>
+
+            </android.support.v4.widget.NestedScrollView>
 
             <RelativeLayout
                 android:id="@+id/no_launches"
@@ -66,8 +97,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="24dp"
-                        android:layout_marginRight="24dp"
                         android:layout_marginTop="16dp"
+                        android:layout_marginRight="24dp"
                         android:orientation="vertical"
                         android:paddingBottom="@dimen/material_baseline_grid_8x">
 
@@ -233,17 +264,17 @@
                         </LinearLayout>
 
                         <android.support.v7.widget.AppCompatButton
-                            style="@style/Base.Widget.AppCompat.Button.Colored"
                             android:id="@+id/action_notification_settings"
+                            style="@style/Base.Widget.AppCompat.Button.Colored"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/edit_notification_settings"/>
+                            android:text="@string/edit_notification_settings" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
                             android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
                             android:layout_marginEnd="8dp"
                             android:text="@string/additional_filters"
                             android:textAppearance="@style/TextAppearance.AppCompat.Title"
@@ -272,8 +303,8 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
                             android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
+                            android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
                             android:orientation="horizontal">
 
 
@@ -303,15 +334,15 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
                             android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
+                            android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
                             android:orientation="horizontal">
 
                             <android.support.v7.widget.SwitchCompat
                                 android:id="@+id/persist_last_launch"
-                                android:layout_weight=".80"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_weight=".80"
                                 android:checked="true"
                                 android:text="@string/keep_launches"
                                 android:textColor="@color/white"
@@ -342,8 +373,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
-                android:layout_marginBottom="@dimen/card_margin"
                 android:layout_marginRight="@dimen/card_margin"
+                android:layout_marginBottom="@dimen/card_margin"
                 app:elevation="@dimen/material_elevation_fab_resting"
                 app:srcCompat="@drawable/ic_notifications_white" />
 

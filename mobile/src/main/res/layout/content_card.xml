@@ -123,15 +123,15 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="26dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:background="@color/View_Separator"
             android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@+id/countdown_layout"
+            app:layout_constraintBottom_toBottomOf="@+id/status_pill"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/launch_image" />
+            app:layout_constraintTop_toTopOf="@+id/status_pill" />
 
         <include
             android:id="@+id/countdown_layout"
@@ -188,37 +188,39 @@
             android:drawablePadding="4dp"
             android:singleLine="true"
             android:text="@string/watch"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/content_mission_description"
             app:layout_constraintTop_toBottomOf="@+id/content_mission_description"
             app:layout_constraintWidth_max="120dp" />
 
-        <android.support.v7.widget.AppCompatButton
+        <ImageView
             android:id="@+id/shareButton"
-            style="@style/Base.Widget.AppCompat.Button.Borderless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/share"
-            android:textColor="?android:textColorPrimary"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="40dp"
+            android:layout_height="0dp"
+            android:adjustViewBounds="false"
+            android:cropToPadding="false"
+            android:scaleType="center"
+            android:src="@drawable/ic_menu_share"
+            app:layout_constraintBottom_toBottomOf="@+id/exploreButton"
             app:layout_constraintEnd_toEndOf="@+id/content_mission_description"
-            app:layout_constraintTop_toBottomOf="@+id/content_mission_description"
-            app:layout_constraintWidth_max="120dp" />
+            app:layout_constraintTop_toTopOf="@+id/exploreButton" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/exploreButton"
-            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            style="@style/Base.Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:drawablePadding="4dp"
+            android:singleLine="true"
             android:text="@string/explore"
-            android:textColor="?android:textColorPrimary"
+            android:drawableStart="@drawable/ic_explore"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/shareButton"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/watchButton"
             app:layout_constraintTop_toBottomOf="@+id/content_mission_description"
             app:layout_constraintWidth_max="120dp" />
