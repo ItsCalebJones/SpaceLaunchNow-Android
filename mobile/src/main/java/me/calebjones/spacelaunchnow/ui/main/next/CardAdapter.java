@@ -480,7 +480,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         @BindView(R.id.status)
         TextView status;
         @BindView(R.id.watchButton)
-        Button watchButton;
+        View watchButton;
         @BindView(R.id.shareButton)
         View shareButton;
         @BindView(R.id.exploreButton)

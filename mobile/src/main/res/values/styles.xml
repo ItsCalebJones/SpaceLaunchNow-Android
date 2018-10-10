@@ -41,6 +41,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="titleBarColor">@color/colorPrimary</item>
+        <item name="shareIconColor">@color/md_grey_700</item>
+        <item name="exploreIconColor">@color/colorAccent</item>
         <item name="recentBarColor">@color/colorRecentPrimary</item>
         <item name="android:textColorPrimary">#212121</item>
         <item name="android:textColorSecondary">#757575</item>
@@ -97,7 +99,7 @@
     </style>
 
     <style name="ExploreButtonTheme" parent="ThemeOverlay.AppCompat.Light">
-        <item name="colorAccent">@color/md_blue_grey_500</item>
+        <item name="colorAccent">?attr/titleBarColor</item>
     </style>
 
 
