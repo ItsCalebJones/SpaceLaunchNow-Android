@@ -21,6 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.main.Landing;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.Launcher;
 import me.calebjones.spacelaunchnow.data.models.main.Stage;
 import me.calebjones.spacelaunchnow.ui.launches.launcher.LauncherLaunchActivity;
@@ -33,9 +34,11 @@ public class StageInformationAdapter extends RecyclerView.Adapter<StageInformati
     public int position;
     private List<Stage> launcherList;
     private Context context;
+    private Launch launch;
 
-    public StageInformationAdapter(List<Stage> launchers, Context context) {
-        launcherList = launchers;
+    public StageInformationAdapter(Launch launch, Context context) {
+        this.launch = launch;
+        launcherList = launch.getRocket().getFirstStage();
         this.context = context;
         notifyDataSetChanged();
     }
@@ -81,6 +84,10 @@ public class StageInformationAdapter extends RecyclerView.Adapter<StageInformati
             holder.viewCoreLaunches.setVisibility(View.GONE);
         }
 
+        if (launch.getMission() != null && launch.getMission().getName() != null) {
+            holder.landingInformationTitle.setText(String.format("%s Landing Information", launch.getMission().getName()));
+        }
+
         holder.landingGroup.setVisibility(View.GONE);
         holder.landingLocationGroup.setVisibility(View.GONE);
         holder.landingTypeGroup.setVisibility(View.GONE);
@@ -91,19 +98,19 @@ public class StageInformationAdapter extends RecyclerView.Adapter<StageInformati
             Landing landing = stage.getLanding();
 
             if (landing.getAttempt() == null) {
-                holder.flightProven.setImageResource(R.drawable.ic_question_mark);
+                holder.attemptIcon.setImageResource(R.drawable.ic_question_mark);
             } else if (landing.getAttempt()) {
-                holder.flightProven.setImageResource(R.drawable.ic_checkmark);
+                holder.attemptIcon.setImageResource(R.drawable.ic_checkmark);
             } else if (!landing.getAttempt()) {
-                holder.flightProven.setImageResource(R.drawable.ic_failed);
+                holder.attemptIcon.setImageResource(R.drawable.ic_failed);
             }
 
             if (landing.getSuccess() == null) {
-                holder.flightProven.setImageResource(R.drawable.ic_question_mark);
+                holder.successIcon.setImageResource(R.drawable.ic_question_mark);
             } else if (landing.getSuccess()) {
-                holder.flightProven.setImageResource(R.drawable.ic_checkmark);
+                holder.successIcon.setImageResource(R.drawable.ic_checkmark);
             } else if (!landing.getSuccess()) {
-                holder.flightProven.setImageResource(R.drawable.ic_failed);
+                holder.successIcon.setImageResource(R.drawable.ic_failed);
             }
 
             if (landing.getDescription().length() != 0) {
@@ -222,6 +229,8 @@ public class StageInformationAdapter extends RecyclerView.Adapter<StageInformati
         Group landingTypeGroup;
         @BindView(R.id.details)
         TextView details;
+        @BindView(R.id.landing_information_title)
+        TextView landingInformationTitle;
 
 
         //Add content to the card

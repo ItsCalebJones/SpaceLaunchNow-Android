@@ -52,7 +52,9 @@ public interface SpaceLaunchNowService {
     Call<LaunchResponse> getUpcomingLaunches(@Query("limit") int amount, @Query("offset") int offset,
                                              @Query("mode") String mode, @Query("search") String search,
                                              @Query("lsp__name") String lspName,
-                                             @Query("launcher_config__id") Integer launcherId);
+                                             @Query("launcher_config__id") Integer launcherId,
+                                             @Query("lsp__ids") String lspIds,
+                                             @Query("location__ids") String locationIds);
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/launch/upcoming/")

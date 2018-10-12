@@ -211,32 +211,14 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
     @Override
     public void setUpcomingBadge(int count) {
         if (tabLayout != null && count > 0) {
-            final BadgeDrawable drawable =
-                    new BadgeDrawable.Builder()
-                            .type(BadgeDrawable.TYPE_NUMBER)
-                            .badgeColor(color)
-                            .number(count)
-                            .padding(8, 8, 8, 8, 8)
-                            .strokeWidth(16)
-                            .build();
-
-            tabLayout.getTabAt(0).setText(TextUtils.concat(getString(R.string.upcoming_with_space), drawable.toSpannable()));
+            tabLayout.with(0).badge(true).badgeCount(count).name("UPCOMING").build();
         }
     }
 
     @Override
     public void setPreviousBadge(int count) {
         if (tabLayout != null && count > 0) {
-            final BadgeDrawable drawable =
-                    new BadgeDrawable.Builder()
-                            .type(BadgeDrawable.TYPE_NUMBER)
-                            .badgeColor(color)
-                            .number(count)
-                            .padding(8, 8, 8, 8, 8)
-                            .strokeWidth(16)
-                            .build();
-
-            tabLayout.getTabAt(1).setText(TextUtils.concat(getString(R.string.previous_with_space), drawable.toSpannable()));
+            tabLayout.with(1).badge(true).badgeCount(count).name("PREVIOUS").build();
         }
     }
 

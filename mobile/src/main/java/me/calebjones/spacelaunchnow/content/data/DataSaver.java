@@ -221,7 +221,7 @@ public class DataSaver {
                 .equalTo("id", id)
                 .findFirst();
         if (previous != null) {
-            previous.deleteFromRealm();
+            mRealm.executeTransaction(realm -> previous.deleteFromRealm());
         }
     }
 }

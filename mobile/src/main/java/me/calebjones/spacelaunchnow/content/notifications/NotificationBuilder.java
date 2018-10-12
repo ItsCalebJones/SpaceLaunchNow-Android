@@ -1,6 +1,5 @@
 package me.calebjones.spacelaunchnow.content.notifications;
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -13,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.text.format.DateFormat;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -36,17 +36,17 @@ import timber.log.Timber;
 import static me.calebjones.spacelaunchnow.content.notifications.NotificationHelper.CHANNEL_LAUNCH_IMMINENT;
 import static me.calebjones.spacelaunchnow.content.notifications.NotificationHelper.CHANNEL_LAUNCH_REMINDER;
 import static me.calebjones.spacelaunchnow.content.notifications.NotificationHelper.CHANNEL_LAUNCH_SILENT;
-import static me.calebjones.spacelaunchnow.content.notifications.NotificationHelper.CHANNEL_LAUNCH_UPDATE;
 
 public class NotificationBuilder {
-    @SuppressLint("ObsoleteSdkInt")
-    public static void notifyUser(Context context, Launch launch, long timeToFinish, String notificationType) {
+
+    private static String liveIcon = "\uD83D\uDD34";
+
+    public static void buildNotification(Context context, Launch launch, String title, String expandedText, String channelId) {
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         NotificationCompat.Builder mBuilder;
         NotificationManager mNotifyManager;
-        int notificationId = 0;
-        boolean update = notificationType.contains("netstampChanged");
+        int notificationId;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationHelper notificationHelper = new NotificationHelper(context);
             mBuilder = new NotificationCompat.Builder(context, CHANNEL_LAUNCH_REMINDER);
@@ -55,9 +55,7 @@ public class NotificationBuilder {
             mBuilder = new NotificationCompat.Builder(context);
             mNotifyManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         }
-        String launchDate;
-        String expandedText;
-        String launchName = launch.getName();
+
         String launchPad = launch.getPad().getLocation().getName();
         boolean isDoNotDisturb = sharedPref.getBoolean("do_not_disturb_status", false);
 
@@ -72,56 +70,21 @@ public class NotificationBuilder {
             }
         }
 
-        String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone", "default ringtone");
-        Uri alarmSound = Uri.parse(ringtoneBox);
-
         Intent resultIntent = new Intent(context, LaunchDetailActivity.class);
         resultIntent.putExtra("TYPE", "launch");
         resultIntent.putExtra("launchID", launch.getId());
 
         PendingIntent pending = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        if (launch.getNet() != null) {
-            SimpleDateFormat sdf;
-            if (sharedPref.getBoolean("24_hour_mode", false)) {
-                sdf = Utils.getSimpleDateFormatForUI("k:mm a zzz");
-            } else {
-                sdf = Utils.getSimpleDateFormatForUI("h:mm a zzz");
-            }
-            //Get launch date
-            if (sharedPref.getBoolean("local_time", true)) {
-                Date date = launch.getNet();
-                launchDate = sdf.format(date);
-            } else {
-                Date date = launch.getNet();
-                sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                launchDate = sdf.format(date);
-            }
-            expandedText = getContentText(timeToFinish, launchDate, update);
-        } else {
-            expandedText = getContentText(timeToFinish, update);
-        }
         mBuilder.setSubText(launchPad);
 
         NotificationCompat.WearableExtender wearableExtender =
                 new NotificationCompat.WearableExtender()
                         .setHintHideIcon(true);
-        if (launch.getRocket().getConfiguration().getImageUrl() != null && launch.getRocket().getConfiguration().getImageUrl().length() > 0 && !launch.getRocket().getConfiguration().getImageUrl().contains("placeholder")) {
-            Bitmap bitmap = null;
-            try {
-                bitmap = Utils.getBitMapFromUrl(context, launch.getRocket().getConfiguration().getImageUrl());
-            } catch (ExecutionException | InterruptedException e) {
-                Timber.e(e);
-                Crashlytics.logException(e);
-            }
-            if (bitmap != null) {
-                wearableExtender.setBackground(bitmap);
-            }
-        }
 
         Once.markDone("SHOW_FILTER_SETTINGS");
-        if (Once.beenDone("SHOW_FILTER_SETTINGS", Amount.lessThan(10))){
-            Intent intent = new Intent(context, MainActivity.class );
+        if (Once.beenDone("SHOW_FILTER_SETTINGS", Amount.lessThan(10))) {
+            Intent intent = new Intent(context, MainActivity.class);
             intent.setAction("SHOW_FILTERS");
             PendingIntent archiveIntent = PendingIntent.getActivity(context,
                     2,
@@ -162,37 +125,31 @@ public class NotificationBuilder {
 
         }
 
+        notificationId = (int) (launch.getNet().getTime() / 1000);
 
-        if (update){
-            mBuilder.setContentTitle("UPDATE: " + launchName);
-            notificationId = (int) (launch.getNet().getTime()/1000);
-        } else {
-            mBuilder.setContentTitle(launchName);
-            notificationId = launch.getId();
-        }
-
-        mBuilder.setContentText(expandedText)
+        mBuilder.setContentTitle(title)
                 .setSmallIcon(R.drawable.ic_rocket)
                 .setAutoCancel(true)
                 .setContentText(expandedText)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(expandedText))
                 .extend(wearableExtender)
                 .setContentIntent(pending);
 
-
-        if (update && !isDoNotDisturb){
-            mBuilder.setChannelId(CHANNEL_LAUNCH_UPDATE);
-        } else if (isDoNotDisturb) {
+        String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone",
+                "default ringtone");
+        Uri alarmSound = Uri.parse(ringtoneBox);
+        if (isDoNotDisturb) {
             mBuilder.setChannelId(CHANNEL_LAUNCH_SILENT);
-        } else if (notificationType.contains("oneHour") || notificationType.contains("tenMinute")) {
-            mBuilder.setChannelId(CHANNEL_LAUNCH_IMMINENT).setSound(alarmSound);
-        } else if (notificationType.contains("twentyFourHour")){
-            mBuilder.setChannelId(CHANNEL_LAUNCH_REMINDER);
+        } else if (channelId.contains(CHANNEL_LAUNCH_IMMINENT)) {
+            mBuilder.setChannelId(CHANNEL_LAUNCH_IMMINENT).setSound(alarmSound).setCategory(NotificationCompat.CATEGORY_ALARM);
         } else {
-            mBuilder.setChannelId(CHANNEL_LAUNCH_REMINDER);
+            mBuilder.setChannelId(channelId).setSound(alarmSound).setCategory(NotificationCompat.CATEGORY_EVENT);
         }
 
-
-        if (launch.getRocket().getConfiguration().getImageUrl() != null && launch.getRocket().getConfiguration().getImageUrl().length() > 0 && !launch.getRocket().getConfiguration().getImageUrl().contains("placeholder")) {
+        if (launch.getRocket().getConfiguration().getImageUrl() != null
+                && launch.getRocket().getConfiguration().getImageUrl().length() > 0
+                && !launch.getRocket().getConfiguration().getImageUrl().contains("placeholder")) {
             Bitmap bitmap = null;
             try {
                 bitmap = Utils.getBitMapFromUrl(context, launch.getRocket().getConfiguration().getImageUrl());
@@ -200,12 +157,13 @@ public class NotificationBuilder {
                 Timber.e(e);
                 Crashlytics.logException(e);
             }
-            if (bitmap != null){
+            if (bitmap != null) {
                 mBuilder.setLargeIcon(bitmap);
+                wearableExtender.setBackground(bitmap);
             }
         }
 
-        if (update || isDoNotDisturb){
+        if (isDoNotDisturb) {
             mBuilder.setPriority(Notification.PRIORITY_LOW);
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && sharedPref.getBoolean("notifications_new_message_heads_up", true)) {
@@ -225,7 +183,7 @@ public class NotificationBuilder {
         mNotifyManager.notify(notificationId, mBuilder.build());
     }
 
-    public static boolean isTimeBetweenTwoTime(String argStartTime,
+    private static boolean isTimeBetweenTwoTime(String argStartTime,
                                                String argEndTime,
                                                String argCurrentTime) throws ParseException {
         String reg = "^([0-2][0-9]|[0-3]):([0-5][0-9])$";
@@ -301,83 +259,129 @@ public class NotificationBuilder {
 
     }
 
-    private static String getContentText(long timeToFinish, boolean update) {
-        String header;
-        if (update){
-            header = "Now launching";
+
+    private static String getTimeFormatted(Context context, Date date) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SimpleDateFormat sdf;
+        if (sharedPref.getBoolean("24_hour_mode", false)) {
+            sdf = Utils.getSimpleDateFormatForUI("k:mm a zzz");
         } else {
-            header = "Launch attempt";
+            sdf = Utils.getSimpleDateFormatForUI("h:mm a zzz");
         }
-        if (timeToFinish < 3600000){
-            int minutes = (int) ((timeToFinish / (1000 * 60)) % 60);
-            if (minutes == 9) {
-                return header + " in ten minutes.";
-            } else if (minutes == 59){
-                return header + " in one hour.";
-            } else {
-                return header + " in " + minutes + " minutes.";
-            }
-        } else if (timeToFinish < 8.64e+7) {
-            int hours = (int) ((timeToFinish / (1000 * 60 * 60)) % 24);
-            if (hours == 23) {
-                return header + " in twenty-four hours.";
-            } else {
-                return header + " in " + hours + " hours.";
-            }
+        //Get launch date
+        if (sharedPref.getBoolean("local_time", true)) {
+            return sdf.format(date);
         } else {
-            int days = (int) (timeToFinish / (1000 * 60 * 60 * 24));
-            int hours = (int) ((timeToFinish / (1000 * 60 * 60)) % 24);
-            if (hours > 0){
-                if (days == 1) {
-                    return header + " tomorrow.";
-                } else {
-                    return header + " in " + days + " day(s).";
-                }
-            } else if (days == 1) {
-                return header + " in one day " + hours + "hours.";
-            } else {
-                return header + " in " + days + " day(s) " + hours + "hours.";
-            }
+            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+            return sdf.format(date);
         }
     }
 
-    private static String getContentText(long timeToFinish, String launchDate, boolean update) {
-        String header;
-        if (update){
-            header = "Now launching";
+    private static String getTimeFormattedLong(Context context, Date date) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SimpleDateFormat sdf;
+        if (DateFormat.is24HourFormat(context)) {
+            sdf = Utils.getSimpleDateFormatForUI("MMMM d, yyyy HH:mm zzz");
         } else {
-            header = "Launch attempt";
+            sdf = Utils.getSimpleDateFormatForUI("MMMM d, yyyy h:mm a zzz");
         }
-        if (timeToFinish < 3600000){
-            int minutes = (int) ((timeToFinish / (1000 * 60)) % 60);
-            if (minutes == 9) {
-                return header + " in ten minutes at " + launchDate;
-            } else if (minutes == 59){
-                return header + " in one hour at " + launchDate;
-            } else {
-                return header + " in " + minutes + " minutes at " + launchDate;
-            }
-        } else if (timeToFinish < 8.64e+7) {
-            int hours = (int) ((timeToFinish / (1000 * 60 * 60)) % 24);
-            if (hours == 23) {
-                return header + " in twenty-four hours at " + launchDate;
-            } else {
-                return header + " in " + hours + " hours at " + launchDate;
-            }
+        sdf.toLocalizedPattern();
+        //Get launch date
+        if (sharedPref.getBoolean("local_time", true)) {
+            return sdf.format(date);
         } else {
-            int days = (int) (timeToFinish / (1000 * 60 * 60 * 24));
-            int hours = (int) ((timeToFinish / (1000 * 60 * 60)) % 24);
-            if (hours > 0){
-                if (days == 1) {
-                    return header + " tomorrow at " + launchDate;
-                } else {
-                    return header + " in " + days + " day(s) at " + launchDate;
-                }
-            } else if (days == 1) {
-                return header + " in one day " + hours + "hours at " + launchDate;
-            } else {
-                return header + " in " + days + " day(s) " + hours + "hours at " + launchDate;
-            }
+            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+            return sdf.format(date);
         }
+    }
+
+    public static void notifyUserTwentyFourHours(Context context, Launch launch) {
+        String title;
+        String expandedText;
+
+        title = launch.getName();
+        expandedText = String.format(context.getString(R.string.notification_twenty_four_hours), getTimeFormatted(context, launch.getNet()));
+
+        buildNotification(context, launch, title, expandedText, CHANNEL_LAUNCH_REMINDER);
+    }
+
+    public static void notifyUserOneHour(Context context, Launch launch) {
+        String title;
+        String expandedText;
+
+        title = launch.getName();
+        expandedText = String.format(context.getString(R.string.notification_one_hour), getTimeFormatted(context, launch.getNet()));
+
+        buildNotification(context, launch, title, expandedText, CHANNEL_LAUNCH_IMMINENT);
+    }
+
+    public static void notifyUserTenMinutes(Context context, Launch launch) {
+        String title;
+        String expandedText;
+
+        if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
+            title = liveIcon + " " + launch.getName();
+        } else {
+            title = launch.getName();
+        }
+        expandedText = String.format(context.getString(R.string.notification_ten_minutes), getTimeFormatted(context, launch.getNet()));
+
+        buildNotification(context, launch, title, expandedText, CHANNEL_LAUNCH_IMMINENT);
+    }
+
+    public static void notifyUserOneMinute(Context context, Launch launch) {
+        String title;
+        String expandedText;
+
+        if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
+            title = liveIcon + " " + launch.getName();
+        } else {
+            title = launch.getName();
+        }
+        expandedText = String.format(context.getString(R.string.notification_one_minute), getTimeFormatted(context, launch.getNet()));
+
+        buildNotification(context, launch, title, expandedText, CHANNEL_LAUNCH_IMMINENT);
+    }
+
+    public static void notifyUserInFlight(Context context, Launch launch) {
+        String title;
+        String expandedText;
+
+        if (launch.getVidURLs() != null && launch.getVidURLs().size() > 0) {
+            title = liveIcon + " " + launch.getName();
+        } else {
+            title = launch.getName();
+        }
+        expandedText = context.getString(R.string.notification_launch_liftoff);
+
+        buildNotification(context, launch, title, expandedText, CHANNEL_LAUNCH_IMMINENT);
+    }
+
+    public static void notifyUserSuccess(Context context, Launch launch) {
+        String title;
+        String expandedText;
+
+        title = launch.getName();
+        expandedText = context.getString(R.string.notification_launch_successful);
+
+        buildNotification(context, launch, title, expandedText, CHANNEL_LAUNCH_REMINDER);
+    }
+
+    public static void notifyUserLaunchScheduleChanged(Context context, Launch launch) {
+        String title;
+        String expandedText;
+
+        title = "" + launch.getName();
+        expandedText = String.format(context.getString(R.string.notification_schedule_changed), getTimeFormattedLong(context, launch.getNet()));
+
+        buildNotification(context, launch, title, expandedText, CHANNEL_LAUNCH_REMINDER);
+    }
+
+    public static void notifyUserTest(Context context, Launch launch) {
+        String title;
+        String expandedText;
+        title = launch.getName();
+        expandedText = "Test Notification";
+        buildNotification(context, launch, title, expandedText, CHANNEL_LAUNCH_REMINDER);
     }
 }

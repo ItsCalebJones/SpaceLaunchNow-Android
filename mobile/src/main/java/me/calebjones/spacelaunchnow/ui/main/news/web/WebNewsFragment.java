@@ -26,6 +26,7 @@ import me.calebjones.spacelaunchnow.common.RetroFitFragment;
 import me.calebjones.spacelaunchnow.content.data.articles.ArticleRepository;
 import me.calebjones.spacelaunchnow.data.models.news.Article;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.utils.views.EndlessRecyclerViewScrollListener;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 
 public class WebNewsFragment extends RetroFitFragment {
@@ -43,8 +44,11 @@ public class WebNewsFragment extends RetroFitFragment {
     private ArticleRepository articleRepository;
     private ArticleAdapter articleAdapter;
     private LinearLayoutManager linearLayoutManager;
-    private StaggeredGridLayoutManager layoutManager;
     private List<Article> articles;
+    private int page = 1;
+    private boolean canLoadMore = true;
+    private boolean statefulStateContentShow = false;
+    private EndlessRecyclerViewScrollListener scrollListener;
 
 
     @Override
@@ -56,19 +60,36 @@ public class WebNewsFragment extends RetroFitFragment {
         View view = inflater.inflate(R.layout.fragment_news, container, false);
         ButterKnife.bind(this, view);
         articleAdapter = new ArticleAdapter(context, getActivity());
-        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
-            layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-            recyclerView.setLayoutManager(layoutManager);
-        } else {
-            linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-            recyclerView.setLayoutManager(linearLayoutManager);
-        }
+        linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                if (canLoadMore) {
+                    getNextPage();
+                }
+            }
+        };
         recyclerView.setAdapter(articleAdapter);
-        getArticles(false);
-        swipeRefreshLayout.setOnRefreshListener(() -> getArticles(true));
+        getFirstPage();
+        swipeRefreshLayout.setOnRefreshListener(() -> getFirstPage());
         statefulView.showProgress();
-        statefulView.setOfflineRetryOnClickListener(v -> getArticles(true));
+        statefulView.setOfflineRetryOnClickListener(v -> getArticles(true, page));
+
+        recyclerView.addOnScrollListener(scrollListener);
         return view;
+    }
+
+    private void getFirstPage() {
+        page = 1;
+        getArticles(true, page);
+    }
+
+    private void getNextPage() {
+        page = page + 1;
+        getArticles(true, page);
     }
 
     @Override
@@ -94,13 +115,16 @@ public class WebNewsFragment extends RetroFitFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public void getArticles(boolean forced) {
+    public void getArticles(boolean forced, int page) {
         swipeRefreshLayout.setRefreshing(true);
-        articleRepository.getArticles(forced, new ArticleRepository.GetArticlesCallback() {
+        articleRepository.getArticles(forced, page, new ArticleRepository.GetArticlesCallback() {
             @Override
             public void onSuccess(List<Article> newArticles) {
                 articles = newArticles;
-                statefulView.showContent();
+                if (!statefulStateContentShow) {
+                    statefulView.showContent();
+                    statefulStateContentShow = true;
+                }
                 articleAdapter.addItems(articles);
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -117,7 +141,13 @@ public class WebNewsFragment extends RetroFitFragment {
             @Override
             public void onNetworkFailure() {
                 statefulView.showOffline();
+                statefulStateContentShow = false;
                 swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onLastPageLoaded() {
+                canLoadMore = false;
             }
         });
     }

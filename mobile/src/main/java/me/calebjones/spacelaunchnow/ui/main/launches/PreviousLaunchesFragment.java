@@ -29,10 +29,10 @@ import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
 import me.calebjones.spacelaunchnow.content.data.previous.PreviousDataRepository;
-import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.views.EndlessRecyclerViewScrollListener;
+import me.calebjones.spacelaunchnow.utils.views.filter.LaunchFilterDialog;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import timber.log.Timber;
 import java.lang.reflect.Field;
@@ -212,6 +212,9 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
     @Override
     public void onRefresh() {
         searchTerm = null;
+        searchView.setQuery("", false);
+        searchView.clearFocus();
+        searchView.setIconified(true);
         fetchData(true);
     }
 
@@ -247,7 +250,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.upcoming_menu, menu);
+        inflater.inflate(R.menu.list_menu, menu);
 
         if (SupporterHelper.isSupporter()) {
             menu.removeItem(R.id.action_supporter);
@@ -269,6 +272,13 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
             onRefresh();
             return true;
         }
+
+        if (id == R.id.filter) {
+            LaunchFilterDialog launchFilterDialog = LaunchFilterDialog.newInstance();
+            launchFilterDialog.show(getActivity().getSupportFragmentManager(), "add_previous_filter_dialog_fragment");
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

@@ -480,9 +480,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         @BindView(R.id.status)
         TextView status;
         @BindView(R.id.watchButton)
-        Button watchButton;
+        View watchButton;
         @BindView(R.id.shareButton)
-        Button shareButton;
+        View shareButton;
         @BindView(R.id.exploreButton)
         Button exploreButton;
         @BindView(R.id.content_mission)
@@ -497,6 +497,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         View landingView;
         @BindView(R.id.status_pill)
         CardView statusPill;
+        @BindView(R.id.background)
+        View titleBackground;
         public View layout;
         public CountDownTimer timer;
         public Disposable var;
@@ -510,6 +512,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
             shareButton.setOnClickListener(this);
             exploreButton.setOnClickListener(this);
             watchButton.setOnClickListener(this);
+            titleBackground.setOnClickListener(this);
         }
 
         //React to click events.
@@ -616,7 +619,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                             .startChooser();
                     Analytics.getInstance().sendLaunchShared("Explore Button", launch.getName() + "-" + launch.getId().toString());
                     break;
-                case R.id.TitleCard:
+                case R.id.background:
                     Timber.d("Explore: %s", launchList.get(position).getId());
                     Analytics.getInstance().sendButtonClicked("Title Card", launch.getName());
 

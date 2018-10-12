@@ -1,10 +1,7 @@
 package me.calebjones.spacelaunchnow.ui.main.launches;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
@@ -21,31 +18,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.crashlytics.android.Crashlytics;
-import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
-import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
-import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecoration;
 
 import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
 import me.calebjones.spacelaunchnow.content.data.upcoming.UpcomingDataRepository;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
-import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.views.EndlessRecyclerViewScrollListener;
+import me.calebjones.spacelaunchnow.utils.views.filter.LaunchFilterDialog;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import timber.log.Timber;
 
@@ -224,6 +213,9 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     @Override
     public void onRefresh() {
         searchTerm = null;
+        searchView.setQuery("", false);
+        searchView.clearFocus();
+        searchView.setIconified(true);
         fetchData(true);
     }
 
@@ -259,7 +251,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.upcoming_menu, menu);
+        inflater.inflate(R.menu.list_menu, menu);
 
         if (SupporterHelper.isSupporter()) {
             menu.removeItem(R.id.action_supporter);
@@ -279,6 +271,12 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
 
         if (id == R.id.action_refresh) {
             onRefresh();
+            return true;
+        }
+
+        if (id == R.id.filter) {
+            LaunchFilterDialog launchFilterDialog = LaunchFilterDialog.newInstance();
+            launchFilterDialog.show(getActivity().getSupportFragmentManager(), "add_upcoming_filter_dialog_fragment");
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -39,7 +39,8 @@
         android:title="@string/translate">
         <intent
             android:action="android.intent.action.VIEW"
-            android:data="https://spacelaunchnow.oneskyapp.com/"
+            android:data="https://goo.gl/forms/Pt4QA5JNznF2MiKu1"
+
             />
     </header>
     <header

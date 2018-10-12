@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -25,7 +24,6 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
 import com.google.ads.mediation.admob.AdMobAdapter;
@@ -53,7 +51,6 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.ExpandableDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 
 import org.greenrobot.eventbus.EventBus;
@@ -71,7 +68,6 @@ import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
-import me.calebjones.spacelaunchnow.common.customviews.generate.OnFeedbackListener;
 import me.calebjones.spacelaunchnow.common.customviews.generate.Rate;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
@@ -91,7 +87,7 @@ import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import timber.log.Timber;
 
-public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
+public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, NextLaunchFragment.CallBackListener {
 
     private static final String NAV_ITEM_ID = "navItemId";
     private static ListPreferences listPreferences;
@@ -106,7 +102,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
     private NewsViewPager mNewsViewpagerFragment;
     private VehiclesViewPager mVehicleViewPager;
     private Toolbar toolbar;
-    private Drawer result = null;
+    private Drawer drawer = null;
     private SharedPreferences sharedPref;
     private SwitchPreferences switchPreferences;
     private CustomTabActivityHelper customTabActivityHelper;
@@ -227,7 +223,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
 
 
         Timber.d("Building DrawerBuilder");
-        result = new DrawerBuilder()
+        drawer = new DrawerBuilder()
                 .withActivity(this)
                 .withTranslucentStatusBar(true)
                 .withToolbar(toolbar)
@@ -291,7 +287,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
         if (!SupporterHelper.isSupporter()) {
             FirebaseAnalytics.getInstance(this).setUserProperty("supporter", "false");
             Timber.d("Adding footer.");
-            result.addStickyFooterItem(
+            drawer.addStickyFooterItem(
                     new PrimaryDrawerItem().withName(R.string.supporter_title)
                             .withDescription(R.string.supporter_main)
                             .withIcon(FontAwesome.Icon.faw_dollar_sign)
@@ -302,7 +298,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
         if (SupporterHelper.isSupporter()) {
             FirebaseAnalytics.getInstance(this).setUserProperty("supporter", "true");
             Timber.d("Show thanks for support.");
-            result.addStickyFooterItem(
+            drawer.addStickyFooterItem(
                     new PrimaryDrawerItem().withName(R.string.thank_you_for_support)
                             .withIcon(GoogleMaterial.Icon.gmd_mood)
                             .withIdentifier(R.id.menu_support)
@@ -478,9 +474,17 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else if (mNavItemId != R.id.menu_next_launch) {
+            drawer.setSelection(R.id.menu_next_launch);
+        } else if (mNavItemId == R.id.menu_next_launch) {
+            if(mUpcomingFragment != null){
+                if (mUpcomingFragment.isFilterShown()){
+                    mUpcomingFragment.checkFilter();
+                }
+            }
         } else {
             if (getFragmentManager().getBackStackEntryCount() != 0) {
                 getFragmentManager().popBackStack();
@@ -872,5 +876,10 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback {
             adviewEnabled = false;
             hideAd();
         }
+    }
+
+    @Override
+    public void onNavigateToLaunches() {
+        drawer.setSelection(R.id.menu_launches);
     }
 }

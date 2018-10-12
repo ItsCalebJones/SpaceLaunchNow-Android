@@ -2,6 +2,10 @@ package me.calebjones.spacelaunchnow.content.data.articles;
 
 import android.content.Context;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.List;
 
 import io.realm.Realm;
@@ -26,8 +30,8 @@ public class ArticleRepository {
         newsAPIClient = new NewsAPIClient(newsRetrofit);
     }
 
-    public void getArticles(boolean forceRefresh, final GetArticlesCallback callback) {
-        newsAPIClient.getNews(30, new Callback<List<Article>>() {
+    public void getArticles(boolean forceRefresh, int page, final GetArticlesCallback callback) {
+        newsAPIClient.getNews(30, page, new Callback<List<Article>>() {
             @Override
             public void onResponse(Call<List<Article>> call, Response<List<Article>> response) {
                 if (response.raw().cacheResponse() != null) {
@@ -45,6 +49,18 @@ public class ArticleRepository {
                 if (response.isSuccessful()) {
                     callback.onSuccess(response.body());
 
+                } else if (response.code() == 404) {
+                    try {
+                        String errorResponse = response.errorBody().string();
+                        JSONObject object = new JSONObject(errorResponse);
+                        String message = "Error";
+                        if (object.has("Error"))
+                            message = String.valueOf(object.get("Error"));
+
+                    } catch (IOException | JSONException e) {
+                        e.printStackTrace();
+                    }
+                    callback.onLastPageLoaded();
                 } else {
                     callback.onNetworkFailure();
                 }
@@ -64,6 +80,8 @@ public class ArticleRepository {
         void onFailure(String error, boolean showContent);
 
         void onNetworkFailure();
+
+        void onLastPageLoaded();
 
     }
 }
