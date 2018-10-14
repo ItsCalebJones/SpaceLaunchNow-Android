@@ -15,6 +15,9 @@ Add In Flight and Launch Success notification types and other small fixes.
 * Made it easier to edit notification channels on Android 8 and above.
 * Links to Translator application directly in the application.
 
+##### HOTFIX
+Changes to eliminate unintended wakelocks and issues with background crashes.
+
 ### Version 2.6.2
 #### Overview
 Finally, SpaceX landing information! It's a long time coming but its finally here. 

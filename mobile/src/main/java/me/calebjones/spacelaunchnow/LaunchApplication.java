@@ -29,6 +29,7 @@ import com.michaelflisar.gdprdialog.GDPR;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.pixplicity.easyprefs.library.Prefs;
+import com.squareup.leakcanary.LeakCanary;
 import com.twitter.sdk.android.core.DefaultLogger;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
@@ -77,6 +78,12 @@ public class LaunchApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
         context = this;
         firebaseMessaging = FirebaseMessaging.getInstance();
 
@@ -90,7 +97,6 @@ public class LaunchApplication extends Application {
         setupWebView();
         setupTheme();
         setupDrawableLoader();
-        checkSubscriptions();
         setupNotificationChannels();
         setupTwitter();
     }
@@ -378,6 +384,9 @@ public class LaunchApplication extends Application {
             Crashlytics.setBool("Network State", Utils.isNetworkAvailable(context));
             Crashlytics.setString("Network Info", Connectivity.getNetworkStatus(context));
             Crashlytics.setBool("Debug Logging", sharedPref.getBoolean("debug_logging", false));
+            Crashlytics.setBool("Supporter", SupporterHelper.isSupporter());
+            Crashlytics.setBool("Calendar Sync", switchPreferences.getCalendarStatus());
+            Crashlytics.setBool("Notifications", sharedPref.getBoolean("notifications_new_message", true));
         }).start();
     }
 
@@ -388,81 +397,6 @@ public class LaunchApplication extends Application {
             UpdateWearJob.scheduleJobNow();
             SyncCalendarJob.scheduleDailyJob();
         }).start();
-    }
-
-    private void checkSubscriptions() {
-        if (sharedPref.getBoolean("notifications_new_message", true)) {
-
-            if (switchPreferences.getSwitchNasa()) {
-                firebaseMessaging.subscribeToTopic("nasa");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("nasa");
-            }
-
-            if (switchPreferences.getSwitchISRO()) {
-                firebaseMessaging.subscribeToTopic("isro");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("isro");
-            }
-
-            if (switchPreferences.getSwitchRoscosmos()) {
-                firebaseMessaging.subscribeToTopic("roscosmos");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("roscosmos");
-            }
-
-            if (switchPreferences.getSwitchULA()) {
-                firebaseMessaging.subscribeToTopic("ula");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("ula");
-            }
-
-            if (switchPreferences.getSwitchArianespace()) {
-                firebaseMessaging.subscribeToTopic("arianespace");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("arianespace");
-            }
-
-            if (switchPreferences.getSwitchKSC()) {
-                firebaseMessaging.subscribeToTopic("ksc");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("ksc");
-            }
-
-            if (switchPreferences.getSwitchPles()) {
-                firebaseMessaging.subscribeToTopic("ples");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("ples");
-            }
-
-            if (switchPreferences.getSwitchVan()) {
-                firebaseMessaging.subscribeToTopic("van");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("van");
-            }
-
-            if (switchPreferences.getSwitchSpaceX()) {
-                firebaseMessaging.subscribeToTopic("spacex");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("spacex");
-            }
-
-            if (switchPreferences.getSwitchCASC()) {
-                firebaseMessaging.subscribeToTopic("casc");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("casc");
-            }
-
-            if (switchPreferences.getAllSwitch()) {
-                firebaseMessaging.subscribeToTopic("all");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("all");
-            }
-
-            firebaseMessaging.subscribeToTopic("notifications_new_message");
-        } else {
-            firebaseMessaging.unsubscribeFromTopic("notifications_new_message");
-        }
     }
 
     @Override

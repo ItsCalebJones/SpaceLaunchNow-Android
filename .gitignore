@@ -24,3 +24,4 @@ mobile/alpha/release/output.json
 *.lnk
 *.log
 wear/src/main/res/values/api_keys.xml
+.idea/markdown-navigator.xml

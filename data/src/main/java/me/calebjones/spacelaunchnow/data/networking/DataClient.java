@@ -84,6 +84,11 @@ public class DataClient {
         return call;
     }
 
+    public Call<LaunchResponse> getNextUpcomingLaunchesSynchronous(int limit, int offset, String location_ids, String lsp_ids) {
+        Call<LaunchResponse> call = spaceLaunchNowService.getUpcomingLaunches(limit, offset, "detailed", null, null, null, lsp_ids, location_ids);
+        return call;
+    }
+
     public Call<LaunchResponse> getUpcomingLaunches(int limit, int offset, String search, String lspName, Integer launchId, Callback<LaunchResponse> callback) {
         Call<LaunchResponse> call = spaceLaunchNowService.getUpcomingLaunches(limit, offset, "detailed", search, lspName, launchId, null, null);
 
