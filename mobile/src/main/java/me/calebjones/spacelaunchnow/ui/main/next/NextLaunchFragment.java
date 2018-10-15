@@ -38,6 +38,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import de.mrapp.android.preference.activity.PreferenceActivity;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.BuildConfig;
@@ -123,6 +124,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     private CallBackListener callBackListener;
     private boolean filterViewShowing;
     private boolean switchChanged;
+    Unbinder unbinder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -166,7 +168,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
         setHasOptionsMenu(true);
         view = inflater.inflate(R.layout.fragment_upcoming, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         setUpSwitches();
         no_data = view.findViewById(R.id.no_launches);
@@ -524,6 +526,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     public void onDestroyView() {
         super.onDestroyView();
         Timber.v("onDestroyView");
+        callBackListener = null;
+        mSwipeRefreshLayout.setOnRefreshListener(null);
+        unbinder.unbind();
     }
 
     private void confirm() {
