@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/weather_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?attr/titleBarColor"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:padding="@dimen/material_baseline_grid_1x"
+        android:text="@string/current_weather"
+        android:textAlignment="center"
+        android:textColor="@color/dark_primary_text_color_selector"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.github.pwittchen.weathericonview.WeatherIconView
+        android:id="@+id/weather_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:minHeight="96dp"
+        android:minWidth="96dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toStartOf="@+id/weather_current_temp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weather_title"
+        app:weatherIconColor="@android:color/black"
+        app:weatherIconResource="@drawable/ic_unknown"
+        app:weatherIconSize="96" />
+
+
+    <com.github.pwittchen.weathericonview.WeatherIconView
+        android:id="@+id/weather_percip_chance_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center|left"
+        android:minHeight="30dp"
+        android:minWidth="30dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="@+id/weather_summary_day"
+        app:layout_constraintTop_toBottomOf="@+id/weather_location"
+        app:weatherIconResource="@string/wi_umbrella"
+        app:weatherIconSize="30" />
+
+    <TextView
+        android:id="@+id/weather_percip_chance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:gravity="left|center"
+        android:text="--"
+        android:textColor="?android:textColorSecondary"
+        android:textIsSelectable="false"
+        android:textSize="15dp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="@+id/weather_percip_chance_icon"
+        app:layout_constraintStart_toEndOf="@+id/weather_percip_chance_icon"
+        app:layout_constraintTop_toTopOf="@+id/weather_percip_chance_icon"
+        tools:text="29%" />
+
+
+    <com.github.pwittchen.weathericonview.WeatherIconView
+        android:id="@+id/weather_wind_speed_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:gravity="center|left"
+        android:minHeight="30dp"
+        android:minWidth="30dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toEndOf="@+id/weather_percip_chance"
+        app:layout_constraintTop_toTopOf="@+id/weather_percip_chance_icon"
+        app:weatherIconResource="@string/wi_windy"
+        app:weatherIconSize="30" />
+
+    <TextView
+        android:id="@+id/weather_wind_speed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="4dp"
+        android:gravity="left|center"
+        android:text="--"
+        android:textColor="?android:textColorSecondary"
+        android:textIsSelectable="false"
+        android:textSize="15dp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="@+id/weather_wind_speed_icon"
+        app:layout_constraintEnd_toEndOf="@+id/weather_location"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/weather_wind_speed_icon"
+        app:layout_constraintTop_toTopOf="@+id/weather_wind_speed_icon"
+        tools:text="12 MpH" />
+
+
+    <TextView
+        android:id="@+id/weather_current_temp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="16dp"
+        android:gravity="center"
+        android:paddingTop="8dp"
+        android:text="--"
+        android:textColor="?android:textColorPrimary"
+        android:textIsSelectable="false"
+        android:textSize="40dp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/weather_icon"
+        app:layout_constraintTop_toTopOf="@+id/weather_icon"
+        tools:text="82 F" />
+
+    <TextView
+        android:id="@+id/weather_feels_like"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="--"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="15dp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toEndOf="@+id/weather_current_temp"
+        app:layout_constraintStart_toStartOf="@+id/weather_current_temp"
+        app:layout_constraintTop_toBottomOf="@+id/weather_current_temp"
+        tools:text="Feels like 89" />
+
+    <TextView
+        android:id="@+id/weather_low_high"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="-- | --"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="15dp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="@+id/weather_icon"
+        app:layout_constraintEnd_toEndOf="@+id/weather_feels_like"
+        app:layout_constraintStart_toStartOf="@+id/weather_feels_like"
+        app:layout_constraintTop_toBottomOf="@+id/weather_feels_like"
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="82 F | 87 F" />
+
+
+    <TextView
+        android:id="@+id/weather_summary_day"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="4dp"
+        android:gravity="center|left"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="15sp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weather_percip_chance_icon"
+        tools:text="Light rain tomorrow through Wednesday, with high temperatures falling." />
+
+    <TextView
+        android:id="@+id/weather_location"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center|left"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="20sp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toEndOf="@+id/weather_summary_day"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/weather_summary_day"
+        app:layout_constraintTop_toBottomOf="@+id/weather_icon"
+        tools:text="Tanegashima, Japan" />
+
+
+    <com.github.pwittchen.weathericonview.WeatherIconView
+        android:id="@+id/day_two_weather_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toStartOf="@+id/day_three_weather_icon"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weather_summary_day"
+        app:weatherIconColor="@android:color/black"
+        app:weatherIconSize="40" />
+
+    <TextView
+        android:id="@+id/day_two_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="--"
+        android:textColor="?android:textColorSecondary"
+        android:textIsSelectable="false"
+        android:textSize="15sp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toEndOf="@+id/day_two_weather_icon"
+        app:layout_constraintStart_toStartOf="@+id/day_two_weather_icon"
+        app:layout_constraintTop_toBottomOf="@+id/day_two_weather_icon"
+        tools:text="Fri" />
+
+    <TextView
+        android:id="@+id/day_two_low_high"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="-- | --"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="15sp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toEndOf="@+id/day_two_day"
+        app:layout_constraintStart_toStartOf="@+id/day_two_day"
+        app:layout_constraintTop_toBottomOf="@+id/day_two_day"
+        tools:text="80 F | 84 F" />
+
+
+    <com.github.pwittchen.weathericonview.WeatherIconView
+        android:id="@+id/day_two_precip_prob_icon"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toStartOf="@+id/day_two_precip_prob"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="@+id/day_two_low_high"
+        app:layout_constraintTop_toBottomOf="@+id/day_two_low_high"
+        app:weatherIconResource="@string/wi_umbrella"
+        app:weatherIconSize="20" />
+
+    <TextView
+        android:id="@+id/day_two_precip_prob"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="--"
+        android:textAlignment="textStart"
+        android:textColor="?android:textColorSecondary"
+        android:textIsSelectable="false"
+        android:textSize="12sp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="@+id/day_two_precip_prob_icon"
+        app:layout_constraintEnd_toEndOf="@+id/day_two_low_high"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/day_two_precip_prob_icon"
+        app:layout_constraintTop_toTopOf="@+id/day_two_precip_prob_icon"
+        tools:text="45%" />
+
+
+    <com.github.pwittchen.weathericonview.WeatherIconView
+        android:id="@+id/day_two_weather_wind_speed_icon"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/day_two_precip_prob_icon"
+        app:layout_constraintStart_toStartOf="@+id/day_two_precip_prob_icon"
+        app:layout_constraintTop_toBottomOf="@+id/day_two_precip_prob_icon"
+        app:weatherIconResource="@string/wi_windy"
+        app:weatherIconSize="20" />
+
+    <TextView
+        android:id="@+id/day_two_weather_wind_speed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="--"
+        android:textAlignment="textStart"
+        android:textColor="?android:textColorSecondary"
+        android:textIsSelectable="false"
+        android:textSize="12sp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="@+id/day_two_weather_wind_speed_icon"
+        app:layout_constraintEnd_toStartOf="@+id/day_three_weather_wind_speed_icon"
+        app:layout_constraintStart_toEndOf="@+id/day_two_weather_wind_speed_icon"
+        app:layout_constraintTop_toTopOf="@+id/day_two_weather_wind_speed_icon"
+        tools:text="18 MpH" />
+
+
+    <com.github.pwittchen.weathericonview.WeatherIconView
+        android:id="@+id/day_three_weather_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toStartOf="@+id/day_four_weather_icon"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/day_two_weather_icon"
+        app:layout_constraintTop_toBottomOf="@+id/weather_summary_day"
+        app:weatherIconColor="@android:color/black"
+        app:weatherIconSize="40" />
+
+    <TextView
+        android:id="@+id/day_three_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="--"
+        android:textColor="?android:textColorSecondary"
+        android:textIsSelectable="false"
+        android:textSize="15sp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toEndOf="@+id/day_three_weather_icon"
+        app:layout_constraintStart_toStartOf="@+id/day_three_weather_icon"
+        app:layout_constraintTop_toBottomOf="@+id/day_three_weather_icon"
+        tools:text="Sat" />
+
+    <TextView
+        android:id="@+id/day_three_low_high"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp "
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="-- | --"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="15sp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toEndOf="@+id/day_three_day"
+        app:layout_constraintStart_toStartOf="@+id/day_three_day"
+        app:layout_constraintTop_toBottomOf="@+id/day_three_day"
+        tools:text="82 F | 87 F" />
+
+
+    <com.github.pwittchen.weathericonview.WeatherIconView
+        android:id="@+id/day_three_precip_prob_icon"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toStartOf="@+id/day_three_precip_prob"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/day_three_low_high"
+        app:layout_constraintTop_toBottomOf="@+id/day_three_low_high"
+        app:weatherIconResource="@string/wi_umbrella"
+        app:weatherIconSize="20" />
+
+    <TextView
+        android:id="@+id/day_three_precip_prob"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="--"
+        android:textAlignment="textStart"
+        android:textColor="?android:textColorSecondary"
+        android:textIsSelectable="false"
+        android:textSize="12sp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="@+id/day_three_precip_prob_icon"
+        app:layout_constraintEnd_toEndOf="@+id/day_three_low_high"
+        app:layout_constraintStart_toEndOf="@+id/day_three_precip_prob_icon"
+        app:layout_constraintTop_toTopOf="@+id/day_three_precip_prob_icon"
+        tools:text="12%" />
+
+
+    <com.github.pwittchen.weathericonview.WeatherIconView
+        android:id="@+id/day_three_weather_wind_speed_icon"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/day_three_precip_prob_icon"
+        app:layout_constraintStart_toStartOf="@+id/day_three_precip_prob_icon"
+        app:layout_constraintTop_toBottomOf="@+id/day_three_precip_prob_icon"
+        app:weatherIconResource="@string/wi_windy"
+        app:weatherIconSize="20" />
+
+    <TextView
+        android:id="@+id/day_three_weather_wind_speed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="--"
+        android:textAlignment="textStart"
+        android:textColor="?android:textColorSecondary"
+        android:textIsSelectable="false"
+        android:textSize="12sp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="@+id/day_three_weather_wind_speed_icon"
+        app:layout_constraintEnd_toStartOf="@+id/day_four_weather_wind_speed_icon"
+        app:layout_constraintStart_toEndOf="@+id/day_three_weather_wind_speed_icon"
+        app:layout_constraintTop_toTopOf="@+id/day_three_weather_wind_speed_icon"
+        tools:text="9 MpH" />
+
+
+    <com.github.pwittchen.weathericonview.WeatherIconView
+        android:id="@+id/day_four_weather_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/day_three_weather_icon"
+        app:layout_constraintTop_toBottomOf="@+id/weather_summary_day"
+        app:weatherIconColor="@android:color/black"
+        app:weatherIconSize="40" />
+
+    <TextView
+        android:id="@+id/day_four_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="--"
+        android:textColor="?android:textColorSecondary"
+        android:textIsSelectable="false"
+        android:textSize="15sp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toEndOf="@+id/day_four_weather_icon"
+        app:layout_constraintStart_toStartOf="@+id/day_four_weather_icon"
+        app:layout_constraintTop_toBottomOf="@+id/day_four_weather_icon"
+        tools:text="Sun" />
+
+    <TextView
+        android:id="@+id/day_four_low_high"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="-- | --"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="15sp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toEndOf="@+id/day_four_day"
+        app:layout_constraintStart_toStartOf="@+id/day_four_day"
+        app:layout_constraintTop_toBottomOf="@+id/day_four_day"
+        tools:text="80 F | 84 F" />
+
+
+    <com.github.pwittchen.weathericonview.WeatherIconView
+        android:id="@+id/day_four_precip_prob_icon"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toStartOf="@+id/day_four_precip_prob"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/day_four_low_high"
+        app:layout_constraintTop_toBottomOf="@+id/day_four_low_high"
+        app:weatherIconResource="@string/wi_umbrella"
+        app:weatherIconSize="20" />
+
+    <TextView
+        android:id="@+id/day_four_precip_prob"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="--"
+        android:textAlignment="textStart"
+        android:textColor="?android:textColorSecondary"
+        android:textIsSelectable="false"
+        android:textSize="12sp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="@+id/day_four_precip_prob_icon"
+        app:layout_constraintEnd_toEndOf="@+id/day_four_low_high"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/day_four_precip_prob_icon"
+        app:layout_constraintTop_toTopOf="@+id/day_four_precip_prob_icon"
+        tools:text="78%" />
+
+
+    <com.github.pwittchen.weathericonview.WeatherIconView
+        android:id="@+id/day_four_weather_wind_speed_icon"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/day_four_precip_prob_icon"
+        app:layout_constraintStart_toStartOf="@+id/day_four_precip_prob_icon"
+        app:layout_constraintTop_toBottomOf="@+id/day_four_precip_prob_icon"
+        app:weatherIconResource="@string/wi_windy"
+        app:weatherIconSize="20" />
+
+    <TextView
+        android:id="@+id/day_four_weather_wind_speed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="--"
+        android:textAlignment="textStart"
+        android:textColor="?android:textColorSecondary"
+        android:textIsSelectable="false"
+        android:textSize="12sp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="@+id/day_four_weather_wind_speed_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/day_four_weather_wind_speed_icon"
+        app:layout_constraintTop_toTopOf="@+id/day_four_weather_wind_speed_icon"
+        tools:text="19 MpH" />
+
+    <android.support.constraint.Group
+        android:id="@+id/three_day_forecast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="day_two_weather_icon, day_two_day, day_two_low_high, day_two_precip_prob_icon, day_two_precip_prob, day_two_weather_wind_speed_icon, day_two_weather_wind_speed,
+                                                   day_three_weather_icon, day_three_day, day_three_low_high, day_three_precip_prob_icon, day_three_precip_prob, day_three_weather_wind_speed_icon, day_three_weather_wind_speed,
+                                                   day_four_weather_icon, day_four_day, day_four_low_high, day_four_precip_prob_icon, day_four_precip_prob, day_four_weather_wind_speed_icon, day_four_weather_wind_speed_icon, day_four_weather_wind_speed" />
+
+
+</android.support.constraint.ConstraintLayout>
