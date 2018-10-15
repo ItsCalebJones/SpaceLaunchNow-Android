@@ -16,6 +16,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
@@ -60,6 +61,7 @@ public class UpcomingLauncherLaunchesFragment extends BaseFragment {
     private Integer launcherId = null;
 
     private UpcomingLauncherLaunchesFragment.OnFragmentInteractionListener mListener;
+    private Unbinder unbinder;
 
     public UpcomingLauncherLaunchesFragment() {
         // Required empty public constructor
@@ -103,7 +105,7 @@ public class UpcomingLauncherLaunchesFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_launch_list, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         adapter = new ListAdapter(context);
         linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
@@ -127,6 +129,13 @@ public class UpcomingLauncherLaunchesFragment extends BaseFragment {
         fetchData(true);
         // Inflate the layout for this fragment
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Timber.v("onDestroyView");
+        unbinder.unbind();
     }
 
 

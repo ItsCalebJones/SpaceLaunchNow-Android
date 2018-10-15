@@ -27,6 +27,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.RetroFitFragment;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
@@ -89,6 +90,7 @@ public class MissionDetailFragment extends RetroFitFragment {
     private OnFragmentInteractionListener mListener;
     private Context context;
     public Launch detailLaunch;
+    private Unbinder unbinder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,9 +107,16 @@ public class MissionDetailFragment extends RetroFitFragment {
         context = getContext();
         view = inflater.inflate(R.layout.detail_launch_payload, container, false);
 
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Timber.v("onDestroyView");
+        unbinder.unbind();
     }
 
     @Override

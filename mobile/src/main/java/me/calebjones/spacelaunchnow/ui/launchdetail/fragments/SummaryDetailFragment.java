@@ -58,6 +58,7 @@ import java.util.regex.Pattern;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -209,6 +210,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     View youTubeView;
 
     public Disposable var;
+    private Unbinder unbinder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -233,7 +235,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
         View view = inflater.inflate(R.layout.detail_launch_summary, container, false);
 
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
         youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.add(R.id.youtube_view, youTubePlayerFragment).commit();
@@ -245,6 +247,13 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         }
 
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Timber.v("onDestroyView");
+        unbinder.unbind();
     }
 
     @Override

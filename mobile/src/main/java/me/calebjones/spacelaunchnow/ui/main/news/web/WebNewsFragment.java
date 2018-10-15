@@ -19,6 +19,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
@@ -28,6 +29,7 @@ import me.calebjones.spacelaunchnow.data.models.news.Article;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.views.EndlessRecyclerViewScrollListener;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
+import timber.log.Timber;
 
 public class WebNewsFragment extends RetroFitFragment {
 
@@ -49,6 +51,7 @@ public class WebNewsFragment extends RetroFitFragment {
     private boolean canLoadMore = true;
     private boolean statefulStateContentShow = false;
     private EndlessRecyclerViewScrollListener scrollListener;
+    Unbinder unbinder;
 
 
     @Override
@@ -58,7 +61,7 @@ public class WebNewsFragment extends RetroFitFragment {
         articleRepository = new ArticleRepository(context, getNewsRetrofit());
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_news, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
         articleAdapter = new ArticleAdapter(context, getActivity());
         linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -95,6 +98,14 @@ public class WebNewsFragment extends RetroFitFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Timber.v("onDestroyView");
+        swipeRefreshLayout.setOnRefreshListener(null);
+        unbinder.unbind();
     }
 
     @Override

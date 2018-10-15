@@ -22,6 +22,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
@@ -61,6 +62,7 @@ public class AgencyDetailFragment extends BaseFragment {
     private OnFragmentInteractionListener mListener;
 
     public static Launch detailLaunch;
+    private Unbinder unbinder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,7 +84,7 @@ public class AgencyDetailFragment extends BaseFragment {
 
         view = inflater.inflate(R.layout.detail_launch_agency, container, false);
 
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         Timber.v("Creating views...");
 
@@ -93,6 +95,13 @@ public class AgencyDetailFragment extends BaseFragment {
         }
 
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Timber.v("onDestroyView");
+        unbinder.unbind();
     }
 
     @Override
