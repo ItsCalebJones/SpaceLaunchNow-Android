@@ -11,6 +11,7 @@ import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
 import com.pixplicity.easyprefs.library.Prefs;
 
+import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -44,7 +45,8 @@ public class SyncCalendarJob extends Job {
         Timber.v("Scheduling UpdateWearJob...");
 
         JobRequest.Builder builder = new JobRequest.Builder(SyncCalendarJob.TAG)
-                .setPeriodic(TimeUnit.DAYS.toMillis(1), TimeUnit.HOURS.toMillis(2))
+                .setPeriodic(TimeUnit.DAYS.toMillis(1))
+                .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
                 .setUpdateCurrent(true);
 
         builder.build().schedule();
@@ -55,48 +57,30 @@ public class SyncCalendarJob extends Job {
     protected Result onRunJob(Params params) {
         Timber.d("Running job ID: %s Tag: %s", params.getId(), params.getTag());
         if (Prefs.getBoolean("calendar_sync_state", false)) {
-            final CountDownLatch countDownLatch = new CountDownLatch(1);
             Context context = getContext();
-            new Thread() {
-                @Override
-                public void run() {
-                    DataSaver dataSaver = new DataSaver(context);
-                    String locationIds = FilterBuilder.getLocationIds(context);
-                    String lspIds = FilterBuilder.getLSPIds(context);
-                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-                    int count = Integer.parseInt(sharedPref.getString("calendar_count", "5"));
-                    // do async operation here
-                    DataClient.getInstance().getNextUpcomingLaunches(count,0, locationIds, lspIds,  new Callback<LaunchResponse>() {
-                        @Override
-                        public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
-                            if (response.isSuccessful()) {
-                                LaunchResponse launchResponse = response.body();
-
-                                Timber.v("UpcomingLaunches Count: %s", launchResponse.getCount());
-                                dataSaver.saveLaunchesToRealm(launchResponse.getLaunches(), false);
-                            }
-                            CalendarSyncManager calendarSyncManager = new CalendarSyncManager(getContext());
-                            calendarSyncManager.resyncAllEvents();
-                            countDownLatch.countDown();
-                        }
-
-                        @Override
-                        public void onFailure(Call<LaunchResponse> call, Throwable t) {
-                            CalendarSyncManager calendarSyncManager = new CalendarSyncManager(getContext());
-                            calendarSyncManager.resyncAllEvents();
-                            countDownLatch.countDown();
-                        }
-                    });
-                }
-            }.start();
-
+            DataSaver dataSaver = new DataSaver(context);
+            String locationIds = FilterBuilder.getLocationIds(context);
+            String lspIds = FilterBuilder.getLSPIds(context);
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+            int count = Integer.parseInt(sharedPref.getString("calendar_count", "5"));
+            Call<LaunchResponse> call = DataClient.getInstance().getNextUpcomingLaunchesSynchronous(count, 0, locationIds, lspIds);
             try {
-                countDownLatch.await();
-            } catch (InterruptedException ignored) {
-
+                Response<LaunchResponse> response = call.execute();
+                if (response.isSuccessful()) {
+                    LaunchResponse launchResponse = response.body();
+                    if (launchResponse != null) {
+                        Timber.v("UpcomingLaunches Count: %s", launchResponse.getCount());
+                        dataSaver.saveLaunchesToRealm(launchResponse.getLaunches(), false);
+                        CalendarSyncManager calendarSyncManager = new CalendarSyncManager(getContext());
+                        calendarSyncManager.resyncAllEvents();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
         return Result.SUCCESS;
     }
 }
+
 
