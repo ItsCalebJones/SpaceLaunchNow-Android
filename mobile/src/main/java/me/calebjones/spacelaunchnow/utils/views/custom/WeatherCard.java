@@ -120,23 +120,29 @@ public class WeatherCard extends CardView {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    public void setNightMode(boolean nightMode){
+    public void setNightMode(boolean nightMode) {
         this.nightMode = nightMode;
-    };
+    }
+
+    ;
 
     public void setWeather(Forecast forecast, String location, boolean current, boolean nightMode) {
         this.forecast = forecast;
         this.current = current;
         this.location = location;
         this.nightMode = nightMode;
-        updateWeatherView(forecast, current, location);
+        if (current) {
+            updateCurrentWeatherView(forecast, location);
+        } else {
+            updatePastWeatherView(forecast, location);
+        }
     }
 
-    public void setTitle(String title){
+    public void setTitle(String title) {
         weatherTitle.setText(title);
     }
 
-    private void updateWeatherView(Forecast forecast, boolean current, String location) {
+    private void updateCurrentWeatherView(Forecast forecast, String location) {
         final String temp;
         final String speed;
         String precip;
@@ -162,12 +168,7 @@ public class WeatherCard extends CardView {
                 weatherCurrentTemp.setText(currentTemp);
             }
             if (forecast.getCurrently().getApparentTemperature() != null) {
-                String feelsLikeTemp;
-                if (current) {
-                    feelsLikeTemp = "Feels like ";
-                } else {
-                    feelsLikeTemp = "Felt like ";
-                }
+                String feelsLikeTemp = "Feels like ";
                 feelsLikeTemp = feelsLikeTemp + String.valueOf(Math.round(forecast.getCurrently().getApparentTemperature())) + (char) 0x00B0;
                 weatherFeelsLike.setText(feelsLikeTemp);
             }
@@ -272,6 +273,81 @@ public class WeatherCard extends CardView {
 
         if (forecast.getDaily() != null && forecast.getDaily().getSummary() != null) {
             weatherSummaryDay.setText(forecast.getDaily().getSummary());
+        } else if (forecast.getCurrently() != null && forecast.getCurrently().getSummary() != null) {
+            weatherSummaryDay.setText(forecast.getCurrently().getSummary());
+        } else {
+            weatherSummaryDay.setVisibility(View.GONE);
+        }
+
+        weatherLocation.setText(location);
+
+        if (nightMode) {
+            dayTwoWeatherWindIcon.setIconColor(Color.WHITE);
+            dayTwoWeatherPrecipIcon.setIconColor(Color.WHITE);
+            dayThreeWeatherWindIcon.setIconColor(Color.WHITE);
+            dayThreeWeatherPrecipIcon.setIconColor(Color.WHITE);
+            dayFourWeatherWindIcon.setIconColor(Color.WHITE);
+            dayFourWeatherPrecipIcon.setIconColor(Color.WHITE);
+            weatherPrecipIcon.setIconColor(Color.WHITE);
+            weatherSpeedIcon.setIconColor(Color.WHITE);
+        }
+    }
+
+    private void updatePastWeatherView(Forecast forecast, String location) {
+        final String temp;
+        final String speed;
+        String precip;
+        String pressure;
+        String visibility;
+
+        if (sharedPref.getBoolean("weather_US_SI", true)) {
+            temp = "F";
+            speed = "Mph";
+            precip = "in.";
+            pressure = "mb";
+            visibility = "mile";
+        } else {
+            temp = "C";
+            speed = "m/s";
+            precip = "cm";
+            pressure = "hPa";
+            visibility = "km";
+        }
+        if (forecast.getCurrently() != null) {
+            if (forecast.getCurrently().getTemperature() != null) {
+                String currentTemp = String.valueOf(Math.round(forecast.getCurrently().getTemperature())) + (char) 0x00B0 + " " + temp;
+                weatherCurrentTemp.setText(currentTemp);
+            }
+            if (forecast.getCurrently().getApparentTemperature() != null) {
+                String feelsLikeTemp = "Feels like ";
+                feelsLikeTemp = feelsLikeTemp + String.valueOf(Math.round(forecast.getCurrently().getApparentTemperature())) + (char) 0x00B0;
+                weatherFeelsLike.setText(feelsLikeTemp);
+            }
+
+            if (forecast.getCurrently().getWindSpeed() != null) {
+                String windSpeed = String.valueOf(Math.round(forecast.getCurrently().getWindSpeed())) + " " + speed;
+                weatherWindSpeed.setText(windSpeed);
+            }
+        }
+        if (forecast.getDaily() != null && forecast.getDaily().getDataPoints() != null && forecast.getDaily().getDataPoints().size() > 0) {
+            String highTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(0).getTemperatureMax()));
+            String lowTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(0).getTemperatureMin()));
+            String lowHigh = lowTemp + (char) 0x00B0 + " " + temp + " | " + highTemp + (char) 0x00B0 + " " + temp;
+            weatherLowHigh.setText(lowHigh);
+
+            if (forecast.getDaily().getDataPoints().get(0).getPrecipProbability() != null) {
+                String precipProb = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(0).getPrecipProbability() * 100) + "%");
+                weatherPercipChance.setText(precipProb);
+            }
+            threeDayForecast.setVisibility(View.GONE);
+        }
+
+        if (forecast.getCurrently().getIcon() != null && forecast.getCurrently().getIcon().getText() != null) {
+            setIconView(weatherIcon, forecast.getCurrently().getIcon().getText());
+        }
+
+        if (forecast.getDaily() != null && forecast.getDaily().getDataPoints() != null && forecast.getDaily().getDataPoints().size() > 0 && forecast.getDaily().getDataPoints().get(0).getSummary() != null) {
+            weatherSummaryDay.setText(forecast.getDaily().getDataPoints().get(0).getSummary());
         } else if (forecast.getCurrently() != null && forecast.getCurrently().getSummary() != null) {
             weatherSummaryDay.setText(forecast.getCurrently().getSummary());
         } else {

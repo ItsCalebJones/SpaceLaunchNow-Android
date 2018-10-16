@@ -180,7 +180,7 @@
 
         <me.calebjones.spacelaunchnow.utils.views.custom.WeatherCard
             android:id="@+id/weather_card"
-            android:layout_width="match_parent"
+            android:layout_width="@dimen/max_width"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/material_baseline_grid_4x"

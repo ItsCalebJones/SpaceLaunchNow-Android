@@ -195,7 +195,9 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                 unit = Unit.SI;
             }
 
-            ForecastClient.getInstance().getForecast(latitude, longitude, (int) detailLaunch.getNet().getTime() / 1000, null, unit, null, false, new Callback<Forecast>() {
+            long longTime = detailLaunch.getNet().getTime() / 1000;
+            int time = (int) longTime;
+            ForecastClient.getInstance().getForecast(latitude, longitude, time, null, unit, null, false, new Callback<Forecast>() {
                 @Override
                 public void onResponse(Call<Forecast> forecastCall, Response<Forecast> response) {
                     if (response.isSuccessful()) {
