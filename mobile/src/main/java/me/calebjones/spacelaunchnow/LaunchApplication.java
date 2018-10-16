@@ -29,7 +29,6 @@ import com.michaelflisar.gdprdialog.GDPR;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.pixplicity.easyprefs.library.Prefs;
-import com.squareup.leakcanary.LeakCanary;
 import com.twitter.sdk.android.core.DefaultLogger;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
@@ -78,12 +77,6 @@ public class LaunchApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            return;
-        }
-        LeakCanary.install(this);
         context = this;
         firebaseMessaging = FirebaseMessaging.getInstance();
 
@@ -240,6 +233,7 @@ public class LaunchApplication extends Application {
                 Realm realm = Realm.getDefaultInstance();
                 realm.executeTransaction(realm1 -> realm1.copyToRealmOrUpdate(product));
                 realm.close();
+                Crashlytics.setBool("Supporter", SupporterHelper.isSupporter());
             }
         }
     }
@@ -384,7 +378,6 @@ public class LaunchApplication extends Application {
             Crashlytics.setBool("Network State", Utils.isNetworkAvailable(context));
             Crashlytics.setString("Network Info", Connectivity.getNetworkStatus(context));
             Crashlytics.setBool("Debug Logging", sharedPref.getBoolean("debug_logging", false));
-            Crashlytics.setBool("Supporter", SupporterHelper.isSupporter());
             Crashlytics.setBool("Calendar Sync", switchPreferences.getCalendarStatus());
             Crashlytics.setBool("Notifications", sharedPref.getBoolean("notifications_new_message", true));
         }).start();

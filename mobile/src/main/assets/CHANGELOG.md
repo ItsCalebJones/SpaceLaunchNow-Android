@@ -16,7 +16,8 @@ Add In Flight and Launch Success notification types and other small fixes.
 * Links to Translator application directly in the application.
 
 ##### HOTFIX
-Changes to eliminate unintended wakelocks and issues with background crashes.
+* Changes to eliminate unintended wakelocks and issues with background crashes.
+* Fix an issue preventing closing the app with the back button.
 
 ### Version 2.6.2
 #### Overview

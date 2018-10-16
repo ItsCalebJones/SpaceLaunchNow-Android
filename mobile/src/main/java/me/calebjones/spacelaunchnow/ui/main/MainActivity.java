@@ -474,15 +474,16 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
+        if (drawer.isDrawerOpen()) {
+            drawer.closeDrawer();
         } else if (mNavItemId != R.id.menu_next_launch) {
             drawer.setSelection(R.id.menu_next_launch);
         } else if (mNavItemId == R.id.menu_next_launch) {
             if(mUpcomingFragment != null){
                 if (mUpcomingFragment.isFilterShown()){
                     mUpcomingFragment.checkFilter();
+                }else {
+                    checkExitApp();
                 }
             } else {
                 checkExitApp();
