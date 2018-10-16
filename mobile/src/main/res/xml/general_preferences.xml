@@ -2,15 +2,6 @@
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/launch_tracking">
-    <PreferenceCategory android:title="@string/default_launch_count">
-        <com.afollestad.materialdialogs.prefs.MaterialListPreference
-            android:defaultValue="5"
-            android:entries="@array/upcoming_array"
-            android:entryValues="@array/upcoming_array_values"
-            android:key="upcoming_value"
-            android:summary="@string/upcoming_launches_summary"
-            android:title="@string/upcoming_launches" />
-    </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/background_sync">
         <SwitchPreference
@@ -25,11 +16,6 @@
             android:summaryOn="@string/data_saver_on"
             android:summaryOff="@string/data_saver_off"
             android:title="@string/data_saver" />
-        <SwitchPreference
-            android:dependency="background_sync"
-            android:key="wifi_only"
-            android:summary="@string/wifi_only_summary"
-            android:title="@string/wifi_only" />
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -41,16 +27,6 @@
             android:key="calendar_sync_state"
             android:summary="@string/auto_calendar_summary"
             android:title="@string/auto_calendar" />
-
-        <com.afollestad.materialdialogs.prefs.MaterialListPreference
-            android:defaultValue="5"
-            android:dependency="calendar_sync_state"
-            android:dialogMessage="@string/event_count_dialog"
-            android:entries="@array/upcoming_array"
-            android:entryValues="@array/upcoming_array_values"
-            android:key="calendar_count"
-            android:summary="@string/event_count_summary"
-            android:title="@string/event_count" />
 
         <com.afollestad.materialdialogs.prefs.MaterialListPreference
             android:defaultValue="0"

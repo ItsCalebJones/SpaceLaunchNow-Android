@@ -312,7 +312,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     public void fetchData(boolean forceRefresh) {
         Timber.v("Sending GET_UP_LAUNCHES");
-        preferredCount = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
+        preferredCount = 10;
         nextLaunchDataRepository.getNextUpcomingLaunches(preferredCount, forceRefresh, new Callbacks.NextLaunchesCallback() {
             @Override
             public void onLaunchesLoaded(RealmResults<Launch> launches) {
@@ -338,7 +338,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     private void updateAdapter(RealmResults<Launch> launches) {
         adapter.clear();
-        preferredCount = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
+        preferredCount = 10;
         if (launches.size() >= preferredCount) {
             no_data.setVisibility(View.GONE);
             viewMoreLaunches.setVisibility(View.VISIBLE);

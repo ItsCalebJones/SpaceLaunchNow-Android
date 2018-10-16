@@ -84,7 +84,7 @@ public class CalendarSyncManager extends BaseManager {
 
         RealmList<Launch> launchResults = new RealmList<>();
 
-        int size = Integer.parseInt(sharedPref.getString("calendar_count", "5"));
+        int size = 10;
 
         if (launches.size() > size) {
             launchResults.addAll(launches.subList(0, size));

@@ -61,8 +61,7 @@ public class SyncCalendarJob extends Job {
             DataSaver dataSaver = new DataSaver(context);
             String locationIds = FilterBuilder.getLocationIds(context);
             String lspIds = FilterBuilder.getLSPIds(context);
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-            int count = Integer.parseInt(sharedPref.getString("calendar_count", "5"));
+            int count = 10;
             Call<LaunchResponse> call = DataClient.getInstance().getNextUpcomingLaunchesSynchronous(count, 0, locationIds, lspIds);
             try {
                 Response<LaunchResponse> response = call.execute();
