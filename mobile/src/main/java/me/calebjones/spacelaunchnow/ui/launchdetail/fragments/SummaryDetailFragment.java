@@ -903,7 +903,9 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        timer.cancel();
+        if (timer != null) {
+            timer.cancel();
+        }
         unbinder.unbind();
     }
 }

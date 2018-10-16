@@ -5,54 +5,35 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Chronometer;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
-import com.bumptech.glide.load.MultiTransformation;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.realm.RealmList;
-import jp.wasabeef.glide.transformations.BlurTransformation;
-import jp.wasabeef.glide.transformations.ColorFilterTransformation;
-import jp.wasabeef.glide.transformations.gpu.BrightnessFilterTransformation;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.data.LaunchStatus;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
@@ -65,11 +46,9 @@ import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivit
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
-import me.calebjones.spacelaunchnow.utils.transformations.SaturationTransformation;
 import me.calebjones.spacelaunchnow.utils.views.CountDownTimer;
+import me.calebjones.spacelaunchnow.utils.views.custom.CountDownView;
 import timber.log.Timber;
-
-import static me.calebjones.spacelaunchnow.utils.GlideOptions.bitmapTransform;
 
 /**
  * Adapts UpcomingLaunch data to the LaunchFragment
@@ -80,33 +59,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
     public int position;
     private RealmList<Launch> launchList;
     private Context context;
-    private Calendar rightNow;
-    private SharedPreferences sharedPref;
-    private Boolean night;
-    private Boolean play = false;
-    private int nightColor;
-    private int color;
-    private int accentColor;
+
 
     public CardAdapter(Context context) {
-        rightNow = Calendar.getInstance();
         launchList = new RealmList<>();
         this.context = context;
-        if (Utils.checkPlayServices(this.context)) {
-            play = true;
-        }
-        nightColor = ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color);
-        color = ContextCompat.getColor(context, R.color.colorTextSecondary);
-        accentColor = ContextCompat.getColor(context, R.color.colorAccent);
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         sharedPreference = ListPreferences.getInstance(context);
-        night = sharedPreference.isNightModeActive(context);
-    }
-
-    public static Calendar DateToCalendar(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        return cal;
     }
 
     public void addItems(List<Launch> launchList) {
@@ -162,13 +120,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
                 }
 
-                double dlat = 0;
-                double dlon = 0;
-                if (launchItem.getPad() != null) {
-                    dlat = Double.parseDouble(launchItem.getPad().getLatitude());
-                    dlon = Double.parseDouble(launchItem.getPad().getLongitude());
-                }
-
                 holder.landingView.setVisibility(View.INVISIBLE);
                 if (launchItem.getRocket().getFirstStage() != null && launchItem.getRocket().getFirstStage().size() >= 1){
                     if (launchItem.getRocket().getFirstStage().size() > 1){
@@ -197,13 +148,13 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                             .load(launchItem.getRocket().getConfiguration().getImageUrl())
                             .placeholder(R.drawable.placeholder)
                             .into(holder.launchImage);
-                } else if (launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getImageUrl() != null) {
+                } else if (launchItem.getRocket().getConfiguration().getLaunchServiceProvider() != null && launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getImageUrl() != null) {
                     holder.launchImage.setVisibility(View.VISIBLE);
                     GlideApp.with(context)
                             .load(launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getImageUrl())
                             .placeholder(R.drawable.placeholder)
                             .into(holder.launchImage);
-                } else if (launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getLogoUrl() != null) {
+                } else if (launchItem.getRocket().getConfiguration().getLaunchServiceProvider() != null && launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getLogoUrl() != null) {
                     holder.launchImage.setVisibility(View.VISIBLE);
                     GlideApp.with(context)
                             .load(launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getLogoUrl())
@@ -217,68 +168,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 holder.statusPill.setCardBackgroundColor(LaunchStatus.getLaunchStatusColor(context, launchItem.getStatus().getId()));
 
                 //If timestamp is available calculate TMinus and date.
-                holder.countdownStatus.setText("");
-                holder.countdownStatus.setVisibility(View.GONE);
                 if (launchItem.getNet().getTime() > 0) {
-                    //TODO VERIFY THIS STILL WORKS
-                    long longdate = launchItem.getNet().getTime();
-                    final Date date = new Date(longdate);
-
-                    Calendar launchDate = DateToCalendar(date);
-                    Calendar now = rightNow;
-
-                    now.setTimeInMillis(System.currentTimeMillis());
-                    if (holder.timer != null) {
-                        Timber.v("Timer is not null, cancelling.");
-                        holder.timer.cancel();
-                    }
-
-                    if (holder.var != null){
-                        holder.var.dispose();
-                    }
-
-                    final int status = launchItem.getStatus().getId();
-                    final String hold = launchItem.getHoldreason();
-
-                    long timeToFinish = launchDate.getTimeInMillis() - now.getTimeInMillis();
-
-                    if (timeToFinish > 0 && launchItem.getStatus().getId() == 1) {
-                        holder.timer = new CountDownTimer(timeToFinish, 1000) {
-                            StringBuilder time = new StringBuilder();
-
-                            @Override
-                            public void onFinish() {
-                                Timber.v("Countdown finished.");
-                                holder.countdownDays.setText("00");
-                                holder.countdownHours.setText("00");
-                                holder.countdownMinutes.setText("00");
-                                holder.countdownSeconds.setText("00");
-                                holder.countdownStatus.setVisibility(View.VISIBLE);
-                                holder.countdownStatus.setText("+");
-                                countUpTimer(holder, longdate);
-                            }
-
-                            @Override
-                            public void onTick(long millisUntilFinished) {
-                                time.setLength(0);
-                                setCountdownView(millisUntilFinished, holder);
-                            }
-                        }.start();
-                    } else if (launchItem.getStatus().getId() == 3 || launchItem.getStatus().getId() == 4 || launchItem.getStatus().getId() == 7) {
-                        holder.countdownDays.setText("00");
-                        holder.countdownHours.setText("00");
-                        holder.countdownMinutes.setText("00");
-                        holder.countdownSeconds.setText("00");
-                    } else if (launchItem.getStatus().getId() == 6 || launchItem.getStatus().getId() == 1) {
-                        holder.countdownStatus.setVisibility(View.VISIBLE);
-                        holder.countdownStatus.setText("+");
-                        countUpTimer(holder, longdate);
-                    } else {
-                        holder.countdownDays.setText("- -");
-                        holder.countdownHours.setText("- -");
-                        holder.countdownMinutes.setText("- -");
-                        holder.countdownSeconds.setText("- -");
-                    }
+                    holder.countDownView.setLaunch(launchItem);
                 }
 
                 //Get launch date
@@ -345,89 +236,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 }
             }
         } catch (NullPointerException e) {
+            Timber.e(e);
             Crashlytics.logException(e);
-        }
-    }
-
-    private void countUpTimer(ViewHolder holder, long longdate) {
-        holder.var = Observable
-                .interval(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
-                .subscribe(
-                        time -> {
-                            Calendar currentTime = Calendar.getInstance();
-                            long timeSince = currentTime.getTimeInMillis() - longdate;
-                            setCountdownView(timeSince, holder);
-                        });
-    }
-
-    private void setCountdownView(long millisUntilFinished, ViewHolder holder) {
-        // Calculate the Days/Hours/Mins/Seconds numerically.
-        long longDays = millisUntilFinished / 86400000;
-        long longHours = (millisUntilFinished / 3600000) % 24;
-        long longMins = (millisUntilFinished / 60000) % 60;
-        long longSeconds = (millisUntilFinished / 1000) % 60;
-
-        String days;
-        String hours;
-        String minutes;
-        String seconds;
-
-        if (longDays < 10) {
-            days = "0" + String.valueOf(longDays);
-        } else {
-            days = String.valueOf(longDays);
-        }
-
-
-        // Translate those numerical values to string values.
-        if (longHours < 10) {
-            hours = "0" + String.valueOf(longHours);
-        } else {
-            hours = String.valueOf(longHours);
-        }
-
-        if (longMins < 10) {
-            minutes = "0" + String.valueOf(longMins);
-        } else {
-            minutes = String.valueOf(longMins);
-        }
-
-        if (longSeconds < 10) {
-            seconds = "0" + String.valueOf(longSeconds);
-        } else {
-            seconds = String.valueOf(longSeconds);
-        }
-
-
-        // Update the views
-        if (Integer.valueOf(days) > 0) {
-            holder.countdownDays.setText(days);
-        } else {
-            holder.countdownDays.setText("00");
-        }
-
-        if (Integer.valueOf(hours) > 0) {
-            holder.countdownHours.setText(hours);
-        } else if (Integer.valueOf(days) > 0) {
-            holder.countdownHours.setText("00");
-        } else {
-            holder.countdownHours.setText("00");
-        }
-
-        if (Integer.valueOf(minutes) > 0) {
-            holder.countdownMinutes.setText(minutes);
-        } else if (Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
-            holder.countdownMinutes.setText("00");
-        } else {
-            holder.countdownMinutes.setText("00");
-        }
-
-        if (Integer.valueOf(seconds) > 0) {
-            holder.countdownSeconds.setText(seconds);
-        } else if (Integer.valueOf(minutes) > 0 || Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
-            holder.countdownSeconds.setText("00");
-        } else {
-            holder.countdownSeconds.setText("00");
         }
     }
 
@@ -467,16 +277,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         TextView launchDateCompact;
         @BindView(R.id.launch_image)
         ImageView launchImage;
-        @BindView(R.id.countdown_days)
-        TextView countdownDays;
-        @BindView(R.id.countdown_hours)
-        TextView countdownHours;
-        @BindView(R.id.countdown_minutes)
-        TextView countdownMinutes;
-        @BindView(R.id.countdown_seconds)
-        TextView countdownSeconds;
-        @BindView(R.id.countdown_status)
-        TextView countdownStatus;
         @BindView(R.id.status)
         TextView status;
         @BindView(R.id.watchButton)
@@ -499,6 +299,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         CardView statusPill;
         @BindView(R.id.background)
         View titleBackground;
+        @BindView(R.id.countdown_layout)
+        CountDownView countDownView;
         public View layout;
         public CountDownTimer timer;
         public Disposable var;

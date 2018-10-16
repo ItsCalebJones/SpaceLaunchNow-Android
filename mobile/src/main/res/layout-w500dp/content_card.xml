@@ -141,7 +141,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/launch_image" />
 
-            <include
+            <me.calebjones.spacelaunchnow.utils.views.custom.CountDownView
                 android:id="@+id/countdown_layout"
                 layout="@layout/countdown_layout_view"
                 android:layout_width="match_parent"
