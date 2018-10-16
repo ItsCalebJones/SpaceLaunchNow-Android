@@ -11,6 +11,37 @@
     android:layout_marginRight="10dp"
     android:weightSum="4.0">
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/View_Separator"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/status_pill"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/status_pill" />
+
+    <me.calebjones.spacelaunchnow.utils.views.custom.StatusPillView
+        android:id="@+id/status_pill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/dark_primary_text_color_selector"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <TextView
         android:id="@+id/countdown_days"
@@ -27,7 +58,7 @@
         android:textSize="45dp"
         app:layout_constraintEnd_toStartOf="@+id/textView8"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/divider" />
 
     <TextView
         android:id="@+id/days"
@@ -58,7 +89,7 @@
         app:layout_constraintEnd_toStartOf="@+id/countdown_seconds"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/countdown_minutes"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/divider"  />
 
 
     <TextView
@@ -74,7 +105,7 @@
         app:layout_constraintEnd_toStartOf="@+id/textView6"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/textView8"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/divider"  />
 
     <TextView
         android:id="@+id/hours"
@@ -105,7 +136,7 @@
         app:layout_constraintEnd_toStartOf="@+id/countdown_minutes"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/countdown_hours"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/divider"  />
 
 
     <TextView
@@ -121,7 +152,7 @@
         app:layout_constraintEnd_toStartOf="@+id/textView4"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/textView6"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/divider"  />
 
     <TextView
         android:id="@+id/minutes"
@@ -152,7 +183,7 @@
         app:layout_constraintEnd_toStartOf="@+id/countdown_hours"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/countdown_days"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/divider"  />
 
 
     <TextView
@@ -169,7 +200,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/textView4"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/divider"  />
 
     <TextView
         android:id="@+id/seconds"
@@ -202,5 +233,31 @@
         app:layout_constraintEnd_toStartOf="@+id/countdown_days"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/countdown_days" />
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/View_Separator"
+        android:paddingBottom="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hours" />
+
+    <TextView
+        android:id="@+id/status_reason"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:textAlignment="center"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider2"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -68,6 +68,7 @@ import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.CountDownTimer;
+import me.calebjones.spacelaunchnow.utils.views.custom.CountDownView;
 import me.calebjones.spacelaunchnow.utils.views.custom.WeatherCard;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -95,20 +96,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
     @BindView(R.id.countdown_status)
     TextView countdownStatus;
-    @BindView(R.id.countdown_separator)
-    View countdownSeparator;
-    @BindView(R.id.content_TMinus_status)
-    TextView contentTMinusStatus;
-    @BindView(R.id.countdown_days)
-    TextView countdownDays;
-    @BindView(R.id.countdown_hours)
-    TextView countdownHours;
-    @BindView(R.id.countdown_minutes)
-    TextView countdownMinutes;
-    @BindView(R.id.countdown_seconds)
-    TextView countdownSeconds;
     @BindView(R.id.countdown_layout)
-    View countdownLayout;
+    CountDownView countDownView;
     @BindView(R.id.launch_summary)
     NestedScrollView launchSummary;
     @BindView(R.id.map_view_summary)
@@ -117,8 +106,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     TextView launch_date_title;
     @BindView(R.id.date)
     TextView date;
-    @BindView(R.id.launch_status)
-    TextView launch_status;
     @BindView(R.id.watchButton)
     AppCompatButton watchButton;
     @BindView(R.id.launch_window_text)
@@ -359,17 +346,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
             Date mDate;
             String dateText = null;
 
-            if (launch.getStatus().getId() == 1) {
-                String go = context.getResources().getString(R.string.status_go);
-                if (detailLaunch.getProbability() != null && detailLaunch.getProbability() > 0) {
-                    go = String.format("%s | Forecast - %s%%", go, detailLaunch.getProbability());
-                }
-                //GO for launch
-                launch_status.setText(go);
-            } else {
-                launch_status.setText(LaunchStatus.getLaunchStatusTitle(context, detailLaunch.getStatus().getId()));
-            }
-
             if (detailLaunch.getVidURLs() != null && detailLaunch.getVidURLs().size() > 0) {
 
                 for (RealmStr url : detailLaunch.getVidURLs()) {
@@ -603,188 +579,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
     private void setupCountdownTimer(Launch launch) {
         //If timestamp is available calculate TMinus and date.
-        if (launch.getNet() != null && (launch.getStatus().getId() == 1 || launch.getStatus().getId() == 2)) {
-            long longdate = launch.getNet().getTime();
-            final Date date = new Date(longdate);
-
-            Calendar future = Utils.DateToCalendar(date);
-            Calendar now = Calendar.getInstance();
-
-            now.setTimeInMillis(System.currentTimeMillis());
-            if (timer != null) {
-                Timber.v("Timer is not null, cancelling.");
-                timer.cancel();
-            }
-
-            final int status = launch.getStatus().getId();
-            final String hold = launch.getHoldreason();
-
-            final int nightColor = ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color);
-            final int color = ContextCompat.getColor(context, R.color.colorTextSecondary);
-            final int accentColor = ContextCompat.getColor(context, R.color.colorAccent);
-
-            contentTMinusStatus.setVisibility(View.GONE);
-            long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
-            if (timeToFinish > 0 && launch.getStatus().getId() == 1) {
-                timer = new CountDownTimer(timeToFinish, 1000) {
-                    StringBuilder time = new StringBuilder();
-
-                    @Override
-                    public void onFinish() {
-                        Timber.v("Countdown finished.");
-                        countdownDays.setText("00");
-                        countdownHours.setText("00");
-                        countdownMinutes.setText("00");
-                        countdownSeconds.setText("00");
-                        countdownStatus.setVisibility(View.VISIBLE);
-                        countdownStatus.setText("+");
-                        countUpTimer(longdate);
-                    }
-
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        time.setLength(0);
-                        setCountdownView(millisUntilFinished);
-                    }
-                }.start();
-            } else if (launch.getStatus().getId() == 3 || launch.getStatus().getId() == 4 || launch.getStatus().getId() == 7) {
-                countdownDays.setText("00");
-                countdownHours.setText("00");
-                countdownMinutes.setText("00");
-                countdownSeconds.setText("00");
-                showStatusDescription(launch);
-            } else if (launch.getStatus().getId() == 6 || launch.getStatus().getId() == 1) {
-                countdownStatus.setVisibility(View.VISIBLE);
-                countdownStatus.setText("+");
-                countUpTimer(longdate);
-            } else {
-                countdownDays.setText("- -");
-                countdownHours.setText("- -");
-                countdownMinutes.setText("- -");
-                countdownSeconds.setText("- -");
-                showStatusDescription(launch);
-            }
-        } else {
-            showStatusDescription(launch);
-        }
-    }
-
-    private void countUpTimer(long longdate) {
-        var = Observable
-                .interval(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
-                .subscribe(
-                        time -> {
-                            Calendar currentTime = Calendar.getInstance();
-                            long timeSince = currentTime.getTimeInMillis() - longdate;
-                            setCountdownView(timeSince);
-                        });
-    }
-
-    private void setCountdownView(long millisUntilFinished) {
-        // Calculate the Days/Hours/Mins/Seconds numerically.
-        long longDays = millisUntilFinished / 86400000;
-        long longHours = (millisUntilFinished / 3600000) % 24;
-        long longMins = (millisUntilFinished / 60000) % 60;
-        long longSeconds = (millisUntilFinished / 1000) % 60;
-
-        String days;
-        String hours;
-        String minutes;
-        String seconds;
-
-        if (longDays < 10) {
-            days = "0" + String.valueOf(longDays);
-        } else {
-            days = String.valueOf(longDays);
-        }
-
-
-        // Translate those numerical values to string values.
-        if (longHours < 10) {
-            hours = "0" + String.valueOf(longHours);
-        } else {
-            hours = String.valueOf(longHours);
-        }
-
-        if (longMins < 10) {
-            minutes = "0" + String.valueOf(longMins);
-        } else {
-            minutes = String.valueOf(longMins);
-        }
-
-        if (longSeconds < 10) {
-            seconds = "0" + String.valueOf(longSeconds);
-        } else {
-            seconds = String.valueOf(longSeconds);
-        }
-
-
-        // Update the views
-        if (Integer.valueOf(days) > 0) {
-            countdownDays.setText(days);
-        } else {
-            countdownDays.setText("00");
-        }
-
-        if (Integer.valueOf(hours) > 0) {
-            countdownHours.setText(hours);
-        } else if (Integer.valueOf(days) > 0) {
-            countdownHours.setText("00");
-        } else {
-            countdownHours.setText("00");
-        }
-
-        if (Integer.valueOf(minutes) > 0) {
-            countdownMinutes.setText(minutes);
-        } else if (Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
-            countdownMinutes.setText("00");
-        } else {
-            countdownMinutes.setText("00");
-        }
-
-        if (Integer.valueOf(seconds) > 0) {
-            countdownSeconds.setText(seconds);
-        } else if (Integer.valueOf(minutes) > 0 || Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
-            countdownSeconds.setText("00");
-        } else {
-            countdownSeconds.setText("00");
-        }
-    }
-
-
-    private void showStatusDescription(Launch launchItem) {
-        contentTMinusStatus.setVisibility(View.VISIBLE);
-        if (launchItem.getStatus().getId() == 2) {
-            if (launchItem.getRocket().getConfiguration().getLaunchServiceProvider() != null) {
-                contentTMinusStatus.setText(String.format(context.getString(R.string.pending_confirmed_go_specific), launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getName()));
-            } else {
-                contentTMinusStatus.setText(R.string.pending_confirmed_go);
-            }
-        } else if (launchItem.getStatus().getId() == 3) {
-            contentTMinusStatus.setText("Launch was a success!");
-        } else if (launchItem.getStatus().getId() == 4) {
-            countdownLayout.setVisibility(View.GONE);
-
-            if (launchItem.getFailreason() != null) {
-                contentTMinusStatus.setText(launchItem.getFailreason());
-            } else {
-                contentTMinusStatus.setText("A launch failure has occurred.");
-            }
-        } else if (launchItem.getStatus().getId() == 5) {
-            if (launchItem.getHoldreason() != null) {
-                contentTMinusStatus.setText(launchItem.getHoldreason());
-            } else {
-                contentTMinusStatus.setText("A hold has been placed on the launch.");
-            }
-        } else if (launchItem.getStatus().getId() == 6) {
-            contentTMinusStatus.setText("Launch is in flight.");
-        } else if (launchItem.getStatus().getId() == 7) {
-            countdownLayout.setVisibility(View.GONE);
-            if (launchItem.getFailreason() != null) {
-                contentTMinusStatus.setText(launchItem.getFailreason());
-            } else {
-                contentTMinusStatus.setText("A partial launch failure has occurred.");
-            }
+        if (launch.getNet() != null) {
+            countDownView.setLaunch(launch);
         }
     }
 

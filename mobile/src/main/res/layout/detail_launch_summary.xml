@@ -78,73 +78,16 @@
                     tools:src="@drawable/placeholder" />
 
 
-                <TextView
-                    android:id="@+id/launch_status"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:background="?attr/titleBarColor"
-                    android:ellipsize="end"
-                    android:gravity="center"
-                    android:paddingBottom="8dp"
-                    android:paddingTop="4dp"
-                    android:singleLine="false"
-                    android:text="@string/unknown_launch_status"
-                    android:textAlignment="center"
-                    android:textColor="@color/dark_primary_text_color_selector"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/content_TMinus_status"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/map_view_summary" />
-
-
-                <TextView
-                    android:id="@+id/content_TMinus_status"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="1dp"
-                    android:ellipsize="end"
-                    android:gravity="left"
-                    android:singleLine="false"
-                    android:text="@string/unknown_countdown_status"
-                    android:textAlignment="center"
-                    android:textColor="?android:textColorSecondary"
-                    android:textSize="16sp"
-                    app:layout_constraintBottom_toTopOf="@+id/countdown_layout"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/launch_status" />
-
-                <include
+                <me.calebjones.spacelaunchnow.utils.views.custom.CountDownView
                     android:id="@+id/countdown_layout"
                     layout="@layout/countdown_layout_view"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="6dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    app:layout_constraintBottom_toTopOf="@+id/countdown_separator"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/content_TMinus_status" />
-
-
-                <View
-                    android:id="@+id/countdown_separator"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="24dp"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/View_Separator"
                     app:layout_constraintBottom_toTopOf="@+id/launch_date_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/countdown_layout" />
-
+                    app:layout_constraintTop_toBottomOf="@+id/map_view_summary" />
 
                 <TextView
                     android:id="@+id/launch_date_title"
@@ -163,7 +106,7 @@
                     app:layout_constraintBottom_toTopOf="@+id/date"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/countdown_separator" />
+                    app:layout_constraintTop_toBottomOf="@+id/countdown_layout" />
 
                 <TextView
                     android:id="@+id/date"

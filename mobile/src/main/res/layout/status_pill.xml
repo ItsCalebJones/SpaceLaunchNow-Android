@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/status_pill_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -23,10 +25,6 @@
         android:paddingEnd="4dp"
         android:paddingStart="4dp"
         android:paddingTop="2dp"
-        android:shadowColor="@color/material_color_black_20_percent"
-        android:shadowDx="1"
-        android:shadowDy="1"
-        android:shadowRadius="5"
         android:text=""
         android:textAlignment="center"
         android:textAppearance="@style/MaterialTypography.Locale.Title"

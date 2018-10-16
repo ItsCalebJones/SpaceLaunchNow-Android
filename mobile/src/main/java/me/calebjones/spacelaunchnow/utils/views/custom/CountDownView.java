@@ -33,9 +33,14 @@ public class CountDownView extends ConstraintLayout {
     TextView countdownSeconds;
     @BindView(R.id.countdown_status)
     TextView countdownStatus;
+    @BindView(R.id.status_pill)
+    StatusPillView statusPill;
+    @BindView(R.id.status_reason)
+    TextView statusReason;
     private CountDownTimer timer;
     private Disposable var;
     private Launch launch;
+    private Context context;
 
     public CountDownView(Context context) {
         super(context);
@@ -56,20 +61,21 @@ public class CountDownView extends ConstraintLayout {
     private void init(Context context) {
         inflate(context, R.layout.countdown_layout_view, this);
         ButterKnife.bind(this);
+        this.context = context;
     }
 
-    private void resetCountdown(){
+    private void resetCountdown() {
         if (timer != null) {
             Timber.v("Timer is not null, cancelling.");
             timer.cancel();
         }
 
-        if (var != null){
+        if (var != null) {
             var.dispose();
         }
     }
 
-    private void startLaunchCountdown(long timeToFinish){
+    private void startLaunchCountdown(long timeToFinish) {
         timer = new CountDownTimer(timeToFinish, 1000) {
             StringBuilder time = new StringBuilder();
 
@@ -93,32 +99,32 @@ public class CountDownView extends ConstraintLayout {
         }.start();
     }
 
-    private void setLaunchCountdownComplete(){
+    private void setLaunchCountdownComplete() {
         countdownDays.setText("00");
         countdownHours.setText("00");
         countdownMinutes.setText("00");
         countdownSeconds.setText("00");
     }
-    
-    private void launchInFlight(){
+
+    private void launchInFlight() {
         countdownStatus.setVisibility(View.VISIBLE);
         countUpTimer(launch.getNet().getTime());
     }
-    
-    private void launchStatusUnknown(){
+
+    private void launchStatusUnknown() {
         countdownDays.setText("- -");
         countdownHours.setText("- -");
         countdownMinutes.setText("- -");
         countdownSeconds.setText("- -");
     }
 
-    private void countUpTimer(long longdate) {
+    private void countUpTimer(long longDate) {
         var = Observable
                 .interval(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
                 .subscribe(
                         time -> {
                             Calendar currentTime = Calendar.getInstance();
-                            long timeSince = currentTime.getTimeInMillis() - longdate;
+                            long timeSince = currentTime.getTimeInMillis() - longDate;
                             setCountdownView(timeSince);
                         });
     }
@@ -197,6 +203,7 @@ public class CountDownView extends ConstraintLayout {
     public void setLaunch(Launch launch) {
         this.launch = launch;
         checkCountdownTimer(this.launch);
+        statusPill.setStatus(launch);
     }
 
     private void checkCountdownTimer(Launch launch) {
@@ -210,8 +217,18 @@ public class CountDownView extends ConstraintLayout {
 
         resetCountdown();
 
-        final int status = launch.getStatus().getId();
-        final String hold = launch.getHoldreason();
+        String hold = launch.getHoldreason();
+        String failure = launch.getFailreason();
+
+        if (hold != null){
+            statusReason.setText(hold);
+            statusReason.setVisibility(VISIBLE);
+        }
+
+        if (failure != null){
+            statusReason.setText(failure);
+            statusReason.setVisibility(VISIBLE);
+        }
 
         long timeToFinish = launchDate.getTimeInMillis() - now.getTimeInMillis();
 
@@ -220,7 +237,7 @@ public class CountDownView extends ConstraintLayout {
         } else if (launch.getStatus().getId() == 3 || launch.getStatus().getId() == 4 || launch.getStatus().getId() == 7) {
             setLaunchCountdownComplete();
         } else if (launch.getStatus().getId() == 6 || launch.getStatus().getId() == 1) {
-           launchInFlight();
+            launchInFlight();
         } else {
             launchStatusUnknown();
         }

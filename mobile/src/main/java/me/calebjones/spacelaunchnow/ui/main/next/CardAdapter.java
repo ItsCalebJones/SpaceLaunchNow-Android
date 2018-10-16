@@ -26,7 +26,6 @@ import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.crashlytics.android.Crashlytics;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -35,7 +34,6 @@ import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.data.LaunchStatus;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.data.models.main.Landing;
@@ -164,13 +162,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     holder.launchImage.setVisibility(View.GONE);
                 }
 
-                holder.status.setText(LaunchStatus.getLaunchStatusTitle(context, launchItem.getStatus().getId()));
-                holder.statusPill.setCardBackgroundColor(LaunchStatus.getLaunchStatusColor(context, launchItem.getStatus().getId()));
-
-                //If timestamp is available calculate TMinus and date.
-                if (launchItem.getNet().getTime() > 0) {
-                    holder.countDownView.setLaunch(launchItem);
-                }
+                holder.countDownView.setLaunch(launchItem);
 
                 //Get launch date
                 if (launchItem.getStatus().getId() == 2) {
@@ -277,8 +269,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         TextView launchDateCompact;
         @BindView(R.id.launch_image)
         ImageView launchImage;
-        @BindView(R.id.status)
-        TextView status;
         @BindView(R.id.watchButton)
         View watchButton;
         @BindView(R.id.shareButton)
@@ -295,8 +285,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         TextView landing;
         @BindView(R.id.landing_pill)
         View landingView;
-        @BindView(R.id.status_pill)
-        CardView statusPill;
         @BindView(R.id.background)
         View titleBackground;
         @BindView(R.id.countdown_layout)
