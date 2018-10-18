@@ -58,10 +58,8 @@ import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
 import me.calebjones.spacelaunchnow.content.data.details.DetailsDataRepository;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
-import me.calebjones.spacelaunchnow.data.models.main.LauncherConfig;
 import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.ui.launchdetail.DetailsViewModel;
-import me.calebjones.spacelaunchnow.ui.launchdetail.OnFragmentInteractionListener;
 import me.calebjones.spacelaunchnow.ui.launchdetail.TabsAdapter;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
@@ -74,7 +72,7 @@ import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import timber.log.Timber;
 
 public class LaunchDetailActivity extends BaseActivity
-        implements AppBarLayout.OnOffsetChangedListener, OnFragmentInteractionListener, SwipeRefreshLayout.OnRefreshListener {
+        implements AppBarLayout.OnOffsetChangedListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final int PERCENTAGE_TO_ANIMATE_AVATAR = 20;
     @BindView(R.id.fab_share)
@@ -347,7 +345,6 @@ public class LaunchDetailActivity extends BaseActivity
         if (launch != null) {
             fabShowable = true;
             this.launch = launch;
-            tabAdapter.updateLaunches(launch);
             setTitleView(launch);
             fabShare.show();
             statefulView.showContent();
@@ -441,22 +438,6 @@ public class LaunchDetailActivity extends BaseActivity
             Timber.v("setData - %s ", line);
         }
         scanner.close();
-    }
-
-    public void sendLaunchToFragment(int fragment) {
-        if (launch != null) {
-            switch (fragment) {
-                case OnFragmentInteractionListener.AGENCY:
-                    tabAdapter.updatAgencyLaunch(launch);
-                    break;
-                case OnFragmentInteractionListener.MISSION:
-                    tabAdapter.updateMissionLaunch(launch);
-                    break;
-                case OnFragmentInteractionListener.SUMMARY:
-                    tabAdapter.updateSummaryLaunch(launch);
-                    break;
-            }
-        }
     }
 
     @Override

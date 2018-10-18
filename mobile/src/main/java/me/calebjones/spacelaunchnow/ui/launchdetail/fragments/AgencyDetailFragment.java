@@ -16,10 +16,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -27,10 +23,8 @@ import butterknife.Unbinder;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.DetailsViewModel;
-import me.calebjones.spacelaunchnow.ui.launchdetail.OnFragmentInteractionListener;
 import me.calebjones.spacelaunchnow.ui.launches.agency.AgencyLaunchActivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -61,7 +55,6 @@ public class AgencyDetailFragment extends BaseFragment {
     private SharedPreferences sharedPref;
     private static ListPreferences sharedPreference;
     private Context context;
-    private OnFragmentInteractionListener mListener;
 
     public static Launch detailLaunch;
     private Unbinder unbinder;
@@ -102,11 +95,11 @@ public class AgencyDetailFragment extends BaseFragment {
 
     @Override
     public void onResume() {
-        mListener.sendLaunchToFragment(OnFragmentInteractionListener.AGENCY);
         super.onResume();
     }
 
     public void setLaunch(Launch launch) {
+        Timber.v("Launch update received: %s", launch.getName());
         detailLaunch = launch;
         setUpViews(launch);
     }
@@ -188,19 +181,7 @@ public class AgencyDetailFragment extends BaseFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 }

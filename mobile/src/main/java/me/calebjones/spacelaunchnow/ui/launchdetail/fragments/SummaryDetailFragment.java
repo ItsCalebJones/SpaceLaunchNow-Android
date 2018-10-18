@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
@@ -37,10 +36,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,23 +45,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.realm.Realm;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
-import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
-import me.calebjones.spacelaunchnow.content.data.LaunchStatus;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.Pad;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.ui.launchdetail.DetailsViewModel;
-import me.calebjones.spacelaunchnow.ui.launchdetail.OnFragmentInteractionListener;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -94,7 +83,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     private Dialog dialog;
     private boolean youTubePlaying = false;
     private int youTubeProgress = 0;
-    private OnFragmentInteractionListener mListener;
 
     @BindView(R.id.countdown_status)
     TextView countdownStatus;
@@ -168,11 +156,11 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         } else {
             nightMode = false;
         }
-        mListener.sendLaunchToFragment(OnFragmentInteractionListener.SUMMARY);
         super.onResume();
     }
 
     public void setLaunch(Launch launch) {
+        Timber.v("Launch update received: %s", launch.getName());
         detailLaunch = launch;
         setUpViews(launch);
     }
@@ -682,23 +670,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         } else {
             youTubeView.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
     @Override
