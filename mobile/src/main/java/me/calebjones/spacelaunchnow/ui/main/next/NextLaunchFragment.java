@@ -330,6 +330,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     Timber.e(throwable);
                 } else {
                     Timber.e(message);
+                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
                 }
                 SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
             }
