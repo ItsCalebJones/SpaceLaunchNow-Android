@@ -474,32 +474,39 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
+        if (drawer.isDrawerOpen()) {
+            drawer.closeDrawer();
         } else if (mNavItemId != R.id.menu_next_launch) {
             drawer.setSelection(R.id.menu_next_launch);
         } else if (mNavItemId == R.id.menu_next_launch) {
             if(mUpcomingFragment != null){
                 if (mUpcomingFragment.isFilterShown()){
                     mUpcomingFragment.checkFilter();
+                }else {
+                    checkExitApp();
                 }
+            } else {
+                checkExitApp();
             }
         } else {
             if (getFragmentManager().getBackStackEntryCount() != 0) {
                 getFragmentManager().popBackStack();
             } else {
-                if (sharedPref.getBoolean("confirm_exit", false)) {
-                    new MaterialDialog.Builder(this)
-                            .title(R.string.confirm_exit)
-                            .negativeText(R.string.cancel)
-                            .positiveText(R.string.exit)
-                            .onPositive((dialog, which) -> finish())
-                            .show();
-                } else {
-                    super.onBackPressed();
-                }
+                checkExitApp();
             }
+        }
+    }
+
+    private void checkExitApp() {
+        if (sharedPref.getBoolean("confirm_exit", false)) {
+            new MaterialDialog.Builder(this)
+                    .title(R.string.confirm_exit)
+                    .negativeText(R.string.cancel)
+                    .positiveText(R.string.exit)
+                    .onPositive((dialog, which) -> finish())
+                    .show();
+        } else {
+            super.onBackPressed();
         }
     }
 
