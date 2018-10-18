@@ -2,6 +2,7 @@ package me.calebjones.spacelaunchnow.ui.launchdetail.fragments.mission;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.LauncherConfig;
 import me.calebjones.spacelaunchnow.data.models.main.Mission;
+import me.calebjones.spacelaunchnow.ui.launchdetail.DetailsViewModel;
 import me.calebjones.spacelaunchnow.ui.launchdetail.OnFragmentInteractionListener;
 import me.calebjones.spacelaunchnow.ui.launches.launcher.LauncherLaunchActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -91,6 +93,7 @@ public class MissionDetailFragment extends RetroFitFragment {
     private Context context;
     public Launch detailLaunch;
     private Unbinder unbinder;
+    private DetailsViewModel model;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -121,11 +124,7 @@ public class MissionDetailFragment extends RetroFitFragment {
 
     @Override
     public void onResume() {
-        if (detailLaunch != null && detailLaunch.isValid()) {
-            setUpViews(detailLaunch);
-        } else {
-            mListener.sendLaunchToFragment(OnFragmentInteractionListener.MISSION);
-        }
+        mListener.sendLaunchToFragment(OnFragmentInteractionListener.MISSION);
         super.onResume();
     }
 
@@ -267,6 +266,9 @@ public class MissionDetailFragment extends RetroFitFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        model = ViewModelProviders.of(getActivity()).get(DetailsViewModel.class);
+        // update UI
+        model.getLaunch().observe(this, this::setLaunch);
     }
 
     public static MissionDetailFragment newInstance() {

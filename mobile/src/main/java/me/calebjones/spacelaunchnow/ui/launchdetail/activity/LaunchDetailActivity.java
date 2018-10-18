@@ -1,6 +1,7 @@
 package me.calebjones.spacelaunchnow.ui.launchdetail.activity;
 
 import android.app.ActivityOptions;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import android.arch.lifecycle.ViewModelProvider;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -58,6 +60,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.LauncherConfig;
 import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
+import me.calebjones.spacelaunchnow.ui.launchdetail.DetailsViewModel;
 import me.calebjones.spacelaunchnow.ui.launchdetail.OnFragmentInteractionListener;
 import me.calebjones.spacelaunchnow.ui.launchdetail.TabsAdapter;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
@@ -119,6 +122,7 @@ public class LaunchDetailActivity extends BaseActivity
     private Realm realm;
     private Rate rate;
     private DetailsDataRepository detailsDataRepository;
+    private DetailsViewModel model;
 
     public LaunchDetailActivity() {
         super("Launch Detail Activity");
@@ -155,6 +159,10 @@ public class LaunchDetailActivity extends BaseActivity
         setTheme(m_theme);
         setContentView(R.layout.activity_launch_detail);
         ButterKnife.bind(this);
+        model = ViewModelProviders.of(this).get(DetailsViewModel.class);
+        // update UI
+        model.getLaunch().observe(this, this::updateViews);
+
 
         detailSwipeRefresh.setOnRefreshListener(this);
         fabShare.hide();
@@ -230,7 +238,7 @@ public class LaunchDetailActivity extends BaseActivity
         detailsDataRepository.getLaunchFromNetwork(launchId, new Callbacks.DetailsCallback() {
             @Override
             public void onLaunchLoaded(Launch launch) {
-                updateViews(launch);
+                updateViewModel(launch);
             }
 
             @Override
@@ -258,10 +266,15 @@ public class LaunchDetailActivity extends BaseActivity
     private void fetchDataFromDatabase(int launchId) {
         Launch launch = detailsDataRepository.getLaunch(launchId);
         if (launch != null) {
-            updateViews(launch);
+            updateViewModel(launch);
         } else {
+            statefulView.showEmpty();
             SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, "Unable to load launch.");
         }
+    }
+
+    private void updateViewModel(Launch launch) {
+        model.getLaunch().setValue(launch);
     }
 
     private void fetchDataFromDatabaseForTitle(int launchId) {
@@ -329,17 +342,6 @@ public class LaunchDetailActivity extends BaseActivity
                 .show();
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        // Checks the orientation of the screen
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
-        }
-    }
 
     private void updateViews(Launch launch) {
         if (launch != null) {

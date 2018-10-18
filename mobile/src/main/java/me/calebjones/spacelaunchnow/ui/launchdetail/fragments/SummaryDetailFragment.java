@@ -1,6 +1,7 @@
 package me.calebjones.spacelaunchnow.ui.launchdetail.fragments;
 
 import android.app.Dialog;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -62,6 +63,7 @@ import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.Pad;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
+import me.calebjones.spacelaunchnow.ui.launchdetail.DetailsViewModel;
 import me.calebjones.spacelaunchnow.ui.launchdetail.OnFragmentInteractionListener;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
@@ -118,6 +120,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     public Disposable var;
     private boolean current = true;
     private Unbinder unbinder;
+    private DetailsViewModel model;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -156,6 +159,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         return view;
     }
 
+
     @Override
     public void onResume() {
 
@@ -164,11 +168,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         } else {
             nightMode = false;
         }
-        if (detailLaunch != null && detailLaunch.isValid()) {
-            setUpViews(detailLaunch);
-        } else {
-            mListener.sendLaunchToFragment(OnFragmentInteractionListener.SUMMARY);
-        }
+        mListener.sendLaunchToFragment(OnFragmentInteractionListener.SUMMARY);
         super.onResume();
     }
 
@@ -635,6 +635,9 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        model = ViewModelProviders.of(getActivity()).get(DetailsViewModel.class);
+        // update UI
+        model.getLaunch().observe(this, this::setLaunch);
     }
 
     public static SummaryDetailFragment newInstance() {

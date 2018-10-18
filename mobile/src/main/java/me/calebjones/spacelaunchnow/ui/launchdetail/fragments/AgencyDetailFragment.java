@@ -1,6 +1,7 @@
 package me.calebjones.spacelaunchnow.ui.launchdetail.fragments;
 
 import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,6 +29,7 @@ import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.ui.launchdetail.DetailsViewModel;
 import me.calebjones.spacelaunchnow.ui.launchdetail.OnFragmentInteractionListener;
 import me.calebjones.spacelaunchnow.ui.launches.agency.AgencyLaunchActivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
@@ -63,6 +65,7 @@ public class AgencyDetailFragment extends BaseFragment {
 
     public static Launch detailLaunch;
     private Unbinder unbinder;
+    private DetailsViewModel model;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,13 +90,6 @@ public class AgencyDetailFragment extends BaseFragment {
         unbinder = ButterKnife.bind(this, view);
 
         Timber.v("Creating views...");
-
-        if (detailLaunch != null && detailLaunch.isValid()) {
-            setUpViews(detailLaunch);
-        } else {
-            mListener.sendLaunchToFragment(OnFragmentInteractionListener.AGENCY);
-        }
-
         return view;
     }
 
@@ -106,11 +102,7 @@ public class AgencyDetailFragment extends BaseFragment {
 
     @Override
     public void onResume() {
-        if (detailLaunch != null && detailLaunch.isValid()) {
-            setUpViews(detailLaunch);
-        } else {
-            mListener.sendLaunchToFragment(OnFragmentInteractionListener.AGENCY);
-        }
+        mListener.sendLaunchToFragment(OnFragmentInteractionListener.AGENCY);
         super.onResume();
     }
 
@@ -167,6 +159,9 @@ public class AgencyDetailFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        model = ViewModelProviders.of(getActivity()).get(DetailsViewModel.class);
+        // update UI
+        model.getLaunch().observe(this, this::setLaunch);
     }
 
     public static AgencyDetailFragment newInstance() {
