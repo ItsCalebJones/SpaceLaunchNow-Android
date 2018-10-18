@@ -246,6 +246,7 @@ public class LaunchApplication extends Application {
                 Realm realm = Realm.getDefaultInstance();
                 realm.executeTransaction(realm1 -> realm1.copyToRealmOrUpdate(product));
                 realm.close();
+                Crashlytics.setBool("Supporter", SupporterHelper.isSupporter());
             }
         }
     }
