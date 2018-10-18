@@ -2,8 +2,8 @@
 <resources>
     <string name="action_settings">Nastavení</string>
     <string name="status_go">"Start je povolen"</string>
-    <string name="status_nogo">"Start byl odložen"</string>
-    <string name="status_success">"Start byl úspěšný"</string>
+    <string name="status_nogo">"Start TBD"</string>
+    <string name="status_success">"Úspěšný start"</string>
     <string name="status_failure">"Při startu se objevila chyba"</string>
     <string name="spacex_summary">SpaceX navrhuje, konstruuje a vypouští pokročilé rakety a kosmické lodě. Společnost byla založená v roce 2002 aby způsobila převrat v kosmonautice. Její hlavní cíl je umožnit lidem život na jiných planetách.</string>
     <string name="usaf_summary">Letectvo Spojených Států Amerických (United States Air Force) je pobočkou Amerických ozbrojených sil (United States Armed Forces) a jednou ze sedmi Amerických uniformovaných služeb.</string>
@@ -28,8 +28,8 @@
     <string name="slide_three_description">Seznamte se s prostředky, která nás dostaly na oběžnou dráhu.</string>
     <string name="thank_you">Tato aplikace, Space Launch Now, začala jako jednoduchý víkendový projekt. Během roku se rozrostla na téměř 10 000 aktivních uživatelů. Jsem neuvěřitelně vděčný každému, kdo si udělal čas hlásit chyby, poskytnout zpětnou vazbu, účastnit se BETA testingu a stát se podporovatelem.</string>
     <string name="player_error">Při inicializaci přehrávače YouTube došlo k chybě: %s</string>
-    <string name="please_rate">Nazdárek! Zdá se, že se vám tato aplikace líbí, vadilo by vám navštívili Obchod Play a ohodnotit ji? Hodně by nám to pomohlo!
-\n\n I pokud nenávidíte tuto aplikaci, rád bychom měli vaši zpětnou vazbu, abychom věděli co máme zlepšit. Díky!</string>
+    <string name="please_rate">Zdravím! Zdá se, že se vám tato aplikace líbí, vadilo by vám navštívit Obchod Play a ohodnotit ji? Hodně by nám to pomohlo!
+\n\n I pokud se vám nelíbí, zanechte nám svou zpětnou vazbu, ať víme co máme zlepšit. Díky!</string>
     <string name="please_rate_short">Ahoj, zdá se, že se vám tato aplikace líbí. Pomohli byste nám hodnocením 5-ti hvězdičkami! Prosím dejte nám vědět pokud máte návrhy na změny.</string>
     <string name="button_yes">Ohodnotit!</string>
     <string name="button_no">Ne, díky</string>
@@ -39,9 +39,9 @@
     <string name="notifications_settings">Nastavení oznámení startu a plánování.</string>
     <string name="appearance_settings">Přizpůsobení tématu aplikace, widgetů a barev.</string>
     <string name="about_settings">Informace o licenci, knihovnách, changelogu apod</string>
-    <string name="support_settings">Sledujte mé projekty a přispívejte k jejich budoucímu rozvoji.</string>
+    <string name="support_settings">Získejte rozšířené funkce a podpořte budoucí rozvoj</string>
     <string name="wear_settings">Změňit nastavení zobrazení na hodinkách Android Wear.</string>
-    <string name="supporter_unlock_text">Děkujeme vám za zvážení podpory Space Launch Now. Každá úroveň podpory je jednorázový nákup, který odemyká všechny pro-funkce navždy! Zaplaťte kolik chcete pro odemknutí všech pro funkcí!</string>
+    <string name="supporter_unlock_text">Vážíme si vaší podpory Space Launch Now.\n\nKaždá úroveň podpory je jednorázový nákup odemykající všechny rozšířené funkce navždy. Přispějte kolik chcete a podpořte budoucí rozvoj aplikace!</string>
     <string name="thank_you_support">Děkujeme za vaši dlouhodobou podporu!</string>
     <string name="ok">OK</string>
     <string name="issues_connecting_billing">Problémy s připojením k fakturační službě Google Play</string>
@@ -181,14 +181,14 @@
     <string name="unknown_location">Neznámé umístění</string>
     <string name="details">Detaily</string>
     <string name="mission">Mise</string>
-    <string name="agencies">Agentůry</string>
+    <string name="agencies">Agentura</string>
     <string name="error_launch_details">Chyba - Nelze načíst podrobnosti startu.</string>
-    <string name="height_full">Výška: %.1f Metry</string>
+    <string name="height_full">Výška: %.1f Metry%s</string>
     <string name="diameter_full">Výška: %.1f Metry</string>
     <string name="stage_full">Max. stupně: %d</string>
     <string name="mass_leo_full">Hmotnost na nízkou oběžnou dráhu: %d kg</string>
     <string name="mass_gto_full">Hmotnost na přechodnou dráhu ke geostacionární dráze: %d kg</string>
-    <string name="mass_launch_full">Hmotnost při startu: %d T</string>
+    <string name="mass_launch_full">Hmotnost při startu: %d kg</string>
     <string name="thrust_full">Tah při startu: %d kN</string>
     <string name="upcoming">Nadcházející</string>
     <string name="previous">Předcházející</string>
@@ -270,7 +270,7 @@
     <string name="night_mode_on">Noční režim je povolen</string>
     <string name="night_mode_off">Noční režim je vypnut</string>
     <string name="automatic_daynight">Automatický režim den / noc</string>
-    <string name="automatic_daynight_summary">Automaticky přepínat mezi denními a nočními motivy podle času.</string>
+    <string name="automatic_daynight_summary">Automaticky přepínat mezi denním a nočním motivem podle skutečného času.</string>
     <string name="widget_themes">Témata widgetu</string>
     <string name="widget_themes_summary">Vyberat z několika výchozích motivů widgetu.</string>
     <string name="widget_background">Pozadí widgetu</string>
@@ -303,13 +303,13 @@
     <string name="data_saver_off">Starty se synchronizují ne více než jednou denně.</string>
     <string name="data_saver_on">Synchronizujte nadcházející starty jednou týdně, pokud není k dispozici připojení WiFi. (Neovlivňuje oznámení)</string>
     <string name="wifi_only">Pouze Wi-Fi</string>
-    <string name="wifi_only_summary">Data startů nebudou synchronizována, pokud není k dispozici připojení WiFi.</string>
+    <string name="wifi_only_summary">Data startů nebudou synchronizována bez připojení WiFi.</string>
     <string name="launch_tracking">Sledování startu</string>
     <string name="calendar_settings">Nastavení kalendáře</string>
     <string name="auto_calendar">Automatická synchronizace kalendáře</string>
     <string name="auto_calendar_summary">Povolit další spuštění synchronizace s výchozím kalendářem.</string>
     <string name="event_count">Počet událostí</string>
-    <string name="event_count_summary">Nakonfigurujte počet událostí kalendáře, které chcete synchronizovat.</string>
+    <string name="event_count_summary">Vyberte počet událostí z kalendáře, které chcete synchronizovat.</string>
     <string name="calendar_account">Kalendářový účet</string>
     <string name="calendar_account_summary">Konfigurace kalendáře pro starty.</string>
     <string name="event_reminder">Připomenutí události</string>
@@ -325,7 +325,7 @@
     <string name="enable_notifications_off">Povolit oznámení pro nadcházející starty.</string>
     <string name="status_updates">Aktualizace stavu</string>
     <string name="status_updates_on">Dostávat oznámení o aktualizaci pro změny stavu startů.</string>
-    <string name="status_updates_off">Do not send notifications when a launch status changes.</string>
+    <string name="status_updates_off">Neposílat upozornění při změně stavu startu.</string>
     <string name="webcast_only">Pouze Web-cast</string>
     <string name="webcast_only_summary">Odeslání upozornění pouze v případě, že je webcast k dispozici.</string>
     <string name="do_not_disturb_enable">Povolit režim Nerušit</string>
@@ -336,7 +336,7 @@
     <string name="notifications">Oznámení</string>
     <string name="appearance">Vzhled</string>
     <string name="wear">Wear</string>
-    <string name="Support">Podpora</string>
+    <string name="Support">Podpořte projekt</string>
     <string name="about">O aplikaci</string>
     <string name="watch_hour_mode">Režim hodinové hodinky</string>
     <string name="watch_hour_mode_on">Používat režim 24 hodin.</string>
@@ -350,8 +350,8 @@
     <string name="blur_settings">Nastavení rozmazání</string>
     <string name="blur_settings_summary">Nakonfigurujte sílu a vlastnosti efektu rozmazání.</string>
     <string name="mission_agencies">Agentura mise</string>
-    <string name="status_hold">Pozastaveno</string>
-    <string name="status_in_flight">v letu</string>
+    <string name="status_hold">Start pozastaven</string>
+    <string name="status_in_flight">V letu</string>
     <string name="status_partial_failure">Částečné selhání</string>
     <string name="do_not_disturb">Nerušit</string>
     <string name="notification_preferences">Předvolby oznámení</string>
@@ -385,7 +385,7 @@
     <string name="wear_os">Wear OS</string>
     <string name="misc">Různé</string>
     <string name="launchers">Kosmické lodě / rakety</string>
-    <string name="orbiters">Orbitery</string>
+    <string name="orbiters">Kosmická loď</string>
     <string name="translate_settings">Přidejte se k překladatelům Space Launch Now!</string>
     <string name="translate">Přeložit</string>
     <string name="news">Novinky</string>
@@ -421,5 +421,32 @@ Tato aplikace využívá nástroj Google Firebase pro analýzu a službu Google 
     <string name="unknown_year">Rok založení - neznámý.</string>
     <string name="improve_our_data">Pomozte zlepšit naše údaje</string>
     <string name="improve_our_data_content">Pokud máte zájem o pomoc při zlepšování přesnosti našich údajů o vzdušném prostoru, připojte se k nám na serveru Space Launch Now Discord a požádejte o to, abyste se stal knihovníkem</string>
+    <string name="tab_text_1">Záložka 1</string>
+    <string name="tab_text_2">Záložka 2</string>
+    <string name="tab_text_3">Záložka 3</string>
+    <string name="section_format">Pozdrav světu ze sekce: %1$d</string>
+    <string name="no_launches_found">Žádné starty nenalezeny</string>
+    <string name="landing_information">Infomace o přistání</string>
+    <string name="payload">Náklad: %d (kg)</string>
+    <string name="spacecraft_format">%s Kosmická loď</string>
+    <string name="crew_capacity">Počet míst pro posádku: %s</string>
+    <string name="current_weather">Aktuální předpověď počasí</string>
+    <string name="upcoming_with_space">"Nadcházející "</string>
+    <string name="previous_with_space">"Předcházející "</string>
+    <string name="watch">Sledovat</string>
+    <string name="notification_schedule_changed">AKTUALIZACE PLÁNU: Další pokus ne dříve než %s</string>
+    <string name="notification_launch_successful">Start byl úspěšný!</string>
+    <string name="notification_launch_liftoff">Po startu! Raketa nyní letí!</string>
+    <string name="notification_one_minute">Pokus o start za méně než jednu minutu v %s</string>
+    <string name="notification_ten_minutes">Pokus o start za méně než dest minut v %s</string>
+    <string name="notification_one_hour">Pokus o start za méně než jednu hodinu v %s</string>
+    <string name="notification_twenty_four_hours">Pokus o start za méně než 24 hodin v %s</string>
+    <string name="settings_in_flight">V letu</string>
+    <string name="settings_in_flight_summary">Dostat oznámení, když start je potvrzen a v letu.</string>
+    <string name="settings_success">Úspěch</string>
+    <string name="settings_success_summary">Dostat oznámení, když start je potvrzen jako úspěšný.</string>
+    <string name="settings_one_minute">Jedna minuta</string>
+    <string name="settings_one_minute_on">Dostat oznámení, jednu minutu před startem.</string>
+    <string name="settings_one_minute_off">Neoznamovat, když je start za jednu minutu.</string>
     <string name="mission_agency">Pořádající agentura mise</string>
 </resources>

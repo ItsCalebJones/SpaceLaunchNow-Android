@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="multi_calendar_reminder">
+        <item>Egy perc</item>
+        <item>Öt perc</item>
+        <item>Harminc perc</item>
+        <item>Egy óra</item>
+        <item>Két óra</item>
+        <item>Négy óra</item>
+        <item>Egy nap</item>
+    </string-array>
+    <string-array name="upcoming_array">
+        <item>Kettő</item>
+        <item>Egy</item>
+        <item>Öt</item>
+        <item>Húsz</item>
+        <item>Tíz</item>
+        <item>Összes (Nem ajánlott)</item>
+    </string-array>
+    <string-array name="sync_timer">
+        <item>Egy nap</item>
+        <item>Három nap</item>
+        <item>Egy hét</item>
+    </string-array>
+</resources>
