@@ -10,7 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -30,7 +30,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -47,24 +46,20 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cz.kinst.jakub.view.SimpleStatefulLayout;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseActivity;
-import me.calebjones.spacelaunchnow.common.customviews.generate.OnFeedbackListener;
 import me.calebjones.spacelaunchnow.common.customviews.generate.Rate;
+import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
+import me.calebjones.spacelaunchnow.content.data.details.DetailsDataRepository;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
-import me.calebjones.spacelaunchnow.content.events.LaunchRequestEvent;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.LauncherConfig;
-import me.calebjones.spacelaunchnow.data.networking.DataClient;
-import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
-import me.calebjones.spacelaunchnow.data.networking.error.LibraryError;
 import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.ui.launchdetail.OnFragmentInteractionListener;
 import me.calebjones.spacelaunchnow.ui.launchdetail.TabsAdapter;
-import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
@@ -73,17 +68,16 @@ import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.utils.views.CustomOnOffsetChangedListener;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import timber.log.Timber;
 
 public class LaunchDetailActivity extends BaseActivity
-        implements AppBarLayout.OnOffsetChangedListener, OnFragmentInteractionListener {
+        implements AppBarLayout.OnOffsetChangedListener, OnFragmentInteractionListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final int PERCENTAGE_TO_ANIMATE_AVATAR = 20;
     @BindView(R.id.fab_share)
     FloatingActionButton fabShare;
+    @BindView(R.id.stateful_view)
+    SimpleStatefulLayout statefulView;
     @BindView(R.id.adView)
     AdView adView;
     @BindView(R.id.detail_profile_image)
@@ -95,7 +89,7 @@ public class LaunchDetailActivity extends BaseActivity
     @BindView(R.id.detail_viewpager)
     ViewPager viewPager;
     @BindView(R.id.rootview)
-    CoordinatorLayout rootview;
+    CoordinatorLayout coordinatorLayout;
     @BindView(R.id.detail_swipe_refresh)
     SwipeRefreshLayout detailSwipeRefresh;
     @BindView(R.id.detail_tabs)
@@ -120,9 +114,11 @@ public class LaunchDetailActivity extends BaseActivity
     public boolean isYouTubePlayerFullScreen;
     public String response;
     public Launch launch;
-    private boolean fabShowable = true;
+    private boolean fabShowable = false;
+    private int launchId = 0;
     private Realm realm;
     private Rate rate;
+    private DetailsDataRepository detailsDataRepository;
 
     public LaunchDetailActivity() {
         super("Launch Detail Activity");
@@ -139,6 +135,7 @@ public class LaunchDetailActivity extends BaseActivity
         context = getApplicationContext();
         customTabActivityHelper = new CustomTabActivityHelper();
         sharedPreference = ListPreferences.getInstance(context);
+        detailsDataRepository = new DetailsDataRepository(context, getRealm());
 
         if (sharedPreference.isNightModeActive(this)) {
             statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
@@ -158,14 +155,18 @@ public class LaunchDetailActivity extends BaseActivity
         setTheme(m_theme);
         setContentView(R.layout.activity_launch_detail);
         ButterKnife.bind(this);
-        detailSwipeRefresh.setEnabled(false);
+
+        detailSwipeRefresh.setOnRefreshListener(this);
+        fabShare.hide();
+        statefulView.showProgress();
+        statefulView.setOfflineRetryOnClickListener(v -> fetchDataFromNetwork(launchId));
 
         rate = new Rate.Builder(context)
                 .setTriggerCount(10)
                 .setMinimumInstallTime(TimeUnit.DAYS.toMillis(3))
                 .setMessage(R.string.please_rate_short)
                 .setFeedbackAction(() -> showFeedback())
-                .setSnackBarParent(rootview)
+                .setSnackBarParent(coordinatorLayout)
                 .build();
 
         rate.showRequest();
@@ -209,57 +210,11 @@ public class LaunchDetailActivity extends BaseActivity
         String type = mIntent.getStringExtra("TYPE");
 
         if (type != null && type.equals("launch")) {
-            final int id = mIntent.getIntExtra("launchID", 0);
-
-            Launch launch = getRealm().where(Launch.class).equalTo("id", id).findFirst();
-            if (launch != null) {
-                updateViews(launch);
-            }
-            if (savedInstanceState == null) {
-                detailSwipeRefresh.setRefreshing(true);
-                DataClient.getInstance().getLaunchById(id, new Callback<Launch>() {
-                    @Override
-                    public void onResponse(Call<Launch> call, Response<Launch> response) {
-                        if (response.isSuccessful()) {
-                            final Launch item = response.body();
-                            getRealm().executeTransactionAsync(bgRealm -> {
-                                Launch previous = bgRealm.where(Launch.class)
-                                        .equalTo("id", item.getId())
-                                        .findFirst();
-                                if (previous != null) {
-                                    item.setEventID(previous.getEventID());
-                                }
-                                bgRealm.copyToRealmOrUpdate(item);
-                                Timber.v("Updated detailLaunch: %s", item.getId());
-                            }, () -> sendUpdateView(id));
-                        } else {
-                            LibraryError error = ErrorUtil.parseLibraryError(response);
-                            if (error.getMessage() != null && error.getMessage().contains("None found")) {
-                                final Launch launch = getRealm().where(Launch.class).equalTo("id", id).findFirst();
-                                if (launch != null) {
-                                    getRealm().executeTransaction(realm -> launch.deleteFromRealm());
-                                }
-                                Toast.makeText(LaunchDetailActivity.this, R.string.error_loading_launch, Toast.LENGTH_SHORT).show();
-                                onBackPressed();
-                            }
-                        }
-
-                        detailSwipeRefresh.setRefreshing(false);
-                    }
-
-                    @Override
-                    public void onFailure(Call<Launch> call, Throwable t) {
-                        Launch item = getRealm().where(Launch.class)
-                                .equalTo("id", id)
-                                .findFirst();
-                        if (item != null) {
-                            updateViews(item);
-                        }
-                        detailSwipeRefresh.setRefreshing(false);
-                    }
-                });
-            }
+            launchId = mIntent.getIntExtra("launchID", 0);
+            fetchDataFromDatabaseForTitle(launchId);
+            fetchDataFromNetwork(launchId);
         }
+
 
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -269,9 +224,69 @@ public class LaunchDetailActivity extends BaseActivity
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
             }
         }
+    }
 
+    private void fetchDataFromNetwork(int launchId) {
+        detailsDataRepository.getLaunchFromNetwork(launchId, new Callbacks.DetailsCallback() {
+            @Override
+            public void onLaunchLoaded(Launch launch) {
+                updateViews(launch);
+            }
 
+            @Override
+            public void onNetworkStateChanged(boolean refreshing) {
+                showNetworkLoading(refreshing);
+            }
 
+            @Override
+            public void onError(String message, @Nullable Throwable throwable) {
+                if (throwable != null) {
+                    Timber.e(throwable);
+                } else {
+                    Timber.e(message);
+                }
+                fetchDataFromDatabase(launchId);
+            }
+
+            @Override
+            public void onLaunchDeleted() {
+                SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, "Error: Launch not found.");
+            }
+        });
+    }
+
+    private void fetchDataFromDatabase(int launchId) {
+        Launch launch = detailsDataRepository.getLaunch(launchId);
+        if (launch != null) {
+            updateViews(launch);
+        } else {
+            SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, "Unable to load launch.");
+        }
+    }
+
+    private void fetchDataFromDatabaseForTitle(int launchId) {
+        Launch launch = detailsDataRepository.getLaunch(launchId);
+        if (launch != null) {
+            setTitleView(launch);
+        }
+    }
+
+    private void showNetworkLoading(boolean loading) {
+        if (loading) {
+            showLoading();
+        } else {
+            hideLoading();
+        }
+    }
+
+    private void showLoading() {
+        Timber.v("Show Loading...");
+        detailSwipeRefresh.post(() -> detailSwipeRefresh.setRefreshing(true));
+    }
+
+    private void hideLoading() {
+        Timber.v("Hide Loading...");
+        detailSwipeRefresh.post(() -> detailSwipeRefresh.setRefreshing(false));
     }
 
     private void showFeedback() {
@@ -281,55 +296,36 @@ public class LaunchDetailActivity extends BaseActivity
                 .content(R.string.feedback_description)
                 .neutralColor(ContextCompat.getColor(this, R.color.colorPrimary))
                 .negativeText(R.string.launch_data)
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        String url = getString(R.string.launch_library_reddit);
-                        Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(url));
-                        startActivity(i);
-                    }
+                .onNegative((dialog, which) -> {
+                    String url = getString(R.string.launch_library_reddit);
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
                 })
                 .positiveColor(ContextCompat.getColor(this, R.color.colorPrimary))
                 .positiveText(R.string.app_feedback)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.getBuilder()
-                                .title(R.string.need_support)
-                                .content(R.string.need_support_description)
-                                .neutralText(R.string.email)
-                                .negativeText(R.string.cancel)
-                                .positiveText(R.string.discord)
-                                .onNeutral(new MaterialDialog.SingleButtonCallback() {
-                                    @Override
-                                    public void onClick(MaterialDialog dialog, DialogAction which) {
-                                        Intent intent = new Intent(Intent.ACTION_SENDTO);
-                                        intent.setData(Uri.parse("mailto:"));
-                                        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@spacelaunchnow.me"});
-                                        intent.putExtra(Intent.EXTRA_SUBJECT, "Space Launch Now - Feedback");
+                .onPositive((dialog, which) -> dialog.getBuilder()
+                        .title(R.string.need_support)
+                        .content(R.string.need_support_description)
+                        .neutralText(R.string.email)
+                        .negativeText(R.string.cancel)
+                        .positiveText(R.string.discord)
+                        .onNeutral((dialog1, which1) -> {
+                            Intent intent = new Intent(Intent.ACTION_SENDTO);
+                            intent.setData(Uri.parse("mailto:"));
+                            intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@spacelaunchnow.me"});
+                            intent.putExtra(Intent.EXTRA_SUBJECT, "Space Launch Now - Feedback");
 
-                                        startActivity(Intent.createChooser(intent, "Email via..."));
-                                    }
-                                })
-                                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                    @Override
-                                    public void onClick(MaterialDialog dialog, DialogAction which) {
-                                        String url = "https://discord.gg/WVfzEDW";
-                                        Intent i = new Intent(Intent.ACTION_VIEW);
-                                        i.setData(Uri.parse(url));
-                                        startActivity(i);
-                                    }
-                                })
-                                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                                    @Override
-                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .show();
-                    }
-                })
+                            startActivity(Intent.createChooser(intent, "Email via..."));
+                        })
+                        .onPositive((dialog12, which12) -> {
+                            String url = "https://discord.gg/WVfzEDW";
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(url));
+                            startActivity(i);
+                        })
+                        .onNegative((dialog13, which13) -> dialog13.dismiss())
+                        .show())
                 .show();
     }
 
@@ -345,100 +341,77 @@ public class LaunchDetailActivity extends BaseActivity
         }
     }
 
-
-    private void sendUpdateView(int id) {
-        Launch item = getRealm().where(Launch.class)
-                .equalTo("id", id)
-                .findFirst();
-        if (item != null) {
-            updateViews(item);
+    private void updateViews(Launch launch) {
+        if (launch != null) {
+            fabShowable = true;
+            this.launch = launch;
+            tabAdapter.updateLaunches(launch);
+            setTitleView(launch);
+            fabShare.show();
+            statefulView.showContent();
         } else {
-            fabShare.hide();
+            statefulView.showEmpty();
         }
     }
 
-    private void updateViews(Launch launch) {
-        try {
-            this.launch = launch;
+    private void setTitleView(Launch launch) {
+        if (!this.isDestroyed() && launch != null && launch.getRocket().getConfiguration() != null) {
+            Timber.v("Loading detailLaunch %s", launch.getId());
+            findProfileLogo(launch);
+            findRocketImage(launch);
+            detail_mission_location.setText(launch.getPad().getName());
+            detail_rocket.setText(launch.getName());
+        } else if (this.isDestroyed()) {
+            Timber.v("DetailLaunch is destroyed, stopping loading data.");
+        }
+    }
 
-            tabAdapter.updateLaunches(launch);
-            if (!this.isDestroyed() && launch != null && launch.getRocket().getConfiguration() != null) {
-                Timber.v("Loading detailLaunch %s", launch.getId());
-                findProfileLogo();
-                if (launch.getRocket().getConfiguration().getName() != null) {
-                    if (launch.getRocket().getConfiguration().getImageUrl() != null
-                            && launch.getRocket().getConfiguration().getImageUrl().length() > 0
-                            && !launch.getRocket().getConfiguration().getImageUrl().contains("placeholder")) {
-                        final String image = launch.getRocket().getConfiguration().getImageUrl();
-                        GlideApp.with(this)
-                                .load(image)
-                                .placeholder(R.drawable.placeholder)
-                                .into(detail_profile_backdrop);
-                        detail_profile_backdrop.setOnClickListener(view -> showImageFullscreen(image));
-                        getLaunchVehicle(launch, false);
-                    } else {
-                        getLaunchVehicle(launch, true);
+    private void findRocketImage(Launch launch) {
+        if (launch.getRocket().getConfiguration().getName() != null) {
+            if (launch.getRocket().getConfiguration().getImageUrl() != null
+                    && launch.getRocket().getConfiguration().getImageUrl().length() > 0
+                    && !launch.getRocket().getConfiguration().getImageUrl().contains("placeholder")) {
+                final String image = launch.getRocket().getConfiguration().getImageUrl();
+                GlideApp.with(this)
+                        .load(image)
+                        .into(detail_profile_backdrop);
+                detail_profile_backdrop.setOnClickListener(view -> showImageFullscreen(image));
+            }
+        }
+    }
+
+    private void findProfileLogo(Launch launch) {
+
+        String locationCountryCode;
+        if (launch.getRocket().getConfiguration().getLaunchServiceProvider() != null) {
+            if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getNationUrl() != null) {
+                applyProfileLogo(launch.getRocket().getConfiguration().getLaunchServiceProvider().getNationUrl());
+            } else {
+                locationCountryCode = launch.getRocket().getConfiguration().getLaunchServiceProvider().getCountryCode();
+                //Go through various CountryCodes and assign flag.
+                if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev().contains("ASA")) {
+                    applyProfileLogo(getString(R.string.ariane_logo));
+                } else if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev().contains("SpX")) {
+                    applyProfileLogo(getString(R.string.spacex_logo));
+                } else if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev().contains("BA")) {
+                    applyProfileLogo(getString(R.string.Yuzhnoye_logo));
+                } else if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev().contains("ULA")) {
+                    applyProfileLogo(getString(R.string.ula_logo));
+                } else if (locationCountryCode.length() == 3) {
+                    if (locationCountryCode.contains("USA")) {
+                        applyProfileLogo(getString(R.string.usa_flag));
+                    } else if (locationCountryCode.contains("RUS")) {
+                        applyProfileLogo(getString(R.string.rus_logo));
+                    } else if (locationCountryCode.contains("CHN")) {
+                        applyProfileLogo(getString(R.string.chn_logo));
+                    } else if (locationCountryCode.contains("IND")) {
+                        applyProfileLogo(getString(R.string.ind_logo));
+                    } else if (locationCountryCode.contains("JPN")) {
+                        applyProfileLogo(getString(R.string.jpn_logo));
                     }
                 }
-            } else if (this.isDestroyed()) {
-                Timber.v("DetailLaunch is destroyed, stopping loading data.");
-            }
-
-            //Assign the title and mission location data
-            detail_rocket.setText(launch.getName());
-            fabShare.show();
-        } catch (NoSuchMethodError e) {
-            Timber.e(e);
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    private void findProfileLogo() {
-
-        //Default location, mission is unknown.
-        String location = getString(R.string.unknown_location);
-        String mission = getString(R.string.unknown_mission);
-        String locationCountryCode = null;
-        String agencyName = null;
-        //This checks to see if a location is available
-
-        if (launch.getRocket().getConfiguration().getLaunchServiceProvider() != null) {
-            locationCountryCode = launch.getRocket().getConfiguration().getLaunchServiceProvider().getCountryCode();
-            agencyName = launch.getRocket().getConfiguration().getLaunchServiceProvider().getName();
-            //Go through various CountryCodes and assign flag.
-            if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev().contains("ASA")) {
-                applyProfileLogo(getString(R.string.ariane_logo));
-            } else if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev().contains("SpX")) {
-                applyProfileLogo(getString(R.string.spacex_logo));
-            } else if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev().contains("BA")) {
-                applyProfileLogo(getString(R.string.Yuzhnoye_logo));
-            } else if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev().contains("ULA")) {
-                applyProfileLogo(getString(R.string.ula_logo));
-            } else if (locationCountryCode.length() == 3) {
-                if (locationCountryCode.contains("USA")) {
-                    applyProfileLogo(getString(R.string.usa_flag));
-                } else if (locationCountryCode.contains("RUS")) {
-                    applyProfileLogo(getString(R.string.rus_logo));
-                } else if (locationCountryCode.contains("CHN")) {
-                    applyProfileLogo(getString(R.string.chn_logo));
-                } else if (locationCountryCode.contains("IND")) {
-                    applyProfileLogo(getString(R.string.ind_logo));
-                } else if (locationCountryCode.contains("JPN")) {
-                    applyProfileLogo(getString(R.string.jpn_logo));
-                }
             }
         }
-
-        Timber.v("LaunchDetailActivity - CountryCode: %s - LSP: %s - %s",
-                String.valueOf(locationCountryCode), locationCountryCode, agencyName);
-
-        location = launch.getPad().getName();
-        //Assigns the result of the two above checks.
-        detail_mission_location.setText(location);
     }
 
     private void applyProfileLogo(String url) {
@@ -454,26 +427,6 @@ public class LaunchDetailActivity extends BaseActivity
     @Override
     public void onResume() {
         super.onResume();
-    }
-
-    private void getLaunchVehicle(Launch result, boolean setImage) {
-        String query;
-        if (result.getRocket().getConfiguration().getName().contains("Space Shuttle")) {
-            query = "Space Shuttle";
-        } else {
-            query = result.getRocket().getConfiguration().getName();
-        }
-        LauncherConfig launchVehicle = getRealm().where(LauncherConfig.class)
-                .contains("name", query)
-                .findFirst();
-        if (setImage) {
-            if (launchVehicle != null && launchVehicle.getImageUrl() != null && launchVehicle.getImageUrl().length() > 0 && !launchVehicle.getImageUrl().contains("placeholder")) {
-                GlideApp.with(this)
-                        .load(launchVehicle.getImageUrl())
-                        .into(detail_profile_backdrop);
-                Timber.d("Glide Loading: %s %s", launchVehicle.getName(), launchVehicle.getImageUrl());
-            }
-        }
     }
 
     public void setData(String data) {
@@ -593,7 +546,7 @@ public class LaunchDetailActivity extends BaseActivity
                     .startChooser();
             Analytics.getInstance().sendLaunchShared("Share FAB", launch.getName() + "-" + launch.getId().toString());
         } else {
-            SnackbarHandler.showErrorSnackbar(this, rootview, "Error - unable to share this launch.");
+            SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, "Error - unable to share this launch.");
         }
     }
 
@@ -693,6 +646,13 @@ public class LaunchDetailActivity extends BaseActivity
             } else {
                 this.startActivity(animateIntent);
             }
+        }
+    }
+
+    @Override
+    public void onRefresh() {
+        if (launchId != 0) {
+            fetchDataFromNetwork(launchId);
         }
     }
 }

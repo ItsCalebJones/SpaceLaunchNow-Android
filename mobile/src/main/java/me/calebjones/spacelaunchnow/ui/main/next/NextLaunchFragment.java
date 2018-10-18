@@ -182,7 +182,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             FABMenu.setVisibility(View.VISIBLE);
         }
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
 
         //If preference is for small card, landscape tablets get three others get two.
@@ -196,10 +196,10 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         mRecyclerView.setAdapter(adapter);
 
 
-        coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.coordinatorLayout);
+        coordinatorLayout = view.findViewById(R.id.coordinatorLayout);
 
         /*Set up Pull to refresh*/
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.activity_main_swipe_refresh_layout);
+        mSwipeRefreshLayout = view.findViewById(R.id.activity_main_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         ViewCompat.setNestedScrollingEnabled(mRecyclerView, false);
