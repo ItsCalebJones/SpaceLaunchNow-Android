@@ -47,16 +47,19 @@ public class DetailsDataRepository {
 
             @Override
             public void onNetworkFailure(int code) {
+                launchCallback.onNetworkStateChanged(false);
                 launchCallback.onError("Unable to load launch data.", null);
             }
 
             @Override
             public void onLaunchDeleted() {
+                launchCallback.onNetworkStateChanged(false);
                 launchCallback.onLaunchDeleted();
             }
 
             @Override
             public void onFailure(Throwable throwable) {
+                launchCallback.onNetworkStateChanged(false);
                 launchCallback.onError("An error has occurred! Uh oh.", throwable);
             }
         });

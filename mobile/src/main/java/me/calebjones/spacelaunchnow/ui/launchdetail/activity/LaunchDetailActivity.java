@@ -248,8 +248,10 @@ public class LaunchDetailActivity extends BaseActivity
             public void onError(String message, @Nullable Throwable throwable) {
                 if (throwable != null) {
                     Timber.e(throwable);
+                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, String.format("Error: %s", throwable.getLocalizedMessage()));
                 } else {
                     Timber.e(message);
+                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
                 }
                 fetchDataFromDatabase(launchId);
             }
