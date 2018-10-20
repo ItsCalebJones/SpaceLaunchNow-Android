@@ -515,7 +515,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 }
 
                 UpdateWearJob.scheduleJobNow();
-                fetchData(false);
+                fetchData(true);
                 if (switchPreferences.getCalendarStatus()) {
                     SyncCalendarJob.scheduleImmediately();
                 }
