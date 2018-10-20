@@ -21,6 +21,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.RetroFitFragment;
@@ -53,6 +54,7 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
     CoordinatorLayout coordinatorLayout;
     @BindView(R.id.swiperefresh)
     SwipeRefreshLayout swipeRefreshLayout;
+    private Unbinder unbinder;
 
 
     @Override
@@ -68,7 +70,7 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
         super.onCreateView(inflater, container, savedInstanceState);
 
         view = inflater.inflate(R.layout.fragment_launch_vehicles, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         mRecyclerView = view.findViewById(R.id.vehicle_detail_list);
         coordinatorLayout = view.findViewById(R.id.vehicle_coordinator);
@@ -104,6 +106,14 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
         statefulView.showProgress();
         statefulView.setOfflineRetryOnClickListener(v -> loadJSON(false));
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Timber.v("onDestroyView");
+        swipeRefreshLayout.setOnRefreshListener(null);
+        unbinder.unbind();
     }
 
 

@@ -24,7 +24,7 @@
     </string-array>
     <string-array name="spinner_list_item_array">
         <item>Alle</item>
-        <item>Kommend</item>
-        <item>Vergangen</item>
+        <item>Kommende</item>
+        <item>Vergangene</item>
     </string-array>
 </resources>

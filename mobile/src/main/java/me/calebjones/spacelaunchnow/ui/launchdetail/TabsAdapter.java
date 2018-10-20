@@ -26,37 +26,6 @@ public class TabsAdapter extends FragmentPagerAdapter {
         this.context = context;
     }
 
-    public void updateLaunches(Launch launch) {
-        if (summaryFragment != null) {
-            summaryFragment.setLaunch(launch);
-        }
-        if (missionFragment != null) {
-            missionFragment.setLaunch(launch);
-        }
-        if (agencyFragment != null) {
-            agencyFragment.setLaunch(launch);
-        }
-    }
-
-    public void updateSummaryLaunch(Launch launch) {
-        if (summaryFragment != null) {
-            summaryFragment.setLaunch(launch);
-        }
-    }
-
-    public void updatAgencyLaunch(Launch launch) {
-        if (agencyFragment != null) {
-            agencyFragment.setLaunch(launch);
-        }
-    }
-
-
-    public void updateMissionLaunch(Launch launch) {
-        if (missionFragment != null) {
-            missionFragment.setLaunch(launch);
-        }
-    }
-
     @Override
     public int getCount() {
         return 3;

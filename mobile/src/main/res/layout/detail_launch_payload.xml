@@ -166,7 +166,7 @@
             android:layout_margin="@dimen/material_card_edge_margin"
             android:animateLayoutChanges="true"
             android:padding="@dimen/material_card_edge_margin"
-            app:cardCornerRadius="@dimen/card_view_corner_radius"
+            app:cardCornerRadius="4dp"
             app:cardElevation="@dimen/material_card_elevation_resting"
             app:cardPreventCornerOverlap="true"
             app:cardUseCompatPadding="true">
@@ -439,6 +439,7 @@
 
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:layout_marginEnd="20dp"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="18dp"
@@ -448,9 +449,11 @@
                     android:singleLine="false"
                     android:text="@string/thrust_at_launch"
                     android:textColor="?android:textColorSecondary"
+                    app:layout_constraintBottom_toTopOf="@+id/launcher_launches"
                     app:layout_constraintEnd_toEndOf="@+id/launch_vehicle"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/launch_vehicle_specs_launch_mass" />
+                    app:layout_constraintTop_toTopOf="@+id/launch_vehicle_specs_launch_mass"
+                    app:layout_constraintVertical_bias="0.0" />
 
 
                 <android.support.v7.widget.AppCompatButton
@@ -511,6 +514,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/material_card_edge_margin"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
                     android:gravity="center"
                     android:text="@string/view_more_launches"
                     android:textSize="12sp"

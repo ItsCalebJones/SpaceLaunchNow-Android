@@ -38,6 +38,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import de.mrapp.android.preference.activity.PreferenceActivity;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.BuildConfig;
@@ -123,6 +124,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     private CallBackListener callBackListener;
     private boolean filterViewShowing;
     private boolean switchChanged;
+    Unbinder unbinder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -166,7 +168,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
         setHasOptionsMenu(true);
         view = inflater.inflate(R.layout.fragment_upcoming, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         setUpSwitches();
         no_data = view.findViewById(R.id.no_launches);
@@ -180,7 +182,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             FABMenu.setVisibility(View.VISIBLE);
         }
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
 
         //If preference is for small card, landscape tablets get three others get two.
@@ -194,10 +196,10 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         mRecyclerView.setAdapter(adapter);
 
 
-        coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.coordinatorLayout);
+        coordinatorLayout = view.findViewById(R.id.coordinatorLayout);
 
         /*Set up Pull to refresh*/
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.activity_main_swipe_refresh_layout);
+        mSwipeRefreshLayout = view.findViewById(R.id.activity_main_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         ViewCompat.setNestedScrollingEnabled(mRecyclerView, false);
@@ -310,7 +312,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     public void fetchData(boolean forceRefresh) {
         Timber.v("Sending GET_UP_LAUNCHES");
-        preferredCount = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
+        preferredCount = 10;
         nextLaunchDataRepository.getNextUpcomingLaunches(preferredCount, forceRefresh, new Callbacks.NextLaunchesCallback() {
             @Override
             public void onLaunchesLoaded(RealmResults<Launch> launches) {
@@ -328,6 +330,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     Timber.e(throwable);
                 } else {
                     Timber.e(message);
+                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
                 }
                 SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
             }
@@ -336,7 +339,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     private void updateAdapter(RealmResults<Launch> launches) {
         adapter.clear();
-        preferredCount = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
+        preferredCount = 10;
         if (launches.size() >= preferredCount) {
             no_data.setVisibility(View.GONE);
             viewMoreLaunches.setVisibility(View.VISIBLE);
@@ -524,6 +527,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     public void onDestroyView() {
         super.onDestroyView();
         Timber.v("onDestroyView");
+        callBackListener = null;
+        mSwipeRefreshLayout.setOnRefreshListener(null);
+        unbinder.unbind();
     }
 
     private void confirm() {

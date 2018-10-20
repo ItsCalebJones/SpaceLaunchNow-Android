@@ -2,6 +2,7 @@ package me.calebjones.spacelaunchnow.ui.launches.agency;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -270,6 +271,7 @@ public class AgencyLaunchActivity extends AppCompatActivity implements UpcomingA
         // FragmentManger). Simply save the returned Fragment from
         // super.instantiateItem() into an appropriate reference depending
         // on the ViewPager position.
+        @NonNull
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             Fragment createdFragment = (Fragment) super.instantiateItem(container, position);
@@ -284,6 +286,12 @@ public class AgencyLaunchActivity extends AppCompatActivity implements UpcomingA
             }
             return createdFragment;
         }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((View) object);
+        }
+
 
         @Override
         public CharSequence getPageTitle(int position) {

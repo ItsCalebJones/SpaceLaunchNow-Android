@@ -1,88 +1,66 @@
 package me.calebjones.spacelaunchnow.ui.launchdetail.fragments;
 
 import android.app.Dialog;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.zetterstrom.com.forecast.ForecastClient;
-import android.zetterstrom.com.forecast.models.DataPoint;
 import android.zetterstrom.com.forecast.models.Forecast;
 import android.zetterstrom.com.forecast.models.Unit;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.crashlytics.android.Crashlytics;
-import com.github.pwittchen.weathericonview.WeatherIconView;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.mypopsy.maps.StaticMap;
 
-import net.cachapa.expandablelayout.ExpandableLayout;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
+import butterknife.Unbinder;
 import io.reactivex.disposables.Disposable;
-import io.realm.Realm;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
-import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
-import me.calebjones.spacelaunchnow.content.data.LaunchStatus;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.events.LaunchEvent;
 import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
-import me.calebjones.spacelaunchnow.data.models.main.Landing;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.Pad;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
-import me.calebjones.spacelaunchnow.ui.launchdetail.OnFragmentInteractionListener;
+import me.calebjones.spacelaunchnow.ui.launchdetail.DetailsViewModel;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
-import me.calebjones.spacelaunchnow.ui.launches.launcher.UpcomingLauncherLaunchesFragment;
-import me.calebjones.spacelaunchnow.ui.main.next.CardAdapter;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.CountDownTimer;
+import me.calebjones.spacelaunchnow.utils.views.custom.CountDownView;
+import me.calebjones.spacelaunchnow.utils.views.custom.WeatherCard;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -91,6 +69,8 @@ import timber.log.Timber;
 
 public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer.OnInitializedListener {
 
+    @BindView(R.id.weather_card)
+    WeatherCard weatherCard;
     private SharedPreferences sharedPref;
     private ListPreferences sharedPreference;
     private Context context;
@@ -103,26 +83,11 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     private Dialog dialog;
     private boolean youTubePlaying = false;
     private int youTubeProgress = 0;
-    private OnFragmentInteractionListener mListener;
 
-    @BindView(R.id.weather_title)
-    TextView weatherTitle;
     @BindView(R.id.countdown_status)
     TextView countdownStatus;
-    @BindView(R.id.countdown_separator)
-    View countdownSeparator;
-    @BindView(R.id.content_TMinus_status)
-    TextView contentTMinusStatus;
-    @BindView(R.id.countdown_days)
-    TextView countdownDays;
-    @BindView(R.id.countdown_hours)
-    TextView countdownHours;
-    @BindView(R.id.countdown_minutes)
-    TextView countdownMinutes;
-    @BindView(R.id.countdown_seconds)
-    TextView countdownSeconds;
     @BindView(R.id.countdown_layout)
-    View countdownLayout;
+    CountDownView countDownView;
     @BindView(R.id.launch_summary)
     NestedScrollView launchSummary;
     @BindView(R.id.map_view_summary)
@@ -131,76 +96,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     TextView launch_date_title;
     @BindView(R.id.date)
     TextView date;
-    @BindView(R.id.launch_status)
-    TextView launch_status;
     @BindView(R.id.watchButton)
     AppCompatButton watchButton;
-    @BindView(R.id.weather_card)
-    CardView weatherCard;
-    @BindView(R.id.weather_icon)
-    WeatherIconView weatherIconView;
-    @BindView(R.id.weather_current_temp)
-    TextView weatherCurrentTemp;
-    @BindView(R.id.weather_feels_like)
-    TextView weatherFeelsLike;
-    @BindView(R.id.weather_low_high)
-    TextView weatherLowHigh;
-    @BindView(R.id.weather_location)
-    TextView weatherLocation;
-    @BindView(R.id.weather_percip_chance)
-    TextView weatherPrecip;
-    @BindView(R.id.weather_wind_speed)
-    TextView weatherWindSpeed;
-    @BindView(R.id.weather_summary_day)
-    TextView weatherSummaryDay;
-    @BindView(R.id.day_two_weather_icon)
-    WeatherIconView dayTwoWeatherIconView;
-    @BindView(R.id.day_two_low_high)
-    TextView dayTwoWeatherLowHigh;
-    @BindView(R.id.day_two_precip_prob)
-    TextView dayTwoWeatherPrecip;
-    @BindView(R.id.day_two_weather_wind_speed)
-    TextView dayTwoWeatherWindSpeed;
-    @BindView(R.id.day_two_day)
-    TextView dayTwoDay;
-    @BindView(R.id.day_three_weather_icon)
-    WeatherIconView dayThreeWeatherIconView;
-    @BindView(R.id.day_three_low_high)
-    TextView dayThreeWeatherLowHigh;
-    @BindView(R.id.day_three_precip_prob)
-    TextView dayThreeWeatherPrecip;
-    @BindView(R.id.day_three_weather_wind_speed)
-    TextView dayThreeWeatherWindSpeed;
-    @BindView(R.id.day_three_day)
-    TextView dayThreeDay;
-    @BindView(R.id.day_four_weather_icon)
-    WeatherIconView dayFourWeatherIconView;
-    @BindView(R.id.day_four_low_high)
-    TextView dayFourWeatherLowHigh;
-    @BindView(R.id.day_four_precip_prob)
-    TextView dayFourWeatherPrecip;
-    @BindView(R.id.day_four_weather_wind_speed)
-    TextView dayFourWeatherWindSpeed;
-    @BindView(R.id.day_four_day)
-    TextView dayFourDay;
-    @BindView(R.id.three_day_forecast)
-    View threeDayForecast;
-    @BindView(R.id.day_two_weather_wind_speed_icon)
-    WeatherIconView dayTwoWeatherWindIcon;
-    @BindView(R.id.day_three_weather_wind_speed_icon)
-    WeatherIconView dayThreeWeatherWindIcon;
-    @BindView(R.id.day_four_weather_wind_speed_icon)
-    WeatherIconView dayFourWeatherWindIcon;
-    @BindView(R.id.day_two_precip_prob_icon)
-    WeatherIconView dayTwoWeatherPrecipIcon;
-    @BindView(R.id.day_three_precip_prob_icon)
-    WeatherIconView dayThreeWeatherPrecipIcon;
-    @BindView(R.id.day_four_precip_prob_icon)
-    WeatherIconView dayFourWeatherPrecipIcon;
-    @BindView(R.id.weather_percip_chance_icon)
-    WeatherIconView weatherPrecipIcon;
-    @BindView(R.id.weather_wind_speed_icon)
-    WeatherIconView weatherSpeedIcon;
     @BindView(R.id.launch_window_text)
     TextView launchWindowText;
     @BindView(R.id.error_message)
@@ -209,6 +106,9 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     View youTubeView;
 
     public Disposable var;
+    private boolean current = true;
+    private Unbinder unbinder;
+    private DetailsViewModel model;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -233,7 +133,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
         View view = inflater.inflate(R.layout.detail_launch_summary, container, false);
 
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
         youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.add(R.id.youtube_view, youTubePlayerFragment).commit();
@@ -247,6 +147,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         return view;
     }
 
+
     @Override
     public void onResume() {
 
@@ -255,21 +156,18 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         } else {
             nightMode = false;
         }
-        if (detailLaunch != null && detailLaunch.isValid()) {
-            setUpViews(detailLaunch);
-        } else {
-            mListener.sendLaunchToFragment(OnFragmentInteractionListener.SUMMARY);
-        }
         super.onResume();
     }
 
     public void setLaunch(Launch launch) {
+        Timber.v("Launch update received: %s", launch.getName());
         detailLaunch = launch;
         setUpViews(launch);
     }
 
     private void fetchPastWeather() {
-        weatherTitle.setText("Launch Day Weather");
+        current = false;
+        weatherCard.setTitle("Launch Day Weather");
         if (detailLaunch.getPad() != null) {
 
             Pad pad = detailLaunch.getPad();
@@ -285,7 +183,9 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                 unit = Unit.SI;
             }
 
-            ForecastClient.getInstance().getForecast(latitude, longitude, (int) detailLaunch.getNet().getTime() / 1000, null, unit, null, false, new Callback<Forecast>() {
+            long longTime = detailLaunch.getNet().getTime() / 1000;
+            int time = (int) longTime;
+            ForecastClient.getInstance().getForecast(latitude, longitude, time, null, unit, null, false, new Callback<Forecast>() {
                 @Override
                 public void onResponse(Call<Forecast> forecastCall, Response<Forecast> response) {
                     if (response.isSuccessful()) {
@@ -309,7 +209,13 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         }
     }
 
+    private void updateWeatherView(Forecast forecast) {
+        weatherCard.setWeather(forecast, detailLaunch.getPad().getLocation().getName(), current ,nightMode);
+        weatherCard.setVisibility(View.VISIBLE);
+    }
+
     private void fetchCurrentWeather() {
+        current = true;
         // Sample WeatherLib client init
         if (detailLaunch.getPad() != null) {
 
@@ -345,199 +251,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                             Timber.e("ERROR: %s", t.getLocalizedMessage());
                         }
                     });
-        }
-    }
-
-    private void updateWeatherView(Forecast forecast) {
-        final String temp;
-        final String speed;
-        String precip;
-        String pressure;
-        String visibility;
-
-        if (sharedPref.getBoolean("weather_US_SI", true)) {
-            temp = "F";
-            speed = "Mph";
-            precip = "in.";
-            pressure = "mb";
-            visibility = "mile";
-        } else {
-            temp = "C";
-            speed = "m/s";
-            precip = "cm";
-            pressure = "hPa";
-            visibility = "km";
-        }
-        if (forecast.getCurrently() != null) {
-            if (forecast.getCurrently().getTemperature() != null) {
-                String currentTemp = String.valueOf(Math.round(forecast.getCurrently().getTemperature())) + (char) 0x00B0 + " " + temp;
-                weatherCurrentTemp.setText(currentTemp);
-            }
-            if (forecast.getCurrently().getApparentTemperature() != null) {
-                String feelsLikeTemp;
-                if (detailLaunch.getNet().after(Calendar.getInstance().getTime())) {
-                    feelsLikeTemp = "Feels like ";
-                } else {
-                    feelsLikeTemp = "Felt like ";
-                }
-                feelsLikeTemp = feelsLikeTemp + String.valueOf(Math.round(forecast.getCurrently().getApparentTemperature())) + (char) 0x00B0;
-                weatherFeelsLike.setText(feelsLikeTemp);
-            }
-
-            if (forecast.getCurrently().getWindSpeed() != null) {
-                String windSpeed = String.valueOf(Math.round(forecast.getCurrently().getWindSpeed())) + " " + speed;
-                weatherWindSpeed.setText(windSpeed);
-            }
-        }
-        if (forecast.getDaily() != null && forecast.getDaily().getDataPoints() != null && forecast.getDaily().getDataPoints().size() > 0) {
-            String highTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(0).getTemperatureMax()));
-            String lowTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(0).getTemperatureMin()));
-            String lowHigh = lowTemp + (char) 0x00B0 + " " + temp + " | " + highTemp + (char) 0x00B0 + " " + temp;
-            weatherLowHigh.setText(lowHigh);
-
-            if (forecast.getDaily().getDataPoints().get(0).getPrecipProbability() != null) {
-                double testPrecip = forecast.getDaily().getDataPoints().get(0).getPrecipProbability();
-                String precipProb = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(0).getPrecipProbability() * 100) + "%");
-                weatherPrecip.setText(precipProb);
-            }
-
-            if (forecast.getDaily().getDataPoints().size() >= 3) {
-
-                DataPoint dayOne = forecast.getDaily().getDataPoints().get(1);
-
-                if (dayOne.getIcon() != null && dayOne.getIcon().getText() != null) {
-                    //Day One!
-                    setIconView(dayTwoWeatherIconView, dayOne.getIcon().getText());
-                }
-
-                String dayTwoLowHigh = "";
-                if (dayOne.getTemperatureMax() != null && dayOne.getTemperatureMin() != null) {
-                    //Get Low - High temp
-                    String dayTwoHighTemp = String.valueOf(Math.round(dayOne.getTemperatureMax()));
-                    String dayTwoLowTemp = String.valueOf(Math.round(dayOne.getTemperatureMin()));
-                    dayTwoLowHigh = dayTwoLowTemp + (char) 0x00B0 + " " + temp + " | " + dayTwoHighTemp + (char) 0x00B0 + " " + temp;
-                }
-
-                //Get rain prop
-                String dayTwoPrecipProb = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(1).getPrecipProbability() * 100) + "%");
-
-                //Get Wind speed
-                String dayTwoWindSpeed = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(1).getWindSpeed())) + " " + speed;
-
-                //Get day date
-                String dayTwoDate = new SimpleDateFormat("EE ").format(forecast.getDaily().getDataPoints().get(1).getTime());
-
-                dayTwoWeatherLowHigh.setText(dayTwoLowHigh);
-                dayTwoWeatherPrecip.setText(dayTwoPrecipProb);
-                dayTwoWeatherWindSpeed.setText(dayTwoWindSpeed);
-                dayTwoDay.setText(dayTwoDate);
-
-                //Day Two!
-                setIconView(dayThreeWeatherIconView, forecast.getDaily().getDataPoints().get(2).getIcon().getText());
-
-                //Get Low - High temp
-                String dayThreeHighTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(2).getTemperatureMax()));
-                String dayThreeLowTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(2).getTemperatureMin()));
-                String dayThreeLowHigh = lowTemp + (char) 0x00B0 + " " + temp + " | " + highTemp + (char) 0x00B0 + " " + temp;
-
-                //Get rain prop
-                String dayThreePrecipProb = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(2).getPrecipProbability() * 100) + "%");
-
-                //Get Wind speed
-                String dayThreeWindSpeed = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(2).getWindSpeed())) + " " + speed;
-
-                //Get day date
-                String dayThreeDate = new SimpleDateFormat("EE").format(forecast.getDaily().getDataPoints().get(2).getTime());
-
-                dayThreeWeatherLowHigh.setText(dayThreeLowHigh);
-                dayThreeWeatherPrecip.setText(dayThreePrecipProb);
-                dayThreeWeatherWindSpeed.setText(dayThreeWindSpeed);
-                dayThreeDay.setText(dayThreeDate);
-
-                //Day Three!
-                setIconView(dayFourWeatherIconView, forecast.getDaily().getDataPoints().get(3).getIcon().getText());
-
-                //Get Low - High temp
-                String dayFourHighTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(3).getTemperatureMax()));
-                String dayFourLowTemp = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(3).getTemperatureMin()));
-                String dayFourLowHigh = lowTemp + (char) 0x00B0 + " " + temp + " | " + highTemp + (char) 0x00B0 + " " + temp;
-
-                String dayFourPrecipProb = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(3).getPrecipProbability() * 100) + "%");
-
-                //Get Wind speed
-                String dayFourWindSpeed = String.valueOf(Math.round(forecast.getDaily().getDataPoints().get(3).getWindSpeed())) + " " + speed;
-
-                //Get day date
-                String dayFourDate = new SimpleDateFormat("EE").format(forecast.getDaily().getDataPoints().get(3).getTime());
-
-                dayFourWeatherLowHigh.setText(dayFourLowHigh);
-                dayFourWeatherPrecip.setText(dayFourPrecipProb);
-                dayFourWeatherWindSpeed.setText(dayFourWindSpeed);
-                dayFourDay.setText(dayFourDate);
-            } else {
-                threeDayForecast.setVisibility(View.GONE);
-            }
-        }
-
-        if (forecast.getCurrently().getIcon() != null && forecast.getCurrently().getIcon().getText() != null) {
-            setIconView(weatherIconView, forecast.getCurrently().getIcon().getText());
-        }
-
-        if (forecast.getDaily() != null && forecast.getDaily().getSummary() != null) {
-            weatherSummaryDay.setText(forecast.getDaily().getSummary());
-        } else if (forecast.getCurrently() != null && forecast.getCurrently().getSummary() != null) {
-            weatherSummaryDay.setText(forecast.getCurrently().getSummary());
-        } else {
-            weatherSummaryDay.setVisibility(View.GONE);
-        }
-
-        weatherLocation.setText(detailLaunch.getPad().getLocation().getName());
-        weatherCard.setVisibility(View.VISIBLE);
-
-        if (nightMode) {
-            dayTwoWeatherWindIcon.setIconColor(Color.WHITE);
-            dayTwoWeatherPrecipIcon.setIconColor(Color.WHITE);
-            dayThreeWeatherWindIcon.setIconColor(Color.WHITE);
-            dayThreeWeatherPrecipIcon.setIconColor(Color.WHITE);
-            dayFourWeatherWindIcon.setIconColor(Color.WHITE);
-            dayFourWeatherPrecipIcon.setIconColor(Color.WHITE);
-            weatherPrecipIcon.setIconColor(Color.WHITE);
-            weatherSpeedIcon.setIconColor(Color.WHITE);
-        }
-    }
-
-    private void setIconView(WeatherIconView view, String icon) {
-        if (icon.contains("partly-cloudy-day")) {
-            view.setIconResource(getString(R.string.wi_forecast_io_partly_cloudy_day));
-        } else if (icon.contains("partly-cloudy-night")) {
-            view.setIconResource(getString(R.string.wi_forecast_io_partly_cloudy_night));
-        } else if (icon.contains("clear-day")) {
-            view.setIconResource(getString(R.string.wi_forecast_io_clear_day));
-        } else if (icon.contains("clear-night")) {
-            view.setIconResource(getString(R.string.wi_forecast_io_clear_night));
-        } else if (icon.contains("rain")) {
-            view.setIconResource(getString(R.string.wi_forecast_io_rain));
-        } else if (icon.contains("snow")) {
-            view.setIconResource(getString(R.string.wi_forecast_io_snow));
-        } else if (icon.contains("sleet")) {
-            view.setIconResource(getString(R.string.wi_forecast_io_sleet));
-        } else if (icon.contains("wind")) {
-            view.setIconResource(getString(R.string.wi_forecast_io_wind));
-        } else if (icon.contains("fog")) {
-            view.setIconResource(getString(R.string.wi_forecast_io_fog));
-        } else if (icon.contains("cloudy")) {
-            view.setIconResource(getString(R.string.wi_forecast_io_cloudy));
-        } else if (icon.contains("hail")) {
-            view.setIconResource(getString(R.string.wi_forecast_io_hail));
-        } else if (icon.contains("thunderstorm")) {
-            view.setIconResource(getString(R.string.wi_forecast_io_thunderstorm));
-        } else if (icon.contains("tornado")) {
-            view.setIconResource(getString(R.string.wi_forecast_io_tornado));
-        }
-        if (nightMode) {
-            view.setIconColor(Color.WHITE);
-        } else {
-            view.setIconColor(Color.BLACK);
         }
     }
 
@@ -622,17 +335,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
             Date mDate;
             String dateText = null;
-
-            if (launch.getStatus().getId() == 1) {
-                String go = context.getResources().getString(R.string.status_go);
-                if (detailLaunch.getProbability() != null && detailLaunch.getProbability() > 0) {
-                    go = String.format("%s | Forecast - %s%%", go, detailLaunch.getProbability());
-                }
-                //GO for launch
-                launch_status.setText(go);
-            } else {
-                launch_status.setText(LaunchStatus.getLaunchStatusTitle(context, detailLaunch.getStatus().getId()));
-            }
 
             if (detailLaunch.getVidURLs() != null && detailLaunch.getVidURLs().size() > 0) {
 
@@ -867,217 +569,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
     private void setupCountdownTimer(Launch launch) {
         //If timestamp is available calculate TMinus and date.
-        if (launch.getNet() != null && (launch.getStatus().getId() == 1 || launch.getStatus().getId() == 2)) {
-            long longdate = launch.getNet().getTime();
-            final Date date = new Date(longdate);
-
-            Calendar future = Utils.DateToCalendar(date);
-            Calendar now = Calendar.getInstance();
-
-            now.setTimeInMillis(System.currentTimeMillis());
-            if (timer != null) {
-                Timber.v("Timer is not null, cancelling.");
-                timer.cancel();
-            }
-
-            final int status = launch.getStatus().getId();
-            final String hold = launch.getHoldreason();
-
-            final int nightColor = ContextCompat.getColor(context, R.color.dark_theme_secondary_text_color);
-            final int color = ContextCompat.getColor(context, R.color.colorTextSecondary);
-            final int accentColor = ContextCompat.getColor(context, R.color.colorAccent);
-
-            contentTMinusStatus.setVisibility(View.GONE);
-            long timeToFinish = future.getTimeInMillis() - now.getTimeInMillis();
-            if (timeToFinish > 0 && launch.getStatus().getId() == 1) {
-                timer = new CountDownTimer(timeToFinish, 1000) {
-                    StringBuilder time = new StringBuilder();
-
-                    @Override
-                    public void onFinish() {
-                        Timber.v("Countdown finished.");
-                        countdownDays.setText("00");
-                        countdownHours.setText("00");
-                        countdownMinutes.setText("00");
-                        countdownSeconds.setText("00");
-                        countdownStatus.setVisibility(View.VISIBLE);
-                        countdownStatus.setText("+");
-                        countUpTimer(longdate);
-                    }
-
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        time.setLength(0);
-                        setCountdownView(millisUntilFinished);
-                    }
-                }.start();
-            } else if (launch.getStatus().getId() == 3 || launch.getStatus().getId() == 4 || launch.getStatus().getId() == 7) {
-                countdownDays.setText("00");
-                countdownHours.setText("00");
-                countdownMinutes.setText("00");
-                countdownSeconds.setText("00");
-                showStatusDescription(launch);
-            } else if (launch.getStatus().getId() == 6 || launch.getStatus().getId() == 1) {
-                countdownStatus.setVisibility(View.VISIBLE);
-                countdownStatus.setText("+");
-                countUpTimer(longdate);
-            } else {
-                countdownDays.setText("- -");
-                countdownHours.setText("- -");
-                countdownMinutes.setText("- -");
-                countdownSeconds.setText("- -");
-                showStatusDescription(launch);
-            }
-        } else {
-            showStatusDescription(launch);
-        }
-    }
-
-    private void countUpTimer(long longdate) {
-        var = Observable
-                .interval(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
-                .subscribe(
-                        time -> {
-                            Calendar currentTime = Calendar.getInstance();
-                            long timeSince = currentTime.getTimeInMillis() - longdate;
-                            setCountdownView(timeSince);
-                        });
-    }
-
-    private void setCountdownView(long millisUntilFinished) {
-        // Calculate the Days/Hours/Mins/Seconds numerically.
-        long longDays = millisUntilFinished / 86400000;
-        long longHours = (millisUntilFinished / 3600000) % 24;
-        long longMins = (millisUntilFinished / 60000) % 60;
-        long longSeconds = (millisUntilFinished / 1000) % 60;
-
-        String days;
-        String hours;
-        String minutes;
-        String seconds;
-
-        if (longDays < 10) {
-            days = "0" + String.valueOf(longDays);
-        } else {
-            days = String.valueOf(longDays);
-        }
-
-
-        // Translate those numerical values to string values.
-        if (longHours < 10) {
-            hours = "0" + String.valueOf(longHours);
-        } else {
-            hours = String.valueOf(longHours);
-        }
-
-        if (longMins < 10) {
-            minutes = "0" + String.valueOf(longMins);
-        } else {
-            minutes = String.valueOf(longMins);
-        }
-
-        if (longSeconds < 10) {
-            seconds = "0" + String.valueOf(longSeconds);
-        } else {
-            seconds = String.valueOf(longSeconds);
-        }
-
-
-        // Update the views
-        if (Integer.valueOf(days) > 0) {
-            countdownDays.setText(days);
-        } else {
-            countdownDays.setText("00");
-        }
-
-        if (Integer.valueOf(hours) > 0) {
-            countdownHours.setText(hours);
-        } else if (Integer.valueOf(days) > 0) {
-            countdownHours.setText("00");
-        } else {
-            countdownHours.setText("00");
-        }
-
-        if (Integer.valueOf(minutes) > 0) {
-            countdownMinutes.setText(minutes);
-        } else if (Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
-            countdownMinutes.setText("00");
-        } else {
-            countdownMinutes.setText("00");
-        }
-
-        if (Integer.valueOf(seconds) > 0) {
-            countdownSeconds.setText(seconds);
-        } else if (Integer.valueOf(minutes) > 0 || Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
-            countdownSeconds.setText("00");
-        } else {
-            countdownSeconds.setText("00");
-        }
-    }
-
-
-    private void showStatusDescription(Launch launchItem) {
-        contentTMinusStatus.setVisibility(View.VISIBLE);
-        if (launchItem.getStatus().getId() == 2) {
-            if (launchItem.getRocket().getConfiguration().getLaunchServiceProvider() != null) {
-                contentTMinusStatus.setText(String.format(context.getString(R.string.pending_confirmed_go_specific), launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getName()));
-            } else {
-                contentTMinusStatus.setText(R.string.pending_confirmed_go);
-            }
-        } else if (launchItem.getStatus().getId() == 3) {
-            contentTMinusStatus.setText("Launch was a success!");
-        } else if (launchItem.getStatus().getId() == 4) {
-            countdownLayout.setVisibility(View.GONE);
-
-            if (launchItem.getFailreason() != null){
-                contentTMinusStatus.setText(launchItem.getFailreason());
-            } else {
-                contentTMinusStatus.setText("A launch failure has occurred.");
-            }
-        } else if (launchItem.getStatus().getId() == 5) {
-            if (launchItem.getHoldreason() != null){
-                contentTMinusStatus.setText(launchItem.getHoldreason());
-            } else {
-                contentTMinusStatus.setText("A hold has been placed on the launch.");
-            }
-        } else if (launchItem.getStatus().getId() == 6) {
-            contentTMinusStatus.setText("Launch is in flight.");
-        } else if (launchItem.getStatus().getId() == 7) {
-            countdownLayout.setVisibility(View.GONE);
-            if (launchItem.getFailreason() != null){
-                contentTMinusStatus.setText(launchItem.getFailreason());
-            } else {
-                contentTMinusStatus.setText("A partial launch failure has occurred.");
-            }
-        }
-    }
-
-    private void setDefaultCalendar() {
-        SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
-        final List<me.calebjones.spacelaunchnow.calendar.model.Calendar> calendarList = me.calebjones.spacelaunchnow.calendar.model.Calendar.getWritableCalendars(context.getContentResolver());
-
-        if (calendarList.size() > 0) {
-
-            final CalendarItem calendarItem = new CalendarItem();
-            calendarItem.setAccountName(calendarList.get(0).accountName);
-            calendarItem.setId(calendarList.get(0).id);
-
-            getRealm().executeTransactionAsync(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    realm.where(CalendarItem.class).findAll().deleteAllFromRealm();
-                    realm.copyToRealm(calendarItem);
-                }
-            }, new Realm.Transaction.OnSuccess() {
-                @Override
-                public void onSuccess() {
-                    CalendarSyncManager calendarSyncManager = new CalendarSyncManager(context);
-                    calendarSyncManager.syncAllEevnts();
-                }
-            });
-        } else {
-            Toast.makeText(context, "No Calendars available to sync detailLaunch events with.", Toast.LENGTH_LONG).show();
-            switchPreferences.setCalendarStatus(false);
+        if (launch.getNet() != null) {
+            countDownView.setLaunch(launch);
         }
     }
 
@@ -1130,6 +623,9 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        model = ViewModelProviders.of(getActivity()).get(DetailsViewModel.class);
+        // update UI
+        model.getLaunch().observe(this, this::setLaunch);
     }
 
     public static SummaryDetailFragment newInstance() {
@@ -1177,19 +673,11 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (timer != null) {
+            timer.cancel();
         }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+        unbinder.unbind();
     }
 }

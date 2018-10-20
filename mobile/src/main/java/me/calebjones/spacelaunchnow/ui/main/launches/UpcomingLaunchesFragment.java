@@ -24,6 +24,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
@@ -61,6 +62,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
 
+    Unbinder unbinder;
     private SearchView searchView;
     public boolean canLoadMore;
     private boolean statefulStateContentShow = false;
@@ -82,7 +84,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
         adapter = new ListAdapter(getContext());
 
         view = inflater.inflate(R.layout.fragment_launches, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
         layoutManager = new LinearLayoutManager(getContext());
@@ -176,6 +178,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
                     Timber.e(throwable);
                 } else {
                     Timber.e(message);
+                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
                 }
                 SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
             }
@@ -244,6 +247,16 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
                 Timber.e("Error setting mChildFragmentManager field %s ", e);
             }
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Timber.v("onDestroyView");
+        mRecyclerView.removeOnScrollListener(scrollListener);
+        scrollListener = null;
+        mSwipeRefreshLayout.setOnRefreshListener(null);
+        unbinder.unbind();
     }
 
 

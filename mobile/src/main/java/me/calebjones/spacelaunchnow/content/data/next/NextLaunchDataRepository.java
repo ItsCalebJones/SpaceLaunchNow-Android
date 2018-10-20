@@ -103,11 +103,13 @@ public class NextLaunchDataRepository {
 
             @Override
             public void onNetworkFailure(int code) {
+                callback.onNetworkStateChanged(false);
                 callback.onError("Unable to load launch data.", null);
             }
 
             @Override
             public void onFailure(Throwable throwable) {
+                callback.onNetworkStateChanged(false);
                 callback.onError("An error has occurred! Uh oh.", throwable);
             }
         });

@@ -221,6 +221,19 @@ public class LaunchApplication extends Application {
             });
         }
 
+        new Thread(() -> {
+            // Initialize Fabric with the debug-disabled crashlytics.
+            Crashlytics.setString("Timezone", String.valueOf(TimeZone.getDefault().getDisplayName()));
+            Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
+            Crashlytics.setBool("is24", DateFormat.is24HourFormat(context));
+            Crashlytics.setBool("Network State", Utils.isNetworkAvailable(context));
+            Crashlytics.setString("Network Info", Connectivity.getNetworkStatus(context));
+            Crashlytics.setBool("Debug Logging", sharedPref.getBoolean("debug_logging", false));
+            Crashlytics.setBool("Supporter", SupporterHelper.isSupporter());
+            Crashlytics.setBool("Calendar Sync", switchPreferences.getCalendarStatus());
+            Crashlytics.setBool("Notifications", sharedPref.getBoolean("notifications_new_message", true));
+        }).start();
+
     }
 
     private void restorePurchases() {
@@ -369,18 +382,6 @@ public class LaunchApplication extends Application {
                 .build();
         Fabric.with(context, crashlyticsKit);
         Analytics.create(this);
-
-        new Thread(() -> {
-            // Initialize Fabric with the debug-disabled crashlytics.
-            Crashlytics.setString("Timezone", String.valueOf(TimeZone.getDefault().getDisplayName()));
-            Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
-            Crashlytics.setBool("is24", DateFormat.is24HourFormat(context));
-            Crashlytics.setBool("Network State", Utils.isNetworkAvailable(context));
-            Crashlytics.setString("Network Info", Connectivity.getNetworkStatus(context));
-            Crashlytics.setBool("Debug Logging", sharedPref.getBoolean("debug_logging", false));
-            Crashlytics.setBool("Calendar Sync", switchPreferences.getCalendarStatus());
-            Crashlytics.setBool("Notifications", sharedPref.getBoolean("notifications_new_message", true));
-        }).start();
     }
 
     private void startJobs() {
