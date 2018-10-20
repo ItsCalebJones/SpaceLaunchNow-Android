@@ -12,10 +12,12 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.util.FilterBuilder;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.Constants;
@@ -81,8 +83,14 @@ public class NextLaunchDataRepository {
 
     private void getNextUpcomingLaunchesFromNetwork(int count, Callbacks.NextLaunchesCallback callback){
 
-        String locationIds = FilterBuilder.getLocationIds(context);
-        String lspIds = FilterBuilder.getLSPIds(context);
+        String locationIds = null;
+        String lspIds = null;
+
+        SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
+        if (!switchPreferences.getAllSwitch()) {
+            lspIds = FilterBuilder.getLSPIds(context);
+            locationIds = FilterBuilder.getLocationIds(context);
+        }
 
         callback.onNetworkStateChanged(true);
         dataLoader.getNextUpcomingLaunches(count, locationIds, lspIds, new Callbacks.NextNetworkCallback() {

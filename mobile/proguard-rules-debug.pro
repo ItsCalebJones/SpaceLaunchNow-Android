@@ -35,6 +35,11 @@
 public *;
 }
 
+-keepclassmembers enum * {
+	public static **[] values();
+	public static ** valueOf(java.lang.String);
+}
+
 -keeppackagenames org.jsoup.nodes
 
 -keep class org.xmlpull.v1.** { *;}
