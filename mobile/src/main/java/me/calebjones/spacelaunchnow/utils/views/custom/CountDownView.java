@@ -168,34 +168,41 @@ public class CountDownView extends ConstraintLayout {
         }
 
 
-        // Update the views
-        if (Integer.valueOf(days) > 0) {
-            countdownDays.setText(days);
-        } else {
+        try {
+            // Update the views
+            if (Integer.valueOf(days) > 0) {
+                countdownDays.setText(days);
+            } else {
+                countdownDays.setText("00");
+            }
+            
+            if (Integer.valueOf(hours) > 0) {
+                countdownHours.setText(hours);
+            } else if (Integer.valueOf(days) > 0) {
+                countdownHours.setText("00");
+            } else {
+                countdownHours.setText("00");
+            }
+
+            if (Integer.valueOf(minutes) > 0) {
+                countdownMinutes.setText(minutes);
+            } else if (Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
+                countdownMinutes.setText("00");
+            } else {
+                countdownMinutes.setText("00");
+            }
+
+            if (Integer.valueOf(seconds) > 0) {
+                countdownSeconds.setText(seconds);
+            } else if (Integer.valueOf(minutes) > 0 || Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
+                countdownSeconds.setText("00");
+            } else {
+                countdownSeconds.setText("00");
+            }
+        } catch (NumberFormatException e) {
+            countdownHours.setText("00");
             countdownDays.setText("00");
-        }
-
-        if (Integer.valueOf(hours) > 0) {
-            countdownHours.setText(hours);
-        } else if (Integer.valueOf(days) > 0) {
-            countdownHours.setText("00");
-        } else {
-            countdownHours.setText("00");
-        }
-
-        if (Integer.valueOf(minutes) > 0) {
-            countdownMinutes.setText(minutes);
-        } else if (Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
             countdownMinutes.setText("00");
-        } else {
-            countdownMinutes.setText("00");
-        }
-
-        if (Integer.valueOf(seconds) > 0) {
-            countdownSeconds.setText(seconds);
-        } else if (Integer.valueOf(minutes) > 0 || Integer.valueOf(hours) > 0 || Integer.valueOf(days) > 0) {
-            countdownSeconds.setText("00");
-        } else {
             countdownSeconds.setText("00");
         }
     }
@@ -220,12 +227,12 @@ public class CountDownView extends ConstraintLayout {
         String hold = launch.getHoldreason();
         String failure = launch.getFailreason();
 
-        if (hold != null){
+        if (hold != null) {
             statusReason.setText(hold);
             statusReason.setVisibility(VISIBLE);
         }
 
-        if (failure != null){
+        if (failure != null) {
             statusReason.setText(failure);
             statusReason.setVisibility(VISIBLE);
         }
