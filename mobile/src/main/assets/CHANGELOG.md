@@ -5,7 +5,17 @@ A space launch tracker for Android using data from the Launch Library API.
 ## Changelog
 #### Updated 6-11-2018
 ---
-### Version 2.6.3 (Latest)
+### Version 2.7.0
+#### Overview
+Added notifications for launch failures and partial-failure, bug fixes!
+
+#### Changelog
+* Added notifications for more then just a 'success'.
+* Fixed a bug where that was sharing the wrong URL.
+* Fixed a few bugs that caused crashes.
+
+
+### Version 2.6.3
 #### Overview
 Add In Flight and Launch Success notification types and other small fixes.
 

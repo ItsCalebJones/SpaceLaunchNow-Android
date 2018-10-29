@@ -175,7 +175,7 @@ public class CountDownView extends ConstraintLayout {
             } else {
                 countdownDays.setText("00");
             }
-            
+
             if (Integer.valueOf(hours) > 0) {
                 countdownHours.setText(hours);
             } else if (Integer.valueOf(days) > 0) {
