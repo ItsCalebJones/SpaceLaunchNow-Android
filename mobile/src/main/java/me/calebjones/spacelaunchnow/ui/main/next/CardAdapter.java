@@ -24,10 +24,16 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.crashlytics.android.Crashlytics;
+import com.prof.youtubeparser.VideoStats;
+import com.prof.youtubeparser.models.stats.Statistics;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -119,18 +125,18 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 }
 
                 holder.landingView.setVisibility(View.INVISIBLE);
-                if (launchItem.getRocket().getFirstStage() != null && launchItem.getRocket().getFirstStage().size() >= 1){
-                    if (launchItem.getRocket().getFirstStage().size() > 1){
+                if (launchItem.getRocket().getFirstStage() != null && launchItem.getRocket().getFirstStage().size() >= 1) {
+                    if (launchItem.getRocket().getFirstStage().size() > 1) {
                         String stagesText = "";
-                        for (Stage stage :  launchItem.getRocket().getFirstStage()){
+                        for (Stage stage : launchItem.getRocket().getFirstStage()) {
                             if (stage.getLanding().getLandingLocation() != null) {
                                 stagesText = stagesText + stage.getLanding().getLandingLocation().getAbbrev() + " ";
                             }
                         }
                         holder.landingView.setVisibility(View.VISIBLE);
                         holder.landing.setText(stagesText);
-                    } else if (launchItem.getRocket().getFirstStage().size() == 1){
-                        if (launchItem.getRocket().getFirstStage().first().getLanding() != null){
+                    } else if (launchItem.getRocket().getFirstStage().size() == 1) {
+                        if (launchItem.getRocket().getFirstStage().first().getLanding() != null) {
                             Landing landing = launchItem.getRocket().getFirstStage().first().getLanding();
                             if (landing.getLandingLocation() != null) {
                                 holder.landingView.setVisibility(View.VISIBLE);
@@ -347,14 +353,49 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                         });
                         for (RealmStr s : launch.getVidURLs()) {
                             //Do your stuff here
-                            adapter.add(new MaterialSimpleListItem.Builder(context)
-                                    .content(s.getVal())
-                                    .build());
+                            try {
+                                URI uri = new URI(s.getVal());
+
+                                String name;
+                                VideoStats videoStats = new VideoStats();
+                                if (uri.getHost().contains("youtube")){
+                                    name = "YouTube";
+                                    String youTubeURL = getYouTubeID(s.getVal());
+                                    // TODO fix API Key.
+                                    String url = videoStats.generateStatsRequest(youTubeURL, context.getResources().getString(R.string.GoogleMapsKey));
+                                    videoStats.execute(url);
+                                    videoStats.onFinish(new VideoStats.OnTaskCompleted() {
+                                        @Override
+                                        public void onTaskCompleted(Statistics stats) {
+                                            adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                    .content(name)
+                                                    .build());
+                                        }
+
+                                        @Override
+                                        public void onError() {
+                                            //what to do in case of error
+                                            adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                    .content(name)
+                                                    .build());
+                                        }
+                                    });
+                                } else {
+                                    name = uri.getHost();
+                                    adapter.add(new MaterialSimpleListItem.Builder(context)
+                                            .content(name)
+                                            .build());
+                                }
+
+
+                            } catch (URISyntaxException e) {
+                                e.printStackTrace();
+                            }
                         }
 
                         MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
                                 .title("Select a Source")
-                                .content("Long press for additional options.")
+                                .content("Long press item for additional options.")
                                 .adapter(adapter, null)
                                 .negativeText("Cancel");
                         builder.show();
@@ -420,5 +461,17 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     break;
             }
         }
+    }
+
+    private String getYouTubeID(String vidURL) {
+        final String regex = "(youtu\\.be\\/|youtube\\.com\\/(watch\\?(.*&)?v=|(embed|v)\\/|c\\/))([a-zA-Z0-9_-]{11}|[a-zA-Z].*)";
+        final Pattern pattern = Pattern.compile(regex);
+
+        Matcher matcher = pattern.matcher(vidURL);
+        Timber.v("Checking for match of %s", vidURL);
+        if (matcher.find() && (matcher.group(1) != null || matcher.group(2) != null) && matcher.group(5) != null) {
+            return matcher.group(5);
+        }
+        return null;
     }
 }

@@ -3,6 +3,8 @@ package me.calebjones.spacelaunchnow.utils.views.custom;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
+import android.support.constraint.Group;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
@@ -23,6 +25,8 @@ import timber.log.Timber;
 
 public class CountDownView extends ConstraintLayout {
 
+    @BindView(R.id.countdown_layout)
+    ConstraintLayout constraintLayout;
     @BindView(R.id.countdown_days)
     TextView countdownDays;
     @BindView(R.id.countdown_hours)
@@ -37,6 +41,8 @@ public class CountDownView extends ConstraintLayout {
     StatusPillView statusPill;
     @BindView(R.id.status_reason)
     TextView statusReason;
+    @BindView(R.id.countdown_view_group)
+    Group countdownGroup;
     private CountDownTimer timer;
     private Disposable var;
     private Launch launch;
@@ -116,6 +122,7 @@ public class CountDownView extends ConstraintLayout {
         countdownHours.setText("- -");
         countdownMinutes.setText("- -");
         countdownSeconds.setText("- -");
+        countdownGroup.setVisibility(GONE);
     }
 
     private void countUpTimer(long longDate) {
@@ -130,6 +137,7 @@ public class CountDownView extends ConstraintLayout {
     }
 
     private void setCountdownView(long millisUntilFinished) {
+
         // Calculate the Days/Hours/Mins/Seconds numerically.
         long longDays = millisUntilFinished / 86400000;
         long longHours = (millisUntilFinished / 3600000) % 24;
@@ -226,19 +234,31 @@ public class CountDownView extends ConstraintLayout {
 
         String hold = launch.getHoldreason();
         String failure = launch.getFailreason();
-
+        statusReason.setVisibility(GONE);
         if (hold != null) {
             statusReason.setText(hold);
+            setReasonConstraintToBottom();
             statusReason.setVisibility(VISIBLE);
         }
 
         if (failure != null) {
             statusReason.setText(failure);
+            setReasonConstraintToBottom();
+            statusReason.setVisibility(VISIBLE);
+        }
+
+        if (launch.getTbddate()){
+            statusReason.setText("Current date is a 'No Earlier Then' estimation.");
+            statusReason.setVisibility(VISIBLE);
+            setReasonConstraintToStatusPill();
+        } else if (!launch.getTbddate() && launch.getTbdtime()){
+            statusReason.setText("Date is confirmed however launch time is unknown.");
+            setReasonConstraintToStatusPill();
             statusReason.setVisibility(VISIBLE);
         }
 
         long timeToFinish = launchDate.getTimeInMillis() - now.getTimeInMillis();
-
+        countdownGroup.setVisibility(VISIBLE);
         if (timeToFinish > 0 && (launch.getStatus().getId() == 1 || launch.getStatus().getId() == 1)) {
             startLaunchCountdown(timeToFinish);
         } else if (launch.getStatus().getId() == 3 || launch.getStatus().getId() == 4 || launch.getStatus().getId() == 7) {
@@ -248,6 +268,20 @@ public class CountDownView extends ConstraintLayout {
         } else {
             launchStatusUnknown();
         }
+    }
+
+    private void setReasonConstraintToBottom() {
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.connect(R.id.status_reason, ConstraintSet.TOP, R.id.bottom_divider, ConstraintSet.BOTTOM,20);
+        constraintSet.applyTo(constraintLayout);
+    }
+
+    private void setReasonConstraintToStatusPill() {
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.connect(R.id.status_reason, ConstraintSet.TOP, R.id.status_pill, ConstraintSet.BOTTOM,20);
+        constraintSet.applyTo(constraintLayout);
     }
 
     public Calendar DateToCalendar(Date date) {

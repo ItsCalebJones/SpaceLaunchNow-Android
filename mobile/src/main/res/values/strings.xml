@@ -2,7 +2,7 @@
 <resources>
     <string name="action_settings">Settings</string>
     <string name="status_go">"Go for Launch"</string>
-    <string name="status_nogo">"Launch TBD"</string>
+    <string name="status_nogo">Launch Date Unconfirmed</string>
     <string name="status_success">"Successful Launch"</string>
     <string name="status_failure">"Launch Failure Occurred"</string>
     <string name="spacex_summary">SpaceX designs, manufactures and launches advanced rockets and spacecraft. The company was founded in 2002 to revolutionize space technology, with the ultimate goal of enabling people to live on other planets.</string>
