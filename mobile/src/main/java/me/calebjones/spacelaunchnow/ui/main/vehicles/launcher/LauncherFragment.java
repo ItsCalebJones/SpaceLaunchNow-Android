@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.RetroFitFragment;
@@ -31,6 +32,7 @@ import me.calebjones.spacelaunchnow.ui.launcher.LauncherDetailActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
+import okhttp3.CacheControl;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,6 +53,7 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
     CoordinatorLayout coordinatorLayout;
     @BindView(R.id.swiperefresh)
     SwipeRefreshLayout swipeRefreshLayout;
+    private Unbinder unbinder;
 
 
     @Override
@@ -66,7 +69,7 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
         super.onCreateView(inflater, container, savedInstanceState);
 
         view = inflater.inflate(R.layout.fragment_launch_vehicles, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         mRecyclerView = view.findViewById(R.id.vehicle_detail_list);
         coordinatorLayout = view.findViewById(R.id.vehicle_coordinator);
@@ -100,8 +103,16 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
         mRecyclerView.setAdapter(adapter);
         Timber.v("Returning view.");
         statefulView.showProgress();
-        statefulView.setOfflineRetryOnClickListener(v -> loadJSON());
+        statefulView.setOfflineRetryOnClickListener(v -> loadJSON(false));
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Timber.v("onDestroyView");
+        swipeRefreshLayout.setOnRefreshListener(null);
+        unbinder.unbind();
     }
 
 
@@ -110,10 +121,10 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
     public void onResume() {
         super.onResume();
         Timber.v("onResume");
-        new Handler().postDelayed(() -> loadJSON(), 100);
+        new Handler().postDelayed(() -> loadJSON(false), 100);
     }
 
-    private void loadJSON() {
+    private void loadJSON(boolean forceRefresh) {
         Timber.v("Loading vehicles...");
         showLoading();
 
@@ -184,6 +195,6 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
     @Override
     public void onRefresh() {
         Analytics.getInstance().sendButtonClicked("Launcher Refresh");
-        loadJSON();
+        loadJSON(true);
     }
 }

@@ -25,7 +25,7 @@
             android:layout_marginTop="@dimen/material_card_edge_margin"
             android:animateLayoutChanges="true"
             android:padding="@dimen/material_card_edge_margin"
-            app:cardCornerRadius="@dimen/card_view_corner_radius"
+            app:cardCornerRadius="4dp"
             app:cardElevation="@dimen/material_card_elevation_resting"
             app:cardPreventCornerOverlap="true"
             app:cardUseCompatPadding="true">

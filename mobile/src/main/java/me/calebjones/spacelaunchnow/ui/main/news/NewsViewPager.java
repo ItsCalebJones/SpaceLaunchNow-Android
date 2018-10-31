@@ -37,8 +37,8 @@ public class NewsViewPager extends Fragment {
         View inflatedView = inflater.inflate(R.layout.fragment_view_pager, container, false);
 
         tabLayout = inflatedView.findViewById(R.id.tabLayout);
-        tabLayout.addTab(tabLayout.newTab().setText("Web"));
-        tabLayout.addTab(tabLayout.newTab().setText("Twitter"));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.news));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.twitter));
         viewPager = inflatedView.findViewById(R.id.viewpager);
 
         pagerAdapter = new PagerAdapter

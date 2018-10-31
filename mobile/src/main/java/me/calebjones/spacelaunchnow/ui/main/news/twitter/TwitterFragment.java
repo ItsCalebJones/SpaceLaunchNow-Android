@@ -25,8 +25,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
+import timber.log.Timber;
 
 
 public class TwitterFragment extends Fragment {
@@ -40,6 +42,7 @@ public class TwitterFragment extends Fragment {
     private LinearLayoutManager linearLayoutManager;
     private TweetTimelineRecyclerViewAdapter timelineAdapter;
     private TwitterListTimeline timeline;
+    private Unbinder unbinder;
 
 
     @Override
@@ -48,7 +51,7 @@ public class TwitterFragment extends Fragment {
         context = getActivity();
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_twitter, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
         getTwitterTimeline();
         swipeRefreshLayout.setOnRefreshListener(() -> timelineAdapter.refresh(new Callback<TimelineResult<Tweet>>() {
             @Override
@@ -62,6 +65,14 @@ public class TwitterFragment extends Fragment {
             }
         }));
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Timber.v("onDestroyView");
+        swipeRefreshLayout.setOnRefreshListener(null);
+        unbinder.unbind();
     }
 
     @Override

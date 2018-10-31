@@ -15,6 +15,8 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.ui.launches.agency.PreviousAgencyLaunchesFragment;
+import me.calebjones.spacelaunchnow.ui.launches.agency.UpcomingAgencyLaunchesFragment;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import timber.log.Timber;
 
@@ -24,6 +26,8 @@ public class LaunchesViewPager extends Fragment {
     private PagerAdapter pagerAdapter;
     private TabLayout tabLayout;
     private static ListPreferences sharedPreference;
+    private UpcomingLaunchesFragment upcomingFragment;
+    private PreviousLaunchesFragment previousFragment;
     private Context context;
 
 
@@ -103,6 +107,17 @@ public class LaunchesViewPager extends Fragment {
         super.onDetach();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Timber.v("onDestroyView");
+        upcomingFragment = null;
+        previousFragment = null;
+        viewPager.clearOnPageChangeListeners();
+        tabLayout.setOnTabSelectedListener(null);
+        pagerAdapter = null;
+    }
+
 
     public class PagerAdapter extends FragmentPagerAdapter {
         int mNumOfTabs;
@@ -121,6 +136,27 @@ public class LaunchesViewPager extends Fragment {
                 default:
                     return null;
             }
+        }
+
+        @NonNull
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Fragment createdFragment = (Fragment) super.instantiateItem(container, position);
+            // save the appropriate reference depending on position
+            switch (position) {
+                case 0:
+                    upcomingFragment = (UpcomingLaunchesFragment) createdFragment;
+                    break;
+                case 1:
+                    previousFragment = (PreviousLaunchesFragment) createdFragment;
+                    break;
+            }
+            return createdFragment;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((View) object);
         }
 
         @Override

@@ -84,6 +84,7 @@ public class AboutActivity extends AppCompatActivity {
                                         goToDebug();
                                     } else {
                                         Toast.makeText(context, "Error - code was invalid.", Toast.LENGTH_LONG).show();
+
                                     }
                                 }).show()
                 )
@@ -92,7 +93,7 @@ public class AboutActivity extends AppCompatActivity {
                 .setActionsColumnsCount(2)
 
                 .addAction(new IconicsDrawable(this).icon(CommunityMaterial.Icon.cmd_google_translate).sizeDp(24).toBitmap(),
-                        "Translate", "https://spacelaunchnow.oneskyapp.com/")
+                        "Translate", "https://goo.gl/forms/Pt4QA5JNznF2MiKu1")
                 .addChangeLogAction(new Intent(this, ChangelogActivity.class))
                 .addIntroduceAction(new Intent(this, OnboardingActivity.class))
                 .addRemoveAdsAction(new Intent(this, SupporterActivity.class))
@@ -101,58 +102,52 @@ public class AboutActivity extends AppCompatActivity {
                                 .sizeDp(24)
                                 .toBitmap(),
                         "Privacy Policy",
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                try {
-                                    StringBuilder buf = new StringBuilder();
-                                    InputStream json = context.getAssets().open("PRIVACY.md");
-                                    BufferedReader in = new BufferedReader(new InputStreamReader(json, "UTF-8"));
+                        view -> {
+                            try {
+                                StringBuilder buf = new StringBuilder();
+                                InputStream json = context.getAssets().open("PRIVACY.md");
+                                BufferedReader in = new BufferedReader(new InputStreamReader(json, "UTF-8"));
 
-                                    String str;
-                                    while((str = in.readLine()) != null) {
-                                        buf.append(str).append("\n");
-                                    }
-
-                                    in.close();
-                                    new MaterialDialog.Builder(context)
-                                            .title("Privacy Policy")
-                                            .content(buf.toString())
-                                            .positiveText("Got it.")
-                                            .show();
-                                } catch (IOException var6) {
-                                    var6.printStackTrace();
+                                String str;
+                                while((str = in.readLine()) != null) {
+                                    buf.append(str).append("\n");
                                 }
 
+                                in.close();
+                                new MaterialDialog.Builder(context)
+                                        .title("Privacy Policy")
+                                        .content(buf.toString())
+                                        .positiveText("Got it.")
+                                        .show();
+                            } catch (IOException var6) {
+                                var6.printStackTrace();
                             }
+
                         })
                 .addAction(new IconicsDrawable(this)
                                 .icon(CommunityMaterial.Icon.cmd_file_check)
                                 .sizeDp(24)
                                 .toBitmap(),
                         "Terms of Use",
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                try {
-                                    StringBuilder buf = new StringBuilder();
-                                    InputStream json = context.getAssets().open("TERMS.md");
-                                    BufferedReader in = new BufferedReader(new InputStreamReader(json, "UTF-8"));
+                        view -> {
+                            try {
+                                StringBuilder buf = new StringBuilder();
+                                InputStream json = context.getAssets().open("TERMS.md");
+                                BufferedReader in = new BufferedReader(new InputStreamReader(json, "UTF-8"));
 
-                                    String str;
-                                    while((str = in.readLine()) != null) {
-                                        buf.append(str).append("\n");
-                                    }
-
-                                    in.close();
-                                    new MaterialDialog.Builder(context)
-                                            .title("Terms of Use")
-                                            .content(buf.toString())
-                                            .positiveText("Got it.")
-                                            .show();
-                                } catch (IOException var6) {
-                                    var6.printStackTrace();
+                                String str;
+                                while((str = in.readLine()) != null) {
+                                    buf.append(str).append("\n");
                                 }
+
+                                in.close();
+                                new MaterialDialog.Builder(context)
+                                        .title("Terms of Use")
+                                        .content(buf.toString())
+                                        .positiveText("Got it.")
+                                        .show();
+                            } catch (IOException var6) {
+                                var6.printStackTrace();
                             }
                         })
                 .setWrapScrollView(true)

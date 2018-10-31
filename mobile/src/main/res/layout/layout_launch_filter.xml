@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minHeight="300dp">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:text="Launch Filters"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/location_group"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingBottom="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/location_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/location_image"
+        app:layout_constraintTop_toTopOf="@+id/location_image"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/location_image"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:srcCompat="@drawable/ic_earth_grey" />
+
+    <TextView
+        android:id="@+id/location_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:text="Location"
+        android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/location_image"
+        app:layout_constraintTop_toTopOf="@+id/location_image" />
+
+    <TextView
+        android:id="@+id/location_subtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:text="All"
+        app:layout_constraintBottom_toBottomOf="@+id/location_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/location_image"
+        app:layout_constraintTop_toBottomOf="@+id/location_title"
+        tools:text="All" />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/location_recycler"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="24dp"
+        android:visibility="gone"
+        android:scrollbars="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_max="200dp"
+        app:layout_constraintHeight_min="200dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/location_subtitle"
+        app:layout_constraintTop_toBottomOf="@+id/location_group" />
+
+    <View
+        android:id="@+id/agency_group"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingBottom="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/agency_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/agency_image"
+        app:layout_constraintTop_toTopOf="@+id/agency_image"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/agency_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Agency"
+        android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/agency_image"
+        app:layout_constraintTop_toTopOf="@+id/agency_image" />
+
+    <ImageView
+        android:id="@+id/agency_image"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/location_recycler"
+        app:srcCompat="@drawable/ic_mission_grey" />
+
+    <TextView
+        android:id="@+id/agency_subtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:text="All"
+        app:layout_constraintBottom_toBottomOf="@+id/agency_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/agency_image"
+        app:layout_constraintTop_toBottomOf="@+id/agency_title"
+        tools:text="All" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/agency_recycler"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="24dp"
+        android:visibility="gone"
+        android:scrollbars="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_max="200dp"
+        app:layout_constraintHeight_min="200dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/agency_subtitle"
+        app:layout_constraintTop_toBottomOf="@+id/agency_group" />
+
+    <View
+        android:id="@+id/rocket_group"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingBottom="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/rocket_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/rocket_image"
+        app:layout_constraintTop_toTopOf="@+id/rocket_image"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/rocket_image"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/agency_recycler"
+        app:srcCompat="@drawable/ic_rocket_grey" />
+
+    <TextView
+        android:id="@+id/rocket_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Rocket"
+        android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+        app:layout_constraintEnd_toEndOf="@+id/agency_title"
+        app:layout_constraintStart_toEndOf="@+id/rocket_image"
+        app:layout_constraintTop_toTopOf="@+id/rocket_image" />
+
+    <TextView
+        android:id="@+id/rocket_subtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:text="All"
+        app:layout_constraintBottom_toBottomOf="@+id/rocket_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/rocket_image"
+        app:layout_constraintTop_toBottomOf="@+id/rocket_title"
+        tools:text="All" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rocket_recycler"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="24dp"
+        android:visibility="gone"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/cancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_max="200dp"
+        app:layout_constraintHeight_min="200dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/rocket_subtitle"
+        app:layout_constraintTop_toBottomOf="@+id/rocket_group"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/apply"
+        style="@style/Base.Widget.AppCompat.Button.Colored"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="@dimen/material_baseline_grid_2x"
+        android:text="Apply"
+        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintTop_toBottomOf="@id/rocket_recycler"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cancel" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/cancel"
+        style="@style/Base.Widget.AppCompat.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="8dp"
+        android:text="Cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/apply"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!--<TextView-->
+        <!--android:id="@+id/to_be_determined"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:layout_marginStart="32dp"-->
+        <!--android:text="To Be Determined"-->
+        <!--android:textAppearance="@android:style/TextAppearance.Material.Medium"-->
+        <!--app:layout_constraintBottom_toBottomOf="@+id/to_be_determined_checkbox"-->
+        <!--app:layout_constraintEnd_toStartOf="@+id/to_be_determined_checkbox"-->
+        <!--app:layout_constraintHorizontal_bias="0.0"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="@+id/to_be_determined_checkbox" />-->
+
+    <!--<android.support.v7.widget.AppCompatCheckBox-->
+        <!--android:id="@+id/to_be_determined_checkbox"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--android:layout_marginEnd="32dp"-->
+        <!--android:layout_marginTop="32dp"-->
+        <!--app:layout_constraintBottom_toTopOf="@+id/cancel"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/rocket_image"-->
+        <!--app:layout_constraintVertical_bias="0.0" />-->
+
+</android.support.constraint.ConstraintLayout>

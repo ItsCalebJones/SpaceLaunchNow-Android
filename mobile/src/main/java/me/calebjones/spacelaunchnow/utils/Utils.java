@@ -149,6 +149,8 @@ public class Utils {
         PendingIntent actionPendingIntent = createPendingShareIntent(context, url);
         intentBuilder.setActionButton(BitmapFactory.decodeResource(context.getResources(),
                 R.drawable.ic_menu_share_white), "Share", actionPendingIntent);
+        intentBuilder.setCloseButtonIcon(BitmapFactory.decodeResource(
+                context.getResources(), R.drawable.ic_arrow_back));
 
 
         intentBuilder.setStartAnimations(activity,

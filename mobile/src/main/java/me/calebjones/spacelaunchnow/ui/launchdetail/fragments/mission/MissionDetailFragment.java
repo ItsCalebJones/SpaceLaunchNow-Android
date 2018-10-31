@@ -1,6 +1,7 @@
 package me.calebjones.spacelaunchnow.ui.launchdetail.fragments.mission;
 
 import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,12 +19,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.RetroFitFragment;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.LauncherConfig;
 import me.calebjones.spacelaunchnow.data.models.main.Mission;
-import me.calebjones.spacelaunchnow.ui.launchdetail.OnFragmentInteractionListener;
+import me.calebjones.spacelaunchnow.ui.launchdetail.DetailsViewModel;
 import me.calebjones.spacelaunchnow.ui.launches.launcher.LauncherLaunchActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
@@ -76,9 +79,10 @@ public class MissionDetailFragment extends RetroFitFragment {
     @BindView(R.id.launcher_launches)
     AppCompatButton launchesButton;
 
-    private OnFragmentInteractionListener mListener;
     private Context context;
     public Launch detailLaunch;
+    private Unbinder unbinder;
+    private DetailsViewModel model;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,22 +99,25 @@ public class MissionDetailFragment extends RetroFitFragment {
         context = getContext();
         view = inflater.inflate(R.layout.detail_launch_payload, container, false);
 
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         return view;
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Timber.v("onDestroyView");
+        unbinder.unbind();
+    }
+
+    @Override
     public void onResume() {
-        if (detailLaunch != null && detailLaunch.isValid()) {
-            setUpViews(detailLaunch);
-        } else {
-            mListener.sendLaunchToFragment(OnFragmentInteractionListener.MISSION);
-        }
         super.onResume();
     }
 
     public void setLaunch(Launch launch) {
+        Timber.v("Launch update received: %s", launch.getName());
         detailLaunch = launch;
         setUpViews(launch);
     }
@@ -170,7 +177,7 @@ public class MissionDetailFragment extends RetroFitFragment {
                 coreRecyclerView.setVisibility(View.VISIBLE);
                 LinearLayoutManager layoutManager = new LinearLayoutManager(context);
                 coreRecyclerView.setLayoutManager(layoutManager);
-                StageInformationAdapter stageInformationAdapter = new StageInformationAdapter(launch.getRocket().getFirstStage(), context);
+                StageInformationAdapter stageInformationAdapter = new StageInformationAdapter(launch, context);
                 coreRecyclerView.setAdapter(stageInformationAdapter);
                 coreRecyclerView.setHasFixedSize(true);
             } else {
@@ -248,6 +255,9 @@ public class MissionDetailFragment extends RetroFitFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        model = ViewModelProviders.of(getActivity()).get(DetailsViewModel.class);
+        // update UI
+        model.getLaunch().observe(this, this::setLaunch);
     }
 
     public static MissionDetailFragment newInstance() {
@@ -255,20 +265,8 @@ public class MissionDetailFragment extends RetroFitFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
 }

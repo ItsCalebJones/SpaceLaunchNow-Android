@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:elevation="0dp"
     android:paddingTop="@dimen/material_baseline_grid_1x">
 
     <androidx.cardview.widget.CardView
         android:layout_width="@dimen/max_width"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/material_baseline_grid_1x"
+        android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:animateLayoutChanges="true"
-        android:elevation="0dp"
+        android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+        android:maxWidth="400dp"
+        android:layout_gravity="center"
+        android:elevation="2dp"
         app:cardUseCompatPadding="true"
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp">
@@ -38,7 +40,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:background="?attr/titleBarColor"
-
                 android:paddingBottom="4dp"
                 app:layout_constraintBottom_toBottomOf="@+id/launch_date_compact"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -51,7 +52,8 @@
                 android:id="@+id/categoryIcon"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:padding="@dimen/material_baseline_grid_2x"
+                android:layout_marginStart="@dimen/material_baseline_grid_1x"
+                android:padding="@dimen/material_baseline_grid_1x"
                 app:layout_constraintBottom_toBottomOf="@+id/launch_date_compact"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -61,9 +63,8 @@
                 android:id="@+id/launch_rocket"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/material_baseline_grid_3x"
-                android:layout_marginStart="4dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="@dimen/material_baseline_grid_2x"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:text="@string/unknown_launch"
@@ -81,8 +82,7 @@
                 android:id="@+id/location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/material_baseline_grid_3x"
-                android:layout_marginStart="4dp"
+                android:layout_marginEnd="@dimen/material_baseline_grid_2x"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@string/unknown_launch_location"
@@ -100,8 +100,7 @@
                 android:id="@+id/launch_date_compact"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/material_baseline_grid_3x"
-                android:layout_marginStart="4dp"
+                android:layout_marginEnd="@dimen/material_baseline_grid_2x"
                 android:ellipsize="end"
                 android:paddingBottom="@dimen/material_baseline_grid_1x"
                 android:singleLine="true"
@@ -127,111 +126,72 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/background" />
 
-            <View
-                android:id="@+id/divider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="26dp"
-                android:background="@color/View_Separator"
-                android:visibility="visible"
-                app:layout_constraintBottom_toTopOf="@+id/countdown_layout"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/launch_image" />
 
-            <include
+
+            <me.calebjones.spacelaunchnow.utils.views.custom.CountDownView
                 android:id="@+id/countdown_layout"
                 layout="@layout/countdown_layout_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/material_baseline_grid_2x"
-                android:layout_marginStart="@dimen/material_baseline_grid_2x"
-                app:layout_constraintBottom_toTopOf="@+id/divider2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/divider" />
-
-            <View
-                android:id="@+id/divider2"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:background="@color/View_Separator"
-                android:paddingBottom="8dp"
+                android:layout_marginEnd="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/countdown_layout" />
-
-            <include
-                android:id="@+id/status_pill"
-                layout="@layout/status_pill"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="8dp"
-                android:textColor="@color/dark_primary_text_color_selector"
-                android:textSize="26sp"
-                android:textStyle="bold"
-                android:visibility="visible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/launch_image" />
 
-            <Button
-                android:id="@+id/watchButton"
-                style="@style/Base.Widget.AppCompat.Button.Colored"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/watch_live"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/content_mission_description" />
 
-            <Button
-                android:id="@+id/shareButton"
-                style="@style/Base.Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/share"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/content_mission_description" />
 
-            <Button
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/exploreButton"
-                style="@style/Base.Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
+                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginStart="22dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="8dp"
+                android:drawableStart="@drawable/ic_explore"
+                android:drawablePadding="4dp"
+                android:singleLine="true"
                 android:text="@string/explore"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/watchButton"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/content_mission_description"
+                app:layout_constraintVertical_bias="0.0"
+                app:layout_constraintWidth_max="150dp" />
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/watchButton"
+                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="36dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_live"
+                app:layout_constraintBottom_toBottomOf="@+id/exploreButton"
                 app:layout_constraintEnd_toStartOf="@+id/shareButton"
-                app:layout_constraintTop_toBottomOf="@+id/content_mission_description" />
+                app:layout_constraintTop_toTopOf="@+id/exploreButton" />
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/shareButton"
+                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="36dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:src="@drawable/ic_menu_share"
+                app:layout_constraintBottom_toBottomOf="@+id/exploreButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/exploreButton" />
 
             <TextView
                 android:id="@+id/content_mission"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:text="@string/unknown_mission"
@@ -241,15 +201,15 @@
                 app:layout_constraintEnd_toStartOf="@+id/landing_pill"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider2" />
+                app:layout_constraintTop_toBottomOf="@id/countdown_layout" />
 
             <TextView
                 android:id="@+id/content_mission_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
                 android:ellipsize="end"
                 android:maxLines="3"
                 android:text="Unknown Mission Description"
@@ -258,17 +218,18 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/content_mission" />
+                app:layout_constraintTop_toBottomOf="@+id/content_mission"
+                tools:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." />
 
             <include
                 android:id="@+id/landing_pill"
                 layout="@layout/landing_pill"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider2" />
+                app:layout_constraintTop_toBottomOf="@id/countdown_layout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

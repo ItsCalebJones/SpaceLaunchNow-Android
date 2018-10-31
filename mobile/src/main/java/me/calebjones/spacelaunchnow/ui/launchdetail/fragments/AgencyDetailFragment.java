@@ -1,6 +1,7 @@
 package me.calebjones.spacelaunchnow.ui.launchdetail.fragments;
 
 import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,11 +19,12 @@ import androidx.cardview.widget.CardView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
-import me.calebjones.spacelaunchnow.ui.launchdetail.OnFragmentInteractionListener;
+import me.calebjones.spacelaunchnow.ui.launchdetail.DetailsViewModel;
 import me.calebjones.spacelaunchnow.ui.launches.agency.AgencyLaunchActivity;
 import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -53,9 +55,10 @@ public class AgencyDetailFragment extends BaseFragment {
     private SharedPreferences sharedPref;
     private static ListPreferences sharedPreference;
     private Context context;
-    private OnFragmentInteractionListener mListener;
 
     public static Launch detailLaunch;
+    private Unbinder unbinder;
+    private DetailsViewModel model;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,30 +80,26 @@ public class AgencyDetailFragment extends BaseFragment {
 
         view = inflater.inflate(R.layout.detail_launch_agency, container, false);
 
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         Timber.v("Creating views...");
-
-        if (detailLaunch != null && detailLaunch.isValid()) {
-            setUpViews(detailLaunch);
-        } else {
-            mListener.sendLaunchToFragment(OnFragmentInteractionListener.AGENCY);
-        }
-
         return view;
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Timber.v("onDestroyView");
+        unbinder.unbind();
+    }
+
+    @Override
     public void onResume() {
-        if (detailLaunch != null && detailLaunch.isValid()) {
-            setUpViews(detailLaunch);
-        } else {
-            mListener.sendLaunchToFragment(OnFragmentInteractionListener.AGENCY);
-        }
         super.onResume();
     }
 
     public void setLaunch(Launch launch) {
+        Timber.v("Launch update received: %s", launch.getName());
         detailLaunch = launch;
         setUpViews(launch);
     }
@@ -119,6 +118,8 @@ public class AgencyDetailFragment extends BaseFragment {
                         .load(detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getLogoUrl())
                         .centerInside()
                         .into(lspLogo);
+            } else {
+                lspLogo.setVisibility(View.GONE);
             }
             lspName.setText(detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getName());
             lspType.setText(detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getType());
@@ -151,6 +152,9 @@ public class AgencyDetailFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        model = ViewModelProviders.of(getActivity()).get(DetailsViewModel.class);
+        // update UI
+        model.getLaunch().observe(this, this::setLaunch);
     }
 
     public static AgencyDetailFragment newInstance() {
@@ -177,19 +181,7 @@ public class AgencyDetailFragment extends BaseFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 }

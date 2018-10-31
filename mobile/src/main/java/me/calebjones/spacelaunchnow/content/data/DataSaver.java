@@ -154,7 +154,6 @@ public class DataSaver {
         isSaving = true;
         if (launches != null) {
             Realm mRealm = Realm.getDefaultInstance();
-
             mRealm.executeTransaction(mRealm1 -> {
                 Date now = Calendar.getInstance().getTime();
                 for (final Launch item : launches) {
@@ -221,7 +220,32 @@ public class DataSaver {
                 .equalTo("id", id)
                 .findFirst();
         if (previous != null) {
-            previous.deleteFromRealm();
+            mRealm.executeTransaction(realm -> previous.deleteFromRealm());
         }
+    }
+
+    public void saveLaunchToRealm(Launch launch) {
+        Realm mRealm = Realm.getDefaultInstance();
+        mRealm.executeTransaction(mRealm1 -> {
+            Date now = Calendar.getInstance().getTime();
+            final Launch previous = mRealm1.where(Launch.class)
+                    .equalTo("id", launch.getId())
+                    .findFirst();
+            if (previous != null) {
+                if (isLaunchTimeChanged(previous, launch)) {
+                    final LaunchNotification notification = mRealm1.where(LaunchNotification.class).equalTo("id", launch.getId()).findFirst();
+                    if (notification != null) {
+
+                        notification.resetNotifiers();
+                        mRealm1.copyToRealmOrUpdate(notification);
+                    }
+                }
+                launch.setLastUpdate(now);
+                launch.setEventID(previous.getEventID());
+            }
+            Timber.v("Saving item: %s", launch.getName());
+            mRealm1.copyToRealmOrUpdate(launch);
+        });
+        mRealm.close();
     }
 }

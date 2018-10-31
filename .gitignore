@@ -1,26 +1,18 @@
 *.iml
 .gradle
 /local.properties
-/.idea/workspace.xml
-/.idea/libraries
 .DS_Store
 /build
 /captures
-
-.idea/*
-
 gradle.properties
 
-app/src/main/res/values/api_keys.xml
-mobile/fabric.properties
 mobile/src/main/res/values/api_keys.xml
-mobile/fabric.properties
-projectFilesBackup/.idea/workspace.xml
 
 *.apk
 keystore.properties
 mobile/keystore.properties
-mobile/alpha/release/output.json
 *.lnk
 *.log
 wear/src/main/res/values/api_keys.xml
+.idea/markdown-navigator.xml
+/.idea/*

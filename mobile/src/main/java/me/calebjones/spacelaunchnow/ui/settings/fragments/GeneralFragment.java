@@ -22,6 +22,7 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.multi.CompositeMultiplePermissionsListener;
 import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
 import me.calebjones.spacelaunchnow.calendar.model.Calendar;
 import me.calebjones.spacelaunchnow.calendar.model.CalendarItem;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.content.jobs.SyncCalendarJob;
 import me.calebjones.spacelaunchnow.ui.settings.util.CalendarPermissionListener;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
@@ -91,10 +93,11 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
         } else if (key.equals("calendar_count")){
             Analytics.getInstance().sendPreferenceEvent(key);
             calendarSyncManager.resyncAllEvents();
+            SyncCalendarJob.scheduleImmediately();
         } else if (key.equals("calendar_sync_state")) {
-            Timber.v("Calendar Sync State: %s", sharedPreferences.getBoolean(key, true));
-            Analytics.getInstance().sendPreferenceEvent(key, sharedPreferences.getBoolean(key, false));
-            if (sharedPreferences.getBoolean(key, true)) {
+            Timber.v("Calendar Sync State: %s", Prefs.getBoolean(key, false));
+            Analytics.getInstance().sendPreferenceEvent(key, Prefs.getBoolean(key, false));
+            if (Prefs.getBoolean(key, false)) {
                 Timber.v("Calendar Status: %s", switchPreferences.getCalendarStatus());
                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
                     Timber.v("Calendar Permission - Granted");
@@ -162,7 +165,7 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
         final CalendarItem calendarItem = mRealm.where(CalendarItem.class).findFirst();
 
         if (calendarItem != null){
-            summary = getString(R.string.current_calendar) + calendarItem.getAccountName();
+            summary = getString(R.string.current_calendar) + " " + calendarItem.getAccountName();
         } else {
             summary = getString(R.string.select_calendar);
         }
@@ -175,7 +178,7 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
                 final CalendarItem calendarItem = new CalendarItem();
                 calendarItem.setId(calendar.id);
                 calendarItem.setAccountName(calendar.displayName);
-                mRealm.executeTransactionAsync(new Realm.Transaction() {
+                mRealm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
                         CalendarItem oldCalendar = realm.where(CalendarItem.class).findFirst();
@@ -186,15 +189,11 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
                             realm.copyToRealmOrUpdate(calendarItem);
                         }
                     }
-                }, new Realm.Transaction.OnSuccess() {
-                    @Override
-                    public void onSuccess() {
-                        Timber.v("Successfully updated active Calendar, sending resync.");
-                        setCalendarPreference();
-                        calendarSyncManager.resyncAllEvents();
-                    }
                 });
-
+                Timber.v("Successfully updated active Calendar, sending resync.");
+                setCalendarPreference();
+                calendarSyncManager.resyncCalendarItem();
+                calendarSyncManager.resyncAllEvents();
                 return true;
             }
         });
@@ -216,18 +215,10 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
                 summary = getString(R.string.select_calendar);
             }
             calendarPreference.setSummary(summary);
-            mRealm.executeTransactionAsync(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    realm.where(CalendarItem.class).findAll().deleteAllFromRealm();
-                    realm.copyToRealm(calendarItem);
-                }
-            }, new Realm.Transaction.OnSuccess() {
-                @Override
-                public void onSuccess() {
-                    calendarSyncManager.syncAllEevnts();
-                }
-            });
+            mRealm.executeTransactionAsync(realm -> {
+                realm.where(CalendarItem.class).findAll().deleteAllFromRealm();
+                realm.copyToRealm(calendarItem);
+            }, () -> calendarSyncManager.syncAllEevnts());
         } else {
             Toast.makeText(context, R.string.no_calendars_available, Toast.LENGTH_LONG).show();
             SwitchPreference calendarSyncState = (SwitchPreference) findPreference("calendar_sync_state");
@@ -262,27 +253,18 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
     public void showPermissionRationale(final PermissionToken token) {
         new AlertDialog.Builder(context).setTitle(R.string.calendar_permission_required)
                 .setMessage(R.string.calendar_permission_required_description)
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switchPreferences.setCalendarStatus(false);
-                        dialog.dismiss();
-                        token.cancelPermissionRequest();
-                    }
+                .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                    switchPreferences.setCalendarStatus(false);
+                    dialog.dismiss();
+                    token.cancelPermissionRequest();
                 })
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        token.continuePermissionRequest();
-                    }
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    dialog.dismiss();
+                    token.continuePermissionRequest();
                 })
-                .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        switchPreferences.setCalendarStatus(false);
-                        token.cancelPermissionRequest();
-                    }
+                .setOnDismissListener(dialog -> {
+                    switchPreferences.setCalendarStatus(false);
+                    token.cancelPermissionRequest();
                 })
                 .show();
     }
@@ -296,10 +278,7 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
     }
 
     public void showPermissionDenied(String permission, boolean isPermanentlyDenied) {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean("calendar_sync_state", false);
-        editor.apply();
+        Prefs.putBoolean("calendar_sync_state", false);
         SwitchPreference calendarSyncState = (SwitchPreference) findPreference("calendar_sync_state");
         calendarSyncState.setChecked(false);
         switchPreferences.setCalendarStatus(false);

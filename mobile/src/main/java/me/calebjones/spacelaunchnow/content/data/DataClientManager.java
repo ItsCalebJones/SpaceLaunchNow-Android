@@ -1,17 +1,10 @@
 package me.calebjones.spacelaunchnow.content.data;
 
 import android.content.Context;
-import android.net.Uri;
-
-import java.util.List;
-import java.util.Set;
 
 import io.realm.Realm;
-import me.calebjones.spacelaunchnow.content.data.next.NextLaunchDataRepository;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.services.NextLaunchTracker;
 import me.calebjones.spacelaunchnow.data.models.Constants;
-import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.Result;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
@@ -69,8 +62,8 @@ public class DataClientManager {
 
     public void getNextUpcomingLaunchesMini() {
         isNextLaunches = true;
-        Timber.i("Running getNextUpcomingLaunchesMini");
-        DataClient.getInstance().getNextUpcomingLaunchesMini(20, 0, new Callback<LaunchResponse>() {
+        Timber.i("Running getNextUpcomingLaunchesForWidgets");
+        DataClient.getInstance().getNextUpcomingLaunchesForWidgets(20, 0, new Callback<LaunchResponse>() {
             @Override
             public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
 

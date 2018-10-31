@@ -1,9 +1,10 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout"
-    android:elevation="0dp"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:elevation="0dp">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/activity_main_swipe_refresh_layout"
@@ -17,9 +18,42 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:columnWidth="320dp"
-                android:visibility="visible" />
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:columnWidth="320dp"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toTopOf="@+id/view_more_launches"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <android.support.v7.widget.AppCompatButton
+                        android:id="@+id/view_more_launches"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:gravity="center"
+                        android:text="@string/view_more_launches"
+                        android:textSize="12sp"
+                        android:theme="@style/PrimaryButtonTheme"
+                        android:visibility="visible"
+                        app:layout_anchor="@+id/recycler_view" />
+
+                </LinearLayout>
+            </android.support.v4.widget.NestedScrollView>
 
             <RelativeLayout
                 android:id="@+id/no_launches"
@@ -27,6 +61,22 @@
                 android:layout_height="match_parent"
                 android:elevation="2dp"
                 android:visibility="visible">
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/view_more_launches2"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:gravity="center"
+                    android:text="@string/view_more_launches"
+                    android:textSize="12sp"
+                    android:theme="@style/PrimaryButtonTheme"
+                    android:visibility="visible"
+                    android:layout_alignParentBottom="true" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -232,19 +282,21 @@
                             </LinearLayout>
                         </LinearLayout>
 
+
                         <androidx.appcompat.widget.AppCompatButton
                             style="@style/Base.Widget.AppCompat.Button.Colored"
                             android:id="@+id/action_notification_settings"
+                            style="@style/Base.Widget.AppCompat.Button.Colored"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/edit_notification_settings"/>
+                            android:text="@string/edit_notification_settings" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
                             android:text="@string/additional_filters"
                             android:textAppearance="@style/TextAppearance.AppCompat.Title"
                             android:textColor="@color/white"
@@ -254,8 +306,8 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"
+                            android:layout_marginStart="8dp"
                             android:text="@string/these_do_not_affect_launch_notifications"
                             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/white"
@@ -309,9 +361,9 @@
 
                             <androidx.appcompat.widget.SwitchCompat
                                 android:id="@+id/persist_last_launch"
-                                android:layout_weight=".80"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_weight=".80"
                                 android:checked="true"
                                 android:text="@string/keep_launches"
                                 android:textColor="@color/white"

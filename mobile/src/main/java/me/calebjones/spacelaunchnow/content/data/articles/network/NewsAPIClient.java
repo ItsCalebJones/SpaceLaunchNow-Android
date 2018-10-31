@@ -32,9 +32,16 @@ public class NewsAPIClient {
         newsService = this.newsRetrofit.create(NewsService.class);
     }
 
-    public Call<List<Article>> getNews(int limit, Callback<List<Article>> callback) {
+    public Call<List<Article>> getNews(int limit, int page, Callback<List<Article>> callback) {
         Call<List<Article>> call;
-        call = newsService.getNews(limit);
+        call = newsService.getNews(limit, page);
+        call.enqueue(callback);
+        return call;
+    }
+
+    public Call<List<Article>> getNewsBySite(int limit, int page, String sites, Callback<List<Article>> callback) {
+        Call<List<Article>> call;
+        call = newsService.getNewsBySite(limit, page, sites);
         call.enqueue(callback);
         return call;
     }

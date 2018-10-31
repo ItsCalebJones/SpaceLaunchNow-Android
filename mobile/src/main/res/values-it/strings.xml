@@ -157,7 +157,7 @@
     <string name="stage_full">Stadi massimi: %d</string>
     <string name="mass_leo_full">Massa in LEO: %d kg</string>
     <string name="mass_gto_full">Massa in GTO: %d kg</string>
-    <string name="mass_launch_full">Massa al lancio: %d T</string>
+    <string name="mass_launch_full">Massa al lancio: %d tonnellate</string>
     <string name="thrust_full">Spinta al lancio: %d kN</string>
     <string name="upcoming">Prossimo</string>
     <string name="previous">Precedente</string>

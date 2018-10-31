@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.RetroFitFragment;
@@ -53,6 +54,7 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
     CoordinatorLayout coordinatorLayout;
     @BindView(R.id.swiperefresh)
     SwipeRefreshLayout swipeRefreshLayout;
+    private Unbinder unbinder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +68,7 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         view = inflater.inflate(R.layout.fragment_launch_vehicles, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         swipeRefreshLayout.setOnRefreshListener(this);
 
@@ -98,6 +100,14 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
         statefulView.showProgress();
         statefulView.setOfflineRetryOnClickListener(v -> loadJSON());
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Timber.v("onDestroyView");
+        swipeRefreshLayout.setOnRefreshListener(null);
+        unbinder.unbind();
     }
 
     @Override

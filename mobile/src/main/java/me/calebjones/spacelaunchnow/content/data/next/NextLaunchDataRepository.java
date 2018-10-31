@@ -12,10 +12,13 @@ import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.UiThread;
 import io.realm.Realm;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.content.util.FilterBuilder;
 import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Result;
@@ -80,8 +83,17 @@ public class NextLaunchDataRepository {
 
     private void getNextUpcomingLaunchesFromNetwork(int count, Callbacks.NextLaunchesCallback callback){
 
+        String locationIds = null;
+        String lspIds = null;
+
+        SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
+        if (!switchPreferences.getAllSwitch()) {
+            lspIds = FilterBuilder.getLSPIds(context);
+            locationIds = FilterBuilder.getLocationIds(context);
+        }
+
         callback.onNetworkStateChanged(true);
-        dataLoader.getNextUpcomingLaunches(count, new Callbacks.NextNetworkCallback() {
+        dataLoader.getNextUpcomingLaunches(count, locationIds, lspIds, new Callbacks.NextNetworkCallback() {
             @Override
             public void onSuccess() {
                 callback.onNetworkStateChanged(false);
@@ -91,11 +103,13 @@ public class NextLaunchDataRepository {
 
             @Override
             public void onNetworkFailure(int code) {
+                callback.onNetworkStateChanged(false);
                 callback.onError("Unable to load launch data.", null);
             }
 
             @Override
             public void onFailure(Throwable throwable) {
+                callback.onNetworkStateChanged(false);
                 callback.onError("An error has occurred! Uh oh.", throwable);
             }
         });

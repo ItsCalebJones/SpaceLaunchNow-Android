@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="action_settings">Paramètres</string>
-    <string name="status_go">"Prêt pour le Lancement"</string>
-    <string name="status_nogo">"Pas prêt pour le lancement"</string>
+    <string name="status_go">"Prêt pour Lancement"</string>
+    <string name="status_nogo">"Lancement Non Planifié"</string>
     <string name="status_success">"Lancement Réussi"</string>
-    <string name="status_failure">"Un Problème est survenu lors du Lancement"</string>
+    <string name="status_failure">"Échec du Lancement"</string>
     <string name="spacex_summary">SpaceX conçoit, fabrique et lance des fusées et véhicules spatiaux sophistiqués. L\'entreprise a été fondée en 2002 avec l\'objectif de révolutionner les technologies spatiales, leur but ultime étant de permettre aux humains de vivre sur d\'autres planètes.</string>
     <string name="usaf_summary">La United States Air Force est l\'armée de l\'air des États-Unis et une des sept branches militaires américaines.</string>
     <string name="casc_summary">La China Aerospace Science and Technology Corporation (CASC) est le contractant principal du programme spatial chinois. Elle est possédée par l\'Etat et est composée de plusieurs entités qui conçoivent, développent et construisent une variété de véhicules spatiaux, lanceurs, systèmes de missiles stratégiques et tactiques ainsi que de l\'équipement de sol.</string>
@@ -86,7 +86,7 @@
     <string name="unknown_mission">Mission Inconnue</string>
     <string name="watch_live">Regarder en Live</string>
     <string name="share">Partager</string>
-    <string name="explore">Explorer</string>
+    <string name="explore">Afficher</string>
     <string name="days">JOURS</string>
     <string name="hours">HEURES</string>
     <string name="minutes">MINUTES</string>
@@ -102,7 +102,7 @@
     <string name="vehicle_agency">Agence du Véhicule</string>
     <string name="mission_details">Détails de la Mission</string>
     <string name="unknown_payload">Charge Utile Inconnue</string>
-    <string name="launch_vehicle_summary">Résumé du Véhicule de Lancement</string>
+    <string name="launch_vehicle_summary">Détails du Véhicule de Lancement</string>
     <string name="unknown_launch_vehicle">Véhicule de Lancement Inconnu</string>
     <string name="family">Famille:</string>
     <string name="configuration">Configuration:</string>
@@ -110,8 +110,8 @@
     <string name="height">Hauteur:</string>
     <string name="diameter">Diamètre:</string>
     <string name="stages">Étages:</string>
-    <string name="mass_to_leo">Masse en LEO:</string>
-    <string name="mass_to_gto">Masse en GTO:</string>
+    <string name="mass_to_leo">Masse en LEO :</string>
+    <string name="mass_to_gto">Masse en GTO :</string>
     <string name="mass_at_launch">Masse au Lancement:</string>
     <string name="thrust_at_launch">Poussée au Lancement:</string>
     <string name="watch_launch">Regarder le Lancement</string>
@@ -169,7 +169,7 @@
     <string name="notification_card">Notifications de Lancements</string>
     <string name="vehicle_card_description">Découvrez les véhicules qui nous ont emmené en orbite.</string>
     <string name="notification_card_description">Recevez des notifications pour les lancements qui vous intéressent.</string>
-    <string name="done">Effectué</string>
+    <string name="done">C\'est parti !</string>
     <string name="error_loading_launch">Erreur: Erreur lors du chargement du lancement.</string>
     <string name="feedback_title">Donner mon avis</string>
     <string name="feedback_description">Veuillez signaler quelconque bug ou fonctionnalités que vous souhaitez voir implémentée. Si vous trouvez une erreur dans les données d\'un lancement, les bibliothèques de Launch Library qui fournissent les données peuvent être contactés via Discord ou Reddit.</string>
@@ -182,14 +182,14 @@
     <string name="unknown_location">Localisation Inconnue</string>
     <string name="details">Détails</string>
     <string name="mission">Mission</string>
-    <string name="agencies">Agences</string>
+    <string name="agencies">Agence</string>
     <string name="error_launch_details">Erreur - Impossible de charger les détails du lanceur.</string>
     <string name="height_full">Hauteur : %.1f Mètres</string>
     <string name="diameter_full">Diamètre : %.1f Mètres</string>
     <string name="stage_full">Nombre max d\'étages : %d</string>
-    <string name="mass_leo_full">Masse vers LEO : %d kg</string>
-    <string name="mass_gto_full">Masse vers GTO : %d kg</string>
-    <string name="mass_launch_full">Masse au lancement : %d T</string>
+    <string name="mass_leo_full">Masse en LEO : %d kg</string>
+    <string name="mass_gto_full">Masse en GTO : %d kg</string>
+    <string name="mass_launch_full">Masse au Lancement : %d kg</string>
     <string name="thrust_full">Poussée au lancement : %d kN</string>
     <string name="upcoming">À venir</string>
     <string name="previous">Précédent</string>
@@ -233,7 +233,7 @@
     <string name="twitter_subtitle">Échanger sur Twitter</string>
     <string name="facebook">Facebook</string>
     <string name="facebook_subtitle">Suivre sur Facebook</string>
-    <string name="website">Sur Internet</string>
+    <string name="website">Site web</string>
     <string name="website_subtitle">Site Officiel</string>
     <string name="whats_new_subtitle">Consulter les Changements</string>
     <string name="about_subtitle">À propos du développeur!</string>
@@ -316,7 +316,7 @@
     <string name="event_reminder">Rappels d\'événement</string>
     <string name="event_reminder_summary">Configurer des rappels personnalisés pour les notifications du calendrier.</string>
     <string name="calendar_account_dialog">Sélectionner un calendrier pour les événements de lancement.</string>
-    <string name="event_count_dialog">Sélectionner le nombre d\'événements à synchroniser.</string>
+    <string name="event_count_dialog">Sélectionnez le nombre d\'événements à synchroniser.</string>
     <string name="confirm_exit">Confirmer pour quitter</string>
     <string name="confirm_exit_summary">Afficher la fenêtre de confirmation avant de quitter.</string>
     <string name="debug_logging">Débogage des logs</string>
@@ -351,8 +351,8 @@
     <string name="blur_settings">Paramètres du Flou</string>
     <string name="blur_settings_summary">Configurer la force et les caractéristiques du flou.</string>
     <string name="mission_agencies">Agences de la Mission</string>
-    <string name="status_hold">Arrêté</string>
-    <string name="status_in_flight">En Vol</string>
+    <string name="status_hold">Lancement Interrompu</string>
+    <string name="status_in_flight">Lancement En Vol</string>
     <string name="status_partial_failure">Échec Partiel</string>
     <string name="do_not_disturb">Ne Pas Déranger</string>
     <string name="notification_preferences">Préférences de Notification</string>
@@ -386,7 +386,7 @@
     <string name="wear_os">Wear OS</string>
     <string name="misc">Divers</string>
     <string name="launchers">Lanceurs</string>
-    <string name="orbiters">Orbiteurs</string>
+    <string name="orbiters">Astronef</string>
     <string name="translate_settings">Participez à la traduction de Space Launch Now !</string>
     <string name="translate">Traduire</string>
     <string name="news">Actualités</string>
@@ -420,5 +420,32 @@
     <string name="unknown_year">Année de Fondation - Inconnue</string>
     <string name="improve_our_data">Aider à améliorer les données</string>
     <string name="improve_our_data_content">Motivé pour aider à améliorer la précision des données ? Rejoignez-nous sur le serveur Discord et demandez à devenir un Librarian.</string>
+    <string name="tab_text_1">Onglet 1</string>
+    <string name="tab_text_2">Onglet 2</string>
+    <string name="tab_text_3">Onglet 3</string>
+    <string name="section_format">Hello World de : %1$d</string>
+    <string name="no_launches_found">Aucun lancement trouvé.</string>
+    <string name="landing_information">Détails de l\'atterrissage</string>
+    <string name="payload">Charge Utile: %d (kg)</string>
+    <string name="spacecraft_format">%s Astronefs</string>
+    <string name="crew_capacity">Nombre de Places: %s</string>
+    <string name="current_weather">Prévisions Météo</string>
+    <string name="upcoming_with_space">"Prochains "</string>
+    <string name="previous_with_space">Précédents</string>
+    <string name="watch">Regarder</string>
+    <string name="notification_schedule_changed">PRÉVOIR UNE MISE À JOUR : Prochaine tentative pas avant %s</string>
+    <string name="notification_launch_successful">Lancement réussi !</string>
+    <string name="notification_launch_liftoff">Décollage ! Le véhicule de lancement est en vol !</string>
+    <string name="notification_one_minute">Tentative de lancement dans moins d\'une minute à %s</string>
+    <string name="notification_ten_minutes">Tentative de lancement dans moins de dix minutes à %s</string>
+    <string name="notification_one_hour">Tentative de lancement dans moins d\'une heure à %s</string>
+    <string name="notification_twenty_four_hours">Tentative de lancement dans moins de 24 heures le %s</string>
+    <string name="settings_in_flight">En Vol</string>
+    <string name="settings_in_flight_summary">Être notifié lorsqu\'un lancement est en vol.</string>
+    <string name="settings_success">Succès</string>
+    <string name="settings_success_summary">Être notifié lorsqu\'un lancement est réussi.</string>
+    <string name="settings_one_minute">Une Minute</string>
+    <string name="settings_one_minute_on">Être notifié lorsqu\'un lancement est dans moins d\'une minute.</string>
+    <string name="settings_one_minute_off">Ne pas être notifié lorsqu\'un lancement est dans moins d\'une minute.</string>
     <string name="mission_agency">Agence de la Mission</string>
 </resources>

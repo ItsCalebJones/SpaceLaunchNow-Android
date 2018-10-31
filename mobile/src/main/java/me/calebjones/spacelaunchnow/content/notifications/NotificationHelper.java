@@ -5,11 +5,14 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.AudioAttributes;
+import android.net.Uri;
 import android.os.Build;
-
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
+
 
 import me.calebjones.spacelaunchnow.R;
 
@@ -26,23 +29,38 @@ public class NotificationHelper extends ContextWrapper {
     public static final String CHANNEL_LAUNCH_UPDATE_NAME = "Launch Status Updates";
     public static final String CHANNEL_LAUNCH_SILENT = "me.calebjones.spacelaunchnow.LAUNCH_SILENT";
     public static final String CHANNEL_LAUNCH_SILENT_NAME = "Do Not Disturb";
+    public static final String CHANNEL_NEWS = "me.calebjones.spacelaunchnow.NEWS";
+    public static final String CHANNEL_NEWS_NAME = "Space Launch News";
+
+    private Context context;
 
 //Create your notification channels//
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public NotificationHelper(Context base) {
-        super(base);
+    public NotificationHelper(Context context) {
+        super(context);
+        this.context = context;
         createChannels();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void createChannels() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone",
+                "default ringtone");
+        Uri alarmSound = Uri.parse(ringtoneBox);
+
+        AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                .build();
 
         NotificationChannel launchImminent = new NotificationChannel(CHANNEL_LAUNCH_IMMINENT,
                 CHANNEL_LAUNCH_IMMINENT_NAME, NotificationManager.IMPORTANCE_HIGH);
         launchImminent.enableLights(true);
         launchImminent.setLightColor(ContextCompat.getColor(this, R.color.primary));
         launchImminent.setShowBadge(true);
+        launchImminent.setSound(alarmSound, audioAttributes);
         launchImminent.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
         getManager().createNotificationChannel(launchImminent);
 
@@ -52,6 +70,7 @@ public class NotificationHelper extends ContextWrapper {
         statusChanged.enableVibration(true);
         statusChanged.setLightColor(Color.RED);
         statusChanged.setShowBadge(true);
+        statusChanged.setSound(alarmSound, audioAttributes);
         getManager().createNotificationChannel(statusChanged);
 
         NotificationChannel launchReminder = new NotificationChannel(CHANNEL_LAUNCH_REMINDER,
@@ -59,6 +78,7 @@ public class NotificationHelper extends ContextWrapper {
         launchReminder.enableLights(false);
         launchReminder.setLightColor(Color.RED);
         launchReminder.setShowBadge(true);
+        launchImminent.setSound(alarmSound, audioAttributes);
         getManager().createNotificationChannel(launchReminder);
 
         NotificationChannel launchWeeklySummary = new NotificationChannel(CHANNEL_LAUNCH_WEEKLY,
@@ -66,7 +86,16 @@ public class NotificationHelper extends ContextWrapper {
         launchWeeklySummary.enableLights(false);
         launchWeeklySummary.setLightColor(Color.RED);
         launchWeeklySummary.setShowBadge(true);
+        launchWeeklySummary.setSound(alarmSound, audioAttributes);
         getManager().createNotificationChannel(launchWeeklySummary);
+
+        NotificationChannel newsChannel = new NotificationChannel(CHANNEL_NEWS,
+                CHANNEL_NEWS_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+        newsChannel.enableLights(false);
+        newsChannel.setLightColor(Color.RED);
+        newsChannel.setShowBadge(true);
+        newsChannel.setSound(alarmSound, audioAttributes);
+        getManager().createNotificationChannel(newsChannel);
 
         NotificationChannel silentChannel = new NotificationChannel(CHANNEL_LAUNCH_SILENT,
                 CHANNEL_LAUNCH_SILENT_NAME, NotificationManager.IMPORTANCE_MIN);

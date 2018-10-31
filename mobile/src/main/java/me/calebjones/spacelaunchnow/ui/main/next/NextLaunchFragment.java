@@ -37,6 +37,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import de.mrapp.android.preference.activity.PreferenceActivity;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.BuildConfig;
@@ -98,6 +99,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     AppCompatImageView lastLaunchInfo;
     @BindView(R.id.action_notification_settings)
     AppCompatButton notificationsSettings;
+    @BindView(R.id.view_more_launches)
+    AppCompatButton viewMoreLaunches;
 
     private View view;
     private RecyclerView mRecyclerView;
@@ -117,9 +120,10 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     private Context context;
     private int preferredCount;
     private NextLaunchDataRepository nextLaunchDataRepository;
-
-    private boolean active;
+    private CallBackListener callBackListener;
+    private boolean filterViewShowing;
     private boolean switchChanged;
+    Unbinder unbinder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -132,12 +136,20 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         setScreenName("Next Launch Fragment");
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        //getActivity() is fully created in onActivityCreated and instanceOf differentiate it between different Activities
+        if (getActivity() instanceof CallBackListener)
+            callBackListener = (CallBackListener) getActivity();
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final int color;
-        active = false;
+        filterViewShowing = false;
 
         if (adapter == null) {
             adapter = new CardAdapter(context);
@@ -155,7 +167,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
         setHasOptionsMenu(true);
         view = inflater.inflate(R.layout.fragment_upcoming, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         setUpSwitches();
         no_data = view.findViewById(R.id.no_launches);
@@ -169,7 +181,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             FABMenu.setVisibility(View.VISIBLE);
         }
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
 
         //If preference is for small card, landscape tablets get three others get two.
@@ -189,9 +201,16 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         mSwipeRefreshLayout = view.findViewById(R.id.activity_main_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
+        ViewCompat.setNestedScrollingEnabled(mRecyclerView, false);
+
         //Enable no data by default
         no_data.setVisibility(View.VISIBLE);
+        viewMoreLaunches.setVisibility(View.GONE);
         return view;
+    }
+
+    public boolean isFilterShown(){
+        return filterViewShowing;
     }
 
     @Override
@@ -292,7 +311,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     public void fetchData(boolean forceRefresh) {
         Timber.v("Sending GET_UP_LAUNCHES");
-        preferredCount = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
+        preferredCount = 10;
         nextLaunchDataRepository.getNextUpcomingLaunches(preferredCount, forceRefresh, new Callbacks.NextLaunchesCallback() {
             @Override
             public void onLaunchesLoaded(RealmResults<Launch> launches) {
@@ -306,10 +325,11 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
             @Override
             public void onError(String message, @Nullable Throwable throwable) {
-                if (throwable != null){
+                if (throwable != null) {
                     Timber.e(throwable);
                 } else {
                     Timber.e(message);
+                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
                 }
                 SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
             }
@@ -318,28 +338,32 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     private void updateAdapter(RealmResults<Launch> launches) {
         adapter.clear();
-        preferredCount = Integer.parseInt(sharedPref.getString("upcoming_value", "5"));
+        preferredCount = 10;
         if (launches.size() >= preferredCount) {
             no_data.setVisibility(View.GONE);
+            viewMoreLaunches.setVisibility(View.VISIBLE);
             setLayoutManager(preferredCount);
             adapter.addItems(launches.subList(0, preferredCount));
             adapter.notifyDataSetChanged();
 
         } else if (launches.size() > 0) {
             no_data.setVisibility(View.GONE);
+            viewMoreLaunches.setVisibility(View.VISIBLE);
             setLayoutManager(preferredCount);
             adapter.addItems(launches);
             adapter.notifyDataSetChanged();
 
         } else {
+            no_data.setVisibility(View.VISIBLE);
+            viewMoreLaunches.setVisibility(View.GONE);
             if (adapter != null) {
                 adapter.clear();
             }
         }
     }
 
-    private void showNetworkLoading(boolean loading){
-        if (loading){
+    private void showNetworkLoading(boolean loading) {
+        if (loading) {
             showLoading();
         } else {
             hideLoading();
@@ -366,7 +390,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         Bundle bundle = getArguments();
         if (bundle != null) {
             if (bundle.getBoolean("SHOW_FILTERS")) {
-                if (!active) {
+                if (!filterViewShowing) {
                     new Handler().postDelayed(this::checkFilter, 500);
                 }
             }
@@ -437,12 +461,12 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
 
-    private void checkFilter() {
+    public void checkFilter() {
 
-        if (!active) {
+        if (!filterViewShowing) {
             Analytics.getInstance().sendButtonClicked("Show Launch filters.");
             switchChanged = false;
-            active = true;
+            filterViewShowing = true;
             mSwipeRefreshLayout.setEnabled(false);
             FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_close));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -452,7 +476,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             }
         } else {
             Analytics.getInstance().sendButtonClicked("Hide Launch filters.");
-            active = false;
+            filterViewShowing = false;
             FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_notifications_white));
             mSwipeRefreshLayout.setEnabled(true);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -490,7 +514,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 }
 
                 UpdateWearJob.scheduleJobNow();
-                fetchData(false);
+                fetchData(true);
                 if (switchPreferences.getCalendarStatus()) {
                     SyncCalendarJob.scheduleImmediately();
                 }
@@ -502,6 +526,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     public void onDestroyView() {
         super.onDestroyView();
         Timber.v("onDestroyView");
+        callBackListener = null;
+        mSwipeRefreshLayout.setOnRefreshListener(null);
+        unbinder.unbind();
     }
 
     private void confirm() {
@@ -627,6 +654,15 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 dialog.title(R.string.launch_info).content(R.string.launch_info_description).show();
                 break;
         }
+    }
+
+    @OnClick({R.id.view_more_launches, R.id.view_more_launches2})
+    public void onViewClicked() {
+        callBackListener.onNavigateToLaunches();
+    }
+
+    public interface CallBackListener {
+        void onNavigateToLaunches();// pass any parameter in your onCallBack which you want to return
     }
 }
 

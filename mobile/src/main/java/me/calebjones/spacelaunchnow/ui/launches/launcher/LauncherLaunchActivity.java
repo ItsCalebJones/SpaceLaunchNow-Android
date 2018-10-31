@@ -7,6 +7,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -203,32 +204,14 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
     @Override
     public void setUpcomingBadge(int count) {
         if (tabLayout != null && count > 0) {
-            final BadgeDrawable drawable =
-                    new BadgeDrawable.Builder()
-                            .type(BadgeDrawable.TYPE_NUMBER)
-                            .badgeColor(color)
-                            .number(count)
-                            .padding(8, 8, 8, 8, 8)
-                            .strokeWidth(16)
-                            .build();
-
-            tabLayout.getTabAt(0).setText(TextUtils.concat("Upcoming ", drawable.toSpannable()));
+            tabLayout.with(0).badge(true).badgeCount(count).name("UPCOMING").build();
         }
     }
 
     @Override
     public void setPreviousBadge(int count) {
         if (tabLayout != null && count > 0) {
-            final BadgeDrawable drawable =
-                    new BadgeDrawable.Builder()
-                            .type(BadgeDrawable.TYPE_NUMBER)
-                            .badgeColor(color)
-                            .number(count)
-                            .padding(8, 8, 8, 8, 8)
-                            .strokeWidth(16)
-                            .build();
-
-            tabLayout.getTabAt(1).setText(TextUtils.concat("Previous ", drawable.toSpannable()));
+            tabLayout.with(1).badge(true).badgeCount(count).name("PREVIOUS").build();
         }
     }
 
@@ -257,6 +240,7 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
         // FragmentManger). Simply save the returned Fragment from
         // super.instantiateItem() into an appropriate reference depending
         // on the ViewPager position.
+        @NonNull
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             Fragment createdFragment = (Fragment) super.instantiateItem(container, position);
@@ -270,6 +254,11 @@ public class LauncherLaunchActivity extends AppCompatActivity implements Upcomin
                     break;
             }
             return createdFragment;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((View) object);
         }
 
         @Override

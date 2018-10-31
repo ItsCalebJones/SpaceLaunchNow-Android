@@ -115,7 +115,7 @@ public class LaunchListFactory implements RemoteViewsService.RemoteViewsFactory 
         int widgetIconsColor = sharedPref.getInt("widget_icon_color",colorWhite);
         int widgetAlpha = Color.alpha(widgetBackgroundColor);
         Timber.v("LaunchListFactory - binding view at %s for launch %s", position, launch.getName());
-        RemoteViews row = new RemoteViews(context.getPackageName(), R.layout.launch_list_item);
+        RemoteViews row = new RemoteViews(context.getPackageName(), R.layout.launch_list_item_widget);
         String[] title;
         String launchDate;
         SimpleDateFormat sdf = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy");

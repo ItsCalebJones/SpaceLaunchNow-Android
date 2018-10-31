@@ -53,7 +53,11 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     }
 
     public void addItems(final List<Article> articles) {
-        this.articles = articles;
+        if (this.articles != null) {
+            this.articles.addAll(articles);
+        } else {
+            this.articles = articles;
+        }
         notifyDataSetChanged();
     }
 
@@ -136,28 +140,28 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
 
             siteDrawable.text1(article.getNewsSite());
-
-            if (article.getTags() != null && article.getTags().size() > 0) {
-                holder.tagText.setVisibility(View.VISIBLE);
-                String upperString = article.getTags().get(0).substring(0, 1).toUpperCase()
-                        + article.getTags().get(0).substring(1);
-                upperString = Utils.ellipsize(upperString, 15);
-                tagDrawable.text1(upperString);
-                holder.tagText.setText(tagDrawable.build().toSpannable());
-            } else {
-                holder.tagText.setVisibility(View.GONE);
-            }
-
-            if (article.getTags() != null && article.getTags().size() > 1) {
-                holder.tagTextAlt.setVisibility(View.VISIBLE);
-                String upperString = article.getTags().get(1).substring(0, 1).toUpperCase()
-                        + article.getTags().get(1).substring(1);
-                upperString = Utils.ellipsize(upperString, 15);
-                altTagDrawable.text1(upperString);
-                holder.tagTextAlt.setText(altTagDrawable.build().toSpannable());
-            } else {
-                holder.tagTextAlt.setVisibility(View.GONE);
-            }
+            holder.tagText.setVisibility(View.GONE);
+//            if (article.getTags() != null && article.getTags().size() > 0) {
+//                holder.tagText.setVisibility(View.VISIBLE);
+//                String upperString = article.getTags().get(0).substring(0, 1).toUpperCase()
+//                        + article.getTags().get(0).substring(1);
+//                upperString = Utils.ellipsize(upperString, 15);
+//                tagDrawable.text1(upperString.toUpperCase());
+//                holder.tagText.setText(tagDrawable.build().toSpannable());
+//            } else {
+//                holder.tagText.setVisibility(View.GONE);
+//            }
+            holder.tagTextAlt.setVisibility(View.GONE);
+//            if (article.getTags() != null && article.getTags().size() > 1) {
+//                holder.tagTextAlt.setVisibility(View.VISIBLE);
+//                String upperString = article.getTags().get(1).substring(0, 1).toUpperCase()
+//                        + article.getTags().get(1).substring(1);
+//                upperString = Utils.ellipsize(upperString, 15);
+//                altTagDrawable.text1(upperString.toUpperCase());
+//                holder.tagTextAlt.setText(altTagDrawable.build().toSpannable());
+//            } else {
+//                holder.tagTextAlt.setVisibility(View.GONE);
+//            }
 
             holder.siteText.setText(siteDrawable.build().toSpannable());
 

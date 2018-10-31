@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.BaseFragment;
@@ -32,6 +33,7 @@ import me.calebjones.spacelaunchnow.content.data.previous.PreviousDataRepository
 import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.views.EndlessRecyclerViewScrollListener;
+import me.calebjones.spacelaunchnow.utils.views.filter.LaunchFilterDialog;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
 import timber.log.Timber;
 import java.lang.reflect.Field;
@@ -56,6 +58,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
 
+    Unbinder unbinder;
     private SearchView searchView;
     public boolean canLoadMore;
     private boolean statefulStateContentShow = false;
@@ -77,7 +80,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
         adapter = new ListAdapter(getContext());
 
         view = inflater.inflate(R.layout.fragment_launches, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
@@ -174,6 +177,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
                     Timber.e(throwable);
                 } else {
                     Timber.e(message);
+                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
                 }
                 SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
             }
@@ -211,6 +215,9 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
     @Override
     public void onRefresh() {
         searchTerm = null;
+        searchView.setQuery("", false);
+        searchView.clearFocus();
+        searchView.setIconified(true);
         fetchData(true);
     }
 
@@ -241,12 +248,22 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Timber.v("onDestroyView");
+        mRecyclerView.removeOnScrollListener(scrollListener);
+        scrollListener = null;
+        mSwipeRefreshLayout.setOnRefreshListener(null);
+        unbinder.unbind();
+    }
+
 
     //Currently only used to debug
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.upcoming_menu, menu);
+        inflater.inflate(R.menu.list_menu, menu);
 
         if (SupporterHelper.isSupporter()) {
             menu.removeItem(R.id.action_supporter);
@@ -268,6 +285,13 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
             onRefresh();
             return true;
         }
+
+        if (id == R.id.filter) {
+            LaunchFilterDialog launchFilterDialog = LaunchFilterDialog.newInstance();
+            launchFilterDialog.show(getActivity().getSupportFragmentManager(), "add_previous_filter_dialog_fragment");
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

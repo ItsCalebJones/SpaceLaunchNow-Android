@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 
+import com.pixplicity.easyprefs.library.Prefs;
+
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
@@ -35,13 +37,15 @@ public class CalendarSyncManager extends BaseManager {
         if (calendarItem != null) {
             calendarUtil = new CalendarUtility(calendarItem);
         } else {
-            sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putBoolean("calendar_sync_state", false);
-            editor.apply();
+            Prefs.putBoolean("calendar_sync_state", false);
 
             switchPreferences.setCalendarStatus(false);
         }
+    }
+
+    public void resyncCalendarItem(){
+        calendarItem = mRealm.where(CalendarItem.class).findFirst();
+        calendarUtil = new CalendarUtility(calendarItem);
     }
 
     public void syncAllEevnts() {
@@ -80,7 +84,7 @@ public class CalendarSyncManager extends BaseManager {
 
         RealmList<Launch> launchResults = new RealmList<>();
 
-        int size = Integer.parseInt(sharedPref.getString("calendar_count", "5"));
+        int size = 10;
 
         if (launches.size() > size) {
             launchResults.addAll(launches.subList(0, size));
@@ -120,12 +124,7 @@ public class CalendarSyncManager extends BaseManager {
         for (final Launch launchRealm : launches) {
             int success = calendarUtil.deleteEvent(context, launchRealm);
             if (success > 0) {
-                mRealm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        launchRealm.setEventID(null);
-                    }
-                });
+                mRealm.executeTransaction(realm -> launchRealm.setEventID(null));
             }
         }
     }

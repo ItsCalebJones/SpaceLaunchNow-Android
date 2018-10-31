@@ -155,10 +155,10 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         }
 
         if (launchItem.getOrbit() != null) {
-            holder.launcherCard.setVisibility(View.VISIBLE);
-            holder.launcher.setText(launchItem.getOrbit());
+            holder.orbitCard.setVisibility(View.VISIBLE);
+            holder.orbitName.setText(launchItem.getOrbit());
         } else {
-            holder.launcherCard.setVisibility(View.GONE);
+            holder.orbitCard.setVisibility(View.GONE);
         }
 
         holder.status.setText(launchItem.getStatus().getName());
@@ -181,9 +181,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         @BindView(R.id.landing_pill_mini)
         CardView landingCard;
         @BindView(R.id.launcher)
-        TextView launcher;
+        TextView orbitName;
         @BindView(R.id.launcher_pill_mini)
-        CardView launcherCard;
+        CardView orbitCard;
         @BindView(R.id.launch_rocket)
         TextView title;
         @BindView(R.id.location)
@@ -218,53 +218,5 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             mContext.startActivity(intent);
         }
     }
-
-    public void animateTo(List<LaunchList> models) {
-        applyAndAnimateRemovals(models);
-        applyAndAnimateAdditions(models);
-        applyAndAnimateMovedItems(models);
-    }
-
-    private void applyAndAnimateRemovals(List<LaunchList> newModels) {
-        for (int i = launchList.size() - 1; i >= 0; i--) {
-            if (!newModels.contains(launchList.get(i))) {
-                removeItem(i);
-            }
-        }
-    }
-
-    private void applyAndAnimateAdditions(List<LaunchList> newModels) {
-        for (int i = 0, count = newModels.size(); i < count; i++) {
-            final LaunchList model = newModels.get(i);
-            if (!launchList.contains(model)) {
-                addItem(i, model);
-            }
-        }
-    }
-
-    private void applyAndAnimateMovedItems(List<LaunchList> newModels) {
-        for (int toPosition = newModels.size() - 1; toPosition >= 0; toPosition--) {
-            final LaunchList model = newModels.get(toPosition);
-            final int fromPosition = launchList.indexOf(model);
-            if (fromPosition >= 0 && fromPosition != toPosition) {
-                moveItem(fromPosition, toPosition);
-            }
-        }
-    }
-
-    public LaunchList removeItem(int position) {
-        LaunchList model = launchList.remove(position);
-        notifyItemRemoved(position);
-        return model;
-    }
-
-    public void addItem(int position, LaunchList model) {
-        launchList.add(position, model);
-        notifyItemInserted(position);
-    }
-
-    public void moveItem(int fromPosition, int toPosition) {
-        launchList.add(toPosition, launchList.remove(fromPosition));
-        notifyItemMoved(fromPosition, toPosition);
-    }
 }
+
