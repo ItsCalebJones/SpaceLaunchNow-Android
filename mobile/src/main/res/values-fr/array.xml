@@ -9,14 +9,7 @@
         <item>Quatre Heures</item>
         <item>Un Jour</item>
     </string-array>
-    <string-array name="upcoming_array">
-        <item>Deux</item>
-        <item>Un</item>
-        <item>Cinq</item>
-        <item>Vingt</item>
-        <item>Dix</item>
-        <item>Tous (Déconseillé)</item>
-    </string-array>
+
     <string-array name="sync_timer">
         <item>Un Jour</item>
         <item>Trois Jours</item>

@@ -419,10 +419,7 @@
     <string name="unknown_year">Gründungsjahr - unbekannt</string>
     <string name="improve_our_data">Hilf mit, unsere Daten zu verbessern</string>
     <string name="improve_our_data_content">Interessiert, die Genauigkeit unserer Raumfahrtdaten zu verbessern? Trete dem Space Launch Now Discord Server bei und erkundige dich über eine Bibliothekarrolle.</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
-    <string name="tab_text_3">Tab 3</string>
-    <string name="section_format">Hallo Welt vom Abschnitt: %1$d</string>
+
     <string name="no_launches_found">Keine Starts gefunden.</string>
     <string name="landing_information">Landeinformation</string>
     <string name="payload">Nutzlast: %d (kg)</string>
@@ -446,5 +443,4 @@
     <string name="settings_one_minute">Eine Minute</string>
     <string name="settings_one_minute_on">Benachrichtigung erhalten, wenn ein Start innerhalb einer Minute erfolgt.</string>
     <string name="settings_one_minute_off">Sende keine Benachrichtigung, wenn ein Start in einer Minute stattfindet.</string>
-    <string name="mission_agency">Missions-Organisation</string>
 </resources>

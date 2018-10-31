@@ -421,10 +421,6 @@ Tato aplikace využívá nástroj Google Firebase pro analýzu a službu Google 
     <string name="unknown_year">Rok založení - neznámý.</string>
     <string name="improve_our_data">Pomozte zlepšit naše údaje</string>
     <string name="improve_our_data_content">Pokud máte zájem o pomoc při zlepšování přesnosti našich údajů o vzdušném prostoru, připojte se k nám na serveru Space Launch Now Discord a požádejte o to, abyste se stal knihovníkem</string>
-    <string name="tab_text_1">Záložka 1</string>
-    <string name="tab_text_2">Záložka 2</string>
-    <string name="tab_text_3">Záložka 3</string>
-    <string name="section_format">Pozdrav světu ze sekce: %1$d</string>
     <string name="no_launches_found">Žádné starty nenalezeny</string>
     <string name="landing_information">Infomace o přistání</string>
     <string name="payload">Náklad: %d (kg)</string>
@@ -448,5 +444,4 @@ Tato aplikace využívá nástroj Google Firebase pro analýzu a službu Google 
     <string name="settings_one_minute">Jedna minuta</string>
     <string name="settings_one_minute_on">Dostat oznámení, jednu minutu před startem.</string>
     <string name="settings_one_minute_off">Neoznamovat, když je start za jednu minutu.</string>
-    <string name="mission_agency">Pořádající agentura mise</string>
 </resources>

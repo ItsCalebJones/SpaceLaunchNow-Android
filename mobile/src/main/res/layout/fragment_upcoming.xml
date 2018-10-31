@@ -386,15 +386,17 @@
 
             </FrameLayout>
 
-            <android.support.design.widget.FloatingActionButton
+            <extendedfablib.ExtendedFAB
                 android:id="@+id/menu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:layout_marginBottom="@dimen/card_margin"
-                android:layout_marginRight="@dimen/card_margin"
-                app:elevation="@dimen/material_elevation_fab_resting"
-                app:srcCompat="@drawable/ic_notifications_white" />
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:elevation="5dp"
+                android:src="@drawable/"
+                />
 
         </android.support.design.widget.CoordinatorLayout>
 

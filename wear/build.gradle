@@ -66,8 +66,8 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
     def appVersionCode = app.versionMajor * 10000 + app.versionMinor * 1000 + app.versionPatch * 100000 + advancedVersioning.versionCode
 
     defaultConfig {
@@ -75,7 +75,7 @@ android {
         manifestPlaceholders = [applicationLabel: "@string/app_name"]
         applicationId "me.calebjones.spacelaunchnow"
         minSdkVersion 23
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode appVersionCode
         versionName advancedVersioning.versionName
     }

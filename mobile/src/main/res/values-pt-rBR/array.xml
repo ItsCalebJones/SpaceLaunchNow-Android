@@ -9,14 +9,6 @@
         <item>Quatro horas</item>
         <item>Um dia</item>
     </string-array>
-    <string-array name="upcoming_array">
-        <item>Dois</item>
-        <item>Um</item>
-        <item>Cinco</item>
-        <item>Vinte</item>
-        <item>Dez</item>
-        <item>Todos (não recomendado)</item>
-    </string-array>
     <string-array name="sync_timer">
         <item>Um dia</item>
         <item>Três dias</item>

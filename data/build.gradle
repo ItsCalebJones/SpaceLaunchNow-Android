@@ -3,7 +3,7 @@ apply plugin: 'realm-android'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
+    buildToolsVersion '28.0.3'
     flavorDimensions "release"
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion

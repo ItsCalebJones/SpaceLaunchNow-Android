@@ -9,14 +9,7 @@
         <item>Čtyři hodiny</item>
         <item>Jeden den</item>
     </string-array>
-    <string-array name="upcoming_array">
-        <item>Dva</item>
-        <item>Jedna</item>
-        <item>Pět</item>
-        <item>Dvacet</item>
-        <item>Deset</item>
-        <item>Všechny (není doporučeno)</item>
-    </string-array>
+
     <string-array name="sync_timer">
         <item>Jeden den</item>
         <item>Tři dny</item>

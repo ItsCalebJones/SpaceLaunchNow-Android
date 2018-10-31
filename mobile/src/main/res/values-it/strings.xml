@@ -259,6 +259,4 @@
     <string name="wear_os">Wear OS</string>
     <string name="launchers">Razzi vettori</string>
     <string name="orbiters">Moduli orbitanti</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="mission_agency">Agenzia della missione</string>
 </resources>

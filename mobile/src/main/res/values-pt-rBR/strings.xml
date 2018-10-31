@@ -317,10 +317,6 @@
     <string name="unknown_year">Ano de fundação - desconhecido.</string>
     <string name="improve_our_data">Ajude a aprimorar nossos dados</string>
     <string name="improve_our_data_content">Interessado em ajudar a aprimorar a precisão dos nossos dados de voos espaciais? Junte-se a nós no servidor Discord Space Launch Now e pergunte sobre como tornar-se um bibliotecário.</string>
-    <string name="tab_text_1">Aba 1</string>
-    <string name="tab_text_2">Aba 2</string>
-    <string name="tab_text_3">Aba 3</string>
-    <string name="section_format">Olá mundo da sessão: %1$d</string>
     <string name="no_launches_found">Nenhum lançamento encontrado.</string>
     <string name="landing_information">Informação do pouso</string>
     <string name="payload">Carga: %d (kg)</string>
@@ -344,5 +340,4 @@
     <string name="settings_one_minute">Um minuto</string>
     <string name="settings_one_minute_on">Receba notificações quando um Lançamento estiver aguardando um minuto.</string>
     <string name="settings_one_minute_off">Não notifique quando o Lançamento estiver aguardando um minuto.</string>
-    <string name="mission_agency">Agência da Missão</string>
 </resources>

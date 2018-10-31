@@ -9,14 +9,7 @@
         <item>Négy óra</item>
         <item>Egy nap</item>
     </string-array>
-    <string-array name="upcoming_array">
-        <item>Kettő</item>
-        <item>Egy</item>
-        <item>Öt</item>
-        <item>Húsz</item>
-        <item>Tíz</item>
-        <item>Összes (Nem ajánlott)</item>
-    </string-array>
+
     <string-array name="sync_timer">
         <item>Egy nap</item>
         <item>Három nap</item>

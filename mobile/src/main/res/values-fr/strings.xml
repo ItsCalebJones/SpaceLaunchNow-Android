@@ -420,10 +420,6 @@
     <string name="unknown_year">Année de Fondation - Inconnue</string>
     <string name="improve_our_data">Aider à améliorer les données</string>
     <string name="improve_our_data_content">Motivé pour aider à améliorer la précision des données ? Rejoignez-nous sur le serveur Discord et demandez à devenir un Librarian.</string>
-    <string name="tab_text_1">Onglet 1</string>
-    <string name="tab_text_2">Onglet 2</string>
-    <string name="tab_text_3">Onglet 3</string>
-    <string name="section_format">Hello World de : %1$d</string>
     <string name="no_launches_found">Aucun lancement trouvé.</string>
     <string name="landing_information">Détails de l\'atterrissage</string>
     <string name="payload">Charge Utile: %d (kg)</string>
@@ -447,5 +443,4 @@
     <string name="settings_one_minute">Une Minute</string>
     <string name="settings_one_minute_on">Être notifié lorsqu\'un lancement est dans moins d\'une minute.</string>
     <string name="settings_one_minute_off">Ne pas être notifié lorsqu\'un lancement est dans moins d\'une minute.</string>
-    <string name="mission_agency">Agence de la Mission</string>
 </resources>
