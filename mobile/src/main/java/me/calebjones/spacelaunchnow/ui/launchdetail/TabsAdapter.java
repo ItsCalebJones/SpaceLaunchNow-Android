@@ -1,18 +1,16 @@
 package me.calebjones.spacelaunchnow.ui.launchdetail;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.AgencyDetailFragment;
 import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.mission.MissionDetailFragment;
 import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.SummaryDetailFragment;
-import me.calebjones.spacelaunchnow.ui.launches.launcher.PreviousLauncherLaunchesFragment;
-import me.calebjones.spacelaunchnow.ui.launches.launcher.UpcomingLauncherLaunchesFragment;
 
 public class TabsAdapter extends FragmentPagerAdapter {
 

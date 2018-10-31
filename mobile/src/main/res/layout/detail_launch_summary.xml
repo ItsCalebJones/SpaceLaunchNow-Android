@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -18,7 +19,7 @@
         android:orientation="vertical">
 
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/material_card_edge_margin"
@@ -30,7 +31,7 @@
             card_view:cardPreventCornerOverlap="true"
             card_view:cardUseCompatPadding="true">
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
 
                 android:id="@+id/constraint_countdown"
                 android:layout_width="match_parent"
@@ -131,7 +132,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/date" />
 
 
-                <android.support.v7.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/watchButton"
                     style="@style/Base.Widget.AppCompat.Button.Colored"
                     android:layout_width="0dp"
@@ -165,8 +166,8 @@
                     app:layout_constraintTop_toBottomOf="@+id/watchButton" />
 
 
-            </android.support.constraint.ConstraintLayout>
-        </android.support.v7.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
 
         <me.calebjones.spacelaunchnow.utils.views.custom.WeatherCard
             android:id="@+id/weather_card"
@@ -190,4 +191,4 @@
 
     </LinearLayout>
 
-</android.support.v4.widget.NestedScrollView>
+</androidx.core.widget.NestedScrollView>

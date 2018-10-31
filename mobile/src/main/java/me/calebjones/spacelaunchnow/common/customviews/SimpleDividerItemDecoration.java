@@ -3,9 +3,9 @@ package me.calebjones.spacelaunchnow.common.customviews;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import androidx.recyclerview.widget.RecyclerView;
 import me.calebjones.spacelaunchnow.R;
 
 public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {

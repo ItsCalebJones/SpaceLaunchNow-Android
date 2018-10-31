@@ -5,8 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.app.ShareCompat;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.app.ShareCompat;
+
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;

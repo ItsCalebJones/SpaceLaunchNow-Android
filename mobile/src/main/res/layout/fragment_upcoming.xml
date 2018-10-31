@@ -1,4 +1,5 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout"
@@ -6,16 +7,16 @@
     android:layout_height="fill_parent"
     android:elevation="0dp">
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/activity_main_swipe_refresh_layout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
-        <android.support.design.widget.CoordinatorLayout
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <android.support.v4.widget.NestedScrollView
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -24,7 +25,7 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -35,7 +36,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <android.support.v7.widget.AppCompatButton
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/view_more_launches"
                         style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                         android:layout_width="match_parent"
@@ -52,7 +53,7 @@
                         app:layout_anchor="@+id/recycler_view" />
 
                 </LinearLayout>
-            </android.support.v4.widget.NestedScrollView>
+            </androidx.core.widget.NestedScrollView>
 
             <RelativeLayout
                 android:id="@+id/no_launches"
@@ -61,7 +62,7 @@
                 android:elevation="2dp"
                 android:visibility="visible">
 
-                <android.support.v7.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/view_more_launches2"
                     style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                     android:layout_width="match_parent"
@@ -107,7 +108,7 @@
                 android:elevation="2dp"
                 android:visibility="invisible">
 
-                <android.support.v4.widget.NestedScrollView
+                <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
@@ -161,7 +162,7 @@
                                 android:layout_weight="1"
                                 android:orientation="vertical">
 
-                                <android.support.v7.widget.AppCompatCheckBox
+                                <androidx.appcompat.widget.AppCompatCheckBox
                                     android:id="@+id/nasa_switch"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -171,7 +172,7 @@
                                     android:textColor="@color/white"
                                     app:buttonTint="@color/white" />
 
-                                <android.support.v7.widget.AppCompatCheckBox
+                                <androidx.appcompat.widget.AppCompatCheckBox
                                     android:id="@+id/spacex_switch"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -181,7 +182,7 @@
                                     android:textColor="@color/white"
                                     app:buttonTint="@color/white" />
 
-                                <android.support.v7.widget.AppCompatCheckBox
+                                <androidx.appcompat.widget.AppCompatCheckBox
                                     android:id="@+id/roscosmos_switch"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -191,7 +192,7 @@
                                     android:textColor="@color/white"
                                     app:buttonTint="@color/white" />
 
-                                <android.support.v7.widget.AppCompatCheckBox
+                                <androidx.appcompat.widget.AppCompatCheckBox
                                     android:id="@+id/ula_switch"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -201,7 +202,7 @@
                                     android:textColor="@color/white"
                                     app:buttonTint="@color/white" />
 
-                                <android.support.v7.widget.AppCompatCheckBox
+                                <androidx.appcompat.widget.AppCompatCheckBox
                                     android:id="@+id/KSC_switch"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -211,7 +212,7 @@
                                     android:textColor="@color/white"
                                     app:buttonTint="@color/white" />
 
-                                <android.support.v7.widget.AppCompatCheckBox
+                                <androidx.appcompat.widget.AppCompatCheckBox
                                     android:id="@+id/van_switch"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -229,7 +230,7 @@
                                 android:layout_weight="1"
                                 android:orientation="vertical">
 
-                                <android.support.v7.widget.AppCompatCheckBox
+                                <androidx.appcompat.widget.AppCompatCheckBox
                                     android:id="@+id/arianespace_switch"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -239,7 +240,7 @@
                                     android:textColor="@color/white"
                                     app:buttonTint="@color/white" />
 
-                                <android.support.v7.widget.AppCompatCheckBox
+                                <androidx.appcompat.widget.AppCompatCheckBox
                                     android:id="@+id/casc_switch"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -249,7 +250,7 @@
                                     android:textColor="@color/white"
                                     app:buttonTint="@color/white" />
 
-                                <android.support.v7.widget.AppCompatCheckBox
+                                <androidx.appcompat.widget.AppCompatCheckBox
                                     android:id="@+id/isro_switch"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -259,7 +260,7 @@
                                     android:textColor="@color/white"
                                     app:buttonTint="@color/white" />
 
-                                <android.support.v7.widget.AppCompatCheckBox
+                                <androidx.appcompat.widget.AppCompatCheckBox
                                     android:id="@+id/ples_switch"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -269,7 +270,7 @@
                                     android:textColor="@color/white"
                                     app:buttonTint="@color/white" />
 
-                                <android.support.v7.widget.AppCompatCheckBox
+                                <androidx.appcompat.widget.AppCompatCheckBox
                                     android:id="@+id/all_switch"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -281,9 +282,10 @@
                             </LinearLayout>
                         </LinearLayout>
 
-                        <android.support.v7.widget.AppCompatButton
-                            android:id="@+id/action_notification_settings"
+
+                        <androidx.appcompat.widget.AppCompatButton
                             style="@style/Base.Widget.AppCompat.Button.Colored"
+                            android:id="@+id/action_notification_settings"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/edit_notification_settings" />
@@ -326,7 +328,7 @@
                             android:orientation="horizontal">
 
 
-                            <android.support.v7.widget.SwitchCompat
+                            <androidx.appcompat.widget.SwitchCompat
                                 android:id="@+id/tbd_launch"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -336,7 +338,7 @@
                                 android:textColor="@color/white"
                                 app:buttonTint="@color/white" />
 
-                            <android.support.v7.widget.AppCompatImageView
+                            <androidx.appcompat.widget.AppCompatImageView
                                 android:id="@+id/tbd_info"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -356,7 +358,7 @@
                             android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
                             android:orientation="horizontal">
 
-                            <android.support.v7.widget.SwitchCompat
+                            <androidx.appcompat.widget.SwitchCompat
                                 android:id="@+id/persist_last_launch"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -366,7 +368,7 @@
                                 android:textColor="@color/white"
                                 app:buttonTint="@color/white" />
 
-                            <android.support.v7.widget.AppCompatImageView
+                            <androidx.appcompat.widget.AppCompatImageView
                                 android:id="@+id/last_launch_info"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -377,16 +379,16 @@
                                 android:src="@drawable/ic_about" />
                         </LinearLayout>
 
-                        <android.support.v4.widget.Space
+                        <Space
                             android:layout_width="match_parent"
                             android:layout_height="56dp" />
                     </LinearLayout>
 
-                </android.support.v4.widget.NestedScrollView>
+                </androidx.core.widget.NestedScrollView>
 
             </FrameLayout>
 
-            <android.support.design.widget.FloatingActionButton
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/menu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -396,8 +398,8 @@
                 app:elevation="@dimen/material_elevation_fab_resting"
                 app:srcCompat="@drawable/ic_notifications_white" />
 
-        </android.support.design.widget.CoordinatorLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -4,10 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.Group;
-import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
@@ -18,6 +14,10 @@ import com.github.pwittchen.weathericonview.WeatherIconView;
 
 import java.text.SimpleDateFormat;
 
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.Group;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.R;

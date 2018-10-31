@@ -4,7 +4,7 @@ import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
+import androidx.core.app.NavUtils;
 import android.transition.Transition;
 import android.view.MenuItem;
 

@@ -31,10 +31,6 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,8 +41,13 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import me.calebjones.spacelaunchnow.R;
 
 /**
@@ -260,7 +261,7 @@ public final class Rate {
         Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout) snackbar.getView();
 
         // Hide default text
-        TextView textView = layout.findViewById(android.support.design.R.id.snackbar_text);
+        TextView textView = layout.findViewById(R.id.snackbar_text);
         textView.setVisibility(View.INVISIBLE);
 
         // Inflate our custom view

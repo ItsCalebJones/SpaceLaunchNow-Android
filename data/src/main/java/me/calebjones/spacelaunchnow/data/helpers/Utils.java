@@ -104,12 +104,6 @@ public class Utils {
         return String.valueOf(formattedDate);
     }
 
-    public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
-    }
-
     public static class EpochDateConverter extends TypeAdapter<Date> {
         @Override
         public void write(JsonWriter out, Date value) throws IOException {

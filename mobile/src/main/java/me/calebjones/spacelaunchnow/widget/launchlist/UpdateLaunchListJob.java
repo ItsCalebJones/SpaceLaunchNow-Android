@@ -1,7 +1,7 @@
 package me.calebjones.spacelaunchnow.widget.launchlist;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;

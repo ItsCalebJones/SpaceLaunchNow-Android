@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
         app:tabSelectedTextColor="@color/dark_theme_primary_text_color"
         app:tabMode="fixed" />
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpager"
         android:layout_below="@id/tabLayout"
         android:layout_width="match_parent"

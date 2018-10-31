@@ -8,9 +8,9 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatDelegate;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.webkit.WebView;
@@ -293,6 +293,84 @@ public class LaunchApplication extends Application {
         boolean oneMinute = Prefs.getBoolean("oneMinute", true);
         boolean inFlight = Prefs.getBoolean("inFlight", true);
         boolean success = Prefs.getBoolean("success", true);
+
+        boolean all = switchPreferences.getAllSwitch();
+        boolean ples = switchPreferences.getSwitchPles();
+        boolean ksc = switchPreferences.getSwitchKSC();
+        boolean van = switchPreferences.getSwitchVan();
+        boolean isro = switchPreferences.getSwitchISRO();
+        boolean casc = switchPreferences.getSwitchCASC();
+        boolean ariane = switchPreferences.getSwitchArianespace();
+        boolean ula = switchPreferences.getSwitchULA();
+        boolean roscosmos = switchPreferences.getSwitchRoscosmos();
+        boolean spacex = switchPreferences.getSwitchSpaceX();
+        boolean nasa = switchPreferences.getSwitchNasa();
+
+        if (all) {
+            firebaseMessaging.subscribeToTopic("all");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("all");
+        }
+
+        if (ksc) {
+            firebaseMessaging.subscribeToTopic("ksc");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("ksc");
+        }
+
+        if (ples) {
+            firebaseMessaging.subscribeToTopic("ples");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("ples");
+        }
+
+        if (van) {
+            firebaseMessaging.subscribeToTopic("van");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("van");
+        }
+
+        if (isro) {
+            firebaseMessaging.subscribeToTopic("isro");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("isro");
+        }
+
+        if (casc) {
+            firebaseMessaging.subscribeToTopic("casc");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("casc");
+        }
+
+        if (ariane) {
+            firebaseMessaging.subscribeToTopic("ariane");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("ariane");
+        }
+
+        if (ula) {
+            firebaseMessaging.subscribeToTopic("ula");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("ula");
+        }
+
+        if (roscosmos) {
+            firebaseMessaging.subscribeToTopic("roscosmos");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("roscosmos");
+        }
+
+        if (spacex) {
+            firebaseMessaging.subscribeToTopic("spacex");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("spacex");
+        }
+
+        if (nasa) {
+            firebaseMessaging.subscribeToTopic("nasa");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("nasa");
+        }
 
         if (notificationEnabled) {
             firebaseMessaging.subscribeToTopic("notificationEnabled");

@@ -4,16 +4,14 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v4.app.JobIntentService;
+import androidx.annotation.NonNull;
+import androidx.core.app.JobIntentService;
 
 import me.calebjones.spacelaunchnow.content.jobs.SyncWidgetJob;
 import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactManager;
-import me.calebjones.spacelaunchnow.widget.launchcard.UpdateLaunchCardJob;
 import me.calebjones.spacelaunchnow.widget.launchlist.LaunchListManager;
 import me.calebjones.spacelaunchnow.widget.launchlist.LaunchListWidgetProvider;
 import me.calebjones.spacelaunchnow.widget.wordtimer.LaunchWordTimerManager;
-import me.calebjones.spacelaunchnow.widget.wordtimer.UpdateWordTimerJob;
 import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactWidgetProvider;
 import me.calebjones.spacelaunchnow.widget.wordtimer.LaunchWordTimerWidgetProvider;
 import timber.log.Timber;

@@ -1,7 +1,6 @@
 package me.calebjones.spacelaunchnow.content.data.next;
 
 import android.content.Context;
-import android.support.annotation.UiThread;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -11,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.UiThread;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;

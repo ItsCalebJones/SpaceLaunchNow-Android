@@ -2,7 +2,7 @@ package me.calebjones.spacelaunchnow.content.jobs;
 
 import android.content.Context;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
 import com.evernote.android.job.Job;

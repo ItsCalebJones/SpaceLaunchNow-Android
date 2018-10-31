@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content">
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="@dimen/max_width"
         android:layout_height="wrap_content"
@@ -115,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <android.support.v7.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/launchButton"
                     style="@style/Base.Widget.AppCompat.Button.Colored"
                     android:layout_width="wrap_content"
@@ -129,7 +129,7 @@
                     android:textColor="@color/white"
                     android:textSize="12sp" />
 
-                <android.support.v7.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/infoButton"
                     style="@style/Base.Widget.AppCompat.Button.Colored"
                     android:layout_width="wrap_content"
@@ -144,5 +144,5 @@
                     android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
-    </android.support.v7.widget.CardView>
-</android.support.design.widget.CoordinatorLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

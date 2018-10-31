@@ -10,10 +10,11 @@ import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.net.Uri;
 import android.os.Build;
-import android.preference.PreferenceManager;
-import android.support.annotation.RequiresApi;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 
+
+import androidx.preference.PreferenceManager;
 import me.calebjones.spacelaunchnow.R;
 
 
