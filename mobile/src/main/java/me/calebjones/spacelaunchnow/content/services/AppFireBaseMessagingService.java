@@ -106,6 +106,14 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
                 NotificationBuilder.notifyUserSuccess(context, launch);
             }
 
+            if (notificationType.contains("failure") && success) {
+                NotificationBuilder.notifyUserFailure(context, launch);
+            }
+
+            if (notificationType.contains("partial_failure") && success) {
+                NotificationBuilder.notifyUserPartialFailure(context, launch);
+            }
+
             if (BuildConfig.DEBUG && notificationType.contains("test")) {
                 NotificationBuilder.notifyUserTest(context, launch);
             }

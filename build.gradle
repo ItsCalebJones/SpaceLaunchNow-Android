@@ -47,6 +47,7 @@ ext {
             versionMajor : 2,
             versionMinor : 7,
             versionPatch : 0
+
     ]
     // Sdk and tools
     minSdkVersion = 19

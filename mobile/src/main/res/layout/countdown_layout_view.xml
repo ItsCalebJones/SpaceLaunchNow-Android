@@ -237,7 +237,7 @@
         app:layout_constraintTop_toTopOf="@+id/countdown_days" />
 
     <View
-        android:id="@+id/divider2"
+        android:id="@+id/bottom_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="8dp"
@@ -256,11 +256,22 @@
         android:layout_height="match_parent"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginTop="@dimen/material_baseline_grid_2.5x"
         android:textAlignment="center"
         android:visibility="gone"
+        android:textColor="?android:textColorSecondary"
+        tools:text="Test String"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider2" />
+        app:layout_constraintTop_toBottomOf="@+id/bottom_divider" />
+
+    <android.support.constraint.Group
+        android:id="@+id/countdown_view_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:constraint_referenced_ids="bottom_divider,seconds,countdown_seconds,textView8,minutes,
+        countdown_minutes,textView6,hours,countdown_hours,textView4,days,countdown_days" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

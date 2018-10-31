@@ -2,7 +2,7 @@
 <resources>
     <string name="action_settings">Settings</string>
     <string name="status_go">"Go for Launch"</string>
-    <string name="status_nogo">"Launch TBD"</string>
+    <string name="status_nogo">Launch Date Unconfirmed</string>
     <string name="status_success">"Successful Launch"</string>
     <string name="status_failure">"Launch Failure Occurred"</string>
     <string name="spacex_summary">SpaceX designs, manufactures and launches advanced rockets and spacecraft. The company was founded in 2002 to revolutionize space technology, with the ultimate goal of enabling people to live on other planets.</string>
@@ -431,17 +431,24 @@
     <string name="previous_with_space">Previous</string>
     <string name="watch">Watch</string>
     <string name="notification_schedule_changed">SCHEDULE UPDATE: Next attempt no earlier then %s</string>
-    <string name="notification_launch_successful">Launch was successful!</string>
+    <string name="notification_launch_successful">The launch was successful!</string>
+    <string name="notification_launch_failure">A launch failure has occurred.</string>
+    <string name="notification_launch_partial_failure">The launch was a partial failure.</string>
     <string name="notification_launch_liftoff">Liftoff! Launch vehicle is now in flight!</string>
     <string name="notification_one_minute">Launch attempt in less than one minute at %s</string>
     <string name="notification_ten_minutes">Launch attempt in less than ten minutes at %s</string>
     <string name="notification_one_hour">Launch attempt in less than one hour at %s</string>
-    <string name="notification_twenty_four_hours">Launch attempt in less than 24 hours on %s</string>
+    <string name="notification_twenty_four_hours">Launch attempt in less than 24 hours at %s</string>
     <string name="settings_in_flight">In Flight</string>
     <string name="settings_in_flight_summary">Receive notifications when a launch is confirmed in-flight.</string>
     <string name="settings_success">Success</string>
-    <string name="settings_success_summary">Receive notifications when a launch is confirmed successful.</string>
+    <string name="settings_success_summary">Receive notifications when a launch is confirmed successful or not.</string>
     <string name="settings_one_minute">One Minute</string>
     <string name="settings_one_minute_on">Receive notification when a Launch is within one minute.</string>
     <string name="settings_one_minute_off">Do not notify when a Launch is within one minute.</string>
+    <string name="no_live_stream_available">No live stream available.</string>
+    <string name="date_confirmed">Date is confirmed however launch time is unknown.</string>
+    <string name="date_unconfirmed">Current date is a \'No Earlier Then\' estimation.</string>
+    <string name="source">Select a Source</string>
+    <string name="long_press_share">Long press an item to share.</string>
 </resources>

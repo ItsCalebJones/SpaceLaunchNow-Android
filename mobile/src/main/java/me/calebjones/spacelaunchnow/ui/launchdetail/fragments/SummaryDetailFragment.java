@@ -9,9 +9,11 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+
 import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
 import androidx.appcompat.widget.AppCompatButton;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,10 +33,13 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.mypopsy.maps.StaticMap;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
@@ -61,6 +66,9 @@ import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.CountDownTimer;
 import me.calebjones.spacelaunchnow.utils.views.custom.CountDownView;
 import me.calebjones.spacelaunchnow.utils.views.custom.WeatherCard;
+import me.calebjones.spacelaunchnow.utils.youtube.YouTubeAPIHelper;
+import me.calebjones.spacelaunchnow.utils.youtube.models.Video;
+import me.calebjones.spacelaunchnow.utils.youtube.models.VideoResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -69,8 +77,29 @@ import timber.log.Timber;
 
 public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer.OnInitializedListener {
 
+    @BindView(R.id.countdown_status)
+    TextView countdownStatus;
+    @BindView(R.id.countdown_layout)
+    CountDownView countDownView;
+    @BindView(R.id.launch_summary)
+    NestedScrollView launchSummary;
+    @BindView(R.id.map_view_summary)
+    ImageView mapView;
+    @BindView(R.id.date)
+    TextView launchDate;
+    @BindView(R.id.watchButton)
+    AppCompatButton watchButton;
+    @BindView(R.id.launch_window_text)
+    TextView launchWindowText;
+    @BindView(R.id.error_message)
+    TextView errorMessage;
+    @BindView(R.id.youtube_view)
+    View youTubeView;
     @BindView(R.id.weather_card)
     WeatherCard weatherCard;
+    @BindView(R.id.videos_empty)
+    TextView videosEmpty;
+
     private SharedPreferences sharedPref;
     private ListPreferences sharedPreference;
     private Context context;
@@ -83,30 +112,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     private Dialog dialog;
     private boolean youTubePlaying = false;
     private int youTubeProgress = 0;
-
-    @BindView(R.id.countdown_status)
-    TextView countdownStatus;
-    @BindView(R.id.countdown_layout)
-    CountDownView countDownView;
-    @BindView(R.id.launch_summary)
-    NestedScrollView launchSummary;
-    @BindView(R.id.map_view_summary)
-    ImageView mapView;
-    @BindView(R.id.launch_date_title)
-    TextView launch_date_title;
-    @BindView(R.id.date)
-    TextView date;
-    @BindView(R.id.watchButton)
-    AppCompatButton watchButton;
-    @BindView(R.id.launch_window_text)
-    TextView launchWindowText;
-    @BindView(R.id.error_message)
-    TextView errorMessage;
-    @BindView(R.id.youtube_view)
-    View youTubeView;
-
     public Disposable var;
-    private boolean current = true;
+    private boolean future = true;
     private Unbinder unbinder;
     private DetailsViewModel model;
 
@@ -166,7 +173,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     }
 
     private void fetchPastWeather() {
-        current = false;
+        future = false;
         weatherCard.setTitle("Launch Day Weather");
         if (detailLaunch.getPad() != null) {
 
@@ -210,12 +217,12 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     }
 
     private void updateWeatherView(Forecast forecast) {
-        weatherCard.setWeather(forecast, detailLaunch.getPad().getLocation().getName(), current ,nightMode);
+        weatherCard.setWeather(forecast, detailLaunch.getPad().getLocation().getName(), future, nightMode);
         weatherCard.setVisibility(View.VISIBLE);
     }
 
     private void fetchCurrentWeather() {
-        current = true;
+        future = true;
         // Sample WeatherLib client init
         if (detailLaunch.getPad() != null) {
 
@@ -271,7 +278,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     private void setUpViews(Launch launch) {
         try {
             weatherCard.setVisibility(View.GONE);
-
+            videosEmpty.setVisibility(View.GONE);
             detailLaunch = launch;
 
             // Check if Weather card is enabled, defaults to false if null.
@@ -328,7 +335,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                 });
             }
 
-            //Setup SimpleDateFormat to parse out getNet date.
+            //Setup SimpleDateFormat to parse out getNet launchDate.
             SimpleDateFormat input = new SimpleDateFormat("MMMM dd, yyyy hh:mm:ss zzz");
             SimpleDateFormat output = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy");
             input.toLocalizedPattern();
@@ -473,67 +480,122 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                 }
 
                 watchButton.setVisibility(View.VISIBLE);
-                watchButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Timber.d("Watch: %s", detailLaunch.getVidURLs().size());
-                        if (detailLaunch.getVidURLs().size() > 0) {
-                            final DialogAdapter adapter = new DialogAdapter(new DialogAdapter.Callback() {
-
-                                @Override
-                                public void onListItemSelected(int index, MaterialSimpleListItem item, boolean longClick) {
-                                    if (longClick) {
-                                        Intent sendIntent = new Intent();
-                                        sendIntent.setAction(Intent.ACTION_SEND);
-                                        sendIntent.putExtra(Intent.EXTRA_TEXT, detailLaunch.getVidURLs().get(index).getVal()); // Simple text and URL to share
-                                        sendIntent.setType("text/plain");
-                                        context.startActivity(sendIntent);
-                                    } else {
-                                        String url = detailLaunch.getVidURLs().get(index).getVal();
-                                        String youTubeID = getYouTubeID(url);
-                                        if (summaryYouTubePlayer != null && youTubeID != null) {
-                                            youTubeURL = youTubeID;
-                                            if (dialog != null && dialog.isShowing())
-                                                dialog.dismiss();
-                                            summaryYouTubePlayer.cueVideo(youTubeURL);
-                                            summaryYouTubePlayer.play();
-                                        } else {
-                                            Uri watchUri = Uri.parse(url);
-                                            Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
-                                            context.startActivity(i);
-                                        }
-                                    }
+                watchButton.setOnClickListener(v -> {
+                    Timber.d("Watch: %s", detailLaunch.getVidURLs().size());
+                    if (detailLaunch.getVidURLs().size() > 0) {
+                        final DialogAdapter adapter = new DialogAdapter((index, item, longClick) -> {
+                            if (longClick) {
+                                Intent sendIntent = new Intent();
+                                sendIntent.setAction(Intent.ACTION_SEND);
+                                sendIntent.putExtra(Intent.EXTRA_TEXT, detailLaunch.getVidURLs().get(index).getVal()); // Simple text and URL to share
+                                sendIntent.setType("text/plain");
+                                context.startActivity(sendIntent);
+                            } else {
+                                String url = detailLaunch.getVidURLs().get(index).getVal();
+                                String youTubeID = getYouTubeID(url);
+                                if (summaryYouTubePlayer != null && youTubeID != null) {
+                                    youTubeURL = youTubeID;
+                                    if (dialog != null && dialog.isShowing())
+                                        dialog.dismiss();
+                                    summaryYouTubePlayer.cueVideo(youTubeURL);
+                                    summaryYouTubePlayer.play();
+                                } else {
+                                    Uri watchUri = Uri.parse(url);
+                                    Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
+                                    context.startActivity(i);
                                 }
-                            });
-
-                            for (RealmStr s : detailLaunch.getVidURLs()) {
-                                //Do your stuff here
-                                adapter.add(new MaterialSimpleListItem.Builder(context)
-                                        .content(s.getVal())
-                                        .build());
                             }
+                        });
 
-                            MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
-                                    .title("Select a Source")
-                                    .content("Long press for additional options.")
-                                    .adapter(adapter, null)
-                                    .negativeText("Cancel");
-                            dialog = builder.show();
+                        for (RealmStr s : detailLaunch.getVidURLs()) {
+                            //Do your stuff here
+                            try {
+                                URI uri = new URI(s.getVal());
+
+                                String name;
+                                YouTubeAPIHelper youTubeAPIHelper = new YouTubeAPIHelper(context, context.getResources().getString(R.string.GoogleMapsKey));
+                                if (uri.getHost().contains("youtube")) {
+                                    name = "YouTube";
+                                    String youTubeURL = getYouTubeID(s.getVal());
+                                    if (youTubeURL.contains("spacex/live")) {
+                                        adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                .content("YouTube - SpaceX Livestream")
+                                                .build());
+                                    } else {
+                                        youTubeAPIHelper.getVideoById(youTubeURL,
+                                                new Callback<VideoResponse>() {
+                                                    @Override
+                                                    public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
+                                                        if (response.isSuccessful()) {
+                                                            if (response.body() != null) {
+                                                                List<Video> videos = response.body().getVideos();
+                                                                if (videos.size() > 0) {
+                                                                    try {
+                                                                        adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                                                .content(videos.get(0).getSnippet().getTitle())
+                                                                                .build());
+                                                                    } catch (Exception e) {
+                                                                        adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                                                .content(name)
+                                                                                .build());
+                                                                    }
+                                                                } else {
+                                                                    adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                                            .content(name)
+                                                                            .build());
+                                                                }
+                                                            } else {
+                                                                adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                                        .content(name)
+                                                                        .build());
+                                                            }
+                                                        } else {
+                                                            adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                                    .content(name)
+                                                                    .build());
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<VideoResponse> call, Throwable t) {
+                                                        adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                                .content(name)
+                                                                .build());
+                                                    }
+                                                });
+                                    }
+                                } else {
+                                    name = uri.getHost();
+                                    adapter.add(new MaterialSimpleListItem.Builder(context)
+                                            .content(name)
+                                            .build());
+                                }
+
+                            } catch (URISyntaxException e) {
+                                e.printStackTrace();
+                            }
                         }
+
+                        MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
+                                .title("Select a Source")
+                                .content("Long press an item to share.")
+                                .adapter(adapter, null)
+                                .negativeText("Cancel");
+                        dialog = builder.show();
                     }
                 });
             } else {
+                if (future){
+                    videosEmpty.setVisibility(View.VISIBLE);
+                }
                 watchButton.setVisibility(View.GONE);
             }
 
             //Try to convert to Month day, Year.
             mDate = detailLaunch.getNet();
             dateText = output.format(mDate);
-            if (mDate.before(Calendar.getInstance().getTime())) {
-                launch_date_title.setText("Launch Date");
-            }
 
-            date.setText(dateText);
+            launchDate.setText(Html.fromHtml("<b>Launch Date</b><br>" + dateText));
 
             if (detailLaunch.getWindowStart() != null && detailLaunch.getWindowStart() != null) {
                 setWindowStamp();
@@ -568,7 +630,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     }
 
     private void setupCountdownTimer(Launch launch) {
-        //If timestamp is available calculate TMinus and date.
+        //If timestamp is available calculate TMinus and launchDate.
         if (launch.getNet() != null) {
             countDownView.setLaunch(launch);
         }
@@ -576,7 +638,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
 
     private void setWindowStamp() {
-        // Create a DateFormatter object for displaying date in specified format.
+        // Create a DateFormatter object for displaying launchDate in specified format.
 
         Date windowStart = detailLaunch.getWindowStart();
         Date windowEnd = detailLaunch.getWindowEnd();
@@ -592,9 +654,9 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
             TimeZone timeZone = dateFormat.getTimeZone();
 
-            launchWindowText.setText(String.format("%s %s",
+            launchWindowText.setText(Html.fromHtml(String.format("<b>Instantaneous Launch Window</b><br>%s %s",
                     dateFormat.format(windowStart),
-                    timeZone.getDisplayName(false, TimeZone.SHORT)));
+                    timeZone.getDisplayName(false, TimeZone.SHORT))));
         } else if (windowStart.after(windowEnd)) {
             // Launch data is not trustworthy - start is after end.
             if (twentyFourHourMode) {
@@ -613,10 +675,12 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
             }
 
             TimeZone timeZone = dateFormat.getTimeZone();
-            launchWindowText.setText(String.format("%s - %s %s",
+            String difference = Utils.printDifference(windowStart, windowEnd);
+            launchWindowText.setText(Html.fromHtml(String.format("<b>Launch Window</b><br>%s - %s %s<br>%s",
                     dateFormat.format(windowStart),
                     dateFormat.format(windowEnd),
-                    timeZone.getDisplayName(false, TimeZone.SHORT)));
+                    timeZone.getDisplayName(false, TimeZone.SHORT),
+                    difference)));
         }
     }
 

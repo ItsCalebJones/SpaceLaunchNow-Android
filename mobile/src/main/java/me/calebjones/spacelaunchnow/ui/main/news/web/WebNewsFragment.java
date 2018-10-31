@@ -129,13 +129,17 @@ public class WebNewsFragment extends RetroFitFragment {
         articleRepository.getArticles(forced, page, new ArticleRepository.GetArticlesCallback() {
             @Override
             public void onSuccess(List<Article> newArticles) {
-                articles = newArticles;
-                if (!statefulStateContentShow) {
-                    statefulView.showContent();
-                    statefulStateContentShow = true;
+                try {
+                    articles = newArticles;
+                    if (!statefulStateContentShow) {
+                        statefulView.showContent();
+                        statefulStateContentShow = true;
+                    }
+                    articleAdapter.addItems(articles);
+                    swipeRefreshLayout.setRefreshing(false);
+                } catch (Exception e) {
+                    Timber.e(e);
                 }
-                articleAdapter.addItems(articles);
-                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
