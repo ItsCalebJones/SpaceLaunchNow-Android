@@ -3,10 +3,8 @@ package me.calebjones.spacelaunchnow.ui.settings;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.SupportActivity;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -21,7 +19,6 @@ import me.calebjones.spacelaunchnow.utils.Utils;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
-import com.mikepenz.iconics.Iconics;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.vansuita.materialabout.builder.AboutBuilder;
 import com.vansuita.materialabout.views.AboutView;
@@ -81,15 +78,13 @@ public class AboutActivity extends AppCompatActivity {
                                 .content("To debug the application - please enter the code from support.")
                                 .inputType(InputType.TYPE_CLASS_NUMBER)
                                 .inputRangeRes(1,100, R.color.accent)
-                                .input("Support Code", null, new MaterialDialog.InputCallback() {
-                                    @Override
-                                    public void onInput(MaterialDialog dialog, CharSequence input) {
-                                        // Do something
-                                        if(!input.equals("") && DebugAuthManager.getAuthResult(input)){
-                                            goToDebug();
-                                        } else {
-                                            Toast.makeText(context, "Error - code was invalid.", Toast.LENGTH_LONG).show();
-                                        }
+                                .input("Support Code", null, (dialog, input) -> {
+                                    // Do something
+                                    if(!input.equals("") && DebugAuthManager.getAuthResult(input)){
+                                        goToDebug();
+                                    } else {
+                                        Toast.makeText(context, "Error - code was invalid.", Toast.LENGTH_LONG).show();
+
                                     }
                                 }).show()
                 )

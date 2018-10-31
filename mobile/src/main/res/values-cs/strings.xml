@@ -183,7 +183,7 @@
     <string name="mission">Mise</string>
     <string name="agencies">Agentura</string>
     <string name="error_launch_details">Chyba - Nelze načíst podrobnosti startu.</string>
-    <string name="height_full">Výška: %.1f Metry%s</string>
+    <string name="height_full">Výška: %.1f Metrys</string>
     <string name="diameter_full">Výška: %.1f Metry</string>
     <string name="stage_full">Max. stupně: %d</string>
     <string name="mass_leo_full">Hmotnost na nízkou oběžnou dráhu: %d kg</string>

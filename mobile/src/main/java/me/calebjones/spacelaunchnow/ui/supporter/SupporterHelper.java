@@ -7,6 +7,7 @@ import java.util.Map;
 
 import io.realm.Realm;
 import me.calebjones.spacelaunchnow.data.models.Products;
+import timber.log.Timber;
 
 public class SupporterHelper {
     // SKU for our subscription (infinite gas)
@@ -72,12 +73,17 @@ public class SupporterHelper {
     }
 
     public static boolean isSupporter(){
-        Realm realm = Realm.getDefaultInstance();
-        if (realm.where(Products.class).findFirst() != null){
-            realm.close();
-            return true;
-        } else {
-            realm.close();
+        try {
+            Realm realm = Realm.getDefaultInstance();
+            if (realm.where(Products.class).findFirst() != null) {
+                realm.close();
+                return true;
+            } else {
+                realm.close();
+                return false;
+            }
+        } catch (Exception e){
+            Timber.e(e);
             return false;
         }
     }

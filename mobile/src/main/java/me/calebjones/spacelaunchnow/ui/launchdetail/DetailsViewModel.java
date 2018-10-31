@@ -1,8 +1,9 @@
 package me.calebjones.spacelaunchnow.ui.launchdetail;
 
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
 
+
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 
 public class DetailsViewModel extends ViewModel {

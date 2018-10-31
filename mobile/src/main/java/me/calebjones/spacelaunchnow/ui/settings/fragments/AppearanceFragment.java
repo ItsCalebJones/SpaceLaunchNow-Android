@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.SwitchPreference;
-import android.support.v7.app.AppCompatDelegate;
+import androidx.appcompat.app.AppCompatDelegate;
 import android.widget.Toast;
 
 import com.jaredrummler.android.colorpicker.ColorPreference;

@@ -1,12 +1,12 @@
 package me.calebjones.spacelaunchnow.content.jobs;
 
-import android.support.annotation.NonNull;
 
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
 
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.NonNull;
 import me.calebjones.spacelaunchnow.content.wear.WearWatchfaceManager;
 import timber.log.Timber;
 

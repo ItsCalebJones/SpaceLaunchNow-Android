@@ -1,13 +1,12 @@
 <resources>
 
-    <style name="BaseAppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="BaseAppTheme" parent="Theme.MaterialComponents.Light.Bridge">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="titleBarColor">@color/colorPrimary</item>
         <item name="shareIconColor">@color/md_grey_700</item>
         <item name="exploreIconColor">@color/colorAccent</item>
-        <item name="android:actionMenuTextColor">@android:color/white</item>
         <item name="android:colorControlActivated">@color/materialGrey</item>
         <item name="android:textColorPrimary">#212121</item>
         <item name="android:textColorSecondary">#757575</item>

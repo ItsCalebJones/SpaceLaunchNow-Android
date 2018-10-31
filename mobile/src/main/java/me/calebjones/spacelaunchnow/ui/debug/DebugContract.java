@@ -2,7 +2,7 @@ package me.calebjones.spacelaunchnow.ui.debug;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import me.calebjones.spacelaunchnow.common.BaseNavigator;
 import me.calebjones.spacelaunchnow.common.BasePresenter;

@@ -1,9 +1,8 @@
 package me.calebjones.spacelaunchnow.content.data.details;
 
-import android.arch.lifecycle.LiveData;
 import android.content.Context;
-import android.support.annotation.UiThread;
 
+import androidx.annotation.UiThread;
 import io.realm.Realm;
 import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;

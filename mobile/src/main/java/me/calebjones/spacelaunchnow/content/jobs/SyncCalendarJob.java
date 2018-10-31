@@ -1,10 +1,6 @@
 package me.calebjones.spacelaunchnow.content.jobs;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.SystemClock;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
 import com.evernote.android.job.Job;
@@ -15,6 +11,7 @@ import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.NonNull;
 import me.calebjones.spacelaunchnow.calendar.CalendarSyncManager;
 import me.calebjones.spacelaunchnow.content.data.DataClientManager;
 import me.calebjones.spacelaunchnow.content.data.DataSaver;

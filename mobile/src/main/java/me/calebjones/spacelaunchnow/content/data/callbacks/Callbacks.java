@@ -1,9 +1,9 @@
 package me.calebjones.spacelaunchnow.content.data.callbacks;
 
-import android.support.annotation.Nullable;
 
 import java.util.List;
 
+import androidx.annotation.Nullable;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.LaunchList;

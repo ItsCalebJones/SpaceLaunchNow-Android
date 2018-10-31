@@ -3,10 +3,10 @@ package me.calebjones.spacelaunchnow.utils.views;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.material.snackbar.Snackbar;
 
 import me.calebjones.spacelaunchnow.utils.Connectivity;
 

@@ -96,7 +96,7 @@
                     android:layout_height="match_parent"
                     android:text="Accept" />
 
-                <android.support.v4.widget.Space
+                <androidx.core.widget.Space
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/material_baseline_grid_4x" />
 

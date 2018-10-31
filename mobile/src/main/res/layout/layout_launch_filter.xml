@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintLayout"
@@ -70,7 +71,7 @@
         tools:text="All" />
 
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/location_recycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -132,7 +133,7 @@
         app:layout_constraintTop_toBottomOf="@+id/agency_title"
         tools:text="All" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/agency_recycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -194,7 +195,7 @@
         app:layout_constraintTop_toBottomOf="@+id/rocket_title"
         tools:text="All" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rocket_recycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -212,7 +213,7 @@
         app:layout_constraintTop_toBottomOf="@+id/rocket_group"
         app:layout_constraintVertical_bias="0.0" />
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/apply"
         style="@style/Base.Widget.AppCompat.Button.Colored"
         android:layout_width="0dp"
@@ -228,7 +229,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/cancel" />
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/cancel"
         style="@style/Base.Widget.AppCompat.Button"
         android:layout_width="0dp"
@@ -241,31 +242,4 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!--<TextView-->
-        <!--android:id="@+id/to_be_determined"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="8dp"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginStart="32dp"-->
-        <!--android:text="To Be Determined"-->
-        <!--android:textAppearance="@android:style/TextAppearance.Material.Medium"-->
-        <!--app:layout_constraintBottom_toBottomOf="@+id/to_be_determined_checkbox"-->
-        <!--app:layout_constraintEnd_toStartOf="@+id/to_be_determined_checkbox"-->
-        <!--app:layout_constraintHorizontal_bias="0.0"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="@+id/to_be_determined_checkbox" />-->
-
-    <!--<android.support.v7.widget.AppCompatCheckBox-->
-        <!--android:id="@+id/to_be_determined_checkbox"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="8dp"-->
-        <!--android:layout_marginEnd="32dp"-->
-        <!--android:layout_marginTop="32dp"-->
-        <!--app:layout_constraintBottom_toTopOf="@+id/cancel"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/rocket_image"-->
-        <!--app:layout_constraintVertical_bias="0.0" />-->
-
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
