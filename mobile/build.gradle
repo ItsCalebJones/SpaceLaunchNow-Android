@@ -309,9 +309,6 @@ dependencies {
     implementation 'com.github.nekocode:Badge:2.0'
     // Firebase Messaging
     implementation "com.google.firebase:firebase-messaging:$rootProject.playServicesVersion"
-
-    //YouTube
-    implementation 'com.prof.youtubeparser:youtubeparser:2.2'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -257,6 +257,7 @@
         android:layout_marginTop="@dimen/material_baseline_grid_2.5x"
         android:textAlignment="center"
         android:visibility="gone"
+        android:textColor="?android:textColorSecondary"
         tools:text="Test String"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

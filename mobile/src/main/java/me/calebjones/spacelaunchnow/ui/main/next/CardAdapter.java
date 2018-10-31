@@ -4,12 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.support.v4.app.ShareCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -24,8 +20,6 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.crashlytics.android.Crashlytics;
-import com.prof.youtubeparser.VideoStats;
-import com.prof.youtubeparser.models.stats.Statistics;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -52,6 +46,12 @@ import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.CountDownTimer;
 import me.calebjones.spacelaunchnow.utils.views.custom.CountDownView;
+import me.calebjones.spacelaunchnow.utils.youtube.YouTubeAPIHelper;
+import me.calebjones.spacelaunchnow.utils.youtube.models.Video;
+import me.calebjones.spacelaunchnow.utils.youtube.models.VideoResponse;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import timber.log.Timber;
 
 /**
@@ -357,29 +357,57 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                                 URI uri = new URI(s.getVal());
 
                                 String name;
-                                VideoStats videoStats = new VideoStats();
+                                YouTubeAPIHelper youTubeAPIHelper = new YouTubeAPIHelper(context, context.getResources().getString(R.string.GoogleMapsKey));
                                 if (uri.getHost().contains("youtube")){
                                     name = "YouTube";
                                     String youTubeURL = getYouTubeID(s.getVal());
-                                    // TODO fix API Key.
-                                    String url = videoStats.generateStatsRequest(youTubeURL, context.getResources().getString(R.string.GoogleMapsKey));
-                                    videoStats.execute(url);
-                                    videoStats.onFinish(new VideoStats.OnTaskCompleted() {
-                                        @Override
-                                        public void onTaskCompleted(Statistics stats) {
-                                            adapter.add(new MaterialSimpleListItem.Builder(context)
-                                                    .content(name)
-                                                    .build());
-                                        }
+                                    if (youTubeURL.contains("spacex/live")){
+                                        adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                .content("YouTube - SpaceX Livestream")
+                                                .build());
+                                    } else {
+                                        youTubeAPIHelper.getVideoById(youTubeURL,
+                                                new Callback<VideoResponse>() {
+                                            @Override
+                                            public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
+                                                if (response.isSuccessful()) {
+                                                    if (response.body() != null) {
+                                                        List<Video> videos = response.body().getVideos();
+                                                        if (videos.size() > 0) {
+                                                            try {
+                                                                adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                                        .content(videos.get(0).getSnippet().getTitle())
+                                                                        .build());
+                                                            } catch (Exception e){
+                                                                adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                                        .content(name)
+                                                                        .build());
+                                                            }
+                                                        } else {
+                                                            adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                                    .content(name)
+                                                                    .build());
+                                                        }
+                                                    } else {
+                                                        adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                                .content(name)
+                                                                .build());
+                                                    }
+                                                } else {
+                                                    adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                            .content(name)
+                                                            .build());
+                                                }
+                                            }
 
-                                        @Override
-                                        public void onError() {
-                                            //what to do in case of error
-                                            adapter.add(new MaterialSimpleListItem.Builder(context)
-                                                    .content(name)
-                                                    .build());
-                                        }
-                                    });
+                                            @Override
+                                            public void onFailure(Call<VideoResponse> call, Throwable t) {
+                                                adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                        .content(name)
+                                                        .build());
+                                            }
+                                        });
+                                    }
                                 } else {
                                     name = uri.getHost();
                                     adapter.add(new MaterialSimpleListItem.Builder(context)
@@ -387,17 +415,16 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                                             .build());
                                 }
 
-
                             } catch (URISyntaxException e) {
                                 e.printStackTrace();
                             }
                         }
 
                         MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
-                                .title("Select a Source")
-                                .content("Long press item for additional options.")
+                                .title(R.string.source)
+                                .content(R.string.long_press_share)
                                 .adapter(adapter, null)
-                                .negativeText("Cancel");
+                                .negativeText(R.string.cancel);
                         builder.show();
                     }
                     break;

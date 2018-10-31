@@ -427,5 +427,40 @@ public class Utils {
 
         return text.substring(0, end) + "...";
     }
+
+    public static String printDifference(Date startDate, Date endDate) {
+        //milliseconds
+        long different = endDate.getTime() - startDate.getTime();
+
+        System.out.println("startDate : " + startDate);
+        System.out.println("endDate : "+ endDate);
+        System.out.println("different : " + different);
+
+        long secondsInMilli = 1000;
+        long minutesInMilli = secondsInMilli * 60;
+        long hoursInMilli = minutesInMilli * 60;
+        long daysInMilli = hoursInMilli * 24;
+
+        long elapsedDays = different / daysInMilli;
+        different = different % daysInMilli;
+
+        long elapsedHours = different / hoursInMilli;
+        different = different % hoursInMilli;
+
+        long elapsedMinutes = different / minutesInMilli;
+
+        if (elapsedDays > 0) {
+            return (String.format(Locale.ENGLISH,"Open for %d days, %d hours and %d minutes.\n",
+                    elapsedDays, elapsedHours, elapsedMinutes));
+        } else if (elapsedHours > 0){
+            return (String.format(Locale.ENGLISH,"Open for %d hours and %d minutes.\n",
+                    elapsedHours, elapsedMinutes));
+        } else if (elapsedMinutes > 0){
+            return (String.format(Locale.ENGLISH,"Open for %d minutes.\n",
+                    elapsedHours, elapsedMinutes));
+        } else {
+            return "";
+        }
+    }
 }
 

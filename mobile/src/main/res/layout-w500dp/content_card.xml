@@ -153,6 +153,7 @@
                 android:drawablePadding="4dp"
                 android:singleLine="true"
                 android:text="@string/explore"
+                android:textColor="?android:textColorPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/watchButton"
                 app:layout_constraintHorizontal_bias="0.0"

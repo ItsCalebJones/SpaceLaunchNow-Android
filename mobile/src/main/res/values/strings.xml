@@ -446,4 +446,9 @@
     <string name="settings_one_minute">One Minute</string>
     <string name="settings_one_minute_on">Receive notification when a Launch is within one minute.</string>
     <string name="settings_one_minute_off">Do not notify when a Launch is within one minute.</string>
+    <string name="no_live_stream_available">No live stream available.</string>
+    <string name="date_confirmed">Date is confirmed however launch time is unknown.</string>
+    <string name="date_unconfirmed">Current date is a \'No Earlier Then\' estimation.</string>
+    <string name="source">Select a Source</string>
+    <string name="long_press_share">Long press an item to share.</string>
 </resources>

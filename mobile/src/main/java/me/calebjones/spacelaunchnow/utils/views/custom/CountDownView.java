@@ -248,11 +248,11 @@ public class CountDownView extends ConstraintLayout {
         }
 
         if (launch.getTbddate()){
-            statusReason.setText("Current date is a 'No Earlier Then' estimation.");
+            statusReason.setText(R.string.date_unconfirmed);
             statusReason.setVisibility(VISIBLE);
             setReasonConstraintToStatusPill();
         } else if (!launch.getTbddate() && launch.getTbdtime()){
-            statusReason.setText("Date is confirmed however launch time is unknown.");
+            statusReason.setText(R.string.date_confirmed);
             setReasonConstraintToStatusPill();
             statusReason.setVisibility(VISIBLE);
         }
