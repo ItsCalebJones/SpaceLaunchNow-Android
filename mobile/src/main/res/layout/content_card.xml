@@ -140,7 +140,7 @@
 
 
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/exploreButton"
             style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="0dp"
@@ -153,6 +153,7 @@
             android:drawablePadding="4dp"
             android:singleLine="true"
             android:text="@string/explore"
+            android:textColor="?android:textColorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/watchButton"
             app:layout_constraintHorizontal_bias="0.0"
@@ -161,7 +162,7 @@
             app:layout_constraintVertical_bias="0.0"
             app:layout_constraintWidth_max="150dp" />
 
-        <android.support.v7.widget.AppCompatImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/watchButton"
             style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="36dp"
@@ -172,7 +173,7 @@
             app:layout_constraintEnd_toStartOf="@+id/shareButton"
             app:layout_constraintTop_toTopOf="@+id/exploreButton" />
 
-        <android.support.v7.widget.AppCompatImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/shareButton"
             style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="36dp"

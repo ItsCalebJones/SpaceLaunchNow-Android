@@ -1,7 +1,9 @@
 package me.calebjones.spacelaunchnow.ui.launchdetail.activity;
 
 import android.app.ActivityOptions;
-import android.arch.lifecycle.ViewModelProviders;
+
+import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,7 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import android.arch.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProvider;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;

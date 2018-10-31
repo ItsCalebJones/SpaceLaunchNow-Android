@@ -1,5 +1,7 @@
 package me.calebjones.spacelaunchnow.content.jobs;
 
+import android.content.Context;
+
 import com.crashlytics.android.Crashlytics;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;

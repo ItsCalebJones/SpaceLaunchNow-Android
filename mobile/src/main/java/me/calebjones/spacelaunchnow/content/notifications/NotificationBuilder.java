@@ -11,6 +11,8 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.text.format.DateFormat;
+
 import androidx.core.app.NotificationCompat;
 
 import com.crashlytics.android.Crashlytics;
