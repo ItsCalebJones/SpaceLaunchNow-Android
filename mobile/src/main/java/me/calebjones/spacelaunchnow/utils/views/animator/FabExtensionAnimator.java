@@ -148,7 +148,10 @@ public class FabExtensionAnimator {
         maskDrawable.setColor(-1);
 
         LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{backgroundDrawable, strokeDrawable});
-        return new RippleDrawable(RippleUtils.convertToRippleDrawableColor(rippleColor), layerDrawable, maskDrawable);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return new RippleDrawable(RippleUtils.convertToRippleDrawableColor(rippleColor), layerDrawable, maskDrawable);
+        }
+        return layerDrawable;
     }
 
     public static abstract class GlyphState {
