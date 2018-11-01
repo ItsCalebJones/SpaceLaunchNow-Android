@@ -12,6 +12,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
@@ -28,9 +30,10 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.button.MaterialButton;
 
 import androidx.core.view.ViewCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -40,6 +43,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import de.mrapp.android.preference.activity.PreferenceActivity;
+
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
@@ -58,6 +62,7 @@ import me.calebjones.spacelaunchnow.ui.settings.fragments.NotificationsFragment;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
+import me.calebjones.spacelaunchnow.utils.views.animator.FabExtensionAnimator;
 import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactManager;
 import me.calebjones.spacelaunchnow.widget.launchcard.LaunchCardCompactWidgetProvider;
 import me.calebjones.spacelaunchnow.widget.launchlist.LaunchListManager;
@@ -102,6 +107,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     AppCompatButton notificationsSettings;
     @BindView(R.id.view_more_launches)
     AppCompatButton viewMoreLaunches;
+    @BindView(R.id.recycler_view_root)
+    NestedScrollView nestedScrollView;
 
     private View view;
     private RecyclerView mRecyclerView;
@@ -112,7 +119,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     private CoordinatorLayout coordinatorLayout;
     private View color_reveal;
     private View no_data;
-    private FloatingActionButton FABMenu;
+    private MaterialButton fab;
     private Menu mMenu;
     private RealmResults<Launch> launchRealms;
     private ListPreferences sharedPreference;
@@ -124,6 +131,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     private CallBackListener callBackListener;
     private boolean filterViewShowing;
     private boolean switchChanged;
+    private FabExtensionAnimator fabExtensionAnimator;
     Unbinder unbinder;
 
     @Override
@@ -174,12 +182,15 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         no_data = view.findViewById(R.id.no_launches);
         color_reveal = view.findViewById(R.id.color_reveal);
         color_reveal.setBackgroundColor(ContextCompat.getColor(context, color));
-        FABMenu = view.findViewById(R.id.menu);
-        FABMenu.setOnClickListener(v -> checkFilter());
+        fab = view.findViewById(R.id.fab);
+        fabExtensionAnimator = new FabExtensionAnimator(fab);
+        fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Filters", ContextCompat.getDrawable(context,R.drawable.ic_notifications_white)));
+        fab.setOnClickListener(v -> checkFilter());
+        fabExtensionAnimator.setExtended(true);
         if (switchPreferences.getNextFABHidden()) {
-            FABMenu.setVisibility(View.GONE);
+            fab.setVisibility(View.GONE);
         } else {
-            FABMenu.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.VISIBLE);
         }
 
         mRecyclerView = view.findViewById(R.id.recycler_view);
@@ -194,6 +205,17 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             mRecyclerView.setLayoutManager(linearLayoutManager);
         }
         mRecyclerView.setAdapter(adapter);
+        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                int dy = Math.abs(scrollY - oldScrollY);
+                if (scrollY > 4) {
+                    setFabExtended(false);
+                } else if (scrollY == 0){
+                    setFabExtended(true);
+                }
+            }
+        });
 
 
         coordinatorLayout = view.findViewById(R.id.coordinatorLayout);
@@ -202,12 +224,14 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         mSwipeRefreshLayout = view.findViewById(R.id.activity_main_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        ViewCompat.setNestedScrollingEnabled(mRecyclerView, false);
-
         //Enable no data by default
         no_data.setVisibility(View.VISIBLE);
         viewMoreLaunches.setVisibility(View.GONE);
         return view;
+    }
+
+    private void setFabExtended(boolean extended) {
+        fabExtensionAnimator.setExtended(extended);
     }
 
     public boolean isFilterShown() {
@@ -229,7 +253,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         if (!isDetached() && isAdded()) {
             if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && (launchRealms != null && launchRealms.size() == 1 || size == 1)) {
                 linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(),
-                        LinearLayoutManager.VERTICAL, false
+                        RecyclerView.VERTICAL, false
                 );
                 mRecyclerView.setLayoutManager(linearLayoutManager);
                 mRecyclerView.setAdapter(adapter);
@@ -262,8 +286,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void hideView() {
         // get the center for the clipping circle
-        int x = (int) (FABMenu.getX() + FABMenu.getWidth() / 2);
-        int y = (int) (FABMenu.getY() + FABMenu.getHeight() / 2);
+        int x = (int) (fab.getX() + fab.getWidth() / 2);
+        int y = (int) (fab.getY() + fab.getHeight() / 2);
 
         // get the initial radius for the clipping circle
         int initialRadius = Math.max(color_reveal.getWidth(), color_reveal.getHeight());
@@ -288,8 +312,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void showView() {
         // get the center for the clipping circle
-        int x = (int) (FABMenu.getX() + FABMenu.getWidth() / 2);
-        int y = (int) (FABMenu.getY() + FABMenu.getHeight() / 2);
+        int x = (int) (fab.getX() + fab.getWidth() / 2);
+        int y = (int) (fab.getY() + fab.getHeight() / 2);
 
         // get the final radius for the clipping circle
         int finalRadius = Math.max(color_reveal.getWidth(), color_reveal.getHeight());
@@ -452,13 +476,12 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             if (switchPreferences.getNextFABHidden()) {
                 item.setTitle("Show FAB");
                 if (switchPreferences.getNextFABHidden()) {
-
-                    FABMenu.setVisibility(View.GONE);
+                    fab.setVisibility(View.GONE);
                 }
             } else {
                 item.setTitle("Hide FAB");
                 if (!switchPreferences.getNextFABHidden()) {
-                    FABMenu.setVisibility(View.VISIBLE);
+                    fab.setVisibility(View.VISIBLE);
                 }
             }
         }
@@ -473,7 +496,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             switchChanged = false;
             filterViewShowing = true;
             mSwipeRefreshLayout.setEnabled(false);
-            FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_close));
+            fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Close", ContextCompat.getDrawable(context,R.drawable.ic_close)));
+            fabExtensionAnimator.setExtended(true);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 showView();
             } else {
@@ -482,7 +506,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         } else {
             Analytics.getInstance().sendButtonClicked("Hide Launch filters.");
             filterViewShowing = false;
-            FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_notifications_white));
+            fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Filters", ContextCompat.getDrawable(context,R.drawable.ic_notifications_white)));
             mSwipeRefreshLayout.setEnabled(true);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 hideView();
@@ -538,7 +562,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     private void confirm() {
         if (!switchChanged) {
-            FABMenu.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_check));
+            fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Apply", ContextCompat.getDrawable(context,R.drawable.ic_check)));
+            fabExtensionAnimator.setExtended(true);
         }
         switchChanged = true;
     }

@@ -265,7 +265,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bottom_divider" />
 
-    <android.support.constraint.Group
+    <androidx.constraintlayout.widget.Group
         android:id="@+id/countdown_view_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -17,6 +17,7 @@
             android:layout_height="match_parent">
 
             <androidx.core.widget.NestedScrollView
+                android:id="@+id/recycler_view_root"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -388,21 +389,24 @@
 
             </FrameLayout>
 
-<<<<<<< HEAD
-            <extendedfablib.ExtendedFAB
-=======
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
->>>>>>> dd813cb23eee796ee9a4eee93da3453fc2db6aec
-                android:id="@+id/menu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:elevation="5dp"
-                android:src="@drawable/"
-                />
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:id="@+id/coordinator_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:elevation="@dimen/material_baseline_grid_1.5x"
+                android:layout_gravity="bottom|end">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/fab"
+                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:elevation="@dimen/material_baseline_grid_1.5x"
+                    android:layout_margin="@dimen/material_baseline_grid_1.5x"
+                    app:layout_behavior="me.calebjones.spacelaunchnow.utils.views.animator.BottomTransientBarBehavior"/>
+
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

@@ -34,7 +34,7 @@
     </style>
 
     <!-- Base application theme. -->
-    <style name="BaseAppTheme" parent="Theme.MaterialComponents.Light.Bridge">
+    <style name="BaseAppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -61,7 +61,6 @@
         <item name="material_drawer_header_selection_text">
             @color/material_drawer_header_selection_text
         </item>
-
 
     </style>
 

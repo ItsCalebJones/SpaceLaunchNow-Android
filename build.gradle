@@ -11,11 +11,8 @@ buildscript {
     }
     dependencies {
         classpath "io.realm:realm-gradle-plugin:5.1.0"
-<<<<<<< HEAD
         classpath 'com.android.tools.build:gradle:3.2.1'
-=======
-        classpath 'com.android.tools.build:gradle:3.3.0-alpha09'
->>>>>>> dd813cb23eee796ee9a4eee93da3453fc2db6aec
+
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
         classpath 'org.moallemi.gradle.advanced-build-version:gradle-plugin:1.6.0'
@@ -54,14 +51,10 @@ ext {
 
     ]
     // Sdk and tools
-    minSdkVersion = 19
+    minSdkVersion = 21
     targetSdkVersion = 28
     compileSdkVersion = 28
-<<<<<<< HEAD
-    buildToolsVersion = '27.0.3'
-=======
     buildToolsVersion = '28.0.2'
->>>>>>> dd813cb23eee796ee9a4eee93da3453fc2db6aec
 
     // App dependencies
     supportLibraryVersion = '28.0.0'

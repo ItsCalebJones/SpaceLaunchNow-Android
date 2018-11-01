@@ -249,20 +249,15 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:core:0.9.4.3'
     implementation 'com.afollestad.material-dialogs:commons:0.9.3.0'
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
-<<<<<<< HEAD
-    implementation 'com.jakewharton:butterknife:8.8.1'
-    implementation 'com.thenotoriousrog.thenotoriousrog:extendedfab:1.1.1'
-=======
+
     implementation 'com.jakewharton:butterknife:9.0.0-SNAPSHOT'
     annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-SNAPSHOT'
 
->>>>>>> dd813cb23eee796ee9a4eee93da3453fc2db6aec
     implementation 'com.github.ItsCalebJones:GDPRDialog:54231db'
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.andkulikov:transitionseverywhere:1.8.0'
 
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.github.jrvansuita:MaterialAbout:0.2.3'
     implementation 'com.github.mukeshsolanki:MarkdownView-Android:1.0.4'
     implementation 'com.jaredrummler:colorpicker:1.0.1'
