@@ -405,7 +405,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     ShareCompat.IntentBuilder.from((Activity) context)
                             .setType("text/plain")
                             .setChooserTitle("Share: " + launch.getName())
-                            .setText(String.format("%s\n\nWatch Live: %s", message, launch.getUrl()))
+                            .setText(String.format("%s\n\nWatch Live: %s", message, launch.getSlug()))
                             .startChooser();
                     Analytics.getInstance().sendLaunchShared("Explore Button", launch.getName() + "-" + launch.getId().toString());
                     break;

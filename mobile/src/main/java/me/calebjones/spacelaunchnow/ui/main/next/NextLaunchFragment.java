@@ -210,7 +210,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         return view;
     }
 
-    public boolean isFilterShown(){
+    public boolean isFilterShown() {
         return filterViewShowing;
     }
 
@@ -316,7 +316,11 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         nextLaunchDataRepository.getNextUpcomingLaunches(preferredCount, forceRefresh, new Callbacks.NextLaunchesCallback() {
             @Override
             public void onLaunchesLoaded(RealmResults<Launch> launches) {
-                updateAdapter(launches);
+                try {
+                    updateAdapter(launches);
+                } catch (Exception e) {
+                    Timber.e(e);
+                }
             }
 
             @Override

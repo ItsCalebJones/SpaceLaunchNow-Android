@@ -19,6 +19,9 @@ public class Launch extends RealmObject {
     @SerializedName("url")
     @Expose
     public String url;
+    @SerializedName("slug")
+    @Expose
+    public String slug;
     @SerializedName("name")
     @Expose
     public String name;
@@ -76,6 +79,14 @@ public class Launch extends RealmObject {
 
     public Integer eventID;
     public Date lastUpdate;
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
 
     public Rocket getRocket() {
         return rocket;
