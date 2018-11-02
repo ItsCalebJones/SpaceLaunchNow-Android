@@ -367,6 +367,28 @@ public class NotificationBuilder {
         buildNotification(context, launch, title, expandedText, CHANNEL_LAUNCH_REMINDER);
     }
 
+
+    public static void notifyUserFailure(Context context, Launch launch) {
+        String title;
+        String expandedText;
+
+        title = launch.getName();
+        expandedText = context.getString(R.string.notification_launch_failure);
+
+        buildNotification(context, launch, title, expandedText, CHANNEL_LAUNCH_REMINDER);
+    }
+
+
+    public static void notifyUserPartialFailure(Context context, Launch launch) {
+        String title;
+        String expandedText;
+
+        title = launch.getName();
+        expandedText = context.getString(R.string.notification_launch_partial_failure);
+
+        buildNotification(context, launch, title, expandedText, CHANNEL_LAUNCH_REMINDER);
+    }
+
     public static void notifyUserLaunchScheduleChanged(Context context, Launch launch) {
         String title;
         String expandedText;
