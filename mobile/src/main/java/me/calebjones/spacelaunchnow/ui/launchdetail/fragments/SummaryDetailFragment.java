@@ -581,14 +581,10 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         Date windowStart = detailLaunch.getWindowStart();
         Date windowEnd = detailLaunch.getWindowEnd();
 
-        boolean twentyFourHourMode = sharedPref.getBoolean("24_hour_mode", false);
         DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault());
 
         if (windowStart.equals(windowEnd)) {
             // Window Start and Window End match - meaning instantaneous.
-            if (twentyFourHourMode) {
-                dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-            }
 
             TimeZone timeZone = dateFormat.getTimeZone();
 
@@ -597,9 +593,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                     timeZone.getDisplayName(false, TimeZone.SHORT)));
         } else if (windowStart.after(windowEnd)) {
             // Launch data is not trustworthy - start is after end.
-            if (twentyFourHourMode) {
-                dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-            }
 
             TimeZone timeZone = dateFormat.getTimeZone();
 
@@ -608,9 +601,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                     timeZone.getDisplayName(false, TimeZone.SHORT)));
         } else if (windowStart.before(windowEnd)) {
             // Launch Window is properly configured
-            if (twentyFourHourMode) {
-                dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-            }
 
             TimeZone timeZone = dateFormat.getTimeZone();
             launchWindowText.setText(String.format("%s - %s %s",

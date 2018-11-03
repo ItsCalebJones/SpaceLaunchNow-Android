@@ -21,6 +21,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -502,9 +503,13 @@ public class LaunchDetailActivity extends BaseActivity
         try {
             if (launch.getNet() != null) {
                 Date date = launch.getNet();
-                SimpleDateFormat df = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy - hh:mm a zzz");
-                df.toLocalizedPattern();
-                launchDate = df.format(date);
+                SimpleDateFormat sdf;
+                if (!DateFormat.is24HourFormat(context)){
+                    sdf = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy h:mm a zzz");
+                } else {
+                    sdf = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy HH:mm zzz");
+                }
+                launchDate = sdf.format(date);
             }
             if (launch.getPad().getLocation() != null) {
 

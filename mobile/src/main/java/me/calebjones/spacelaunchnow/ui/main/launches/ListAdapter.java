@@ -40,7 +40,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     private Boolean night;
     private static ListPreferences sharedPreference;
     private SimpleDateFormat sdf;
-    private SimpleDateFormat df;
 
     public ListAdapter(Context context) {
         rightNow = Calendar.getInstance();
@@ -53,13 +52,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         } else {
             sdf = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy zzz");
             sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        }
-
-        if (sharedPref.getBoolean("24_hour_mode", false)) {
-            df = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy - HH:mm");
-        } else {
-            df = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy - hh:mm a zzz");
-            df.setTimeZone(TimeZone.getTimeZone("UTC"));
         }
 
         night = sharedPreference.isNightModeActive(mContext);

@@ -21,13 +21,13 @@ buildscript {
 
 allprojects {
     repositories {
+        google()
         jcenter()
         maven { url 'https://github.com/leonardocardoso/mvn-repo/raw/master/maven-deploy' }
         maven { url "https://jitpack.io" }
         maven {
             url "https://maven.google.com" // Google's Maven repository
         }
-        google()
     }
 }
 
@@ -41,7 +41,7 @@ ext {
     app = [
             versionMajor : 2,
             versionMinor : 6,
-            versionPatch : 4
+            versionPatch : 5
     ]
     // Sdk and tools
     minSdkVersion = 19
