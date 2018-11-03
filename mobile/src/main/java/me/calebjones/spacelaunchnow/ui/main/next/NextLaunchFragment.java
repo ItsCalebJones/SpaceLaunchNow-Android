@@ -495,6 +495,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             Analytics.getInstance().sendButtonClicked("Show Launch filters.");
             switchChanged = false;
             filterViewShowing = true;
+            fab.setVisibility(View.VISIBLE);
             mSwipeRefreshLayout.setEnabled(false);
             fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Close", ContextCompat.getDrawable(context,R.drawable.ic_close)));
             fabExtensionAnimator.setExtended(true);
@@ -506,6 +507,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         } else {
             Analytics.getInstance().sendButtonClicked("Hide Launch filters.");
             filterViewShowing = false;
+            if (switchPreferences.getNextFABHidden()) {
+                fab.setVisibility(View.GONE);
+            }
             fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Filters", ContextCompat.getDrawable(context,R.drawable.ic_notifications_white)));
             mSwipeRefreshLayout.setEnabled(true);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

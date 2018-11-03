@@ -23,8 +23,14 @@
 -keep class com.anjlab.android.iab.v3.** { *; }
 
 -keep public class com.google.android.gms.* { public *; }
+-keep class com.google.** { *; }
 -dontwarn com.google.android.gms.**
-
+-keep class com.google.android.material.** { *; }
+-dontwarn com.google.android.material.**
+-dontnote com.google.android.material.**
+-dontwarn androidx.**
+-keep class androidx.** { *; }
+-keep interface androidx.** { *; }
 -dontwarn android.support.**
 
 -keep public class com.google.ads.** {
