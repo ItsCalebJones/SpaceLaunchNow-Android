@@ -282,7 +282,6 @@ public class LaunchApplication extends Application {
             firebaseMessaging.subscribeToTopic("production");
             firebaseMessaging.unsubscribeFromTopic("debug");
         }
-        migrateNotifications();
 
         boolean notificationEnabled = Prefs.getBoolean("notificationEnabled", true);
         boolean netstampChanged = Prefs.getBoolean("netstampChanged", true);
@@ -426,25 +425,6 @@ public class LaunchApplication extends Application {
             firebaseMessaging.unsubscribeFromTopic("oneMinute");
         }
 
-    }
-
-    private void migrateNotifications() {
-        if (!Once.beenDone("migrateNotifications")) {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            boolean notificationEnabled = prefs.getBoolean("notifications_new_message", true);
-            boolean netstampChanged = prefs.getBoolean("notifications_launch_imminent_updates", true);
-            boolean webcastOnly = prefs.getBoolean("notifications_new_message_webcast", false);
-            boolean twentyFourHour = prefs.getBoolean("notifications_launch_day", true);
-            boolean oneHour = prefs.getBoolean("notifications_launch_imminent", true);
-            boolean tenMinutes = prefs.getBoolean("notifications_launch_minute", true);
-
-            Prefs.putBoolean("notificationEnabled", notificationEnabled);
-            Prefs.putBoolean("netstampChanged", netstampChanged);
-            Prefs.putBoolean("webcastOnly", webcastOnly);
-            Prefs.putBoolean("twentyFourHour", twentyFourHour);
-            Prefs.putBoolean("oneHour", oneHour);
-            Prefs.putBoolean("tenMinutes", tenMinutes);
-        }
     }
 
     private void setupCrashlytics() {

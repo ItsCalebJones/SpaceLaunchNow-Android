@@ -264,7 +264,7 @@ public class NotificationBuilder {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         SimpleDateFormat sdf;
         if (!DateFormat.is24HourFormat(context)){
-            sdf = Utils.getSimpleDateFormatForUI("k:mm a zzz");
+            sdf = Utils.getSimpleDateFormatForUI("h:mm a zzz");
         } else {
             sdf = Utils.getSimpleDateFormatForUI("HH:mm zzz");
         }
