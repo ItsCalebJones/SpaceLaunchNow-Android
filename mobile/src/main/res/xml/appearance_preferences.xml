@@ -8,12 +8,6 @@
         android:summaryOff="@string/local_timezone_off"
         android:summaryOn="@string/local_timezone_on"
         android:title="@string/local_timezone" />
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="24_hour_mode"
-        android:summaryOff="@string/time_format_off"
-        android:summaryOn="@string/time_format_on"
-        android:title="@string/time_format" />
     <PreferenceCategory android:title="@string/night_mode"
         android:key="night_category">
         <SwitchPreference

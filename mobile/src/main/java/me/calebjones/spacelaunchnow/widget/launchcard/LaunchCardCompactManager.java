@@ -41,7 +41,7 @@ public class LaunchCardCompactManager {
     private RemoteViews remoteViews;
     private SwitchPreferences switchPreferences;
 
-    public LaunchCardCompactManager(Context context){
+    public LaunchCardCompactManager(Context context) {
         this.context = context;
         appWidgetManager = AppWidgetManager.getInstance(context);
     }
@@ -133,12 +133,12 @@ public class LaunchCardCompactManager {
         int colorWhite = 0xFFFFFFFF;
         int colorSecondaryWhite = 0xB3FFFFFF;
         int colorBackground = 0xFF303030;
-        int widgetTextColor = sharedPref.getInt("widget_text_color",colorWhite);
+        int widgetTextColor = sharedPref.getInt("widget_text_color", colorWhite);
         int widgetBackgroundColor = sharedPref.getInt("widget_background_color", colorBackground);
-        int widgetSecondaryTextColor = sharedPref.getInt("widget_secondary_text_color",colorSecondaryWhite);
+        int widgetSecondaryTextColor = sharedPref.getInt("widget_secondary_text_color", colorSecondaryWhite);
         int widgetIconColor = sharedPref.getInt("widget_icon_color", colorWhite);
 
-        if(sharedPref.getBoolean("widget_theme_round_corner", true))
+        if (sharedPref.getBoolean("widget_theme_round_corner", true))
             remoteViews.setImageViewResource(R.id.bgcolor, R.drawable.rounded);
         else
             remoteViews.setImageViewResource(R.id.bgcolor, R.drawable.squared);
@@ -148,7 +148,7 @@ public class LaunchCardCompactManager {
         int red = Color.red(widgetBackgroundColor);
         int green = Color.green(widgetBackgroundColor);
         int blue = Color.blue(widgetBackgroundColor);
-        remoteViews.setInt(R.id.bgcolor, "setColorFilter", Color.rgb(red,green,blue));
+        remoteViews.setInt(R.id.bgcolor, "setColorFilter", Color.rgb(red, green, blue));
         remoteViews.setInt(R.id.bgcolor, "setAlpha", widgetAlpha);
         remoteViews.setTextColor(R.id.widget_launch_mission, widgetTextColor);
         remoteViews.setTextColor(R.id.widget_launch_rocket, widgetSecondaryTextColor);
@@ -203,11 +203,7 @@ public class LaunchCardCompactManager {
 
     private void setLaunchDate(Launch launch) {
         SimpleDateFormat sdf;
-        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("24_hour_mode", false)) {
-            sdf = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy");
-        } else {
-            sdf = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy");
-        }
+        sdf = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy");
         sdf.toLocalizedPattern();
         if (launch.getNet() != null) {
             remoteViews.setTextViewText(R.id.widget_launch_date, sdf.format(launch.getNet()));

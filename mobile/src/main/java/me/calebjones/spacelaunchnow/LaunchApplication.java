@@ -282,7 +282,6 @@ public class LaunchApplication extends Application {
             firebaseMessaging.subscribeToTopic("production");
             firebaseMessaging.unsubscribeFromTopic("debug");
         }
-        migrateNotifications();
 
         boolean notificationEnabled = Prefs.getBoolean("notificationEnabled", true);
         boolean netstampChanged = Prefs.getBoolean("netstampChanged", true);
@@ -293,6 +292,84 @@ public class LaunchApplication extends Application {
         boolean oneMinute = Prefs.getBoolean("oneMinute", true);
         boolean inFlight = Prefs.getBoolean("inFlight", true);
         boolean success = Prefs.getBoolean("success", true);
+
+        boolean all = switchPreferences.getAllSwitch();
+        boolean ples = switchPreferences.getSwitchPles();
+        boolean ksc = switchPreferences.getSwitchKSC();
+        boolean van = switchPreferences.getSwitchVan();
+        boolean isro = switchPreferences.getSwitchISRO();
+        boolean casc = switchPreferences.getSwitchCASC();
+        boolean ariane = switchPreferences.getSwitchArianespace();
+        boolean ula = switchPreferences.getSwitchULA();
+        boolean roscosmos = switchPreferences.getSwitchRoscosmos();
+        boolean spacex = switchPreferences.getSwitchSpaceX();
+        boolean nasa = switchPreferences.getSwitchNasa();
+
+        if (all) {
+            firebaseMessaging.subscribeToTopic("all");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("all");
+        }
+
+        if (ksc) {
+            firebaseMessaging.subscribeToTopic("ksc");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("ksc");
+        }
+
+        if (ples) {
+            firebaseMessaging.subscribeToTopic("ples");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("ples");
+        }
+
+        if (van) {
+            firebaseMessaging.subscribeToTopic("van");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("van");
+        }
+
+        if (isro) {
+            firebaseMessaging.subscribeToTopic("isro");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("isro");
+        }
+
+        if (casc) {
+            firebaseMessaging.subscribeToTopic("casc");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("casc");
+        }
+
+        if (ariane) {
+            firebaseMessaging.subscribeToTopic("ariane");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("ariane");
+        }
+
+        if (ula) {
+            firebaseMessaging.subscribeToTopic("ula");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("ula");
+        }
+
+        if (roscosmos) {
+            firebaseMessaging.subscribeToTopic("roscosmos");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("roscosmos");
+        }
+
+        if (spacex) {
+            firebaseMessaging.subscribeToTopic("spacex");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("spacex");
+        }
+
+        if (nasa) {
+            firebaseMessaging.subscribeToTopic("nasa");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("nasa");
+        }
 
         if (notificationEnabled) {
             firebaseMessaging.subscribeToTopic("notificationEnabled");
@@ -348,25 +425,6 @@ public class LaunchApplication extends Application {
             firebaseMessaging.unsubscribeFromTopic("oneMinute");
         }
 
-    }
-
-    private void migrateNotifications() {
-        if (!Once.beenDone("migrateNotifications")) {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            boolean notificationEnabled = prefs.getBoolean("notifications_new_message", true);
-            boolean netstampChanged = prefs.getBoolean("notifications_launch_imminent_updates", true);
-            boolean webcastOnly = prefs.getBoolean("notifications_new_message_webcast", false);
-            boolean twentyFourHour = prefs.getBoolean("notifications_launch_day", true);
-            boolean oneHour = prefs.getBoolean("notifications_launch_imminent", true);
-            boolean tenMinutes = prefs.getBoolean("notifications_launch_minute", true);
-
-            Prefs.putBoolean("notificationEnabled", notificationEnabled);
-            Prefs.putBoolean("netstampChanged", netstampChanged);
-            Prefs.putBoolean("webcastOnly", webcastOnly);
-            Prefs.putBoolean("twentyFourHour", twentyFourHour);
-            Prefs.putBoolean("oneHour", oneHour);
-            Prefs.putBoolean("tenMinutes", tenMinutes);
-        }
     }
 
     private void setupCrashlytics() {

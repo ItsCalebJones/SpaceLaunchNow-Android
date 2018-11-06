@@ -26,8 +26,7 @@ import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -175,7 +174,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
 
                     if (launchItem.getNet() != null) {
                         //Get launch date
-
                         SimpleDateFormat sdf = Utils.getSimpleDateFormatForUI("MMMM d, yyyy");
                         Date date = launchItem.getNet();
                         String launchTime = sdf.format(date);
@@ -186,12 +184,11 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     }
                 } else {
                     SimpleDateFormat sdf;
-                    if (DateFormat.is24HourFormat(context)) {
-                        sdf = Utils.getSimpleDateFormatForUI("MMMM d, yyyy HH:mm zzz");
-                    } else {
+                    if (!DateFormat.is24HourFormat(context)){
                         sdf = Utils.getSimpleDateFormatForUI("MMMM d, yyyy h:mm a zzz");
+                    } else {
+                        sdf = Utils.getSimpleDateFormatForUI("MMMM d, yyyy HH:mm zzz");
                     }
-                    sdf.toLocalizedPattern();
                     Date date = launchItem.getNet();
                     holder.launchDateCompact.setText(sdf.format(date));
                 }
@@ -321,7 +318,11 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
             Intent sendIntent = new Intent();
 
             SimpleDateFormat df = Utils.getSimpleDateFormatForUI("EEEE, MMMM d, yyyy - hh:mm a zzz");
-            df.toLocalizedPattern();
+            if (!DateFormat.is24HourFormat(context)){
+                df = Utils.getSimpleDateFormatForUI("EEEE, MMMM d, yyyy h:mm a zzz");
+            } else {
+                df = Utils.getSimpleDateFormatForUI("EEEE, MMMM d, yyyy HH:mm zzz");
+            }
 
             Date date = launch.getNet();
             String launchDate = df.format(date);

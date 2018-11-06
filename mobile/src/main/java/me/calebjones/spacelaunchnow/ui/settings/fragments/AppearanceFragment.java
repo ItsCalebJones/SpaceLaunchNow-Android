@@ -222,19 +222,6 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
             widgetHideSettings.setEnabled(false);
             widgetHideSettings.setSelectable(false);
         }
-        Preference localTime = findPreference("local_time");
-        localTime.setOnPreferenceChangeListener(createLocalTimeListener());
-    }
-
-    private Preference.OnPreferenceChangeListener createLocalTimeListener() {
-        return new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(final Preference preference, final Object newValue) {
-                Timber.v("Clicked!");
-                return true;
-            }
-
-        };
     }
 
     public void checkLocationPermission() {
