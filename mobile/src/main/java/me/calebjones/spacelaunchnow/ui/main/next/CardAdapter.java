@@ -4,12 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.support.v4.app.ShareCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -25,6 +21,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.crashlytics.android.Crashlytics;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -47,6 +45,12 @@ import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.CountDownTimer;
 import me.calebjones.spacelaunchnow.utils.views.custom.CountDownView;
+import me.calebjones.spacelaunchnow.utils.youtube.YouTubeAPIHelper;
+import me.calebjones.spacelaunchnow.utils.youtube.models.Video;
+import me.calebjones.spacelaunchnow.utils.youtube.models.VideoResponse;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import timber.log.Timber;
 
 /**
@@ -120,18 +124,18 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 }
 
                 holder.landingView.setVisibility(View.INVISIBLE);
-                if (launchItem.getRocket().getFirstStage() != null && launchItem.getRocket().getFirstStage().size() >= 1){
-                    if (launchItem.getRocket().getFirstStage().size() > 1){
+                if (launchItem.getRocket().getFirstStage() != null && launchItem.getRocket().getFirstStage().size() >= 1) {
+                    if (launchItem.getRocket().getFirstStage().size() > 1) {
                         String stagesText = "";
-                        for (Stage stage :  launchItem.getRocket().getFirstStage()){
+                        for (Stage stage : launchItem.getRocket().getFirstStage()) {
                             if (stage.getLanding().getLandingLocation() != null) {
                                 stagesText = stagesText + stage.getLanding().getLandingLocation().getAbbrev() + " ";
                             }
                         }
                         holder.landingView.setVisibility(View.VISIBLE);
                         holder.landing.setText(stagesText);
-                    } else if (launchItem.getRocket().getFirstStage().size() == 1){
-                        if (launchItem.getRocket().getFirstStage().first().getLanding() != null){
+                    } else if (launchItem.getRocket().getFirstStage().size() == 1) {
+                        if (launchItem.getRocket().getFirstStage().first().getLanding() != null) {
                             Landing landing = launchItem.getRocket().getFirstStage().first().getLanding();
                             if (landing.getLandingLocation() != null) {
                                 holder.landingView.setVisibility(View.VISIBLE);
@@ -350,16 +354,78 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                         });
                         for (RealmStr s : launch.getVidURLs()) {
                             //Do your stuff here
-                            adapter.add(new MaterialSimpleListItem.Builder(context)
-                                    .content(s.getVal())
-                                    .build());
+                            try {
+                                URI uri = new URI(s.getVal());
+
+                                String name;
+                                YouTubeAPIHelper youTubeAPIHelper = new YouTubeAPIHelper(context, context.getResources().getString(R.string.GoogleMapsKey));
+                                if (uri.getHost().contains("youtube")){
+                                    name = "YouTube";
+                                    String youTubeURL = getYouTubeID(s.getVal());
+                                    if (youTubeURL.contains("spacex/live")){
+                                        adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                .content("YouTube - SpaceX Livestream")
+                                                .build());
+                                    } else {
+                                        youTubeAPIHelper.getVideoById(youTubeURL,
+                                                new Callback<VideoResponse>() {
+                                            @Override
+                                            public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
+                                                if (response.isSuccessful()) {
+                                                    if (response.body() != null) {
+                                                        List<Video> videos = response.body().getVideos();
+                                                        if (videos.size() > 0) {
+                                                            try {
+                                                                adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                                        .content(videos.get(0).getSnippet().getTitle())
+                                                                        .build());
+                                                            } catch (Exception e){
+                                                                adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                                        .content(name)
+                                                                        .build());
+                                                            }
+                                                        } else {
+                                                            adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                                    .content(name)
+                                                                    .build());
+                                                        }
+                                                    } else {
+                                                        adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                                .content(name)
+                                                                .build());
+                                                    }
+                                                } else {
+                                                    adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                            .content(name)
+                                                            .build());
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<VideoResponse> call, Throwable t) {
+                                                adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                        .content(name)
+                                                        .build());
+                                            }
+                                        });
+                                    }
+                                } else {
+                                    name = uri.getHost();
+                                    adapter.add(new MaterialSimpleListItem.Builder(context)
+                                            .content(name)
+                                            .build());
+                                }
+
+                            } catch (URISyntaxException e) {
+                                e.printStackTrace();
+                            }
                         }
 
                         MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
-                                .title("Select a Source")
-                                .content("Long press for additional options.")
+                                .title(R.string.source)
+                                .content(R.string.long_press_share)
                                 .adapter(adapter, null)
-                                .negativeText("Cancel");
+                                .negativeText(R.string.cancel);
                         builder.show();
                     }
                     break;
@@ -423,5 +489,17 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     break;
             }
         }
+    }
+
+    private String getYouTubeID(String vidURL) {
+        final String regex = "(youtu\\.be\\/|youtube\\.com\\/(watch\\?(.*&)?v=|(embed|v)\\/|c\\/))([a-zA-Z0-9_-]{11}|[a-zA-Z].*)";
+        final Pattern pattern = Pattern.compile(regex);
+
+        Matcher matcher = pattern.matcher(vidURL);
+        Timber.v("Checking for match of %s", vidURL);
+        if (matcher.find() && (matcher.group(1) != null || matcher.group(2) != null) && matcher.group(5) != null) {
+            return matcher.group(5);
+        }
+        return null;
     }
 }

@@ -2,7 +2,7 @@
 <resources>
     <string name="action_settings">Settings</string>
     <string name="status_go">"Go for Launch"</string>
-    <string name="status_nogo">"Launch TBD"</string>
+    <string name="status_nogo">Launch Date Unconfirmed</string>
     <string name="status_success">"Successful Launch"</string>
     <string name="status_failure">"Launch Failure Occurred"</string>
     <string name="spacex_summary">SpaceX designs, manufactures and launches advanced rockets and spacecraft. The company was founded in 2002 to revolutionize space technology, with the ultimate goal of enabling people to live on other planets.</string>
@@ -446,4 +446,9 @@
     <string name="settings_one_minute">One Minute</string>
     <string name="settings_one_minute_on">Receive notification when a Launch is within one minute.</string>
     <string name="settings_one_minute_off">Do not notify when a Launch is within one minute.</string>
+    <string name="no_live_stream_available">No live stream available.</string>
+    <string name="date_confirmed">Date is confirmed however launch time is unknown.</string>
+    <string name="date_unconfirmed">Current date is a \'No Earlier Then\' estimation.</string>
+    <string name="source">Select a Source</string>
+    <string name="long_press_share">Long press an item to share.</string>
 </resources>
