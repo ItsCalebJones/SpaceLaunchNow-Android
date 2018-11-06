@@ -532,7 +532,7 @@ public class LaunchDetailActivity extends BaseActivity
             ShareCompat.IntentBuilder.from(this)
                     .setType("text/plain")
                     .setChooserTitle("Share: " + launch.getName())
-                    .setText(String.format("%s\n\nWatch Live: %s", message, launch.getUrl()))
+                    .setText(String.format("%s\n\nWatch Live: %s", message, launch.getSlug()))
                     .startChooser();
             Analytics.getInstance().sendLaunchShared("Share FAB", launch.getName() + "-" + launch.getId().toString());
         } else {
