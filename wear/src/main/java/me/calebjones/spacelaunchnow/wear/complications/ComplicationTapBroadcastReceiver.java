@@ -6,12 +6,9 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.view.View;
-import android.widget.Toast;
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.wearable.CapabilityClient;
@@ -19,10 +16,8 @@ import com.google.android.gms.wearable.CapabilityInfo;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.Wearable;
 
-import java.nio.ByteBuffer;
 import java.util.Set;
 
-import me.calebjones.spacelaunchnow.wear.ui.launchdetail.LaunchDetail;
 import timber.log.Timber;
 
 public class ComplicationTapBroadcastReceiver extends BroadcastReceiver {

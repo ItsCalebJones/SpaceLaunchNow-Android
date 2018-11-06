@@ -3,10 +3,10 @@ import com.android.build.OutputFile
 
 buildscript {
     repositories {
+        google()
         maven { url 'https://maven.fabric.io/public' }
         maven { url "https://jitpack.io" }
         jcenter()
-        google()
         maven {
             name 'Sonatype SNAPSHOTs';
             url 'https://oss.sonatype.org/content/repositories/snapshots/'
@@ -83,9 +83,9 @@ advancedVersioning {
 
 
 repositories {
+    google()
     jcenter()
     maven { url 'https://maven.fabric.io/public' }
-    google()
 }
 
 // Create a variable called keystorePropertiesFile, and initialize it to your
@@ -143,7 +143,6 @@ android {
             versionNameSuffix "-debug-b${appVersionCode}"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
-
         }
         release {
 //        splits {
@@ -205,36 +204,30 @@ dependencies {
 
     implementation project(path: ':data')
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
+    implementation 'com.android.support:multidex:1.0.3'
 
     // Android Official Libraries
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.1'
     implementation 'androidx.browser:browser:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.palette:palette:1.0.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'android.arch.lifecycle:extensions:1.1.1'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.preference:preference:1.0.0'
     implementation 'androidx.vectordrawable:vectordrawable-animated:1.0.0'
-    implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation "com.google.firebase:firebase-core:$rootProject.playServicesVersion"
-    implementation "com.google.android.gms:play-services-location:$rootProject.playServicesVersion"
-    implementation "com.google.android.gms:play-services-wearable:$rootProject.playServicesVersion"
-    implementation "com.google.android.gms:play-services-gcm:$rootProject.playServicesVersion"
-    implementation "com.google.android.gms:play-services-ads:$rootProject.playServicesVersion"
-    implementation "com.google.android.gms:play-services-maps:$rootProject.playServicesVersion"
+    implementation "com.google.firebase:firebase-core:16.0.5"
+    implementation "com.google.android.gms:play-services-wearable:16.0.1"
+    implementation "com.google.android.gms:play-services-ads:16.0.0"
 
     implementation 'com.pixplicity.easyprefs:library:1.9.0'
 
     // Architecture and Tools
     implementation 'com.jonathanfinerty.once:once:1.2.2'
     implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
-        transitive = true
-    }
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
     implementation 'com.jakewharton.timber:timber:4.6.0'
     implementation 'com.karumi:dexter:4.2.0'
     implementation 'cz.kinst.jakub:android-stateful-layout-simple:2.0.7'
@@ -261,12 +254,10 @@ dependencies {
     implementation 'com.github.jrvansuita:MaterialAbout:0.2.3'
     implementation 'com.github.mukeshsolanki:MarkdownView-Android:1.0.4'
     implementation 'com.jaredrummler:colorpicker:1.0.1'
-    implementation 'com.andkulikov:transitionseverywhere:1.7.7'
+    implementation 'com.andkulikov:transitionseverywhere:1.8.0'
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
     implementation 'com.github.florent37:glidepalette:2.1.2'
-    implementation 'com.github.clans:fab:1.6.4'
-    implementation 'com.github.amlcurran.showcaseview:library:5.4.3'
     implementation 'com.codemybrainsout.onboarding:onboarder:1.0.4'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.borax12.materialdaterangepicker:library:1.9'
@@ -283,7 +274,6 @@ dependencies {
     // HTTP Related libraries
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
-    implementation 'com.squareup.retrofit2:converter-simplexml:2.4.0'
     implementation 'com.github.renaudcerrato:static-maps-api:1.0.4'
     implementation 'com.google.code.gson:gson:2.8.4'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
@@ -299,7 +289,6 @@ dependencies {
     implementation 'com.mikepenz:community-material-typeface:2.0.46.1@aar'
     implementation 'com.github.pwittchen:weathericonview:1.1.0'
     implementation 'com.mikepenz:fontawesome-typeface:5.0.13.0@aar'
-    implementation files('libs/YouTubeAndroidPlayerApi.jar')
 
     //Twitter
     implementation 'com.twitter.sdk.android:twitter-core:3.1.1'
@@ -308,13 +297,10 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:2.1.15"
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     //Rich Links
-    implementation 'io.github.ponnamkarthik:richlinkpreview:1.0.8'
-    implementation 'org.jsoup:jsoup:1.11.2'
-    implementation 'com.leocardz:link-preview:2.0.0@aar'
-
     implementation 'com.github.nekocode:Badge:2.0'
+
     // Firebase Messaging
-    implementation "com.google.firebase:firebase-messaging:$rootProject.playServicesVersion"
+    implementation "com.google.firebase:firebase-messaging:17.3.4"
 }
 
 apply plugin: 'com.google.gms.google-services'

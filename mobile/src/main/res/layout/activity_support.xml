@@ -535,8 +535,6 @@
         android:layout_marginBottom="@dimen/material_baseline_grid_1x"
         android:layout_marginEnd="@dimen/material_baseline_grid_1x"
         android:src="@drawable/ic_money"
-        app:fab_elevationCompat="@dimen/material_baseline_grid_1x"
-        app:fab_size="normal"
         app:layout_anchor="@id/nested_scroll_view"
         app:layout_anchorGravity="bottom|right|end" />​
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -49,13 +49,6 @@
         <item name="colorAccent">@color/darkAccent</item>
     </style>
 
-    <style name="ShowCaseThemeDark" parent="ShowcaseView">
-        <item name="sv_backgroundColor">@color/darkPrimary</item>
-        <item name="sv_showcaseColor">@color/darkAccent</item>
-        <item name="sv_buttonText">Hide</item>
-        <item name="sv_tintButtonColor">true</item>
-    </style>
-
     <style name="SPL"></style>
 
     <style name="SPL.SnackBar">

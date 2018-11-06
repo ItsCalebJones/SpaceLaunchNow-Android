@@ -41,13 +41,6 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
-    <style name="ShowCaseThemeDark" parent="ShowCaseThemeDark">
-        <item name="sv_backgroundColor">@color/darkPrimary</item>
-        <item name="sv_showcaseColor">@color/darkAccent</item>
-        <item name="sv_buttonText">Hide</item>
-        <item name="sv_tintButtonColor">true</item>
-    </style>
-
     <style name="ToolBarWithNavigationBack" parent="AppTheme.AppBarOverlay">
         <item name="navigationIcon">@drawable/ic_arrow_back</item>
     </style>

@@ -139,7 +139,9 @@ public class FabExtensionAnimator {
         backgroundDrawable.setColor(-1);
 
         GradientDrawable strokeDrawable = new GradientDrawable();
-        strokeDrawable.setStroke(strokeWidth, strokeColor);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            strokeDrawable.setStroke(strokeWidth, strokeColor);
+        }
         strokeDrawable.setCornerRadius(cornerRadius);
         strokeDrawable.setColor(0);
 

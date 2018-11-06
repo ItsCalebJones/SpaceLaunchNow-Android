@@ -74,15 +74,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="ShowCaseThemeLight" parent="ShowCaseThemeLight">
-        <item name="sv_backgroundColor">@color/colorPrimary</item>
-        <item name="sv_showcaseColor">@color/colorAccent</item>
-        <item name="sv_buttonText">Hide</item>
-        <item name="sv_tintButtonColor">true</item>
-        <item name="sv_titleTextAppearance">@style/CustomTitle2</item>
-        <item name="sv_detailTextAppearance">@style/CustomText2</item>
-    </style>
-
     <style name="PopupMenuDark" parent="@style/Widget.AppCompat.PopupMenu">
         <item name="android:popupBackground">@android:color/white</item>
     </style>

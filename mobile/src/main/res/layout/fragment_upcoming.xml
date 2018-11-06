@@ -402,9 +402,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"
+                    android:layout_margin="8dp"
                     android:elevation="@dimen/material_baseline_grid_1.5x"
-                    android:layout_margin="@dimen/material_baseline_grid_1.5x"
-                    app:layout_behavior="me.calebjones.spacelaunchnow.utils.views.animator.BottomTransientBarBehavior"/>
+                    app:layout_behavior="me.calebjones.spacelaunchnow.utils.views.animator.BottomTransientBarBehavior" />
 
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

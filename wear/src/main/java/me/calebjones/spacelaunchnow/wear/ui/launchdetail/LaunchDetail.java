@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.core.widget.SwipeRefreshLayout;
 import androidx.appcompat.widget.AppCompatButton;
 import android.support.wearable.activity.ConfirmationActivity;
