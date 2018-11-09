@@ -5,55 +5,75 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
         tools:openDrawer="start">
 
-        <RelativeLayout
-            android:id="@+id/container"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <include
-                layout="@layout/app_bar_main"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@id/adView" />
-
-            <androidx.coordinatorlayout.widget.CoordinatorLayout
-                android:id="@+id/bottom_app_bar_coordinator"
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appBarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true">
+                android:background="?attr/titleBarColor"
+                android:elevation="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <com.google.android.material.bottomappbar.BottomAppBar
-                    android:id="@+id/bottom_app_bar"
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/main_toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="bottom"
-                    app:backgroundTint="?attr/titleBarColor" />
+                    android:layout_height="?attr/actionBarSize"
+                    android:elevation="8dp"
+                    android:theme="@style/ThemeOverlay.MaterialComponents.Dark"/>
 
-            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/navigation_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/toolbar_height"
+                android:background="?android:attr/windowBackground"
+                app:itemIconTint="@color/bnv_tab_item_foreground"
+                app:itemTextColor="@color/bnv_tab_item_foreground"
+                android:elevation="12dp"
+                app:menu="@menu/bottom_main_menu"
+                app:labelVisibilityMode="labeled"
+                app:itemHorizontalTranslationEnabled="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <FrameLayout
+                android:id="@+id/flContent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:elevation="0dp"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                app:layout_constraintBottom_toTopOf="@+id/navigation_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+                app:layout_constraintVertical_bias="0.39" />
 
             <com.google.android.gms.ads.AdView
                 xmlns:ads="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/adView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@id/bottom_app_bar_coordinator"
-                android:visibility="visible"
+                android:visibility="gone"
                 ads:adSize="SMART_BANNER"
                 ads:adUnitId="ca-app-pub-9824528399164059/9713798255" />
 
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
     </androidx.drawerlayout.widget.DrawerLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

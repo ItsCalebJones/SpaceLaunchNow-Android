@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:elevation="12dp">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
@@ -11,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/darkPrimary"
-        android:elevation="8dp"
+        android:elevation="12dp"
         app:tabGravity="fill"
         app:tabBackground="@color/darkPrimary"
         app:tabTextColor="@color/dark_theme_secondary_text_color"
@@ -20,6 +21,7 @@
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpager"
+        android:elevation="0dp"
         android:layout_below="@id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"  />

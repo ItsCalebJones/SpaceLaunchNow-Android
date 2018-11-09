@@ -96,7 +96,7 @@
             android:name=".ui.imageviewer.FullscreenImageActivity"
             android:label="@string/title_activity_fullscreen_image"
             android:parentActivityName=".ui.main.MainActivity"
-            android:theme="@style/LightTheme.Transparent">
+            android:theme="@style/BaseAppTheme.Transparent">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.main.MainActivity" />

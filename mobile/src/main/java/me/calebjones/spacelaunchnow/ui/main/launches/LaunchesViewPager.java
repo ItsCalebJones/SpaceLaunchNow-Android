@@ -19,6 +19,7 @@ import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.ui.launches.agency.PreviousAgencyLaunchesFragment;
 import me.calebjones.spacelaunchnow.ui.launches.agency.UpcomingAgencyLaunchesFragment;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
+import me.calebjones.spacelaunchnow.ui.main.next.NextLaunchFragment;
 import timber.log.Timber;
 
 public class LaunchesViewPager extends Fragment {
@@ -27,6 +28,7 @@ public class LaunchesViewPager extends Fragment {
     private PagerAdapter pagerAdapter;
     private TabLayout tabLayout;
     private static ListPreferences sharedPreference;
+    private NextLaunchFragment nextLaunchFragment;
     private UpcomingLaunchesFragment upcomingFragment;
     private PreviousLaunchesFragment previousFragment;
     private Context context;
@@ -42,24 +44,21 @@ public class LaunchesViewPager extends Fragment {
         View inflatedView = inflater.inflate(R.layout.fragment_view_pager, container, false);
 
         tabLayout = inflatedView.findViewById(R.id.tabLayout);
+        tabLayout.addTab(tabLayout.newTab().setText("Next"));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.upcoming));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.previous));
         viewPager = inflatedView.findViewById(R.id.viewpager);
 
         pagerAdapter = new PagerAdapter
                 (getChildFragmentManager(), tabLayout.getTabCount());
-
+        viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                if (tab.getPosition() == 0) {
-                    ((MainActivity) getActivity()).setActionBarTitle(sharedPreference.getUpTitle());
-                } else {
-                    ((MainActivity) getActivity()).setActionBarTitle(sharedPreference.getPreviousTitle());
-                }
+                ((MainActivity) getActivity()).setActionBarTitle(sharedPreference.getUpTitle());
             }
 
             @Override
@@ -132,8 +131,9 @@ public class LaunchesViewPager extends Fragment {
         public Fragment getItem(int position) {
 
             switch (position) {
-                case 0: return UpcomingLaunchesFragment.newInstance("Upcoming");
-                case 1: return PreviousLaunchesFragment.newInstance("Previous");
+                case 0: return NextLaunchFragment.newInstance();
+                case 1: return UpcomingLaunchesFragment.newInstance("Upcoming");
+                case 2: return PreviousLaunchesFragment.newInstance("Previous");
                 default:
                     return null;
             }
@@ -146,18 +146,16 @@ public class LaunchesViewPager extends Fragment {
             // save the appropriate reference depending on position
             switch (position) {
                 case 0:
-                    upcomingFragment = (UpcomingLaunchesFragment) createdFragment;
+                    nextLaunchFragment = (NextLaunchFragment) createdFragment;
                     break;
                 case 1:
+                    upcomingFragment = (UpcomingLaunchesFragment) createdFragment;
+                    break;
+                case 2:
                     previousFragment = (PreviousLaunchesFragment) createdFragment;
                     break;
             }
             return createdFragment;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView((View) object);
         }
 
         @Override

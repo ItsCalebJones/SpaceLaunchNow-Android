@@ -10,17 +10,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import androidx.annotation.NonNull;
+
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
 import androidx.appcompat.widget.Toolbar;
 
 import android.transition.Slide;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RelativeLayout;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -29,8 +29,11 @@ import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.jaeger.library.StatusBarUtil;
 import com.michaelflisar.gdprdialog.GDPR;
 import com.michaelflisar.gdprdialog.GDPRConsent;
 import com.michaelflisar.gdprdialog.GDPRConsentState;
@@ -59,7 +62,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.concurrent.TimeUnit;
 
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -95,15 +97,18 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private static ListPreferences listPreferences;
     @BindView(R.id.adView)
     AdView adView;
-    @BindView(R.id.container)
-    RelativeLayout container;
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.main_toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.appBarLayout)
+    AppBarLayout appBarLayout;
+    @BindView(R.id.navigation_view)
+    BottomNavigationView bottomNavigationView;
     private LaunchesViewPager mlaunchesViewPager;
     private NextLaunchFragment mUpcomingFragment;
     private NewsViewPager mNewsViewpagerFragment;
     private VehiclesViewPager mVehicleViewPager;
-    private Toolbar toolbar;
     private Drawer drawer = null;
     private SharedPreferences sharedPref;
     private SwitchPreferences switchPreferences;
@@ -171,8 +176,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
             switchPreferences.setNightModeStatus(false);
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
         }
-        m_theme = R.style.LightTheme_NoActionBar;
-
+        m_theme = R.style.BaseAppTheme;
         Timber.d("Checking if theme changed.");
         if (getSharedPreferences("theme_changed", 0).getBoolean("recreate", false)) {
             SharedPreferences.Editor editor = getSharedPreferences("theme_changed", 0).edit();
@@ -185,7 +189,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         setTheme(m_theme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         Timber.d("Binding views.");
         ButterKnife.bind(this);
 
@@ -196,7 +199,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
             setupWindowAnimations();
         }
 
-        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // load saved navigation state if present
@@ -227,7 +229,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         Timber.d("Building DrawerBuilder");
         drawer = new DrawerBuilder()
                 .withActivity(this)
-                .withTranslucentStatusBar(true)
                 .withToolbar(toolbar)
                 .withHasStableIds(true)
                 .withAccountHeader(headerResult)
@@ -417,9 +418,9 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
     private void showRemoveAd() {
         snackbar = Snackbar
-                .make(coordinatorLayout, R.string.upgrade_pro, Snackbar.LENGTH_INDEFINITE)
+                .make(coordinatorLayout, R.string.upgrade_pro, Snackbar.LENGTH_LONG)
                 .setActionTextColor(ContextCompat.getColor(context, R.color.colorAccent))
-                .setAction("Yes", view -> {
+                .setAction("Show Me", view -> {
                     Once.markDone("userCheckedSupporter");
                     startActivity(new Intent(context, SupporterActivity.class));
                 });
@@ -559,8 +560,11 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         Timber.v("Navigate to %s", itemId);
         // perform the actual navigation logic, updating the main_menu content fragment etc
         FragmentManager fm = getSupportFragmentManager();
+        Timber.v(String.valueOf(getSupportActionBar().getElevation()));
         switch (itemId) {
             case R.id.menu_next_launch:
+
+                Timber.v(String.valueOf(getSupportActionBar().getElevation()));
                 mNavItemId = R.id.menu_next_launch;
                 // Check to see if we have retained the worker fragment.
                 mUpcomingFragment = (NextLaunchFragment) fm.findFragmentByTag("NEXT_LAUNCH");
@@ -577,6 +581,11 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                     // Tell it who it is working with.
                     fm.beginTransaction().replace(R.id.flContent, mUpcomingFragment, "NEXT_LAUNCH").commit();
                 }
+
+                getSupportActionBar().setElevation(21);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    appBarLayout.setElevation(21);
+                }
                 break;
             case R.id.menu_launches:
                 mNavItemId = R.id.menu_launches;
@@ -592,7 +601,10 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
-
+                getSupportActionBar().setElevation(0);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    appBarLayout.setElevation(0);
+                }
                 break;
             case R.id.menu_news:
                 mNavItemId = R.id.menu_news;
@@ -609,9 +621,16 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
-
+                getSupportActionBar().setElevation(0);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    appBarLayout.setElevation(0);
+                }
                 break;
             case R.id.menu_vehicle:
+                getSupportActionBar().setElevation(0);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    appBarLayout.setElevation(0);
+                }
                 mNavItemId = R.id.menu_vehicle;
                 setActionBarTitle(getString(R.string.vehicles));
                 // Check to see if we have retained the worker fragment.
@@ -731,9 +750,9 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
     private void showAd() {
         Timber.v("Showing Ad!");
-        if (adviewEnabled && adView.getVisibility() == View.GONE) {
-            adView.setVisibility(View.VISIBLE);
-        }
+//        if (adviewEnabled && adView.getVisibility() == View.GONE) {
+//            adView.setVisibility(View.VISIBLE);
+//        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -134,6 +134,15 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     private FabExtensionAnimator fabExtensionAnimator;
     Unbinder unbinder;
 
+    public static NextLaunchFragment newInstance() {
+
+        NextLaunchFragment u = new NextLaunchFragment();
+        Bundle b = new Bundle();
+        u.setArguments(b);
+
+        return u;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
