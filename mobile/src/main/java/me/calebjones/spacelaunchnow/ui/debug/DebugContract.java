@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import androidx.annotation.NonNull;
 
-import me.calebjones.spacelaunchnow.common.BaseNavigator;
-import me.calebjones.spacelaunchnow.common.BasePresenter;
-import me.calebjones.spacelaunchnow.common.BaseView;
+import me.calebjones.spacelaunchnow.local.common.BaseNavigator;
+import me.calebjones.spacelaunchnow.local.common.BasePresenter;
+import me.calebjones.spacelaunchnow.local.common.BaseView;
 
 public interface DebugContract {
 

@@ -104,7 +104,7 @@
         <activity
             android:name=".ui.supporter.SupporterActivity"
             android:theme="@style/BaseAppTheme" />
-        <activity android:name=".common.BaseActivity" />
+        <activity android:name=".local.common.BaseActivity" />
         <activity
             android:name=".ui.webview.WebViewFallbackActivity"
             android:label="@string/title_activity_web_view_fallback"

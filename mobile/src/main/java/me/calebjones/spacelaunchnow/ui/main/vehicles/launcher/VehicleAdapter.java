@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
-import me.calebjones.spacelaunchnow.utils.GlideApp;
+import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
 import timber.log.Timber;
 

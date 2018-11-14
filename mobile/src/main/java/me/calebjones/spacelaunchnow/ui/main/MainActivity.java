@@ -19,8 +19,6 @@ import android.transition.Slide;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -33,7 +31,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.jaeger.library.StatusBarUtil;
+
 import com.michaelflisar.gdprdialog.GDPR;
 import com.michaelflisar.gdprdialog.GDPRConsent;
 import com.michaelflisar.gdprdialog.GDPRConsentState;
@@ -71,8 +69,8 @@ import jonathanfinerty.once.Amount;
 import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.BaseActivity;
-import me.calebjones.spacelaunchnow.common.customviews.generate.Rate;
+import me.calebjones.spacelaunchnow.local.common.BaseActivity;
+import me.calebjones.spacelaunchnow.local.common.customviews.generate.Rate;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.events.FilterViewEvent;
@@ -200,10 +198,9 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         }
 
         setSupportActionBar(toolbar);
-
         // load saved navigation state if present
         if (null == savedInstanceState) {
-            mNavItemId = R.id.menu_next_launch;
+            mNavItemId = R.id.menu_launches;
         } else {
             mNavItemId = savedInstanceState.getInt(NAV_ITEM_ID);
         }
@@ -231,49 +228,54 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 .withActivity(this)
                 .withToolbar(toolbar)
                 .withHasStableIds(true)
+                .withTranslucentStatusBar(true)
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
-                        new PrimaryDrawerItem().withName(R.string.home)
+                        new ExpandableDrawerItem()
+                                .withName(R.string.home)
                                 .withIcon(GoogleMaterial.Icon.gmd_home)
-                                .withIdentifier(R.id.menu_next_launch)
-                                .withSelectable(true),
-                        new PrimaryDrawerItem().withName(R.string.launches)
-                                .withIcon(GoogleMaterial.Icon.gmd_assignment)
-                                .withIdentifier(R.id.menu_launches)
-                                .withSelectable(true),
-                        new PrimaryDrawerItem().withName(R.string.news)
-                                .withIcon(CommunityMaterial.Icon.cmd_newspaper)
-                                .withIdentifier(R.id.menu_news)
-                                .withSelectable(true),
-                        new PrimaryDrawerItem().withName(R.string.vehicles)
-                                .withIcon(FontAwesome.Icon.faw_rocket)
-                                .withIdentifier(R.id.menu_vehicle)
-                                .withSelectable(true),
+                                .withIdentifier(R.id.menu_home)
+                                .withSelectable(false)
+                                .withSubItems(
+                                        new SecondaryDrawerItem()
+                                                .withIcon(GoogleMaterial.Icon.gmd_assignment)
+                                                .withName("Launches")
+                                                .withLevel(2)
+                                                .withIdentifier(R.id.menu_launches)
+                                                .withSelectable(true),
+                                        new SecondaryDrawerItem()
+                                                .withIcon(CommunityMaterial.Icon.cmd_newspaper)
+                                                .withName(R.string.news)
+                                                .withLevel(2)
+                                                .withIdentifier(R.id.menu_news)
+                                                .withSelectable(true),
+                                        new SecondaryDrawerItem()
+                                                .withIcon(R.drawable.ic_rocket_grey)
+                                                .withLevel(2)
+                                                .withName(R.string.vehicle)
+                                                .withIdentifier(R.id.menu_vehicle)
+                                                .withSelectable(true)
+                                ),
+                        new PrimaryDrawerItem()
+                                .withIcon(GoogleMaterial.Icon.gmd_info_outline)
+                                .withName(R.string.whats_new)
+                                .withIdentifier(R.id.menu_new)
+                                .withSelectable(false),
+                        new PrimaryDrawerItem()
+                                .withIcon(GoogleMaterial.Icon.gmd_account_box)
+                                .withName(R.string.about).withDescription(R.string.about_subtitle)
+                                .withIdentifier(R.id.about)
+                                .withSelectable(false),
                         new PrimaryDrawerItem()
                                 .withIcon(CommunityMaterial.Icon.cmd_discord)
                                 .withName(R.string.discord)
                                 .withIdentifier(R.id.menu_discord)
                                 .withSelectable(false),
-                        new DividerDrawerItem(),
-                        new ExpandableDrawerItem().withName(R.string.get_help).withIcon(GoogleMaterial.Icon.gmd_account_box).withDescription(R.string.help_description).withIdentifier(20).withSelectable(false).withSubItems(
-                                new SecondaryDrawerItem()
-                                        .withIcon(GoogleMaterial.Icon.gmd_info_outline)
-                                        .withName(R.string.whats_new)
-                                        .withDescription(R.string.whats_new_subtitle)
-                                        .withIdentifier(R.id.menu_new)
-                                        .withSelectable(false),
-                                new SecondaryDrawerItem()
-                                        .withIcon(GoogleMaterial.Icon.gmd_account_box)
-                                        .withName(R.string.about).withDescription(R.string.about_subtitle)
-                                        .withIdentifier(R.id.about)
-                                        .withSelectable(false),
-                                new SecondaryDrawerItem()
-                                        .withIcon(GoogleMaterial.Icon.gmd_feedback)
-                                        .withName(R.string.feedback)
-                                        .withDescription(R.string.feedback_subtitle)
-                                        .withIdentifier(R.id.menu_feedback)
-                                        .withSelectable(false)
-                        ),
+                        new PrimaryDrawerItem()
+                                .withIcon(GoogleMaterial.Icon.gmd_feedback)
+                                .withName(R.string.feedback)
+                                .withIdentifier(R.id.menu_feedback)
+                                .withSelectable(false),
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem().withName(R.string.settings)
                                 .withIcon(GoogleMaterial.Icon.gmd_settings)
@@ -281,7 +283,10 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                                 .withSelectable(true)
                 ).withOnDrawerItemClickListener((view, position, drawerItem) -> {
                     if (drawerItem != null) {
-                        navigate((int) drawerItem.getIdentifier());
+                        if (mNavItemId != (int) drawerItem.getIdentifier()) {
+                            mNavItemId = (int) drawerItem.getIdentifier();
+                            navigate(mNavItemId);
+                        }
                     }
                     return false;
                 }).build();
@@ -310,11 +315,20 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
 
         if ("SHOW_FILTERS".equals(action)) {
-            navigate(R.id.menu_next_launch);
+            navigate(R.id.menu_launches);
         } else {
             Timber.d("Navigate to initial fragment.");
             navigate(mNavItemId);
         }
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(menuItem -> {
+            if (mNavItemId != menuItem.getItemId()) {
+                mNavItemId = menuItem.getItemId();
+                drawer.setSelection(mNavItemId, false);
+                navigate(mNavItemId);
+            }
+            return true;
+        });
 
     }
 
@@ -432,7 +446,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 .title("Official Discord Server")
                 .icon(new IconicsDrawable(this)
                         .icon(FontAwesome.Icon.faw_discord)
-                        .color(Color.rgb(114,137,218))
+                        .color(Color.rgb(114, 137, 218))
                         .sizeDp(24))
                 .content(R.string.join_discord)
                 .negativeText(R.string.button_no)
@@ -479,13 +493,13 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     public void onBackPressed() {
         if (drawer.isDrawerOpen()) {
             drawer.closeDrawer();
-        } else if (mNavItemId != R.id.menu_next_launch) {
-            drawer.setSelection(R.id.menu_next_launch);
-        } else if (mNavItemId == R.id.menu_next_launch) {
-            if(mUpcomingFragment != null){
-                if (mUpcomingFragment.isFilterShown()){
+        } else if (mNavItemId != R.id.menu_launches) {
+            drawer.setSelection(R.id.menu_launches);
+        } else if (mNavItemId == R.id.menu_launches) {
+            if (mUpcomingFragment != null) {
+                if (mUpcomingFragment.isFilterShown()) {
                     mUpcomingFragment.checkFilter();
-                }else {
+                } else {
                     checkExitApp();
                 }
             } else {
@@ -561,32 +575,11 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         // perform the actual navigation logic, updating the main_menu content fragment etc
         FragmentManager fm = getSupportFragmentManager();
         Timber.v(String.valueOf(getSupportActionBar().getElevation()));
+        getSupportActionBar().setElevation(0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            appBarLayout.setElevation(0);
+        }
         switch (itemId) {
-            case R.id.menu_next_launch:
-
-                Timber.v(String.valueOf(getSupportActionBar().getElevation()));
-                mNavItemId = R.id.menu_next_launch;
-                // Check to see if we have retained the worker fragment.
-                mUpcomingFragment = (NextLaunchFragment) fm.findFragmentByTag("NEXT_LAUNCH");
-
-
-                // If not retained (or first time running), we need to create it.
-                if (mUpcomingFragment == null) {
-                    mUpcomingFragment = new NextLaunchFragment();
-                    if ("SHOW_FILTERS".equals(getIntent().getAction())) {
-                        Bundle bundle = new Bundle();
-                        bundle.putBoolean("SHOW_FILTERS", true);
-                        mUpcomingFragment.setArguments(bundle);
-                    }
-                    // Tell it who it is working with.
-                    fm.beginTransaction().replace(R.id.flContent, mUpcomingFragment, "NEXT_LAUNCH").commit();
-                }
-
-                getSupportActionBar().setElevation(21);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    appBarLayout.setElevation(21);
-                }
-                break;
             case R.id.menu_launches:
                 mNavItemId = R.id.menu_launches;
                 // Check to see if we have retained the worker fragment.
@@ -601,10 +594,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
-                getSupportActionBar().setElevation(0);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    appBarLayout.setElevation(0);
-                }
+                bottomNavigationView.setSelectedItemId(R.id.menu_launches);
                 break;
             case R.id.menu_news:
                 mNavItemId = R.id.menu_news;
@@ -621,16 +611,9 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
-                getSupportActionBar().setElevation(0);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    appBarLayout.setElevation(0);
-                }
+                bottomNavigationView.setSelectedItemId(R.id.menu_launches);
                 break;
             case R.id.menu_vehicle:
-                getSupportActionBar().setElevation(0);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    appBarLayout.setElevation(0);
-                }
                 mNavItemId = R.id.menu_vehicle;
                 setActionBarTitle(getString(R.string.vehicles));
                 // Check to see if we have retained the worker fragment.
@@ -646,6 +629,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                     rate.showRequest();
                 }
 
+                bottomNavigationView.setSelectedItemId(R.id.menu_launches);
                 break;
             case R.id.menu_launch:
                 Utils.openCustomTab(this, getApplicationContext(), "https://launchlibrary.net/");

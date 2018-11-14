@@ -38,7 +38,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.BaseActivity;
+import me.calebjones.spacelaunchnow.local.common.BaseActivity;
 import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.data.models.Products;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;

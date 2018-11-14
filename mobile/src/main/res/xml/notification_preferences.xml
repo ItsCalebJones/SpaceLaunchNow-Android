@@ -41,12 +41,12 @@
             android:key="do_not_disturb_status"
             android:summary="@string/do_not_disturb_summary"
             android:title="@string/do_not_disturb_enable" />
-        <me.calebjones.spacelaunchnow.common.customviews.TimePreference
+        <me.calebjones.spacelaunchnow.local.common.customviews.TimePreference
             android:defaultValue="22:00"
             android:dependency="do_not_disturb_status"
             android:key="do_not_disturb_start_time"
             android:title="@string/start_time" />
-        <me.calebjones.spacelaunchnow.common.customviews.TimePreference
+        <me.calebjones.spacelaunchnow.local.common.customviews.TimePreference
             android:defaultValue="08:00"
             android:dependency="do_not_disturb_status"
             android:key="do_not_disturb_end_time"

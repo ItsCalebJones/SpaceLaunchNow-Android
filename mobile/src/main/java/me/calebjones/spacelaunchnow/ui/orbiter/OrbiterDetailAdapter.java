@@ -29,7 +29,7 @@ import butterknife.OnClick;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.main.Orbiter;
-import me.calebjones.spacelaunchnow.utils.GlideApp;
+import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
 public class OrbiterDetailAdapter extends RecyclerView.Adapter<OrbiterDetailAdapter.ViewHolder> {

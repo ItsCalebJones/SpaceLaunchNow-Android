@@ -21,12 +21,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.BaseFragment;
+import me.calebjones.spacelaunchnow.local.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.DetailsViewModel;
 import me.calebjones.spacelaunchnow.ui.launches.agency.AgencyLaunchActivity;
-import me.calebjones.spacelaunchnow.utils.GlideApp;
+import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 

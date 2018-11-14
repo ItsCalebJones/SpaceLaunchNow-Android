@@ -53,6 +53,7 @@ import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.utils.customtab.WebViewFallback;

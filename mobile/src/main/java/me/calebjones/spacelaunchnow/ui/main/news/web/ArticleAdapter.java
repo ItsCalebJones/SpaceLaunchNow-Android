@@ -27,7 +27,7 @@ import cn.nekocode.badge.BadgeDrawable;
 import io.realm.OrderedCollectionChangeSet;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.news.Article;
-import me.calebjones.spacelaunchnow.utils.GlideApp;
+import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 

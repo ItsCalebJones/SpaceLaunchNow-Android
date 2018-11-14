@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="BaseAppTheme" parent="MaterialTheme.DarkToolbar.TranslucentStatus.DayNight">
+    <style name="BaseAppTheme" parent="MaterialTheme.DarkToolbar.DayNight">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -11,8 +11,6 @@
         <item name="android:colorControlActivated">@color/materialGrey</item>
         <item name="android:textColorPrimary">#212121</item>
         <!--<item name="android:textColorSecondary">#757575</item>-->
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
 
          <!--MaterialDrawer specific values -->
         <item name="material_drawer_background">@color/material_drawer_background</item>

@@ -12,7 +12,7 @@
     <string name="link_store" translatable="false">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>
     <string name="default_wear_image" translatable="false">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1462465326/navbar_one_sqfhes.png</string>
     <string name="launch_library_reddit" translatable="false">https://www.reddit.com/r/LaunchLibrary/</string>
-    <string name="header_image" translatable="false">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1462465326/navbar_one_sqfhes.png</string>
+    <string name="header_image" translatable="false">https://res.cloudinary.com/dnkkbfy3m/image/upload/v1462465326/navbar_one_sqfhes.png</string>
     <string name="twitter_url" translatable="false">https://twitter.com/spacelaunchnow</string>
     <string name="discord_url" translatable="false">https://discord.gg/WVfzEDW</string>
     <string name="facebook_url" translatable="false">https://www.facebook.com/spacelaunchnow/</string>

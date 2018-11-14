@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
@@ -32,7 +31,6 @@ import android.view.ViewGroup;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.button.MaterialButton;
 
-import androidx.core.view.ViewCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,7 +45,7 @@ import de.mrapp.android.preference.activity.PreferenceActivity;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.BaseFragment;
+import me.calebjones.spacelaunchnow.local.common.BaseFragment;
 import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
 import me.calebjones.spacelaunchnow.content.data.next.NextLaunchDataRepository;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;

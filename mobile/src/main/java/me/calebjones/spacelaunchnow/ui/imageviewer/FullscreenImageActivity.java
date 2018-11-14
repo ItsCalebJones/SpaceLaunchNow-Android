@@ -12,8 +12,8 @@ import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.BaseActivity;
-import me.calebjones.spacelaunchnow.utils.GlideApp;
+import me.calebjones.spacelaunchnow.local.common.BaseActivity;
+import me.calebjones.spacelaunchnow.common.GlideApp;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.

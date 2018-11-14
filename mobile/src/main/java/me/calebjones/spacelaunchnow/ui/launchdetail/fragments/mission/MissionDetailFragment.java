@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.RetroFitFragment;
+import me.calebjones.spacelaunchnow.local.common.RetroFitFragment;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.LauncherConfig;
 import me.calebjones.spacelaunchnow.data.models.main.Mission;

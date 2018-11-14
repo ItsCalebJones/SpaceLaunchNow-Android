@@ -21,17 +21,17 @@
                 android:id="@+id/appBarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:elevation="0dp"
                 android:background="?attr/titleBarColor"
-                android:elevation="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/main_toolbar"
+                    android:elevation="0dp"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    android:elevation="8dp"
                     android:theme="@style/ThemeOverlay.MaterialComponents.Dark"/>
 
             </com.google.android.material.appbar.AppBarLayout>
@@ -41,15 +41,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/toolbar_height"
                 android:background="?android:attr/windowBackground"
+                android:elevation="4dp"
+                app:itemHorizontalTranslationEnabled="true"
                 app:itemIconTint="@color/bnv_tab_item_foreground"
                 app:itemTextColor="@color/bnv_tab_item_foreground"
-                android:elevation="12dp"
-                app:menu="@menu/bottom_main_menu"
                 app:labelVisibilityMode="labeled"
-                app:itemHorizontalTranslationEnabled="true"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:menu="@menu/bottom_main_menu" />
 
             <FrameLayout
                 android:id="@+id/flContent"
@@ -57,7 +58,7 @@
                 android:layout_height="0dp"
                 android:elevation="0dp"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                app:layout_constraintBottom_toTopOf="@+id/navigation_view"
+                app:layout_constraintBottom_toTopOf="@+id/adView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
@@ -68,12 +69,15 @@
                 android:id="@+id/adView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
+                android:visibility="visible"
                 ads:adSize="SMART_BANNER"
-                ads:adUnitId="ca-app-pub-9824528399164059/9713798255" />
+                ads:adUnitId="ca-app-pub-9824528399164059/9713798255"
+                app:layout_constraintBottom_toTopOf="@+id/navigation_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/flContent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
     </androidx.drawerlayout.widget.DrawerLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
