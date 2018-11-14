@@ -23,10 +23,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
-import me.calebjones.spacelaunchnow.news.R
 import me.calebjones.spacelaunchnow.news.repository.NetworkState
 import me.calebjones.spacelaunchnow.news.repository.Status.FAILED
 import me.calebjones.spacelaunchnow.news.repository.Status.RUNNING
+import me.calebjones.spacelaunchnow.news.R
 
 /**
  * A View Holder that can display a loading or have click action.

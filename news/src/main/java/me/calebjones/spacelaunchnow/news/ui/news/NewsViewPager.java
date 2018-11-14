@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.ui.main.news;
+package me.calebjones.spacelaunchnow.news.ui.news;
 
 
 import android.content.Context;
@@ -17,7 +17,6 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.news.ui.ArticleFragment;
 import me.calebjones.spacelaunchnow.ui.main.news.twitter.TwitterFragment;
-import me.calebjones.spacelaunchnow.ui.main.news.web.WebNewsFragment;
 
 public class NewsViewPager extends Fragment {
 

@@ -26,7 +26,7 @@ import me.calebjones.spacelaunchnow.news.repository.NetworkState
 import me.calebjones.spacelaunchnow.news.vo.NewsArticle
 
 /**
- * A simple adapter implementation that shows NewsArticle posts.
+ * A simple adapter implementation that shows Reddit posts.
  */
 class PostsAdapter(
         private val glide: GlideRequests,
@@ -35,7 +35,7 @@ class PostsAdapter(
     private var networkState: NetworkState? = null
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
-            R.layout.reddit_post_item -> (holder as NewsPostViewHolder).bind(getItem(position))
+            R.layout.reddit_post_item -> (holder as ArticlePostViewHolder).bind(getItem(position))
             R.layout.network_state_item -> (holder as NetworkStateItemViewHolder).bindTo(
                     networkState)
         }
@@ -47,7 +47,7 @@ class PostsAdapter(
             payloads: MutableList<Any>) {
         if (payloads.isNotEmpty()) {
             val item = getItem(position)
-            (holder as NewsPostViewHolder).updateScore(item)
+            (holder as ArticlePostViewHolder).updateScore(item)
         } else {
             onBindViewHolder(holder, position)
         }
@@ -55,7 +55,7 @@ class PostsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            R.layout.reddit_post_item -> NewsPostViewHolder.create(parent, glide)
+            R.layout.reddit_post_item -> ArticlePostViewHolder.create(parent, glide)
             R.layout.network_state_item -> NetworkStateItemViewHolder.create(parent, retryCallback)
             else -> throw IllegalArgumentException("unknown view type $viewType")
         }
@@ -98,10 +98,10 @@ class PostsAdapter(
                     oldItem == newItem
 
             override fun areItemsTheSame(oldItem: NewsArticle, newItem: NewsArticle): Boolean =
-                    oldItem.name == newItem.name
+                    oldItem.title == newItem.title
 
             override fun getChangePayload(oldItem: NewsArticle, newItem: NewsArticle): Any? {
-                return if (sameExceptScore(oldItem, newItem)) {
+                return if (sameExceptUrl(oldItem, newItem)) {
                     PAYLOAD_SCORE
                 } else {
                     null
@@ -109,11 +109,11 @@ class PostsAdapter(
             }
         }
 
-        private fun sameExceptScore(oldItem: NewsArticle, newItem: NewsArticle): Boolean {
+        private fun sameExceptUrl(oldItem: NewsArticle, newItem: NewsArticle): Boolean {
             // DON'T do this copy in a real app, it is just convenient here for the demo :)
-            // because NewsArticle randomizes scores, we want to pass it as a payload to minimize
+            // because reddit randomizes scores, we want to pass it as a payload to minimize
             // UI updates between refreshes
-            return oldItem.copy(score = newItem.score) == newItem
+            return oldItem.copy(url = newItem.url) == newItem
         }
     }
 }

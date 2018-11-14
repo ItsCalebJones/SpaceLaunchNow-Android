@@ -29,9 +29,9 @@ import me.calebjones.spacelaunchnow.news.R
 import me.calebjones.spacelaunchnow.news.vo.NewsArticle
 
 /**
- * A RecyclerView ViewHolder that displays a NewsArticle post.
+ * A RecyclerView ViewHolder that displays a reddit post.
  */
-class NewsPostViewHolder(view: View, private val glide: GlideRequests)
+class ArticlePostViewHolder(view: View, private val glide: GlideRequests)
     : RecyclerView.ViewHolder(view) {
     private val title: TextView = view.findViewById(R.id.title)
     private val subtitle: TextView = view.findViewById(R.id.subtitle)
@@ -51,11 +51,11 @@ class NewsPostViewHolder(view: View, private val glide: GlideRequests)
         this.post = post
         title.text = post?.title ?: "loading"
         subtitle.text = itemView.context.resources.getString(R.string.post_subtitle,
-                post?.author ?: "unknown")
-        score.text = "${post?.score ?: 0}"
-        if (post?.thumbnail?.startsWith("http") == true) {
+                post?.news_site_long ?: "unknown")
+        score.text = "${post?.date_published ?: 0}"
+        if (post?.featured_image?.startsWith("http") == true) {
             thumbnail.visibility = View.VISIBLE
-            glide.load(post.thumbnail)
+            glide.load(post.featured_image)
                     .centerCrop()
                     .placeholder(R.drawable.ic_insert_photo_black_48dp)
                     .into(thumbnail)
@@ -66,15 +66,15 @@ class NewsPostViewHolder(view: View, private val glide: GlideRequests)
     }
 
     companion object {
-        fun create(parent: ViewGroup, glide: GlideRequests): NewsPostViewHolder {
+        fun create(parent: ViewGroup, glide: GlideRequests): ArticlePostViewHolder {
             val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.reddit_post_item, parent, false)
-            return NewsPostViewHolder(view, glide)
+            return ArticlePostViewHolder(view, glide)
         }
     }
 
     fun updateScore(item: NewsArticle?) {
         post = item
-        score.text = "${item?.score ?: 0}"
+        score.text = "${item?.date_published ?: 0}"
     }
 }

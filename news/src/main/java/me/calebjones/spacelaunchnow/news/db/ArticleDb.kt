@@ -23,21 +23,20 @@ import android.content.Context
 import me.calebjones.spacelaunchnow.news.vo.NewsArticle
 
 /**
- * Database schema used by the DbNewsPostRepository
+ * Database schema used by the DbArticleRepository
  */
 @Database(
         entities = arrayOf(NewsArticle::class),
         version = 1,
         exportSchema = false
 )
-
-abstract class NewsDb : RoomDatabase() {
+abstract class ArticleDb : RoomDatabase() {
     companion object {
-        fun create(context: Context, useInMemory : Boolean): NewsDb {
+        fun create(context: Context, useInMemory : Boolean): ArticleDb {
             val databaseBuilder = if(useInMemory) {
-                Room.inMemoryDatabaseBuilder(context, NewsDb::class.java)
+                Room.inMemoryDatabaseBuilder(context, ArticleDb::class.java)
             } else {
-                Room.databaseBuilder(context, NewsDb::class.java, "news.db")
+                Room.databaseBuilder(context, ArticleDb::class.java, "article.db")
             }
             return databaseBuilder
                     .fallbackToDestructiveMigration()
@@ -45,5 +44,5 @@ abstract class NewsDb : RoomDatabase() {
         }
     }
 
-    abstract fun posts(): NewsPostDao
+    abstract fun posts(): ArticlePostDao
 }

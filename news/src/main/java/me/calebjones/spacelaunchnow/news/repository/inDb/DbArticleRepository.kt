@@ -21,26 +21,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.annotation.MainThread
 import androidx.paging.toLiveData
-import me.calebjones.spacelaunchnow.news.api.NewsApi
-import me.calebjones.spacelaunchnow.news.db.NewsDb
+import me.calebjones.spacelaunchnow.news.api.ArticleApi
+import me.calebjones.spacelaunchnow.news.db.ArticleDb
+import me.calebjones.spacelaunchnow.news.repository.ArticlesRepository
 import me.calebjones.spacelaunchnow.news.repository.Listing
 import me.calebjones.spacelaunchnow.news.repository.NetworkState
-import me.calebjones.spacelaunchnow.news.repository.NewsPostRepository
 import me.calebjones.spacelaunchnow.news.vo.NewsArticle
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.concurrent.Executor
 
-/**
- * Repository implementation that uses a database PagedList + a boundary callback to return a
- * listing that loads in pages.
- */
-class DbNewsPostRepository(
-        val db: NewsDb,
-        private val NewsApi: NewsApi,
+class DbArticleRepository(
+        val db: ArticleDb,
+        private val articleApi: ArticleApi,
         private val ioExecutor: Executor,
-        private val networkPageSize: Int = DEFAULT_NETWORK_PAGE_SIZE) : NewsPostRepository {
+        private val networkPageSize: Int = DEFAULT_NETWORK_PAGE_SIZE) : ArticlesRepository {
     companion object {
         private const val DEFAULT_NETWORK_PAGE_SIZE = 10
     }
@@ -48,13 +44,13 @@ class DbNewsPostRepository(
     /**
      * Inserts the response into the database while also assigning position indices to items.
      */
-    private fun insertResultIntoDb(subredditName: String, body: NewsApi.ListingResponse?) {
-        body!!.data.children.let { posts ->
+    private fun insertResultIntoDb(body: List<NewsArticle>?) {
+        body!!.let { posts ->
             db.runInTransaction {
-                val start = db.posts().getNextIndexInSubreddit(subredditName)
+                var start = db.posts().getNextArticleIndex()
                 val items = posts.mapIndexed { index, child ->
-                    child.data.indexInResponse = start + index
-                    child.data
+                    child.indexInResponse = start
+                    child
                 }
                 db.posts().insert(items)
             }
@@ -69,23 +65,23 @@ class DbNewsPostRepository(
      * updated after the database transaction is finished.
      */
     @MainThread
-    private fun refresh(subredditName: String): LiveData<NetworkState> {
+    private fun refresh(): LiveData<NetworkState> {
         val networkState = MutableLiveData<NetworkState>()
         networkState.value = NetworkState.LOADING
-        NewsApi.getTop(subredditName, networkPageSize).enqueue(
-                object : Callback<NewsApi.ListingResponse> {
-                    override fun onFailure(call: Call<NewsApi.ListingResponse>, t: Throwable) {
+        articleApi.getTop(networkPageSize).enqueue(
+                object : Callback<List<NewsArticle>> {
+                    override fun onFailure(call: Call<List<NewsArticle>>, t: Throwable) {
                         // retrofit calls this on main thread so safe to call set value
                         networkState.value = NetworkState.error(t.message)
                     }
 
                     override fun onResponse(
-                            call: Call<NewsApi.ListingResponse>,
-                            response: Response<NewsApi.ListingResponse>) {
+                            call: Call<List<NewsArticle>>,
+                            response: Response<List<NewsArticle>>) {
                         ioExecutor.execute {
                             db.runInTransaction {
-                                db.posts().deleteBySubreddit(subredditName)
-                                insertResultIntoDb(subredditName, response.body())
+                                db.posts().deleteArticles()
+                                insertResultIntoDb(response.body())
                             }
                             // since we are in bg thread now, post the result.
                             networkState.postValue(NetworkState.LOADED)
@@ -100,12 +96,11 @@ class DbNewsPostRepository(
      * Returns a Listing for the given subreddit.
      */
     @MainThread
-    override fun postsOfsubreddit(subreddit: String, pageSize: Int): Listing<NewsArticle> {
+    override fun articles(pageSize: Int): Listing<NewsArticle> {
         // create a boundary callback which will observe when the user reaches to the edges of
         // the list and update the database with extra data.
-        val boundaryCallback = subredditBoundaryCallback(
-                webservice = NewsApi,
-                subredditName = subreddit,
+        val boundaryCallback = ArticleBoundaryCallback(
+                webservice = articleApi,
                 handleResponse = this::insertResultIntoDb,
                 ioExecutor = ioExecutor,
                 networkPageSize = networkPageSize)
@@ -114,11 +109,11 @@ class DbNewsPostRepository(
         // dispatched data in refreshTrigger
         val refreshTrigger = MutableLiveData<Unit>()
         val refreshState = Transformations.switchMap(refreshTrigger) {
-            refresh(subreddit)
+            refresh()
         }
 
         // We use toLiveData Kotlin extension function here, you could also use LivePagedListBuilder
-        val livePagedList = db.posts().postsBySubreddit(subreddit).toLiveData(
+        val livePagedList = db.posts().articles().toLiveData(
                 pageSize = pageSize,
                 boundaryCallback = boundaryCallback)
 

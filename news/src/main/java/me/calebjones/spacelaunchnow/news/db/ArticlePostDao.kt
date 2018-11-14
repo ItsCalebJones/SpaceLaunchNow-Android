@@ -24,16 +24,16 @@ import androidx.room.Query
 import me.calebjones.spacelaunchnow.news.vo.NewsArticle
 
 @Dao
-interface NewsPostDao {
+interface ArticlePostDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(posts : List<NewsArticle>)
 
-    @Query("SELECT * FROM posts WHERE subreddit = :subreddit ORDER BY indexInResponse ASC")
-    fun postsBySubreddit(subreddit : String) : DataSource.Factory<Int, NewsArticle>
+    @Query("SELECT * FROM article ORDER BY indexInResponse ASC")
+    fun articles() : DataSource.Factory<Int, NewsArticle>
 
-    @Query("DELETE FROM posts WHERE subreddit = :subreddit")
-    fun deleteBySubreddit(subreddit: String)
+    @Query("DELETE FROM article")
+    fun deleteArticles()
 
-    @Query("SELECT MAX(indexInResponse) + 1 FROM posts WHERE subreddit = :subreddit")
-    fun getNextIndexInSubreddit(subreddit: String) : Int
+    @Query("SELECT MAX(indexInResponse) + 1 FROM article")
+    fun getNextArticleIndex() : Int
 }

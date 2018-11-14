@@ -20,12 +20,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations.map
 import androidx.lifecycle.Transformations.switchMap
 import androidx.lifecycle.ViewModel
-import me.calebjones.spacelaunchnow.news.repository.NewsPostRepository
+import me.calebjones.spacelaunchnow.news.repository.ArticlesRepository
 
-class subredditViewModel(private val repository: NewsPostRepository) : ViewModel() {
+class ArticleViewModel(private val repository: ArticlesRepository) : ViewModel() {
     private val subredditName = MutableLiveData<String>()
     private val repoResult = map(subredditName) {
-        repository.postsOfsubreddit(it, 30)
+        repository.articles(30)
     }
     val posts = switchMap(repoResult, { it.pagedList })!!
     val networkState = switchMap(repoResult, { it.networkState })!!
@@ -35,11 +35,8 @@ class subredditViewModel(private val repository: NewsPostRepository) : ViewModel
         repoResult.value?.refresh?.invoke()
     }
 
-    fun showsubreddit(subreddit: String): Boolean {
-        if (subredditName.value == subreddit) {
-            return false
-        }
-        subredditName.value = subreddit
+    fun showArticle(): Boolean {
+        subredditName.value = "test"
         return true
     }
 
@@ -47,6 +44,4 @@ class subredditViewModel(private val repository: NewsPostRepository) : ViewModel
         val listing = repoResult?.value
         listing?.retry?.invoke()
     }
-
-    fun currentsubreddit(): String? = subredditName.value
 }

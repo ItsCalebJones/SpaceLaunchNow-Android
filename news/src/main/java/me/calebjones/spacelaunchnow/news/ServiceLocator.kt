@@ -19,12 +19,10 @@ package me.calebjones.spacelaunchnow.news
 import android.app.Application
 import android.content.Context
 import androidx.annotation.VisibleForTesting
-import me.calebjones.spacelaunchnow.news.api.NewsApi
-import me.calebjones.spacelaunchnow.news.db.NewsDb
-import me.calebjones.spacelaunchnow.news.repository.NewsPostRepository
-import me.calebjones.spacelaunchnow.news.repository.inDb.DbNewsPostRepository
-import me.calebjones.spacelaunchnow.news.repository.inMemory.byItem.InMemoryByItemRepository
-import me.calebjones.spacelaunchnow.news.repository.inMemory.byPage.InMemoryByPageKeyRepository
+import me.calebjones.spacelaunchnow.news.api.ArticleApi
+import me.calebjones.spacelaunchnow.news.db.ArticleDb
+import me.calebjones.spacelaunchnow.news.repository.ArticlesRepository
+import me.calebjones.spacelaunchnow.news.repository.inDb.DbArticleRepository
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
@@ -56,13 +54,13 @@ interface ServiceLocator {
         }
     }
 
-    fun getRepository(type: NewsPostRepository.Type): NewsPostRepository
+    fun getRepository(): ArticlesRepository
 
     fun getNetworkExecutor(): Executor
 
     fun getDiskIOExecutor(): Executor
 
-    fun getNewsApi(): NewsApi
+    fun getNewsApi(): ArticleApi
 }
 
 /**
@@ -78,31 +76,23 @@ open class DefaultServiceLocator(val app: Application, val useInMemoryDb: Boolea
     private val NETWORK_IO = Executors.newFixedThreadPool(5)
 
     private val db by lazy {
-        NewsDb.create(app, useInMemoryDb)
+        ArticleDb.create(app, useInMemoryDb)
     }
 
     private val api by lazy {
-        NewsApi.create()
+        ArticleApi.create()
     }
 
-    override fun getRepository(type: NewsPostRepository.Type): NewsPostRepository {
-        return when (type) {
-            NewsPostRepository.Type.IN_MEMORY_BY_ITEM -> InMemoryByItemRepository(
-                    NewsApi = getNewsApi(),
-                    networkExecutor = getNetworkExecutor())
-            NewsPostRepository.Type.IN_MEMORY_BY_PAGE -> InMemoryByPageKeyRepository(
-                    NewsApi = getNewsApi(),
-                    networkExecutor = getNetworkExecutor())
-            NewsPostRepository.Type.DB -> DbNewsPostRepository(
+    override fun getRepository(): ArticlesRepository {
+        return DbArticleRepository(
                     db = db,
-                    NewsApi = getNewsApi(),
+                    articleApi = getNewsApi(),
                     ioExecutor = getDiskIOExecutor())
-        }
     }
 
     override fun getNetworkExecutor(): Executor = NETWORK_IO
 
     override fun getDiskIOExecutor(): Executor = DISK_IO
 
-    override fun getNewsApi(): NewsApi = api
+    override fun getNewsApi(): ArticleApi = api
 }

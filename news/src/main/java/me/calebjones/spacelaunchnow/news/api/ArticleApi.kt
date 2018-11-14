@@ -20,6 +20,7 @@ import android.util.Log
 import me.calebjones.spacelaunchnow.news.vo.NewsArticle
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -30,49 +31,39 @@ import retrofit2.http.Query
 /**
  * API communication setup
  */
-interface NewsApi {
-    @GET("/r/{subreddit}/hot.json")
+interface ArticleApi {
+    @GET("/articles")
     fun getTop(
-            @Path("subreddit") subreddit: String,
-            @Query("limit") limit: Int): Call<ListingResponse>
+            @Query("limit") limit: Int): Call<List<NewsArticle>>
 
-    // for after/before param, either get from RedditDataResponse.after/before,
-    // or pass RedditNewsDataResponse.name (though this is technically incorrect)
-    @GET("/r/{subreddit}/hot.json")
+
+    @GET("/articles")
     fun getTopAfter(
-            @Path("subreddit") subreddit: String,
-            @Query("after") after: String,
-            @Query("limit") limit: Int): Call<ListingResponse>
+            @Query("page") page: String,
+            @Query("limit") limit: Int): Call<List<NewsArticle>>
 
-    @GET("/r/{subreddit}/hot.json")
+    @GET("/articles")
     fun getTopBefore(
-            @Path("subreddit") subreddit: String,
-            @Query("before") before: String,
-            @Query("limit") limit: Int): Call<ListingResponse>
-
-    class ListingResponse(val data: ListingData)
-
-    class ListingData(
-            val children: List<RedditChildrenResponse>,
-            val after: String?,
-            val before: String?
-    )
-
-    data class RedditChildrenResponse(val data: NewsArticle)
+            @Query("limit") limit: Int): Call<List<NewsArticle>>
 
     companion object {
-        private const val BASE_URL = "https://www.reddit.com/"
-        fun create(): NewsApi = create(HttpUrl.parse(BASE_URL)!!)
-        fun create(httpUrl: HttpUrl): NewsApi {
+        private const val BASE_URL = "https://api.spaceflightnewsapi.net"
+        fun create(): ArticleApi = create(HttpUrl.parse(BASE_URL)!!)
+        fun create(httpUrl: HttpUrl): ArticleApi {
+            val logger = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger {
+                Log.d("API", it)
+            })
+            logger.level = HttpLoggingInterceptor.Level.BASIC
 
             val client = OkHttpClient.Builder()
+                    .addInterceptor(logger)
                     .build()
             return Retrofit.Builder()
                     .baseUrl(httpUrl)
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
-                    .create(NewsApi::class.java)
+                    .create(ArticleApi::class.java)
         }
     }
 }

@@ -18,7 +18,7 @@ package me.calebjones.spacelaunchnow.news.repository.inDb
 
 import androidx.paging.PagedList
 import androidx.annotation.MainThread
-import me.calebjones.spacelaunchnow.news.api.NewsApi
+import me.calebjones.spacelaunchnow.news.api.ArticleApi
 import me.calebjones.spacelaunchnow.news.util.PagingRequestHelper
 import me.calebjones.spacelaunchnow.news.util.createStatusLiveData
 import me.calebjones.spacelaunchnow.news.vo.NewsArticle
@@ -34,10 +34,9 @@ import java.util.concurrent.Executor
  * The boundary callback might be called multiple times for the same direction so it does its own
  * rate limiting using the PagingRequestHelper class.
  */
-class subredditBoundaryCallback(
-        private val subredditName: String,
-        private val webservice: NewsApi,
-        private val handleResponse: (String, NewsApi.ListingResponse?) -> Unit,
+class ArticleBoundaryCallback(
+        private val webservice: ArticleApi,
+        private val handleResponse: (List<NewsArticle>?) -> Unit,
         private val ioExecutor: Executor,
         private val networkPageSize: Int)
     : PagedList.BoundaryCallback<NewsArticle>() {
@@ -52,7 +51,6 @@ class subredditBoundaryCallback(
     override fun onZeroItemsLoaded() {
         helper.runIfNotRunning(PagingRequestHelper.RequestType.INITIAL) {
             webservice.getTop(
-                    subreddit = subredditName,
                     limit = networkPageSize)
                     .enqueue(createWebserviceCallback(it))
         }
@@ -65,8 +63,7 @@ class subredditBoundaryCallback(
     override fun onItemAtEndLoaded(itemAtEnd: NewsArticle) {
         helper.runIfNotRunning(PagingRequestHelper.RequestType.AFTER) {
             webservice.getTopAfter(
-                    subreddit = subredditName,
-                    after = itemAtEnd.name,
+                    page = (itemAtEnd.indexInResponse + 1).toString(),
                     limit = networkPageSize)
                     .enqueue(createWebserviceCallback(it))
         }
@@ -77,10 +74,10 @@ class subredditBoundaryCallback(
      * paging library takes care of refreshing the list if necessary.
      */
     private fun insertItemsIntoDb(
-            response: Response<NewsApi.ListingResponse>,
+            response: Response<List<NewsArticle>>,
             it: PagingRequestHelper.Request.Callback) {
         ioExecutor.execute {
-            handleResponse(subredditName, response.body())
+            handleResponse(response.body())
             it.recordSuccess()
         }
     }
@@ -90,17 +87,17 @@ class subredditBoundaryCallback(
     }
 
     private fun createWebserviceCallback(it: PagingRequestHelper.Request.Callback)
-            : Callback<NewsApi.ListingResponse> {
-        return object : Callback<NewsApi.ListingResponse> {
+            : Callback<List<NewsArticle>> {
+        return object : Callback<List<NewsArticle>> {
             override fun onFailure(
-                    call: Call<NewsApi.ListingResponse>,
+                    call: Call<List<NewsArticle>>,
                     t: Throwable) {
                 it.recordFailure(t)
             }
 
             override fun onResponse(
-                    call: Call<NewsApi.ListingResponse>,
-                    response: Response<NewsApi.ListingResponse>) {
+                    call: Call<List<NewsArticle>>,
+                    response: Response<List<NewsArticle>>) {
                 insertItemsIntoDb(response, it)
             }
         }

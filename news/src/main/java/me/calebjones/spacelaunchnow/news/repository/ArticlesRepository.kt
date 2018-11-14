@@ -23,8 +23,8 @@ import me.calebjones.spacelaunchnow.news.vo.NewsArticle
  * Note: this only exists for sample purposes - typically an app would implement a repo once, either
  * network+db, or network-only
  */
-interface NewsPostRepository {
-    fun postsOfsubreddit(subreddit: String, pageSize: Int): Listing<NewsArticle>
+interface ArticlesRepository {
+    fun articles(pageSize: Int): Listing<NewsArticle>
 
     enum class Type {
         IN_MEMORY_BY_ITEM,
