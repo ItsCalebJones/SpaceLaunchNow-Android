@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="multi_calendar_reminder">
+        <item>Eén minuut</item>
+        <item>Vijf minuten</item>
+        <item>Dertig minuten</item>
+        <item>Eén uur</item>
+        <item>Twee uur</item>
+        <item>Vier uur</item>
+        <item>Eén dag</item>
+    </string-array>
+    <string-array name="upcoming_array">
+        <item>Twee dagen</item>
+        <item>Eén</item>
+        <item>Vijf</item>
+        <item>Twintig</item>
+        <item>Tien</item>
+        <item>Alles (Niet Aanbevolen)</item>
+    </string-array>
+    <string-array name="sync_timer">
+        <item>Één Dag</item>
+        <item>Drie Dagen</item>
+        <item>Één Week</item>
+    </string-array>
+</resources>

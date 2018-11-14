@@ -216,7 +216,7 @@
     <string name="unconfirmed">(Unbestätigt)</string>
     <string name="no_go">Starts ohne Startfreigabe</string>
     <string name="no_go_description">Dies versteckt Starts ohne Startfreigabe und kann manchmal Starts verstecken, die innerhalb ihres Startfensters sind, jedoch auf Grund eines technischen Problems warten.</string>
-    <string name="to_be_determined">Starts mit noch offener Freigabe</string>
+    <string name="to_be_determined">Verstecke noch offene Starts</string>
     <string name="to_be_determined_description">Dies versteckt Starts, die noch kein bestätigtes Startdatum oder Startzeit haben. Dies kann gelegentlich auch Starts verstecken, die für den Tag abgebrochen wurden.</string>
     <string name="launch_info">Behalte Starts für 24 Stunden</string>
     <string name="launch_info_description">Diese Option wird Raketenstarts bis zu 24 Stunden nach Start auf der Hauptseite anzeigen.</string>
@@ -303,7 +303,7 @@
     <string name="data_saver_off">Startdetails werden nur einmal pro Tag synchronisiert.</string>
     <string name="data_saver_on">Synchronisiere kommende Starts einmal pro Woche, es sei denn, WLAN ist vorhanden. (Hat keinen Einfluss auf Benachrichtigungen)</string>
     <string name="wifi_only">Ausschließlich WLAN</string>
-    <string name="wifi_only_summary">Startdetails werden nicht synchronisiert, es sei denn, eine WLAN-Verbindung ist vorhanden.</string>
+    <string name="wifi_only_summary">Startdetails werden nur synchronisiert, wenn eine WLAN-Verbindung vorhanden ist.</string>
     <string name="launch_tracking">Startverfolgung</string>
     <string name="calendar_settings">Kalendereinstellungen</string>
     <string name="auto_calendar">Sync Kalender automatisch</string>
@@ -327,7 +327,7 @@
     <string name="status_updates_on">Empfange Update-Benachrichtigungen, wenn Status eines Starts geändert wurde.</string>
     <string name="status_updates_off">Keine Benachrichtigung erhalten, wenn sich der Start-Status ändert.</string>
     <string name="webcast_only">Nur Live-Übertragung</string>
-    <string name="webcast_only_summary">Benachrichtigung nur erhalten, wenn eine Live-Übertragung vorhanden ist.</string>
+    <string name="webcast_only_summary">Benachrichtigungen nur erhalten, wenn eine Live-Übertragung vorhanden ist.</string>
     <string name="do_not_disturb_enable">Aktiviere \"Nicht stören\"</string>
     <string name="do_not_disturb_summary">Aktiviere lautlose Benachrichtigungen, während \"Nicht stören\" aktiviert ist.</string>
     <string name="start_time">Startzeit</string>
@@ -419,10 +419,6 @@
     <string name="unknown_year">Gründungsjahr - unbekannt</string>
     <string name="improve_our_data">Hilf mit, unsere Daten zu verbessern</string>
     <string name="improve_our_data_content">Interessiert, die Genauigkeit unserer Raumfahrtdaten zu verbessern? Trete dem Space Launch Now Discord Server bei und erkundige dich über eine Bibliothekarrolle.</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
-    <string name="tab_text_3">Tab 3</string>
-    <string name="section_format">Hallo Welt vom Abschnitt: %1$d</string>
     <string name="no_launches_found">Keine Starts gefunden.</string>
     <string name="landing_information">Landeinformation</string>
     <string name="payload">Nutzlast: %d (kg)</string>
@@ -432,8 +428,10 @@
     <string name="upcoming_with_space">"Kommende "</string>
     <string name="previous_with_space">"Vergangene "</string>
     <string name="watch">Zuschauen</string>
-    <string name="notification_schedule_changed">GEPLANTE AKTUALISIERUNG: Nächster Versuch nicht früher als %s</string>
-    <string name="notification_launch_successful">Start war erfolgreich!</string>
+    <string name="notification_schedule_changed">ZEITPLAN AKTUALISIERT: Nächster Versuch frühestens am %s</string>
+    <string name="notification_launch_successful">Der Start war erfolgreich!</string>
+    <string name="notification_launch_failure">Start ist fehlgeschlagen.</string>
+    <string name="notification_launch_partial_failure">Start ist teilweise fehlgeschlagen.</string>
     <string name="notification_launch_liftoff">Abgehoben! Die Trägerrakete befindet sich nun im Flug!</string>
     <string name="notification_one_minute">Startversuch in weniger als einer Minute um %s</string>
     <string name="notification_ten_minutes">Startversuch in weniger als zehn Minuten um %s</string>
@@ -442,9 +440,13 @@
     <string name="settings_in_flight">Im Flug</string>
     <string name="settings_in_flight_summary">Benachrichtigung erhalten, wenn sich ein Start im Flug befindet.</string>
     <string name="settings_success">Erfolg</string>
-    <string name="settings_success_summary">Benachrichtigung erhalten, wenn ein Start erflogreich war.</string>
+    <string name="settings_success_summary">Benachrichtigung erhalten, wenn der Endstatus des Starts bekannt ist.</string>
     <string name="settings_one_minute">Eine Minute</string>
     <string name="settings_one_minute_on">Benachrichtigung erhalten, wenn ein Start innerhalb einer Minute erfolgt.</string>
     <string name="settings_one_minute_off">Sende keine Benachrichtigung, wenn ein Start in einer Minute stattfindet.</string>
     <string name="mission_agency">Missions-Organisation</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_3">Tab 3</string>
+    <string name="section_format">Hallo Welt vom Abschnitt: %1$d</string>
 </resources>

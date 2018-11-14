@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="action_settings">Paramètres</string>
-    <string name="status_go">"Prêt pour Lancement"</string>
+    <string name="status_go">"Paré au Lancement"</string>
     <string name="status_nogo">"Lancement Non Planifié"</string>
     <string name="status_success">"Lancement Réussi"</string>
     <string name="status_failure">"Échec du Lancement"</string>
@@ -217,7 +217,7 @@
     <string name="unconfirmed">(Non confirmé)</string>
     <string name="no_go">Lancements Pas Prêts</string>
     <string name="no_go_description">Ceci masque les lancements ayant un statut \"pas prêt\" et peut parfois masquer des lancements pendant leur fenêtre de tir mais en attente pour des raisons techniques.</string>
-    <string name="to_be_determined">Lancements pas encore confirmés</string>
+    <string name="to_be_determined">Masquer les lancements non confirmés</string>
     <string name="to_be_determined_description">Ceci masque les lancements qui n\'ont pas une date/heure de lancement confirmée. Ceci peut occasionnellement masquer des lancements qui ont été annulés pour la journée.</string>
     <string name="launch_info">Garder les lancements pendant 24 heures</string>
     <string name="launch_info_description">Cette option va maintenir les lancements sur la page d\'accueil pendant 24 heures après qu\'ils aient eu lieu.</string>
@@ -324,7 +324,7 @@
     <string name="enable_notifications">Activer les Notifications</string>
     <string name="enable_notifications_on">Les notifications sont activées pour les prochains lancements.</string>
     <string name="enable_notifications_off">Activer les notifications pour les prochains lancements.</string>
-    <string name="status_updates">Mises à jour du Statut</string>
+    <string name="status_updates">Changements de Statut</string>
     <string name="status_updates_on">Recevoir une notification de mise à jour lorsque le statut d\'un lancement change.</string>
     <string name="status_updates_off">Ne pas envoyer de notifications lors du changement de statut d\'un lancement.</string>
     <string name="webcast_only">Live Uniquement</string>
@@ -352,7 +352,7 @@
     <string name="blur_settings_summary">Configurer la force et les caractéristiques du flou.</string>
     <string name="mission_agencies">Agences de la Mission</string>
     <string name="status_hold">Lancement Interrompu</string>
-    <string name="status_in_flight">Lancement En Vol</string>
+    <string name="status_in_flight">En Vol</string>
     <string name="status_partial_failure">Échec Partiel</string>
     <string name="do_not_disturb">Ne Pas Déranger</string>
     <string name="notification_preferences">Préférences de Notification</string>
@@ -409,7 +409,7 @@
     <string name="view_upcoming_launches">Voir les Prochains Lancements</string>
     <string name="unknown_mission_or_payload">Mission ou Charge Utile Inconnue</string>
     <string name="view_more_launches">Voir plus de Lancements</string>
-    <string name="view_rocket_launches">Voir %s Lancements</string>
+    <string name="view_rocket_launches">Voir les lancements de %s</string>
     <string name="refresh">Rafraîchir</string>
     <string name="search">Chercher</string>
     <string name="date">Date</string>
@@ -420,10 +420,6 @@
     <string name="unknown_year">Année de Fondation - Inconnue</string>
     <string name="improve_our_data">Aider à améliorer les données</string>
     <string name="improve_our_data_content">Motivé pour aider à améliorer la précision des données ? Rejoignez-nous sur le serveur Discord et demandez à devenir un Librarian.</string>
-    <string name="tab_text_1">Onglet 1</string>
-    <string name="tab_text_2">Onglet 2</string>
-    <string name="tab_text_3">Onglet 3</string>
-    <string name="section_format">Hello World de : %1$d</string>
     <string name="no_launches_found">Aucun lancement trouvé.</string>
     <string name="landing_information">Détails de l\'atterrissage</string>
     <string name="payload">Charge Utile: %d (kg)</string>
@@ -433,19 +429,25 @@
     <string name="upcoming_with_space">"Prochains "</string>
     <string name="previous_with_space">Précédents</string>
     <string name="watch">Regarder</string>
-    <string name="notification_schedule_changed">PRÉVOIR UNE MISE À JOUR : Prochaine tentative pas avant %s</string>
+    <string name="notification_schedule_changed">Lancement Décalé : Prochaine tentative pas avant %s</string>
     <string name="notification_launch_successful">Lancement réussi !</string>
+    <string name="notification_launch_failure">Une problème est survenu lors du lancement.</string>
+    <string name="notification_launch_partial_failure">Le lancement a partiellement échoué.</string>
     <string name="notification_launch_liftoff">Décollage ! Le véhicule de lancement est en vol !</string>
     <string name="notification_one_minute">Tentative de lancement dans moins d\'une minute à %s</string>
     <string name="notification_ten_minutes">Tentative de lancement dans moins de dix minutes à %s</string>
     <string name="notification_one_hour">Tentative de lancement dans moins d\'une heure à %s</string>
-    <string name="notification_twenty_four_hours">Tentative de lancement dans moins de 24 heures le %s</string>
+    <string name="notification_twenty_four_hours">Tentative de lancement dans moins de 24 heures à %s</string>
     <string name="settings_in_flight">En Vol</string>
     <string name="settings_in_flight_summary">Être notifié lorsqu\'un lancement est en vol.</string>
     <string name="settings_success">Succès</string>
-    <string name="settings_success_summary">Être notifié lorsqu\'un lancement est réussi.</string>
+    <string name="settings_success_summary">Être notifié lorsqu\'un lancement est réussi ou raté.</string>
     <string name="settings_one_minute">Une Minute</string>
     <string name="settings_one_minute_on">Être notifié lorsqu\'un lancement est dans moins d\'une minute.</string>
     <string name="settings_one_minute_off">Ne pas être notifié lorsqu\'un lancement est dans moins d\'une minute.</string>
     <string name="mission_agency">Agence de la Mission</string>
+    <string name="tab_text_2">Onglet 2</string>
+    <string name="tab_text_1">Onglet 1</string>
+    <string name="tab_text_3">Onglet 3</string>
+    <string name="section_format">Hello World de : %1$d</string>
 </resources>

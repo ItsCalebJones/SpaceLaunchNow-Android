@@ -14,10 +14,10 @@
     <string name="roscosmos_summary">L\'agenzia spaziale russa, comunemente conosciuta come Roscosmos, è l\'agenzia governativa responsabile del programma spaziale e della ricerca aerospaziale russa.</string>
     <string name="ula_summary"><![CDATA[L\'United Launch Alliance (ULA) è una joint venture di Lockheed Martin e Boeing. L\'ULA è stata costituita nel dicembre 2016 combinando i rispettivi team attivi nel settore dei veicoli spaziali. Forniscono servizi di lancio al Dipartimento di Difesa degli Stati Uniti.]]></string>
     <string name="gd_summary">General Dynamics Corporation è una compagnia aerospaziale e di difesa americana formatasi in seguito a diverse fusioni e dismissioni. È il quinto più grande defense contractor del mondo.</string>
-    <string name="asa_summary">Arianespace SA è una multinazionale francese fondata nel 1980 come la prima azienda mondiale nel trasporto spaziale commerciale.</string>
+    <string name="asa_summary">Arianespace SA è una multinazionale francese. Fondata nel 1980 è stata la prima azienda mondiale nel trasporto spaziale commerciale.</string>
     <string name="TsSKB_summary">Il Progress State Research and Production Space Centre, anche conosciuto come TsSKB-Progress, è una compagnia federale sotto la giurisdizione della Roscosmos, l\'agenzia spaziale della federazione russa responsabile per la la ricerca scientifica e aerospaziale. Ha sviluppato sia il famoso razzo Soyuz-FG utilizzato per i viaggi spaziali con equipaggio umano, che il Soyuz-U usato per lanciare sonde senza equipaggio.</string>
     <string name="nasa_summary">La National Aeronautics and Space Administration (NASA) è l\'agenzia governativa civile responsabile del programma spaziale degli Stati Uniti d\'America e della ricerca aerospaziale.</string>
-    <string name="general_settings">Impostazioni generali per seguire i lanci e sul comportamento dell\'applicazione.</string>
+    <string name="general_settings">Impostazioni generali per seguire i lanci e per l\'applicazione.</string>
     <string name="supporter_title">Diventa un sostenitore</string>
     <string name="supporter_description">Aiuta a garantire un supporto continuo, correzioni di bug tempestive e nuove funzionalità.</string>
     <string name="slide_one_title">Space Launch Now</string>

@@ -221,10 +221,6 @@ Ha ez nem megfelelő, akkor nyugodtan emailt is küldhet.</string>
     <string name="unconfirmed">(nem megerősített)</string>
     <string name="no_go">Indítások, melyek még nem állnak készen</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="tab_text_1">Lap 1</string>
-    <string name="tab_text_2">Lap 2</string>
-    <string name="tab_text_3">Lap 3</string>
-    <string name="section_format">Helló Világ a szekcióból: %1$d</string>
     <string name="no_launches_found">Nem találtunk indításokat.</string>
     <string name="landing_information">Leszállási információ</string>
     <string name="payload">Rakomány: %d (kg)</string>
@@ -249,4 +245,8 @@ Ha ez nem megfelelő, akkor nyugodtan emailt is küldhet.</string>
     <string name="settings_one_minute_on">Értesítés kérése amikor egy indítás egy percen belül lesz.</string>
     <string name="settings_one_minute_off">Ne értesítsen amikor egy indítás egy percen belül lesz.</string>
     <string name="mission_agency">Küldetés ügynökége</string>
+    <string name="tab_text_2">Lap 2</string>
+    <string name="tab_text_1">Lap 1</string>
+    <string name="tab_text_3">Lap 3</string>
+    <string name="section_format">Helló Világ a szekcióból: %1$d</string>
 </resources>
