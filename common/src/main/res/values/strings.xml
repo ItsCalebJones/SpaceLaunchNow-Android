@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Common</string>
+    <string name="news">News</string>
+    <string name="twitter">Twitter</string>
 </resources>

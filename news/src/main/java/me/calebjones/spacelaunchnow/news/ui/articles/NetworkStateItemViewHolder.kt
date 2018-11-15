@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.calebjones.spacelaunchnow.news.ui
+package me.calebjones.spacelaunchnow.news.ui.articles
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater

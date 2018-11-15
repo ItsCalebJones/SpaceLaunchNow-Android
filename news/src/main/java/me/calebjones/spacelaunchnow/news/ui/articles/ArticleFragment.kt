@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package me.calebjones.spacelaunchnow.news.ui
+package me.calebjones.spacelaunchnow.news.ui.articles
 
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.paging.PagedList
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -70,7 +68,7 @@ class ArticleFragment : Fragment() {
 
     private fun initAdapter() {
         val glide = GlideApp.with(this)
-        val adapter = PostsAdapter(glide) {
+        val adapter = ArticleAdapter(glide, context) {
             model.retry()
         }
         list.adapter = adapter

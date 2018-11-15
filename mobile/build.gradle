@@ -216,7 +216,7 @@ dependencies {
     implementation 'com.jonathanfinerty.once:once:1.2.2'
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
-    implementation 'com.jakewharton.timber:timber:4.6.0'
+
     implementation 'com.karumi:dexter:4.2.0'
     implementation 'cz.kinst.jakub:android-stateful-layout-simple:2.0.7'
 
@@ -230,9 +230,6 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:core:0.9.4.3'
     implementation 'com.afollestad.material-dialogs:commons:0.9.3.0'
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
-
-    implementation 'com.jakewharton:butterknife:9.0.0-SNAPSHOT'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-SNAPSHOT'
 
     implementation 'com.github.ItsCalebJones:GDPRDialog:54231db'
 
@@ -277,10 +274,6 @@ dependencies {
     implementation 'com.mikepenz:community-material-typeface:2.0.46.1@aar'
     implementation 'com.github.pwittchen:weathericonview:1.1.0'
     implementation 'com.mikepenz:fontawesome-typeface:5.0.13.0@aar'
-
-    //Twitter
-    implementation 'com.twitter.sdk.android:twitter-core:3.1.1'
-    implementation 'com.twitter.sdk.android:tweet-ui:3.1.1'
 
     implementation "io.reactivex.rxjava2:rxjava:2.1.15"
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'

@@ -1,5 +1,4 @@
-package me.calebjones.spacelaunchnow.ui.main.news.twitter;
-
+package me.calebjones.spacelaunchnow.news.ui.twitter;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,14 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.TwitterException;
-import com.twitter.sdk.android.core.models.Tweet;
-import com.twitter.sdk.android.tweetui.TimelineResult;
-import com.twitter.sdk.android.tweetui.TweetTimelineRecyclerViewAdapter;
-import com.twitter.sdk.android.tweetui.TwitterListTimeline;
-
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,16 +17,16 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.news.R2;
+import me.calebjones.spacelaunchnow.news.R;
 import timber.log.Timber;
 
 
 public class TwitterFragment extends Fragment {
 
-    @BindView(R.id.recycler_view)
+    @BindView(R2.id.recycler_view)
     RecyclerView recyclerView;
-    @BindView(R.id.swiperefresh)
+    @BindView(R2.id.swiperefresh)
     SwipeRefreshLayout swipeRefreshLayout;
 
     private Context context;
@@ -79,10 +70,6 @@ public class TwitterFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.main_menu, menu);
-
-        if (SupporterHelper.isSupporter()) {
-            menu.removeItem(R.id.action_supporter);
-        }
     }
 
     @Override

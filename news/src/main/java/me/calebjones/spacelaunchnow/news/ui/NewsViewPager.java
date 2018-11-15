@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.news.ui.news;
+package me.calebjones.spacelaunchnow.news.ui;
 
 
 import android.content.Context;
@@ -13,17 +13,15 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.news.ui.ArticleFragment;
-import me.calebjones.spacelaunchnow.ui.main.news.twitter.TwitterFragment;
+import me.calebjones.spacelaunchnow.news.R;
+import me.calebjones.spacelaunchnow.news.ui.articles.ArticleFragment;
+import me.calebjones.spacelaunchnow.news.ui.twitter.TwitterFragment;
 
 public class NewsViewPager extends Fragment {
 
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
     private TabLayout tabLayout;
-    private static ListPreferences sharedPreference;
     private Context context;
 
 
@@ -32,7 +30,6 @@ public class NewsViewPager extends Fragment {
                              Bundle savedInstanceState) {
         this.context = getActivity().getApplicationContext();
 
-        sharedPreference = ListPreferences.getInstance(this.context);
 
         View inflatedView = inflater.inflate(R.layout.fragment_view_pager, container, false);
 

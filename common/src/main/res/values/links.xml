@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="spacex_logo" translatable="false">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950103/3BqROn0_pfsamc.jpg</string>
+    <string name="Yuzhnoye_logo" translatable="false">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950107/KnDMy7l_ua9lnu.png</string>
+    <string name="usa_flag" translatable="false">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950350/usa_flag_pewvgy.png</string>
+    <string name="ula_logo" translatable="false">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950111/rh7JAa3_ygosxx.jpg</string>
+    <string name="rus_logo" translatable="false">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950119/eafUB5i_iatgl1.png</string>
+    <string name="chn_logo" translatable="false">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950120/dIsaknI_qcvxuy.png</string>
+    <string name="ind_logo" translatable="false">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950125/Caj9kpG_xo8s1g.png</string>
+    <string name="jpn_logo" translatable="false">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950129/QOdDYa5_dhdlct.png</string>
+    <string name="ariane_logo" translatable="false">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1454950133/yffq0aI_oyyhmj.jpg</string>
+    <string name="link_store" translatable="false">https://play.google.com/store/apps/details?id=me.calebjones.spacelaunchnow</string>
+    <string name="default_wear_image" translatable="false">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1462465326/navbar_one_sqfhes.png</string>
+    <string name="launch_library_reddit" translatable="false">https://www.reddit.com/r/LaunchLibrary/</string>
+    <string name="header_image" translatable="false">https://res.cloudinary.com/dnkkbfy3m/image/upload/v1462465326/navbar_one_sqfhes.png</string>
+    <string name="twitter_url" translatable="false">https://twitter.com/spacelaunchnow</string>
+    <string name="discord_url" translatable="false">https://discord.gg/WVfzEDW</string>
+    <string name="facebook_url" translatable="false">https://www.facebook.com/spacelaunchnow/</string>
+    <string name="spacelaunchnow_web" translatable="false">https://spacelaunchnow.me/</string>
+    <string name="spaceflightnow_logo">https://res.cloudinary.com/dnkkbfy3m/image/upload/v1522865927/spaceflightnow_iak6di.jpg</string>
+    <string name="NASA_logo">https://res.cloudinary.com/dnkkbfy3m/image/upload/b_rgb:ffffff/v1522867663/NASA_Worm_logo.svg_y3eu3b.png</string>
+    <string name="nasaspaceflight_logo">https://res.cloudinary.com/dnkkbfy3m/image/upload/v1522865950/nasa_spaceflight_tc5vco.jpg</string>
+    <string name="spacenews_logo">http://res.cloudinary.com/dnkkbfy3m/image/upload/v1522866102/logo-spacenews_jtnesq.png</string>
+    <string name="spaceflight_101">https://res.cloudinary.com/dnkkbfy3m/image/upload/v1522868930/spaceflight_101_byadhd.png</string>
+</resources>

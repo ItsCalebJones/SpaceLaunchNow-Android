@@ -6,6 +6,6 @@
         android:allowBackup="true"
         android:supportsRtl="true">
         <activity android:name="me.calebjones.spacelaunchnow.news.MainActivity" />
-        <activity android:name="me.calebjones.spacelaunchnow.news.ui.ArticleFragment" />
+        <activity android:name="me.calebjones.spacelaunchnow.news.ui.articles.ArticleFragment" />
     </application>
 </manifest>

@@ -228,7 +228,7 @@
     <string name="stay_connected">Stay Connected</string>
     <string name="connect_description">Connect with the Community</string>
     <string name="discord_subtitle">Join the Community</string>
-    <string name="twitter">Twitter</string>
+
     <string name="twitter_subtitle">Connect on Twitter</string>
     <string name="facebook">Facebook</string>
     <string name="facebook_subtitle">Follow on Facebook</string>
@@ -388,7 +388,6 @@
     <string name="orbiters">Spacecraft</string>
     <string name="translate_settings">Contribute to translating Space Launch Now!</string>
     <string name="translate">Translate</string>
-    <string name="news">News</string>
     <string name="get_help">Get Help</string>
     <string name="help_description">Help and Support</string>
     <string name="gdpr_dialog_disagree_info">I understand that I may still see ads if I am not a Supporter, but they may not be as relevant to my interests.</string>

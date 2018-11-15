@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.calebjones.spacelaunchnow.news.ui
+package me.calebjones.spacelaunchnow.news.ui.articles
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations.map

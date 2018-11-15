@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package me.calebjones.spacelaunchnow.news.ui
+package me.calebjones.spacelaunchnow.news.ui.articles
 
+import android.content.Context
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -28,14 +29,15 @@ import me.calebjones.spacelaunchnow.news.vo.NewsArticle
 /**
  * A simple adapter implementation that shows Reddit posts.
  */
-class PostsAdapter(
+class ArticleAdapter(
         private val glide: GlideRequests,
+        private val context: Context?,
         private val retryCallback: () -> Unit)
     : PagedListAdapter<NewsArticle, RecyclerView.ViewHolder>(POST_COMPARATOR) {
     private var networkState: NetworkState? = null
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
-            R.layout.reddit_post_item -> (holder as ArticlePostViewHolder).bind(getItem(position))
+            R.layout.article_item -> (holder as ArticlePostViewHolder).bind(getItem(position))
             R.layout.network_state_item -> (holder as NetworkStateItemViewHolder).bindTo(
                     networkState)
         }
@@ -55,7 +57,7 @@ class PostsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            R.layout.reddit_post_item -> ArticlePostViewHolder.create(parent, glide)
+            R.layout.article_item -> ArticlePostViewHolder.create(parent, glide, context)
             R.layout.network_state_item -> NetworkStateItemViewHolder.create(parent, retryCallback)
             else -> throw IllegalArgumentException("unknown view type $viewType")
         }
