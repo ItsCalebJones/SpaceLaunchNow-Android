@@ -78,7 +78,6 @@ import me.calebjones.spacelaunchnow.news.ui.NewsViewPager;
 import me.calebjones.spacelaunchnow.ui.changelog.ChangelogActivity;
 import me.calebjones.spacelaunchnow.ui.intro.OnboardingActivity;
 import me.calebjones.spacelaunchnow.ui.main.launches.LaunchesViewPager;
-import me.calebjones.spacelaunchnow.ui.main.news.NewsViewPager;
 import me.calebjones.spacelaunchnow.ui.main.next.NextLaunchFragment;
 import me.calebjones.spacelaunchnow.ui.main.vehicles.VehiclesViewPager;
 import me.calebjones.spacelaunchnow.ui.settings.AboutActivity;

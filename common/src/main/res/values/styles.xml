@@ -1,0 +1,155 @@
+<resources>
+
+    <attr name="cardStyle" format="reference" />
+
+    <style name="BaseAppTheme.Launcher">
+        <item name="android:windowBackground">@drawable/launcher_drawable</item>
+        <item name="spinnerStyle">@style/MySpinner</item>
+    </style>
+
+    <style name="SpaceLaunchNowTweetStyle" parent="tw__TweetLightWithActionsStyle" />
+
+    <!-- Base application theme. -->
+    <style name="BaseAppTheme" parent="MaterialTheme.DarkToolbar.TranslucentStatus.DayNight">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="titleBarColor">@color/colorPrimary</item>
+        <item name="cardTitleBarColor">@color/colorPrimary</item>
+        <item name="shareIconColor">@color/md_grey_700</item>
+        <item name="exploreIconColor">@color/colorAccent</item>
+        <item name="recentBarColor">@color/colorRecentPrimary</item>
+        <item name="android:textColorPrimary">#212121</item>
+        <item name="android:textColorSecondary">#757575</item>
+
+        <item name="cardStyle">@style/CardView.Light</item>
+        <item name="android:textColorHighlight">@color/colorPrimaryLight</item>
+
+        <!-- MaterialDrawer specific values -->
+        <item name="material_drawer_background">@color/material_drawer_background</item>
+        <item name="material_drawer_primary_text">@color/material_drawer_primary_text</item>
+        <item name="material_drawer_primary_icon">@color/material_drawer_primary_icon</item>
+        <item name="material_drawer_secondary_text">@color/material_drawer_secondary_text</item>
+        <item name="material_drawer_hint_text">@color/material_drawer_hint_text</item>
+        <item name="material_drawer_divider">@color/material_drawer_divider</item>
+        <item name="material_drawer_selected">@color/material_drawer_selected</item>
+        <item name="material_drawer_selected_text">@color/material_drawer_selected_text</item>
+        <item name="material_drawer_header_selection_text">@color/material_drawer_header_selection_text</item>
+
+    </style>
+
+    <style name="BaseAppTheme.TranslucentStatus" parent="MaterialTheme.Light.TranslucentStatus">
+    </style>
+
+
+    <style name="BaseAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="BaseAppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="CustomPreferenceTheme" parent="@style/PreferenceActivity.Light">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="DrawerArrowStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@android:color/white</item>
+        <item name="spinBars">true</item>
+    </style>
+
+    <style name="AppTheme.ActionBar.Transparent" parent="BaseAppTheme" />
+
+    <style name="PrimaryButtonTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
+    <style name="ExploreButtonTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorAccent">?attr/titleBarColor</item>
+    </style>
+
+
+    <style name="ToolBarWithNavigationBack" parent="AppTheme.AppBarOverlay">
+        <item name="navigationIcon">@drawable/ic_arrow_back</item>
+    </style>
+
+    <style name="LightTheme.NoActionBar" parent="BaseAppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="BaseAppTheme.Transparent" parent="BaseAppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.AppBarOverlay.Dark" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="CardViewStyle.Light" parent="CardView">
+        <item name="cardBackgroundColor">@color/cardview_light_background</item>
+    </style>
+
+    <style name="CardViewStyle.Dark" parent="CardView">
+        <item name="cardBackgroundColor">@color/dark_card_background</item>
+    </style>
+
+    <style name="LightTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="LightTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="SPL"></style>
+
+    <style name="SPL.SnackBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="SPL.SnackBar.Layout">
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <style name="SPL.SnackBar.Text">
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">left</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="SPL.SnackBar.Button">
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SPL.SnackBar.Button.Decline">
+        <item name="android:background">@null</item>
+        <item name="android:layout_width">40dp</item>
+    </style>
+
+    <style name="FullscreenTheme" parent="BaseAppTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+
+    <style name="CircularProgress" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+
+</resources>

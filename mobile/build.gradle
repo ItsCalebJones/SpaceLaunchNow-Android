@@ -188,8 +188,8 @@ android {
 
 dependencies {
     implementation project(path: ':data')
-    implementation project(':news')
     implementation project(path: ':common')
+    implementation project(':news')
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
     implementation 'com.android.support:multidex:1.0.3'
 
@@ -280,8 +280,17 @@ dependencies {
     //Rich Links
     implementation 'com.github.nekocode:Badge:2.0'
 
+    //Twitter
+    implementation 'com.twitter.sdk.android:twitter-core:3.3.0'
+    implementation 'com.twitter.sdk.android:tweet-ui:3.3.0'
+
     // Firebase Messaging
     implementation "com.google.firebase:firebase-messaging:17.3.4"
+
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    implementation 'com.jakewharton:butterknife:9.0.0-SNAPSHOT'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-SNAPSHOT'
 }
 
 apply plugin: 'com.google.gms.google-services'
