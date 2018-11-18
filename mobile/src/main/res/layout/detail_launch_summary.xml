@@ -55,7 +55,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="Failed" />
 
-                <FrameLayout
+                <com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView
                     android:id="@+id/youtube_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -65,29 +65,15 @@
                     app:layout_constraintTop_toBottomOf="@+id/error_message" />
 
 
-                <ImageView
-                    android:id="@+id/map_view_summary"
-                    android:layout_width="0dp"
-                    android:layout_height="180dp"
-                    android:clickable="true"
-                    android:visibility="visible"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/youtube_view"
-                    tools:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    tools:src="@drawable/placeholder" />
-
-
                 <me.calebjones.spacelaunchnow.utils.views.custom.CountDownView
                     android:id="@+id/countdown_layout"
                     layout="@layout/countdown_layout_view"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="6dp"
-                    app:layout_constraintBottom_toTopOf="@+id/launch_date_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/map_view_summary" />
+                    app:layout_constraintTop_toBottomOf="@+id/youtube_view" />
 
                 <TextView
                     android:id="@+id/date"

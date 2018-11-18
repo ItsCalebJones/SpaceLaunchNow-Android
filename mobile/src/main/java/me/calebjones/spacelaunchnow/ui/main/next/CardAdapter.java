@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.crashlytics.android.Crashlytics;
 
@@ -333,7 +334,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     Timber.d("Watch: %s", launch.getVidURLs().size());
                     Analytics.getInstance().sendButtonClicked("Watch Button - Opening Dialogue");
                     if (launch.getVidURLs().size() > 0) {
-                        final DialogAdapter adapter = new DialogAdapter((index, item, longClick) -> {
+                        final DialogAdapter adapter = new DialogAdapter(context, (index, item, longClick) -> {
                             try {
                                 if (longClick) {
                                     Intent sendIntent1 = new Intent();
@@ -353,75 +354,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                                 Toast.makeText(context, "Ops, an error occurred.", Toast.LENGTH_SHORT).show();
                             }
                         });
-                        for (RealmStr s : launch.getVidURLs()) {
-                            //Do your stuff here
-                            try {
-                                URI uri = new URI(s.getVal());
 
-                                String name;
-                                YouTubeAPIHelper youTubeAPIHelper = new YouTubeAPIHelper(context, context.getResources().getString(R.string.GoogleMapsKey));
-                                if (uri.getHost().contains("youtube")){
-                                    name = "YouTube";
-                                    String youTubeURL = getYouTubeID(s.getVal());
-                                    if (youTubeURL.contains("spacex/live")){
-                                        adapter.add(new MaterialSimpleListItem.Builder(context)
-                                                .content("YouTube - SpaceX Livestream")
-                                                .build());
-                                    } else {
-                                        youTubeAPIHelper.getVideoById(youTubeURL,
-                                                new Callback<VideoResponse>() {
-                                            @Override
-                                            public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
-                                                if (response.isSuccessful()) {
-                                                    if (response.body() != null) {
-                                                        List<Video> videos = response.body().getVideos();
-                                                        if (videos.size() > 0) {
-                                                            try {
-                                                                adapter.add(new MaterialSimpleListItem.Builder(context)
-                                                                        .content(videos.get(0).getSnippet().getTitle())
-                                                                        .build());
-                                                            } catch (Exception e){
-                                                                adapter.add(new MaterialSimpleListItem.Builder(context)
-                                                                        .content(name)
-                                                                        .build());
-                                                            }
-                                                        } else {
-                                                            adapter.add(new MaterialSimpleListItem.Builder(context)
-                                                                    .content(name)
-                                                                    .build());
-                                                        }
-                                                    } else {
-                                                        adapter.add(new MaterialSimpleListItem.Builder(context)
-                                                                .content(name)
-                                                                .build());
-                                                    }
-                                                } else {
-                                                    adapter.add(new MaterialSimpleListItem.Builder(context)
-                                                            .content(name)
-                                                            .build());
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onFailure(Call<VideoResponse> call, Throwable t) {
-                                                adapter.add(new MaterialSimpleListItem.Builder(context)
-                                                        .content(name)
-                                                        .build());
-                                            }
-                                        });
-                                    }
-                                } else {
-                                    name = uri.getHost();
-                                    adapter.add(new MaterialSimpleListItem.Builder(context)
-                                            .content(name)
-                                            .build());
-                                }
-
-                            } catch (URISyntaxException e) {
-                                e.printStackTrace();
-                            }
+                        for (RealmStr string : launch.getVidURLs()) {
+                            adapter.add(new MaterialSimpleListItem.Builder(context)
+                                    .content(string.getVal())
+                                    .build());
                         }
-
                         MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
                                 .title(R.string.source)
                                 .content(R.string.long_press_share)
@@ -492,15 +430,5 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         }
     }
 
-    private String getYouTubeID(String vidURL) {
-        final String regex = "(youtu\\.be\\/|youtube\\.com\\/(watch\\?(.*&)?v=|(embed|v)\\/|c\\/))([a-zA-Z0-9_-]{11}|[a-zA-Z].*)";
-        final Pattern pattern = Pattern.compile(regex);
 
-        Matcher matcher = pattern.matcher(vidURL);
-        Timber.v("Checking for match of %s", vidURL);
-        if (matcher.find() && (matcher.group(1) != null || matcher.group(2) != null) && matcher.group(5) != null) {
-            return matcher.group(5);
-        }
-        return null;
-    }
 }

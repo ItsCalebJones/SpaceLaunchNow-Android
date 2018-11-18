@@ -2,7 +2,7 @@
 <resources>
     <string name="action_settings">Paramètres</string>
     <string name="status_go">"Paré au Lancement"</string>
-    <string name="status_nogo">"Lancement Non Planifié"</string>
+    <string name="status_nogo">"Date Non Confirmée"</string>
     <string name="status_success">"Lancement Réussi"</string>
     <string name="status_failure">"Échec du Lancement"</string>
     <string name="spacex_summary">SpaceX conçoit, fabrique et lance des fusées et véhicules spatiaux sophistiqués. L\'entreprise a été fondée en 2002 avec l\'objectif de révolutionner les technologies spatiales, leur but ultime étant de permettre aux humains de vivre sur d\'autres planètes.</string>
@@ -343,7 +343,7 @@
     <string name="watch_hour_mode_on">Utiliser le format 24 heures.</string>
     <string name="watch_hour_mode_off">Utiliser le format AM/PM.</string>
     <string name="utc_time">Afficher l\'heure UTC</string>
-    <string name="utc_time_summary">Activer pour afficher l\'heure actuelle UTC.</string>
+    <string name="utc_time_summary">Activer pour afficher l\'heure UTC actuelle.</string>
     <string name="dynamic_background">Fond d\'écran Dynamique</string>
     <string name="dynamic_background_summary">Utiliser l\'image du prochain véhicule de lancement comme arrière-plan si disponible.</string>
     <string name="blur_background">Flouter le fond d\'écran</string>
@@ -445,6 +445,11 @@
     <string name="settings_one_minute">Une Minute</string>
     <string name="settings_one_minute_on">Être notifié lorsqu\'un lancement est dans moins d\'une minute.</string>
     <string name="settings_one_minute_off">Ne pas être notifié lorsqu\'un lancement est dans moins d\'une minute.</string>
+    <string name="no_live_stream_available">Pas de retransmission en direct disponible.</string>
+    <string name="date_confirmed">La date est confirmée mais l\'heure n\'est pas encore connue.</string>
+    <string name="date_unconfirmed">La date affichée est une estimation \"au plus tôt\".</string>
+    <string name="source">Sélectionner une source</string>
+    <string name="long_press_share">Appuyer longtemps pour partager.</string>
     <string name="mission_agency">Agence de la Mission</string>
     <string name="tab_text_2">Onglet 2</string>
     <string name="tab_text_1">Onglet 1</string>

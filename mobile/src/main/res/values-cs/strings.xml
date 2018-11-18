@@ -2,7 +2,7 @@
 <resources>
     <string name="action_settings">Nastavení</string>
     <string name="status_go">"Start je povolen"</string>
-    <string name="status_nogo">"Start TBD"</string>
+    <string name="status_nogo">"Datum startu není potvrzeno"</string>
     <string name="status_success">"Úspěšný start"</string>
     <string name="status_failure">"Při startu se objevila chyba"</string>
     <string name="spacex_summary">SpaceX navrhuje, konstruuje a vypouští pokročilé rakety a kosmické lodě. Společnost byla založená v roce 2002 aby způsobila převrat v kosmonautice. Její hlavní cíl je umožnit lidem život na jiných planetách.</string>
@@ -216,7 +216,7 @@
     <string name="unconfirmed">(Nepotvrzený)</string>
     <string name="no_go">Neschválené starty</string>
     <string name="no_go_description">Toto skryje starty, které mají stav \"nechválen\" a někdy mohou skrýt starty, které se nacházejí v jejich spouštěcím okně, ale jsou zdrženy kvůli technickým nebo vzdálenostním problémům.</string>
-    <string name="to_be_determined">Starty které ještě budou upřesněny</string>
+    <string name="to_be_determined">Schovat nepotvrzené starty</string>
     <string name="to_be_determined_description">Toto skryje starty, které nemají potvrzené datum nebo čas startu. Toto může příležitostně skrýt starty, které byly pro dnešní den zrušeny.</string>
     <string name="launch_info">Zachová starty po dobu 24 hodin</string>
     <string name="launch_info_description">Tato možnost zobrazí starty na domovské stránce až po dobu až 24 hodin po startu.</string>
@@ -342,7 +342,7 @@
     <string name="watch_hour_mode_on">Používat režim 24 hodin.</string>
     <string name="watch_hour_mode_off">Používat režim AM/PM.</string>
     <string name="utc_time">Zobrazit koordinovaný světový čas</string>
-    <string name="utc_time_summary">Povolit zobrazení aktuálního koordinovaného světového času.</string>
+    <string name="utc_time_summary">Povolit zobrazení aktuálního koordinovaného světového času UTC.</string>
     <string name="dynamic_background">Dynamické pozadí</string>
     <string name="dynamic_background_summary">Použít obrázek další rakety jako pozadí, pokud je k dispozici.</string>
     <string name="blur_background">Rozostření pozadí</string>
@@ -446,9 +446,14 @@ Tato aplikace využívá nástroj Google Firebase pro analýzu a službu Google 
     <string name="settings_one_minute">Jedna minuta</string>
     <string name="settings_one_minute_on">Dostat oznámení, jednu minutu před startem.</string>
     <string name="settings_one_minute_off">Neoznamovat, když je start za jednu minutu.</string>
+    <string name="no_live_stream_available">Živý přenos není k dispozici</string>
+    <string name="date_confirmed">Datum startu je schváleno, ale čas je neznámý.</string>
+    <string name="date_unconfirmed">Aktuální čas startu má status \'Ne dříve než\'.</string>
+    <string name="source">Vyberte zdroj</string>
+    <string name="long_press_share">Dlouhým podržením start sdílejte</string>
     <string name="mission_agency">Pořádající agentura mise</string>
     <string name="tab_text_2">Záložka 2</string>
     <string name="tab_text_1">Záložka 1</string>
     <string name="tab_text_3">Záložka 3</string>
-    <string name="section_format">Pozdrav světu ze sekce: %1$d</string>
+    <string name="section_formatsection_format">Pozdrav světu ze sekce: %1$d</string>
 </resources>

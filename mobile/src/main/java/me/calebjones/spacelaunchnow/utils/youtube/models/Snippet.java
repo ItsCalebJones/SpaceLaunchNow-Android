@@ -5,6 +5,7 @@ public class Snippet {
     private String channelId;
     private String title;
     private String categoryId;
+    private String liveBroadcastContent;
 
     public String getChannelId() {
         return channelId;
@@ -28,5 +29,13 @@ public class Snippet {
 
     public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public String getLiveBroadcastContent() {
+        return liveBroadcastContent;
+    }
+
+    public void setLiveBroadcastContent(String liveBroadcastContent) {
+        this.liveBroadcastContent = liveBroadcastContent;
     }
 }

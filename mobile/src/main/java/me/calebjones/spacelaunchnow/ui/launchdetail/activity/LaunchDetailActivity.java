@@ -37,7 +37,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.youtube.player.YouTubePlayer;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.IconicsDrawable;
 
@@ -59,7 +58,6 @@ import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
 import me.calebjones.spacelaunchnow.content.data.details.DetailsDataRepository;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
-import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.ui.launchdetail.DetailsViewModel;
 import me.calebjones.spacelaunchnow.ui.launchdetail.TabsAdapter;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
@@ -112,8 +110,7 @@ public class LaunchDetailActivity extends BaseActivity
     private Context context;
     private TabsAdapter tabAdapter;
     private int statusColor;
-    public YouTubePlayer youTubePlayer;
-    public boolean isYouTubePlayerFullScreen;
+    public boolean isYouTubePlayerFullScreen = false;
     public String response;
     public Launch launch;
     private boolean fabShowable = false;
@@ -377,7 +374,6 @@ public class LaunchDetailActivity extends BaseActivity
                 GlideApp.with(this)
                         .load(image)
                         .into(detail_profile_backdrop);
-                detail_profile_backdrop.setOnClickListener(view -> showImageFullscreen(image));
             }
         }
     }
@@ -601,42 +597,10 @@ public class LaunchDetailActivity extends BaseActivity
     }
 
     @Override
-    public void onBackPressed() {
-        if (youTubePlayer != null && isYouTubePlayerFullScreen) {
-            youTubePlayer.setFullscreen(false);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
     public void onLowMemory() {
         Timber.v("onLowMemory");
 //        adView.destroy();
         super.onLowMemory();
-    }
-
-    public void videoPlaying() {
-        fabShowable = false;
-        fabShare.hide();
-    }
-
-    public void videoStopped() {
-        fabShowable = true;
-        fabShare.show();
-    }
-
-
-    public void showImageFullscreen(String backdropImage) {
-        if (backdropImage != null) {
-            Intent animateIntent = new Intent(this, FullscreenImageActivity.class);
-            animateIntent.putExtra("imageURL", backdropImage);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                this.startActivity(animateIntent, ActivityOptions.makeSceneTransitionAnimation(this, detail_profile_backdrop, "imageCover").toBundle());
-            } else {
-                this.startActivity(animateIntent);
-            }
-        }
     }
 
     @Override

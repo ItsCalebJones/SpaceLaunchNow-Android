@@ -415,7 +415,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
     private void showRemoveAd() {
         snackbar = Snackbar
-                .make(coordinatorLayout, R.string.upgrade_pro, Snackbar.LENGTH_INDEFINITE)
+                .make(coordinatorLayout, R.string.upgrade_pro, Snackbar.LENGTH_LONG)
                 .setActionTextColor(ContextCompat.getColor(context, R.color.colorAccent))
                 .setAction("Yes", view -> {
                     Once.markDone("userCheckedSupporter");

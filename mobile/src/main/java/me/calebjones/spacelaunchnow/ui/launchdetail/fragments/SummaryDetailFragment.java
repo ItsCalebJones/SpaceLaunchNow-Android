@@ -1,17 +1,25 @@
 package me.calebjones.spacelaunchnow.ui.launchdetail.fragments;
 
 import android.app.Dialog;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -28,13 +36,15 @@ import android.zetterstrom.com.forecast.models.Unit;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.crashlytics.android.Crashlytics;
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubePlayer;
-import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.mypopsy.maps.StaticMap;
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.PlayerConstants;
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer;
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView;
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.YouTubePlayerFullScreenListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.YouTubePlayerInitListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.YouTubePlayerListener;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -74,7 +84,7 @@ import retrofit2.Response;
 import timber.log.Timber;
 
 
-public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer.OnInitializedListener {
+public class SummaryDetailFragment extends BaseFragment implements YouTubePlayerListener {
 
     @BindView(R.id.countdown_status)
     TextView countdownStatus;
@@ -82,8 +92,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     CountDownView countDownView;
     @BindView(R.id.launch_summary)
     NestedScrollView launchSummary;
-    @BindView(R.id.map_view_summary)
-    ImageView mapView;
     @BindView(R.id.date)
     TextView launchDate;
     @BindView(R.id.watchButton)
@@ -92,20 +100,18 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     TextView launchWindowText;
     @BindView(R.id.error_message)
     TextView errorMessage;
-    @BindView(R.id.youtube_view)
-    View youTubeView;
     @BindView(R.id.weather_card)
     WeatherCard weatherCard;
     @BindView(R.id.videos_empty)
     TextView videosEmpty;
+    @BindView(R.id.youtube_view)
+    YouTubePlayerView youTubePlayerView;
 
     private SharedPreferences sharedPref;
     private ListPreferences sharedPreference;
     private Context context;
     private CountDownTimer timer;
     public Launch detailLaunch;
-    private YouTubePlayerSupportFragment youTubePlayerFragment;
-    private YouTubePlayer summaryYouTubePlayer;
     private boolean nightMode;
     private String youTubeURL;
     private Dialog dialog;
@@ -115,6 +121,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     private boolean future = true;
     private Unbinder unbinder;
     private DetailsViewModel model;
+    private YouTubePlayer youTubePlayer;
+    boolean isYouTubePlaying = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,7 +138,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         this.context = getContext();
 
         sharedPreference = ListPreferences.getInstance(this.context);
-
         if (sharedPreference.isNightModeActive(context)) {
             nightMode = true;
         } else {
@@ -140,9 +147,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         View view = inflater.inflate(R.layout.detail_launch_summary, container, false);
 
         unbinder = ButterKnife.bind(this, view);
-        youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.add(R.id.youtube_view, youTubePlayerFragment).commit();
 
         if (savedInstanceState != null) {
             youTubePlaying = savedInstanceState.getBoolean("youTubePlaying", false);
@@ -262,20 +266,21 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (summaryYouTubePlayer != null) {
-            try {
-                outState.putBoolean("youTubePlaying", summaryYouTubePlayer.isPlaying());
-                outState.putInt("youTubeProgress", summaryYouTubePlayer.getCurrentTimeMillis());
-                outState.putString("youTubeID", youTubeURL);
-            } catch (IllegalStateException e) {
-                Timber.e(e);
-            }
-        }
+//        if (youTubePlayer != null) {
+//            try {
+//                outState.putBoolean("youTubePlaying", youTubePlayer.);
+//                outState.putInt("youTubeProgress", );
+//                outState.putString("youTubeID", youTubeURL);
+//            } catch (IllegalStateException e) {
+//                Timber.e(e);
+//            }
+//        }
         super.onSaveInstanceState(outState);
     }
 
     private void setUpViews(Launch launch) {
         try {
+            getLifecycle().addObserver(youTubePlayerView);
             weatherCard.setVisibility(View.GONE);
             videosEmpty.setVisibility(View.GONE);
             detailLaunch = launch;
@@ -290,49 +295,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
             }
 
             setupCountdownTimer(launch);
-
-            double dlat = 0;
-            double dlon = 0;
-            if (detailLaunch.getPad() != null) {
-                dlat = Double.parseDouble(detailLaunch.getPad().getLatitude());
-                dlon = Double.parseDouble(detailLaunch.getPad().getLongitude());
-            }
-
-            // Getting status
-            if (dlat == 0 && dlon == 0 || Double.isNaN(dlat) || Double.isNaN(dlon) || dlat == Double.NaN || dlon == Double.NaN) {
-                if (mapView != null) {
-                    mapView.setVisibility(View.GONE);
-                }
-            } else {
-                mapView.setVisibility(View.VISIBLE);
-                final Resources res = context.getResources();
-                final StaticMap map = new StaticMap()
-                        .center(dlat, dlon)
-                        .scale(4)
-                        .type(StaticMap.Type.ROADMAP)
-                        .zoom(7)
-                        .marker(dlat, dlon)
-                        .key(res.getString(R.string.GoogleMapsKey));
-
-                //Strange but necessary to calculate the height/width
-                mapView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                    public boolean onPreDraw() {
-                        map.size(
-                                mapView.getWidth() / 2,
-                                mapView.getHeight() / 2
-                        );
-
-                        Timber.v("onPreDraw: %s", map.toString());
-                        GlideApp.with(context)
-                                .load(map.toString())
-                                .error(R.drawable.placeholder)
-                                .centerCrop()
-                                .into(mapView);
-                        mapView.getViewTreeObserver().removeOnPreDrawListener(this);
-                        return true;
-                    }
-                });
-            }
 
             //Setup SimpleDateFormat to parse out getNet launchDate.
             SimpleDateFormat input = new SimpleDateFormat("MMMM dd, yyyy hh:mm:ss zzz");
@@ -351,138 +313,25 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
                 if (youTubeURL != null) {
                     Timber.v("Loading %s", youTubeURL);
-                    mapView.setVisibility(View.GONE);
-                    youTubeView.setVisibility(View.VISIBLE);
+                    youTubePlayerView.setVisibility(View.VISIBLE);
                     errorMessage.setVisibility(View.GONE);
-                    final LaunchDetailActivity mainActivity = (LaunchDetailActivity) getActivity();
-                    youTubePlayerFragment.initialize(context.getResources().getString(R.string.GoogleMapsKey), new YouTubePlayer.OnInitializedListener() {
-                        @Override
-                        public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean restored) {
-                            mainActivity.youTubePlayer = youTubePlayer;
-                            summaryYouTubePlayer = youTubePlayer;
-                            youTubePlayer.cueVideo(youTubeURL);
-                            Timber.v("YouTube Player - initialized: Progress - %s isPlaying - %s", youTubeProgress, youTubePlaying);
-                            youTubePlayer.setOnFullscreenListener(new YouTubePlayer.OnFullscreenListener() {
-                                @Override
-                                public void onFullscreen(boolean b) {
-                                    Timber.v("onFullscreen");
-                                    mainActivity.isYouTubePlayerFullScreen = b;
-                                }
-                            });
-                            youTubePlayer.setPlaybackEventListener(new YouTubePlayer.PlaybackEventListener() {
-                                @Override
-                                public void onPlaying() {
-                                    Timber.v("onPlaying");
-                                    mainActivity.videoPlaying();
-                                }
-
-                                @Override
-                                public void onPaused() {
-                                    Timber.v("onPaused");
-                                    mainActivity.videoStopped();
-                                }
-
-                                @Override
-                                public void onStopped() {
-                                    Timber.v("onStopped");
-                                    mainActivity.videoStopped();
-                                }
-
-                                @Override
-                                public void onBuffering(boolean b) {
-                                    Timber.v("onBuffering %s", b);
-                                }
-
-                                @Override
-                                public void onSeekTo(int i) {
-                                    Timber.v("onSeekTo %s", i);
-                                }
-                            });
-                            youTubePlayer.setPlaylistEventListener(new YouTubePlayer.PlaylistEventListener() {
-                                @Override
-                                public void onPrevious() {
-                                    Timber.v("onPrevious");
-                                }
-
-                                @Override
-                                public void onNext() {
-                                    Timber.v("onNext");
-                                }
-
-                                @Override
-                                public void onPlaylistEnded() {
-                                    Timber.v("onPlaylistEnded");
-                                }
-                            });
-                            youTubePlayer.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
-                                @Override
-                                public void onLoading() {
-                                    Timber.v("onLoading");
-                                }
-
-                                @Override
-                                public void onLoaded(String s) {
-                                    Timber.v("onLoaded %s", s);
-                                    if (youTubeURL.contains("live")) {
-                                        errorMessage.setVisibility(View.VISIBLE);
-                                        errorMessage.setText(String.format("Live Broadcast %s", s));
-                                    } else {
-                                        errorMessage.setVisibility(View.GONE);
-                                    }
-                                    checkState();
-                                }
-
-                                @Override
-                                public void onAdStarted() {
-                                    Timber.v("onAdStarted");
-                                }
-
-                                @Override
-                                public void onVideoStarted() {
-                                    Timber.v("onVideoStarted");
-                                }
-
-                                @Override
-                                public void onVideoEnded() {
-                                    Timber.v("onVideoEnded");
-                                }
-
-                                @Override
-                                public void onError(YouTubePlayer.ErrorReason errorReason) {
-                                    Timber.v("onError - %s", errorReason.name());
-                                    if (youTubeURL.contains("live")) {
-                                        errorMessage.setVisibility(View.VISIBLE);
-                                        errorMessage.setText("Broadcast may not be live.");
-                                    } else {
-                                        errorMessage.setVisibility(View.GONE);
-                                    }
-                                    if (errorReason.ordinal() == 4) {
-                                        Toast.makeText(mainActivity, "Playback paused by YouTube while view is obstructed.", Toast.LENGTH_SHORT).show();
-                                    }
-                                    Crashlytics.log(errorReason.name());
-                                }
-                            });
-                            youTubePlayer.setFullscreenControlFlags(YouTubePlayer.FULLSCREEN_FLAG_CONTROL_SYSTEM_UI);
-
-                        }
-
-                        @Override
-                        public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-                            if (youTubeInitializationResult.isUserRecoverableError()) {
-                                youTubeInitializationResult.getErrorDialog(getActivity(), 1).show();
-                            } else {
-                                String error = String.format(getString(R.string.player_error), youTubeInitializationResult.toString());
-                                Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
+//                    youTubePlayerView.getPlayerUIController().enableLiveVideoUI(true);
+                    youTubePlayerView.getPlayerUIController().showFullscreenButton(false);
+                    youTubePlayerView.initialize(youTubePlayer -> {
+                        youTubePlayer.addListener(new AbstractYouTubePlayerListener() {
+                            @Override
+                            public void onReady() {
+                                loadVideo(youTubePlayer, youTubeURL);
                             }
-                        }
-                    });
+                        });
+                    }, true);
                 }
 
                 watchButton.setVisibility(View.VISIBLE);
                 watchButton.setOnClickListener(v -> {
                     Timber.d("Watch: %s", detailLaunch.getVidURLs().size());
                     if (detailLaunch.getVidURLs().size() > 0) {
-                        final DialogAdapter adapter = new DialogAdapter((index, item, longClick) -> {
+                        final DialogAdapter adapter = new DialogAdapter(context, (index, item, longClick) -> {
                             if (longClick) {
                                 Intent sendIntent = new Intent();
                                 sendIntent.setAction(Intent.ACTION_SEND);
@@ -492,12 +341,11 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                             } else {
                                 String url = detailLaunch.getVidURLs().get(index).getVal();
                                 String youTubeID = getYouTubeID(url);
-                                if (summaryYouTubePlayer != null && youTubeID != null) {
+                                if (youTubePlayer != null && youTubeID != null) {
                                     youTubeURL = youTubeID;
                                     if (dialog != null && dialog.isShowing())
                                         dialog.dismiss();
-                                    summaryYouTubePlayer.cueVideo(youTubeURL);
-                                    summaryYouTubePlayer.play();
+                                    youTubePlayer.loadVideo(youTubeURL, 0);
                                 } else {
                                     Uri watchUri = Uri.parse(url);
                                     Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
@@ -506,73 +354,10 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                             }
                         });
 
-                        for (RealmStr s : detailLaunch.getVidURLs()) {
-                            //Do your stuff here
-                            try {
-                                URI uri = new URI(s.getVal());
-
-                                String name;
-                                YouTubeAPIHelper youTubeAPIHelper = new YouTubeAPIHelper(context, context.getResources().getString(R.string.GoogleMapsKey));
-                                if (uri.getHost().contains("youtube")) {
-                                    name = "YouTube";
-                                    String youTubeURL = getYouTubeID(s.getVal());
-                                    if (youTubeURL.contains("spacex/live")) {
-                                        adapter.add(new MaterialSimpleListItem.Builder(context)
-                                                .content("YouTube - SpaceX Livestream")
-                                                .build());
-                                    } else {
-                                        youTubeAPIHelper.getVideoById(youTubeURL,
-                                                new Callback<VideoResponse>() {
-                                                    @Override
-                                                    public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
-                                                        if (response.isSuccessful()) {
-                                                            if (response.body() != null) {
-                                                                List<Video> videos = response.body().getVideos();
-                                                                if (videos.size() > 0) {
-                                                                    try {
-                                                                        adapter.add(new MaterialSimpleListItem.Builder(context)
-                                                                                .content(videos.get(0).getSnippet().getTitle())
-                                                                                .build());
-                                                                    } catch (Exception e) {
-                                                                        adapter.add(new MaterialSimpleListItem.Builder(context)
-                                                                                .content(name)
-                                                                                .build());
-                                                                    }
-                                                                } else {
-                                                                    adapter.add(new MaterialSimpleListItem.Builder(context)
-                                                                            .content(name)
-                                                                            .build());
-                                                                }
-                                                            } else {
-                                                                adapter.add(new MaterialSimpleListItem.Builder(context)
-                                                                        .content(name)
-                                                                        .build());
-                                                            }
-                                                        } else {
-                                                            adapter.add(new MaterialSimpleListItem.Builder(context)
-                                                                    .content(name)
-                                                                    .build());
-                                                        }
-                                                    }
-
-                                                    @Override
-                                                    public void onFailure(Call<VideoResponse> call, Throwable t) {
-                                                        adapter.add(new MaterialSimpleListItem.Builder(context)
-                                                                .content(name)
-                                                                .build());
-                                                    }
-                                                });
-                                    }
-                                } else {
-                                    name = uri.getHost();
-                                    adapter.add(new MaterialSimpleListItem.Builder(context)
-                                            .content(name)
-                                            .build());
-                                }
-
-                            } catch (URISyntaxException e) {
-                                e.printStackTrace();
-                            }
+                        for (RealmStr string : detailLaunch.getVidURLs()) {
+                            adapter.add(new MaterialSimpleListItem.Builder(context)
+                                    .content(string.getVal())
+                                    .build());
                         }
 
                         MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
@@ -584,10 +369,12 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                     }
                 });
             } else {
-                if (future){
+                if (future) {
                     videosEmpty.setVisibility(View.VISIBLE);
                 }
                 watchButton.setVisibility(View.GONE);
+                errorMessage.setText("Video sources unavailable.");
+                errorMessage.setVisibility(View.VISIBLE);
             }
 
             //Try to convert to Month day, Year.
@@ -607,14 +394,15 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         }
     }
 
-    private void checkState() {
-        if (youTubeProgress != 0 && summaryYouTubePlayer != null) {
-            summaryYouTubePlayer.seekToMillis(youTubeProgress);
-            if (youTubePlaying) {
-                summaryYouTubePlayer.play();
-            }
-        }
+
+    private void loadVideo(YouTubePlayer youTubePlayer, String videoId) {
+        youTubePlayer.addListener(this);
+        if (getLifecycle().getCurrentState() == Lifecycle.State.RESUMED)
+            youTubePlayer.loadVideo(videoId, 0);
+        else
+            youTubePlayer.cueVideo(videoId, 0);
     }
+
 
     private String getYouTubeID(String vidURL) {
         final String regex = "(youtu\\.be\\/|youtube\\.com\\/(watch\\?(.*&)?v=|(embed|v)\\/|c\\/))([a-zA-Z0-9_-]{11}|[a-zA-Z].*)";
@@ -685,46 +473,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         return new SummaryDetailFragment();
     }
 
-    @OnClick(R.id.map_view_summary)
-    public void onViewClicked() {
-        if (detailLaunch != null && detailLaunch.isValid() && detailLaunch.getPad().getLocation() != null) {
-            String location = detailLaunch.getPad().getLocation().getName();
-            location = (location.substring(location.indexOf(",") + 1));
-
-            Timber.d("FAB: %s ", location);
-
-            double dlat = Double.parseDouble(detailLaunch.getPad().getLatitude());
-            double dlon = Double.parseDouble(detailLaunch.getPad().getLongitude());
-
-            Uri gmmIntentUri = Uri.parse("geo:" + dlat + ", " + dlon + "?z=12&q=" + dlat + ", " + dlon);
-            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-            mapIntent.setPackage("com.google.android.apps.maps");
-
-            Analytics.getInstance().sendLaunchMapClicked(detailLaunch.getName());
-
-            if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
-                Toast.makeText(context, "Loading " + detailLaunch.getPad().getName(), Toast.LENGTH_LONG).show();
-                context.startActivity(mapIntent);
-            }
-        }
-    }
-
-    @Override
-    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean restored) {
-        if (!restored) {
-            youTubePlayer.cueVideo("fhWaJi1Hsfo"); // Plays https://www.youtube.com/watch?v=fhWaJi1Hsfo
-        }
-    }
-
-    @Override
-    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-        if (youTubeInitializationResult.isUserRecoverableError()) {
-            youTubeInitializationResult.getErrorDialog(getActivity(), 1).show();
-        } else {
-            youTubeView.setVisibility(View.GONE);
-        }
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -732,5 +480,81 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
             timer.cancel();
         }
         unbinder.unbind();
+    }
+    @Override
+    public void onReady() {
+
+    }
+
+    @Override
+    public void onStateChange(@NonNull PlayerConstants.PlayerState state) {
+        if (state == PlayerConstants.PlayerState.PLAYING) {
+            isYouTubePlaying = true;
+        } else {
+            isYouTubePlaying = false;
+        }
+    }
+
+    @Override
+    public void onPlaybackQualityChange(@NonNull PlayerConstants.PlaybackQuality playbackQuality) {
+
+    }
+
+    @Override
+    public void onPlaybackRateChange(@NonNull PlayerConstants.PlaybackRate playbackRate) {
+
+    }
+
+    @Override
+    public void onError(@NonNull PlayerConstants.PlayerError error) {
+
+    }
+
+    @Override
+    public void onApiChange() {
+
+    }
+
+    @Override
+    public void onCurrentSecond(float second) {
+
+    }
+
+    @Override
+    public void onVideoDuration(float duration) {
+
+    }
+
+    @Override
+    public void onVideoLoadedFraction(float loadedFraction) {
+
+    }
+
+    @Override
+    public void onVideoId(@NonNull String videoId) {
+        YouTubeAPIHelper youTubeAPIHelper = new YouTubeAPIHelper(context,
+                context.getResources().getString(R.string.GoogleMapsKey));
+        youTubePlayerView.getPlayerUIController().enableLiveVideoUI(false);
+        youTubeAPIHelper.getVideoById(videoId, new retrofit2.Callback<VideoResponse>() {
+            @Override
+            public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Video> videos = response.body().getVideos();
+                    if (videos.size() > 0) {
+                        try {
+                            if (videos.get(0).getSnippet().getLiveBroadcastContent().contains("live")){
+                                youTubePlayerView.getPlayerUIController().enableLiveVideoUI(true);
+                            }
+                        } catch (Exception e) {
+                            Timber.e(e);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<VideoResponse> call, Throwable t) {
+            }
+        });
     }
 }

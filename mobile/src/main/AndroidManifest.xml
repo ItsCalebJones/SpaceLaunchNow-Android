@@ -28,7 +28,8 @@
         android:label="${appNameLabel}"
         android:supportsRtl="true"
         android:theme="@style/BaseAppTheme"
-        tools:replace="label,android:allowBackup">
+        tools:replace="label,android:allowBackup"
+        tools:ignore="GoogleAppIndexingWarning">
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -58,7 +59,8 @@
         </activity>
         <activity
             android:name=".ui.launchdetail.activity.LaunchDetailActivity"
-            android:configChanges="orientation|keyboardHidden"
+            android:supportsPictureInPicture="true"
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
             android:theme="@style/BaseAppTheme" />
         <activity
             android:name=".ui.intro.OnboardingActivity"

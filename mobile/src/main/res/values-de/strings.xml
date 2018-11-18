@@ -9,7 +9,7 @@
     <string name="usaf_summary">Die United States Air Force ist der Luftkampf-Zweig der Streitkräfte der Vereinigten Staaten und einer der sieben American Uniformed Services.</string>
     <string name="casc_summary">Die China Aerospace Science and Technology Corporation (CASC) ist der Hauptauftragnehmer für das chinesische Weltraumprogramm. Die CASC ist in staatlichem Besitz und hat eine Reihe von untergeordneten Einheiten, welche eine Vielzahl von Raumfahrzeugen, Trägerraketen, strategischen und taktischen Raketensystemen sowie Bodenausrüstung konstruieren, entwickeln und herstellen.</string>
     <string name="cnsa_summary">Die China National Space Administration (CNSA) ist die chinesische Weltraumorganisation, welche für das zivile Raumfahrtprogramm der Volksrepublic China verantwortlich ist.</string>
-    <string name="isro_summary">Die Indian Research Organisation (ISRO) ist die Raumfahrtbehörde Indiens mit Hauptsitz in Bangalore. Ihr Ziel ist es, \"Raumfahrttechnologie zur Entwicklung des Landes zu nutzen und Weltraumwissenschaft sowie die Erkundung des Sonnensystems voranzutreiben\".</string>
+    <string name="isro_summary">Die Indian Research Organisation (ISRO) ist die Raumfahrtbehörde Indiens mit Hauptsitz in Bangalore. Ihr Ziel ist es, „Raumfahrttechnologie zur Entwicklung des Landes zu nutzen und Weltraumwissenschaft sowie die Erkundung des Sonnensystems voranzutreiben“.</string>
     <string name="vko_summary">"Die Streitkräfte Luft-Weltraum-Vereidigung, engl.: Russian Aerospace Defence Forces, (VKO) waren eine eigene Teilstreitkraft im Bestand der Streitkräfte der Russischen Förderation. Ihr Auftrag war die Verteidigung gegen Luft- und Raketenangriffe, der Betrieb russischer Spionagesatelliten, sowie des Kosmodrom Plessezk. "</string>
     <string name="roscosmos_summary">Roskosmos, engl.: Roscosmos Coporation for Space Activities, ist die Weltraumorganisation der Russischen Förderation, zuständig für das russische Raumfahrtprogramm und Raumfahrtforschung.</string>
     <string name="ula_summary"><![CDATA[Die United Launch Alliance (ULA) ist ein 2006 gegründetes Joint Venture der beiden US-amerikanischen Konzerne Boeing Defense, Space and Security und Lockheed Martin Space Systems für die gemeinsame Bedienung US-amerikanischer Regierungsbehörden mit Startdiensten.]]></string>
@@ -244,7 +244,7 @@
     <string name="exit">Schließen</string>
     <string name="error_orbiter_details">Fehler - Kann Orbiterdetails nicht laden.</string>
     <string name="spacecraft_history">%s Raumfahrzeug Geschichte</string>
-    <string name="spacecraft_details">%s Raumfahrzeug Geschichte</string>
+    <string name="spacecraft_details">%s Raumfahrzeug Einzelheiten</string>
     <string name="night_mode_restart">Neustart der App könnte erforderlich sein, damit der Nachtmodus in Effekt tritt.</string>
     <string name="day_mode_restart">Neustart der App könnte erforderlich sein, damit der Tagmodus in Effekt tritt.</string>
     <string name="auto_daynight_restart">Auto Tag/Nacht deaktiviert, Neustart der App könnte für Effekt erforderlich sein.</string>
@@ -285,8 +285,8 @@
     <string name="launch_list_widget_text_summary">Wähle Textfarbe der Überschrift des Startliste-Widgets.</string>
     <string name="icon_color">Icon-Farbe</string>
     <string name="icon_color_summary">Wähle Icon-Farbe des Start-Widget.</string>
-    <string name="hide_refresh">Verstecke \"Aktualisieren\"</string>
-    <string name="hide_refresh_summary">Verstecke den \"Aktualisieren\"-Button.</string>
+    <string name="hide_refresh">Verstecke „Aktualisieren“</string>
+    <string name="hide_refresh_summary">Verstecke den „Aktualisieren“-Knopf.</string>
     <string name="round_corners">Runde Ecken</string>
     <string name="round_corners_summary">Aktiviere runde Ecken für Widgets.</string>
     <string name="enable_weather">Aktiviere Wetter</string>
@@ -328,8 +328,8 @@
     <string name="status_updates_off">Keine Benachrichtigung erhalten, wenn sich der Start-Status ändert.</string>
     <string name="webcast_only">Nur Live-Übertragung</string>
     <string name="webcast_only_summary">Benachrichtigungen nur erhalten, wenn eine Live-Übertragung vorhanden ist.</string>
-    <string name="do_not_disturb_enable">Aktiviere \"Nicht stören\"</string>
-    <string name="do_not_disturb_summary">Aktiviere lautlose Benachrichtigungen, während \"Nicht stören\" aktiviert ist.</string>
+    <string name="do_not_disturb_enable">Aktiviere „Nicht stören“</string>
+    <string name="do_not_disturb_summary">Aktiviere lautlose Benachrichtigungen, während „Nicht stören“ aktiviert ist.</string>
     <string name="start_time">Startzeit</string>
     <string name="end_time">Endzeit</string>
     <string name="general">Allgemein</string>
@@ -444,6 +444,11 @@
     <string name="settings_one_minute">Eine Minute</string>
     <string name="settings_one_minute_on">Benachrichtigung erhalten, wenn ein Start innerhalb einer Minute erfolgt.</string>
     <string name="settings_one_minute_off">Sende keine Benachrichtigung, wenn ein Start in einer Minute stattfindet.</string>
+    <string name="no_live_stream_available">Keine Liveübertragung vorhanden.</string>
+    <string name="date_confirmed">Datum ist bekannt, die Startzeit jedoch nicht.</string>
+    <string name="date_unconfirmed">Aktuelles Datum ist eine „nicht früher als“ Schätzung.</string>
+    <string name="source">Wähle eine Quelle</string>
+    <string name="long_press_share">Lange drücken, um ein Element zu teilen.</string>
     <string name="mission_agency">Missions-Organisation</string>
     <string name="tab_text_2">Tab 2</string>
     <string name="tab_text_1">Tab 1</string>

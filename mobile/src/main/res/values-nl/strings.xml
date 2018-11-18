@@ -40,8 +40,4 @@
     <string name="settings_one_minute">Één minuut</string>
     <string name="settings_one_minute_on">Ontvang een notificatie wanneer een lancering binnen één minuut is.</string>
     <string name="settings_one_minute_off">Ontvang geen notificatie wanneer een lancering binnen één minuut is.</string>
-    <string name="tab_text_2">Tab 2</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_3">Tab 3</string>
-    <string name="section_format">Hallo Wereld in sectie: %1$d</string>
 </resources>

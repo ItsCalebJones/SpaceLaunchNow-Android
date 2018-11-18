@@ -2,7 +2,7 @@
 <resources>
     <string name="action_settings">Ajustes</string>
     <string name="status_go">"Prosseguir para lançamento"</string>
-    <string name="status_nogo">"Lançamento a ser determinado"</string>
+    <string name="status_nogo">"Data de lançamento não confirmada"</string>
     <string name="status_success">"Lançamento bem-sucedido"</string>
     <string name="status_failure">"Ocorreu falha no lançamento"</string>
     <string name="spacex_summary">A SpaceX projeta, fabrica e lança foguetes e espaçonaves avançadas. A empresa foi fundada em 2002 para revolucionar a tecnologia espacial, com o objetivo final de permitir que as pessoas vivam em outros planetas.</string>
@@ -29,7 +29,7 @@
     <string name="thank_you">Este aplicativo, Space Launch Now, começou como um simples projeto de final de semana. E no curso de um ano isso cresceu para quase 10.000 usuários ativos. Eu sou incrivelmente grato por todos tomarem um tempo para reportar bugs, enviarem feedback, participarem nos BETA\'s e tornarem-se apoiadores.</string>
     <string name="player_error">Erro ao inicializar o player do YouTube: %s</string>
     <string name="please_rate">Olá! Você parece gostar deste aplicativo, você se importaria em visitar a Play Store e dar uma avaliação? Isso nos ajudaria muito!
-\n\nSe ao invés disso você odeia esse aplicativo, gostaríamos de ouvir seus feedback para que possamos melhorar. Obrigado!</string>
+\n\nSe ao invés disso você odiar esse aplicativo, gostaríamos de ouvir seus feedback para que possamos melhorar. Obrigado!</string>
     <string name="please_rate_short">Ei, você parece gostar deste app. Você nos ajudaria muito com uma classificação de 5 estrelas! Caso contrário, se você tiver sugestões - deixe-nos saber.</string>
     <string name="button_yes">Avalie!</string>
     <string name="button_no">Não obrigado</string>
@@ -444,9 +444,10 @@
     <string name="settings_one_minute">Um minuto</string>
     <string name="settings_one_minute_on">Receba notificações quando um Lançamento estiver aguardando um minuto.</string>
     <string name="settings_one_minute_off">Não notifique quando o Lançamento estiver aguardando um minuto.</string>
+    <string name="no_live_stream_available">Nenhuma transmissão ao vivo disponível.</string>
+    <string name="date_confirmed">A data foi confirmada, no entanto a hora do lançamento é desconhecida.</string>
+    <string name="date_unconfirmed">A data atual \"Não antes de\" é uma estimativa.</string>
+    <string name="source">Selecione uma fonte</string>
+    <string name="long_press_share">Pressione e segure um item para compartilhar.</string>
     <string name="mission_agency">Agência da Missão</string>
-    <string name="tab_text_2">Aba 2</string>
-    <string name="tab_text_1">Aba 1</string>
-    <string name="tab_text_3">Aba 3</string>
-    <string name="section_format">Olá mundo da sessão: %1$d</string>
 </resources>
